@@ -5,7 +5,6 @@ import kitchenPendantLights from "@/assets/gallery/kitchen-pendant-lights.jpg";
 import kitchenIslandView from "@/assets/gallery/kitchen-island-view.jpg";
 import kitchenTraditional from "@/assets/gallery/kitchen-traditional.jpg";
 import bedroomCloset from "@/assets/gallery/bedroom-closet.jpg";
-import grayCabinetsCorner from "@/assets/gallery/gray-cabinets-corner.jpg";
 import blackCabinet from "@/assets/gallery/black-cabinet.jpg";
 import laundryRoom from "@/assets/gallery/laundry-room.jpg";
 import radiatorCover from "@/assets/gallery/radiator-cover.jpg";
@@ -22,7 +21,6 @@ import whiteCabinetWall from "@/assets/gallery/white-cabinet-wall.jpg";
 import modernGrayConstruction from "@/assets/gallery/modern-gray-construction.jpg";
 import grayKitchenConstruction from "@/assets/gallery/gray-kitchen-construction.jpg";
 import darkModernKitchen from "@/assets/gallery/dark-modern-kitchen.jpg";
-import whiteUtilityRoom from "@/assets/gallery/white-utility-room.jpg";
 import openConceptMarbleKitchen from "@/assets/gallery/open-concept-marble-kitchen.jpg";
 import marbleWoodKitchenIsland from "@/assets/gallery/marble-wood-kitchen-island.jpg";
 import contemporaryWoodCabinets from "@/assets/gallery/contemporary-wood-cabinets.jpg";
@@ -38,8 +36,6 @@ import modernBathroomMarbleVanity from "@/assets/gallery/modern-bathroom-marble-
 import modernPowderRoomMarble from "@/assets/gallery/modern-powder-room-marble.jpeg";
 import modernKitchenIslandConstruction from "@/assets/gallery/modern-kitchen-island-construction.jpg";
 import whiteKitchenIslandCabinets from "@/assets/gallery/white-kitchen-island-cabinets.jpg";
-import kitchenIslandMarbleProgress from "@/assets/gallery/kitchen-island-marble-progress.jpg";
-import kitchenCabinetInstallationView from "@/assets/gallery/kitchen-cabinet-installation-view.jpg";
 import modernKitchenCabinetsGray from "@/assets/gallery/modern-kitchen-cabinets-gray.jpg";
 import kitchenConstructionCabinets from "@/assets/gallery/kitchen-construction-cabinets.jpeg";
 import whiteKitchenCabinetsProgress from "@/assets/gallery/white-kitchen-cabinets-progress.jpeg";
@@ -68,7 +64,6 @@ import contemporaryWhiteGrayKitchen from "@/assets/gallery/contemporary-white-gr
 import brightModernWhiteKitchenOpen from "@/assets/gallery/bright-modern-white-kitchen-open.jpeg";
 import modernWhiteKitchenPendants from "@/assets/gallery/modern-white-kitchen-pendants.jpeg";
 import twoToneWoodWhiteKitchenConstruction from "@/assets/gallery/two-tone-wood-white-kitchen-construction.jpeg";
-import darkWoodCabinetConstruction from "@/assets/gallery/dark-wood-cabinet-construction.jpeg";
 import traditionalWhiteKitchenGrayIsland from "@/assets/gallery/traditional-white-kitchen-gray-island.jpg";
 import kitchenConstructionTwoToneCabinets from "@/assets/gallery/kitchen-construction-two-tone-cabinets.jpeg";
 import minimalistWhiteKitchenIsland from "@/assets/gallery/minimalist-white-kitchen-island.jpg";
@@ -78,7 +73,6 @@ import minimalistCabinetDetail from "@/assets/gallery/minimalist-cabinet-detail.
 import whiteKitchenIslandDrawerOrganization from "@/assets/gallery/white-kitchen-island-drawer-organization.jpg";
 import whiteKitchenDrawerStorageOrganization from "@/assets/gallery/white-kitchen-drawer-storage-organization.jpg";
 import whiteCabinetLiftMechanismHardware from "@/assets/gallery/white-cabinet-lift-mechanism-hardware.jpg";
-import darkCherryWoodKitchenInstallation from "@/assets/gallery/dark-cherry-wood-kitchen-installation.jpg";
 import darkCherryKitchenGraniteIsland from "@/assets/gallery/dark-cherry-kitchen-granite-island.jpg";
 import whiteKitchenConstructionDarkIsland from "@/assets/gallery/white-kitchen-construction-dark-island.jpg";
 import whiteKitchenDualIslandsPendants from "@/assets/gallery/white-kitchen-dual-islands-pendants.jpg";
@@ -93,8 +87,6 @@ import lightGrayTallStorageCabinet from "@/assets/gallery/light-gray-tall-storag
 import whiteBathroomStorageDrawers from "@/assets/gallery/white-bathroom-storage-drawers.jpg";
 import darkWoodCornerWardrobe from "@/assets/gallery/dark-wood-corner-wardrobe.jpg";
 import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
-import naturalWoodKitchenInstallationProgress from "@/assets/gallery/natural-wood-kitchen-installation-progress.jpeg";
-import woodBaseCabinetsApplianceInstallation from "@/assets/gallery/wood-base-cabinets-appliance-installation.jpeg";
 import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
 
 const Gallery = () => {
@@ -108,7 +100,6 @@ const Gallery = () => {
     { src: whiteKitchenInstallation, alt: "White kitchen installation with gray countertops" },
     { src: whiteKitchenIslandProgress, alt: "White kitchen island installation progress" },
     { src: whiteCabinetWall, alt: "White cabinet wall with gray countertops" },
-    { src: whiteUtilityRoom, alt: "White utility room with gray countertop" },
     { src: laundryRoom, alt: "White laundry room cabinetry" },
     { src: whiteKitchenGlassPendants, alt: "White traditional kitchen with glass pendant lights and open shelving" },
     { src: whiteKitchenIslandCabinets, alt: "White kitchen island with custom cabinet installation" },
@@ -129,7 +120,6 @@ const Gallery = () => {
     { src: whiteKitchenIslandOpenShelving, alt: "White kitchen island featuring open shelving and glass pendants" },
 
     // === GRAY KITCHENS ===
-    { src: grayCabinetsCorner, alt: "Gray corner cabinet installation" },
     { src: grayKitchenCorner, alt: "Gray L-shaped kitchen installation" },
     { src: modernGrayConstruction, alt: "Modern gray kitchen under construction" },
     { src: grayKitchenConstruction, alt: "Contemporary gray kitchen in progress" },
@@ -142,8 +132,6 @@ const Gallery = () => {
     { src: darkModernKitchen, alt: "Modern dark kitchen installation" },
     { src: darkKitchenMarbleConstruction, alt: "Dark kitchen with marble backsplash under construction" },
     { src: modernKitchenDarkIsland, alt: "Modern kitchen with dark island and pendant lighting" },
-    { src: darkWoodCabinetConstruction, alt: "Dark wood cabinet installation in progress with white countertops" },
-    { src: darkCherryWoodKitchenInstallation, alt: "Dark cherry wood kitchen cabinets with granite countertops installation" },
     { src: darkCherryKitchenGraniteIsland, alt: "Dark cherry kitchen with granite island and bar seating" },
 
     // === NATURAL WOOD KITCHENS ===
@@ -160,8 +148,6 @@ const Gallery = () => {
     { src: modernOpenLivingWoodKitchen, alt: "Modern open concept living area with wood kitchen and pendant lighting" },
     { src: contemporaryLivingWoodKitchenIsland, alt: "Contemporary living room with open wood kitchen island and bar seating" },
     { src: modernKitchenIslandGlassPendants, alt: "Modern kitchen island with wood cabinets and glass globe pendant lights" },
-    { src: naturalWoodKitchenInstallationProgress, alt: "Natural wood kitchen installation showing full wall cabinetry progress" },
-    { src: woodBaseCabinetsApplianceInstallation, alt: "Wood base cabinets with built-in oven and appliance installation" },
     { src: loftKitchenExposedBrickNaturalWood, alt: "Loft kitchen with natural wood cabinetry, exposed brick wall, and pendant lighting" },
 
     // === TWO-TONE KITCHENS ===
@@ -188,8 +174,6 @@ const Gallery = () => {
 
     // === KITCHEN CONSTRUCTION & INSTALLATION ===
     { src: modernKitchenIslandConstruction, alt: "Modern kitchen island construction and installation process" },
-    { src: kitchenIslandMarbleProgress, alt: "Kitchen island with marble countertop installation in progress" },
-    { src: kitchenCabinetInstallationView, alt: "Kitchen cabinet installation and assembly view" },
     { src: kitchenConstructionCabinets, alt: "Kitchen construction with cabinet assembly" },
     { src: kitchenIslandCabinetInstall, alt: "Kitchen island cabinet installation process" },
     { src: customKitchenCabinetsInstall, alt: "Custom kitchen cabinets professional installation" },
