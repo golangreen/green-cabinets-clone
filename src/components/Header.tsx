@@ -15,11 +15,13 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const scrollToGallery = (category: string) => {
-    window.location.hash = `gallery?category=${category}`;
+    setIsMobileMenuOpen(false);
     setTimeout(() => {
-      document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }, 150);
+      window.location.hash = `gallery?category=${category}`;
+      setTimeout(() => {
+        document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }, 50);
   };
 
   return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{
