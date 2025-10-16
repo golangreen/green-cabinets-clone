@@ -4,20 +4,11 @@ import logo from "@/assets/logo.jpg";
 const Hero = () => {
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       
-      {/* Background Image with Overlay */}
+      {/* Background Image with Dark Overlay */}
       <div className="absolute inset-0">
-        <img src={heroImage} alt="Premium Green Cabinets Kitchen" className="w-full h-full object-cover opacity-70" />
+        <img src={heroImage} alt="Premium Green Cabinets Kitchen" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/40" />
       </div>
-      
-      {/* Logo as Background Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden opacity-25">
-        <img src={logo} alt="" className="w-[70%] max-w-4xl h-auto" style={{
-        mixBlendMode: 'lighten'
-      }} />
-      </div>
-      
-      {/* Decorative Circle */}
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-primary-foreground/10 blur-3xl" />
       
       {/* Content */}
       <div className="container relative z-10 mx-auto px-6 py-32 text-center">
