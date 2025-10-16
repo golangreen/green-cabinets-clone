@@ -131,11 +131,11 @@ const Hero = () => {
       </div>
       
       {/* Logo Overlay - Full Size Glass Effect */}
-      <div className="absolute inset-0 flex items-center justify-center p-12" style={{ zIndex: 10 }}>
+      <div className="absolute inset-0" style={{ zIndex: 10 }}>
         <img 
           src={logo} 
           alt="Company Logo" 
-          className="w-full h-full object-contain max-w-full max-h-full"
+          className="w-full h-full object-cover"
           style={{
             filter: 'grayscale(100%) brightness(2.5) contrast(0.2)',
             opacity: 0.18,
