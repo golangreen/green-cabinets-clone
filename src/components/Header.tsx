@@ -33,12 +33,11 @@ const Header = () => {
       {/* Wood texture background */}
       <div className="absolute inset-0" style={{
         backgroundImage: `url(${walnutTexture})`,
-        backgroundSize: '100% auto',
+        backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         opacity: 1,
-        transform: 'rotate(3deg) scale(1.1)',
-        transformOrigin: 'center',
+        imageRendering: 'crisp-edges',
         zIndex: 0
       }} />
       <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }}>
