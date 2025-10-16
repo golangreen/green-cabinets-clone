@@ -21,28 +21,31 @@ const Header = () => {
       event.stopPropagation();
     }
     
-    // Set the category first
-    window.location.hash = `gallery?category=${category}`;
-    
-    // Close menu
+    // Close menu first
     setIsMobileMenuOpen(false);
     
-    // Use requestAnimationFrame for better timing on iOS
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        const gallery = document.getElementById('gallery');
-        if (gallery) {
-          const headerOffset = 80;
-          const elementPosition = gallery.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-          
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
-        }
-      }, 150);
-    });
+    // Dispatch custom event to change category directly
+    window.dispatchEvent(new CustomEvent('categoryChange', { 
+      detail: { category } 
+    }));
+    
+    // Update hash for URL consistency
+    window.history.replaceState(null, '', `#gallery?category=${category}`);
+    
+    // Scroll after a short delay
+    setTimeout(() => {
+      const gallery = document.getElementById('gallery');
+      if (gallery) {
+        const headerOffset = 80;
+        const elementPosition = gallery.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 250);
   };
 
   return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{

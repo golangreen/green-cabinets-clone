@@ -117,9 +117,16 @@ const Gallery = () => {
     // Also check when window gains focus (helps with iOS)
     window.addEventListener("focus", handleHashChange);
     
+    // Listen for custom category change event (for mobile navigation)
+    const handleCategoryChange = (e: CustomEvent) => {
+      setActiveCategory(e.detail.category);
+    };
+    window.addEventListener("categoryChange" as any, handleCategoryChange as any);
+    
     return () => {
       window.removeEventListener("hashchange", handleHashChange);
       window.removeEventListener("focus", handleHashChange);
+      window.removeEventListener("categoryChange" as any, handleCategoryChange as any);
     };
   }, []);
 
