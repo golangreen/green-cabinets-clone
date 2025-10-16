@@ -1,4 +1,11 @@
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 const Header = () => {
   return <header className="fixed top-0 left-0 right-0 z-50 bg-[#000000] backdrop-blur-md border-b border-border">
@@ -14,9 +21,29 @@ const Header = () => {
           </div>
           
           <div className="hidden md:flex items-center gap-8">
-            <a href="#services" className="text-muted-foreground hover:text-foreground transition-colors">
-              Services
-            </a>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 outline-none">
+                Services
+                <ChevronDown className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-background border-border z-50">
+                <DropdownMenuItem asChild>
+                  <a href="#gallery?category=kitchens" className="cursor-pointer">
+                    Kitchens
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="#gallery?category=vanities" className="cursor-pointer">
+                    Vanities
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="#gallery?category=closets" className="cursor-pointer">
+                    Closets
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <a href="#solutions" className="text-muted-foreground hover:text-foreground transition-colors">
               Solutions
             </a>
