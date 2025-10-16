@@ -35,45 +35,48 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 const Hero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [shuffledImages] = useState(() => shuffleArray(heroImages));
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsTransitioning(true);
-      
-      setTimeout(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % shuffledImages.length);
-        setIsTransitioning(false);
-      }, 1200); // Duration of transition
+      setCurrentImageIndex((prev) => (prev + 1) % shuffledImages.length);
     }, 6000); // Change image every 6 seconds
 
     return () => clearInterval(interval);
   }, [shuffledImages.length]);
 
+  const getPrevIndex = (current: number) => {
+    return current === 0 ? shuffledImages.length - 1 : current - 1;
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Images with Slide and Fade */}
-      <div className="absolute inset-0">
-        {shuffledImages.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-all duration-[1200ms] ease-in-out ${
-              index === currentImageIndex && !isTransitioning 
-                ? 'opacity-100 translate-x-0' 
-                : index === currentImageIndex 
-                ? 'opacity-0 -translate-x-full'
-                : 'opacity-0 translate-x-full'
-            }`}
-          >
-            <img 
-              src={image.src} 
-              alt={image.alt} 
-              className="w-full h-full object-cover brightness-110 contrast-105 saturate-105" 
-              style={{ filter: 'brightness(1.15) contrast(1.05) saturate(1.05)' }}
-            />
-          </div>
-        ))}
-        <div className="absolute inset-0 bg-black/25" />
+      {/* Background Images with Smooth Slide and Fade */}
+      <div className="absolute inset-0 bg-black">
+        {shuffledImages.map((image, index) => {
+          const isCurrent = index === currentImageIndex;
+          const isPrev = index === getPrevIndex(currentImageIndex);
+          
+          return (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-all duration-[1500ms] ease-in-out ${
+                isCurrent 
+                  ? 'opacity-100 translate-x-0 z-10' 
+                  : isPrev
+                  ? 'opacity-0 -translate-x-1/4 z-0'
+                  : 'opacity-0 translate-x-full z-0'
+              }`}
+            >
+              <img 
+                src={image.src} 
+                alt={image.alt} 
+                className="w-full h-full object-cover" 
+                style={{ filter: 'brightness(1.15) contrast(1.05) saturate(1.05)' }}
+              />
+            </div>
+          );
+        })}
+        <div className="absolute inset-0 bg-black/25 z-20" />
       </div>
       
       {/* Content */}
