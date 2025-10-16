@@ -44,31 +44,36 @@ const Hero = () => {
       setTimeout(() => {
         setCurrentImageIndex((prev) => (prev + 1) % shuffledImages.length);
         setIsTransitioning(false);
-      }, 1000); // Duration of fade out
-    }, 5000); // Change image every 5 seconds
+      }, 1200); // Duration of transition
+    }, 6000); // Change image every 6 seconds
 
     return () => clearInterval(interval);
   }, [shuffledImages.length]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Images with Crossfade */}
+      {/* Background Images with Slide and Fade */}
       <div className="absolute inset-0">
         {shuffledImages.map((image, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentImageIndex && !isTransitioning ? 'opacity-100' : 'opacity-0'
+            className={`absolute inset-0 transition-all duration-[1200ms] ease-in-out ${
+              index === currentImageIndex && !isTransitioning 
+                ? 'opacity-100 translate-x-0' 
+                : index === currentImageIndex 
+                ? 'opacity-0 -translate-x-full'
+                : 'opacity-0 translate-x-full'
             }`}
           >
             <img 
               src={image.src} 
               alt={image.alt} 
-              className="w-full h-full object-cover" 
+              className="w-full h-full object-cover brightness-110 contrast-105 saturate-105" 
+              style={{ filter: 'brightness(1.15) contrast(1.05) saturate(1.05)' }}
             />
           </div>
         ))}
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/25" />
       </div>
       
       {/* Content */}
