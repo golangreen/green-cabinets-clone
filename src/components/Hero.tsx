@@ -13,16 +13,6 @@ const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-6 py-32 text-center">
         <div className="max-w-4xl mx-auto space-y-8">
-          <h1 className="text-6xl font-bold text-primary-foreground leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000 text-right md:text-2xl">
-            One solution
-            <br />
-            for all spaces
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-primary-foreground/90 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150">
-            Transform your home with premium custom cabinetry.
-          </p>
-          
           <div className="flex flex-wrap items-center justify-center gap-4 pt-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
             <Button size="lg" variant="hero" className="text-lg px-8 py-6">
               Get Started
