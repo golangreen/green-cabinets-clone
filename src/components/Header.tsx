@@ -5,7 +5,7 @@ const Header = () => {
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <a href="/" className="cursor-pointer">
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
               <img src={logo} alt="Green Cabinets Logo" className="h-20 w-auto rounded-2xl" style={{
               mixBlendMode: 'lighten'
             }} />
