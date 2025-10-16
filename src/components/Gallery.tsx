@@ -16,6 +16,16 @@ import classicWhiteKitchen from "@/assets/gallery/classic-white-kitchen.jpg";
 import marbleCountertopKitchen from "@/assets/gallery/marble-countertop-kitchen.jpg";
 import brightKitchenIsland from "@/assets/gallery/bright-kitchen-island.jpg";
 import kitchenIslandSeating from "@/assets/gallery/kitchen-island-seating.jpg";
+import whiteKitchenInstallation from "@/assets/gallery/white-kitchen-installation.jpg";
+import whiteKitchenIslandProgress from "@/assets/gallery/white-kitchen-island-progress.jpg";
+import whiteCabinetWall from "@/assets/gallery/white-cabinet-wall.jpg";
+import modernGrayConstruction from "@/assets/gallery/modern-gray-construction.jpg";
+import grayKitchenConstruction from "@/assets/gallery/gray-kitchen-construction.jpg";
+import darkModernKitchen from "@/assets/gallery/dark-modern-kitchen.jpg";
+import whiteUtilityRoom from "@/assets/gallery/white-utility-room.jpg";
+import openConceptMarbleKitchen from "@/assets/gallery/open-concept-marble-kitchen.jpg";
+import marbleWoodKitchenIsland from "@/assets/gallery/marble-wood-kitchen-island.jpg";
+import contemporaryWoodCabinets from "@/assets/gallery/contemporary-wood-cabinets.jpg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -37,6 +47,16 @@ const Gallery = () => {
     { src: marbleCountertopKitchen, alt: "Kitchen with marble countertops and wood trim" },
     { src: brightKitchenIsland, alt: "Bright open kitchen with large island" },
     { src: kitchenIslandSeating, alt: "Kitchen island with built-in seating" },
+    { src: whiteKitchenInstallation, alt: "White kitchen installation with gray countertops" },
+    { src: whiteKitchenIslandProgress, alt: "White kitchen island installation progress" },
+    { src: whiteCabinetWall, alt: "White cabinet wall with gray countertops" },
+    { src: modernGrayConstruction, alt: "Modern gray kitchen under construction" },
+    { src: grayKitchenConstruction, alt: "Contemporary gray kitchen in progress" },
+    { src: darkModernKitchen, alt: "Modern dark kitchen installation" },
+    { src: whiteUtilityRoom, alt: "White utility room with gray countertop" },
+    { src: openConceptMarbleKitchen, alt: "Open concept kitchen with marble and wood accents" },
+    { src: marbleWoodKitchenIsland, alt: "Marble waterfall island with wood cabinetry" },
+    { src: contemporaryWoodCabinets, alt: "Contemporary wood cabinet installation" },
   ];
 
   return (
