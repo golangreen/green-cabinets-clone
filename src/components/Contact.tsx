@@ -6,7 +6,7 @@ const Contact = () => {
     <section id="contact" className="py-24 bg-gradient-to-b from-secondary/20 to-background">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="font-poppins text-4xl md:text-5xl font-bold mb-6">Get in Touch</h2>
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">Get in Touch</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Ready to transform your space? Contact us today for a free consultation.
           </p>
@@ -18,7 +18,7 @@ const Contact = () => {
             <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
               <Mail className="w-8 h-8 text-primary" />
             </div>
-            <h3 className="font-poppins text-xl font-bold text-foreground mb-3">Email Us</h3>
+            <h3 className="font-display text-xl font-bold text-foreground mb-3">Email Us</h3>
             <a 
               href="mailto:greencabinets@gmail.com"
               className="text-muted-foreground hover:text-primary transition-colors"
@@ -32,7 +32,7 @@ const Contact = () => {
             <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
               <Phone className="w-8 h-8 text-primary" />
             </div>
-            <h3 className="font-poppins text-xl font-bold text-foreground mb-3">Call Us</h3>
+            <h3 className="font-display text-xl font-bold text-foreground mb-3">Call Us</h3>
             <a 
               href="tel:+16465493955"
               className="text-muted-foreground hover:text-primary transition-colors"
@@ -46,7 +46,7 @@ const Contact = () => {
             <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
               <MapPin className="w-8 h-8 text-primary" />
             </div>
-            <h3 className="font-poppins text-xl font-bold text-foreground mb-3">Visit Us</h3>
+            <h3 className="font-display text-xl font-bold text-foreground mb-3">Visit Us</h3>
             <address className="text-muted-foreground not-italic">
               10 Montieth St<br />
               Brooklyn, NY 11206

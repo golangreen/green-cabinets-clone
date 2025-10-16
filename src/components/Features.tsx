@@ -47,7 +47,7 @@ const Features = () => {
                 <div className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold w-fit">
                   {feature.stats}
                 </div>
-                <h3 className="font-poppins text-4xl font-bold text-foreground">
+                <h3 className="font-display text-4xl font-bold text-foreground">
                   {feature.title}
                 </h3>
                 <p className="text-lg text-muted-foreground leading-relaxed">

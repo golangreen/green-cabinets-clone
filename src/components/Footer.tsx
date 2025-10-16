@@ -8,7 +8,7 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <img src={logo} alt="Green Cabinets Logo" className="h-10 w-auto" style={{ mixBlendMode: 'lighten' }} />
-              <span className="font-poppins text-xl font-bold text-foreground">Green Cabinets</span>
+              <span className="font-display text-xl font-bold text-foreground">Green Cabinets</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Premium custom cabinetry for modern living.

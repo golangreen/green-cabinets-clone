@@ -33,7 +33,7 @@ const Header = () => {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8 font-poppins">
+          <div className="hidden md:flex items-center gap-8 font-display">
             <DropdownMenu>
               <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 outline-none">
                 Catalog
@@ -71,7 +71,7 @@ const Header = () => {
             </a>
           </div>
           
-          <div className="flex items-center gap-4 font-poppins">
+          <div className="flex items-center gap-4 font-display">
             <Button variant="ghost" className="hidden md:inline-flex">
               Sign In
             </Button>
@@ -84,7 +84,7 @@ const Header = () => {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px] font-poppins">
+              <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display">
                 <div className="flex flex-col gap-6 mt-8">
                   <div className="flex flex-col gap-2">
                     <h3 className="font-semibold mb-2">Catalog</h3>
