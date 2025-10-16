@@ -38,9 +38,17 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>contact@greencabinets.com</li>
-              <li>1-800-GREEN-CAB</li>
-              <li>Mon-Fri 9am-6pm EST</li>
+              <li>
+                <a href="mailto:greencabinets@gmail.com" className="hover:text-foreground transition-colors">
+                  greencabinets@gmail.com
+                </a>
+              </li>
+              <li>
+                <a href="tel:+16465493955" className="hover:text-foreground transition-colors">
+                  646-549-3955
+                </a>
+              </li>
+              <li>10 Montieth St<br />Brooklyn, NY 11206</li>
             </ul>
           </div>
         </div>
