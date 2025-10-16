@@ -99,7 +99,6 @@ import woodKitchenConstructionOutdoorAccess from "@/assets/gallery/wood-kitchen-
 import builtInRefrigeratorWoodPanels from "@/assets/gallery/built-in-refrigerator-wood-panels.jpeg";
 import naturalWoodKitchenInstallationProgress from "@/assets/gallery/natural-wood-kitchen-installation-progress.jpeg";
 import woodBaseCabinetsApplianceInstallation from "@/assets/gallery/wood-base-cabinets-appliance-installation.jpeg";
-import tallWoodCabinetPanelConstruction from "@/assets/gallery/tall-wood-cabinet-panel-construction.jpeg";
 import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
 
 const Gallery = () => {
@@ -186,7 +185,6 @@ const Gallery = () => {
     { src: builtInRefrigeratorWoodPanels, alt: "Built-in refrigerator with integrated wood cabinet panels" },
     { src: naturalWoodKitchenInstallationProgress, alt: "Natural wood kitchen installation showing full wall cabinetry progress" },
     { src: woodBaseCabinetsApplianceInstallation, alt: "Wood base cabinets with built-in oven and appliance installation" },
-    { src: tallWoodCabinetPanelConstruction, alt: "Tall wood cabinet panel construction at installation site" },
     { src: loftKitchenExposedBrickNaturalWood, alt: "Loft kitchen with natural wood cabinetry, exposed brick wall, and pendant lighting" },
 
     // === TWO-TONE KITCHENS (Original) ===
