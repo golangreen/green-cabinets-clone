@@ -66,6 +66,16 @@ import contemporaryLivingWoodKitchenIsland from "@/assets/gallery/contemporary-l
 import modernKitchenIslandGlassPendants from "@/assets/gallery/modern-kitchen-island-glass-pendants.jpeg";
 import contemporaryWhiteGrayKitchen from "@/assets/gallery/contemporary-white-gray-kitchen.jpeg";
 import brightModernWhiteKitchenOpen from "@/assets/gallery/bright-modern-white-kitchen-open.jpeg";
+import modernWhiteKitchenPendants from "@/assets/gallery/modern-white-kitchen-pendants.jpeg";
+import twoToneWoodWhiteKitchenConstruction from "@/assets/gallery/two-tone-wood-white-kitchen-construction.jpeg";
+import darkWoodCabinetConstruction from "@/assets/gallery/dark-wood-cabinet-construction.jpeg";
+import traditionalWhiteKitchenGrayIsland from "@/assets/gallery/traditional-white-kitchen-gray-island.jpg";
+import kitchenConstructionTwoToneCabinets from "@/assets/gallery/kitchen-construction-two-tone-cabinets.jpeg";
+import minimalistWhiteKitchenIsland from "@/assets/gallery/minimalist-white-kitchen-island.jpg";
+import contemporaryWhiteKitchenBlueWall from "@/assets/gallery/contemporary-white-kitchen-blue-wall.jpg";
+import blumDrawerHardwareCloseup from "@/assets/gallery/blum-drawer-hardware-closeup.jpg";
+import minimalistCabinetDetail from "@/assets/gallery/minimalist-cabinet-detail.jpg";
+import whiteKitchenIslandDrawerOrganization from "@/assets/gallery/white-kitchen-island-drawer-organization.jpg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -137,6 +147,16 @@ const Gallery = () => {
     { src: modernKitchenIslandGlassPendants, alt: "Modern kitchen island with wood cabinets and glass globe pendant lights" },
     { src: contemporaryWhiteGrayKitchen, alt: "Contemporary white and gray kitchen with wood island and waterfall edge" },
     { src: brightModernWhiteKitchenOpen, alt: "Bright modern white kitchen with open concept dining and living area" },
+    { src: modernWhiteKitchenPendants, alt: "Modern white kitchen with island and globe pendant lights" },
+    { src: twoToneWoodWhiteKitchenConstruction, alt: "Two-tone kitchen construction with wood island and white cabinets" },
+    { src: darkWoodCabinetConstruction, alt: "Dark wood cabinet installation in progress with white countertops" },
+    { src: traditionalWhiteKitchenGrayIsland, alt: "Traditional white kitchen with gray island and subway tile backsplash" },
+    { src: kitchenConstructionTwoToneCabinets, alt: "Kitchen construction showing two-tone wood and white cabinet installation" },
+    { src: minimalistWhiteKitchenIsland, alt: "Minimalist white kitchen with modern island and contemporary lighting" },
+    { src: contemporaryWhiteKitchenBlueWall, alt: "Contemporary white kitchen with blue accent wall and modern design" },
+    { src: blumDrawerHardwareCloseup, alt: "Close-up of premium Blum drawer hardware installation" },
+    { src: minimalistCabinetDetail, alt: "Minimalist white cabinet detail showing clean lines and craftsmanship" },
+    { src: whiteKitchenIslandDrawerOrganization, alt: "White kitchen island with organized Blum drawer system" },
   ];
 
   return (
