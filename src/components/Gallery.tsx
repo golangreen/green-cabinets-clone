@@ -26,6 +26,16 @@ import whiteUtilityRoom from "@/assets/gallery/white-utility-room.jpg";
 import openConceptMarbleKitchen from "@/assets/gallery/open-concept-marble-kitchen.jpg";
 import marbleWoodKitchenIsland from "@/assets/gallery/marble-wood-kitchen-island.jpg";
 import contemporaryWoodCabinets from "@/assets/gallery/contemporary-wood-cabinets.jpg";
+import darkKitchenMarbleConstruction from "@/assets/gallery/dark-kitchen-marble-construction.jpeg";
+import modernWhiteWoodIsland from "@/assets/gallery/modern-white-wood-island-kitchen.jpg";
+import whiteWoodIslandSideView from "@/assets/gallery/white-wood-island-side-view.jpg";
+import modernKitchenDarkIsland from "@/assets/gallery/modern-kitchen-dark-island.jpg";
+import whiteKitchenGlassPendants from "@/assets/gallery/white-kitchen-glass-pendants.jpeg";
+import greenKitchenMarbleIsland from "@/assets/gallery/green-kitchen-marble-island.png";
+import greenOpenConceptKitchen from "@/assets/gallery/green-open-concept-kitchen.png";
+import naturalWoodKitchenMarble from "@/assets/gallery/natural-wood-kitchen-marble.jpeg";
+import modernBathroomMarbleVanity from "@/assets/gallery/modern-bathroom-marble-vanity.jpeg";
+import modernPowderRoomMarble from "@/assets/gallery/modern-powder-room-marble.jpeg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -57,6 +67,16 @@ const Gallery = () => {
     { src: openConceptMarbleKitchen, alt: "Open concept kitchen with marble and wood accents" },
     { src: marbleWoodKitchenIsland, alt: "Marble waterfall island with wood cabinetry" },
     { src: contemporaryWoodCabinets, alt: "Contemporary wood cabinet installation" },
+    { src: darkKitchenMarbleConstruction, alt: "Dark kitchen with marble backsplash under construction" },
+    { src: modernWhiteWoodIsland, alt: "Modern white kitchen with wood island and pendant lights" },
+    { src: whiteWoodIslandSideView, alt: "White kitchen with natural wood island side view" },
+    { src: modernKitchenDarkIsland, alt: "Modern kitchen with dark island and pendant lighting" },
+    { src: whiteKitchenGlassPendants, alt: "White traditional kitchen with glass pendant lights and open shelving" },
+    { src: greenKitchenMarbleIsland, alt: "Green cabinets with marble waterfall island and brass accents" },
+    { src: greenOpenConceptKitchen, alt: "Green open concept kitchen with marble island" },
+    { src: naturalWoodKitchenMarble, alt: "Natural wood kitchen with marble backsplash and countertops" },
+    { src: modernBathroomMarbleVanity, alt: "Modern bathroom with floating marble vanity and walk-in shower" },
+    { src: modernPowderRoomMarble, alt: "Modern powder room with marble countertop and storage" },
   ];
 
   return (
