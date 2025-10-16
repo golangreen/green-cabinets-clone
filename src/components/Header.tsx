@@ -16,12 +16,12 @@ const Header = () => {
 
   const scrollToGallery = (category: string) => {
     setIsMobileMenuOpen(false);
+    // First set the category in the URL
+    window.location.hash = `gallery?category=${category}`;
+    // Wait a bit longer for the hash change to be processed
     setTimeout(() => {
-      window.location.hash = `gallery?category=${category}`;
-      setTimeout(() => {
-        document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }, 50);
+      document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
+    }, 200);
   };
 
   return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{

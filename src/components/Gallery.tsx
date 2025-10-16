@@ -96,11 +96,14 @@ const Gallery = () => {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
-      if (hash.includes('?category=')) {
-        const params = new URLSearchParams(hash.split("?")[1] || "");
-        const category = params.get("category") as Category;
-        if (category && ["kitchens", "vanities", "closets"].includes(category)) {
-          setActiveCategory(category);
+      // Handle both #gallery?category=X and direct category changes
+      if (hash.includes('category=')) {
+        const categoryMatch = hash.match(/category=([^&]*)/);
+        if (categoryMatch) {
+          const category = categoryMatch[1] as Category;
+          if (["kitchens", "vanities", "closets"].includes(category)) {
+            setActiveCategory(category);
+          }
         }
       }
     };
