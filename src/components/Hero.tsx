@@ -79,9 +79,9 @@ const Hero = () => {
   const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden touch-pan-y">
       {/* Background Images with Enhanced Crossfade */}
-      <div className="absolute inset-0 bg-black">
+      <div className="absolute inset-0 bg-black select-none">
         {/* Current Image - fades out */}
         <div
           className="absolute inset-0"
@@ -94,11 +94,13 @@ const Hero = () => {
           <img 
             src={shuffledImages[currentImageIndex].src} 
             alt={shuffledImages[currentImageIndex].alt} 
-            className="w-full h-full object-cover" 
+            className="w-full h-full object-cover pointer-events-none" 
             style={{ 
               filter: 'brightness(1.25) contrast(1.08) saturate(1.08)',
               imageRendering: 'crisp-edges'
             }}
+            loading="eager"
+            decoding="async"
           />
         </div>
         
@@ -114,11 +116,13 @@ const Hero = () => {
           <img 
             src={shuffledImages[getNextIndex()].src} 
             alt={shuffledImages[getNextIndex()].alt} 
-            className="w-full h-full object-cover" 
+            className="w-full h-full object-cover pointer-events-none" 
             style={{ 
               filter: 'brightness(1.25) contrast(1.08) saturate(1.08)',
               imageRendering: 'crisp-edges'
             }}
+            loading="eager"
+            decoding="async"
           />
         </div>
         
