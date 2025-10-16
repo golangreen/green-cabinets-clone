@@ -131,25 +131,18 @@ const Hero = () => {
       </div>
       
       {/* Content */}
-      <div className="container relative z-10 mx-auto px-6 py-32 text-center flex items-center justify-center">
-        <div 
-          className="inline-block rounded-2xl p-8 backdrop-blur-sm bg-white/[0.02] border border-white/[0.08]"
+      <div className="absolute inset-0 z-10 flex items-center justify-center p-8">
+        <img 
+          src={logo} 
+          alt="Company Logo" 
+          className="w-full h-full object-contain"
           style={{
-            boxShadow: '0 4px 24px 0 rgba(0, 0, 0, 0.05)'
+            filter: 'grayscale(100%) brightness(2) contrast(0.3)',
+            opacity: 0.15,
+            mixBlendMode: 'overlay'
           }}
-        >
-          <img 
-            src={logo} 
-            alt="Company Logo" 
-            className="w-48 md:w-64 h-auto"
-            style={{
-              filter: 'grayscale(100%) brightness(1.5) contrast(0.5)',
-              opacity: 0.25,
-              mixBlendMode: 'overlay'
-            }}
-            loading="eager"
-          />
-        </div>
+          loading="eager"
+        />
       </div>
     </section>
   );
