@@ -6,7 +6,7 @@ const Hero = () => {
       
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
-        <img src={heroImage} alt="Premium Green Cabinets Kitchen" className="w-full h-full object-cover opacity-30" />
+        <img src={heroImage} alt="Premium Green Cabinets Kitchen" className="w-full h-full object-cover opacity-70" />
       </div>
       
       {/* Logo as Background Watermark */}
