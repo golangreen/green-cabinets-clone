@@ -21,31 +21,44 @@ const Header = () => {
       event.stopPropagation();
     }
     
-    // Close menu first
-    setIsMobileMenuOpen(false);
-    
-    // Dispatch custom event to change category directly
-    window.dispatchEvent(new CustomEvent('categoryChange', { 
+    // Immediately dispatch the category change
+    const categoryEvent = new CustomEvent('categoryChange', { 
       detail: { category } 
-    }));
+    });
+    window.dispatchEvent(categoryEvent);
     
-    // Update hash for URL consistency
+    // Update hash without triggering navigation
     window.history.replaceState(null, '', `#gallery?category=${category}`);
     
-    // Scroll after a short delay
+    // Close menu after category is set
+    setTimeout(() => {
+      setIsMobileMenuOpen(false);
+    }, 50);
+    
+    // Scroll with longer delay to ensure rendering completes
     setTimeout(() => {
       const gallery = document.getElementById('gallery');
       if (gallery) {
-        const headerOffset = 80;
-        const elementPosition = gallery.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        // Get fresh position after category change
+        const rect = gallery.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const targetPosition = rect.top + scrollTop - 80;
         
+        // Force scroll without smooth behavior for iOS reliability
         window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
+          top: targetPosition,
+          behavior: 'auto'
         });
+        
+        // Then smooth scroll to the exact position
+        setTimeout(() => {
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }, 50);
       }
-    }, 250);
+    }, 400);
   };
 
   return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{
