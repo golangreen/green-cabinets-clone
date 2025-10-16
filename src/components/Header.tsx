@@ -14,19 +14,21 @@ import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const scrollToGallery = (category: string) => {
-    // For iOS Safari reliability, use href navigation
-    const newHash = `#gallery?category=${category}`;
+  const scrollToGallery = (category: string, event?: React.MouseEvent) => {
+    // Prevent any default behavior
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     
-    // Close menu first
+    // Set the category first
+    window.location.hash = `gallery?category=${category}`;
+    
+    // Close menu
     setIsMobileMenuOpen(false);
     
-    // Use setTimeout to ensure menu close completes
-    setTimeout(() => {
-      // Force navigation with replace to ensure iOS picks it up
-      window.location.href = newHash;
-      
-      // Then scroll
+    // Use requestAnimationFrame for better timing on iOS
+    requestAnimationFrame(() => {
       setTimeout(() => {
         const gallery = document.getElementById('gallery');
         if (gallery) {
@@ -39,8 +41,8 @@ const Header = () => {
             behavior: 'smooth'
           });
         }
-      }, 100);
-    }, 100);
+      }, 150);
+    });
   };
 
   return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{
@@ -80,19 +82,19 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-background border-border z-50">
                 <DropdownMenuItem 
-                  onClick={() => scrollToGallery('kitchens')}
+                  onClick={(e) => scrollToGallery('kitchens', e)}
                   className="cursor-pointer"
                 >
                   Kitchens
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => scrollToGallery('vanities')}
+                  onClick={(e) => scrollToGallery('vanities', e)}
                   className="cursor-pointer"
                 >
                   Vanities
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => scrollToGallery('closets')}
+                  onClick={(e) => scrollToGallery('closets', e)}
                   className="cursor-pointer"
                 >
                   Closets
@@ -125,21 +127,21 @@ const Header = () => {
                     <Button 
                       variant="ghost" 
                       className="justify-start" 
-                      onClick={() => scrollToGallery('kitchens')}
+                      onClick={(e) => scrollToGallery('kitchens', e)}
                     >
                       Kitchens
                     </Button>
                     <Button 
                       variant="ghost" 
                       className="justify-start" 
-                      onClick={() => scrollToGallery('vanities')}
+                      onClick={(e) => scrollToGallery('vanities', e)}
                     >
                       Vanities
                     </Button>
                     <Button 
                       variant="ghost" 
                       className="justify-start" 
-                      onClick={() => scrollToGallery('closets')}
+                      onClick={(e) => scrollToGallery('closets', e)}
                     >
                       Closets
                     </Button>
