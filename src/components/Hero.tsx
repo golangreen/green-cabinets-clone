@@ -133,15 +133,15 @@ const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-6 py-32 text-center flex items-center justify-center">
         <div 
-          className="inline-block rounded-2xl p-8 backdrop-blur-md bg-white/5 border border-white/10 shadow-lg"
+          className="inline-block rounded-2xl p-8 backdrop-blur-sm bg-white/[0.02] border border-white/[0.08]"
           style={{
-            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.15)'
+            boxShadow: '0 4px 24px 0 rgba(0, 0, 0, 0.05)'
           }}
         >
           <img 
             src={logo} 
             alt="Company Logo" 
-            className="w-48 md:w-64 h-auto opacity-95"
+            className="w-48 md:w-64 h-auto opacity-90"
             loading="eager"
           />
         </div>
