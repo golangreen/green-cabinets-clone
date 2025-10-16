@@ -23,7 +23,7 @@ const Services = () => {
     <section id="services" className="py-24 bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-5xl md:text-6xl font-bold text-foreground">
+          <h2 className="font-poppins text-5xl md:text-6xl font-bold text-foreground">
             Simple, fast & reliable
           </h2>
           <p className="text-xl text-muted-foreground">
