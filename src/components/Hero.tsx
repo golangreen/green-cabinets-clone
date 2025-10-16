@@ -36,20 +36,47 @@ const Hero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [shuffledImages] = useState(() => shuffleArray(heroImages));
+  const [recentIndices, setRecentIndices] = useState<number[]>([0]);
+  const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
+
+  // Get a random index that hasn't been used recently
+  const getNextRandomIndex = () => {
+    const availableIndices = shuffledImages
+      .map((_, idx) => idx)
+      .filter(idx => !recentIndices.includes(idx));
+    
+    if (availableIndices.length === 0) {
+      // If all images have been shown recently, reset but keep current image excluded
+      const resetIndices = shuffledImages
+        .map((_, idx) => idx)
+        .filter(idx => idx !== currentImageIndex);
+      return resetIndices[Math.floor(Math.random() * resetIndices.length)];
+    }
+    
+    return availableIndices[Math.floor(Math.random() * availableIndices.length)];
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
+      const nextIdx = getNextRandomIndex();
+      setNextImageIndex(nextIdx);
       setIsTransitioning(true);
+      
       setTimeout(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % shuffledImages.length);
+        setCurrentImageIndex(nextIdx);
+        setRecentIndices(prev => {
+          const updated = [...prev, nextIdx];
+          // Keep only the last 5 indices
+          return updated.slice(-5);
+        });
         setIsTransitioning(false);
       }, 2500); // Half of transition time
     }, 7000); // Change image every 7 seconds
 
     return () => clearInterval(interval);
-  }, [shuffledImages.length]);
+  }, [shuffledImages.length, currentImageIndex, recentIndices]);
 
-  const getNextIndex = () => (currentImageIndex + 1) % shuffledImages.length;
+  const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
