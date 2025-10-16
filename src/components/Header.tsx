@@ -5,9 +5,11 @@ const Header = () => {
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={logo} alt="Green Cabinets Logo" className="h-20 w-auto rounded-2xl" style={{
-            mixBlendMode: 'lighten'
-          }} />
+            <a href="/" className="cursor-pointer">
+              <img src={logo} alt="Green Cabinets Logo" className="h-20 w-auto rounded-2xl" style={{
+              mixBlendMode: 'lighten'
+            }} />
+            </a>
             
           </div>
           
