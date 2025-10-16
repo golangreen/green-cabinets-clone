@@ -1,30 +1,21 @@
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-kitchen.jpg";
 import logo from "@/assets/logo.png";
-
 const Hero = () => {
-  return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Gradient Background */}
       <div className="absolute inset-0 bg-[image:var(--gradient-hero)] opacity-90" />
       
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
-        <img 
-          src={heroImage} 
-          alt="Premium Green Cabinets Kitchen"
-          className="w-full h-full object-cover opacity-30"
-        />
+        <img src={heroImage} alt="Premium Green Cabinets Kitchen" className="w-full h-full object-cover opacity-30" />
       </div>
       
       {/* Logo as Background Watermark */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden opacity-25">
-        <img 
-          src={logo} 
-          alt=""
-          className="w-[70%] max-w-4xl h-auto"
-          style={{ mixBlendMode: 'lighten' }}
-        />
+        <img src={logo} alt="" className="w-[70%] max-w-4xl h-auto" style={{
+        mixBlendMode: 'lighten'
+      }} />
       </div>
       
       {/* Decorative Circle */}
@@ -33,7 +24,7 @@ const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-6 py-32 text-center">
         <div className="max-w-4xl mx-auto space-y-8">
-          <h1 className="text-6xl md:text-8xl font-bold text-primary-foreground leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <h1 className="text-6xl font-bold text-primary-foreground leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000 text-left md:text-2xl">
             One solution
             <br />
             for all spaces
@@ -57,8 +48,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
