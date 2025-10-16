@@ -51,7 +51,7 @@ const Header = () => {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8 font-display">
+          <div className="hidden md:flex items-center gap-8 font-display ml-auto mr-32">
             <DropdownMenu>
               <DropdownMenuTrigger className="text-black hover:text-black/70 transition-colors flex items-center gap-1 outline-none text-xl font-semibold">
                 Catalog
