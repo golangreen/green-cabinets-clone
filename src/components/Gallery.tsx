@@ -93,7 +93,6 @@ import lightGrayTallStorageCabinet from "@/assets/gallery/light-gray-tall-storag
 import whiteBathroomStorageDrawers from "@/assets/gallery/white-bathroom-storage-drawers.jpg";
 import darkWoodCornerWardrobe from "@/assets/gallery/dark-wood-corner-wardrobe.jpg";
 import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
-import woodCabinetConstructionProgress from "@/assets/gallery/wood-cabinet-construction-progress.jpeg";
 import woodKitchenConstructionOutdoorAccess from "@/assets/gallery/wood-kitchen-construction-outdoor-access.jpeg";
 import builtInRefrigeratorWoodPanels from "@/assets/gallery/built-in-refrigerator-wood-panels.jpeg";
 import naturalWoodKitchenInstallationProgress from "@/assets/gallery/natural-wood-kitchen-installation-progress.jpeg";
@@ -179,7 +178,6 @@ const Gallery = () => {
     { src: modernKitchenIslandGlassPendants, alt: "Modern kitchen island with wood cabinets and glass globe pendant lights" },
     
     // === NATURAL WOOD (Recent Additions) ===
-    { src: woodCabinetConstructionProgress, alt: "Natural wood cabinet construction in progress with protective wrapping" },
     { src: woodKitchenConstructionOutdoorAccess, alt: "Wood kitchen construction with outdoor patio access installation" },
     { src: builtInRefrigeratorWoodPanels, alt: "Built-in refrigerator with integrated wood cabinet panels" },
     { src: naturalWoodKitchenInstallationProgress, alt: "Natural wood kitchen installation showing full wall cabinetry progress" },
