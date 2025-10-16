@@ -17,9 +17,6 @@ import classicWhiteKitchen from "@/assets/gallery/classic-white-kitchen.jpg";
 import marbleCountertopKitchen from "@/assets/gallery/marble-countertop-kitchen.jpg";
 import brightKitchenIsland from "@/assets/gallery/bright-kitchen-island.jpg";
 import kitchenIslandSeating from "@/assets/gallery/kitchen-island-seating.jpg";
-import whiteKitchenInstallation from "@/assets/gallery/white-kitchen-installation.jpg";
-import whiteKitchenIslandProgress from "@/assets/gallery/white-kitchen-island-progress.jpg";
-import whiteCabinetWall from "@/assets/gallery/white-cabinet-wall.jpg";
 import modernGrayConstruction from "@/assets/gallery/modern-gray-construction.jpg";
 import grayKitchenConstruction from "@/assets/gallery/gray-kitchen-construction.jpg";
 import darkModernKitchen from "@/assets/gallery/dark-modern-kitchen.jpg";
@@ -118,9 +115,6 @@ const Gallery = () => {
     { src: kitchenModernWhite, alt: "Modern white kitchen with pendant lighting", category: "kitchens" },
     { src: kitchenPendantLights, alt: "White kitchen with glass pendant lights", category: "kitchens" },
     { src: classicWhiteKitchen, alt: "Classic white kitchen with gray island", category: "kitchens" },
-    { src: whiteKitchenInstallation, alt: "White kitchen installation with gray countertops", category: "kitchens" },
-    { src: whiteKitchenIslandProgress, alt: "White kitchen island installation progress", category: "kitchens" },
-    { src: whiteCabinetWall, alt: "White cabinet wall with gray countertops", category: "kitchens" },
     { src: laundryRoom, alt: "White laundry room cabinetry", category: "kitchens" },
     { src: whiteKitchenGlassPendants, alt: "White traditional kitchen with glass pendant lights and open shelving", category: "kitchens" },
     { src: whiteKitchenIslandCabinets, alt: "White kitchen island with custom cabinet installation", category: "kitchens" },
