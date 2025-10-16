@@ -141,7 +141,12 @@ const Hero = () => {
           <img 
             src={logo} 
             alt="Company Logo" 
-            className="w-48 md:w-64 h-auto opacity-90"
+            className="w-48 md:w-64 h-auto"
+            style={{
+              filter: 'grayscale(100%) brightness(1.5) contrast(0.5)',
+              opacity: 0.25,
+              mixBlendMode: 'overlay'
+            }}
             loading="eager"
           />
         </div>
