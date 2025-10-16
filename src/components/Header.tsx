@@ -14,10 +14,6 @@ import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const scrollToGallery = (category: string) => {
     setIsMobileMenuOpen(false);
     setTimeout(() => {
@@ -28,11 +24,9 @@ const Header = () => {
     }, 50);
   };
 
-  return <header 
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden cursor-pointer" 
-      style={{ position: 'relative' }}
-      onClick={scrollToTop}
-    >
+  return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{
+      position: 'relative'
+    }}>
       {/* Black to wood gradient overlay */}
       <div className="absolute inset-0" style={{
         background: `linear-gradient(to right, #000000 0%, #000000 15%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0) 70%)`,
@@ -48,12 +42,14 @@ const Header = () => {
         imageRendering: 'crisp-edges',
         zIndex: 0
       }} />
-      <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }} onClick={(e) => e.stopPropagation()}>
+      <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={logo} alt="Green Cabinets Logo" className="h-16 md:h-20 w-auto" style={{
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
+              <img src={logo} alt="Green Cabinets Logo" className="h-16 md:h-20 w-auto" style={{
               mixBlendMode: 'lighten'
             }} />
+            </a>
           </div>
           
           {/* Desktop Navigation */}
