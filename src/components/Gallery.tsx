@@ -46,6 +46,16 @@ import whiteKitchenCabinetsProgress from "@/assets/gallery/white-kitchen-cabinet
 import kitchenIslandCabinetInstall from "@/assets/gallery/kitchen-island-cabinet-install.jpeg";
 import grayKitchenIslandConstruction from "@/assets/gallery/gray-kitchen-island-construction.jpeg";
 import customKitchenCabinetsInstall from "@/assets/gallery/custom-kitchen-cabinets-install.jpg";
+import naturalWoodGalleyKitchen from "@/assets/gallery/natural-wood-galley-kitchen.jpeg";
+import naturalWoodOpenConceptKitchen from "@/assets/gallery/natural-wood-open-concept-kitchen.jpeg";
+import woodKitchenOutdoorAccess from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
+import modernBathroomWoodMarble from "@/assets/gallery/modern-bathroom-wood-marble.jpeg";
+import contemporaryPowderRoomWood from "@/assets/gallery/contemporary-powder-room-wood.jpeg";
+import marbleBathroomOutdoorAccess from "@/assets/gallery/marble-bathroom-outdoor-access.jpeg";
+import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
+import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
+import luxuryMarbleBathroomShower from "@/assets/gallery/luxury-marble-bathroom-shower.jpeg";
+import contemporaryBathroomMixedMarble from "@/assets/gallery/contemporary-bathroom-mixed-marble.jpeg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -97,6 +107,16 @@ const Gallery = () => {
     { src: kitchenIslandCabinetInstall, alt: "Kitchen island cabinet installation process" },
     { src: grayKitchenIslandConstruction, alt: "Gray kitchen island under construction" },
     { src: customKitchenCabinetsInstall, alt: "Custom kitchen cabinets professional installation" },
+    { src: naturalWoodGalleyKitchen, alt: "Natural wood galley kitchen with marble backsplash and white countertops" },
+    { src: naturalWoodOpenConceptKitchen, alt: "Natural wood open concept kitchen with dining area" },
+    { src: woodKitchenOutdoorAccess, alt: "Wood kitchen with marble countertops and outdoor patio access" },
+    { src: modernBathroomWoodMarble, alt: "Modern bathroom with floating wood cabinets and marble vanity" },
+    { src: contemporaryPowderRoomWood, alt: "Contemporary powder room with wood vanity and marble countertop" },
+    { src: marbleBathroomOutdoorAccess, alt: "Luxury marble bathroom with wood vanity and outdoor access" },
+    { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration" },
+    { src: modernKitchenIslandBarStools, alt: "Modern kitchen island with wood bar stools and marble waterfall edge" },
+    { src: luxuryMarbleBathroomShower, alt: "Luxury marble bathroom with wood vanity and walk-in glass shower" },
+    { src: contemporaryBathroomMixedMarble, alt: "Contemporary bathroom with wood floating vanity and mixed marble tiles" },
   ];
 
   return (
