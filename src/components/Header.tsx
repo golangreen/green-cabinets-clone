@@ -14,6 +14,10 @@ import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const scrollToGallery = (category: string) => {
     setIsMobileMenuOpen(false);
     setTimeout(() => {
@@ -44,12 +48,10 @@ const Header = () => {
       }} />
       <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
-              <img src={logo} alt="Green Cabinets Logo" className="h-16 md:h-20 w-auto" style={{
+          <div className="flex items-center gap-3 cursor-pointer" onClick={scrollToTop}>
+            <img src={logo} alt="Green Cabinets Logo" className="h-16 md:h-20 w-auto" style={{
               mixBlendMode: 'lighten'
             }} />
-            </a>
           </div>
           
           {/* Desktop Navigation */}
