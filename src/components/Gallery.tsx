@@ -8,6 +8,14 @@ import bedroomCloset from "@/assets/gallery/bedroom-closet.jpg";
 import grayCabinetsCorner from "@/assets/gallery/gray-cabinets-corner.jpg";
 import blackCabinet from "@/assets/gallery/black-cabinet.jpg";
 import laundryRoom from "@/assets/gallery/laundry-room.jpg";
+import radiatorCover from "@/assets/gallery/radiator-cover.jpg";
+import grayKitchenCorner from "@/assets/gallery/gray-kitchen-corner.jpg";
+import twoToneKitchenIsland from "@/assets/gallery/two-tone-kitchen-island.jpg";
+import twoToneKitchenWide from "@/assets/gallery/two-tone-kitchen-wide.jpg";
+import classicWhiteKitchen from "@/assets/gallery/classic-white-kitchen.jpg";
+import marbleCountertopKitchen from "@/assets/gallery/marble-countertop-kitchen.jpg";
+import brightKitchenIsland from "@/assets/gallery/bright-kitchen-island.jpg";
+import kitchenIslandSeating from "@/assets/gallery/kitchen-island-seating.jpg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -21,6 +29,14 @@ const Gallery = () => {
     { src: grayCabinetsCorner, alt: "Gray corner cabinet installation" },
     { src: blackCabinet, alt: "Modern black freestanding cabinet" },
     { src: laundryRoom, alt: "White laundry room cabinetry" },
+    { src: radiatorCover, alt: "Custom radiator cover with mesh panels" },
+    { src: grayKitchenCorner, alt: "Gray L-shaped kitchen installation" },
+    { src: twoToneKitchenIsland, alt: "Two-tone kitchen with marble island" },
+    { src: twoToneKitchenWide, alt: "Modern two-tone kitchen with wood accents" },
+    { src: classicWhiteKitchen, alt: "Classic white kitchen with gray island" },
+    { src: marbleCountertopKitchen, alt: "Kitchen with marble countertops and wood trim" },
+    { src: brightKitchenIsland, alt: "Bright open kitchen with large island" },
+    { src: kitchenIslandSeating, alt: "Kitchen island with built-in seating" },
   ];
 
   return (
