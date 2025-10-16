@@ -86,6 +86,12 @@ import whiteKitchenGrayIslandBarSeating from "@/assets/gallery/white-kitchen-gra
 import whiteKitchenIslandDiningNook from "@/assets/gallery/white-kitchen-island-dining-nook.jpg";
 import whiteKitchenIslandOpenShelving from "@/assets/gallery/white-kitchen-island-open-shelving.jpg";
 import customRadiatorCoverMeshPanels from "@/assets/gallery/custom-radiator-cover-mesh-panels.jpg";
+import grayWoodBedroomCloset from "@/assets/gallery/gray-wood-bedroom-closet.jpg";
+import grayWoodWardrobeConstruction from "@/assets/gallery/gray-wood-wardrobe-construction.jpg";
+import customClosetAngledCeiling from "@/assets/gallery/custom-closet-angled-ceiling.jpg";
+import lightGrayTallStorageCabinet from "@/assets/gallery/light-gray-tall-storage-cabinet.jpg";
+import whiteBathroomStorageDrawers from "@/assets/gallery/white-bathroom-storage-drawers.jpg";
+import darkWoodCornerWardrobe from "@/assets/gallery/dark-wood-corner-wardrobe.jpg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -177,6 +183,12 @@ const Gallery = () => {
     { src: whiteKitchenIslandDiningNook, alt: "White kitchen island with adjacent dining nook and built-in seating" },
     { src: whiteKitchenIslandOpenShelving, alt: "White kitchen island featuring open shelving and glass pendants" },
     { src: customRadiatorCoverMeshPanels, alt: "Custom radiator cover with decorative mesh panels and wood finish" },
+    { src: grayWoodBedroomCloset, alt: "Gray wood bedroom closet with integrated drawer storage" },
+    { src: grayWoodWardrobeConstruction, alt: "Gray wood wardrobe construction with open shelving design" },
+    { src: customClosetAngledCeiling, alt: "Custom closet installation with angled ceiling accommodation" },
+    { src: lightGrayTallStorageCabinet, alt: "Light gray tall storage cabinet with minimalist design" },
+    { src: whiteBathroomStorageDrawers, alt: "White bathroom storage cabinet with multiple drawers" },
+    { src: darkWoodCornerWardrobe, alt: "Dark wood corner wardrobe with floor-to-ceiling design" },
   ];
 
   return (
