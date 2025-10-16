@@ -23,7 +23,7 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-8">
             <DropdownMenu>
               <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 outline-none">
-                Services
+                Catalog
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-background border-border z-50">
