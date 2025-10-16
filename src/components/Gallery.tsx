@@ -36,6 +36,16 @@ import greenOpenConceptKitchen from "@/assets/gallery/green-open-concept-kitchen
 import naturalWoodKitchenMarble from "@/assets/gallery/natural-wood-kitchen-marble.jpeg";
 import modernBathroomMarbleVanity from "@/assets/gallery/modern-bathroom-marble-vanity.jpeg";
 import modernPowderRoomMarble from "@/assets/gallery/modern-powder-room-marble.jpeg";
+import modernKitchenIslandConstruction from "@/assets/gallery/modern-kitchen-island-construction.jpg";
+import whiteKitchenIslandCabinets from "@/assets/gallery/white-kitchen-island-cabinets.jpg";
+import kitchenIslandMarbleProgress from "@/assets/gallery/kitchen-island-marble-progress.jpg";
+import kitchenCabinetInstallationView from "@/assets/gallery/kitchen-cabinet-installation-view.jpg";
+import modernKitchenCabinetsGray from "@/assets/gallery/modern-kitchen-cabinets-gray.jpg";
+import kitchenConstructionCabinets from "@/assets/gallery/kitchen-construction-cabinets.jpeg";
+import whiteKitchenCabinetsProgress from "@/assets/gallery/white-kitchen-cabinets-progress.jpeg";
+import kitchenIslandCabinetInstall from "@/assets/gallery/kitchen-island-cabinet-install.jpeg";
+import grayKitchenIslandConstruction from "@/assets/gallery/gray-kitchen-island-construction.jpeg";
+import customKitchenCabinetsInstall from "@/assets/gallery/custom-kitchen-cabinets-install.jpg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -77,6 +87,16 @@ const Gallery = () => {
     { src: naturalWoodKitchenMarble, alt: "Natural wood kitchen with marble backsplash and countertops" },
     { src: modernBathroomMarbleVanity, alt: "Modern bathroom with floating marble vanity and walk-in shower" },
     { src: modernPowderRoomMarble, alt: "Modern powder room with marble countertop and storage" },
+    { src: modernKitchenIslandConstruction, alt: "Modern kitchen island construction and installation process" },
+    { src: whiteKitchenIslandCabinets, alt: "White kitchen island with custom cabinet installation" },
+    { src: kitchenIslandMarbleProgress, alt: "Kitchen island with marble countertop installation in progress" },
+    { src: kitchenCabinetInstallationView, alt: "Kitchen cabinet installation and assembly view" },
+    { src: modernKitchenCabinetsGray, alt: "Modern gray kitchen cabinets installation" },
+    { src: kitchenConstructionCabinets, alt: "Kitchen construction with cabinet assembly" },
+    { src: whiteKitchenCabinetsProgress, alt: "White kitchen cabinets installation progress" },
+    { src: kitchenIslandCabinetInstall, alt: "Kitchen island cabinet installation process" },
+    { src: grayKitchenIslandConstruction, alt: "Gray kitchen island under construction" },
+    { src: customKitchenCabinetsInstall, alt: "Custom kitchen cabinets professional installation" },
   ];
 
   return (
