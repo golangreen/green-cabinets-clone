@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.jpg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
 import modernBathroomWoodMarble from "@/assets/gallery/modern-bathroom-wood-marble.jpeg";
@@ -130,8 +131,20 @@ const Hero = () => {
       </div>
       
       {/* Content */}
-      <div className="container relative z-10 mx-auto px-6 py-32 text-center">
-        
+      <div className="container relative z-10 mx-auto px-6 py-32 text-center flex items-center justify-center">
+        <div 
+          className="inline-block rounded-2xl p-8 backdrop-blur-md bg-white/5 border border-white/10 shadow-lg"
+          style={{
+            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.15)'
+          }}
+        >
+          <img 
+            src={logo} 
+            alt="Company Logo" 
+            className="w-48 md:w-64 h-auto opacity-95"
+            loading="eager"
+          />
+        </div>
       </div>
     </section>
   );
