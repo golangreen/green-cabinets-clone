@@ -33,10 +33,11 @@ const Header = () => {
       {/* Wood texture background */}
       <div className="absolute inset-0" style={{
         backgroundImage: `url(${walnutTexture})`,
-        backgroundSize: 'cover',
+        backgroundSize: '100% auto',
         backgroundPosition: 'center',
-        opacity: 0.9,
-        transform: 'rotate(-5deg) scale(1.2)',
+        backgroundRepeat: 'no-repeat',
+        opacity: 1,
+        transform: 'rotate(3deg) scale(1.1)',
         transformOrigin: 'center',
         zIndex: 0
       }} />
