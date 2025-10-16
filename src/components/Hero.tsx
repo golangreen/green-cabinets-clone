@@ -3,8 +3,6 @@ import heroImage from "@/assets/hero-kitchen.jpg";
 import logo from "@/assets/logo.jpg";
 const Hero = () => {
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-[image:var(--gradient-hero)] opacity-90" />
       
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
