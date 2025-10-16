@@ -53,7 +53,7 @@ const Header = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8 font-display">
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-black hover:text-black/70 transition-colors flex items-center gap-1 outline-none text-lg">
+              <DropdownMenuTrigger className="text-black hover:text-black/70 transition-colors flex items-center gap-1 outline-none text-xl font-semibold">
                 Catalog
                 <ChevronDown className="h-5 w-5" />
               </DropdownMenuTrigger>
@@ -78,13 +78,13 @@ const Header = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <a href="#solutions" className="text-black hover:text-black/70 transition-colors text-lg">
+            <a href="#solutions" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
               Solutions
             </a>
-            <a href="#about" className="text-black hover:text-black/70 transition-colors text-lg">
+            <a href="#about" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
               About
             </a>
-            <a href="#contact" className="text-black hover:text-black/70 transition-colors text-lg">
+            <a href="#contact" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
               Contact
             </a>
           </div>
@@ -125,21 +125,21 @@ const Header = () => {
                   </div>
                   <a 
                     href="#solutions" 
-                    className="text-black hover:text-black/70 transition-colors px-2 text-lg"
+                    className="text-black hover:text-black/70 transition-colors px-2 text-xl font-semibold"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Solutions
                   </a>
                   <a 
                     href="#about" 
-                    className="text-black hover:text-black/70 transition-colors px-2 text-lg"
+                    className="text-black hover:text-black/70 transition-colors px-2 text-xl font-semibold"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     About
                   </a>
                   <a 
                     href="#contact" 
-                    className="text-black hover:text-black/70 transition-colors px-2 text-lg"
+                    className="text-black hover:text-black/70 transition-colors px-2 text-xl font-semibold"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Contact
