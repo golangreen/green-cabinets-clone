@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-kitchen.jpg";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo.jpg";
 const Hero = () => {
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Gradient Background */}
