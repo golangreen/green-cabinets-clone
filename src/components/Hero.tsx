@@ -18,12 +18,12 @@ const Hero = () => {
       </div>
       
       {/* Logo as Background Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden opacity-25">
         <img 
           src={logo} 
           alt=""
-          className="w-[60%] h-auto opacity-20"
-          style={{ mixBlendMode: 'screen' }}
+          className="w-[70%] max-w-4xl h-auto"
+          style={{ mixBlendMode: 'lighten' }}
         />
       </div>
       
