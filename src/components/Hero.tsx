@@ -13,7 +13,7 @@ const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-6 py-32 text-center">
         <div className="max-w-4xl mx-auto space-y-8">
-          <h1 className="text-6xl font-bold text-primary-foreground leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000 text-left md:text-2xl">
+          <h1 className="text-6xl font-bold text-primary-foreground leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000 md:text-2xl text-right">
             One solution
             <br />
             for all spaces
