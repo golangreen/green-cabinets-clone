@@ -34,38 +34,46 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 
 const Hero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [nextImageIndex, setNextImageIndex] = useState(1);
   const [shuffledImages] = useState(() => shuffleArray(heroImages));
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % shuffledImages.length);
-    }, 6000); // Change image every 6 seconds
+      setNextImageIndex((prev) => (prev + 1) % shuffledImages.length);
+    }, 7000); // Change image every 7 seconds
 
     return () => clearInterval(interval);
   }, [shuffledImages.length]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Images with Smooth Crossfade */}
+      {/* Background Images with Enhanced Crossfade */}
       <div className="absolute inset-0 bg-black">
-        {shuffledImages.map((image, index) => (
-          <div
-            key={index}
-            className="absolute inset-0 transition-opacity duration-[2000ms] ease-in-out"
-            style={{
-              opacity: index === currentImageIndex ? 1 : 0,
-              zIndex: index === currentImageIndex ? 1 : 0,
-            }}
-          >
-            <img 
-              src={image.src} 
-              alt={image.alt} 
-              className="w-full h-full object-cover" 
-              style={{ filter: 'brightness(1.15) contrast(1.05) saturate(1.05)' }}
-            />
-          </div>
-        ))}
-        <div className="absolute inset-0 bg-black/25" style={{ zIndex: 2 }} />
+        {shuffledImages.map((image, index) => {
+          const isCurrent = index === currentImageIndex;
+          const isNext = index === nextImageIndex;
+          
+          return (
+            <div
+              key={index}
+              className="absolute inset-0"
+              style={{
+                opacity: isCurrent || isNext ? 1 : 0,
+                transition: 'opacity 3000ms cubic-bezier(0.4, 0, 0.2, 1)',
+                zIndex: isCurrent ? 2 : isNext ? 1 : 0,
+              }}
+            >
+              <img 
+                src={image.src} 
+                alt={image.alt} 
+                className="w-full h-full object-cover" 
+                style={{ filter: 'brightness(1.15) contrast(1.05) saturate(1.05)' }}
+              />
+            </div>
+          );
+        })}
+        <div className="absolute inset-0 bg-black/25" style={{ zIndex: 3 }} />
       </div>
       
       {/* Content */}
