@@ -6,7 +6,7 @@ const Header = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
-              <img src={logo} alt="Green Cabinets Logo" className="h-20 w-auto rounded-2xl" style={{
+              <img src={logo} alt="Green Cabinets Logo" className="h-20 w-auto" style={{
               mixBlendMode: 'lighten'
             }} />
             </a>
