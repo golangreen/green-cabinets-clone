@@ -27,20 +27,38 @@ const Header = () => {
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-background border-border z-50">
-                <DropdownMenuItem asChild>
-                  <a href="#gallery?category=kitchens" className="cursor-pointer">
-                    Kitchens
-                  </a>
+                <DropdownMenuItem 
+                  onClick={() => {
+                    window.location.hash = 'gallery?category=kitchens';
+                    setTimeout(() => {
+                      document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="cursor-pointer"
+                >
+                  Kitchens
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <a href="#gallery?category=vanities" className="cursor-pointer">
-                    Vanities
-                  </a>
+                <DropdownMenuItem 
+                  onClick={() => {
+                    window.location.hash = 'gallery?category=vanities';
+                    setTimeout(() => {
+                      document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="cursor-pointer"
+                >
+                  Vanities
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <a href="#gallery?category=closets" className="cursor-pointer">
-                    Closets
-                  </a>
+                <DropdownMenuItem 
+                  onClick={() => {
+                    window.location.hash = 'gallery?category=closets';
+                    setTimeout(() => {
+                      document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="cursor-pointer"
+                >
+                  Closets
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
