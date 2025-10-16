@@ -93,7 +93,6 @@ import lightGrayTallStorageCabinet from "@/assets/gallery/light-gray-tall-storag
 import whiteBathroomStorageDrawers from "@/assets/gallery/white-bathroom-storage-drawers.jpg";
 import darkWoodCornerWardrobe from "@/assets/gallery/dark-wood-corner-wardrobe.jpg";
 import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
-import cabinetHardwareMeasuringDetail from "@/assets/gallery/cabinet-hardware-measuring-detail.jpeg";
 import woodCabinetConstructionProgress from "@/assets/gallery/wood-cabinet-construction-progress.jpeg";
 import woodKitchenConstructionOutdoorAccess from "@/assets/gallery/wood-kitchen-construction-outdoor-access.jpeg";
 import builtInRefrigeratorWoodPanels from "@/assets/gallery/built-in-refrigerator-wood-panels.jpeg";
@@ -226,7 +225,6 @@ const Gallery = () => {
     // === MIXED / SPECIAL FEATURES (Recent Additions) ===
     { src: customRadiatorCoverMeshPanels, alt: "Custom radiator cover with decorative mesh panels and wood finish" },
     { src: customClosetAngledCeiling, alt: "Custom closet installation with angled ceiling accommodation" },
-    { src: cabinetHardwareMeasuringDetail, alt: "Precision cabinet hardware installation and measuring detail" },
 
     // === CONSTRUCTION & INSTALLATION PROCESS (Original) ===
     { src: modernKitchenIslandConstruction, alt: "Modern kitchen island construction and installation process" },
