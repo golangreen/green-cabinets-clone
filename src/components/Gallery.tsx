@@ -96,10 +96,12 @@ const Gallery = () => {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
-      const params = new URLSearchParams(hash.split("?")[1]);
-      const category = params.get("category") as Category;
-      if (category && ["kitchens", "vanities", "closets"].includes(category)) {
-        setActiveCategory(category);
+      if (hash.includes('?category=')) {
+        const params = new URLSearchParams(hash.split("?")[1] || "");
+        const category = params.get("category") as Category;
+        if (category && ["kitchens", "vanities", "closets"].includes(category)) {
+          setActiveCategory(category);
+        }
       }
     };
 
@@ -242,12 +244,6 @@ const Gallery = () => {
         {/* Filter Buttons */}
         <div className="flex justify-center gap-4 mb-12 flex-wrap">
           <Button
-            variant={activeCategory === "all" ? "default" : "outline"}
-            onClick={() => setActiveCategory("all")}
-          >
-            All Projects
-          </Button>
-          <Button
             variant={activeCategory === "kitchens" ? "default" : "outline"}
             onClick={() => setActiveCategory("kitchens")}
           >
@@ -264,6 +260,12 @@ const Gallery = () => {
             onClick={() => setActiveCategory("closets")}
           >
             Closets ({closets.length})
+          </Button>
+          <Button
+            variant={activeCategory === "all" ? "default" : "outline"}
+            onClick={() => setActiveCategory("all")}
+          >
+            All Projects
           </Button>
         </div>
         
