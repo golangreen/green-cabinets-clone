@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-kitchen.jpg";
+import logo from "@/assets/logo.png";
 
 const Hero = () => {
   return (
@@ -13,6 +14,16 @@ const Hero = () => {
           src={heroImage} 
           alt="Premium Green Cabinets Kitchen"
           className="w-full h-full object-cover opacity-30"
+        />
+      </div>
+      
+      {/* Logo as Background Watermark */}
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+        <img 
+          src={logo} 
+          alt=""
+          className="w-[60%] h-auto opacity-20"
+          style={{ mixBlendMode: 'screen' }}
         />
       </div>
       
