@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo.jpg";
 
 const Footer = () => {
   return (
@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <img src={logo} alt="Green Cabinets Logo" className="h-10 w-auto" />
+              <img src={logo} alt="Green Cabinets Logo" className="h-10 w-auto" style={{ mixBlendMode: 'lighten' }} />
               <span className="text-xl font-bold text-foreground">Green Cabinets</span>
             </div>
             <p className="text-sm text-muted-foreground">
