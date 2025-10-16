@@ -9,6 +9,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronDown, Menu } from "lucide-react";
 import logo from "@/assets/logo.jpg";
+import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -21,10 +22,23 @@ const Header = () => {
     }, 100);
   };
 
-  return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border" style={{
-      background: 'linear-gradient(to right, #000000 0%, #000000 20%, #5d4a3a 60%, #6b543f 100%)'
+  return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{
+      position: 'relative'
     }}>
-      <nav className="container mx-auto px-4 md:px-6 py-3 md:py-4">
+      {/* Black to wood gradient overlay */}
+      <div className="absolute inset-0" style={{
+        background: `linear-gradient(to right, #000000 0%, #000000 15%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0) 70%)`,
+        zIndex: 1
+      }} />
+      {/* Wood texture background */}
+      <div className="absolute inset-0" style={{
+        backgroundImage: `url(${walnutTexture})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.9,
+        zIndex: 0
+      }} />
+      <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
