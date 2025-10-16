@@ -98,9 +98,10 @@ import woodBaseCabinetsApplianceInstallation from "@/assets/gallery/wood-base-ca
 import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
 
 const Gallery = () => {
-  // Gallery organized by color type and chronology
   const galleryImages = [
-    // === WHITE KITCHENS & CABINETS (Original) ===
+    // ==================== KITCHENS ====================
+    
+    // === WHITE KITCHENS ===
     { src: kitchenModernWhite, alt: "Modern white kitchen with pendant lighting" },
     { src: kitchenPendantLights, alt: "White kitchen with glass pendant lights" },
     { src: classicWhiteKitchen, alt: "Classic white kitchen with gray island" },
@@ -119,8 +120,6 @@ const Gallery = () => {
     { src: contemporaryWhiteKitchenBlueWall, alt: "Contemporary white kitchen with blue accent wall and modern design" },
     { src: minimalistCabinetDetail, alt: "Minimalist white cabinet detail showing clean lines and craftsmanship" },
     { src: whiteKitchenIslandDrawerOrganization, alt: "White kitchen island with organized Blum drawer system" },
-    
-    // === WHITE KITCHENS (Recent Additions) ===
     { src: whiteKitchenDrawerStorageOrganization, alt: "White kitchen with multi-level drawer storage organization" },
     { src: whiteCabinetLiftMechanismHardware, alt: "White cabinet with premium lift-up mechanism hardware" },
     { src: whiteKitchenConstructionDarkIsland, alt: "White kitchen construction with dark wood island in progress" },
@@ -128,10 +127,8 @@ const Gallery = () => {
     { src: whiteKitchenGrayIslandBarSeating, alt: "White kitchen with gray island and wood bar stool seating" },
     { src: whiteKitchenIslandDiningNook, alt: "White kitchen island with adjacent dining nook and built-in seating" },
     { src: whiteKitchenIslandOpenShelving, alt: "White kitchen island featuring open shelving and glass pendants" },
-    { src: whiteBathroomStorageDrawers, alt: "White bathroom storage cabinet with multiple drawers" },
 
-    // === GRAY KITCHENS & CABINETS (Original) ===
-    { src: bedroomCloset, alt: "Custom gray bedroom built-in closet" },
+    // === GRAY KITCHENS ===
     { src: grayCabinetsCorner, alt: "Gray corner cabinet installation" },
     { src: grayKitchenCorner, alt: "Gray L-shaped kitchen installation" },
     { src: modernGrayConstruction, alt: "Modern gray kitchen under construction" },
@@ -139,25 +136,17 @@ const Gallery = () => {
     { src: modernKitchenCabinetsGray, alt: "Modern gray kitchen cabinets installation" },
     { src: grayKitchenIslandConstruction, alt: "Gray kitchen island under construction" },
     { src: contemporaryWhiteGrayKitchen, alt: "Contemporary white and gray kitchen with wood island and waterfall edge" },
-    
-    // === GRAY CABINETS (Recent Additions) ===
-    { src: grayWoodBedroomCloset, alt: "Gray wood bedroom closet with integrated drawer storage" },
-    { src: grayWoodWardrobeConstruction, alt: "Gray wood wardrobe construction with open shelving design" },
-    { src: lightGrayTallStorageCabinet, alt: "Light gray tall storage cabinet with minimalist design" },
 
-    // === DARK WOOD & CHERRY (Original) ===
+    // === DARK WOOD & CHERRY KITCHENS ===
     { src: blackCabinet, alt: "Modern black freestanding cabinet" },
     { src: darkModernKitchen, alt: "Modern dark kitchen installation" },
     { src: darkKitchenMarbleConstruction, alt: "Dark kitchen with marble backsplash under construction" },
     { src: modernKitchenDarkIsland, alt: "Modern kitchen with dark island and pendant lighting" },
     { src: darkWoodCabinetConstruction, alt: "Dark wood cabinet installation in progress with white countertops" },
-    
-    // === DARK WOOD (Recent Additions) ===
     { src: darkCherryWoodKitchenInstallation, alt: "Dark cherry wood kitchen cabinets with granite countertops installation" },
     { src: darkCherryKitchenGraniteIsland, alt: "Dark cherry kitchen with granite island and bar seating" },
-    { src: darkWoodCornerWardrobe, alt: "Dark wood corner wardrobe with floor-to-ceiling design" },
 
-    // === NATURAL WOOD KITCHENS (Original) ===
+    // === NATURAL WOOD KITCHENS ===
     { src: contemporaryWoodCabinets, alt: "Contemporary wood cabinet installation" },
     { src: marbleWoodKitchenIsland, alt: "Marble waterfall island with wood cabinetry" },
     { src: modernWhiteWoodIsland, alt: "Modern white kitchen with wood island and pendant lights" },
@@ -166,31 +155,46 @@ const Gallery = () => {
     { src: naturalWoodGalleyKitchen, alt: "Natural wood galley kitchen with marble backsplash and white countertops" },
     { src: naturalWoodOpenConceptKitchen, alt: "Natural wood open concept kitchen with dining area" },
     { src: woodKitchenOutdoorAccess, alt: "Wood kitchen with marble countertops and outdoor patio access" },
-    { src: naturalWoodHallwayCabinets, alt: "Natural wood hallway with built-in storage cabinets and ceiling panels" },
-    { src: modernWorkspaceWoodDeskBrick, alt: "Modern workspace with natural wood desk and exposed brick wall" },
-    { src: modernStudioWoodCabinetry, alt: "Modern studio apartment with custom wood cabinetry and dining area" },
     { src: compactKitchenWoodIslandWhite, alt: "Compact kitchen with wood island and white countertops" },
     { src: naturalWoodKitchenWhiteCountertops, alt: "Natural wood kitchen with white countertops and glass pendant lights" },
     { src: modernOpenLivingWoodKitchen, alt: "Modern open concept living area with wood kitchen and pendant lighting" },
     { src: contemporaryLivingWoodKitchenIsland, alt: "Contemporary living room with open wood kitchen island and bar seating" },
     { src: modernKitchenIslandGlassPendants, alt: "Modern kitchen island with wood cabinets and glass globe pendant lights" },
-    
-    // === NATURAL WOOD (Recent Additions) ===
     { src: naturalWoodKitchenInstallationProgress, alt: "Natural wood kitchen installation showing full wall cabinetry progress" },
     { src: woodBaseCabinetsApplianceInstallation, alt: "Wood base cabinets with built-in oven and appliance installation" },
     { src: loftKitchenExposedBrickNaturalWood, alt: "Loft kitchen with natural wood cabinetry, exposed brick wall, and pendant lighting" },
 
-    // === TWO-TONE KITCHENS (Original) ===
+    // === TWO-TONE KITCHENS ===
     { src: twoToneKitchenIsland, alt: "Two-tone kitchen with marble island" },
     { src: twoToneKitchenWide, alt: "Modern two-tone kitchen with wood accents" },
     { src: twoToneWoodWhiteKitchenConstruction, alt: "Two-tone kitchen construction with wood island and white cabinets" },
     { src: kitchenConstructionTwoToneCabinets, alt: "Kitchen construction showing two-tone wood and white cabinet installation" },
 
-    // === GREEN KITCHENS (Original) ===
+    // === GREEN KITCHENS ===
     { src: greenKitchenMarbleIsland, alt: "Green cabinets with marble waterfall island and brass accents" },
     { src: greenOpenConceptKitchen, alt: "Green open concept kitchen with marble island" },
 
-    // === BATHROOMS (Original) ===
+    // === KITCHEN SPECIAL FEATURES ===
+    { src: kitchenFireplace, alt: "Contemporary kitchen with fireplace feature" },
+    { src: kitchenIslandView, alt: "Kitchen island with bar seating" },
+    { src: kitchenTraditional, alt: "Traditional style kitchen installation" },
+    { src: marbleCountertopKitchen, alt: "Kitchen with marble countertops and wood trim" },
+    { src: brightKitchenIsland, alt: "Bright open kitchen with large island" },
+    { src: kitchenIslandSeating, alt: "Kitchen island with built-in seating" },
+    { src: openConceptMarbleKitchen, alt: "Open concept kitchen with marble and wood accents" },
+    { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration" },
+    { src: modernKitchenIslandBarStools, alt: "Modern kitchen island with wood bar stools and marble waterfall edge" },
+    { src: blumDrawerHardwareCloseup, alt: "Close-up of premium Blum drawer hardware installation" },
+
+    // === KITCHEN CONSTRUCTION & INSTALLATION ===
+    { src: modernKitchenIslandConstruction, alt: "Modern kitchen island construction and installation process" },
+    { src: kitchenIslandMarbleProgress, alt: "Kitchen island with marble countertop installation in progress" },
+    { src: kitchenCabinetInstallationView, alt: "Kitchen cabinet installation and assembly view" },
+    { src: kitchenConstructionCabinets, alt: "Kitchen construction with cabinet assembly" },
+    { src: kitchenIslandCabinetInstall, alt: "Kitchen island cabinet installation process" },
+    { src: customKitchenCabinetsInstall, alt: "Custom kitchen cabinets professional installation" },
+
+    // ==================== VANITIES (BATHROOMS) ====================
     { src: bathroomMarble, alt: "Elegant marble bathroom with modern fixtures" },
     { src: modernBathroomMarbleVanity, alt: "Modern bathroom with floating marble vanity and walk-in shower" },
     { src: modernPowderRoomMarble, alt: "Modern powder room with marble countertop and storage" },
@@ -199,34 +203,23 @@ const Gallery = () => {
     { src: marbleBathroomOutdoorAccess, alt: "Luxury marble bathroom with wood vanity and outdoor access" },
     { src: luxuryMarbleBathroomShower, alt: "Luxury marble bathroom with wood vanity and walk-in glass shower" },
     { src: contemporaryBathroomMixedMarble, alt: "Contemporary bathroom with wood floating vanity and mixed marble tiles" },
-    
-    // === BATHROOMS (Recent Additions) ===
     { src: modernBathroomFloatingWoodVanity, alt: "Modern bathroom with floating wood vanity and marble walk-in shower" },
+    { src: whiteBathroomStorageDrawers, alt: "White bathroom storage cabinet with multiple drawers" },
 
-    // === MIXED / SPECIAL FEATURES (Original) ===
-    { src: kitchenFireplace, alt: "Contemporary kitchen with fireplace feature" },
-    { src: kitchenIslandView, alt: "Kitchen island with bar seating" },
-    { src: kitchenTraditional, alt: "Traditional style kitchen installation" },
-    { src: radiatorCover, alt: "Custom radiator cover with mesh panels" },
-    { src: marbleCountertopKitchen, alt: "Kitchen with marble countertops and wood trim" },
-    { src: brightKitchenIsland, alt: "Bright open kitchen with large island" },
-    { src: kitchenIslandSeating, alt: "Kitchen island with built-in seating" },
-    { src: openConceptMarbleKitchen, alt: "Open concept kitchen with marble and wood accents" },
-    { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration" },
-    { src: modernKitchenIslandBarStools, alt: "Modern kitchen island with wood bar stools and marble waterfall edge" },
-    { src: blumDrawerHardwareCloseup, alt: "Close-up of premium Blum drawer hardware installation" },
-    
-    // === MIXED / SPECIAL FEATURES (Recent Additions) ===
-    { src: customRadiatorCoverMeshPanels, alt: "Custom radiator cover with decorative mesh panels and wood finish" },
+    // ==================== CLOSETS & STORAGE ====================
+    { src: bedroomCloset, alt: "Custom gray bedroom built-in closet" },
+    { src: grayWoodBedroomCloset, alt: "Gray wood bedroom closet with integrated drawer storage" },
+    { src: grayWoodWardrobeConstruction, alt: "Gray wood wardrobe construction with open shelving design" },
+    { src: lightGrayTallStorageCabinet, alt: "Light gray tall storage cabinet with minimalist design" },
+    { src: darkWoodCornerWardrobe, alt: "Dark wood corner wardrobe with floor-to-ceiling design" },
     { src: customClosetAngledCeiling, alt: "Custom closet installation with angled ceiling accommodation" },
-
-    // === CONSTRUCTION & INSTALLATION PROCESS (Original) ===
-    { src: modernKitchenIslandConstruction, alt: "Modern kitchen island construction and installation process" },
-    { src: kitchenIslandMarbleProgress, alt: "Kitchen island with marble countertop installation in progress" },
-    { src: kitchenCabinetInstallationView, alt: "Kitchen cabinet installation and assembly view" },
-    { src: kitchenConstructionCabinets, alt: "Kitchen construction with cabinet assembly" },
-    { src: kitchenIslandCabinetInstall, alt: "Kitchen island cabinet installation process" },
-    { src: customKitchenCabinetsInstall, alt: "Custom kitchen cabinets professional installation" },
+    { src: naturalWoodHallwayCabinets, alt: "Natural wood hallway with built-in storage cabinets and ceiling panels" },
+    
+    // === OTHER STORAGE & SPECIALTY ===
+    { src: radiatorCover, alt: "Custom radiator cover with mesh panels" },
+    { src: customRadiatorCoverMeshPanels, alt: "Custom radiator cover with decorative mesh panels and wood finish" },
+    { src: modernWorkspaceWoodDeskBrick, alt: "Modern workspace with natural wood desk and exposed brick wall" },
+    { src: modernStudioWoodCabinetry, alt: "Modern studio apartment with custom wood cabinetry and dining area" },
   ];
 
   return (
