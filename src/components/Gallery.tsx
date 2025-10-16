@@ -108,9 +108,19 @@ const Gallery = () => {
       }
     };
 
+    // Check on mount
     handleHashChange();
+    
+    // Listen for hash changes
     window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
+    
+    // Also check when window gains focus (helps with iOS)
+    window.addEventListener("focus", handleHashChange);
+    
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+      window.removeEventListener("focus", handleHashChange);
+    };
   }, []);
 
   const galleryImages = [

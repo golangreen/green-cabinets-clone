@@ -15,13 +15,32 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const scrollToGallery = (category: string) => {
+    // For iOS Safari reliability, use href navigation
+    const newHash = `#gallery?category=${category}`;
+    
+    // Close menu first
     setIsMobileMenuOpen(false);
-    // First set the category in the URL
-    window.location.hash = `gallery?category=${category}`;
-    // Wait a bit longer for the hash change to be processed
+    
+    // Use setTimeout to ensure menu close completes
     setTimeout(() => {
-      document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
-    }, 200);
+      // Force navigation with replace to ensure iOS picks it up
+      window.location.href = newHash;
+      
+      // Then scroll
+      setTimeout(() => {
+        const gallery = document.getElementById('gallery');
+        if (gallery) {
+          const headerOffset = 80;
+          const elementPosition = gallery.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    }, 100);
   };
 
   return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{
