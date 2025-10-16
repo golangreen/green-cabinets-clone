@@ -53,9 +53,9 @@ const Header = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8 font-display">
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 outline-none">
+              <DropdownMenuTrigger className="text-black hover:text-black/70 transition-colors flex items-center gap-1 outline-none text-lg">
                 Catalog
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-5 w-5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-background border-border z-50">
                 <DropdownMenuItem 
@@ -78,13 +78,13 @@ const Header = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <a href="#solutions" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a href="#solutions" className="text-black hover:text-black/70 transition-colors text-lg">
               Solutions
             </a>
-            <a href="#about" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a href="#about" className="text-black hover:text-black/70 transition-colors text-lg">
               About
             </a>
-            <a href="#contact" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a href="#contact" className="text-black hover:text-black/70 transition-colors text-lg">
               Contact
             </a>
           </div>
@@ -125,25 +125,25 @@ const Header = () => {
                   </div>
                   <a 
                     href="#solutions" 
-                    className="text-muted-foreground hover:text-foreground transition-colors px-2"
+                    className="text-black hover:text-black/70 transition-colors px-2 text-lg"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Solutions
                   </a>
                   <a 
                     href="#about" 
-                    className="text-muted-foreground hover:text-foreground transition-colors px-2"
+                    className="text-black hover:text-black/70 transition-colors px-2 text-lg"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     About
                   </a>
                   <a 
                     href="#contact" 
-                    className="text-muted-foreground hover:text-foreground transition-colors px-2"
+                    className="text-black hover:text-black/70 transition-colors px-2 text-lg"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                  Contact
-                </a>
+                    Contact
+                  </a>
               </div>
               </SheetContent>
             </Sheet>
