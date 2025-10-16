@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.tiff";
 
 const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-xl">GC</span>
-            </div>
+          <div className="flex items-center gap-3">
+            <img src={logo} alt="Green Cabinets Logo" className="h-12 w-auto" />
             <span className="text-2xl font-bold text-foreground">Green Cabinets</span>
           </div>
           

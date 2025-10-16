@@ -1,13 +1,13 @@
+import logo from "@/assets/logo.tiff";
+
 const Footer = () => {
   return (
     <footer className="bg-card border-t border-border py-12">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xl">GC</span>
-              </div>
+            <div className="flex items-center gap-3">
+              <img src={logo} alt="Green Cabinets Logo" className="h-10 w-auto" />
               <span className="text-xl font-bold text-foreground">Green Cabinets</span>
             </div>
             <p className="text-sm text-muted-foreground">
