@@ -21,7 +21,9 @@ const Header = () => {
     }, 100);
   };
 
-  return <header className="fixed top-0 left-0 right-0 z-50 bg-[#000000] backdrop-blur-md border-b border-border">
+  return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border" style={{
+      background: 'linear-gradient(to right, #000000 0%, #000000 20%, #5d4a3a 60%, #6b543f 100%)'
+    }}>
       <nav className="container mx-auto px-4 md:px-6 py-3 md:py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
