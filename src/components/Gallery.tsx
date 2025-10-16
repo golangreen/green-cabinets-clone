@@ -92,6 +92,15 @@ import customClosetAngledCeiling from "@/assets/gallery/custom-closet-angled-cei
 import lightGrayTallStorageCabinet from "@/assets/gallery/light-gray-tall-storage-cabinet.jpg";
 import whiteBathroomStorageDrawers from "@/assets/gallery/white-bathroom-storage-drawers.jpg";
 import darkWoodCornerWardrobe from "@/assets/gallery/dark-wood-corner-wardrobe.jpg";
+import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
+import cabinetHardwareMeasuringDetail from "@/assets/gallery/cabinet-hardware-measuring-detail.jpeg";
+import woodCabinetConstructionProgress from "@/assets/gallery/wood-cabinet-construction-progress.jpeg";
+import woodKitchenConstructionOutdoorAccess from "@/assets/gallery/wood-kitchen-construction-outdoor-access.jpeg";
+import builtInRefrigeratorWoodPanels from "@/assets/gallery/built-in-refrigerator-wood-panels.jpeg";
+import naturalWoodKitchenInstallationProgress from "@/assets/gallery/natural-wood-kitchen-installation-progress.jpeg";
+import woodBaseCabinetsApplianceInstallation from "@/assets/gallery/wood-base-cabinets-appliance-installation.jpeg";
+import tallWoodCabinetPanelConstruction from "@/assets/gallery/tall-wood-cabinet-panel-construction.jpeg";
+import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -189,6 +198,15 @@ const Gallery = () => {
     { src: lightGrayTallStorageCabinet, alt: "Light gray tall storage cabinet with minimalist design" },
     { src: whiteBathroomStorageDrawers, alt: "White bathroom storage cabinet with multiple drawers" },
     { src: darkWoodCornerWardrobe, alt: "Dark wood corner wardrobe with floor-to-ceiling design" },
+    { src: modernBathroomFloatingWoodVanity, alt: "Modern bathroom with floating wood vanity and marble walk-in shower" },
+    { src: cabinetHardwareMeasuringDetail, alt: "Precision cabinet hardware installation and measuring detail" },
+    { src: woodCabinetConstructionProgress, alt: "Natural wood cabinet construction in progress with protective wrapping" },
+    { src: woodKitchenConstructionOutdoorAccess, alt: "Wood kitchen construction with outdoor patio access installation" },
+    { src: builtInRefrigeratorWoodPanels, alt: "Built-in refrigerator with integrated wood cabinet panels" },
+    { src: naturalWoodKitchenInstallationProgress, alt: "Natural wood kitchen installation showing full wall cabinetry progress" },
+    { src: woodBaseCabinetsApplianceInstallation, alt: "Wood base cabinets with built-in oven and appliance installation" },
+    { src: tallWoodCabinetPanelConstruction, alt: "Tall wood cabinet panel construction at installation site" },
+    { src: loftKitchenExposedBrickNaturalWood, alt: "Loft kitchen with natural wood cabinetry, exposed brick wall, and pendant lighting" },
   ];
 
   return (
