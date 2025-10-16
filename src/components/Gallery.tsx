@@ -76,6 +76,16 @@ import contemporaryWhiteKitchenBlueWall from "@/assets/gallery/contemporary-whit
 import blumDrawerHardwareCloseup from "@/assets/gallery/blum-drawer-hardware-closeup.jpg";
 import minimalistCabinetDetail from "@/assets/gallery/minimalist-cabinet-detail.jpg";
 import whiteKitchenIslandDrawerOrganization from "@/assets/gallery/white-kitchen-island-drawer-organization.jpg";
+import whiteKitchenDrawerStorageOrganization from "@/assets/gallery/white-kitchen-drawer-storage-organization.jpg";
+import whiteCabinetLiftMechanismHardware from "@/assets/gallery/white-cabinet-lift-mechanism-hardware.jpg";
+import darkCherryWoodKitchenInstallation from "@/assets/gallery/dark-cherry-wood-kitchen-installation.jpg";
+import darkCherryKitchenGraniteIsland from "@/assets/gallery/dark-cherry-kitchen-granite-island.jpg";
+import whiteKitchenConstructionDarkIsland from "@/assets/gallery/white-kitchen-construction-dark-island.jpg";
+import whiteKitchenDualIslandsPendants from "@/assets/gallery/white-kitchen-dual-islands-pendants.jpg";
+import whiteKitchenGrayIslandBarSeating from "@/assets/gallery/white-kitchen-gray-island-bar-seating.jpg";
+import whiteKitchenIslandDiningNook from "@/assets/gallery/white-kitchen-island-dining-nook.jpg";
+import whiteKitchenIslandOpenShelving from "@/assets/gallery/white-kitchen-island-open-shelving.jpg";
+import customRadiatorCoverMeshPanels from "@/assets/gallery/custom-radiator-cover-mesh-panels.jpg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -157,6 +167,16 @@ const Gallery = () => {
     { src: blumDrawerHardwareCloseup, alt: "Close-up of premium Blum drawer hardware installation" },
     { src: minimalistCabinetDetail, alt: "Minimalist white cabinet detail showing clean lines and craftsmanship" },
     { src: whiteKitchenIslandDrawerOrganization, alt: "White kitchen island with organized Blum drawer system" },
+    { src: whiteKitchenDrawerStorageOrganization, alt: "White kitchen with multi-level drawer storage organization" },
+    { src: whiteCabinetLiftMechanismHardware, alt: "White cabinet with premium lift-up mechanism hardware" },
+    { src: darkCherryWoodKitchenInstallation, alt: "Dark cherry wood kitchen cabinets with granite countertops installation" },
+    { src: darkCherryKitchenGraniteIsland, alt: "Dark cherry kitchen with granite island and bar seating" },
+    { src: whiteKitchenConstructionDarkIsland, alt: "White kitchen construction with dark wood island in progress" },
+    { src: whiteKitchenDualIslandsPendants, alt: "White kitchen with dual islands and glass globe pendant lights" },
+    { src: whiteKitchenGrayIslandBarSeating, alt: "White kitchen with gray island and wood bar stool seating" },
+    { src: whiteKitchenIslandDiningNook, alt: "White kitchen island with adjacent dining nook and built-in seating" },
+    { src: whiteKitchenIslandOpenShelving, alt: "White kitchen island featuring open shelving and glass pendants" },
+    { src: customRadiatorCoverMeshPanels, alt: "Custom radiator cover with decorative mesh panels and wood finish" },
   ];
 
   return (
