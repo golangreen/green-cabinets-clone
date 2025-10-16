@@ -135,8 +135,12 @@ const Hero = () => {
         <img 
           src={logo} 
           alt="Company Logo" 
-          className="w-full h-full object-cover"
+          className="pointer-events-none"
           style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
             filter: 'grayscale(100%) brightness(2.5) contrast(0.2)',
             opacity: 0.18,
             mixBlendMode: 'overlay'
