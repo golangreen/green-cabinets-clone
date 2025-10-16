@@ -44,39 +44,28 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, [shuffledImages.length]);
 
-  const getPrevIndex = (current: number) => {
-    return current === 0 ? shuffledImages.length - 1 : current - 1;
-  };
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Images with Smooth Slide and Fade */}
+      {/* Background Images with Smooth Crossfade */}
       <div className="absolute inset-0 bg-black">
-        {shuffledImages.map((image, index) => {
-          const isCurrent = index === currentImageIndex;
-          const isPrev = index === getPrevIndex(currentImageIndex);
-          
-          return (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-all duration-[1500ms] ease-in-out ${
-                isCurrent 
-                  ? 'opacity-100 translate-x-0 z-10' 
-                  : isPrev
-                  ? 'opacity-0 -translate-x-1/4 z-0'
-                  : 'opacity-0 translate-x-full z-0'
-              }`}
-            >
-              <img 
-                src={image.src} 
-                alt={image.alt} 
-                className="w-full h-full object-cover" 
-                style={{ filter: 'brightness(1.15) contrast(1.05) saturate(1.05)' }}
-              />
-            </div>
-          );
-        })}
-        <div className="absolute inset-0 bg-black/25 z-20" />
+        {shuffledImages.map((image, index) => (
+          <div
+            key={index}
+            className="absolute inset-0 transition-opacity duration-[2000ms] ease-in-out"
+            style={{
+              opacity: index === currentImageIndex ? 1 : 0,
+              zIndex: index === currentImageIndex ? 1 : 0,
+            }}
+          >
+            <img 
+              src={image.src} 
+              alt={image.alt} 
+              className="w-full h-full object-cover" 
+              style={{ filter: 'brightness(1.15) contrast(1.05) saturate(1.05)' }}
+            />
+          </div>
+        ))}
+        <div className="absolute inset-0 bg-black/25" style={{ zIndex: 2 }} />
       </div>
       
       {/* Content */}
