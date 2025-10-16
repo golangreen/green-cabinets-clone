@@ -36,6 +36,8 @@ const Header = () => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         opacity: 0.9,
+        transform: 'rotate(-5deg) scale(1.2)',
+        transformOrigin: 'center',
         zIndex: 0
       }} />
       <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }}>
