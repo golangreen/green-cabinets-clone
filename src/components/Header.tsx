@@ -90,11 +90,6 @@ const Header = () => {
           </div>
           
           <div className="flex items-center gap-4 font-display">
-            <Button variant="ghost" className="hidden md:inline-flex">
-              Sign In
-            </Button>
-            <Button className="hidden md:inline-flex">Get Started</Button>
-            
             {/* Mobile Menu */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild className="md:hidden">
@@ -147,13 +142,9 @@ const Header = () => {
                     className="text-muted-foreground hover:text-foreground transition-colors px-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Contact
-                  </a>
-                  <div className="flex flex-col gap-3 mt-4">
-                    <Button variant="ghost" onClick={() => setIsMobileMenuOpen(false)}>Sign In</Button>
-                    <Button onClick={() => setIsMobileMenuOpen(false)}>Get Started</Button>
-                  </div>
-                </div>
+                  Contact
+                </a>
+              </div>
               </SheetContent>
             </Sheet>
           </div>
