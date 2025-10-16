@@ -56,6 +56,16 @@ import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-di
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 import luxuryMarbleBathroomShower from "@/assets/gallery/luxury-marble-bathroom-shower.jpeg";
 import contemporaryBathroomMixedMarble from "@/assets/gallery/contemporary-bathroom-mixed-marble.jpeg";
+import naturalWoodHallwayCabinets from "@/assets/gallery/natural-wood-hallway-cabinets.jpeg";
+import modernWorkspaceWoodDeskBrick from "@/assets/gallery/modern-workspace-wood-desk-brick.jpeg";
+import modernStudioWoodCabinetry from "@/assets/gallery/modern-studio-wood-cabinetry.jpeg";
+import compactKitchenWoodIslandWhite from "@/assets/gallery/compact-kitchen-wood-island-white.jpeg";
+import naturalWoodKitchenWhiteCountertops from "@/assets/gallery/natural-wood-kitchen-white-countertops.jpeg";
+import modernOpenLivingWoodKitchen from "@/assets/gallery/modern-open-living-wood-kitchen.jpeg";
+import contemporaryLivingWoodKitchenIsland from "@/assets/gallery/contemporary-living-wood-kitchen-island.jpeg";
+import modernKitchenIslandGlassPendants from "@/assets/gallery/modern-kitchen-island-glass-pendants.jpeg";
+import contemporaryWhiteGrayKitchen from "@/assets/gallery/contemporary-white-gray-kitchen.jpeg";
+import brightModernWhiteKitchenOpen from "@/assets/gallery/bright-modern-white-kitchen-open.jpeg";
 
 const Gallery = () => {
   const galleryImages = [
@@ -117,6 +127,16 @@ const Gallery = () => {
     { src: modernKitchenIslandBarStools, alt: "Modern kitchen island with wood bar stools and marble waterfall edge" },
     { src: luxuryMarbleBathroomShower, alt: "Luxury marble bathroom with wood vanity and walk-in glass shower" },
     { src: contemporaryBathroomMixedMarble, alt: "Contemporary bathroom with wood floating vanity and mixed marble tiles" },
+    { src: naturalWoodHallwayCabinets, alt: "Natural wood hallway with built-in storage cabinets and ceiling panels" },
+    { src: modernWorkspaceWoodDeskBrick, alt: "Modern workspace with natural wood desk and exposed brick wall" },
+    { src: modernStudioWoodCabinetry, alt: "Modern studio apartment with custom wood cabinetry and dining area" },
+    { src: compactKitchenWoodIslandWhite, alt: "Compact kitchen with wood island and white countertops" },
+    { src: naturalWoodKitchenWhiteCountertops, alt: "Natural wood kitchen with white countertops and glass pendant lights" },
+    { src: modernOpenLivingWoodKitchen, alt: "Modern open concept living area with wood kitchen and pendant lighting" },
+    { src: contemporaryLivingWoodKitchenIsland, alt: "Contemporary living room with open wood kitchen island and bar seating" },
+    { src: modernKitchenIslandGlassPendants, alt: "Modern kitchen island with wood cabinets and glass globe pendant lights" },
+    { src: contemporaryWhiteGrayKitchen, alt: "Contemporary white and gray kitchen with wood island and waterfall edge" },
+    { src: brightModernWhiteKitchenOpen, alt: "Bright modern white kitchen with open concept dining and living area" },
   ];
 
   return (
