@@ -107,6 +107,10 @@ import modernGrayWhiteLShapedKitchen from "@/assets/gallery/modern-gray-white-l-
 import modernWhiteKitchenBlackIslandCopperPendants from "@/assets/gallery/modern-white-kitchen-black-island-copper-pendants.webp";
 import openConceptWhiteKitchenBlackIslandDining from "@/assets/gallery/open-concept-white-kitchen-black-island-dining.webp";
 import openConceptLivingBlackKitchenIslandCopperPendants from "@/assets/gallery/open-concept-living-black-kitchen-island-copper-pendants.webp";
+import minimalistWhiteKitchenWoodFloor from "@/assets/gallery/minimalist-white-kitchen-wood-floor.webp";
+import modernWhiteKitchenOpenLiving from "@/assets/gallery/modern-white-kitchen-open-living.webp";
+import contemporaryWhiteKitchenMarbleIsland from "@/assets/gallery/contemporary-white-kitchen-marble-island.webp";
+import brightWhiteKitchenIslandWindows from "@/assets/gallery/bright-white-kitchen-island-windows.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "all";
 
@@ -182,6 +186,10 @@ const Gallery = () => {
     { src: modernKitchenDiningWoodMarbleWindows, alt: "Modern kitchen and dining area with wood cabinetry, marble island, and floor-to-ceiling windows", category: "kitchens" },
     { src: modernWhiteKitchenIslandBarStools, alt: "Modern white kitchen with island, marble countertops, and bar stool seating", category: "kitchens" },
     { src: compactWhiteKitchenMarbleIsland, alt: "Compact white kitchen with marble island and colorful modern seating", category: "kitchens" },
+    { src: minimalistWhiteKitchenWoodFloor, alt: "Minimalist white kitchen with wood floors and bay windows", category: "kitchens" },
+    { src: modernWhiteKitchenOpenLiving, alt: "Modern white kitchen with open concept living and dining area", category: "kitchens" },
+    { src: contemporaryWhiteKitchenMarbleIsland, alt: "Contemporary white kitchen with marble waterfall island and glass table", category: "kitchens" },
+    { src: brightWhiteKitchenIslandWindows, alt: "Bright white kitchen with island and floor-to-ceiling windows", category: "kitchens" },
 
     // === GRAY KITCHENS ===
     { src: grayKitchenCorner, alt: "Gray L-shaped kitchen installation", category: "kitchens" },
