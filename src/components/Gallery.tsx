@@ -87,6 +87,12 @@ import whiteBathroomStorageDrawers from "@/assets/gallery/white-bathroom-storage
 import darkWoodCornerWardrobe from "@/assets/gallery/dark-wood-corner-wardrobe.jpg";
 import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
 import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
+import modernBathroomTubWoodVanity from "@/assets/gallery/modern-bathroom-tub-wood-vanity.webp";
+import contemporaryBathroomDoubleVanity from "@/assets/gallery/contemporary-bathroom-double-vanity.webp";
+import modernKitchenIslandOrangeStools from "@/assets/gallery/modern-kitchen-island-orange-stools.webp";
+import contemporaryKitchenGrayCountertop from "@/assets/gallery/contemporary-kitchen-gray-countertop.webp";
+import modernBathroomGlassShowerWood from "@/assets/gallery/modern-bathroom-glass-shower-wood.webp";
+import modernKitchenWoodCabinetsCloseup from "@/assets/gallery/modern-kitchen-wood-cabinets-closeup.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "all";
 
@@ -186,6 +192,9 @@ const Gallery = () => {
     { src: contemporaryLivingWoodKitchenIsland, alt: "Contemporary living room with open wood kitchen island and bar seating", category: "kitchens" },
     { src: modernKitchenIslandGlassPendants, alt: "Modern kitchen island with wood cabinets and glass globe pendant lights", category: "kitchens" },
     { src: loftKitchenExposedBrickNaturalWood, alt: "Loft kitchen with natural wood cabinetry, exposed brick wall, and pendant lighting", category: "kitchens" },
+    { src: modernKitchenIslandOrangeStools, alt: "Modern kitchen with wood island, gray marble countertop, and orange bar stools", category: "kitchens" },
+    { src: contemporaryKitchenGrayCountertop, alt: "Contemporary kitchen with natural wood cabinetry, gray waterfall island, and pendant lighting", category: "kitchens" },
+    { src: modernKitchenWoodCabinetsCloseup, alt: "Modern kitchen wood cabinets close-up with gray marble countertops", category: "kitchens" },
 
     // === TWO-TONE KITCHENS ===
     { src: twoToneKitchenIsland, alt: "Two-tone kitchen with marble island", category: "kitchens" },
@@ -226,6 +235,9 @@ const Gallery = () => {
     { src: contemporaryBathroomMixedMarble, alt: "Contemporary bathroom with wood floating vanity and mixed marble tiles", category: "vanities" },
     { src: modernBathroomFloatingWoodVanity, alt: "Modern bathroom with floating wood vanity and marble walk-in shower", category: "vanities" },
     { src: whiteBathroomStorageDrawers, alt: "White bathroom storage cabinet with multiple drawers", category: "vanities" },
+    { src: modernBathroomTubWoodVanity, alt: "Modern bathroom with tub, glass shower, and natural wood floating vanity", category: "vanities" },
+    { src: contemporaryBathroomDoubleVanity, alt: "Contemporary bathroom with double sink wood vanity and marble countertop", category: "vanities" },
+    { src: modernBathroomGlassShowerWood, alt: "Modern bathroom with wood vanity, glass walk-in shower, and marble tiles", category: "vanities" },
 
     // ==================== CLOSETS & STORAGE ====================
     { src: bedroomCloset, alt: "Custom gray bedroom built-in closet", category: "closets" },
