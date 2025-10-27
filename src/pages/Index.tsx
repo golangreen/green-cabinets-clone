@@ -6,6 +6,7 @@ import Gallery from "@/components/Gallery";
 import Contact from "@/components/Contact";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import Chatbot from "@/components/Chatbot";
 
 const Index = () => {
   return (
@@ -18,6 +19,7 @@ const Index = () => {
       <Contact />
       <CTA />
       <Footer />
+      <Chatbot />
     </div>
   );
 };
