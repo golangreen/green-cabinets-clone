@@ -93,6 +93,11 @@ import modernKitchenIslandOrangeStools from "@/assets/gallery/modern-kitchen-isl
 import contemporaryKitchenGrayCountertop from "@/assets/gallery/contemporary-kitchen-gray-countertop.webp";
 import modernBathroomGlassShowerWood from "@/assets/gallery/modern-bathroom-glass-shower-wood.webp";
 import modernKitchenWoodCabinetsCloseup from "@/assets/gallery/modern-kitchen-wood-cabinets-closeup.webp";
+import modernWhiteKitchenDiningOpenConcept from "@/assets/gallery/modern-white-kitchen-dining-open-concept.webp";
+import contemporaryWhiteKitchenWoodIslandBar from "@/assets/gallery/contemporary-white-kitchen-wood-island-bar.webp";
+import modernKitchenMarbleWaterfallWoodBase from "@/assets/gallery/modern-kitchen-marble-waterfall-wood-base.webp";
+import minimalistWhiteKitchenWoodLowerCabinets from "@/assets/gallery/minimalist-white-kitchen-wood-lower-cabinets.webp";
+import contemporaryWhiteKitchenWoodIslandSeating from "@/assets/gallery/contemporary-white-kitchen-wood-island-seating.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "all";
 
@@ -161,6 +166,10 @@ const Gallery = () => {
     { src: whiteKitchenGrayIslandBarSeating, alt: "White kitchen with gray island and wood bar stool seating", category: "kitchens" },
     { src: whiteKitchenIslandDiningNook, alt: "White kitchen island with adjacent dining nook and built-in seating", category: "kitchens" },
     { src: whiteKitchenIslandOpenShelving, alt: "White kitchen island featuring open shelving and glass pendants", category: "kitchens" },
+    { src: modernWhiteKitchenDiningOpenConcept, alt: "Modern white kitchen with wood island and open concept dining area", category: "kitchens" },
+    { src: contemporaryWhiteKitchenWoodIslandBar, alt: "Contemporary white kitchen with wood island and bar seating", category: "kitchens" },
+    { src: minimalistWhiteKitchenWoodLowerCabinets, alt: "Minimalist white kitchen with wood lower island cabinets and pendant lights", category: "kitchens" },
+    { src: contemporaryWhiteKitchenWoodIslandSeating, alt: "Contemporary white kitchen with natural wood island and bar stool seating", category: "kitchens" },
 
     // === GRAY KITCHENS ===
     { src: grayKitchenCorner, alt: "Gray L-shaped kitchen installation", category: "kitchens" },
@@ -195,6 +204,7 @@ const Gallery = () => {
     { src: modernKitchenIslandOrangeStools, alt: "Modern kitchen with wood island, gray marble countertop, and orange bar stools", category: "kitchens" },
     { src: contemporaryKitchenGrayCountertop, alt: "Contemporary kitchen with natural wood cabinetry, gray waterfall island, and pendant lighting", category: "kitchens" },
     { src: modernKitchenWoodCabinetsCloseup, alt: "Modern kitchen wood cabinets close-up with gray marble countertops", category: "kitchens" },
+    { src: modernKitchenMarbleWaterfallWoodBase, alt: "Modern kitchen with marble waterfall island and natural wood base", category: "kitchens" },
 
     // === TWO-TONE KITCHENS ===
     { src: twoToneKitchenIsland, alt: "Two-tone kitchen with marble island", category: "kitchens" },
