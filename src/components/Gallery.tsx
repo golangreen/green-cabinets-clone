@@ -99,6 +99,8 @@ import modernKitchenMarbleWaterfallWoodBase from "@/assets/gallery/modern-kitche
 import minimalistWhiteKitchenWoodLowerCabinets from "@/assets/gallery/minimalist-white-kitchen-wood-lower-cabinets.webp";
 import contemporaryWhiteKitchenWoodIslandSeating from "@/assets/gallery/contemporary-white-kitchen-wood-island-seating.webp";
 import modernKitchenDiningWoodMarbleWindows from "@/assets/gallery/modern-kitchen-dining-wood-marble-windows.webp";
+import modernWhiteKitchenIslandBarStools from "@/assets/gallery/modern-white-kitchen-island-bar-stools.webp";
+import compactWhiteKitchenMarbleIsland from "@/assets/gallery/compact-kitchen-wood-island-white.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "all";
 
@@ -172,6 +174,8 @@ const Gallery = () => {
     { src: minimalistWhiteKitchenWoodLowerCabinets, alt: "Minimalist white kitchen with wood lower island cabinets and pendant lights", category: "kitchens" },
     { src: contemporaryWhiteKitchenWoodIslandSeating, alt: "Contemporary white kitchen with natural wood island and bar stool seating", category: "kitchens" },
     { src: modernKitchenDiningWoodMarbleWindows, alt: "Modern kitchen and dining area with wood cabinetry, marble island, and floor-to-ceiling windows", category: "kitchens" },
+    { src: modernWhiteKitchenIslandBarStools, alt: "Modern white kitchen with island, marble countertops, and bar stool seating", category: "kitchens" },
+    { src: compactWhiteKitchenMarbleIsland, alt: "Compact white kitchen with marble island and colorful modern seating", category: "kitchens" },
 
     // === GRAY KITCHENS ===
     { src: grayKitchenCorner, alt: "Gray L-shaped kitchen installation", category: "kitchens" },
