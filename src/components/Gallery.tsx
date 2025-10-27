@@ -100,6 +100,9 @@ import contemporaryWhiteKitchenWoodIslandSeating from "@/assets/gallery/contempo
 import modernKitchenDiningWoodMarbleWindows from "@/assets/gallery/modern-kitchen-dining-wood-marble-windows.webp";
 import modernWhiteKitchenIslandBarStools from "@/assets/gallery/modern-white-kitchen-island-bar-stools.webp";
 import compactWhiteKitchenMarbleIsland from "@/assets/gallery/compact-kitchen-wood-island-white.webp";
+import lightWoodKitchenMarbleIslandBar from "@/assets/gallery/light-wood-kitchen-marble-island-bar.webp";
+import lightWoodKitchenDiningOpenConcept from "@/assets/gallery/light-wood-kitchen-dining-open-concept.webp";
+import modernWoodKitchenDarkBaseCabinets from "@/assets/gallery/modern-wood-kitchen-dark-base-cabinets.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "all";
 
@@ -209,6 +212,9 @@ const Gallery = () => {
     { src: contemporaryKitchenGrayCountertop, alt: "Contemporary kitchen with natural wood cabinetry, gray waterfall island, and pendant lighting", category: "kitchens" },
     { src: modernKitchenWoodCabinetsCloseup, alt: "Modern kitchen wood cabinets close-up with gray marble countertops", category: "kitchens" },
     { src: modernKitchenMarbleWaterfallWoodBase, alt: "Modern kitchen with marble waterfall island and natural wood base", category: "kitchens" },
+    { src: lightWoodKitchenMarbleIslandBar, alt: "Light wood kitchen with marble island and bar seating", category: "kitchens" },
+    { src: lightWoodKitchenDiningOpenConcept, alt: "Light wood open concept kitchen with dining area and pendant lights", category: "kitchens" },
+    { src: modernWoodKitchenDarkBaseCabinets, alt: "Modern wood kitchen with dark base cabinets and open concept living", category: "kitchens" },
 
     // === TWO-TONE KITCHENS ===
     { src: twoToneKitchenIsland, alt: "Two-tone kitchen with marble island", category: "kitchens" },
