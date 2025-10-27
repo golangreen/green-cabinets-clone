@@ -72,7 +72,6 @@ import minimalistCabinetDetail from "@/assets/gallery/minimalist-cabinet-detail.
 import whiteKitchenIslandDrawerOrganization from "@/assets/gallery/white-kitchen-island-drawer-organization.jpg";
 import whiteKitchenDrawerStorageOrganization from "@/assets/gallery/white-kitchen-drawer-storage-organization.jpg";
 import whiteCabinetLiftMechanismHardware from "@/assets/gallery/white-cabinet-lift-mechanism-hardware.jpg";
-import darkCherryKitchenGraniteIsland from "@/assets/gallery/dark-cherry-kitchen-granite-island.jpg";
 import whiteKitchenConstructionDarkIsland from "@/assets/gallery/white-kitchen-construction-dark-island.jpg";
 import whiteKitchenDualIslandsPendants from "@/assets/gallery/white-kitchen-dual-islands-pendants.jpg";
 import whiteKitchenGrayIslandBarSeating from "@/assets/gallery/white-kitchen-gray-island-bar-seating.jpg";
@@ -190,7 +189,6 @@ const Gallery = () => {
     { src: darkModernKitchen, alt: "Modern dark kitchen installation", category: "kitchens" },
     { src: darkKitchenMarbleConstruction, alt: "Dark kitchen with marble backsplash under construction", category: "kitchens" },
     { src: modernKitchenDarkIsland, alt: "Modern kitchen with dark island and pendant lighting", category: "kitchens" },
-    { src: darkCherryKitchenGraniteIsland, alt: "Dark cherry kitchen with granite island and bar seating", category: "kitchens" },
 
     // === NATURAL WOOD KITCHENS ===
     { src: contemporaryWoodCabinets, alt: "Contemporary wood cabinet installation", category: "kitchens" },
