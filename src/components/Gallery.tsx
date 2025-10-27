@@ -103,6 +103,9 @@ import compactWhiteKitchenMarbleIsland from "@/assets/gallery/compact-kitchen-wo
 import lightWoodKitchenMarbleIslandBar from "@/assets/gallery/light-wood-kitchen-marble-island-bar.webp";
 import lightWoodKitchenDiningOpenConcept from "@/assets/gallery/light-wood-kitchen-dining-open-concept.webp";
 import modernWoodKitchenDarkBaseCabinets from "@/assets/gallery/modern-wood-kitchen-dark-base-cabinets.webp";
+import modernGrayWhiteLShapedKitchen from "@/assets/gallery/modern-gray-white-l-shaped-kitchen.webp";
+import modernWhiteKitchenBlackIslandCopperPendants from "@/assets/gallery/modern-white-kitchen-black-island-copper-pendants.webp";
+import openConceptWhiteKitchenBlackIslandDining from "@/assets/gallery/open-concept-white-kitchen-black-island-dining.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "all";
 
@@ -186,6 +189,9 @@ const Gallery = () => {
     { src: modernKitchenCabinetsGray, alt: "Modern gray kitchen cabinets installation", category: "kitchens" },
     { src: grayKitchenIslandConstruction, alt: "Gray kitchen island under construction", category: "kitchens" },
     { src: contemporaryWhiteGrayKitchen, alt: "Contemporary white and gray kitchen with wood island and waterfall edge", category: "kitchens" },
+    { src: modernGrayWhiteLShapedKitchen, alt: "Modern gray and white L-shaped kitchen with stainless steel appliances", category: "kitchens" },
+    { src: modernWhiteKitchenBlackIslandCopperPendants, alt: "Modern white kitchen with black island and copper pendant lights", category: "kitchens" },
+    { src: openConceptWhiteKitchenBlackIslandDining, alt: "Open concept white kitchen with black island and dining area", category: "kitchens" },
 
     // === DARK WOOD & CHERRY KITCHENS ===
     { src: blackCabinet, alt: "Modern black freestanding cabinet", category: "kitchens" },
