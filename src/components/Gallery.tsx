@@ -106,6 +106,7 @@ import modernWoodKitchenDarkBaseCabinets from "@/assets/gallery/modern-wood-kitc
 import modernGrayWhiteLShapedKitchen from "@/assets/gallery/modern-gray-white-l-shaped-kitchen.webp";
 import modernWhiteKitchenBlackIslandCopperPendants from "@/assets/gallery/modern-white-kitchen-black-island-copper-pendants.webp";
 import openConceptWhiteKitchenBlackIslandDining from "@/assets/gallery/open-concept-white-kitchen-black-island-dining.webp";
+import openConceptLivingBlackKitchenIslandCopperPendants from "@/assets/gallery/open-concept-living-black-kitchen-island-copper-pendants.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "all";
 
@@ -192,6 +193,7 @@ const Gallery = () => {
     { src: modernGrayWhiteLShapedKitchen, alt: "Modern gray and white L-shaped kitchen with stainless steel appliances", category: "kitchens" },
     { src: modernWhiteKitchenBlackIslandCopperPendants, alt: "Modern white kitchen with black island and copper pendant lights", category: "kitchens" },
     { src: openConceptWhiteKitchenBlackIslandDining, alt: "Open concept white kitchen with black island and dining area", category: "kitchens" },
+    { src: openConceptLivingBlackKitchenIslandCopperPendants, alt: "Open concept living area with black kitchen island and copper pendant lights", category: "kitchens" },
 
     // === DARK WOOD & CHERRY KITCHENS ===
     { src: blackCabinet, alt: "Modern black freestanding cabinet", category: "kitchens" },
