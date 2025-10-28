@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X } from "lucide-react";
+import { X, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface CatalogSlideshowProps {
@@ -23,6 +23,7 @@ const slideDirections = [
 export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(slideDirections[0]);
+  const [isMuted, setIsMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -37,10 +38,12 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
       audioRef.current.volume = 0.15;
     }
 
-    audioRef.current.play().catch(() => {
-      // Auto-play might be blocked by browser
-      console.log("Audio autoplay blocked");
-    });
+    // Don't autoplay - wait for user interaction
+    if (!isMuted) {
+      audioRef.current.play().catch(() => {
+        console.log("Audio autoplay blocked");
+      });
+    }
 
     const interval = setInterval(() => {
       setDirection(slideDirections[Math.floor(Math.random() * slideDirections.length)]);
@@ -54,7 +57,19 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
         audioRef.current.currentTime = 0;
       }
     };
-  }, [isOpen, images.length]);
+  }, [isOpen, images.length, isMuted]);
+
+  const toggleMute = () => {
+    if (!audioRef.current) return;
+    
+    if (isMuted) {
+      audioRef.current.play().catch(console.error);
+      setIsMuted(false);
+    } else {
+      audioRef.current.pause();
+      setIsMuted(true);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -68,6 +83,15 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
           variant="secondary"
         >
           <X className="h-5 w-5" />
+        </Button>
+        
+        <Button
+          onClick={toggleMute}
+          className="absolute top-4 right-20 z-50 rounded-full"
+          size="icon"
+          variant="secondary"
+        >
+          {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
         </Button>
         
         <div className="relative w-full h-[80vh] overflow-hidden">
