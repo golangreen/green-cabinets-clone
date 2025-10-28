@@ -12,13 +12,76 @@ serve(async (req) => {
 
   try {
     const { messages } = await req.json();
+    
+    // Input validation to prevent abuse and injection attacks
+    if (!Array.isArray(messages)) {
+      console.error("Invalid request: messages is not an array");
+      return new Response(
+        JSON.stringify({ error: "Invalid messages format" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (messages.length === 0) {
+      console.error("Invalid request: empty messages array");
+      return new Response(
+        JSON.stringify({ error: "Messages array cannot be empty" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (messages.length > 50) {
+      console.error("Invalid request: too many messages", messages.length);
+      return new Response(
+        JSON.stringify({ error: "Too many messages in conversation. Maximum 50 allowed." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate each message
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      
+      if (!msg.content || typeof msg.content !== 'string') {
+        console.error(`Invalid message format at index ${i}:`, msg);
+        return new Response(
+          JSON.stringify({ error: "Invalid message format" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      
+      if (msg.content.length > 2000) {
+        console.error(`Message too long at index ${i}:`, msg.content.length, "characters");
+        return new Response(
+          JSON.stringify({ error: "Message too long. Maximum 2000 characters per message." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      if (!msg.role || (msg.role !== 'user' && msg.role !== 'assistant' && msg.role !== 'system')) {
+        console.error(`Invalid message role at index ${i}:`, msg.role);
+        return new Response(
+          JSON.stringify({ error: "Invalid message role" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    console.log("Processing chat request with", messages.length, "messages");
+    // Enhanced logging for monitoring
+    const clientIp = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
+    const totalChars = messages.reduce((sum, msg) => sum + msg.content.length, 0);
+    console.log("Processing chat request:", {
+      messageCount: messages.length,
+      totalCharacters: totalChars,
+      clientIp,
+      timestamp: new Date().toISOString()
+    });
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
