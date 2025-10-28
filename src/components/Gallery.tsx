@@ -33,7 +33,6 @@ import modernBathroomMarbleVanity from "@/assets/gallery/modern-bathroom-marble-
 import modernPowderRoomMarble from "@/assets/gallery/modern-powder-room-marble.jpeg";
 import modernKitchenIslandConstruction from "@/assets/gallery/modern-kitchen-island-construction.jpg";
 import whiteKitchenIslandCabinets from "@/assets/gallery/white-kitchen-island-cabinets.jpg";
-import modernKitchenCabinetsGray from "@/assets/gallery/modern-kitchen-cabinets-gray.jpg";
 import kitchenConstructionCabinets from "@/assets/gallery/kitchen-construction-cabinets.jpeg";
 import whiteKitchenCabinetsProgress from "@/assets/gallery/white-kitchen-cabinets-progress.jpeg";
 import kitchenIslandCabinetInstall from "@/assets/gallery/kitchen-island-cabinet-install.jpeg";
@@ -213,7 +212,6 @@ const Gallery = () => {
     { src: brightWhiteKitchenIslandWindows, alt: "Bright white kitchen with island and floor-to-ceiling windows", category: "kitchens" },
 
     // === GRAY KITCHENS ===
-    { src: modernKitchenCabinetsGray, alt: "Modern gray kitchen cabinets installation", category: "kitchens" },
     { src: grayKitchenIslandConstruction, alt: "Gray kitchen island under construction", category: "kitchens" },
     { src: contemporaryWhiteGrayKitchen, alt: "Contemporary white and gray kitchen with wood island and waterfall edge", category: "kitchens" },
     { src: modernGrayWhiteLShapedKitchen, alt: "Modern gray and white L-shaped kitchen with stainless steel appliances", category: "kitchens" },
