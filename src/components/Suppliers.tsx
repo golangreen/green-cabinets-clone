@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Image } from "lucide-react";
+import { CatalogSlideshow } from "./CatalogSlideshow";
 
 interface Supplier {
   id: string;
@@ -65,11 +66,29 @@ const suppliers: Supplier[] = [
       "Functional storage solutions",
       "Lighting and organizational systems"
     ]
+  },
+  {
+    id: "greencabinets",
+    name: "Green Cabinets",
+    description: "Premium custom cabinetry and design excellence",
+    website: "catalog",
+    details: "Green Cabinets specializes in creating stunning, custom-designed cabinetry solutions. Our portfolio showcases exceptional craftsmanship and innovative design approaches that transform spaces into beautiful, functional environments.",
+    products: [
+      "Custom kitchen designs",
+      "Luxury bathroom vanities",
+      "Walk-in closet systems",
+      "Contemporary and traditional styles"
+    ]
   }
 ];
 
+// Import all gallery images
+const galleryImages = import.meta.glob('../assets/gallery/*.{jpg,jpeg,png,webp}', { eager: true, as: 'url' });
+const allGalleryImages = Object.values(galleryImages);
+
 const Suppliers = () => {
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+  const [showCatalogSlideshow, setShowCatalogSlideshow] = useState(false);
 
   return (
     <section id="suppliers" className="py-20 bg-muted/30">
@@ -88,12 +107,22 @@ const Suppliers = () => {
             <Card
               key={supplier.id}
               className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105"
-              onClick={() => setSelectedSupplier(supplier)}
+              onClick={() => {
+                if (supplier.website === "catalog") {
+                  setShowCatalogSlideshow(true);
+                } else {
+                  setSelectedSupplier(supplier);
+                }
+              }}
             >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <h3 className="text-xl font-semibold">{supplier.name}</h3>
-                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                  {supplier.website === "catalog" ? (
+                    <Image className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                  )}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {supplier.description}
@@ -127,18 +156,26 @@ const Suppliers = () => {
                 </div>
               )}
 
-              <a
-                href={selectedSupplier?.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
-              >
-                Visit {selectedSupplier?.name} Website
-                <ExternalLink className="h-4 w-4" />
-              </a>
+              {selectedSupplier?.website !== "catalog" && (
+                <a
+                  href={selectedSupplier?.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-primary hover:underline"
+                >
+                  Visit {selectedSupplier?.name} Website
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              )}
             </div>
           </DialogContent>
         </Dialog>
+
+        <CatalogSlideshow 
+          isOpen={showCatalogSlideshow}
+          onClose={() => setShowCatalogSlideshow(false)}
+          images={allGalleryImages}
+        />
       </div>
     </section>
   );
