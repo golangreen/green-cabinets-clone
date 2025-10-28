@@ -32,10 +32,10 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     // Initialize audio element with nature sounds
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      // Using a reliable nature sounds URL from YouTube Audio Library alternative
-      audioRef.current.src = "https://assets.mixkit.co/active_storage/sfx/2462/2462-preview.mp3";
+      // Using calm forest ambiance with gentle birds
+      audioRef.current.src = "https://assets.mixkit.co/active_storage/sfx/2459/2459-preview.mp3";
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.4;
+      audioRef.current.volume = 0.35;
       audioRef.current.preload = "auto";
     }
 
