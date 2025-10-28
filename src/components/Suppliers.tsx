@@ -104,11 +104,11 @@ const Suppliers = () => {
         </div>
 
         <Dialog open={!!selectedSupplier} onOpenChange={() => setSelectedSupplier(null)}>
-          <DialogContent className="max-w-6xl max-h-[90vh]">
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle className="text-2xl">{selectedSupplier?.name}</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4">
+            <div className="space-y-6">
               <p className="text-muted-foreground">
                 {selectedSupplier?.details}
               </p>
@@ -116,7 +116,7 @@ const Suppliers = () => {
               {selectedSupplier?.products && (
                 <div>
                   <h4 className="font-semibold mb-3">Featured Products:</h4>
-                  <ul className="grid grid-cols-2 gap-2">
+                  <ul className="space-y-2">
                     {selectedSupplier.products.map((product, index) => (
                       <li key={index} className="flex items-center gap-2">
                         <span className="h-1.5 w-1.5 rounded-full bg-primary" />
@@ -127,27 +127,15 @@ const Suppliers = () => {
                 </div>
               )}
 
-              {selectedSupplier?.website && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-semibold">Website Preview:</h4>
-                    <a
-                      href={selectedSupplier.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
-                    >
-                      Open in new tab
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  </div>
-                  <iframe
-                    src={selectedSupplier.website}
-                    className="w-full h-[500px] border rounded-lg"
-                    title={`${selectedSupplier.name} website`}
-                  />
-                </div>
-              )}
+              <a
+                href={selectedSupplier?.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-primary hover:underline"
+              >
+                Visit {selectedSupplier?.name} Website
+                <ExternalLink className="h-4 w-4" />
+              </a>
             </div>
           </DialogContent>
         </Dialog>
