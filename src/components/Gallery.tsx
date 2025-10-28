@@ -34,7 +34,6 @@ import kitchenConstructionCabinets from "@/assets/gallery/kitchen-construction-c
 import whiteKitchenCabinetsProgress from "@/assets/gallery/white-kitchen-cabinets-progress.jpeg";
 import kitchenIslandCabinetInstall from "@/assets/gallery/kitchen-island-cabinet-install.jpeg";
 import grayKitchenIslandConstruction from "@/assets/gallery/gray-kitchen-island-construction.jpeg";
-import customKitchenCabinetsInstall from "@/assets/gallery/custom-kitchen-cabinets-install.jpg";
 import naturalWoodGalleyKitchen from "@/assets/gallery/natural-wood-galley-kitchen.jpeg";
 import naturalWoodOpenConceptKitchen from "@/assets/gallery/natural-wood-open-concept-kitchen.jpeg";
 import woodKitchenOutdoorAccess from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
@@ -267,7 +266,6 @@ const Gallery = () => {
     { src: modernKitchenIslandConstruction, alt: "Modern kitchen island construction and installation process", category: "kitchens" },
     { src: kitchenConstructionCabinets, alt: "Kitchen construction with cabinet assembly", category: "kitchens" },
     { src: kitchenIslandCabinetInstall, alt: "Kitchen island cabinet installation process", category: "kitchens" },
-    { src: customKitchenCabinetsInstall, alt: "Custom kitchen cabinets professional installation", category: "kitchens" },
 
     // ==================== VANITIES (BATHROOMS) ====================
     { src: bathroomMarble, alt: "Elegant marble bathroom with modern fixtures", category: "vanities" },
