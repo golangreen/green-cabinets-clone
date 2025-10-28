@@ -32,10 +32,11 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     // Initialize audio with calm nature music
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      // Calm peaceful ambient nature music
-      audioRef.current.src = "https://cdn.pixabay.com/audio/2023/10/03/audio_d50334e3be.mp3";
+      audioRef.current.crossOrigin = "anonymous";
+      // Using reliable SoundHelix calm music
+      audioRef.current.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3";
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.25;
+      audioRef.current.volume = 0.2;
       audioRef.current.preload = "auto";
     }
 
