@@ -27,6 +27,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const noiseSourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const oscillatorsRef = useRef<OscillatorNode[]>([]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -46,6 +47,15 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
         }
         noiseSourceRef.current = null;
       }
+      oscillatorsRef.current.forEach(osc => {
+        try {
+          osc.stop();
+        } catch (e) {
+          // Already stopped
+        }
+      });
+      oscillatorsRef.current = [];
+      
       if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
         audioContextRef.current.close();
         audioContextRef.current = null;
@@ -56,7 +66,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   const toggleMute = () => {
     if (isMuted) {
       try {
-        // Create a genuinely calm, peaceful ambient sound - NO ROOSTERS!
+        // Create calm ambient music with gentle harmonies
         if (!audioContextRef.current) {
           audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
         }
@@ -67,11 +77,10 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
           audioContext.resume();
         }
         
-        // Create very soft pink noise (sounds like gentle breeze/distant water)
+        // Create very soft pink noise background
         const bufferSize = audioContext.sampleRate * 5;
         const buffer = audioContext.createBuffer(2, bufferSize, audioContext.sampleRate);
         
-        // Generate pink noise for both channels
         for (let channel = 0; channel < 2; channel++) {
           const data = buffer.getChannelData(channel);
           let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
@@ -84,7 +93,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
             b3 = 0.86650 * b3 + white * 0.3104856;
             b4 = 0.55000 * b4 + white * 0.5329522;
             b5 = -0.7616 * b5 - white * 0.0168980;
-            data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.02; // Very gentle
+            data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.015;
             b6 = white * 0.115926;
           }
         }
@@ -93,35 +102,54 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
         source.buffer = buffer;
         source.loop = true;
         
-        // Very low volume
-        const gainNode = audioContext.createGain();
-        gainNode.gain.value = 0.12;
+        const noiseGain = audioContext.createGain();
+        noiseGain.gain.value = 0.08;
         
-        // Strong low-pass filter for ultra-smooth sound
         const filter = audioContext.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.value = 400; // Very smooth, no harsh sounds
-        filter.Q.value = 0.3;
+        filter.frequency.value = 400;
         
-        // Add gentle slow modulation for natural variation
-        const lfo = audioContext.createOscillator();
-        lfo.frequency.value = 0.1; // Very slow
-        const lfoGain = audioContext.createGain();
-        lfoGain.gain.value = 30; // Subtle
-        lfo.connect(lfoGain);
-        lfoGain.connect(filter.frequency);
-        
-        // Connect everything
         source.connect(filter);
-        filter.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
+        filter.connect(noiseGain);
+        noiseGain.connect(audioContext.destination);
         source.start(0);
-        lfo.start(0);
         noiseSourceRef.current = source;
         
+        // Add peaceful ambient music tones (C major pentatonic: C, D, E, G, A)
+        const notes = [261.63, 293.66, 329.63, 392.00, 440.00]; // C4, D4, E4, G4, A4
+        const harmonyNotes = [130.81, 164.81, 196.00]; // C3, E3, G3 (lower harmony)
+        
+        // Create main ambient pad
+        [...notes, ...harmonyNotes].forEach((freq, index) => {
+          const osc = audioContext.createOscillator();
+          const gain = audioContext.createGain();
+          
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          
+          // Fade in slowly
+          gain.gain.setValueAtTime(0, audioContext.currentTime);
+          gain.gain.linearRampToValueAtTime(0.02, audioContext.currentTime + 2);
+          
+          // Add subtle vibrato
+          const vibrato = audioContext.createOscillator();
+          const vibratoGain = audioContext.createGain();
+          vibrato.frequency.value = 0.5 + (index * 0.1); // Slow vibrato
+          vibratoGain.gain.value = 0.5;
+          vibrato.connect(vibratoGain);
+          vibratoGain.connect(osc.frequency);
+          
+          osc.connect(gain);
+          gain.connect(audioContext.destination);
+          
+          osc.start(0);
+          vibrato.start(0);
+          
+          oscillatorsRef.current.push(osc);
+        });
+        
         setIsMuted(false);
-        console.log("✅ Calm ambient sound playing (no roosters!)");
+        console.log("✅ Ambient music playing");
       } catch (error) {
         console.error("❌ Error creating audio:", error);
         alert(`Could not create audio: ${error}`);
@@ -135,6 +163,15 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
         }
         noiseSourceRef.current = null;
       }
+      oscillatorsRef.current.forEach(osc => {
+        try {
+          osc.stop();
+        } catch (e) {
+          // Already stopped
+        }
+      });
+      oscillatorsRef.current = [];
+      
       if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
         audioContextRef.current.close();
         audioContextRef.current = null;
