@@ -18,7 +18,7 @@ const suppliers: Supplier[] = [
     id: "blum",
     name: "Blum",
     description: "Premium cabinet hardware and lifting systems",
-    website: "https://www.blum.com",
+    website: "https://d2.blum.com/services/BEC003/concealedhinges_ep_dok_bus_$sen-us_$aof_$v17.pdf",
     details: "Blum is a leading manufacturer of furniture fittings. We use their innovative hinge systems, drawer runners, and lift systems to ensure your cabinets operate smoothly and reliably for years to come.",
     products: [
       "AVENTOS lift systems",
