@@ -71,7 +71,7 @@ const Contact = () => {
         {/* Contact Info */}
         <div className="text-center mt-12">
           <p className="text-lg text-foreground font-semibold">
-            Contact us:
+            Contact Us:
           </p>
         </div>
 
