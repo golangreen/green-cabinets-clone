@@ -65,19 +65,6 @@ const suppliers: Supplier[] = [
       "Functional storage solutions",
       "Lighting and organizational systems"
     ]
-  },
-  {
-    id: "nykb",
-    name: "NYKB",
-    description: "Premium kitchen and bath cabinetry solutions",
-    website: "https://www.nykb.com/",
-    details: "NYKB (New York Kitchen & Bath) specializes in high-quality custom cabinetry and design solutions. We work with them to provide exceptional kitchen and bathroom cabinetry that combines innovative design with superior craftsmanship.",
-    products: [
-      "Custom kitchen cabinetry",
-      "Bathroom vanities and storage",
-      "Modern design solutions",
-      "Premium finishes and materials"
-    ]
   }
 ];
 
