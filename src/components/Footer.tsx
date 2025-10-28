@@ -1,4 +1,5 @@
 import logo from "@/assets/logo.jpg";
+import { Instagram } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -13,6 +14,17 @@ const Footer = () => {
             <p className="text-sm text-muted-foreground">
               Premium custom cabinetry for modern living.
             </p>
+            <div className="flex gap-4">
+              <a 
+                href="https://instagram.com/YOUR_HANDLE" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Follow us on Instagram"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+            </div>
           </div>
           
           <div>
