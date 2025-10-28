@@ -11,7 +11,7 @@ const CTA = () => {
     if (contactMethod === "email") {
       window.location.href = 'mailto:greencabinets@gmail.com';
     } else {
-      window.location.href = 'sms:+16465493955';
+      window.location.href = 'sms:+17184545480';
     }
   };
 

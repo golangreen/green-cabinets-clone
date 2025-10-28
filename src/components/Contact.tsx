@@ -12,7 +12,7 @@ const Contact = () => {
     if (contactMethod === "email") {
       window.location.href = 'mailto:greencabinets@gmail.com';
     } else {
-      window.location.href = 'sms:+16465493955';
+      window.location.href = 'sms:+17184545480';
     }
   };
 
@@ -48,10 +48,10 @@ const Contact = () => {
             </div>
             <h3 className="font-display text-xl font-bold text-foreground mb-3">Call Us</h3>
             <a 
-              href="tel:+16465493955"
+              href="tel:+17184545480"
               className="text-muted-foreground hover:text-primary transition-colors"
             >
-              646-549-3955
+              718-454-5480
             </a>
           </div>
 
@@ -71,7 +71,7 @@ const Contact = () => {
         {/* Owner Info */}
         <div className="text-center mt-12">
           <p className="text-lg text-muted-foreground">
-            Contact: <span className="text-foreground font-semibold">Golan Achdary</span>
+            Contact: <span className="text-foreground font-semibold">Designer</span>
           </p>
         </div>
 
