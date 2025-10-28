@@ -25,42 +25,12 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   const [direction, setDirection] = useState(slideDirections[0]);
   const [isMuted, setIsMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const oscillatorRef = useRef<OscillatorNode | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
-
-    // Initialize nature ambiance audio
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-      // Using reliable public domain nature sound
-      audioRef.current.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.15;
-      audioRef.current.preload = "auto";
-      
-      audioRef.current.addEventListener('canplaythrough', () => {
-        console.log("✅ Audio loaded and ready to play");
-      });
-      
-      audioRef.current.addEventListener('playing', () => {
-        console.log("✅ Audio is now playing");
-      });
-      
-      audioRef.current.addEventListener('loadeddata', () => {
-        console.log("✅ Audio data loaded");
-      });
-      
-      audioRef.current.addEventListener('error', (e) => {
-        console.error("❌ Audio error:", audioRef.current?.error);
-      });
-    }
-
-    // Don't autoplay - wait for user interaction
-    if (!isMuted) {
-      audioRef.current.play().catch((error) => {
-        console.log("Audio play error:", error);
-      });
-    }
 
     const interval = setInterval(() => {
       setDirection(slideDirections[Math.floor(Math.random() * slideDirections.length)]);
@@ -69,29 +39,83 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
 
     return () => {
       clearInterval(interval);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+      // Clean up audio context when closing
+      if (oscillatorRef.current) {
+        oscillatorRef.current.stop();
+        oscillatorRef.current = null;
+      }
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
       }
     };
-  }, [isOpen, images.length, isMuted]);
+  }, [isOpen, images.length]);
 
   const toggleMute = () => {
-    if (!audioRef.current) return;
-    
     if (isMuted) {
-      // Simply play the audio - don't reload
-      audioRef.current.play()
-        .then(() => {
-          console.log("✅ Audio playing successfully at volume:", audioRef.current?.volume);
-          setIsMuted(false);
-        })
-        .catch((error) => {
-          console.error("❌ Error playing audio:", error);
-          alert(`Could not play audio: ${error.message}`);
-        });
+      try {
+        // Create audio context and generate calming ambient sound
+        if (!audioContextRef.current) {
+          audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        }
+        
+        const audioContext = audioContextRef.current;
+        
+        // Resume context if suspended
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        
+        // Create a gentle, nature-like ambient sound using white noise
+        const bufferSize = audioContext.sampleRate * 2;
+        const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+        const data = buffer.getChannelData(0);
+        
+        // Generate filtered white noise (sounds like gentle wind/water)
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * 0.1; // Gentle white noise
+        }
+        
+        // Create and configure source
+        const source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        source.loop = true;
+        
+        // Create gain node for volume control
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.15;
+        gainNodeRef.current = gainNode;
+        
+        // Create a low-pass filter for softer, nature-like sound
+        const filter = audioContext.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 800; // Makes it sound more like gentle water/wind
+        
+        // Connect nodes
+        source.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        // Start playing
+        source.start(0);
+        oscillatorRef.current = source as any;
+        
+        setIsMuted(false);
+        console.log("✅ Audio playing successfully");
+      } catch (error) {
+        console.error("❌ Error creating audio:", error);
+        alert(`Could not create audio: ${error}`);
+      }
     } else {
-      audioRef.current.pause();
+      // Stop audio
+      if (oscillatorRef.current) {
+        try {
+          oscillatorRef.current.stop();
+          oscillatorRef.current = null;
+        } catch (e) {
+          console.error("Error stopping audio:", e);
+        }
+      }
       setIsMuted(true);
     }
   };
