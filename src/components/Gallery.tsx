@@ -129,6 +129,7 @@ interface GalleryImage {
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState<Category>("all");
+  const [showAllImages, setShowAllImages] = useState(false);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -317,6 +318,9 @@ const Gallery = () => {
     ? galleryImages 
     : galleryImages.filter(img => img.category === activeCategory);
 
+  // Limit to 3 images unless "Show All" is clicked
+  const displayedImages = showAllImages ? filteredImages : filteredImages.slice(0, 3);
+
   const kitchens = galleryImages.filter(img => img.category === "kitchens");
   const vanities = galleryImages.filter(img => img.category === "vanities");
   const closets = galleryImages.filter(img => img.category === "closets");
@@ -335,32 +339,44 @@ const Gallery = () => {
         <div className="flex justify-center gap-4 mb-12 flex-wrap">
           <Button
             variant={activeCategory === "kitchens" ? "default" : "outline"}
-            onClick={() => setActiveCategory("kitchens")}
+            onClick={() => {
+              setActiveCategory("kitchens");
+              setShowAllImages(false);
+            }}
           >
             Kitchens ({kitchens.length})
           </Button>
           <Button
             variant={activeCategory === "vanities" ? "default" : "outline"}
-            onClick={() => setActiveCategory("vanities")}
+            onClick={() => {
+              setActiveCategory("vanities");
+              setShowAllImages(false);
+            }}
           >
             Vanities ({vanities.length})
           </Button>
           <Button
             variant={activeCategory === "closets" ? "default" : "outline"}
-            onClick={() => setActiveCategory("closets")}
+            onClick={() => {
+              setActiveCategory("closets");
+              setShowAllImages(false);
+            }}
           >
             Closets ({closets.length})
           </Button>
           <Button
             variant={activeCategory === "all" ? "default" : "outline"}
-            onClick={() => setActiveCategory("all")}
+            onClick={() => {
+              setActiveCategory("all");
+              setShowAllImages(false);
+            }}
           >
             All Projects
           </Button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredImages.map((image, index) => (
+          {displayedImages.map((image, index) => (
             <div 
               key={index}
               className="group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 bg-card"
@@ -407,6 +423,20 @@ const Gallery = () => {
             </div>
           ))}
         </div>
+
+        {/* Show All / Show Less Button */}
+        {filteredImages.length > 3 && (
+          <div className="flex justify-center mt-12">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setShowAllImages(!showAllImages)}
+              className="min-w-[200px]"
+            >
+              {showAllImages ? `Show Less` : `View All ${filteredImages.length} Images`}
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
