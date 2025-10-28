@@ -32,14 +32,24 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     // Initialize nature ambiance audio
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      // Using calm and joyful nature sounds - forest ambiance
-      audioRef.current.src = "https://assets.mixkit.co/active_storage/sfx/2456/2456-preview.mp3";
+      audioRef.current.crossOrigin = "anonymous";
+      // Using calm forest birds sounds
+      audioRef.current.src = "https://cdn.freesound.org/previews/515/515851_5674468-lq.mp3";
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.2;
+      audioRef.current.volume = 0.3;
       audioRef.current.preload = "auto";
+      
+      audioRef.current.addEventListener('canplaythrough', () => {
+        console.log("Audio loaded successfully");
+      });
       
       audioRef.current.addEventListener('error', (e) => {
         console.error("Audio loading error:", e);
+        // Fallback to alternative source
+        if (audioRef.current) {
+          audioRef.current.src = "https://freesound.org/data/previews/563/563619_3997781-lq.mp3";
+          audioRef.current.load();
+        }
       });
     }
 
@@ -68,19 +78,28 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     if (!audioRef.current) return;
     
     if (isMuted) {
-      // Try to load and play
+      // Reload audio element to ensure fresh start
       audioRef.current.load();
-      audioRef.current.play()
-        .then(() => {
-          console.log("Audio playing successfully");
-          setIsMuted(false);
-        })
-        .catch((error) => {
-          console.error("Error playing audio:", error);
-          alert("Unable to play audio. Please check your browser settings.");
-        });
+      
+      // Wait a moment for load, then play
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.play()
+            .then(() => {
+              console.log("Audio playing successfully at volume:", audioRef.current?.volume);
+              setIsMuted(false);
+            })
+            .catch((error) => {
+              console.error("Error playing audio:", error);
+              // Show user-friendly message
+              const message = `Audio playback failed. Error: ${error.message}. Please check your device volume and browser audio permissions.`;
+              alert(message);
+            });
+        }
+      }, 100);
     } else {
       audioRef.current.pause();
+      audioRef.current.currentTime = 0;
       setIsMuted(true);
     }
   };
