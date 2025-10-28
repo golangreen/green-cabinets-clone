@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Card, CardContent } from "@/components/ui/card";
 import { ExternalLink, Image } from "lucide-react";
 import { CatalogSlideshow } from "./CatalogSlideshow";
-import blumLogo from "@/assets/logos/blum-logo.svg";
+import blumLogo from "@/assets/logos/blum-logo.png";
 import tafisaLogo from "@/assets/logos/tafisa-logo.png";
 import richelieuLogo from "@/assets/logos/richelieu-logo.png";
 import shinnokiLogo from "@/assets/logos/shinnoki-logo.png";
