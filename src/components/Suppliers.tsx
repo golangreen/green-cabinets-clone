@@ -7,7 +7,7 @@ import blumLogo from "@/assets/logos/blum-logo.png";
 import tafisaLogo from "@/assets/logos/tafisa-logo.png";
 import richelieuLogo from "@/assets/logos/richelieu-logo.png";
 import shinnokiLogo from "@/assets/logos/shinnoki-logo.png";
-import greenCabinetsLogo from "@/assets/logo.jpg";
+import greenCabinetsLogo from "@/assets/logos/green-cabinets-logo.jpg";
 
 interface Supplier {
   id: string;
