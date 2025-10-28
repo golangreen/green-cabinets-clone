@@ -24,21 +24,11 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(slideDirections[0]);
   const [isMuted, setIsMuted] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const musicNodesRef = useRef<any[]>([]);
 
   useEffect(() => {
     if (!isOpen) return;
-
-    // Initialize audio with calm nature music
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.crossOrigin = "anonymous";
-      // Using reliable SoundHelix calm music
-      audioRef.current.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3";
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.2;
-      audioRef.current.preload = "auto";
-    }
 
     const interval = setInterval(() => {
       setDirection(slideDirections[Math.floor(Math.random() * slideDirections.length)]);
@@ -47,28 +37,102 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
 
     return () => {
       clearInterval(interval);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+      // Clean up all audio nodes
+      musicNodesRef.current.forEach(node => {
+        try {
+          if (node.stop) node.stop();
+          if (node.disconnect) node.disconnect();
+        } catch (e) {
+          // Already stopped
+        }
+      });
+      musicNodesRef.current = [];
+      
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
       }
     };
   }, [isOpen, images.length]);
 
   const toggleMute = () => {
-    if (!audioRef.current) return;
-    
     if (isMuted) {
-      audioRef.current.play()
-        .then(() => {
-          console.log("✅ Calm nature music playing");
-          setIsMuted(false);
-        })
-        .catch((error) => {
-          console.error("❌ Error playing audio:", error);
-          alert(`Unable to play audio: ${error.message}`);
-        });
+      try {
+        if (!audioContextRef.current) {
+          audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        }
+        
+        const ctx = audioContextRef.current;
+        
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+        
+        // Create a beautiful ambient soundscape with actual musical harmony
+        // Using soft pad sounds with gentle chord progressions
+        
+        // Soft pad chords - C major (C, E, G) and A minor (A, C, E)
+        const chordProgression = [
+          [261.63, 329.63, 392.00], // C major (C4, E4, G4)
+          [220.00, 261.63, 329.63], // A minor (A3, C4, E4)
+          [293.66, 369.99, 440.00], // D minor (D4, F4, A4)
+          [246.94, 293.66, 369.99], // G major (G3, D4, F4)
+        ];
+        
+        let chordIndex = 0;
+        
+        const playChord = () => {
+          if (!isMuted || !ctx) return;
+          
+          const chord = chordProgression[chordIndex];
+          chordIndex = (chordIndex + 1) % chordProgression.length;
+          
+          chord.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            
+            const now = ctx.currentTime;
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.03, now + 1);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 7);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.start(now);
+            osc.stop(now + 8);
+            
+            musicNodesRef.current.push(osc);
+          });
+          
+          setTimeout(playChord, 8000);
+        };
+        
+        playChord();
+        
+        setIsMuted(false);
+        console.log("✅ Calm ambient music playing");
+      } catch (error) {
+        console.error("❌ Error:", error);
+        alert(`Could not create audio: ${error}`);
+      }
     } else {
-      audioRef.current.pause();
+      musicNodesRef.current.forEach(node => {
+        try {
+          if (node.stop) node.stop();
+        } catch (e) {
+          // Already stopped
+        }
+      });
+      musicNodesRef.current = [];
+      
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
       setIsMuted(true);
     }
   };
