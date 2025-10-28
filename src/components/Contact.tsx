@@ -1,7 +1,19 @@
+import { useState } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Contact = () => {
+  const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
+
+  const handleContact = () => {
+    if (contactMethod === "email") {
+      window.location.href = 'mailto:greencabinets@gmail.com';
+    } else {
+      window.location.href = 'sms:+16465493955';
+    }
+  };
+
   return (
     <section id="contact" className="py-24 bg-gradient-to-b from-secondary/20 to-background">
       <div className="container mx-auto px-6">
@@ -61,20 +73,24 @@ const Contact = () => {
           </p>
         </div>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-12">
+        {/* Contact Method Selector & CTA */}
+        <div className="flex flex-col items-center justify-center gap-4 mt-12 max-w-md mx-auto">
+          <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Choose contact method" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="email">Email</SelectItem>
+              <SelectItem value="text">Text Message</SelectItem>
+            </SelectContent>
+          </Select>
+          
           <Button 
             size="lg"
-            onClick={() => window.location.href = 'mailto:greencabinets@gmail.com'}
+            className="w-full"
+            onClick={handleContact}
           >
-            Send Email
-          </Button>
-          <Button 
-            size="lg" 
-            variant="outline"
-            onClick={() => window.location.href = 'tel:+16465493955'}
-          >
-            Call Now
+            {contactMethod === "email" ? "Send Email" : "Send Text"}
           </Button>
         </div>
       </div>
