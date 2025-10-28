@@ -25,19 +25,11 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   const [direction, setDirection] = useState(slideDirections[0]);
   const [isMuted, setIsMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const noiseSourceRef = useRef<AudioBufferSourceNode | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
-
-    // Initialize audio element with nature sounds
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-      // Using peaceful water stream sounds - definitely no roosters!
-      audioRef.current.src = "https://assets.mixkit.co/active_storage/sfx/2393/2393-preview.mp3";
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.3;
-      audioRef.current.preload = "auto";
-    }
 
     const interval = setInterval(() => {
       setDirection(slideDirections[Math.floor(Math.random() * slideDirections.length)]);
@@ -46,38 +38,107 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
 
     return () => {
       clearInterval(interval);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+      if (noiseSourceRef.current) {
+        try {
+          noiseSourceRef.current.stop();
+        } catch (e) {
+          // Already stopped
+        }
+        noiseSourceRef.current = null;
+      }
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
       }
     };
   }, [isOpen, images.length]);
 
   const toggleMute = () => {
-    if (!audioRef.current) return;
-    
     if (isMuted) {
-      const playPromise = audioRef.current.play();
-      
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log("✅ Nature sounds playing");
-            setIsMuted(false);
-          })
-          .catch((error) => {
-            console.error("❌ Error playing audio:", error);
-            // Try alternative source
-            if (audioRef.current) {
-              audioRef.current.src = "https://cdn.pixabay.com/download/audio/2022/03/10/audio_d1718ab41b.mp3";
-              audioRef.current.play()
-                .then(() => setIsMuted(false))
-                .catch(() => alert("Unable to play nature sounds. Please check your browser settings."));
-            }
-          });
+      try {
+        // Create a genuinely calm, peaceful ambient sound - NO ROOSTERS!
+        if (!audioContextRef.current) {
+          audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        }
+        
+        const audioContext = audioContextRef.current;
+        
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        
+        // Create very soft pink noise (sounds like gentle breeze/distant water)
+        const bufferSize = audioContext.sampleRate * 5;
+        const buffer = audioContext.createBuffer(2, bufferSize, audioContext.sampleRate);
+        
+        // Generate pink noise for both channels
+        for (let channel = 0; channel < 2; channel++) {
+          const data = buffer.getChannelData(channel);
+          let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+          
+          for (let i = 0; i < bufferSize; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.99886 * b0 + white * 0.0555179;
+            b1 = 0.99332 * b1 + white * 0.0750759;
+            b2 = 0.96900 * b2 + white * 0.1538520;
+            b3 = 0.86650 * b3 + white * 0.3104856;
+            b4 = 0.55000 * b4 + white * 0.5329522;
+            b5 = -0.7616 * b5 - white * 0.0168980;
+            data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.02; // Very gentle
+            b6 = white * 0.115926;
+          }
+        }
+        
+        const source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        source.loop = true;
+        
+        // Very low volume
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.12;
+        
+        // Strong low-pass filter for ultra-smooth sound
+        const filter = audioContext.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 400; // Very smooth, no harsh sounds
+        filter.Q.value = 0.3;
+        
+        // Add gentle slow modulation for natural variation
+        const lfo = audioContext.createOscillator();
+        lfo.frequency.value = 0.1; // Very slow
+        const lfoGain = audioContext.createGain();
+        lfoGain.gain.value = 30; // Subtle
+        lfo.connect(lfoGain);
+        lfoGain.connect(filter.frequency);
+        
+        // Connect everything
+        source.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        source.start(0);
+        lfo.start(0);
+        noiseSourceRef.current = source;
+        
+        setIsMuted(false);
+        console.log("✅ Calm ambient sound playing (no roosters!)");
+      } catch (error) {
+        console.error("❌ Error creating audio:", error);
+        alert(`Could not create audio: ${error}`);
       }
     } else {
-      audioRef.current.pause();
+      if (noiseSourceRef.current) {
+        try {
+          noiseSourceRef.current.stop();
+        } catch (e) {
+          // Already stopped
+        }
+        noiseSourceRef.current = null;
+      }
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
       setIsMuted(true);
     }
   };
