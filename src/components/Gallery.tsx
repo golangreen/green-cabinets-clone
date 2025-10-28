@@ -112,7 +112,7 @@ import modernWhiteKitchenOpenLiving from "@/assets/gallery/modern-white-kitchen-
 import contemporaryWhiteKitchenMarbleIsland from "@/assets/gallery/contemporary-white-kitchen-marble-island.webp";
 import brightWhiteKitchenIslandWindows from "@/assets/gallery/bright-white-kitchen-island-windows.webp";
 
-type Category = "kitchens" | "vanities" | "closets" | "all";
+type Category = "kitchens" | "vanities" | "closets" | "design-to-reality" | "all";
 
 interface ProductInfo {
   supplier: string;
@@ -139,7 +139,7 @@ const Gallery = () => {
         const categoryMatch = hash.match(/category=([^&]*)/);
         if (categoryMatch) {
           const category = categoryMatch[1] as Category;
-          if (["kitchens", "vanities", "closets"].includes(category)) {
+          if (["kitchens", "vanities", "closets", "design-to-reality"].includes(category)) {
             setActiveCategory(category);
           }
         }
@@ -312,6 +312,13 @@ const Gallery = () => {
     { src: customRadiatorCoverMeshPanels, alt: "Custom radiator cover with decorative mesh panels and wood finish", category: "closets" },
     { src: modernWorkspaceWoodDeskBrick, alt: "Modern workspace with natural wood desk and exposed brick wall", category: "closets" },
     { src: modernStudioWoodCabinetry, alt: "Modern studio apartment with custom wood cabinetry and dining area", category: "closets" },
+
+    // ==================== DESIGN TO REALITY ====================
+    // Add your images here in order: Floor Plan → Rendering → Real Pictures
+    // Example:
+    // { src: floorPlanImage1, alt: "Floor plan for kitchen renovation", category: "design-to-reality" },
+    // { src: renderingImage1, alt: "3D rendering of kitchen design", category: "design-to-reality" },
+    // { src: realPhotoImage1, alt: "Completed kitchen installation", category: "design-to-reality" },
   ] as GalleryImage[];
 
   const filteredImages = activeCategory === "all" 
@@ -324,6 +331,7 @@ const Gallery = () => {
   const kitchens = galleryImages.filter(img => img.category === "kitchens");
   const vanities = galleryImages.filter(img => img.category === "vanities");
   const closets = galleryImages.filter(img => img.category === "closets");
+  const designToReality = galleryImages.filter(img => img.category === "design-to-reality");
 
   return (
     <section id="gallery" className="py-24 bg-muted/30">
@@ -363,6 +371,15 @@ const Gallery = () => {
             }}
           >
             Closets ({closets.length})
+          </Button>
+          <Button
+            variant={activeCategory === "design-to-reality" ? "default" : "outline"}
+            onClick={() => {
+              setActiveCategory("design-to-reality");
+              setShowAllImages(false);
+            }}
+          >
+            Design to Reality ({designToReality.length})
           </Button>
           <Button
             variant={activeCategory === "all" ? "default" : "outline"}
