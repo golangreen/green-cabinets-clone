@@ -114,6 +114,19 @@ import brightWhiteKitchenIslandWindows from "@/assets/gallery/bright-white-kitch
 
 type Category = "kitchens" | "vanities" | "closets" | "all";
 
+interface ProductInfo {
+  supplier: string;
+  code: string;
+  description?: string;
+}
+
+interface GalleryImage {
+  src: string;
+  alt: string;
+  category: Category;
+  products?: ProductInfo[];
+}
+
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState<Category>("all");
 
@@ -158,7 +171,16 @@ const Gallery = () => {
     // ==================== KITCHENS ====================
     
     // === WHITE KITCHENS ===
-    { src: kitchenModernWhite, alt: "Modern white kitchen with pendant lighting", category: "kitchens" },
+    { 
+      src: kitchenModernWhite, 
+      alt: "Modern white kitchen with pendant lighting", 
+      category: "kitchens",
+      // Example: Add your product codes like this:
+      // products: [
+      //   { supplier: "Tafisa TFL", code: "W1000ST9", description: "Premium White" },
+      //   { supplier: "Blum", code: "SERVO-DRIVE", description: "Electronic Opening System" }
+      // ]
+    },
     { src: kitchenPendantLights, alt: "White kitchen with glass pendant lights", category: "kitchens" },
     { src: classicWhiteKitchen, alt: "Classic white kitchen with gray island", category: "kitchens" },
     { src: laundryRoom, alt: "White laundry room cabinetry", category: "kitchens" },
@@ -289,7 +311,7 @@ const Gallery = () => {
     { src: customRadiatorCoverMeshPanels, alt: "Custom radiator cover with decorative mesh panels and wood finish", category: "closets" },
     { src: modernWorkspaceWoodDeskBrick, alt: "Modern workspace with natural wood desk and exposed brick wall", category: "closets" },
     { src: modernStudioWoodCabinetry, alt: "Modern studio apartment with custom wood cabinetry and dining area", category: "closets" },
-  ].map(img => ({ ...img, category: img.category || "kitchens" as Category }));
+  ] as GalleryImage[];
 
   const filteredImages = activeCategory === "all" 
     ? galleryImages 
@@ -341,22 +363,47 @@ const Gallery = () => {
           {filteredImages.map((image, index) => (
             <div 
               key={index}
-              className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4"
+              className="group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 bg-card"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="aspect-[4/3] overflow-hidden bg-muted">
-                <img 
-                  src={image.src} 
-                  alt={image.alt}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  loading="lazy"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-primary-foreground transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <p className="text-sm font-medium">{image.alt}</p>
+              <div className="relative">
+                <div className="aspect-[4/3] overflow-hidden bg-muted">
+                  <img 
+                    src={image.src} 
+                    alt={image.alt}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-primary-foreground transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    <p className="text-sm font-medium">{image.alt}</p>
+                  </div>
                 </div>
               </div>
+              
+              {image.products && image.products.length > 0 && (
+                <div className="p-4 border-t bg-card">
+                  <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
+                    Materials & Hardware
+                  </h4>
+                  <div className="space-y-2">
+                    {image.products.map((product, prodIndex) => (
+                      <div key={prodIndex} className="text-sm">
+                        <div className="flex items-start gap-2">
+                          <span className="font-medium text-foreground">{product.supplier}:</span>
+                          <span className="text-muted-foreground font-mono">{product.code}</span>
+                        </div>
+                        {product.description && (
+                          <p className="text-xs text-muted-foreground ml-2 mt-0.5">
+                            {product.description}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
