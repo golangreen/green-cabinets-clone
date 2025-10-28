@@ -1,6 +1,18 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const CTA = () => {
+  const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
+
+  const handleConsultation = () => {
+    if (contactMethod === "email") {
+      window.location.href = 'mailto:greencabinets@gmail.com';
+    } else {
+      window.location.href = 'sms:+16465493955';
+    }
+  };
+
   return (
     <section className="py-32 relative overflow-hidden">
       {/* Gradient Background */}
@@ -20,17 +32,31 @@ const CTA = () => {
             Join thousands of happy homeowners who transformed their spaces with Green Cabinets.
           </p>
           
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-8">
-            <Button size="lg" variant="hero" className="text-lg px-8 py-6">
+          <div className="flex flex-col items-center justify-center gap-6 pt-8 max-w-md mx-auto">
+            <Button size="lg" variant="hero" className="text-lg px-8 py-6 w-full">
               Get Started
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="text-lg px-8 py-6 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
-            >
-              Schedule Consultation
-            </Button>
+            
+            <div className="w-full space-y-3">
+              <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
+                <SelectTrigger className="w-full border-primary-foreground/30 text-primary-foreground bg-primary-foreground/5">
+                  <SelectValue placeholder="Choose contact method" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="email">Email</SelectItem>
+                  <SelectItem value="text">Text Message</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6 w-full border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
+                onClick={handleConsultation}
+              >
+                Schedule Consultation
+              </Button>
+            </div>
           </div>
         </div>
       </div>
