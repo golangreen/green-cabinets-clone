@@ -25,11 +25,19 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   const [direction, setDirection] = useState(slideDirections[0]);
   const [isMuted, setIsMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const soundSourcesRef = useRef<AudioBufferSourceNode[]>([]);
 
   useEffect(() => {
     if (!isOpen) return;
+
+    // Initialize audio element with nature sounds
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+      // Using a reliable nature sounds URL from YouTube Audio Library alternative
+      audioRef.current.src = "https://assets.mixkit.co/active_storage/sfx/2462/2462-preview.mp3";
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.4;
+      audioRef.current.preload = "auto";
+    }
 
     const interval = setInterval(() => {
       setDirection(slideDirections[Math.floor(Math.random() * slideDirections.length)]);
@@ -38,142 +46,38 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
 
     return () => {
       clearInterval(interval);
-      // Clean up all audio sources when closing
-      soundSourcesRef.current.forEach(source => {
-        try {
-          source.stop();
-        } catch (e) {
-          // Already stopped
-        }
-      });
-      soundSourcesRef.current = [];
-      
-      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-        audioContextRef.current.close();
-        audioContextRef.current = null;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
       }
     };
   }, [isOpen, images.length]);
 
-  const createBirdChirp = (audioContext: AudioContext, time: number, frequency: number) => {
-    const osc = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    
-    // Use sine wave for more natural bird-like sound
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(frequency, time);
-    osc.frequency.exponentialRampToValueAtTime(frequency * 1.5, time + 0.1);
-    
-    // Quick fade in and out like a chirp
-    gain.gain.setValueAtTime(0, time);
-    gain.gain.linearRampToValueAtTime(0.15, time + 0.05);
-    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
-    
-    osc.connect(gain);
-    gain.connect(audioContext.destination);
-    
-    osc.start(time);
-    osc.stop(time + 0.3);
-    
-    return osc;
-  };
-
-  const scheduleRandomChirps = (audioContext: AudioContext) => {
-    const currentTime = audioContext.currentTime;
-    
-    // Schedule multiple chirps at random intervals
-    const birdFrequencies = [800, 1000, 1200, 1400, 1600, 1800, 2000, 2200];
-    
-    for (let i = 0; i < 8; i++) {
-      const time = currentTime + Math.random() * 3;
-      const freq = birdFrequencies[Math.floor(Math.random() * birdFrequencies.length)];
-      createBirdChirp(audioContext, time, freq);
-    }
-    
-    // Continue scheduling chirps
-    setTimeout(() => {
-      if (!isMuted && audioContextRef.current) {
-        scheduleRandomChirps(audioContext);
-      }
-    }, 2500);
-  };
-
   const toggleMute = () => {
+    if (!audioRef.current) return;
+    
     if (isMuted) {
-      try {
-        // Create audio context for lively nature sounds
-        if (!audioContextRef.current) {
-          audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-        }
-        
-        const audioContext = audioContextRef.current;
-        
-        // Resume context if suspended
-        if (audioContext.state === 'suspended') {
-          audioContext.resume();
-        }
-        
-        // Add gentle background ambiance
-        const bufferSize = audioContext.sampleRate * 3;
-        const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-        const data = buffer.getChannelData(0);
-        
-        // Very gentle pink noise background
-        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          b0 = 0.99886 * b0 + white * 0.0555179;
-          b1 = 0.99332 * b1 + white * 0.0750759;
-          b2 = 0.96900 * b2 + white * 0.1538520;
-          b3 = 0.86650 * b3 + white * 0.3104856;
-          b4 = 0.55000 * b4 + white * 0.5329522;
-          b5 = -0.7616 * b5 - white * 0.0168980;
-          data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.03;
-          b6 = white * 0.115926;
-        }
-        
-        const source = audioContext.createBufferSource();
-        source.buffer = buffer;
-        source.loop = true;
-        
-        const gainNode = audioContext.createGain();
-        gainNode.gain.value = 0.3;
-        
-        const filter = audioContext.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = 500;
-        
-        source.connect(filter);
-        filter.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        source.start(0);
-        soundSourcesRef.current.push(source);
-        
-        // Start scheduling bird chirps
-        scheduleRandomChirps(audioContext);
-        
-        setIsMuted(false);
-        console.log("✅ Lively nature sounds playing");
-      } catch (error) {
-        console.error("❌ Error creating audio:", error);
-        alert(`Could not create audio: ${error}`);
+      const playPromise = audioRef.current.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log("✅ Nature sounds playing");
+            setIsMuted(false);
+          })
+          .catch((error) => {
+            console.error("❌ Error playing audio:", error);
+            // Try alternative source
+            if (audioRef.current) {
+              audioRef.current.src = "https://cdn.pixabay.com/download/audio/2022/03/10/audio_d1718ab41b.mp3";
+              audioRef.current.play()
+                .then(() => setIsMuted(false))
+                .catch(() => alert("Unable to play nature sounds. Please check your browser settings."));
+            }
+          });
       }
     } else {
-      // Stop all audio sources
-      soundSourcesRef.current.forEach(source => {
-        try {
-          source.stop();
-        } catch (e) {
-          // Already stopped
-        }
-      });
-      soundSourcesRef.current = [];
-      
-      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-        audioContextRef.current.close();
-        audioContextRef.current = null;
-      }
+      audioRef.current.pause();
       setIsMuted(true);
     }
   };
