@@ -80,28 +80,18 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     if (!audioRef.current) return;
     
     if (isMuted) {
-      // Reload audio element to ensure fresh start
-      audioRef.current.load();
-      
-      // Wait a moment for load, then play
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.play()
-            .then(() => {
-              console.log("Audio playing successfully at volume:", audioRef.current?.volume);
-              setIsMuted(false);
-            })
-            .catch((error) => {
-              console.error("Error playing audio:", error);
-              // Show user-friendly message
-              const message = `Audio playback failed. Error: ${error.message}. Please check your device volume and browser audio permissions.`;
-              alert(message);
-            });
-        }
-      }, 100);
+      // Simply play the audio - don't reload
+      audioRef.current.play()
+        .then(() => {
+          console.log("✅ Audio playing successfully at volume:", audioRef.current?.volume);
+          setIsMuted(false);
+        })
+        .catch((error) => {
+          console.error("❌ Error playing audio:", error);
+          alert(`Could not play audio: ${error.message}`);
+        });
     } else {
       audioRef.current.pause();
-      audioRef.current.currentTime = 0;
       setIsMuted(true);
     }
   };
