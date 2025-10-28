@@ -3,6 +3,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Card, CardContent } from "@/components/ui/card";
 import { ExternalLink, Image } from "lucide-react";
 import { CatalogSlideshow } from "./CatalogSlideshow";
+import blumLogo from "@/assets/logos/blum-logo.svg";
+import tafisaLogo from "@/assets/logos/tafisa-logo.png";
+import richelieuLogo from "@/assets/logos/richelieu-logo.png";
+import shinnokiLogo from "@/assets/logos/shinnoki-logo.png";
+import greenCabinetsLogo from "@/assets/logo.jpg";
 
 interface Supplier {
   id: string;
@@ -19,6 +24,7 @@ const suppliers: Supplier[] = [
     id: "blum",
     name: "Blum",
     description: "Premium cabinet hardware and lifting systems",
+    logo: blumLogo,
     website: "https://www.blum.com/us/en/",
     details: "Blum is a leading manufacturer of furniture fittings. We use their innovative hinge systems, drawer runners, and lift systems to ensure your cabinets operate smoothly and reliably for years to come.",
     products: [
@@ -32,6 +38,7 @@ const suppliers: Supplier[] = [
     id: "shinnoki",
     name: "Shinnoki",
     description: "Real wood veneer with innovative backing",
+    logo: shinnokiLogo,
     website: "https://www.decospan.com/en-us/shinnoki",
     details: "Shinnoki by Decospan combines the authentic beauty of real wood veneer with innovative backing technology. We use their premium wood veneers to create stunning, natural-looking cabinetry that brings warmth and elegance to any space.",
     products: [
@@ -45,6 +52,7 @@ const suppliers: Supplier[] = [
     id: "tafisa",
     name: "Tafisa TFL",
     description: "Premium thermally fused laminate panels",
+    logo: tafisaLogo,
     website: "https://tafisa.ca/en/our-colours",
     details: "Tafisa is a leading manufacturer of thermally fused laminate (TFL) panels. We source their high-quality decorative surfaces to create beautiful, durable cabinetry with a wide range of colors and textures.",
     products: [
@@ -58,6 +66,7 @@ const suppliers: Supplier[] = [
     id: "tafisa-lummia",
     name: "Tafisa LUMMIA",
     description: "Revolutionary light-diffusing technology for surfaces",
+    logo: tafisaLogo,
     website: "https://tafisa.ca/en/Lummia-Technology",
     details: "Tafisa LUMMIA represents cutting-edge innovation in decorative surfaces. This revolutionary technology creates unique light-diffusing effects that add depth and visual interest to cabinetry, transforming spaces with sophisticated illuminated designs.",
     products: [
@@ -71,6 +80,7 @@ const suppliers: Supplier[] = [
     id: "richelieu",
     name: "Richelieu",
     description: "Comprehensive hardware and accessories solutions",
+    logo: richelieuLogo,
     website: "https://www.richelieu.com/us/en/",
     details: "Richelieu is a leading distributor and manufacturer of specialty hardware and complementary products. We partner with them to source a wide range of cabinet hardware, decorative accessories, and functional solutions for custom cabinetry.",
     products: [
@@ -84,6 +94,7 @@ const suppliers: Supplier[] = [
     id: "greencabinets",
     name: "Green Cabinets (That's us)",
     description: "Premium custom cabinetry and design excellence",
+    logo: greenCabinetsLogo,
     website: "catalog",
     details: "Green Cabinets specializes in creating stunning, custom-designed cabinetry solutions. Our portfolio showcases exceptional craftsmanship and innovative design approaches that transform spaces into beautiful, functional environments.",
     products: [
@@ -129,13 +140,24 @@ const Suppliers = () => {
               }}
             >
               <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-xl font-semibold">{supplier.name}</h3>
-                  {supplier.website === "catalog" ? (
-                    <Image className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                <div className="flex items-start gap-4 mb-4">
+                  {supplier.logo && (
+                    <img 
+                      src={supplier.logo} 
+                      alt={`${supplier.name} logo`}
+                      className="h-12 w-12 object-contain flex-shrink-0"
+                    />
                   )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-xl font-semibold">{supplier.name}</h3>
+                      {supplier.website === "catalog" ? (
+                        <Image className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      ) : (
+                        <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {supplier.description}
