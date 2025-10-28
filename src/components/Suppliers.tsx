@@ -142,11 +142,13 @@ const Suppliers = () => {
               <CardContent className="p-6">
                 <div className="flex items-start gap-4 mb-4">
                   {supplier.logo && (
-                    <img 
-                      src={supplier.logo} 
-                      alt={`${supplier.name} logo`}
-                      className="h-20 w-20 object-contain flex-shrink-0"
-                    />
+                    <div className={`h-20 w-20 flex-shrink-0 flex items-center justify-center ${supplier.id === 'greencabinets' ? 'rounded-full overflow-hidden bg-muted/50' : ''}`}>
+                      <img 
+                        src={supplier.logo} 
+                        alt={`${supplier.name} logo`}
+                        className={`object-contain ${supplier.id === 'greencabinets' ? 'h-full w-full' : 'h-20 w-20'}`}
+                      />
+                    </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
