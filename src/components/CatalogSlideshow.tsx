@@ -28,13 +28,13 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   useEffect(() => {
     if (!isOpen) return;
 
-    // Initialize white noise audio
+    // Initialize waterfall audio
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      // Using a white noise generator URL
-      audioRef.current.src = "https://www.soundjay.com/nature/sounds/wind-1.mp3";
+      // Using a calming waterfall sound
+      audioRef.current.src = "https://www.soundjay.com/nature/sounds/waterfall-1.mp3";
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.15;
+      audioRef.current.volume = 0.12;
     }
 
     audioRef.current.play().catch(() => {
