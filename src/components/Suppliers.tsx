@@ -39,6 +39,19 @@ const suppliers: Supplier[] = [
       "Durable decorative surfaces",
       "Contemporary and classic designs"
     ]
+  },
+  {
+    id: "shinnoki",
+    name: "Shinnoki",
+    description: "Real wood veneer with innovative backing",
+    website: "https://www.decospan.com/en-us/shinnoki",
+    details: "Shinnoki by Decospan combines the authentic beauty of real wood veneer with innovative backing technology. We use their premium wood veneers to create stunning, natural-looking cabinetry that brings warmth and elegance to any space.",
+    products: [
+      "Real wood veneer panels",
+      "Innovative backing technology",
+      "Wide variety of wood species",
+      "Natural and authentic finishes"
+    ]
   }
 ];
 
