@@ -233,7 +233,6 @@ const Gallery = () => {
     { src: modernKitchenDarkIsland, alt: "Modern kitchen with dark island and pendant lighting", category: "kitchens" },
 
     // === NATURAL WOOD KITCHENS ===
-    { src: contemporaryWoodCabinets, alt: "Contemporary wood cabinet installation", category: "kitchens" },
     { src: marbleWoodKitchenIsland, alt: "Marble waterfall island with wood cabinetry", category: "kitchens" },
     { src: modernWhiteWoodIsland, alt: "Modern white kitchen with wood island and pendant lights", category: "kitchens" },
     { src: whiteWoodIslandSideView, alt: "White kitchen with natural wood island side view", category: "kitchens" },
@@ -305,6 +304,7 @@ const Gallery = () => {
     { src: lightGrayTallStorageCabinet, alt: "Light gray tall storage cabinet with minimalist design", category: "closets" },
     { src: darkWoodCornerWardrobe, alt: "Dark wood corner wardrobe with floor-to-ceiling design", category: "closets" },
     { src: customClosetAngledCeiling, alt: "Custom closet installation with angled ceiling accommodation", category: "closets" },
+    { src: contemporaryWoodCabinets, alt: "Contemporary wood cabinet installation", category: "closets" },
     { src: naturalWoodHallwayCabinets, alt: "Natural wood hallway with built-in storage cabinets and ceiling panels", category: "closets" },
     
     // === OTHER STORAGE & SPECIALTY ===
