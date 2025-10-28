@@ -17,7 +17,6 @@ import classicWhiteKitchen from "@/assets/gallery/classic-white-kitchen.jpg";
 import marbleCountertopKitchen from "@/assets/gallery/marble-countertop-kitchen.jpg";
 import brightKitchenIsland from "@/assets/gallery/bright-kitchen-island.jpg";
 import kitchenIslandSeating from "@/assets/gallery/kitchen-island-seating.jpg";
-import modernGrayConstruction from "@/assets/gallery/modern-gray-construction.jpg";
 import darkModernKitchen from "@/assets/gallery/dark-modern-kitchen.jpg";
 import openConceptMarbleKitchen from "@/assets/gallery/open-concept-marble-kitchen.jpg";
 import marbleWoodKitchenIsland from "@/assets/gallery/marble-wood-kitchen-island.jpg";
@@ -214,7 +213,6 @@ const Gallery = () => {
     { src: brightWhiteKitchenIslandWindows, alt: "Bright white kitchen with island and floor-to-ceiling windows", category: "kitchens" },
 
     // === GRAY KITCHENS ===
-    { src: modernGrayConstruction, alt: "Modern gray kitchen under construction", category: "kitchens" },
     { src: modernKitchenCabinetsGray, alt: "Modern gray kitchen cabinets installation", category: "kitchens" },
     { src: grayKitchenIslandConstruction, alt: "Gray kitchen island under construction", category: "kitchens" },
     { src: contemporaryWhiteGrayKitchen, alt: "Contemporary white and gray kitchen with wood island and waterfall edge", category: "kitchens" },
