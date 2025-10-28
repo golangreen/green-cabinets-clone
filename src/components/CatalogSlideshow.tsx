@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface CatalogSlideshowProps {
   isOpen: boolean;
@@ -141,12 +142,18 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 overflow-hidden bg-muted/95">
+      <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 overflow-hidden bg-muted/95" aria-describedby="slideshow-description">
+        <VisuallyHidden>
+          <DialogTitle>Project Gallery Slideshow</DialogTitle>
+          <p id="slideshow-description">An automated slideshow displaying our cabinet design portfolio</p>
+        </VisuallyHidden>
+        
         <Button
           onClick={onClose}
           className="absolute top-4 right-4 z-50 rounded-full"
           size="icon"
           variant="secondary"
+          aria-label="Close slideshow"
         >
           <X className="h-5 w-5" />
         </Button>
@@ -156,6 +163,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
           className="absolute top-4 right-20 z-50 rounded-full"
           size="icon"
           variant="secondary"
+          aria-label={isMuted ? "Unmute audio" : "Mute audio"}
         >
           {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
         </Button>
