@@ -252,7 +252,7 @@ const Gallery = () => {
     { src: modernKitchenMarbleWaterfallWoodBase, alt: "Modern kitchen with marble waterfall island and natural wood base", category: "kitchens" },
     { src: lightWoodKitchenMarbleIslandBar, alt: "Light wood kitchen with marble island and bar seating", category: "kitchens" },
     { src: lightWoodKitchenDiningOpenConcept, alt: "Light wood open concept kitchen with dining area and pendant lights", category: "kitchens" },
-    { src: modernWoodKitchenDarkBaseCabinets, alt: "Modern wood kitchen with dark base cabinets and open concept living", category: "kitchens" },
+    { src: modernWoodKitchenDarkBaseCabinets, alt: "Modern wood kitchen with dark base cabinets and open concept living", category: "closets" },
 
     // === TWO-TONE KITCHENS ===
     { src: twoToneKitchenIsland, alt: "Two-tone kitchen with marble island", category: "kitchens" },
