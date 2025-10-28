@@ -57,7 +57,6 @@ import brightModernWhiteKitchenOpen from "@/assets/gallery/bright-modern-white-k
 import modernWhiteKitchenPendants from "@/assets/gallery/modern-white-kitchen-pendants.jpeg";
 import twoToneWoodWhiteKitchenConstruction from "@/assets/gallery/two-tone-wood-white-kitchen-construction.jpeg";
 import traditionalWhiteKitchenGrayIsland from "@/assets/gallery/traditional-white-kitchen-gray-island.jpg";
-import kitchenConstructionTwoToneCabinets from "@/assets/gallery/kitchen-construction-two-tone-cabinets.jpeg";
 import minimalistWhiteKitchenIsland from "@/assets/gallery/minimalist-white-kitchen-island.jpg";
 import contemporaryWhiteKitchenBlueWall from "@/assets/gallery/contemporary-white-kitchen-blue-wall.jpg";
 import blumDrawerHardwareCloseup from "@/assets/gallery/blum-drawer-hardware-closeup.jpg";
@@ -245,7 +244,6 @@ const Gallery = () => {
     { src: twoToneKitchenIsland, alt: "Two-tone kitchen with marble island", category: "kitchens" },
     { src: twoToneKitchenWide, alt: "Modern two-tone kitchen with wood accents", category: "kitchens" },
     { src: twoToneWoodWhiteKitchenConstruction, alt: "Two-tone kitchen construction with wood island and white cabinets", category: "kitchens" },
-    { src: kitchenConstructionTwoToneCabinets, alt: "Kitchen construction showing two-tone wood and white cabinet installation", category: "kitchens" },
 
     // === GREEN KITCHENS ===
     { src: greenKitchenMarbleIsland, alt: "Green cabinets with marble waterfall island and brass accents", category: "kitchens" },
