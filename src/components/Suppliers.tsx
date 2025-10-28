@@ -69,7 +69,7 @@ const suppliers: Supplier[] = [
   },
   {
     id: "greencabinets",
-    name: "Green Cabinets",
+    name: "Green Cabinets (That's us)",
     description: "Premium custom cabinetry and design excellence",
     website: "catalog",
     details: "Green Cabinets specializes in creating stunning, custom-designed cabinetry solutions. Our portfolio showcases exceptional craftsmanship and innovative design approaches that transform spaces into beautiful, functional environments.",
