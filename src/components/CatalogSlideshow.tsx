@@ -54,7 +54,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   const toggleMute = () => {
     if (isMuted) {
       try {
-        // Create audio context and generate calming ambient sound
+        // Create audio context and generate calming nature-like ambient sound
         if (!audioContextRef.current) {
           audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
         }
@@ -66,14 +66,23 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
           audioContext.resume();
         }
         
-        // Create a gentle, nature-like ambient sound using white noise
-        const bufferSize = audioContext.sampleRate * 2;
+        // Create pink noise (more natural than white noise)
+        const bufferSize = audioContext.sampleRate * 4;
         const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
         const data = buffer.getChannelData(0);
         
-        // Generate filtered white noise (sounds like gentle wind/water)
+        // Generate pink noise (sounds like gentle wind/water)
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
         for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * 0.1; // Gentle white noise
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+          b6 = white * 0.115926;
         }
         
         // Create and configure source
@@ -83,17 +92,36 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
         
         // Create gain node for volume control
         const gainNode = audioContext.createGain();
-        gainNode.gain.value = 0.15;
+        gainNode.gain.value = 0.08; // Gentle volume
         gainNodeRef.current = gainNode;
         
-        // Create a low-pass filter for softer, nature-like sound
+        // Create a low-pass filter for soft, nature-like sound
         const filter = audioContext.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.value = 800; // Makes it sound more like gentle water/wind
+        filter.frequency.value = 600; // Softer, more natural
+        filter.Q.value = 0.5;
         
-        // Connect nodes
+        // Add gentle LFO (Low Frequency Oscillator) for natural variation
+        const lfo = audioContext.createOscillator();
+        lfo.frequency.value = 0.3; // Slow modulation
+        const lfoGain = audioContext.createGain();
+        lfoGain.gain.value = 50; // Subtle variation
+        lfo.connect(lfoGain);
+        lfoGain.connect(filter.frequency);
+        lfo.start(0);
+        
+        // Add reverb-like effect with a simple delay
+        const delay = audioContext.createDelay();
+        delay.delayTime.value = 0.03;
+        const delayGain = audioContext.createGain();
+        delayGain.gain.value = 0.2;
+        
+        // Connect nodes for a richer, more natural sound
         source.connect(filter);
         filter.connect(gainNode);
+        filter.connect(delay);
+        delay.connect(delayGain);
+        delayGain.connect(gainNode);
         gainNode.connect(audioContext.destination);
         
         // Start playing
@@ -101,7 +129,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
         oscillatorRef.current = source as any;
         
         setIsMuted(false);
-        console.log("✅ Audio playing successfully");
+        console.log("✅ Nature ambient audio playing");
       } catch (error) {
         console.error("❌ Error creating audio:", error);
         alert(`Could not create audio: ${error}`);
@@ -115,6 +143,10 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
         } catch (e) {
           console.error("Error stopping audio:", e);
         }
+      }
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
       }
       setIsMuted(true);
     }
