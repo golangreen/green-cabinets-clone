@@ -116,6 +116,12 @@ const Header = () => {
                   Closets
                 </DropdownMenuItem>
                 <DropdownMenuItem 
+                  onClick={(e) => scrollToGallery('design-to-reality', e)}
+                  className="cursor-pointer"
+                >
+                  Design to Reality
+                </DropdownMenuItem>
+                <DropdownMenuItem 
                   onClick={(e) => {
                     e.preventDefault();
                     setIsMobileMenuOpen(false);
@@ -175,6 +181,13 @@ const Header = () => {
                       onClick={(e) => scrollToGallery('closets', e)}
                     >
                       Closets
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start" 
+                      onClick={(e) => scrollToGallery('design-to-reality', e)}
+                    >
+                      Design to Reality
                     </Button>
                     <Button 
                       variant="ghost" 
