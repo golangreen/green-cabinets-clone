@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send, ChevronUp } from "lucide-react";
+import { MessageCircle, X, Send, ChevronUp, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -132,13 +132,17 @@ const Chatbot = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const scrollPageToBottom = () => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  };
+
   return (
     <>
       {/* Scroll to Top Button */}
       {!isOpen && (
         <Button
           onClick={scrollToTop}
-          className="fixed bottom-24 right-6 h-12 w-12 rounded-full shadow-elegant z-50"
+          className="fixed bottom-[180px] right-6 h-12 w-12 rounded-full shadow-elegant z-50"
           size="icon"
           variant="secondary"
         >
@@ -150,10 +154,22 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-elegant z-50"
+          className="fixed bottom-[100px] right-6 h-14 w-14 rounded-full shadow-elegant z-50"
           size="icon"
         >
           <MessageCircle className="h-6 w-6" />
+        </Button>
+      )}
+
+      {/* Scroll to Bottom Button */}
+      {!isOpen && (
+        <Button
+          onClick={scrollPageToBottom}
+          className="fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-elegant z-50"
+          size="icon"
+          variant="secondary"
+        >
+          <ChevronDown className="h-5 w-5" />
         </Button>
       )}
 
