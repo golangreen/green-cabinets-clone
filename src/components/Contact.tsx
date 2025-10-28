@@ -68,10 +68,10 @@ const Contact = () => {
           </div>
         </div>
 
-        {/* Owner Info */}
+        {/* Contact Info */}
         <div className="text-center mt-12">
-          <p className="text-lg text-muted-foreground">
-            Contact: <span className="text-foreground font-semibold">Designer</span>
+          <p className="text-lg text-foreground font-semibold">
+            Contact us:
           </p>
         </div>
 
