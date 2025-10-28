@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import QuoteForm from "@/components/QuoteForm";
 
 const CTA = () => {
   const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
 
   const handleConsultation = () => {
     if (contactMethod === "email") {
@@ -33,8 +35,13 @@ const CTA = () => {
           </p>
           
           <div className="flex flex-col items-center justify-center gap-6 pt-8 max-w-md mx-auto">
-            <Button size="lg" variant="hero" className="text-lg px-8 py-6 w-full">
-              Get Started
+            <Button 
+              size="lg" 
+              variant="hero" 
+              className="text-lg px-8 py-6 w-full"
+              onClick={() => setShowQuoteForm(true)}
+            >
+              Get Your Free Quote
             </Button>
             
             <div className="w-full space-y-3">
@@ -60,6 +67,8 @@ const CTA = () => {
           </div>
         </div>
       </div>
+
+      <QuoteForm isOpen={showQuoteForm} onClose={() => setShowQuoteForm(false)} />
     </section>
   );
 };

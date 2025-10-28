@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import QuoteForm from "@/components/QuoteForm";
 
 const Contact = () => {
   const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
 
   const handleContact = () => {
     if (contactMethod === "email") {
@@ -75,6 +77,16 @@ const Contact = () => {
 
         {/* Contact Method Selector & CTA */}
         <div className="flex flex-col items-center justify-center gap-4 mt-12 max-w-md mx-auto">
+          <Button 
+            size="lg"
+            className="w-full"
+            onClick={() => setShowQuoteForm(true)}
+          >
+            Get Detailed Quote
+          </Button>
+          
+          <div className="text-center text-muted-foreground">or</div>
+          
           <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Choose contact method" />
@@ -87,6 +99,7 @@ const Contact = () => {
           
           <Button 
             size="lg"
+            variant="outline"
             className="w-full"
             onClick={handleContact}
           >
@@ -94,6 +107,8 @@ const Contact = () => {
           </Button>
         </div>
       </div>
+
+      <QuoteForm isOpen={showQuoteForm} onClose={() => setShowQuoteForm(false)} />
     </section>
   );
 };
