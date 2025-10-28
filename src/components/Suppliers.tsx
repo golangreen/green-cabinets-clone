@@ -26,6 +26,19 @@ const suppliers: Supplier[] = [
       "CLIP top hinges",
       "SERVO-DRIVE electronic opening systems"
     ]
+  },
+  {
+    id: "tafisa",
+    name: "Tafisa TFL",
+    description: "Premium thermally fused laminate panels",
+    website: "https://tafisa.ca/en/our-colours",
+    details: "Tafisa is a leading manufacturer of thermally fused laminate (TFL) panels. We source their high-quality decorative surfaces to create beautiful, durable cabinetry with a wide range of colors and textures.",
+    products: [
+      "Thermally fused laminate panels",
+      "Wide range of colors and finishes",
+      "Durable decorative surfaces",
+      "Contemporary and classic designs"
+    ]
   }
 ];
 
