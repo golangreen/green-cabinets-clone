@@ -142,7 +142,7 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={scrollToTop}
-          className="fixed bottom-[180px] right-6 h-12 w-12 rounded-full shadow-elegant z-50"
+          className="fixed bottom-[180px] right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-opacity-80 backdrop-blur-sm"
           size="icon"
           variant="secondary"
         >
@@ -154,10 +154,10 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-[100px] right-6 h-14 w-14 rounded-full shadow-elegant z-50"
+          className="fixed bottom-[100px] right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-opacity-80 backdrop-blur-sm"
           size="icon"
         >
-          <MessageCircle className="h-6 w-6" />
+          <MessageCircle className="h-5 w-5" />
         </Button>
       )}
 
@@ -165,7 +165,7 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={scrollPageToBottom}
-          className="fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-elegant z-50"
+          className="fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-opacity-80 backdrop-blur-sm"
           size="icon"
           variant="secondary"
         >
