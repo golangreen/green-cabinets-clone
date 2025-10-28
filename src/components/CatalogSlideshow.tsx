@@ -32,24 +32,26 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     // Initialize nature ambiance audio
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      audioRef.current.crossOrigin = "anonymous";
-      // Using calm forest birds sounds
-      audioRef.current.src = "https://cdn.freesound.org/previews/515/515851_5674468-lq.mp3";
+      // Using reliable public domain nature sound
+      audioRef.current.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.3;
+      audioRef.current.volume = 0.15;
       audioRef.current.preload = "auto";
       
       audioRef.current.addEventListener('canplaythrough', () => {
-        console.log("Audio loaded successfully");
+        console.log("✅ Audio loaded and ready to play");
+      });
+      
+      audioRef.current.addEventListener('playing', () => {
+        console.log("✅ Audio is now playing");
+      });
+      
+      audioRef.current.addEventListener('loadeddata', () => {
+        console.log("✅ Audio data loaded");
       });
       
       audioRef.current.addEventListener('error', (e) => {
-        console.error("Audio loading error:", e);
-        // Fallback to alternative source
-        if (audioRef.current) {
-          audioRef.current.src = "https://freesound.org/data/previews/563/563619_3997781-lq.mp3";
-          audioRef.current.load();
-        }
+        console.error("❌ Audio error:", audioRef.current?.error);
       });
     }
 
