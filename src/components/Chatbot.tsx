@@ -142,7 +142,7 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={scrollToTop}
-          className="fixed bottom-[180px] right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-secondary/70 backdrop-blur-sm hover:bg-secondary/80"
+          className="fixed bottom-[180px] right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-secondary/20 backdrop-blur-md border border-white/20 hover:bg-secondary/30"
           size="icon"
         >
           <ChevronUp className="h-5 w-5" />
@@ -153,7 +153,7 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-[100px] right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-primary/70 backdrop-blur-sm hover:bg-primary/80"
+          className="fixed bottom-[100px] right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-primary/20 backdrop-blur-md border border-white/20 hover:bg-primary/30"
           size="icon"
         >
           <MessageCircle className="h-5 w-5" />
@@ -164,7 +164,7 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={scrollPageToBottom}
-          className="fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-secondary/70 backdrop-blur-sm hover:bg-secondary/80"
+          className="fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-secondary/20 backdrop-blur-md border border-white/20 hover:bg-secondary/30"
           size="icon"
         >
           <ChevronDown className="h-5 w-5" />
