@@ -29,6 +29,19 @@ const suppliers: Supplier[] = [
     ]
   },
   {
+    id: "shinnoki",
+    name: "Shinnoki",
+    description: "Real wood veneer with innovative backing",
+    website: "https://www.decospan.com/en-us/shinnoki",
+    details: "Shinnoki by Decospan combines the authentic beauty of real wood veneer with innovative backing technology. We use their premium wood veneers to create stunning, natural-looking cabinetry that brings warmth and elegance to any space.",
+    products: [
+      "Real wood veneer panels",
+      "Innovative backing technology",
+      "Wide variety of wood species",
+      "Natural and authentic finishes"
+    ]
+  },
+  {
     id: "tafisa",
     name: "Tafisa TFL",
     description: "Premium thermally fused laminate panels",
@@ -42,16 +55,16 @@ const suppliers: Supplier[] = [
     ]
   },
   {
-    id: "shinnoki",
-    name: "Shinnoki",
-    description: "Real wood veneer with innovative backing",
-    website: "https://www.decospan.com/en-us/shinnoki",
-    details: "Shinnoki by Decospan combines the authentic beauty of real wood veneer with innovative backing technology. We use their premium wood veneers to create stunning, natural-looking cabinetry that brings warmth and elegance to any space.",
+    id: "tafisa-lummia",
+    name: "Tafisa LUMMIA",
+    description: "Revolutionary light-diffusing technology for surfaces",
+    website: "https://tafisa.ca/en/Lummia-Technology",
+    details: "Tafisa LUMMIA represents cutting-edge innovation in decorative surfaces. This revolutionary technology creates unique light-diffusing effects that add depth and visual interest to cabinetry, transforming spaces with sophisticated illuminated designs.",
     products: [
-      "Real wood veneer panels",
-      "Innovative backing technology",
-      "Wide variety of wood species",
-      "Natural and authentic finishes"
+      "Light-diffusing decorative panels",
+      "Innovative LUMMIA technology",
+      "Unique visual effects",
+      "Modern illuminated surface solutions"
     ]
   },
   {
