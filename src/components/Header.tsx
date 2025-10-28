@@ -115,6 +115,21 @@ const Header = () => {
                 >
                   Closets
                 </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMobileMenuOpen(false);
+                    setTimeout(() => {
+                      const suppliers = document.getElementById('suppliers');
+                      if (suppliers) {
+                        suppliers.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }, 100);
+                  }}
+                  className="cursor-pointer"
+                >
+                  Suppliers
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <a href="#solutions" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
@@ -160,6 +175,22 @@ const Header = () => {
                       onClick={(e) => scrollToGallery('closets', e)}
                     >
                       Closets
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsMobileMenuOpen(false);
+                        setTimeout(() => {
+                          const suppliers = document.getElementById('suppliers');
+                          if (suppliers) {
+                            suppliers.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }, 100);
+                      }}
+                    >
+                      Suppliers
                     </Button>
                   </div>
                   <a 
