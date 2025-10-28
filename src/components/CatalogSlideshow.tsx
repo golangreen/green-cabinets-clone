@@ -32,16 +32,21 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     // Initialize nature ambiance audio
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      // Using calm and joyful birds chirping sound
-      audioRef.current.src = "https://www.soundjay.com/nature/sounds/birds-chirping-1.mp3";
+      // Using calm and joyful nature sounds - forest ambiance
+      audioRef.current.src = "https://assets.mixkit.co/active_storage/sfx/2456/2456-preview.mp3";
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.15;
+      audioRef.current.volume = 0.2;
+      audioRef.current.preload = "auto";
+      
+      audioRef.current.addEventListener('error', (e) => {
+        console.error("Audio loading error:", e);
+      });
     }
 
     // Don't autoplay - wait for user interaction
     if (!isMuted) {
-      audioRef.current.play().catch(() => {
-        console.log("Audio autoplay blocked");
+      audioRef.current.play().catch((error) => {
+        console.log("Audio play error:", error);
       });
     }
 
@@ -63,8 +68,17 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     if (!audioRef.current) return;
     
     if (isMuted) {
-      audioRef.current.play().catch(console.error);
-      setIsMuted(false);
+      // Try to load and play
+      audioRef.current.load();
+      audioRef.current.play()
+        .then(() => {
+          console.log("Audio playing successfully");
+          setIsMuted(false);
+        })
+        .catch((error) => {
+          console.error("Error playing audio:", error);
+          alert("Unable to play audio. Please check your browser settings.");
+        });
     } else {
       audioRef.current.pause();
       setIsMuted(true);
