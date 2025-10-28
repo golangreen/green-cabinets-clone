@@ -16,7 +16,6 @@ import twoToneKitchenWide from "@/assets/gallery/two-tone-kitchen-wide.jpg";
 import classicWhiteKitchen from "@/assets/gallery/classic-white-kitchen.jpg";
 import marbleCountertopKitchen from "@/assets/gallery/marble-countertop-kitchen.jpg";
 import brightKitchenIsland from "@/assets/gallery/bright-kitchen-island.jpg";
-import kitchenIslandSeating from "@/assets/gallery/kitchen-island-seating.jpg";
 import openConceptMarbleKitchen from "@/assets/gallery/open-concept-marble-kitchen.jpg";
 import marbleWoodKitchenIsland from "@/assets/gallery/marble-wood-kitchen-island.jpg";
 import contemporaryWoodCabinets from "@/assets/gallery/contemporary-wood-cabinets.jpg";
@@ -259,7 +258,6 @@ const Gallery = () => {
     { src: kitchenTraditional, alt: "Traditional style kitchen installation", category: "kitchens" },
     { src: marbleCountertopKitchen, alt: "Kitchen with marble countertops and wood trim", category: "kitchens" },
     { src: brightKitchenIsland, alt: "Bright open kitchen with large island", category: "kitchens" },
-    { src: kitchenIslandSeating, alt: "Kitchen island with built-in seating", category: "kitchens" },
     { src: openConceptMarbleKitchen, alt: "Open concept kitchen with marble and wood accents", category: "kitchens" },
     { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration", category: "kitchens" },
     { src: modernKitchenIslandBarStools, alt: "Modern kitchen island with wood bar stools and marble waterfall edge", category: "kitchens" },
