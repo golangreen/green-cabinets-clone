@@ -52,6 +52,19 @@ const suppliers: Supplier[] = [
       "Wide variety of wood species",
       "Natural and authentic finishes"
     ]
+  },
+  {
+    id: "richelieu",
+    name: "Richelieu",
+    description: "Comprehensive hardware and accessories solutions",
+    website: "https://www.richelieu.com/us/en/",
+    details: "Richelieu is a leading distributor and manufacturer of specialty hardware and complementary products. We partner with them to source a wide range of cabinet hardware, decorative accessories, and functional solutions for custom cabinetry.",
+    products: [
+      "Cabinet hardware and pulls",
+      "Decorative accessories",
+      "Functional storage solutions",
+      "Lighting and organizational systems"
+    ]
   }
 ];
 
