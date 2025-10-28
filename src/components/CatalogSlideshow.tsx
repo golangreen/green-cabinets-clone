@@ -28,13 +28,13 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   useEffect(() => {
     if (!isOpen) return;
 
-    // Initialize waterfall audio
+    // Initialize nature ambiance audio
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      // Using a calming waterfall sound
-      audioRef.current.src = "https://www.soundjay.com/nature/sounds/waterfall-1.mp3";
+      // Using calm and joyful birds chirping sound
+      audioRef.current.src = "https://www.soundjay.com/nature/sounds/birds-chirping-1.mp3";
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.12;
+      audioRef.current.volume = 0.15;
     }
 
     audioRef.current.play().catch(() => {
