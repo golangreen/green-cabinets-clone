@@ -24,7 +24,7 @@ const Services = () => {
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <h2 className="font-display text-5xl md:text-6xl font-bold text-foreground">
-            Simple, fast & reliable
+            Simple, Fast & Reliable
           </h2>
           <p className="text-xl text-muted-foreground">
             From design to installation, we make premium cabinetry accessible to everyone.
