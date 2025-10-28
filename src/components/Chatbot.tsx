@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, ChevronUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -128,8 +128,24 @@ const Chatbot = () => {
     await streamChat(userMessage);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
+      {/* Scroll to Top Button */}
+      {!isOpen && (
+        <Button
+          onClick={scrollToTop}
+          className="fixed bottom-24 right-6 h-12 w-12 rounded-full shadow-elegant z-50"
+          size="icon"
+          variant="secondary"
+        >
+          <ChevronUp className="h-5 w-5" />
+        </Button>
+      )}
+
       {/* Chat Button */}
       {!isOpen && (
         <Button
