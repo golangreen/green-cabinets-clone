@@ -60,7 +60,7 @@ const Footer = () => {
                   718-454-5480
                 </a>
               </li>
-              <li>10 Montieth St<br />Brooklyn, NY 11206</li>
+              <li>BUSHWICK<br />Brooklyn, NY 11206</li>
             </ul>
           </div>
         </div>

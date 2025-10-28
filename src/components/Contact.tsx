@@ -62,7 +62,7 @@ const Contact = () => {
             </div>
             <h3 className="font-display text-xl font-bold text-foreground mb-3">Visit Us</h3>
             <address className="text-muted-foreground not-italic">
-              10 Montieth St<br />
+              BUSHWICK<br />
               Brooklyn, NY 11206
             </address>
           </div>
