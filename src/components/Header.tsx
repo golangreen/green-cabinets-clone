@@ -152,8 +152,8 @@ const Header = () => {
           <div className="flex items-center gap-4 font-display">
             {/* Get Quote Button - Desktop */}
             <Button
-              size="lg"
-              className="hidden md:inline-flex"
+              size="default"
+              className="hidden md:inline-flex text-sm px-4"
               onClick={() => {
                 const ctaSection = document.querySelector('section[class*="py-32"]');
                 if (ctaSection) {
@@ -166,7 +166,7 @@ const Header = () => {
                 }
               }}
             >
-              Get Free Quote
+              Get Quote
             </Button>
 
             {/* Mobile Menu */}
