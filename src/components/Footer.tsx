@@ -30,20 +30,20 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Services</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">Kitchen Cabinets</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Bathroom Vanities</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Custom Storage</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Installation</a></li>
+              <li><a href="#services" className="hover:text-foreground transition-colors">Our Services</a></li>
+              <li><a href="#gallery?category=kitchens" className="hover:text-foreground transition-colors">Kitchen Cabinets</a></li>
+              <li><a href="#gallery?category=vanities" className="hover:text-foreground transition-colors">Bathroom Vanities</a></li>
+              <li><a href="#gallery?category=closets" className="hover:text-foreground transition-colors">Custom Storage</a></li>
             </ul>
           </div>
           
           <div>
             <h4 className="font-semibold text-foreground mb-4">Company</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Our Process</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Testimonials</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Contact</a></li>
+              <li><a href="#about" className="hover:text-foreground transition-colors">About Us</a></li>
+              <li><a href="#solutions" className="hover:text-foreground transition-colors">Our Solutions</a></li>
+              <li><a href="#gallery" className="hover:text-foreground transition-colors">Portfolio</a></li>
+              <li><a href="#contact" className="hover:text-foreground transition-colors">Contact</a></li>
             </ul>
           </div>
           
