@@ -215,7 +215,6 @@ const Gallery = () => {
     { src: brightWhiteKitchenIslandWindows, alt: "Bright white kitchen with island and floor-to-ceiling windows", category: "kitchens" },
 
     // === GRAY KITCHENS ===
-    { src: grayKitchenCorner, alt: "Gray L-shaped kitchen installation", category: "kitchens" },
     { src: modernGrayConstruction, alt: "Modern gray kitchen under construction", category: "kitchens" },
     { src: grayKitchenConstruction, alt: "Contemporary gray kitchen in progress", category: "kitchens" },
     { src: modernKitchenCabinetsGray, alt: "Modern gray kitchen cabinets installation", category: "kitchens" },
