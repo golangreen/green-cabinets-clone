@@ -92,7 +92,7 @@ const suppliers: Supplier[] = [
   },
   {
     id: "greencabinets",
-    name: "Green Cabinets (That's us)",
+    name: "Green Cabinets",
     description: "Premium custom cabinetry and design excellence",
     logo: greenCabinetsLogo,
     website: "catalog",
@@ -150,7 +150,12 @@ const Suppliers = () => {
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="text-xl font-semibold">{supplier.name}</h3>
+                      <div>
+                        <h3 className="text-xl font-semibold">{supplier.name}</h3>
+                        {supplier.id === 'greencabinets' && (
+                          <p className="text-sm text-muted-foreground italic">(That's us)</p>
+                        )}
+                      </div>
                       {supplier.website === "catalog" ? (
                         <Image className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                       ) : (
