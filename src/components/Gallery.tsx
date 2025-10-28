@@ -20,7 +20,6 @@ import kitchenIslandSeating from "@/assets/gallery/kitchen-island-seating.jpg";
 import openConceptMarbleKitchen from "@/assets/gallery/open-concept-marble-kitchen.jpg";
 import marbleWoodKitchenIsland from "@/assets/gallery/marble-wood-kitchen-island.jpg";
 import contemporaryWoodCabinets from "@/assets/gallery/contemporary-wood-cabinets.jpg";
-import darkKitchenMarbleConstruction from "@/assets/gallery/dark-kitchen-marble-construction.jpeg";
 import modernWhiteWoodIsland from "@/assets/gallery/modern-white-wood-island-kitchen.jpg";
 import whiteWoodIslandSideView from "@/assets/gallery/white-wood-island-side-view.jpg";
 import modernKitchenDarkIsland from "@/assets/gallery/modern-kitchen-dark-island.jpg";
@@ -220,7 +219,6 @@ const Gallery = () => {
 
     // === DARK WOOD & CHERRY KITCHENS ===
     { src: blackCabinet, alt: "Modern black freestanding cabinet", category: "kitchens" },
-    { src: darkKitchenMarbleConstruction, alt: "Dark kitchen with marble backsplash under construction", category: "kitchens" },
     { src: modernKitchenDarkIsland, alt: "Modern kitchen with dark island and pendant lighting", category: "kitchens" },
 
     // === NATURAL WOOD KITCHENS ===
