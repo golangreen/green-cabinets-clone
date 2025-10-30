@@ -7,6 +7,7 @@ import blumLogo from "@/assets/logos/blum-logo.png";
 import tafisaLogo from "@/assets/logos/tafisa-logo.png";
 import richelieuLogo from "@/assets/logos/richelieu-logo.png";
 import shinnokiLogo from "@/assets/logos/shinnoki-logo.png";
+import wilsonartLogo from "@/assets/logos/wilsonart-logo.png";
 import greenCabinetsLogo from "@/assets/logos/green-cabinets-logo.jpg";
 
 interface Supplier {
@@ -88,6 +89,20 @@ const suppliers: Supplier[] = [
       "Decorative accessories",
       "Functional storage solutions",
       "Lighting and organizational systems"
+    ]
+  },
+  {
+    id: "wilsonart",
+    name: "Wilsonart",
+    description: "Premium thermally fused laminate surfaces",
+    logo: wilsonartLogo,
+    website: "https://www.wilsonart.com/laminate/thermally-fused-laminate/design-library",
+    details: "Wilsonart is a world-leading manufacturer of engineered surfaces. We use their premium thermally fused laminate (TFL) products to create stunning, durable cabinetry with an extensive range of contemporary designs and finishes.",
+    products: [
+      "Thermally fused laminate panels",
+      "Extensive design library",
+      "Durable decorative surfaces",
+      "Modern colors and textures"
     ]
   },
   {
