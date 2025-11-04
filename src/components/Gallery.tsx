@@ -104,6 +104,8 @@ import designRenderKitchen1View2 from "@/assets/gallery/design-render-kitchen-1-
 import designRenderKitchen1View3 from "@/assets/gallery/design-render-kitchen-1-view3.jpeg";
 import designRealityKitchen1CompletedView1 from "@/assets/gallery/design-reality-kitchen-1-completed-view1.webp";
 import designRealityKitchen1CompletedView2 from "@/assets/gallery/design-reality-kitchen-1-completed-view2.webp";
+import designRenderKitchen2View1 from "@/assets/gallery/design-render-kitchen-2-view1.jpg";
+import designRealityKitchen2CompletedView1 from "@/assets/gallery/design-reality-kitchen-2-completed-view1.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "design-to-reality" | "all";
 
@@ -300,6 +302,10 @@ const Gallery = () => {
     { src: designRenderKitchen1View3, alt: "Top-down view of modern kitchen design layout with cabinetry placement", category: "design-to-reality" },
     { src: designRealityKitchen1CompletedView1, alt: "Completed modern kitchen with natural wood cabinetry and marble waterfall island", category: "design-to-reality" },
     { src: designRealityKitchen1CompletedView2, alt: "Close-up view of completed kitchen showing wood cabinetry detail and marble island", category: "design-to-reality" },
+
+    // Project 2: Contemporary Kitchen with White and Wood Cabinetry
+    { src: designRenderKitchen2View1, alt: "3D rendering of contemporary kitchen with wood and white cabinets and gray island countertop", category: "design-to-reality" },
+    { src: designRealityKitchen2CompletedView1, alt: "Completed contemporary kitchen with white upper cabinets, wood lower cabinets, and marble island", category: "design-to-reality" },
   ] as GalleryImage[];
 
   const filteredImages = activeCategory === "all" 
