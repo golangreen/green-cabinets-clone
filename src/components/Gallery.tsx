@@ -106,6 +106,9 @@ import designRealityKitchen1CompletedView1 from "@/assets/gallery/design-reality
 import designRealityKitchen1CompletedView2 from "@/assets/gallery/design-reality-kitchen-1-completed-view2.webp";
 import designRenderKitchen2View1 from "@/assets/gallery/design-render-kitchen-2-view1.jpg";
 import designRealityKitchen2CompletedView1 from "@/assets/gallery/design-reality-kitchen-2-completed-view1.webp";
+import designRenderKitchen2View2 from "@/assets/gallery/design-render-kitchen-2-view2.jpg";
+import designRealityKitchen2CompletedView2 from "@/assets/gallery/design-reality-kitchen-2-completed-view2.webp";
+import designRealityKitchen2CompletedView3 from "@/assets/gallery/design-reality-kitchen-2-completed-view3.webp";
 import contemporaryBathroomWoodVanityDoubleSink from "@/assets/gallery/contemporary-bathroom-wood-vanity-double-sink.webp";
 import contemporaryBathroomWoodVanityTubShower from "@/assets/gallery/contemporary-bathroom-wood-vanity-tub-shower.webp";
 
@@ -309,7 +312,10 @@ const Gallery = () => {
 
     // Project 2: Contemporary Kitchen with White and Wood Cabinetry
     { src: designRenderKitchen2View1, alt: "3D rendering of contemporary kitchen with wood and white cabinets and gray island countertop", category: "design-to-reality" },
+    { src: designRenderKitchen2View2, alt: "3D rendering of contemporary kitchen - alternate view showing layout and materials", category: "design-to-reality" },
     { src: designRealityKitchen2CompletedView1, alt: "Completed contemporary kitchen with white upper cabinets, wood lower cabinets, and marble island", category: "design-to-reality" },
+    { src: designRealityKitchen2CompletedView2, alt: "Completed contemporary kitchen with wood and white cabinets, island dining area, and terrace access", category: "design-to-reality" },
+    { src: designRealityKitchen2CompletedView3, alt: "Open concept living space with completed contemporary kitchen featuring wood island and modern design", category: "design-to-reality" },
   ] as GalleryImage[];
 
   const filteredImages = activeCategory === "all" 
