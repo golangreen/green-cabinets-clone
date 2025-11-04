@@ -106,6 +106,8 @@ import designRealityKitchen1CompletedView1 from "@/assets/gallery/design-reality
 import designRealityKitchen1CompletedView2 from "@/assets/gallery/design-reality-kitchen-1-completed-view2.webp";
 import designRenderKitchen2View1 from "@/assets/gallery/design-render-kitchen-2-view1.jpg";
 import designRealityKitchen2CompletedView1 from "@/assets/gallery/design-reality-kitchen-2-completed-view1.webp";
+import contemporaryBathroomWoodVanityDoubleSink from "@/assets/gallery/contemporary-bathroom-wood-vanity-double-sink.webp";
+import contemporaryBathroomWoodVanityTubShower from "@/assets/gallery/contemporary-bathroom-wood-vanity-tub-shower.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "design-to-reality" | "all";
 
@@ -278,6 +280,8 @@ const Gallery = () => {
     { src: modernBathroomTubWoodVanity, alt: "Modern bathroom with tub, glass shower, and natural wood floating vanity", category: "vanities" },
     { src: contemporaryBathroomDoubleVanity, alt: "Contemporary bathroom with double sink wood vanity and marble countertop", category: "vanities" },
     { src: modernBathroomGlassShowerWood, alt: "Modern bathroom with wood vanity, glass walk-in shower, and marble tiles", category: "vanities" },
+    { src: contemporaryBathroomWoodVanityDoubleSink, alt: "Contemporary bathroom with natural wood floating double vanity, marble backsplash, and mirror medicine cabinets", category: "vanities" },
+    { src: contemporaryBathroomWoodVanityTubShower, alt: "Contemporary bathroom with wood floating vanity, marble tile, built-in tub, and walk-in shower", category: "vanities" },
 
     // ==================== CLOSETS & STORAGE ====================
     { src: bedroomCloset, alt: "Custom gray bedroom built-in closet", category: "closets" },
