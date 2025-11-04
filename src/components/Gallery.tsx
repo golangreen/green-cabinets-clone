@@ -47,11 +47,7 @@ import contemporaryBathroomMixedMarble from "@/assets/gallery/contemporary-bathr
 import naturalWoodHallwayCabinets from "@/assets/gallery/natural-wood-hallway-cabinets.jpeg";
 import modernWorkspaceWoodDeskBrick from "@/assets/gallery/modern-workspace-wood-desk-brick.jpeg";
 import modernStudioWoodCabinetry from "@/assets/gallery/modern-studio-wood-cabinetry.jpeg";
-import compactKitchenWoodIslandWhite from "@/assets/gallery/compact-kitchen-wood-island-white.jpeg";
-import naturalWoodKitchenWhiteCountertops from "@/assets/gallery/natural-wood-kitchen-white-countertops.jpeg";
 import modernOpenLivingWoodKitchen from "@/assets/gallery/modern-open-living-wood-kitchen.jpeg";
-import contemporaryLivingWoodKitchenIsland from "@/assets/gallery/contemporary-living-wood-kitchen-island.jpeg";
-import modernKitchenIslandGlassPendants from "@/assets/gallery/modern-kitchen-island-glass-pendants.jpeg";
 import contemporaryWhiteGrayKitchen from "@/assets/gallery/contemporary-white-gray-kitchen.jpeg";
 import brightModernWhiteKitchenOpen from "@/assets/gallery/bright-modern-white-kitchen-open.jpeg";
 import modernWhiteKitchenPendants from "@/assets/gallery/modern-white-kitchen-pendants.jpeg";
@@ -226,11 +222,7 @@ const Gallery = () => {
     { src: naturalWoodGalleyKitchen, alt: "Natural wood galley kitchen with marble backsplash and white countertops", category: "kitchens" },
     { src: naturalWoodOpenConceptKitchen, alt: "Natural wood open concept kitchen with dining area", category: "kitchens" },
     { src: woodKitchenOutdoorAccess, alt: "Wood kitchen with marble countertops and outdoor patio access", category: "kitchens" },
-    { src: compactKitchenWoodIslandWhite, alt: "Compact kitchen with wood island and white countertops", category: "kitchens" },
-    { src: naturalWoodKitchenWhiteCountertops, alt: "Natural wood kitchen with white countertops and glass pendant lights", category: "kitchens" },
     { src: modernOpenLivingWoodKitchen, alt: "Modern open concept living area with wood kitchen and pendant lighting", category: "kitchens" },
-    { src: contemporaryLivingWoodKitchenIsland, alt: "Contemporary living room with open wood kitchen island and bar seating", category: "kitchens" },
-    { src: modernKitchenIslandGlassPendants, alt: "Modern kitchen island with wood cabinets and glass globe pendant lights", category: "kitchens" },
     { src: loftKitchenExposedBrickNaturalWood, alt: "Loft kitchen with natural wood cabinetry, exposed brick wall, and pendant lighting", category: "kitchens" },
     { src: modernKitchenIslandOrangeStools, alt: "Modern kitchen with wood island, gray marble countertop, and orange bar stools", category: "kitchens" },
     { src: contemporaryKitchenGrayCountertop, alt: "Contemporary kitchen with natural wood cabinetry, gray waterfall island, and pendant lighting", category: "kitchens" },
