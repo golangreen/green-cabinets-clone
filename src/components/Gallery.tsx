@@ -99,6 +99,9 @@ import minimalistWhiteKitchenWoodFloor from "@/assets/gallery/minimalist-white-k
 import modernWhiteKitchenOpenLiving from "@/assets/gallery/modern-white-kitchen-open-living.webp";
 import contemporaryWhiteKitchenMarbleIsland from "@/assets/gallery/contemporary-white-kitchen-marble-island.webp";
 import brightWhiteKitchenIslandWindows from "@/assets/gallery/bright-white-kitchen-island-windows.webp";
+import designRenderKitchen1View1 from "@/assets/gallery/design-render-kitchen-1-view1.jpeg";
+import designRenderKitchen1View2 from "@/assets/gallery/design-render-kitchen-1-view2.jpeg";
+import designRenderKitchen1View3 from "@/assets/gallery/design-render-kitchen-1-view3.jpeg";
 
 type Category = "kitchens" | "vanities" | "closets" | "design-to-reality" | "all";
 
@@ -289,11 +292,10 @@ const Gallery = () => {
     { src: modernStudioWoodCabinetry, alt: "Modern studio apartment with custom wood cabinetry and dining area", category: "closets" },
 
     // ==================== DESIGN TO REALITY ====================
-    // Add your images here in order: Floor Plan → Rendering → Real Pictures
-    // Example:
-    // { src: floorPlanImage1, alt: "Floor plan for kitchen renovation", category: "design-to-reality" },
-    // { src: renderingImage1, alt: "3D rendering of kitchen design", category: "design-to-reality" },
-    // { src: realPhotoImage1, alt: "Completed kitchen installation", category: "design-to-reality" },
+    // Project 1: Modern Kitchen with Wood Cabinetry
+    { src: designRenderKitchen1View1, alt: "3D rendering of modern kitchen with natural wood cabinets and dark countertop - perspective view", category: "design-to-reality" },
+    { src: designRenderKitchen1View2, alt: "3D rendering of modern kitchen with natural wood cabinets and dark countertop - alternate angle", category: "design-to-reality" },
+    { src: designRenderKitchen1View3, alt: "Top-down view of modern kitchen design layout with cabinetry placement", category: "design-to-reality" },
   ] as GalleryImage[];
 
   const filteredImages = activeCategory === "all" 
