@@ -102,6 +102,8 @@ import brightWhiteKitchenIslandWindows from "@/assets/gallery/bright-white-kitch
 import designRenderKitchen1View1 from "@/assets/gallery/design-render-kitchen-1-view1.jpeg";
 import designRenderKitchen1View2 from "@/assets/gallery/design-render-kitchen-1-view2.jpeg";
 import designRenderKitchen1View3 from "@/assets/gallery/design-render-kitchen-1-view3.jpeg";
+import designRealityKitchen1CompletedView1 from "@/assets/gallery/design-reality-kitchen-1-completed-view1.webp";
+import designRealityKitchen1CompletedView2 from "@/assets/gallery/design-reality-kitchen-1-completed-view2.webp";
 
 type Category = "kitchens" | "vanities" | "closets" | "design-to-reality" | "all";
 
@@ -292,10 +294,12 @@ const Gallery = () => {
     { src: modernStudioWoodCabinetry, alt: "Modern studio apartment with custom wood cabinetry and dining area", category: "closets" },
 
     // ==================== DESIGN TO REALITY ====================
-    // Project 1: Modern Kitchen with Wood Cabinetry
+    // Project 1: Modern Kitchen with Wood Cabinetry and Marble Island
     { src: designRenderKitchen1View1, alt: "3D rendering of modern kitchen with natural wood cabinets and dark countertop - perspective view", category: "design-to-reality" },
     { src: designRenderKitchen1View2, alt: "3D rendering of modern kitchen with natural wood cabinets and dark countertop - alternate angle", category: "design-to-reality" },
     { src: designRenderKitchen1View3, alt: "Top-down view of modern kitchen design layout with cabinetry placement", category: "design-to-reality" },
+    { src: designRealityKitchen1CompletedView1, alt: "Completed modern kitchen with natural wood cabinetry and marble waterfall island", category: "design-to-reality" },
+    { src: designRealityKitchen1CompletedView2, alt: "Close-up view of completed kitchen showing wood cabinetry detail and marble island", category: "design-to-reality" },
   ] as GalleryImage[];
 
   const filteredImages = activeCategory === "all" 
