@@ -51,18 +51,18 @@ serve(async (req) => {
       const session = event.data.object as Stripe.Checkout.Session;
       console.log("Processing completed checkout session:", session.id);
 
-      // Extract cart items from metadata
-      const cartItemsJson = session.metadata?.cart_items;
-      if (!cartItemsJson) {
-        console.error("No cart items found in session metadata");
-        return new Response(JSON.stringify({ error: "No cart items in metadata" }), {
+      // Extract order items from metadata
+      const orderItemsJson = session.metadata?.order_items;
+      if (!orderItemsJson) {
+        console.error("No order items found in session metadata");
+        return new Response(JSON.stringify({ error: "No order items in metadata" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      const cartItems = JSON.parse(cartItemsJson);
-      console.log("Cart items:", cartItems);
+      const orderItems = JSON.parse(orderItemsJson);
+      console.log("Order items:", orderItems);
 
       // Get customer details
       const customerName = session.metadata?.customer_name || "Customer";
@@ -77,14 +77,14 @@ serve(async (req) => {
       }
 
       // Build line items for Shopify
-      const lineItems = cartItems.map((item: any) => {
+      const lineItems = orderItems.map((item: any) => {
         const customTotal = item.customAttributes?.find((attr: any) => 
           attr.key === "Total Estimate"
         );
         
         const totalValue = customTotal 
           ? parseFloat(customTotal.value.replace(/[^0-9.]/g, ''))
-          : parseFloat(item.price.amount) * item.quantity;
+          : parseFloat(item.price) * item.quantity;
 
         // Extract variant ID number from GraphQL ID
         const variantIdMatch = item.variantId.match(/ProductVariant\/(\d+)/);
@@ -94,7 +94,7 @@ serve(async (req) => {
           variant_id: variantId ? parseInt(variantId) : null,
           quantity: item.quantity,
           price: totalValue.toFixed(2),
-          title: item.product.node.title,
+          title: item.productTitle,
           properties: item.customAttributes?.map((attr: any) => ({
             name: attr.key,
             value: attr.value,

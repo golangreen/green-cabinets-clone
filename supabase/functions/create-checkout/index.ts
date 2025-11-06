@@ -64,7 +64,16 @@ serve(async (req) => {
 
     console.log("Creating Stripe checkout session with line items:", lineItems);
 
-    // Create checkout session with metadata containing all custom details
+    // Extract only essential data for metadata (Stripe has 500 char limit per value)
+    const orderItems = items.map((item: any, index: number) => ({
+      variantId: item.variantId,
+      productTitle: item.product.node.title,
+      quantity: item.quantity,
+      price: item.price.amount,
+      customAttributes: item.customAttributes || []
+    }));
+
+    // Create checkout session with metadata containing essential order data
     const session = await stripe.checkout.sessions.create({
       customer_email: customerEmail,
       line_items: lineItems,
@@ -73,7 +82,7 @@ serve(async (req) => {
       cancel_url: `${req.headers.get("origin")}/checkout`,
       metadata: {
         customer_name: customerName,
-        cart_items: JSON.stringify(items), // Store complete cart data for webhook
+        order_items: JSON.stringify(orderItems),
       },
     });
 
