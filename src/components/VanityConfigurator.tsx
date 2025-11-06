@@ -232,7 +232,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           <p className="text-muted-foreground">{product.node.description}</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-6">
           {/* Configuration Form */}
           <Card>
             <CardHeader>
@@ -369,12 +369,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </CardContent>
         </Card>
 
-        {/* Finish Preview */}
+        {/* Finish Preview - Full width for better visibility */}
         {selectedBrand && selectedFinish && (
-          <FinishPreview 
-            brand={selectedBrand} 
-            finish={selectedFinish}
-          />
+          <div className="w-full">
+            <FinishPreview 
+              brand={selectedBrand} 
+              finish={selectedFinish}
+            />
+          </div>
         )}
       </div>
 

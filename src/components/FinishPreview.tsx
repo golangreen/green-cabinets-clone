@@ -1,6 +1,31 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Map finish names to their actual product image URLs from manufacturer websites
+const FINISH_IMAGE_URLS: Record<string, string> = {
+  // Tafisa finishes
+  'White': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L175_White_Blanc.jpg',
+  'Cream Puff': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L781_cream%20puff_chou%20a%20la%20creme.jpg',
+  'Sand Castle': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L782_Sand%20Castle_Ch%C3%A2teau%20de%20Sable.jpg',
+  'Tiramisu': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L783_Tiramisu_Tiramisu.jpg',
+  'Secret Garden': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L784_Secret%20Garden_Jardin%20Secret.jpg',
+  'Froth of Sea': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB__L080_Froth%20of%20Sea_%C3%89cume%20de%20Mer.jpg',
+  'Gardenia': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L775_Gardenia_Gard%C3%A9nia.jpg',
+  'Cashmere': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L775_Gardenia_Gard%C3%A9nia_0.jpg',
+  'Morning Dew': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L763_Morning%20Dew_Rose%CC%81e%20du%20Matin.jpg',
+  'Daybreak': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L764_Daybreak_Au%20Petit%20Matin.jpg',
+  'Milky Way': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L767_Milky%20Way_Voie%20Lact%C3%A9e.jpg',
+  'Summer Drops': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L202_Summer%20Drops_Grisaille.jpg',
+  'Moonlight': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L761_Moonlight_Claire%20de%20Lune.jpg',
+  'White Chocolate': 'https://tafisa.ca/sites/default/files/2020-04/tafisa_L492%28R%29_24X24_72dpi.jpg',
+  'Natural Affinity': 'https://tafisa.ca/sites/default/files/2023-05/L586K%20NaturalAffinity_12x12.jpg',
+  'Free Spirit': 'https://tafisa.ca/sites/default/files/2020-10/L580%28K%29%20Free%20Spirit_Esprit%20Libre_24X24%20%28Medium%29_0.jpg',
+  'Niagara': 'https://tafisa.ca/sites/default/files/2020-03/Tafisa_L544%28A%29_24X24_72dpi.jpg',
+  'Love at First Sight': 'https://tafisa.ca/sites/default/files/2023-05/L590-12x12_Compress%C3%A9.jpg',
+  'Summer Breeze': 'https://tafisa.ca/sites/default/files/2020-04/tafisa_L540%28A%29_24X24_72dpi.jpg',
+  'Mojave': 'https://tafisa.ca/sites/default/files/2020-03/Tafisa_L546%28A%29_24X24_72dpi.jpg',
+};
+
 interface FinishPreviewProps {
   brand: string;
   finish: string;
@@ -54,8 +79,9 @@ const FINISH_DESCRIPTIONS: Record<string, string> = {
 export const FinishPreview = ({ brand, finish, isLoading }: FinishPreviewProps) => {
   const description = FINISH_DESCRIPTIONS[finish] || 'Premium cabinet finish';
   const isWoodVeneer = brand === 'Shinnoki';
+  const imageUrl = FINISH_IMAGE_URLS[finish];
   
-  // Accurate color mapping for each finish
+  // Fallback color mapping if no image available
   const getFinishColors = () => {
     switch (finish) {
       // Tafisa - Whites & Creams
@@ -123,67 +149,80 @@ export const FinishPreview = ({ brand, finish, isLoading }: FinishPreviewProps) 
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg">Finish Preview</CardTitle>
+        <CardTitle className="text-lg">Actual Finish Sample</CardTitle>
+        <p className="text-sm text-muted-foreground">High-quality image from manufacturer</p>
       </CardHeader>
       <CardContent className="space-y-4">
         {isLoading ? (
           <Skeleton className="w-full aspect-square rounded-lg" />
         ) : (
           <>
-            {/* Large Preview */}
-            <div className="relative w-full aspect-square rounded-lg overflow-hidden border-2 border-border shadow-lg">
-              <div 
-                className="absolute inset-0"
-                style={{
-                  background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.via} 50%, ${colors.to} 100%)`,
-                }}
-              >
-                {isWoodVeneer && (
-                  <>
-                    {/* Wood grain pattern */}
+            {/* Large Preview - Show actual manufacturer image if available */}
+            <div className="relative w-full aspect-square rounded-lg overflow-hidden border-2 border-border shadow-2xl">
+              {imageUrl ? (
+                <img 
+                  src={imageUrl}
+                  alt={`${brand} ${finish} finish sample`}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback to gradient if image fails to load
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div 
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.via} 50%, ${colors.to} 100%)`,
+                  }}
+                >
+                  {isWoodVeneer && (
+                    <>
+                      {/* Wood grain pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-30"
+                        style={{
+                          backgroundImage: `repeating-linear-gradient(
+                            90deg,
+                            transparent,
+                            transparent 3px,
+                            rgba(0,0,0,0.15) 3px,
+                            rgba(0,0,0,0.15) 4px
+                          ), repeating-linear-gradient(
+                            0deg,
+                            transparent,
+                            transparent 40px,
+                            rgba(0,0,0,0.08) 40px,
+                            rgba(0,0,0,0.08) 42px
+                          )`,
+                        }}
+                      />
+                      {/* Subtle wood texture */}
+                      <div 
+                        className="absolute inset-0 opacity-20"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                        }}
+                      />
+                    </>
+                  )}
+                  {!isWoodVeneer && (
+                    /* Melamine subtle texture */
                     <div 
-                      className="absolute inset-0 opacity-30"
+                      className="absolute inset-0 opacity-10 mix-blend-overlay"
                       style={{
-                        backgroundImage: `repeating-linear-gradient(
-                          90deg,
-                          transparent,
-                          transparent 3px,
-                          rgba(0,0,0,0.15) 3px,
-                          rgba(0,0,0,0.15) 4px
-                        ), repeating-linear-gradient(
-                          0deg,
-                          transparent,
-                          transparent 40px,
-                          rgba(0,0,0,0.08) 40px,
-                          rgba(0,0,0,0.08) 42px
-                        )`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
                       }}
                     />
-                    {/* Subtle wood texture */}
-                    <div 
-                      className="absolute inset-0 opacity-20"
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                      }}
-                    />
-                  </>
-                )}
-                {!isWoodVeneer && (
-                  /* Melamine subtle texture */
-                  <div 
-                    className="absolute inset-0 opacity-10 mix-blend-overlay"
-                    style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                    }}
-                  />
-                )}
-              </div>
-              
-              {/* Info overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                <h3 className="text-white font-semibold text-lg">{finish}</h3>
-                <p className="text-white/90 text-sm">{brand}</p>
-              </div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Finish info below image */}
+            <div className="space-y-1 border-t pt-3">
+              <h3 className="font-bold text-xl">{finish}</h3>
+              <p className="text-sm font-medium text-muted-foreground">{brand} Collection</p>
             </div>
             
             {/* Description */}
