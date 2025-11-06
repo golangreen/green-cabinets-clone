@@ -27,14 +27,20 @@ export const CartDrawer = () => {
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
 
   const handleCheckout = async () => {
+    // Open window immediately to avoid popup blockers
+    const checkoutWindow = window.open('about:blank', '_blank');
+    
     try {
       const checkoutUrl = await createCheckout();
-      if (checkoutUrl) {
-        window.open(checkoutUrl, '_blank');
+      if (checkoutUrl && checkoutWindow) {
+        checkoutWindow.location.href = checkoutUrl;
         setIsOpen(false);
+      } else if (!checkoutWindow) {
+        toast.error('Please allow popups to proceed to checkout');
       }
     } catch (error) {
       console.error('Checkout failed:', error);
+      if (checkoutWindow) checkoutWindow.close();
       toast.error('Failed to create checkout. Please try again.');
     }
   };
