@@ -1,6 +1,16 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+
+const customerDataSchema = z.object({
+  customerEmail: z.string().trim().email().max(255),
+  customerName: z.string().trim().min(1).max(100),
+});
+
+const sanitizeString = (str: string): string => {
+  return str.trim().replace(/[<>]/g, '');
+};
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,6 +24,22 @@ serve(async (req) => {
 
   try {
     const { items, customerEmail, customerName } = await req.json();
+    
+    // Validate customer data
+    const validationResult = customerDataSchema.safeParse({ customerEmail, customerName });
+    if (!validationResult.success) {
+      console.error("Validation error:", validationResult.error);
+      return new Response(
+        JSON.stringify({ error: "Invalid customer data", details: validationResult.error.errors }), 
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        }
+      );
+    }
+
+    const sanitizedEmail = sanitizeString(customerEmail);
+    const sanitizedName = sanitizeString(customerName);
     
     console.log("Creating checkout for items:", items);
 
@@ -75,13 +101,13 @@ serve(async (req) => {
 
     // Create checkout session with metadata containing essential order data
     const session = await stripe.checkout.sessions.create({
-      customer_email: customerEmail,
+      customer_email: sanitizedEmail,
       line_items: lineItems,
       mode: "payment",
       success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get("origin")}/checkout`,
       metadata: {
-        customer_name: customerName,
+        customer_name: sanitizedName,
         order_items: JSON.stringify(orderItems),
       },
     });

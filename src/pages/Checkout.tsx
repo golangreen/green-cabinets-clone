@@ -11,6 +11,18 @@ import { useCartStore } from "@/stores/cartStore";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const checkoutSchema = z.object({
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
+  lastName: z.string().trim().min(1, "Last name is required").max(50, "Last name must be less than 50 characters"),
+  address: z.string().trim().min(1, "Address is required").max(200, "Address must be less than 200 characters"),
+  city: z.string().trim().min(1, "City is required").max(100, "City must be less than 100 characters"),
+  state: z.string().trim().min(2, "State is required").max(50, "State must be less than 50 characters"),
+  zipCode: z.string().trim().regex(/^\d{5}(-\d{4})?$/, "Invalid ZIP code format (e.g., 12345 or 12345-6789)"),
+  phone: z.string().trim().regex(/^[\d\s\-\(\)\.+]*$/, "Invalid phone number format").max(20, "Phone number must be less than 20 characters").optional(),
+});
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -47,10 +59,15 @@ export default function Checkout() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form
-    if (!formData.email || !formData.firstName || !formData.lastName || !formData.address || !formData.city || !formData.state || !formData.zipCode) {
-      toast.error("Please fill in all required fields");
-      return;
+    // Validate form data
+    try {
+      checkoutSchema.parse(formData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const firstError = error.errors[0];
+        toast.error(firstError.message);
+        return;
+      }
     }
 
     setIsProcessing(true);

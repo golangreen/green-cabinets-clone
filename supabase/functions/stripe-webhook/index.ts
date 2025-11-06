@@ -1,5 +1,19 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+
+const orderItemSchema = z.object({
+  variantId: z.string().min(1),
+  productTitle: z.string().min(1).max(200),
+  quantity: z.number().int().positive().max(100),
+  price: z.string().regex(/^\d+(\.\d{1,2})?$/),
+  customAttributes: z.array(z.object({
+    key: z.string().max(100),
+    value: z.string().max(500)
+  })).optional()
+});
+
+const orderItemsSchema = z.array(orderItemSchema).min(1).max(50);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -61,11 +75,34 @@ serve(async (req) => {
         });
       }
 
-      const orderItems = JSON.parse(orderItemsJson);
-      console.log("Order items:", orderItems);
+      let orderItems;
+      try {
+        orderItems = JSON.parse(orderItemsJson);
+      } catch (parseError) {
+        console.error("Failed to parse order items:", parseError);
+        return new Response(JSON.stringify({ error: "Invalid order items format" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
-      // Get customer details
-      const customerName = session.metadata?.customer_name || "Customer";
+      // Validate order items structure
+      const validationResult = orderItemsSchema.safeParse(orderItems);
+      if (!validationResult.success) {
+        console.error("Order items validation failed:", validationResult.error);
+        return new Response(JSON.stringify({ 
+          error: "Invalid order items data",
+          details: validationResult.error.errors 
+        }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      console.log("Validated order items:", orderItems);
+
+      // Get customer details and sanitize
+      const customerName = (session.metadata?.customer_name || "Customer").trim().substring(0, 100);
       const customerEmail = session.customer_details?.email || session.customer_email || "";
 
       // Create Shopify order

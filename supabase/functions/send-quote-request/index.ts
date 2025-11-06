@@ -1,12 +1,49 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "https://esm.sh/resend@2.0.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+
+const quoteRequestSchema = z.object({
+  customerName: z.string().trim().min(1).max(100),
+  customerEmail: z.string().trim().email().max(255),
+  customerPhone: z.string().trim().regex(/^[\d\s\-\(\)\.+]+$/).min(10).max(20),
+  brand: z.string().trim().min(1).max(100),
+  finish: z.string().trim().min(1).max(100),
+  width: z.string().trim().min(1).max(20),
+  height: z.string().trim().min(1).max(20),
+  depth: z.string().trim().min(1).max(20),
+  zipCode: z.string().trim().regex(/^\d{5}$/),
+  basePrice: z.string().trim().max(20),
+  tax: z.string().trim().max(20),
+  shipping: z.string().trim().max(20),
+  totalPrice: z.string().trim().max(20),
+});
+
+// Simple in-memory rate limiting (for basic protection)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+const MAX_REQUESTS_PER_WINDOW = 5;
+
+const checkRateLimit = (ip: string): boolean => {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+  
+  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    return false;
+  }
+  
+  record.count++;
+  return true;
+};
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 interface QuoteRequest {
@@ -31,12 +68,57 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const quoteData: QuoteRequest = await req.json();
+    // Get client IP for rate limiting
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0] || 
+                     req.headers.get("x-real-ip") || 
+                     "unknown";
+    
+    // Check rate limit
+    if (!checkRateLimit(clientIp)) {
+      console.warn(`Rate limit exceeded for IP: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Too many requests. Please try again later.",
+          retryAfter: 3600
+        }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
-    // Send email to business owner
-    const ownerEmail = await resend.emails.send({
+    const rawData = await req.json();
+    
+    // Validate input data
+    const validationResult = quoteRequestSchema.safeParse(rawData);
+    if (!validationResult.success) {
+      console.error("Validation error:", validationResult.error);
+      return new Response(
+        JSON.stringify({ 
+          error: "Invalid input data", 
+          details: validationResult.error.errors 
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const quoteData: QuoteRequest = validationResult.data;
+    console.log(`Processing quote request from IP: ${clientIp}, Email: ${quoteData.customerEmail}`);
+
+    // Send email to business owner using Resend API
+    const ownerEmailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
       from: "Green Cabinets Quote <onboarding@resend.dev>",
-      to: ["info@greencabinets.com"], // Replace with your actual business email
+      to: ["info@greencabinets.com"],
       subject: `New Custom Vanity Quote Request from ${quoteData.customerName}`,
       html: `
         <h2>New Custom Bathroom Vanity Quote Request</h2>
@@ -62,10 +144,23 @@ const handler = async (req: Request): Promise<Response> => {
           Reply to this email to contact the customer directly.
         </p>
       `,
+      }),
     });
 
+    if (!ownerEmailResponse.ok) {
+      throw new Error(`Failed to send owner email: ${await ownerEmailResponse.text()}`);
+    }
+
+    const ownerEmail = await ownerEmailResponse.json();
+
     // Send confirmation email to customer
-    const customerEmail = await resend.emails.send({
+    const customerEmailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
       from: "Green Cabinets <onboarding@resend.dev>",
       to: [quoteData.customerEmail],
       subject: "We Received Your Custom Vanity Quote Request",
@@ -94,7 +189,14 @@ const handler = async (req: Request): Promise<Response> => {
           Green Cabinets Team
         </p>
       `,
+      }),
     });
+
+    if (!customerEmailResponse.ok) {
+      throw new Error(`Failed to send customer email: ${await customerEmailResponse.text()}`);
+    }
+
+    const customerEmail = await customerEmailResponse.json();
 
     console.log("Quote request emails sent successfully");
 

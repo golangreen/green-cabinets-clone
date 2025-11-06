@@ -25,6 +25,14 @@ import { FinishPreview } from "./FinishPreview";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
 import { useCartStore } from "@/stores/cartStore";
+import { z } from "zod";
+
+const dimensionSchema = z.object({
+  width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
+  height: z.number().min(12, "Height must be at least 12 inches").max(60, "Height cannot exceed 60 inches"),
+  depth: z.number().min(12, "Depth must be at least 12 inches").max(36, "Depth cannot exceed 36 inches"),
+  zipCode: z.string().regex(/^\d{5}$/, "ZIP code must be exactly 5 digits"),
+});
 
 interface VanityConfiguratorProps {
   product: ShopifyProduct;
@@ -205,8 +213,17 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       return;
     }
 
-    if (zipCode.length !== 5) {
-      toast.error("Please enter a valid 5-digit ZIP code");
+    // Validate dimensions and zip code
+    const validationResult = dimensionSchema.safeParse({
+      width: parseFloat(width),
+      height: parseFloat(height),
+      depth: parseFloat(depth),
+      zipCode
+    });
+
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0];
+      toast.error(firstError.message);
       return;
     }
 
