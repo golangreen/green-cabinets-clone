@@ -77,6 +77,29 @@ const BRAND_INFO = {
   },
 };
 
+// Helper function to display fractions in simplified form
+const getFractionDisplay = (sixteenths: string): string => {
+  const fractions: Record<string, string> = {
+    '0': '',
+    '1': '1/16',
+    '2': '1/8',
+    '3': '3/16',
+    '4': '1/4',
+    '5': '5/16',
+    '6': '3/8',
+    '7': '7/16',
+    '8': '1/2',
+    '9': '9/16',
+    '10': '5/8',
+    '11': '11/16',
+    '12': '3/4',
+    '13': '13/16',
+    '14': '7/8',
+    '15': '15/16',
+  };
+  return fractions[sixteenths] || '';
+};
+
 export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [selectedBrand, setSelectedBrand] = useState<string>("Tafisa");
   const [selectedFinish, setSelectedFinish] = useState<string>("");
@@ -321,21 +344,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
-                    <SelectItem value="0">0/16"</SelectItem>
+                    <SelectItem value="0">0"</SelectItem>
                     <SelectItem value="1">1/16"</SelectItem>
-                    <SelectItem value="2">2/16"</SelectItem>
+                    <SelectItem value="2">1/8"</SelectItem>
                     <SelectItem value="3">3/16"</SelectItem>
-                    <SelectItem value="4">4/16"</SelectItem>
+                    <SelectItem value="4">1/4"</SelectItem>
                     <SelectItem value="5">5/16"</SelectItem>
-                    <SelectItem value="6">6/16"</SelectItem>
+                    <SelectItem value="6">3/8"</SelectItem>
                     <SelectItem value="7">7/16"</SelectItem>
-                    <SelectItem value="8">8/16"</SelectItem>
+                    <SelectItem value="8">1/2"</SelectItem>
                     <SelectItem value="9">9/16"</SelectItem>
-                    <SelectItem value="10">10/16"</SelectItem>
+                    <SelectItem value="10">5/8"</SelectItem>
                     <SelectItem value="11">11/16"</SelectItem>
-                    <SelectItem value="12">12/16"</SelectItem>
+                    <SelectItem value="12">3/4"</SelectItem>
                     <SelectItem value="13">13/16"</SelectItem>
-                    <SelectItem value="14">14/16"</SelectItem>
+                    <SelectItem value="14">7/8"</SelectItem>
                     <SelectItem value="15">15/16"</SelectItem>
                   </SelectContent>
                 </Select>
@@ -356,7 +379,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   className="w-full"
                 />
                 <p className="text-xs text-muted-foreground text-center">
-                  {width || "0"} {widthFraction !== "0" && `${widthFraction}/16`}" 
+                  {width || "0"}{widthFraction !== "0" && ` ${getFractionDisplay(widthFraction)}`}" 
                   {width && ` (${(parseFloat(width) + parseInt(widthFraction) / 16).toFixed(4)}")`}
                 </p>
               </div>
@@ -379,21 +402,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
-                    <SelectItem value="0">0/16"</SelectItem>
+                    <SelectItem value="0">0"</SelectItem>
                     <SelectItem value="1">1/16"</SelectItem>
-                    <SelectItem value="2">2/16"</SelectItem>
+                    <SelectItem value="2">1/8"</SelectItem>
                     <SelectItem value="3">3/16"</SelectItem>
-                    <SelectItem value="4">4/16"</SelectItem>
+                    <SelectItem value="4">1/4"</SelectItem>
                     <SelectItem value="5">5/16"</SelectItem>
-                    <SelectItem value="6">6/16"</SelectItem>
+                    <SelectItem value="6">3/8"</SelectItem>
                     <SelectItem value="7">7/16"</SelectItem>
-                    <SelectItem value="8">8/16"</SelectItem>
+                    <SelectItem value="8">1/2"</SelectItem>
                     <SelectItem value="9">9/16"</SelectItem>
-                    <SelectItem value="10">10/16"</SelectItem>
+                    <SelectItem value="10">5/8"</SelectItem>
                     <SelectItem value="11">11/16"</SelectItem>
-                    <SelectItem value="12">12/16"</SelectItem>
+                    <SelectItem value="12">3/4"</SelectItem>
                     <SelectItem value="13">13/16"</SelectItem>
-                    <SelectItem value="14">14/16"</SelectItem>
+                    <SelectItem value="14">7/8"</SelectItem>
                     <SelectItem value="15">15/16"</SelectItem>
                   </SelectContent>
                 </Select>
@@ -417,21 +440,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
-                    <SelectItem value="0">0/16"</SelectItem>
+                    <SelectItem value="0">0"</SelectItem>
                     <SelectItem value="1">1/16"</SelectItem>
-                    <SelectItem value="2">2/16"</SelectItem>
+                    <SelectItem value="2">1/8"</SelectItem>
                     <SelectItem value="3">3/16"</SelectItem>
-                    <SelectItem value="4">4/16"</SelectItem>
+                    <SelectItem value="4">1/4"</SelectItem>
                     <SelectItem value="5">5/16"</SelectItem>
-                    <SelectItem value="6">6/16"</SelectItem>
+                    <SelectItem value="6">3/8"</SelectItem>
                     <SelectItem value="7">7/16"</SelectItem>
-                    <SelectItem value="8">8/16"</SelectItem>
+                    <SelectItem value="8">1/2"</SelectItem>
                     <SelectItem value="9">9/16"</SelectItem>
-                    <SelectItem value="10">10/16"</SelectItem>
+                    <SelectItem value="10">5/8"</SelectItem>
                     <SelectItem value="11">11/16"</SelectItem>
-                    <SelectItem value="12">12/16"</SelectItem>
+                    <SelectItem value="12">3/4"</SelectItem>
                     <SelectItem value="13">13/16"</SelectItem>
-                    <SelectItem value="14">14/16"</SelectItem>
+                    <SelectItem value="14">7/8"</SelectItem>
                     <SelectItem value="15">15/16"</SelectItem>
                   </SelectContent>
                 </Select>
