@@ -160,7 +160,7 @@ export async function storefrontApiRequest(query: string, variables: any = {}) {
     toast.error("Shopify: Payment required", {
       description: "Shopify API access requires an active Shopify billing plan. Your store needs to be upgraded to a paid plan. Visit https://admin.shopify.com to upgrade.",
     });
-    return;
+    throw new Error('Shopify payment required - store needs to be on a paid plan');
   }
 
   if (!response.ok) {
@@ -183,10 +183,14 @@ export async function fetchProducts(first: number = 50, query?: string) {
 
 export async function createStorefrontCheckout(items: any[]): Promise<string> {
   try {
+    console.log('Creating checkout with items:', items);
+    
     const lines = items.map(item => ({
       quantity: item.quantity,
       merchandiseId: item.variantId,
     }));
+
+    console.log('Cart lines:', lines);
 
     const cartData = await storefrontApiRequest(CART_CREATE_MUTATION, {
       input: {
@@ -194,21 +198,36 @@ export async function createStorefrontCheckout(items: any[]): Promise<string> {
       },
     });
 
+    if (!cartData || !cartData.data) {
+      throw new Error('No response from Shopify API');
+    }
+
+    console.log('Cart data:', cartData);
+
     if (cartData.data.cartCreate.userErrors.length > 0) {
-      throw new Error(`Cart creation failed: ${cartData.data.cartCreate.userErrors.map((e: any) => e.message).join(', ')}`);
+      const errors = cartData.data.cartCreate.userErrors.map((e: any) => e.message).join(', ');
+      toast.error('Cart creation failed', { description: errors });
+      throw new Error(`Cart creation failed: ${errors}`);
     }
 
     const cart = cartData.data.cartCreate.cart;
     
     if (!cart.checkoutUrl) {
+      toast.error('No checkout URL returned from Shopify');
       throw new Error('No checkout URL returned from Shopify');
     }
 
     const url = new URL(cart.checkoutUrl);
     url.searchParams.set('channel', 'online_store');
-    return url.toString();
+    const finalUrl = url.toString();
+    
+    console.log('Final checkout URL:', finalUrl);
+    return finalUrl;
   } catch (error) {
     console.error('Error creating storefront checkout:', error);
+    toast.error('Checkout failed', { 
+      description: error instanceof Error ? error.message : 'Unknown error occurred' 
+    });
     throw error;
   }
 }
