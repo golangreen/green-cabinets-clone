@@ -260,7 +260,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       <div className="space-y-6 lg:col-span-2 md:col-span-1">
         <div>
           <h1 className="text-3xl font-bold mb-2">{product.node.title}</h1>
-          <p className="text-muted-foreground mb-4">{product.node.description}</p>
+          <p className="text-muted-foreground mb-4">
+            {product.node.description.replace(/NY TAX/gi, '').trim()}
+          </p>
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>
               <strong>Available Brands:</strong> Tafisa (60+ melamine colors), Egger (98+ TFL & HPL finishes), and Shinnoki (prefinished wood veneer)
