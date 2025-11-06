@@ -70,7 +70,6 @@ import grayWoodBedroomCloset from "@/assets/gallery/gray-wood-bedroom-closet.jpg
 import grayWoodWardrobeConstruction from "@/assets/gallery/gray-wood-wardrobe-construction.jpg";
 import customClosetAngledCeiling from "@/assets/gallery/custom-closet-angled-ceiling.jpg";
 import lightGrayTallStorageCabinet from "@/assets/gallery/light-gray-tall-storage-cabinet.jpg";
-import whiteBathroomStorageDrawers from "@/assets/gallery/white-bathroom-storage-drawers.jpg";
 import darkWoodCornerWardrobe from "@/assets/gallery/dark-wood-corner-wardrobe.jpg";
 import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
 import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
@@ -279,7 +278,6 @@ const Gallery = () => {
     { src: luxuryMarbleBathroomShower, alt: "Luxury marble bathroom with wood vanity and walk-in glass shower", category: "vanities" },
     { src: contemporaryBathroomMixedMarble, alt: "Contemporary bathroom with wood floating vanity and mixed marble tiles", category: "vanities" },
     { src: modernBathroomFloatingWoodVanity, alt: "Modern bathroom with floating wood vanity and marble walk-in shower", category: "vanities" },
-    { src: whiteBathroomStorageDrawers, alt: "White bathroom storage cabinet with multiple drawers", category: "vanities" },
     { src: modernBathroomTubWoodVanity, alt: "Modern bathroom with tub, glass shower, and natural wood floating vanity", category: "vanities" },
     { src: contemporaryBathroomDoubleVanity, alt: "Contemporary bathroom with double sink wood vanity and marble countertop", category: "vanities" },
     { src: modernBathroomGlassShowerWood, alt: "Modern bathroom with wood vanity, glass walk-in shower, and marble tiles", category: "vanities" },
