@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, ChevronUp, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Session } from "@supabase/supabase-js";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -11,8 +14,23 @@ const Chatbot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check authentication status
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -23,6 +41,16 @@ const Chatbot = () => {
   }, [messages]);
 
   const streamChat = async (userMessage: Message) => {
+    if (!session) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login to use the chatbot",
+        variant: "destructive",
+      });
+      navigate("/auth");
+      return;
+    }
+
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
     
     try {
@@ -30,7 +58,7 @@ const Chatbot = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
@@ -152,7 +180,13 @@ const Chatbot = () => {
       {/* Chat Button */}
       {!isOpen && (
         <Button
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            if (!session) {
+              navigate("/auth");
+            } else {
+              setIsOpen(true);
+            }
+          }}
           className="fixed bottom-[100px] right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
           size="icon"
         >
