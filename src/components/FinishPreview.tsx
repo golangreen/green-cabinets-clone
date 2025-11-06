@@ -55,49 +55,70 @@ export const FinishPreview = ({ brand, finish, isLoading }: FinishPreviewProps) 
   const description = FINISH_DESCRIPTIONS[finish] || 'Premium cabinet finish';
   const isWoodVeneer = brand === 'Shinnoki';
   
-  // Generate background based on finish characteristics
-  const getFinishGradient = () => {
-    const finishLower = finish.toLowerCase();
-    
-    // Whites and Creams
-    if (finishLower.includes('white') || finishLower.includes('cream') || finishLower.includes('ivory')) {
-      return 'bg-gradient-to-br from-gray-50 via-white to-gray-100';
+  // Accurate color mapping for each finish
+  const getFinishColors = () => {
+    switch (finish) {
+      // Tafisa - Whites & Creams
+      case 'White': return { from: '#FFFFFF', to: '#F5F5F5', via: '#FAFAFA' };
+      case 'Cream Puff': return { from: '#FFF8E7', to: '#F5E6D3', via: '#FAF0E0' };
+      case 'Sand Castle': return { from: '#F5E6D3', to: '#E6D4BE', via: '#EAD9C5' };
+      case 'Tiramisu': return { from: '#E8D5B7', to: '#D4BFA3', via: '#DECAA8' };
+      case 'Gardenia': return { from: '#FAF5EE', to: '#F0EAE0', via: '#F5EFE7' };
+      case 'Cashmere': return { from: '#E8DDD0', to: '#D9C9B8', via: '#E0D3C4' };
+      
+      // Tafisa - Grays
+      case 'Froth of Sea': return { from: '#E8F0F2', to: '#D4E0E3', via: '#DDE8EB' };
+      case 'Morning Dew': return { from: '#E8E8E0', to: '#D6D6CE', via: '#DFDFD7' };
+      case 'Daybreak': return { from: '#F2E8E0', to: '#E3D6CE', via: '#EADFD7' };
+      case 'Milky Way': return { from: '#E8E8E8', to: '#D6D6D6', via: '#DFDFDF' };
+      case 'Summer Drops': return { from: '#C9C9C9', to: '#B5B5B5', via: '#BFBFBF' };
+      case 'Moonlight': return { from: '#D6D6D6', to: '#C4C4C4', via: '#CDCDCD' };
+      case 'Secret Garden': return { from: '#D9E3D3', to: '#C7D4BC', via: '#D0DBC7' };
+      
+      // Tafisa - Woods
+      case 'White Chocolate': return { from: '#F5EDE0', to: '#E6D9C9', via: '#EDE3D4' };
+      case 'Natural Affinity': return { from: '#E8D4B8', to: '#D9C5A3', via: '#E0CCA8' };
+      case 'Free Spirit': return { from: '#E0C9A8', to: '#D1BA99', via: '#D8C1A0' };
+      case 'Niagara': return { from: '#D6C9B8', to: '#C7BAA9', via: '#CEC1B0' };
+      case 'Summer Breeze': return { from: '#E0D9CE', to: '#D1CAB8', via: '#D8D1C3' };
+      case 'Mojave': return { from: '#D4BFA3', to: '#C5B094', via: '#CCB79B' };
+      case 'Fogo Harbour': return { from: '#D1BFA8', to: '#C2B099', via: '#C9B7A0' };
+      case 'Weekend Getaway': return { from: '#CEB89C', to: '#BFA98D', via: '#C6B094' };
+      case 'Crème de la Crème': return { from: '#F5F0E6', to: '#E6E0D6', via: '#EDE8DD' };
+      case 'Love at First Sight': return { from: '#E8DACC', to: '#D9CBBD', via: '#E0D2C4' };
+      
+      // Shinnoki - Light Oaks
+      case 'Bondi Oak': return { from: '#F5EDD9', to: '#E6DEC9', via: '#EDE5D1' };
+      case 'Milk Oak': return { from: '#F5F0E6', to: '#E6E0D6', via: '#EDE8DD' };
+      case 'Ivory Oak': return { from: '#F5E8D6', to: '#E6D9C7', via: '#EDE0CE' };
+      case 'Ivory Infinite Oak': return { from: '#F5E8D6', to: '#E6D9C7', via: '#EDE0CE' };
+      case 'Natural Oak': return { from: '#E8D4B8', to: '#D9C5A3', via: '#E0CCA8' };
+      case 'Pebble Triba': return { from: '#D9CEC4', to: '#CABFB5', via: '#D1C6BC' };
+      
+      // Shinnoki - Medium Oaks
+      case 'Sahara Oak': return { from: '#D9BF99', to: '#CAB08A', via: '#D1B791' };
+      case 'Desert Oak': return { from: '#D9C4A3', to: '#CAB594', via: '#D1BC9B' };
+      case 'Manhattan Oak': return { from: '#C9B099', to: '#BAA18A', via: '#C1A891' };
+      case 'Burley Oak': return { from: '#B8A08A', to: '#A9917B', via: '#B09880' };
+      
+      // Shinnoki - Walnuts
+      case 'Frozen Walnut': return { from: '#A39687', to: '#948778', via: '#9B8E7F' };
+      case 'Smoked Walnut': return { from: '#705E4D', to: '#614F3E', via: '#685647' };
+      case 'Pure Walnut': return { from: '#5E4D3E', to: '#4F3E2F', via: '#564536' };
+      case 'Stardust Walnut': return { from: '#8A735C', to: '#7B644D', via: '#826B54' };
+      
+      // Shinnoki - Dark Woods
+      case 'Raven Oak': return { from: '#3D3833', to: '#2E2924', via: '#35302B' };
+      case 'Shadow Eucalyptus': return { from: '#524740', to: '#433832', via: '#4A3F39' };
+      case 'Terra Sapele': return { from: '#8A5E4D', to: '#7B4F3E', via: '#825645' };
+      case 'Cinnamon Triba': return { from: '#A37356', to: '#946447', via: '#9B6B4E' };
+      
+      // Default
+      default: return { from: '#E8D4B8', to: '#D9C5A3', via: '#E0CCA8' };
     }
-    // Grays
-    if (finishLower.includes('gray') || finishLower.includes('moonlight') || finishLower.includes('silver')) {
-      return 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400';
-    }
-    // Beiges and Tans
-    if (finishLower.includes('sand') || finishLower.includes('beige') || finishLower.includes('cashmere')) {
-      return 'bg-gradient-to-br from-amber-100 via-amber-200 to-amber-300';
-    }
-    // Oak - Light
-    if ((finishLower.includes('oak') || finishLower.includes('bondi') || finishLower.includes('milk')) && 
-        (finishLower.includes('light') || finishLower.includes('natural') || finishLower.includes('bondi') || finishLower.includes('milk'))) {
-      return 'bg-gradient-to-br from-amber-50 via-amber-100 to-yellow-100';
-    }
-    // Oak - Medium
-    if (finishLower.includes('oak') && (finishLower.includes('sahara') || finishLower.includes('desert') || finishLower.includes('manhattan'))) {
-      return 'bg-gradient-to-br from-amber-200 via-amber-300 to-orange-200';
-    }
-    // Walnut
-    if (finishLower.includes('walnut')) {
-      if (finishLower.includes('frozen')) {
-        return 'bg-gradient-to-br from-stone-400 via-stone-500 to-stone-600';
-      }
-      if (finishLower.includes('smoked') || finishLower.includes('pure')) {
-        return 'bg-gradient-to-br from-amber-800 via-amber-900 to-stone-800';
-      }
-      return 'bg-gradient-to-br from-amber-600 via-amber-700 to-amber-800';
-    }
-    // Dark finishes
-    if (finishLower.includes('raven') || finishLower.includes('shadow') || finishLower.includes('black')) {
-      return 'bg-gradient-to-br from-gray-800 via-gray-900 to-black';
-    }
-    
-    // Default
-    return 'bg-gradient-to-br from-amber-100 via-amber-200 to-orange-100';
   };
+
+  const colors = getFinishColors();
 
   return (
     <Card className="overflow-hidden">
@@ -111,28 +132,51 @@ export const FinishPreview = ({ brand, finish, isLoading }: FinishPreviewProps) 
           <>
             {/* Large Preview */}
             <div className="relative w-full aspect-square rounded-lg overflow-hidden border-2 border-border shadow-lg">
-              <div className={`absolute inset-0 ${getFinishGradient()}`}>
+              <div 
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(135deg, ${colors.from} 0%, ${colors.via} 50%, ${colors.to} 100%)`,
+                }}
+              >
                 {isWoodVeneer && (
+                  <>
+                    {/* Wood grain pattern */}
+                    <div 
+                      className="absolute inset-0 opacity-30"
+                      style={{
+                        backgroundImage: `repeating-linear-gradient(
+                          90deg,
+                          transparent,
+                          transparent 3px,
+                          rgba(0,0,0,0.15) 3px,
+                          rgba(0,0,0,0.15) 4px
+                        ), repeating-linear-gradient(
+                          0deg,
+                          transparent,
+                          transparent 40px,
+                          rgba(0,0,0,0.08) 40px,
+                          rgba(0,0,0,0.08) 42px
+                        )`,
+                      }}
+                    />
+                    {/* Subtle wood texture */}
+                    <div 
+                      className="absolute inset-0 opacity-20"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                      }}
+                    />
+                  </>
+                )}
+                {!isWoodVeneer && (
+                  /* Melamine subtle texture */
                   <div 
-                    className="absolute inset-0 opacity-40"
+                    className="absolute inset-0 opacity-10 mix-blend-overlay"
                     style={{
-                      backgroundImage: `repeating-linear-gradient(
-                        90deg,
-                        transparent,
-                        transparent 2px,
-                        rgba(0,0,0,0.1) 2px,
-                        rgba(0,0,0,0.1) 4px
-                      )`,
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
                     }}
                   />
                 )}
-                {/* Texture overlay for realism */}
-                <div 
-                  className="absolute inset-0 opacity-20 mix-blend-overlay"
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                  }}
-                />
               </div>
               
               {/* Info overlay */}
