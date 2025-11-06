@@ -64,7 +64,7 @@ serve(async (req) => {
 
     console.log("Creating Stripe checkout session with line items:", lineItems);
 
-    // Create checkout session
+    // Create checkout session with metadata containing all custom details
     const session = await stripe.checkout.sessions.create({
       customer_email: customerEmail,
       line_items: lineItems,
@@ -73,6 +73,7 @@ serve(async (req) => {
       cancel_url: `${req.headers.get("origin")}/checkout`,
       metadata: {
         customer_name: customerName,
+        cart_items: JSON.stringify(items), // Store complete cart data for webhook
       },
     });
 
