@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const orderItemSchema = z.object({
   variantId: z.string().min(1),
@@ -22,6 +23,12 @@ const corsHeaders = {
 
 const SHOPIFY_ADMIN_API_VERSION = "2025-01";
 
+const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+  apiVersion: "2025-08-27.basil",
+});
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY") as string);
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -34,10 +41,6 @@ serve(async (req) => {
     if (!signature) {
       throw new Error("No Stripe signature found");
     }
-
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-      apiVersion: "2025-08-27.basil",
-    });
 
     const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
     if (!webhookSecret) {
@@ -203,6 +206,94 @@ serve(async (req) => {
 
       const shopifyOrder = await shopifyResponse.json();
       console.log("Shopify order created successfully:", shopifyOrder.order.id);
+
+      // Send order confirmation email
+      try {
+        const customerEmail = session.customer_email || session.customer_details?.email;
+        
+        if (customerEmail) {
+          // Build order summary HTML
+          const itemsHtml = orderItems.map((item: any) => {
+            const attributes = item.customAttributes
+              ?.map((attr: any) => `${attr.key}: ${attr.value}`)
+              .join("<br/>") || "";
+            
+            return `
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #eee;">
+                  <div style="font-weight: 600; margin-bottom: 4px;">Quantity: ${item.quantity}</div>
+                  ${attributes ? `<div style="font-size: 14px; color: #666;">${attributes}</div>` : ""}
+                </td>
+              </tr>
+            `;
+          }).join("");
+
+          const emailHtml = `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Order Confirmation</title>
+              </head>
+              <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                  <!-- Header -->
+                  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                    <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Order Confirmed!</h1>
+                  </div>
+                  
+                  <!-- Content -->
+                  <div style="padding: 40px 30px;">
+                    <p style="font-size: 16px; margin-bottom: 20px;">Hi ${customerName},</p>
+                    <p style="font-size: 16px; margin-bottom: 30px;">Thank you for your order! We've received your payment and will begin processing your custom vanity order shortly.</p>
+                    
+                    <!-- Order Details -->
+                    <div style="background-color: #f9fafb; border-radius: 8px; padding: 24px; margin-bottom: 30px;">
+                      <h2 style="font-size: 20px; margin: 0 0 20px 0; color: #333;">Order Details</h2>
+                      <table style="width: 100%; border-collapse: collapse;">
+                        ${itemsHtml}
+                      </table>
+                      <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #667eea;">
+                        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 700;">
+                          <span>Total Paid:</span>
+                          <span style="color: #667eea;">$${(session.amount_total! / 100).toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Next Steps -->
+                    <div style="background-color: #eff6ff; border-left: 4px solid #667eea; padding: 16px; margin-bottom: 30px; border-radius: 4px;">
+                      <h3 style="font-size: 16px; margin: 0 0 8px 0; color: #1e40af;">What's Next?</h3>
+                      <p style="margin: 0; font-size: 14px; color: #1e3a8a;">Our team will review your custom specifications and reach out within 1-2 business days to confirm details and provide a timeline for manufacturing and delivery.</p>
+                    </div>
+                    
+                    <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Questions about your order? Reply to this email or contact us.</p>
+                    <p style="font-size: 14px; color: #666; margin: 0;">Thank you for choosing us!</p>
+                  </div>
+                  
+                  <!-- Footer -->
+                  <div style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                    <p style="margin: 0; font-size: 12px; color: #6b7280;">© ${new Date().getFullYear()} Green Cabinets. All rights reserved.</p>
+                  </div>
+                </div>
+              </body>
+            </html>
+          `;
+
+          await resend.emails.send({
+            from: "Green Cabinets <onboarding@resend.dev>",
+            to: [customerEmail],
+            subject: "Order Confirmation - Your Custom Vanity Order",
+            html: emailHtml,
+          });
+
+          console.log("Order confirmation email sent to:", customerEmail);
+        }
+      } catch (emailError) {
+        console.error("Error sending confirmation email:", emailError);
+        // Don't fail the webhook if email fails
+      }
 
       return new Response(
         JSON.stringify({ 
