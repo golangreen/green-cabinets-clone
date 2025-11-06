@@ -269,9 +269,6 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               <strong>Pricing:</strong> Tafisa $250/ft • Egger $300/ft • Shinnoki $350/ft
             </p>
             <p>
-              <strong>Taxes:</strong> Sales tax calculated based on your location
-            </p>
-            <p>
               <strong>Shipping:</strong> Approximately 14-21 business days
             </p>
           </div>
