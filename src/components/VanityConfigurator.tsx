@@ -23,7 +23,14 @@ interface VanityConfiguratorProps {
   product: ShopifyProduct;
 }
 
-const NY_TAX_RATE = 0.08875; // 8.875% NY sales tax
+const TAX_RATES: { [key: string]: number } = {
+  "NY": 0.08875, // 8.875%
+  "NJ": 0.06625, // 6.625%
+  "CT": 0.0635,  // 6.35%
+  "PA": 0.06,    // 6%
+  "other": 0,    // No tax for other states
+};
+
 const SHIPPING_RATES: { [key: string]: number } = {
   "NY": 150,
   "NJ": 200,
@@ -150,10 +157,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const calculateTax = (subtotal: number) => {
-    if (state === "NY") {
-      return subtotal * NY_TAX_RATE;
-    }
-    return 0;
+    if (!state) return 0;
+    const taxRate = TAX_RATES[state] || 0;
+    return subtotal * taxRate;
   };
 
   const calculateShipping = () => {
@@ -534,7 +540,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               </div>
               {tax > 0 && (
                 <div className="flex justify-between text-sm">
-                  <span>NY Sales Tax (8.875%):</span>
+                  <span>Sales Tax ({state} - {(TAX_RATES[state] * 100).toFixed(3)}%):</span>
                   <span className="font-medium">${tax.toFixed(2)}</span>
                 </div>
               )}
