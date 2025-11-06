@@ -28,8 +28,7 @@ export const CartDrawer = () => {
 
   const handleCheckout = async () => {
     try {
-      await createCheckout();
-      const checkoutUrl = useCartStore.getState().checkoutUrl;
+      const checkoutUrl = await createCheckout();
       if (checkoutUrl) {
         window.open(checkoutUrl, '_blank');
         setIsOpen(false);
