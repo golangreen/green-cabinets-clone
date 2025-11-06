@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cartStore";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -55,21 +56,26 @@ export default function Checkout() {
     setIsProcessing(true);
     
     try {
-      // TODO: Integrate with Stripe and create Shopify order
-      // For now, show success message
-      toast.success("Payment processing will be integrated with Stripe");
-      
-      // Simulate processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Clear cart and redirect
-      clearCart();
-      navigate("/");
-      toast.success("Order placed successfully!");
+      // Create Stripe checkout session
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: {
+          items: items,
+          customerEmail: formData.email,
+          customerName: `${formData.firstName} ${formData.lastName}`,
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        // Redirect to Stripe checkout
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL received");
+      }
     } catch (error) {
       console.error("Checkout error:", error);
       toast.error("Checkout failed. Please try again.");
-    } finally {
       setIsProcessing(false);
     }
   };
