@@ -188,9 +188,13 @@ export async function createStorefrontCheckout(items: any[]): Promise<string> {
     const lines = items.map(item => ({
       quantity: item.quantity,
       merchandiseId: item.variantId,
+      attributes: item.selectedOptions?.map((opt: any) => ({
+        key: opt.name,
+        value: opt.value
+      })) || []
     }));
 
-    console.log('Cart lines:', lines);
+    console.log('Cart lines with attributes:', lines);
 
     const cartData = await storefrontApiRequest(CART_CREATE_MUTATION, {
       input: {
