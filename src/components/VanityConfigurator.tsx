@@ -16,6 +16,7 @@ import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 import { ShoppingCart } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
+import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 
 interface VanityConfiguratorProps {
   product: ShopifyProduct;
@@ -30,32 +31,9 @@ const SHIPPING_RATES: { [key: string]: number } = {
   "other": 400,
 };
 
-// Tafisa finish options - Premium melamine
-const TAFISA_FINISHES = [
-  'White',
-  'Cream Puff',
-  'Sand Castle',
-  'Tiramisu',
-  'Secret Garden',
-  'Froth of Sea',
-  'Gardenia',
-  'Cashmere',
-  'Morning Dew',
-  'Daybreak',
-  'Milky Way',
-  'Summer Drops',
-  'Moonlight',
-  'White Chocolate',
-  'Fogo Harbour',
-  'Weekend Getaway',
-  'Crème de la Crème',
-  'Natural Affinity',
-  'Free Spirit',
-  'Niagara',
-  'Love at First Sight',
-  'Summer Breeze',
-  'Mojave',
-];
+// Get Tafisa finish options from comprehensive color library
+const TAFISA_FINISHES = getTafisaColorNames();
+const TAFISA_CATEGORIES = getTafisaCategories();
 
 // Shinnoki finish options - Prefinished wood veneer (organized by wood type)
 const SHINNOKI_FINISHES = [
@@ -285,16 +263,34 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   <SelectValue placeholder={selectedBrand ? "Select finish" : "Select brand first"} />
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50 max-h-80">
-                  {availableFinishes.map((finish) => (
-                    <SelectItem key={finish} value={finish} className="cursor-pointer">
-                      {finish}
-                    </SelectItem>
-                  ))}
+                  {selectedBrand === 'Tafisa' ? (
+                    // Group Tafisa colors by category
+                    TAFISA_CATEGORIES.map((category) => (
+                      <div key={category}>
+                        <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-secondary/50">
+                          {category}
+                        </div>
+                        {getTafisaColorsByCategory(category).map((color) => (
+                          <SelectItem key={color.name} value={color.name} className="cursor-pointer pl-4">
+                            {color.name} <span className="text-xs text-muted-foreground">({color.code})</span>
+                          </SelectItem>
+                        ))}
+                      </div>
+                    ))
+                  ) : (
+                    // Shinnoki colors without grouping
+                    availableFinishes.map((finish) => (
+                      <SelectItem key={finish} value={finish} className="cursor-pointer">
+                        {finish}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
               {selectedBrand && (
                 <p className="text-xs text-muted-foreground">
                   {availableFinishes.length} finishes available for {selectedBrand}
+                  {selectedBrand === 'Tafisa' && ` across ${TAFISA_CATEGORIES.length} categories`}
                 </p>
               )}
             </div>

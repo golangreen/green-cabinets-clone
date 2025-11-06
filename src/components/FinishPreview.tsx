@@ -1,29 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TAFISA_COLORS } from "@/lib/tafisaColors";
 
 // Map finish names to their actual product image URLs from manufacturer websites
 const FINISH_IMAGE_URLS: Record<string, string> = {
-  // Tafisa finishes - High quality images from manufacturer
-  'White': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L175_White_Blanc.jpg',
-  'Cream Puff': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L781_cream%20puff_chou%20a%20la%20creme.jpg',
-  'Sand Castle': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L782_Sand%20Castle_Ch%C3%A2teau%20de%20Sable.jpg',
-  'Tiramisu': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L783_Tiramisu_Tiramisu.jpg',
-  'Secret Garden': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L784_Secret%20Garden_Jardin%20Secret.jpg',
-  'Froth of Sea': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB__L080_Froth%20of%20Sea_%C3%89cume%20de%20Mer.jpg',
-  'Gardenia': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L775_Gardenia_Gard%C3%A9nia.jpg',
-  'Cashmere': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L775_Gardenia_Gard%C3%A9nia_0.jpg',
-  'Morning Dew': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L763_Morning%20Dew_Rose%CC%81e%20du%20Matin.jpg',
-  'Daybreak': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L764_Daybreak_Au%20Petit%20Matin.jpg',
-  'Milky Way': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L767_Milky%20Way_Voie%20Lact%C3%A9e.jpg',
-  'Summer Drops': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L202_Summer%20Drops_Grisaille.jpg',
-  'Moonlight': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L761_Moonlight_Claire%20de%20Lune.jpg',
-  'White Chocolate': 'https://tafisa.ca/sites/default/files/2020-04/tafisa_L492%28R%29_24X24_72dpi.jpg',
-  'Natural Affinity': 'https://tafisa.ca/sites/default/files/2023-05/L586K%20NaturalAffinity_12x12.jpg',
-  'Free Spirit': 'https://tafisa.ca/sites/default/files/2020-10/L580%28K%29%20Free%20Spirit_Esprit%20Libre_24X24%20%28Medium%29_0.jpg',
-  'Niagara': 'https://tafisa.ca/sites/default/files/2020-03/Tafisa_L544%28A%29_24X24_72dpi.jpg',
-  'Love at First Sight': 'https://tafisa.ca/sites/default/files/2023-05/L590-12x12_Compress%C3%A9.jpg',
-  'Summer Breeze': 'https://tafisa.ca/sites/default/files/2020-04/tafisa_L540%28A%29_24X24_72dpi.jpg',
-  'Mojave': 'https://tafisa.ca/sites/default/files/2020-03/Tafisa_L546%28A%29_24X24_72dpi.jpg',
+  // Get Tafisa images from the comprehensive color library
+  ...Object.fromEntries(
+    TAFISA_COLORS.filter(c => c.imageUrl).map(c => [c.name, c.imageUrl!])
+  ),
   
   // Shinnoki finishes - High quality images from Architonic
   'Bondi Oak': 'https://media.architonic.com/m-on/3101951/product/1366359/decospan_shinnoki-desert-oak_6bc23886.jpeg',
