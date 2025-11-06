@@ -429,8 +429,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               </div>
             </div>
 
-            {/* Height Input with Fraction */}
-            <div className="space-y-2">
+            {/* Height Input with Slider and Fraction */}
+            <div className="space-y-3">
               <Label>Height (inches)</Label>
               <div className="flex gap-2">
                 <Input
@@ -439,6 +439,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
                   min="0"
+                  max="120"
                   className="flex-1"
                 />
                 <Select value={heightFraction} onValueChange={setHeightFraction}>
@@ -465,10 +466,30 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="space-y-2">
+                <Slider
+                  value={[parseFloat(height || "0") * 16 + parseInt(heightFraction)]}
+                  onValueChange={(value) => {
+                    const totalSixteenths = value[0];
+                    const wholeInches = Math.floor(totalSixteenths / 16);
+                    const fraction = totalSixteenths % 16;
+                    setHeight(wholeInches.toString());
+                    setHeightFraction(fraction.toString());
+                  }}
+                  min={0}
+                  max={1920}
+                  step={1}
+                  className="w-full"
+                />
+                <p className="text-xs text-muted-foreground text-center">
+                  {height || "0"}{heightFraction !== "0" && ` ${getFractionDisplay(heightFraction)}`}" 
+                  {height && ` (${(parseFloat(height) + parseInt(heightFraction) / 16).toFixed(4)}")`}
+                </p>
+              </div>
             </div>
 
-            {/* Depth Input with Fraction */}
-            <div className="space-y-2">
+            {/* Depth Input with Slider and Fraction */}
+            <div className="space-y-3">
               <Label>Depth (inches)</Label>
               <div className="flex gap-2">
                 <Input
@@ -477,6 +498,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   value={depth}
                   onChange={(e) => setDepth(e.target.value)}
                   min="0"
+                  max="120"
                   className="flex-1"
                 />
                 <Select value={depthFraction} onValueChange={setDepthFraction}>
@@ -502,6 +524,26 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     <SelectItem value="15">15/16"</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Slider
+                  value={[parseFloat(depth || "0") * 16 + parseInt(depthFraction)]}
+                  onValueChange={(value) => {
+                    const totalSixteenths = value[0];
+                    const wholeInches = Math.floor(totalSixteenths / 16);
+                    const fraction = totalSixteenths % 16;
+                    setDepth(wholeInches.toString());
+                    setDepthFraction(fraction.toString());
+                  }}
+                  min={0}
+                  max={1920}
+                  step={1}
+                  className="w-full"
+                />
+                <p className="text-xs text-muted-foreground text-center">
+                  {depth || "0"}{depthFraction !== "0" && ` ${getFractionDisplay(depthFraction)}`}" 
+                  {depth && ` (${(parseFloat(depth) + parseInt(depthFraction) / 16).toFixed(4)}")`}
+                </p>
               </div>
             </div>
 
