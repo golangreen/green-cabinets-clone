@@ -203,12 +203,15 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       return;
     }
 
+    // Find any variant for the selected brand (we'll use custom pricing and options)
     const variant = product.node.variants.edges.find(
-      (v) => v.node.title === `${selectedBrand} / ${selectedFinish}`
+      (v) => v.node.title.startsWith(selectedBrand)
     );
 
     if (!variant) {
-      toast.error("Selected configuration not available");
+      toast.error("Product variant not available", {
+        description: "Please try selecting a different brand",
+      });
       return;
     }
 
@@ -220,7 +223,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     const cartItem = {
       product,
       variantId: variant.node.id,
-      variantTitle: `${variant.node.title} - ${measurements}`,
+      variantTitle: `${selectedBrand} ${selectedFinish} - ${measurements}`,
       price: {
         amount: totalPrice.toFixed(2),
         currencyCode: "USD",
@@ -231,6 +234,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         { name: "Finish", value: selectedFinish },
         { name: "Measurements", value: measurements },
         { name: "Location", value: `${zipCode} (${state})` },
+        { name: "Base Price", value: `$${basePrice.toFixed(2)}` },
+        { name: "Tax", value: tax > 0 ? `$${tax.toFixed(2)} (${state})` : "N/A" },
+        { name: "Shipping", value: `$${shipping.toFixed(2)}` },
       ],
     };
 
