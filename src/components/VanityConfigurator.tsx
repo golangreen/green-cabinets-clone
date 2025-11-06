@@ -14,6 +14,7 @@ import {
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 import { ShoppingCart } from "lucide-react";
+import { FinishPreview } from "./FinishPreview";
 
 interface VanityConfiguratorProps {
   product: ShopifyProduct;
@@ -199,9 +200,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
       {/* Product Images */}
-      <div className="space-y-4">
+      <div className="space-y-4 lg:col-span-1">
         {product.node.images.edges[0] && (
           <div className="aspect-square overflow-hidden rounded-lg bg-secondary/20">
             <img
@@ -225,17 +226,19 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       </div>
 
       {/* Configurator */}
-      <div className="space-y-6">
+      <div className="space-y-6 lg:col-span-2 md:col-span-1">
         <div>
           <h1 className="text-3xl font-bold mb-2">{product.node.title}</h1>
           <p className="text-muted-foreground">{product.node.description}</p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Configure Your Vanity</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Configuration Form */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Configure Your Vanity</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
             {/* Brand Selection */}
             <div className="space-y-2">
               <Label htmlFor="brand">Brand</Label>
@@ -365,6 +368,15 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Finish Preview */}
+        {selectedBrand && selectedFinish && (
+          <FinishPreview 
+            brand={selectedBrand} 
+            finish={selectedFinish}
+          />
+        )}
+      </div>
 
         {/* Price Breakdown */}
         {basePrice > 0 && (
