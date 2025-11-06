@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // Map finish names to their actual product image URLs from manufacturer websites
 const FINISH_IMAGE_URLS: Record<string, string> = {
-  // Tafisa finishes
+  // Tafisa finishes - High quality images from manufacturer
   'White': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L175_White_Blanc.jpg',
   'Cream Puff': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L781_cream%20puff_chou%20a%20la%20creme.jpg',
   'Sand Castle': 'https://tafisa.ca/sites/default/files/2025-05/materia_24x24_RGB_L782_Sand%20Castle_Ch%C3%A2teau%20de%20Sable.jpg',
@@ -147,29 +147,35 @@ export const FinishPreview = ({ brand, finish, isLoading }: FinishPreviewProps) 
   const colors = getFinishColors();
 
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg">Actual Finish Sample</CardTitle>
-        <p className="text-sm text-muted-foreground">High-quality image from manufacturer</p>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {isLoading ? (
-          <Skeleton className="w-full aspect-square rounded-lg" />
-        ) : (
-          <>
-            {/* Large Preview - Show actual manufacturer image if available */}
-            <div className="relative w-full aspect-square rounded-lg overflow-hidden border-2 border-border shadow-2xl">
-              {imageUrl ? (
-                <img 
-                  src={imageUrl}
-                  alt={`${brand} ${finish} finish sample`}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    // Fallback to gradient if image fails to load
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              ) : (
+    <div className="space-y-3">
+      <div className="space-y-1">
+        <h3 className="font-semibold text-sm">Finish Preview</h3>
+        <p className="text-xs text-muted-foreground">Actual product image from manufacturer</p>
+      </div>
+      
+      {isLoading ? (
+        <Skeleton className="w-full aspect-square rounded-lg" />
+      ) : (
+        <div className="space-y-3">
+          {/* Large Preview - Show actual manufacturer image */}
+          <div className="relative w-full aspect-square rounded-lg overflow-hidden border-2 border-border shadow-lg bg-muted">
+            {imageUrl ? (
+              <img 
+                src={imageUrl}
+                alt={`${brand} ${finish} finish sample`}
+                className="w-full h-full object-cover"
+                loading="eager"
+                onError={(e) => {
+                  // Fallback to gradient if image fails to load
+                  const target = e.currentTarget as HTMLImageElement;
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent) {
+                    parent.style.background = `linear-gradient(135deg, ${colors.from} 0%, ${colors.via} 50%, ${colors.to} 100%)`;
+                  }
+                }}
+              />
+            ) : (
                 <div 
                   className="absolute inset-0"
                   style={{
@@ -216,39 +222,35 @@ export const FinishPreview = ({ brand, finish, isLoading }: FinishPreviewProps) 
                     />
                   )}
                 </div>
-              )}
+            )}
+          </div>
+          
+          {/* Finish info */}
+          <div className="space-y-2 p-3 bg-muted/50 rounded-lg border">
+            <div>
+              <h4 className="font-bold text-base">{finish}</h4>
+              <p className="text-xs text-muted-foreground">{brand} Collection</p>
             </div>
             
-            {/* Finish info below image */}
-            <div className="space-y-1 border-t pt-3">
-              <h3 className="font-bold text-xl">{finish}</h3>
-              <p className="text-sm font-medium text-muted-foreground">{brand} Collection</p>
-            </div>
-            
-            {/* Description */}
-            <div className="space-y-2 text-sm">
+            <div className="space-y-1.5 text-xs">
               <div className="flex items-start gap-2">
-                <span className="font-medium min-w-[80px]">Material:</span>
+                <span className="font-medium min-w-[70px]">Material:</span>
                 <span className="text-muted-foreground">
-                  {isWoodVeneer ? 'Prefinished Wood Veneer' : 'Premium Melamine (TFL)'}
+                  {isWoodVeneer ? 'Wood Veneer' : 'Melamine (TFL)'}
                 </span>
               </div>
               <div className="flex items-start gap-2">
-                <span className="font-medium min-w-[80px]">Description:</span>
-                <span className="text-muted-foreground">{description}</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="font-medium min-w-[80px]">Features:</span>
+                <span className="font-medium min-w-[70px]">Features:</span>
                 <span className="text-muted-foreground">
                   {isWoodVeneer 
-                    ? 'Scratch resistant, Natural wood beauty, Deep brushing texture'
-                    : 'Durable surface, Easy to clean, Consistent color'}
+                    ? 'Scratch resistant, Natural beauty'
+                    : 'Durable, Easy to clean'}
                 </span>
               </div>
             </div>
-          </>
-        )}
-      </CardContent>
-    </Card>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

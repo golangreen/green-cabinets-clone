@@ -285,6 +285,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               )}
             </div>
 
+            {/* Finish Preview - Shows manufacturer image */}
+            {selectedFinish && selectedBrand && (
+              <FinishPreview 
+                brand={selectedBrand}
+                finish={selectedFinish}
+              />
+            )}
+
             {/* Width Input with Fraction */}
             <div className="space-y-2">
               <Label>Width (inches)</Label>
@@ -368,16 +376,6 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Finish Preview - Full width for better visibility */}
-        {selectedBrand && selectedFinish && (
-          <div className="w-full">
-            <FinishPreview 
-              brand={selectedBrand} 
-              finish={selectedFinish}
-            />
-          </div>
-        )}
       </div>
 
         {/* Price Breakdown */}
