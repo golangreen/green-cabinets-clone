@@ -261,7 +261,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         <div>
           <h1 className="text-3xl font-bold mb-2">{product.node.title}</h1>
           <p className="text-muted-foreground mb-4">
-            {product.node.description.replace(/NY TAX/gi, '').trim()}
+            {product.node.description.replace(/NY TAX/gi, 'tax').trim()}
           </p>
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>
