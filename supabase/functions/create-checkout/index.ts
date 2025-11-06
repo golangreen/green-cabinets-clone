@@ -91,13 +91,18 @@ serve(async (req) => {
     console.log("Creating Stripe checkout session with line items:", lineItems);
 
     // Extract only essential data for metadata (Stripe has 500 char limit per value)
-    const orderItems = items.map((item: any, index: number) => ({
-      variantId: item.variantId,
-      productTitle: item.product.node.title,
-      quantity: item.quantity,
-      price: item.price.amount,
-      customAttributes: item.customAttributes || []
-    }));
+    // Keep only critical custom attributes needed for order fulfillment
+    const orderItems = items.map((item: any) => {
+      const essentialAttributes = item.customAttributes?.filter((attr: any) => 
+        ['Brand', 'Finish', 'Width', 'Height', 'Depth'].includes(attr.key)
+      ) || [];
+      
+      return {
+        variantId: item.variantId,
+        quantity: item.quantity,
+        customAttributes: essentialAttributes
+      };
+    });
 
     // Create checkout session with metadata containing essential order data
     const session = await stripe.checkout.sessions.create({
