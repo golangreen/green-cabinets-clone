@@ -79,20 +79,20 @@ export const ShopProducts = () => {
   }
 
   return (
-    <section className="py-24 px-4">
+    <section className="py-12 sm:py-16 md:py-24 px-4">
       <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Our Products</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Our Products</h2>
+          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">
             Browse our collection of premium custom cabinetry
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {products.map((product) => (
             <Card 
               key={product.node.id} 
-              className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+              className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform"
               onClick={() => navigate(`/product/${product.node.handle}`)}
             >
               {product.node.images.edges[0] && (
@@ -104,21 +104,21 @@ export const ShopProducts = () => {
                   />
                 </div>
               )}
-              <CardHeader>
-                <CardTitle>{product.node.title}</CardTitle>
-                <CardDescription className="line-clamp-2">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg sm:text-xl">{product.node.title}</CardTitle>
+                <CardDescription className="line-clamp-2 text-sm">
                   {product.node.description}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">
+              <CardContent className="pb-3">
+                <p className="text-xl sm:text-2xl font-bold">
                   {product.node.priceRange.minVariantPrice.currencyCode}{' '}
                   {parseFloat(product.node.priceRange.minVariantPrice.amount).toFixed(2)}
                 </p>
               </CardContent>
               <CardFooter>
                 <Button 
-                  className="w-full"
+                  className="w-full touch-manipulation"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleAddToCart(product);

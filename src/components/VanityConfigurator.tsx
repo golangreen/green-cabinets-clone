@@ -243,21 +243,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
   return (
     <>
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6 md:gap-8">
         {/* Product Images */}
         <div className="space-y-4 lg:col-span-1">
           {product.node.images.edges[0] && (
             <div 
-              className="aspect-square overflow-hidden rounded-lg bg-secondary/20 cursor-pointer group relative"
+              className="aspect-square overflow-hidden rounded-lg bg-secondary/20 cursor-pointer group relative touch-manipulation"
               onClick={() => openLightbox(product.node.images.edges[0].node.url, product.node.images.edges[0].node.altText || product.node.title)}
             >
               <img
                 src={product.node.images.edges[0].node.url}
                 alt={product.node.images.edges[0].node.altText || product.node.title}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 group-active:scale-105"
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
-                <ZoomIn className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 group-active:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                <ZoomIn className="w-10 h-10 sm:w-12 sm:h-12 text-white opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300" />
               </div>
             </div>
           )}
@@ -265,16 +265,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             {product.node.images.edges.slice(1).map((image, idx) => (
               <div 
                 key={idx} 
-                className="aspect-square overflow-hidden rounded-lg bg-secondary/20 cursor-pointer group relative"
+                className="aspect-square overflow-hidden rounded-lg bg-secondary/20 cursor-pointer group relative touch-manipulation"
                 onClick={() => openLightbox(image.node.url, image.node.altText || `${product.node.title} ${idx + 2}`)}
               >
                 <img
                   src={image.node.url}
                   alt={image.node.altText || `${product.node.title} ${idx + 2}`}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 group-active:scale-110"
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
-                  <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 group-active:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                  <ZoomIn className="w-6 h-6 sm:w-8 sm:h-8 text-white opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300" />
                 </div>
               </div>
             ))}
@@ -282,13 +282,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         </div>
 
       {/* Configurator */}
-      <div className="space-y-6 lg:col-span-2 md:col-span-1">
+      <div className="space-y-4 sm:space-y-6 lg:col-span-2 md:col-span-1">
         <div>
-          <h1 className="text-3xl font-bold mb-2">{product.node.title}</h1>
-          <p className="text-muted-foreground mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">{product.node.title}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mb-4">
             {product.node.description.replace(/NY TAX/gi, 'tax').trim()}
           </p>
-          <div className="space-y-2 text-sm text-muted-foreground">
+          <div className="space-y-2 text-xs sm:text-sm text-muted-foreground">
             <p>
               <strong>Available Brands:</strong> Tafisa (60+ melamine colors), Egger (98+ TFL & HPL finishes), and Shinnoki (prefinished wood veneer)
             </p>
@@ -624,18 +624,18 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </Card>
         )}
 
-        <Button onClick={handleAddToCart} className="w-full" size="lg">
-          <ShoppingCart className="mr-2 h-5 w-5" />
-          Add to Cart - ${totalPrice > 0 ? totalPrice.toFixed(2) : "0.00"}
+        <Button onClick={handleAddToCart} className="w-full touch-manipulation" size="lg">
+          <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="text-sm sm:text-base">Add to Cart - ${totalPrice > 0 ? totalPrice.toFixed(2) : "0.00"}</span>
         </Button>
       </div>
     </div>
 
       {/* Image Lightbox */}
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
-        <DialogContent className="max-w-7xl w-full p-2">
+        <DialogContent className="max-w-7xl w-[95vw] sm:w-full p-2 sm:p-6">
           {lightboxImage && (
-            <div className="relative w-full h-[90vh]">
+            <div className="relative w-full h-[70vh] sm:h-[80vh] md:h-[90vh]">
               <img
                 src={lightboxImage.url}
                 alt={lightboxImage.alt}

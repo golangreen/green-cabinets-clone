@@ -64,10 +64,10 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 py-12">
+      <main className="flex-1 py-6 sm:py-8 md:py-12">
         <div className="container mx-auto px-4">
           <Link to="/">
-            <Button variant="ghost" className="mb-6">
+            <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Shop
             </Button>
