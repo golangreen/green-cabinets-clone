@@ -56,26 +56,35 @@ const TAFISA_FINISHES = [
   'Mojave',
 ];
 
-// Shinnoki finish options - Prefinished wood veneer
+// Shinnoki finish options - Prefinished wood veneer (organized by wood type)
 const SHINNOKI_FINISHES = [
+  // Light Oaks
   'Bondi Oak',
   'Milk Oak',
-  'Pebble Triba',
   'Ivory Oak',
   'Ivory Infinite Oak',
+  
+  // Natural & Medium Oaks
   'Natural Oak',
-  'Frozen Walnut',
   'Manhattan Oak',
   'Desert Oak',
   'Sahara Oak',
-  'Terra Sapele',
-  'Cinnamon Triba',
+  'Burley Oak',
+  
+  // Dark Oak
+  'Raven Oak',
+  
+  // Walnuts
+  'Frozen Walnut',
   'Smoked Walnut',
   'Pure Walnut',
-  'Shadow Eucalyptus',
-  'Burley Oak',
   'Stardust Walnut',
-  'Raven Oak',
+  
+  // Other Woods
+  'Pebble Triba',
+  'Terra Sapele',
+  'Cinnamon Triba',
+  'Shadow Eucalyptus',
 ];
 
 const BRAND_INFO = {
