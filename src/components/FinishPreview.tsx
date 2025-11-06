@@ -24,6 +24,26 @@ const FINISH_IMAGE_URLS: Record<string, string> = {
   'Love at First Sight': 'https://tafisa.ca/sites/default/files/2023-05/L590-12x12_Compress%C3%A9.jpg',
   'Summer Breeze': 'https://tafisa.ca/sites/default/files/2020-04/tafisa_L540%28A%29_24X24_72dpi.jpg',
   'Mojave': 'https://tafisa.ca/sites/default/files/2020-03/Tafisa_L546%28A%29_24X24_72dpi.jpg',
+  
+  // Shinnoki finishes - High quality images from Architonic
+  'Bondi Oak': 'https://media.architonic.com/m-on/3101951/product/1366359/decospan_shinnoki-desert-oak_6bc23886.jpeg',
+  'Milk Oak': 'https://media.architonic.com/m-on/3101951/product/1366355/decospan_shinnoki-milk-oak_7f124fc1.jpeg',
+  'Pebble Triba': 'https://media.architonic.com/m-on/3101951/product/1366390/decospan_shinnoki-sand-ash_c559aa55.jpeg',
+  'Ivory Oak': 'https://media.architonic.com/m-on/3101951/product/1366352/decospan_shinnoki-ivory-oak_f2ae951b.jpeg',
+  'Ivory Infinite Oak': 'https://media.architonic.com/m-on/3101951/product/1366352/decospan_shinnoki-ivory-oak_60d3c83a.jpeg',
+  'Natural Oak': 'https://media.architonic.com/m-on/3101951/product/1351346/decospan_shinnoki-natural-oak_8bdf9494.jpeg',
+  'Frozen Walnut': 'https://media.architonic.com/m-on/3101951/product/1366400/decospan_shinnoki-granite-walnut_13e3d5c7.jpeg',
+  'Manhattan Oak': 'https://media.architonic.com/m-on/3101951/product/1366366/decospan_shinnoki-manhattan-oak_da1b59ed.jpeg',
+  'Desert Oak': 'https://media.architonic.com/m-on/3101951/product/1366359/decospan_shinnoki-desert-oak_6bc23886.jpeg',
+  'Sahara Oak': 'https://media.architonic.com/m-on/3101951/product/1366369/decospan_shinnoki-mystery-oak_587d97f0.jpeg',
+  'Terra Sapele': 'https://media.architonic.com/m-on/3101951/product/1366388/decospan_shinnoki-tempered-frake_3cbf3e75.jpeg',
+  'Cinnamon Triba': 'https://media.architonic.com/m-on/3101951/product/1366379/decospan_shinnoki-vanilla-larch_b20616b2.jpeg',
+  'Smoked Walnut': 'https://media.architonic.com/m-on/3101951/product/1366405/decospan_shinnoki-smoked-walnut_ba35ad13.jpeg',
+  'Pure Walnut': 'https://media.architonic.com/m-on/3101951/product/1366400/decospan_shinnoki-granite-walnut_13e3d5c7.jpeg',
+  'Shadow Eucalyptus': 'https://media.architonic.com/m-on/3101951/product/1366415/decospan_shinnoki-shadow-macassar_03c140fa.jpeg',
+  'Burley Oak': 'https://media.architonic.com/m-on/3101951/product/1366374/decospan_shinnoki-antique-oak_19eed38c.jpeg',
+  'Stardust Walnut': 'https://media.architonic.com/m-on/3101951/product/1366405/decospan_shinnoki-smoked-walnut_ba35ad13.jpeg',
+  'Raven Oak': 'https://media.architonic.com/m-on/3101951/product/1366418/decospan_shinnoki-nero-lati_0314ee39.jpeg',
 };
 
 interface FinishPreviewProps {
