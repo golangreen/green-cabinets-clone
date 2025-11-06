@@ -15,6 +15,10 @@ export interface CartItem {
     name: string;
     value: string;
   }>;
+  customAttributes?: Array<{
+    key: string;
+    value: string;
+  }>;
 }
 
 interface CartStore {

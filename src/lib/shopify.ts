@@ -185,14 +185,25 @@ export async function createStorefrontCheckout(items: any[]): Promise<string> {
   try {
     console.log('Creating checkout with items:', items);
     
-    const lines = items.map(item => ({
-      quantity: item.quantity,
-      merchandiseId: item.variantId,
-      attributes: item.selectedOptions?.map((opt: any) => ({
-        key: opt.name,
-        value: opt.value
-      })) || []
-    }));
+    const lines = items.map(item => {
+      // Combine selectedOptions and customAttributes
+      const attributes = [
+        ...(item.selectedOptions?.map((opt: any) => ({
+          key: opt.name,
+          value: opt.value
+        })) || []),
+        ...(item.customAttributes?.map((attr: any) => ({
+          key: attr.key,
+          value: attr.value
+        })) || [])
+      ];
+      
+      return {
+        quantity: item.quantity,
+        merchandiseId: item.variantId,
+        attributes
+      };
+    });
 
     console.log('Cart lines with attributes:', lines);
 
