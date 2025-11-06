@@ -15,13 +15,23 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
-import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn } from "lucide-react";
+import { Mail, ZoomIn } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const quoteFormSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100),
+  email: z.string().trim().email("Invalid email address").max(255),
+  phone: z.string().trim().min(10, "Phone number must be at least 10 digits").max(20),
+});
 
 interface VanityConfiguratorProps {
   product: ShopifyProduct;
@@ -133,8 +143,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [state, setState] = useState<string>("");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; alt: string } | null>(null);
-  
-  const addItem = useCartStore((state) => state.addItem);
+  const [showQuoteDialog, setShowQuoteDialog] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [customerName, setCustomerName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
 
   const openLightbox = (imageUrl: string, imageAlt: string) => {
     setLightboxImage({ url: imageUrl, alt: imageAlt });
@@ -195,7 +208,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     }
   }, [zipCode]);
 
-  const handleAddToCart = () => {
+  const handleRequestQuote = () => {
     if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
       toast.error("Please complete all fields", {
         description: "Brand, finish, measurements, and zip code are required",
@@ -203,48 +216,66 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       return;
     }
 
-    // Find any variant for the selected brand (we'll use custom pricing and options)
-    const variant = product.node.variants.edges.find(
-      (v) => v.node.title.startsWith(selectedBrand)
-    );
-
-    if (!variant) {
-      toast.error("Product variant not available", {
-        description: "Please try selecting a different brand",
-      });
+    if (zipCode.length !== 5) {
+      toast.error("Please enter a valid 5-digit ZIP code");
       return;
     }
 
-    const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
-    const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
-    const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
-    const measurements = `${widthInches}"W x ${heightInches}"H x ${depthInches}"D`;
+    setShowQuoteDialog(true);
+  };
 
-    const cartItem = {
-      product,
-      variantId: variant.node.id,
-      variantTitle: `${selectedBrand} ${selectedFinish} - ${measurements}`,
-      price: {
-        amount: totalPrice.toFixed(2),
-        currencyCode: "USD",
-      },
-      quantity: 1,
-      selectedOptions: [
-        { name: "Brand", value: selectedBrand },
-        { name: "Finish", value: selectedFinish },
-        { name: "Measurements", value: measurements },
-        { name: "Location", value: `${zipCode} (${state})` },
-        { name: "Base Price", value: `$${basePrice.toFixed(2)}` },
-        { name: "Tax", value: tax > 0 ? `$${tax.toFixed(2)} (${state})` : "N/A" },
-        { name: "Shipping", value: `$${shipping.toFixed(2)}` },
-      ],
-    };
+  const handleSubmitQuote = async () => {
+    try {
+      const validatedData = quoteFormSchema.parse({
+        name: customerName,
+        email: customerEmail,
+        phone: customerPhone,
+      });
 
-    addItem(cartItem);
-    toast.success("Added to cart", {
-      description: `Custom ${selectedBrand} vanity - ${measurements}`,
-      position: "top-center",
-    });
+      setIsSubmitting(true);
+
+      const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
+      const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
+      const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
+
+      const { error } = await supabase.functions.invoke('send-quote-request', {
+        body: {
+          customerName: validatedData.name,
+          customerEmail: validatedData.email,
+          customerPhone: validatedData.phone,
+          brand: selectedBrand,
+          finish: selectedFinish,
+          width: widthInches.toFixed(4),
+          height: heightInches.toFixed(4),
+          depth: depthInches.toFixed(4),
+          zipCode,
+          basePrice: basePrice.toFixed(2),
+          tax: tax.toFixed(2),
+          shipping: shipping.toFixed(2),
+          totalPrice: totalPrice.toFixed(2),
+        },
+      });
+
+      if (error) throw error;
+
+      toast.success("Quote request sent!", {
+        description: "Check your email for confirmation. We'll respond within 24 hours.",
+        position: "top-center",
+      });
+      setShowQuoteDialog(false);
+      setCustomerName("");
+      setCustomerEmail("");
+      setCustomerPhone("");
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      } else {
+        console.error("Error submitting quote:", error);
+        toast.error("Failed to send quote request. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -630,10 +661,84 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </Card>
         )}
 
-        <Button onClick={handleAddToCart} className="w-full touch-manipulation" size="lg">
-          <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-          <span className="text-sm sm:text-base">Add to Cart - ${totalPrice > 0 ? totalPrice.toFixed(2) : "0.00"}</span>
+        <Button onClick={handleRequestQuote} className="w-full touch-manipulation" size="lg">
+          <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="text-sm sm:text-base">Request Quote - ${totalPrice > 0 ? totalPrice.toFixed(2) : "0.00"}</span>
         </Button>
+
+        {/* Quote Request Dialog */}
+        <Dialog open={showQuoteDialog} onOpenChange={setShowQuoteDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Request Your Custom Vanity Quote</DialogTitle>
+              <DialogDescription>
+                We'll send you a detailed quote based on your configuration within 24 hours.
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name *</Label>
+                <Input
+                  id="name"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  placeholder="John Doe"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={customerEmail}
+                  onChange={(e) => setCustomerEmail(e.target.value)}
+                  placeholder="john@example.com"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone *</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+
+              <div className="bg-muted p-4 rounded-lg space-y-1">
+                <p className="text-sm font-medium">Configuration Summary:</p>
+                <p className="text-sm">{selectedBrand} - {selectedFinish}</p>
+                <p className="text-sm">
+                  {width}{widthFraction !== "0" && ` ${getFractionDisplay(widthFraction)}`}" W × 
+                  {height}{heightFraction !== "0" && ` ${getFractionDisplay(heightFraction)}`}" H × 
+                  {depth}{depthFraction !== "0" && ` ${getFractionDisplay(depthFraction)}`}" D
+                </p>
+                <p className="text-sm font-semibold">Estimated Total: ${totalPrice.toFixed(2)}</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowQuoteDialog(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSubmitQuote}
+                disabled={isSubmitting}
+                className="flex-1"
+              >
+                {isSubmitting ? "Sending..." : "Send Quote Request"}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
 
