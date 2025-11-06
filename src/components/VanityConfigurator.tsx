@@ -214,16 +214,12 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
     const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
 
-    // Find the matching variant based on selected brand and finish
-    const matchingVariant = product.node.variants.edges.find(
-      (variant) =>
-        variant.node.selectedOptions.some(opt => opt.value === selectedBrand) &&
-        variant.node.selectedOptions.some(opt => opt.value === selectedFinish)
-    );
+    // Use the first available variant (custom products typically have one default variant)
+    const matchingVariant = product.node.variants.edges[0];
 
     if (!matchingVariant) {
       toast.error("Configuration error", {
-        description: "Could not find matching product variant. Please try different options.",
+        description: "Product variant not available.",
       });
       return;
     }
@@ -234,8 +230,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       variantTitle: matchingVariant.node.title,
       price: matchingVariant.node.price,
       quantity: 1,
-      selectedOptions: matchingVariant.node.selectedOptions,
+      selectedOptions: [
+        { name: "Brand", value: selectedBrand },
+        { name: "Finish", value: selectedFinish }
+      ],
       customAttributes: [
+        { key: "Brand", value: selectedBrand },
+        { key: "Finish", value: selectedFinish },
         { key: "Width", value: `${widthInches.toFixed(4)}"` },
         { key: "Height", value: `${heightInches.toFixed(4)}"` },
         { key: "Depth", value: `${depthInches.toFixed(4)}"` },
