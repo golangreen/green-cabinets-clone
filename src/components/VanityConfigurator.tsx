@@ -12,9 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+} from "@/components/ui/dialog";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, ZoomIn } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
@@ -127,8 +131,15 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [depthFraction, setDepthFraction] = useState<string>("0");
   const [zipCode, setZipCode] = useState<string>("");
   const [state, setState] = useState<string>("");
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<{ url: string; alt: string } | null>(null);
   
   const addItem = useCartStore((state) => state.addItem);
+
+  const openLightbox = (imageUrl: string, imageAlt: string) => {
+    setLightboxImage({ url: imageUrl, alt: imageAlt });
+    setLightboxOpen(true);
+  };
 
   // Get all available brands from BRAND_INFO
   const brands = Object.keys(BRAND_INFO);
@@ -231,30 +242,44 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   return (
-    <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
-      {/* Product Images */}
-      <div className="space-y-4 lg:col-span-1">
-        {product.node.images.edges[0] && (
-          <div className="aspect-square overflow-hidden rounded-lg bg-secondary/20">
-            <img
-              src={product.node.images.edges[0].node.url}
-              alt={product.node.images.edges[0].node.altText || product.node.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
-        <div className="grid grid-cols-3 gap-2">
-          {product.node.images.edges.slice(1).map((image, idx) => (
-            <div key={idx} className="aspect-square overflow-hidden rounded-lg bg-secondary/20">
+    <>
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
+        {/* Product Images */}
+        <div className="space-y-4 lg:col-span-1">
+          {product.node.images.edges[0] && (
+            <div 
+              className="aspect-square overflow-hidden rounded-lg bg-secondary/20 cursor-pointer group relative"
+              onClick={() => openLightbox(product.node.images.edges[0].node.url, product.node.images.edges[0].node.altText || product.node.title)}
+            >
               <img
-                src={image.node.url}
-                alt={image.node.altText || `${product.node.title} ${idx + 2}`}
-                className="w-full h-full object-cover"
+                src={product.node.images.edges[0].node.url}
+                alt={product.node.images.edges[0].node.altText || product.node.title}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                <ZoomIn className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
             </div>
-          ))}
+          )}
+          <div className="grid grid-cols-3 gap-2">
+            {product.node.images.edges.slice(1).map((image, idx) => (
+              <div 
+                key={idx} 
+                className="aspect-square overflow-hidden rounded-lg bg-secondary/20 cursor-pointer group relative"
+                onClick={() => openLightbox(image.node.url, image.node.altText || `${product.node.title} ${idx + 2}`)}
+              >
+                <img
+                  src={image.node.url}
+                  alt={image.node.altText || `${product.node.title} ${idx + 2}`}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                  <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
       {/* Configurator */}
       <div className="space-y-6 lg:col-span-2 md:col-span-1">
@@ -605,5 +630,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         </Button>
       </div>
     </div>
+
+      {/* Image Lightbox */}
+      <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
+        <DialogContent className="max-w-7xl w-full p-2">
+          {lightboxImage && (
+            <div className="relative w-full h-[90vh]">
+              <img
+                src={lightboxImage.url}
+                alt={lightboxImage.alt}
+                className="w-full h-full object-contain"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
