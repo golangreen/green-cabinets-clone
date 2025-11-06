@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -104,7 +105,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [width, setWidth] = useState<string>("");
   const [widthFraction, setWidthFraction] = useState<string>("0");
   const [height, setHeight] = useState<string>("");
+  const [heightFraction, setHeightFraction] = useState<string>("0");
   const [depth, setDepth] = useState<string>("");
+  const [depthFraction, setDepthFraction] = useState<string>("0");
   const [zipCode, setZipCode] = useState<string>("");
   const [state, setState] = useState<string>("");
   
@@ -182,7 +185,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     }
 
     const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
-    const measurements = `${widthInches}"W x ${height}"H x ${depth}"D`;
+    const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
+    const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
+    const measurements = `${widthInches}"W x ${heightInches}"H x ${depthInches}"D`;
 
     const cartItem = {
       product,
@@ -302,8 +307,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               />
             )}
 
-            {/* Width Input with Fraction */}
-            <div className="space-y-2">
+            {/* Width Input with Slider and Fraction */}
+            <div className="space-y-3">
               <Label>Width (inches)</Label>
               <div className="flex gap-2">
                 <Input
@@ -312,6 +317,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   value={width}
                   onChange={(e) => setWidth(e.target.value)}
                   min="0"
+                  max="120"
                   className="flex-1"
                 />
                 <Select value={widthFraction} onValueChange={setWidthFraction}>
@@ -338,32 +344,102 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="space-y-2">
+                <Slider
+                  value={[parseFloat(width || "0") * 16 + parseInt(widthFraction)]}
+                  onValueChange={(value) => {
+                    const totalSixteenths = value[0];
+                    const wholeInches = Math.floor(totalSixteenths / 16);
+                    const fraction = totalSixteenths % 16;
+                    setWidth(wholeInches.toString());
+                    setWidthFraction(fraction.toString());
+                  }}
+                  min={0}
+                  max={1920}
+                  step={1}
+                  className="w-full"
+                />
+                <p className="text-xs text-muted-foreground text-center">
+                  {width || "0"} {widthFraction !== "0" && `${widthFraction}/16`}" 
+                  {width && ` (${(parseFloat(width) + parseInt(widthFraction) / 16).toFixed(4)}")`}
+                </p>
+              </div>
             </div>
 
-            {/* Height Input */}
+            {/* Height Input with Fraction */}
             <div className="space-y-2">
-              <Label htmlFor="height">Height (inches)</Label>
-              <Input
-                id="height"
-                type="number"
-                placeholder="Height"
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
-                min="0"
-              />
+              <Label>Height (inches)</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="number"
+                  placeholder="Inches"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  min="0"
+                  className="flex-1"
+                />
+                <Select value={heightFraction} onValueChange={setHeightFraction}>
+                  <SelectTrigger className="w-24 bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="0">0/16"</SelectItem>
+                    <SelectItem value="1">1/16"</SelectItem>
+                    <SelectItem value="2">2/16"</SelectItem>
+                    <SelectItem value="3">3/16"</SelectItem>
+                    <SelectItem value="4">4/16"</SelectItem>
+                    <SelectItem value="5">5/16"</SelectItem>
+                    <SelectItem value="6">6/16"</SelectItem>
+                    <SelectItem value="7">7/16"</SelectItem>
+                    <SelectItem value="8">8/16"</SelectItem>
+                    <SelectItem value="9">9/16"</SelectItem>
+                    <SelectItem value="10">10/16"</SelectItem>
+                    <SelectItem value="11">11/16"</SelectItem>
+                    <SelectItem value="12">12/16"</SelectItem>
+                    <SelectItem value="13">13/16"</SelectItem>
+                    <SelectItem value="14">14/16"</SelectItem>
+                    <SelectItem value="15">15/16"</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            {/* Depth Input */}
+            {/* Depth Input with Fraction */}
             <div className="space-y-2">
-              <Label htmlFor="depth">Depth (inches)</Label>
-              <Input
-                id="depth"
-                type="number"
-                placeholder="Depth"
-                value={depth}
-                onChange={(e) => setDepth(e.target.value)}
-                min="0"
-              />
+              <Label>Depth (inches)</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="number"
+                  placeholder="Inches"
+                  value={depth}
+                  onChange={(e) => setDepth(e.target.value)}
+                  min="0"
+                  className="flex-1"
+                />
+                <Select value={depthFraction} onValueChange={setDepthFraction}>
+                  <SelectTrigger className="w-24 bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="0">0/16"</SelectItem>
+                    <SelectItem value="1">1/16"</SelectItem>
+                    <SelectItem value="2">2/16"</SelectItem>
+                    <SelectItem value="3">3/16"</SelectItem>
+                    <SelectItem value="4">4/16"</SelectItem>
+                    <SelectItem value="5">5/16"</SelectItem>
+                    <SelectItem value="6">6/16"</SelectItem>
+                    <SelectItem value="7">7/16"</SelectItem>
+                    <SelectItem value="8">8/16"</SelectItem>
+                    <SelectItem value="9">9/16"</SelectItem>
+                    <SelectItem value="10">10/16"</SelectItem>
+                    <SelectItem value="11">11/16"</SelectItem>
+                    <SelectItem value="12">12/16"</SelectItem>
+                    <SelectItem value="13">13/16"</SelectItem>
+                    <SelectItem value="14">14/16"</SelectItem>
+                    <SelectItem value="15">15/16"</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Zip Code */}
