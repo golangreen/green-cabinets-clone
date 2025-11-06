@@ -123,8 +123,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   
   const addItem = useCartStore((state) => state.addItem);
 
-  // Get unique brand options
-  const brands = product.node.options.find((opt) => opt.name === "Brand")?.values || [];
+  // Get all available brands from BRAND_INFO
+  const brands = Object.keys(BRAND_INFO);
   
   // Get finishes based on selected brand
   const availableFinishes = selectedBrand === 'Tafisa' ? TAFISA_FINISHES : 
