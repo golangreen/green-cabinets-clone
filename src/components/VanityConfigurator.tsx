@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { ShoppingCart } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
+import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
 
 interface VanityConfiguratorProps {
   product: ShopifyProduct;
@@ -34,6 +35,10 @@ const SHIPPING_RATES: { [key: string]: number } = {
 // Get Tafisa finish options from comprehensive color library
 const TAFISA_FINISHES = getTafisaColorNames();
 const TAFISA_CATEGORIES = getTafisaCategories();
+
+// Get Egger finish options from comprehensive color library
+const EGGER_FINISHES = getEggerColorNames();
+const EGGER_CATEGORIES = getEggerCategories();
 
 // Shinnoki finish options - Prefinished wood veneer (organized by wood type)
 const SHINNOKI_FINISHES = [
@@ -69,7 +74,11 @@ const SHINNOKI_FINISHES = [
 const BRAND_INFO = {
   'Tafisa': {
     price: 250,
-    description: 'Premium melamine panels - 122+ colors available',
+    description: 'Premium melamine panels - 60+ colors available',
+  },
+  'Egger': {
+    price: 300,
+    description: 'Premium TFL & HPL panels - 98+ woodgrain and solid colors',
   },
   'Shinnoki': {
     price: 350,
@@ -119,6 +128,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   
   // Get finishes based on selected brand
   const availableFinishes = selectedBrand === 'Tafisa' ? TAFISA_FINISHES : 
+                            selectedBrand === 'Egger' ? EGGER_FINISHES :
                             selectedBrand === 'Shinnoki' ? SHINNOKI_FINISHES : [];
   
   // Update finish when brand changes
@@ -300,6 +310,20 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                         ))}
                       </div>
                     ))
+                  ) : selectedBrand === 'Egger' ? (
+                    // Group Egger colors by category
+                    EGGER_CATEGORIES.map((category) => (
+                      <div key={category}>
+                        <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-secondary/50">
+                          {category}
+                        </div>
+                        {getEggerColorsByCategory(category).map((color) => (
+                          <SelectItem key={color.name} value={color.name} className="cursor-pointer pl-4">
+                            {color.name} <span className="text-xs text-muted-foreground">({color.code})</span>
+                          </SelectItem>
+                        ))}
+                      </div>
+                    ))
                   ) : (
                     // Shinnoki colors without grouping
                     availableFinishes.map((finish) => (
@@ -314,6 +338,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 <p className="text-xs text-muted-foreground">
                   {availableFinishes.length} finishes available for {selectedBrand}
                   {selectedBrand === 'Tafisa' && ` across ${TAFISA_CATEGORIES.length} categories`}
+                  {selectedBrand === 'Egger' && ` across ${EGGER_CATEGORIES.length} categories`}
                 </p>
               )}
             </div>

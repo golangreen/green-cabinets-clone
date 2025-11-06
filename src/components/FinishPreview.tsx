@@ -1,12 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TAFISA_COLORS } from "@/lib/tafisaColors";
+import { EGGER_COLORS } from "@/lib/eggerColors";
 
 // Map finish names to their actual product image URLs from manufacturer websites
 const FINISH_IMAGE_URLS: Record<string, string> = {
   // Get Tafisa images from the comprehensive color library
   ...Object.fromEntries(
     TAFISA_COLORS.filter(c => c.imageUrl).map(c => [c.name, c.imageUrl!])
+  ),
+  
+  // Get Egger images from the comprehensive color library
+  ...Object.fromEntries(
+    EGGER_COLORS.filter(c => c.imageUrl).map(c => [c.name, c.imageUrl!])
   ),
   
   // Shinnoki finishes - High quality images from Architonic
@@ -83,6 +89,7 @@ const FINISH_DESCRIPTIONS: Record<string, string> = {
 export const FinishPreview = ({ brand, finish, isLoading }: FinishPreviewProps) => {
   const description = FINISH_DESCRIPTIONS[finish] || 'Premium cabinet finish';
   const isWoodVeneer = brand === 'Shinnoki';
+  const isTFL = brand === 'Tafisa' || brand === 'Egger';
   const imageUrl = FINISH_IMAGE_URLS[finish];
   
   // Fallback color mapping if no image available
@@ -240,7 +247,7 @@ export const FinishPreview = ({ brand, finish, isLoading }: FinishPreviewProps) 
               <div className="flex items-start gap-2">
                 <span className="font-medium min-w-[70px]">Material:</span>
                 <span className="text-muted-foreground">
-                  {isWoodVeneer ? 'Wood Veneer' : 'Melamine (TFL)'}
+                  {isWoodVeneer ? 'Wood Veneer' : isTFL ? 'Melamine (TFL/HPL)' : 'Premium Surface'}
                 </span>
               </div>
               <div className="flex items-start gap-2">

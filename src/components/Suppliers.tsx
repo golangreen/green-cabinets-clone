@@ -9,6 +9,7 @@ import richelieuLogo from "@/assets/logos/richelieu-logo.png";
 import shinnokiLogo from "@/assets/logos/shinnoki-logo.png";
 import wilsonartLogo from "@/assets/logos/wilsonart-logo.png";
 import greenCabinetsLogo from "@/assets/logos/green-cabinets-logo.jpg";
+import eggerLogo from "@/assets/logos/egger-logo.png";
 
 interface Supplier {
   id: string;
@@ -21,6 +22,21 @@ interface Supplier {
 }
 
 const suppliers: Supplier[] = [
+  {
+    id: "egger",
+    name: "Egger",
+    description: "Premium decorative wood-based materials",
+    logo: eggerLogo,
+    website: "https://www.egger.com/en/furniture-interior-design/?country=US",
+    details: "EGGER is a leading manufacturer of wood-based materials for furniture and interior design. We use their premium TFL panels, laminates, and decorative surfaces to create stunning, durable cabinetry with an extensive range of contemporary woodgrain reproductions and solid colors.",
+    products: [
+      "Thermally fused laminate panels (TFL)",
+      "High-pressure laminates (HPL)",
+      "PerfectSense Matt surfaces",
+      "Feelwood synchronized pore textures",
+      "98+ woodgrain and solid color options"
+    ]
+  },
   {
     id: "blum",
     name: "Blum",
