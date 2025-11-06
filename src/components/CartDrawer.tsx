@@ -160,25 +160,30 @@ export const CartDrawer = () => {
                   Checkout Here
                 </Button>
                 
-                <Button 
-                  onClick={handleCheckout}
-                  className="w-full" 
-                  size="lg"
-                  variant="outline"
-                  disabled={items.length === 0 || isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Creating Checkout...
-                    </>
-                  ) : (
-                    <>
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Checkout with Shopify
-                    </>
-                  )}
-                </Button>
+                <div className="space-y-2">
+                  <Button 
+                    onClick={handleCheckout}
+                    className="w-full" 
+                    size="lg"
+                    variant="outline"
+                    disabled={items.length === 0 || isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Creating Checkout...
+                      </>
+                    ) : (
+                      <>
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Checkout with Shopify
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-xs text-muted-foreground text-center">
+                    Price will be adjusted later based on your custom choices and dimensions
+                  </p>
+                </div>
               </div>
             </>
           )}
