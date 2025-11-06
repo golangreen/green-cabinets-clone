@@ -28,8 +28,68 @@ const SHIPPING_RATES: { [key: string]: number } = {
   "other": 400,
 };
 
+// Tafisa finish options - Premium melamine
+const TAFISA_FINISHES = [
+  'White',
+  'Cream Puff',
+  'Sand Castle',
+  'Tiramisu',
+  'Secret Garden',
+  'Froth of Sea',
+  'Gardenia',
+  'Cashmere',
+  'Morning Dew',
+  'Daybreak',
+  'Milky Way',
+  'Summer Drops',
+  'Moonlight',
+  'White Chocolate',
+  'Fogo Harbour',
+  'Weekend Getaway',
+  'Crème de la Crème',
+  'Natural Affinity',
+  'Free Spirit',
+  'Niagara',
+  'Love at First Sight',
+  'Summer Breeze',
+  'Mojave',
+];
+
+// Shinnoki finish options - Prefinished wood veneer
+const SHINNOKI_FINISHES = [
+  'Bondi Oak',
+  'Milk Oak',
+  'Pebble Triba',
+  'Ivory Oak',
+  'Ivory Infinite Oak',
+  'Natural Oak',
+  'Frozen Walnut',
+  'Manhattan Oak',
+  'Desert Oak',
+  'Sahara Oak',
+  'Terra Sapele',
+  'Cinnamon Triba',
+  'Smoked Walnut',
+  'Pure Walnut',
+  'Shadow Eucalyptus',
+  'Burley Oak',
+  'Stardust Walnut',
+  'Raven Oak',
+];
+
+const BRAND_INFO = {
+  'Tafisa': {
+    price: 250,
+    description: 'Premium melamine panels - 122+ colors available',
+  },
+  'Shinnoki': {
+    price: 350,
+    description: 'Prefinished wood veneer panels - Natural wood beauty',
+  },
+};
+
 export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
-  const [selectedBrand, setSelectedBrand] = useState<string>("");
+  const [selectedBrand, setSelectedBrand] = useState<string>("Tafisa");
   const [selectedFinish, setSelectedFinish] = useState<string>("");
   const [width, setWidth] = useState<string>("");
   const [widthFraction, setWidthFraction] = useState<string>("0");
@@ -40,9 +100,19 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   
   const addItem = useCartStore((state) => state.addItem);
 
-  // Get unique brand and finish options
+  // Get unique brand options
   const brands = product.node.options.find((opt) => opt.name === "Brand")?.values || [];
-  const finishes = product.node.options.find((opt) => opt.name === "Finish")?.values || [];
+  
+  // Get finishes based on selected brand
+  const availableFinishes = selectedBrand === 'Tafisa' ? TAFISA_FINISHES : 
+                            selectedBrand === 'Shinnoki' ? SHINNOKI_FINISHES : [];
+  
+  // Update finish when brand changes
+  useEffect(() => {
+    if (selectedBrand) {
+      setSelectedFinish(availableFinishes[0] || '');
+    }
+  }, [selectedBrand]);
 
   // Calculate price
   const calculatePrice = () => {
@@ -50,7 +120,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     
     const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
     const widthFeet = widthInches / 12;
-    const pricePerFoot = selectedBrand === "Tafisa" ? 250 : 350;
+    const pricePerFoot = BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.price || 0;
     
     return widthFeet * pricePerFoot;
   };
@@ -170,34 +240,46 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             <div className="space-y-2">
               <Label htmlFor="brand">Brand</Label>
               <Select value={selectedBrand} onValueChange={setSelectedBrand}>
-                <SelectTrigger id="brand">
+                <SelectTrigger id="brand" className="bg-background">
                   <SelectValue placeholder="Select brand" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background z-50">
                   {brands.map((brand) => (
-                    <SelectItem key={brand} value={brand}>
-                      {brand} - ${brand === "Tafisa" ? "250" : "350"}/ft
+                    <SelectItem key={brand} value={brand} className="cursor-pointer">
+                      {brand} - ${BRAND_INFO[brand as keyof typeof BRAND_INFO]?.price}/ft
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {selectedBrand && (
+                <p className="text-xs text-muted-foreground">
+                  {BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.description}
+                </p>
+              )}
             </div>
 
             {/* Finish Selection */}
             <div className="space-y-2">
-              <Label htmlFor="finish">Finish / Color</Label>
-              <Select value={selectedFinish} onValueChange={setSelectedFinish}>
-                <SelectTrigger id="finish">
-                  <SelectValue placeholder="Select finish" />
+              <Label htmlFor="finish">
+                Finish / Color {selectedBrand && `- ${selectedBrand} Collection`}
+              </Label>
+              <Select value={selectedFinish} onValueChange={setSelectedFinish} disabled={!selectedBrand}>
+                <SelectTrigger id="finish" className="bg-background">
+                  <SelectValue placeholder={selectedBrand ? "Select finish" : "Select brand first"} />
                 </SelectTrigger>
-                <SelectContent>
-                  {finishes.map((finish) => (
-                    <SelectItem key={finish} value={finish}>
+                <SelectContent className="bg-background z-50 max-h-80">
+                  {availableFinishes.map((finish) => (
+                    <SelectItem key={finish} value={finish} className="cursor-pointer">
                       {finish}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {selectedBrand && (
+                <p className="text-xs text-muted-foreground">
+                  {availableFinishes.length} finishes available for {selectedBrand}
+                </p>
+              )}
             </div>
 
             {/* Width Input with Fraction */}
@@ -213,10 +295,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   className="flex-1"
                 />
                 <Select value={widthFraction} onValueChange={setWidthFraction}>
-                  <SelectTrigger className="w-24">
+                  <SelectTrigger className="w-24 bg-background">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-background z-50">
                     <SelectItem value="0">0/16"</SelectItem>
                     <SelectItem value="1">1/16"</SelectItem>
                     <SelectItem value="2">2/16"</SelectItem>
