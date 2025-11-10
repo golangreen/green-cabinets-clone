@@ -21,7 +21,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown } from "lucide-react";
+import jsPDF from "jspdf";
 import { FinishPreview } from "./FinishPreview";
 import { Checkbox } from "@/components/ui/checkbox";
 import logoImage from "@/assets/logo.jpg";
@@ -426,6 +427,173 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       else setState("other");
     }
   }, [zipCode]);
+
+  const handleExportPDF = () => {
+    if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
+      toast.error("Please complete all fields", {
+        description: "Brand, finish, measurements, and zip code are required to export",
+      });
+      return;
+    }
+
+    try {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      let yPos = 20;
+      const lineHeight = 7;
+      const sectionSpacing = 10;
+
+      // Header
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text("Custom Vanity Configuration", pageWidth / 2, yPos, { align: "center" });
+      yPos += lineHeight + sectionSpacing;
+
+      // Company info
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text("Green Cabinets - Custom Bathroom Vanity", pageWidth / 2, yPos, { align: "center" });
+      yPos += lineHeight;
+      doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPos, { align: "center" });
+      yPos += lineHeight + sectionSpacing;
+
+      // Dimensions
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Dimensions", 20, yPos);
+      yPos += lineHeight;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
+      const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
+      const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
+      
+      doc.text(`Width: ${widthInches.toFixed(2)}"`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Height: ${heightInches.toFixed(2)}"`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Depth: ${depthInches.toFixed(2)}"`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Brand & Finish
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Materials", 20, yPos);
+      yPos += lineHeight;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Brand: ${selectedBrand}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Finish: ${selectedFinish}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Price per Linear Foot: $${BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.price}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Cabinet Configuration
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Cabinet Configuration", 20, yPos);
+      yPos += lineHeight;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      const doorStyleText = doorStyle === "single" ? "Single Door" : 
+                            doorStyle === "double" ? "Double Doors" : 
+                            doorStyle === "drawers" ? "All Drawers" : 
+                            doorStyle === "mixed" ? "Drawers + Doors" :
+                            doorStyle === "door-drawer-split" ? `Door + Drawer (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+                            doorStyle === "door-shelf-split" ? `Door + Shelf (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+                            "Custom";
+      doc.text(`Door Style: ${doorStyleText}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Number of Drawers: ${numDrawers}`, 20, yPos);
+      yPos += lineHeight;
+      const handleText = handleStyle === "bar" ? "Bar Handles" : handleStyle === "knob" ? "Knobs" : "Push-to-Open";
+      doc.text(`Handle Style: ${handleText}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Countertop & Sink
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Countertop & Sink", 20, yPos);
+      yPos += lineHeight;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Countertop Material: ${countertopMaterial.charAt(0).toUpperCase() + countertopMaterial.slice(1)}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Edge Profile: ${countertopEdge.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Sink Style: ${sinkStyle.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Sink Shape: ${sinkShape.charAt(0).toUpperCase() + sinkShape.slice(1)}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Pricing
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Pricing Estimate", 20, yPos);
+      yPos += lineHeight;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Vanity Base Price: $${basePrice.toFixed(2)}`, 20, yPos);
+      yPos += lineHeight;
+      
+      if (wallPrice > 0) {
+        doc.text(`Wall Configuration: $${wallPrice.toFixed(2)}`, 20, yPos);
+        yPos += lineHeight;
+      }
+      
+      if (floorPrice > 0) {
+        doc.text(`Floor Configuration: $${floorPrice.toFixed(2)}`, 20, yPos);
+        yPos += lineHeight;
+      }
+      
+      if (tax > 0) {
+        doc.text(`Sales Tax (${state}): $${tax.toFixed(2)}`, 20, yPos);
+        yPos += lineHeight;
+      }
+      
+      if (shipping > 0) {
+        doc.text(`Shipping to ${state}: $${shipping.toFixed(2)}`, 20, yPos);
+        yPos += lineHeight;
+      }
+      
+      doc.setFont("helvetica", "bold");
+      doc.text(`Total Estimate: $${totalPrice.toFixed(2)}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Delivery Info
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Delivery ZIP Code: ${zipCode}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Delivery State: ${state || "Unknown"}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Footer
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "italic");
+      doc.text("Note: This is an estimate. Final pricing will be confirmed by our team.", 20, yPos);
+      yPos += lineHeight;
+      doc.text("Contact us for detailed quote and installation information.", 20, yPos);
+
+      // Save the PDF
+      doc.save(`vanity-configuration-${Date.now()}.pdf`);
+      
+      toast.success("PDF exported successfully!", {
+        description: "Your configuration has been saved to your downloads",
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Failed to export PDF", {
+        description: "Please try again or contact support",
+      });
+    }
+  };
 
   const handleAddToCart = () => {
     if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
@@ -2622,25 +2790,34 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <Button 
             onClick={handleSaveTemplate} 
             variant="outline"
-            className="flex-1 touch-manipulation" 
+            className="touch-manipulation" 
             size="lg"
           >
             <Save className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">Save Template</span>
+            <span className="text-sm sm:text-base">Save</span>
           </Button>
           <Button 
-            onClick={handleAddToCart} 
-            className="flex-1 touch-manipulation" 
+            onClick={handleExportPDF} 
+            variant="outline"
+            className="touch-manipulation" 
             size="lg"
           >
-            <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">Add to Cart</span>
+            <FileDown className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Export PDF</span>
           </Button>
         </div>
+        <Button 
+          onClick={handleAddToCart} 
+          className="w-full touch-manipulation" 
+          size="lg"
+        >
+          <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="text-sm sm:text-base">Add to Cart</span>
+        </Button>
       </div>
     </div>
 
