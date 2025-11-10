@@ -141,6 +141,9 @@ const VanityDesigner = () => {
   const wallThickness = 9; // 9px = 4.5 inches at 2px per inch scale
   const canvasRef = useRef<HTMLDivElement>(null);
   
+  // Selected wall for context menu
+  const [selectedWallId, setSelectedWallId] = useState<number | null>(null);
+  
   // Snap to grid helper
   const snapToGrid = useCallback((value: number) => {
     return Math.round(value / gridSize) * gridSize;
@@ -780,12 +783,19 @@ const VanityDesigner = () => {
   }, [drawingTool, drawingWall, snapToGrid]);
 
   const deleteSelectedWall = useCallback(() => {
-    // For now, delete the last wall
-    if (walls.length > 0) {
+    if (selectedWallId) {
+      // Remove openings associated with this wall
+      setOpenings(openings.filter(o => o.wallId !== selectedWallId));
+      // Remove the wall
+      setWalls(walls.filter(w => w.id !== selectedWallId));
+      setSelectedWallId(null);
+      toast.success("Wall removed");
+    } else if (walls.length > 0) {
+      // Delete last wall if none selected
       setWalls(walls.slice(0, -1));
       toast.success("Wall removed");
     }
-  }, [walls]);
+  }, [walls, openings, selectedWallId]);
   
   const deleteSelectedOpening = useCallback(() => {
     if (selectedOpeningId) {
@@ -1530,8 +1540,64 @@ const VanityDesigner = () => {
                 />
               )}
 
-              {/* Walls with openings */}
-              <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
+              {/* Walls with openings and context menus */}
+              {walls.map(wall => {
+                const length = calculateWallLength(wall);
+                const wallOpenings = openings.filter(o => o.wallId === wall.id);
+                const midX = (wall.x1 + wall.x2) / 2;
+                const midY = (wall.y1 + wall.y2) / 2;
+                
+                return (
+                  <ContextMenu key={`wall-ctx-${wall.id}`}>
+                    <ContextMenuTrigger>
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: Math.min(wall.x1, wall.x2) - 10,
+                          top: Math.min(wall.y1, wall.y2) - 10,
+                          width: Math.abs(wall.x2 - wall.x1) + 20,
+                          height: Math.abs(wall.y2 - wall.y1) + 20,
+                          cursor: 'pointer',
+                          zIndex: 1
+                        }}
+                        onClick={() => setSelectedWallId(wall.id)}
+                      />
+                    </ContextMenuTrigger>
+                    <ContextMenuContent>
+                      <ContextMenuItem onClick={() => {
+                        setSelectedWallId(wall.id);
+                        setDrawingTool("door");
+                        toast.info("Click on wall to add door");
+                      }}>
+                        <DoorOpen className="mr-2 h-4 w-4" />
+                        Add Door
+                      </ContextMenuItem>
+                      <ContextMenuItem onClick={() => {
+                        setSelectedWallId(wall.id);
+                        setDrawingTool("window");
+                        toast.info("Click on wall to add window");
+                      }}>
+                        <RectangleHorizontal className="mr-2 h-4 w-4" />
+                        Add Window
+                      </ContextMenuItem>
+                      <ContextMenuSeparator />
+                      <ContextMenuItem 
+                        onClick={() => {
+                          setSelectedWallId(wall.id);
+                          deleteSelectedWall();
+                        }}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete Wall
+                      </ContextMenuItem>
+                    </ContextMenuContent>
+                  </ContextMenu>
+                );
+              })}
+              
+              {/* SVG walls rendering */}
+              <svg className="absolute inset-0" style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
                 {walls.map(wall => {
                   const length = calculateWallLength(wall);
                   const wallOpenings = openings.filter(o => o.wallId === wall.id);
@@ -1555,7 +1621,7 @@ const VanityDesigner = () => {
                           y1={wall.y1}
                           x2={wall.x2}
                           y2={wall.y2}
-                          stroke="#1F2937"
+                          stroke={selectedWallId === wall.id ? "#FF8C00" : "#1F2937"}
                           strokeWidth={wall.thickness}
                           strokeLinecap="square"
                         />
