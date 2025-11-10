@@ -26,6 +26,12 @@ import {
   Plus,
   Trash2,
   Copy,
+  AlignLeft,
+  AlignRight,
+  AlignCenterHorizontal,
+  AlignVerticalJustifyStart,
+  AlignVerticalJustifyEnd,
+  AlignCenterVertical,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -311,6 +317,95 @@ const VanityDesigner = () => {
       saveToHistory();
       setDraggingId(null);
     }
+  };
+
+  // Alignment functions
+  const alignLeft = () => {
+    if (cabinets.length < 2) return;
+    const minX = Math.min(...cabinets.map(c => c.x));
+    setCabinets(cabinets.map(c => ({ ...c, x: minX })));
+    saveToHistory();
+    toast.success("Cabinets aligned left");
+  };
+
+  const alignRight = () => {
+    if (cabinets.length < 2) return;
+    const maxRight = Math.max(...cabinets.map(c => c.x + (c.width * 2)));
+    setCabinets(cabinets.map(c => ({ ...c, x: maxRight - (c.width * 2) })));
+    saveToHistory();
+    toast.success("Cabinets aligned right");
+  };
+
+  const alignTop = () => {
+    if (cabinets.length < 2) return;
+    const minY = Math.min(...cabinets.map(c => c.y));
+    setCabinets(cabinets.map(c => ({ ...c, y: minY })));
+    saveToHistory();
+    toast.success("Cabinets aligned top");
+  };
+
+  const alignBottom = () => {
+    if (cabinets.length < 2) return;
+    const maxBottom = Math.max(...cabinets.map(c => c.y + (c.depth * 2)));
+    setCabinets(cabinets.map(c => ({ ...c, y: maxBottom - (c.depth * 2) })));
+    saveToHistory();
+    toast.success("Cabinets aligned bottom");
+  };
+
+  const alignCenterHorizontal = () => {
+    if (cabinets.length < 2) return;
+    const avgX = cabinets.reduce((sum, c) => sum + c.x + (c.width * 2) / 2, 0) / cabinets.length;
+    setCabinets(cabinets.map(c => ({ ...c, x: avgX - (c.width * 2) / 2 })));
+    saveToHistory();
+    toast.success("Cabinets centered horizontally");
+  };
+
+  const alignCenterVertical = () => {
+    if (cabinets.length < 2) return;
+    const avgY = cabinets.reduce((sum, c) => sum + c.y + (c.depth * 2) / 2, 0) / cabinets.length;
+    setCabinets(cabinets.map(c => ({ ...c, y: avgY - (c.depth * 2) / 2 })));
+    saveToHistory();
+    toast.success("Cabinets centered vertically");
+  };
+
+  const distributeHorizontally = () => {
+    if (cabinets.length < 3) return;
+    const sorted = [...cabinets].sort((a, b) => a.x - b.x);
+    const leftmost = sorted[0].x;
+    const rightmost = sorted[sorted.length - 1].x + (sorted[sorted.length - 1].width * 2);
+    const totalWidth = cabinets.reduce((sum, c) => sum + (c.width * 2), 0);
+    const spacing = (rightmost - leftmost - totalWidth) / (cabinets.length - 1);
+    
+    let currentX = leftmost;
+    const distributed = sorted.map(c => {
+      const newCabinet = { ...c, x: currentX };
+      currentX += (c.width * 2) + spacing;
+      return newCabinet;
+    });
+    
+    setCabinets(distributed);
+    saveToHistory();
+    toast.success("Cabinets distributed horizontally");
+  };
+
+  const distributeVertically = () => {
+    if (cabinets.length < 3) return;
+    const sorted = [...cabinets].sort((a, b) => a.y - b.y);
+    const topmost = sorted[0].y;
+    const bottommost = sorted[sorted.length - 1].y + (sorted[sorted.length - 1].depth * 2);
+    const totalHeight = cabinets.reduce((sum, c) => sum + (c.depth * 2), 0);
+    const spacing = (bottommost - topmost - totalHeight) / (cabinets.length - 1);
+    
+    let currentY = topmost;
+    const distributed = sorted.map(c => {
+      const newCabinet = { ...c, y: currentY };
+      currentY += (c.depth * 2) + spacing;
+      return newCabinet;
+    });
+    
+    setCabinets(distributed);
+    saveToHistory();
+    toast.success("Cabinets distributed vertically");
   };
 
   return (
@@ -976,12 +1071,121 @@ const VanityDesigner = () => {
                 );
               })}
               
-              {/* Helper overlay */}
-              <div className="absolute top-4 left-4 bg-card/95 backdrop-blur-sm p-3 rounded-lg border border-border shadow-lg text-xs pointer-events-none">
-                <div className="font-semibold mb-1">2D Layout View</div>
-                <div className="text-muted-foreground">• Drag cabinets to position</div>
-                <div className="text-muted-foreground">• Snaps to {gridSize}px grid</div>
-                <div className="text-muted-foreground mt-1">{cabinets.length} cabinet{cabinets.length !== 1 ? 's' : ''}</div>
+              {/* Alignment Toolbar */}
+              <div className="absolute top-4 left-4 bg-card/95 backdrop-blur-sm rounded-lg border border-border shadow-lg overflow-hidden">
+                <div className="p-2 border-b border-border">
+                  <div className="font-semibold text-xs mb-1">Alignment Tools</div>
+                  <div className="text-[10px] text-muted-foreground">{cabinets.length} cabinet{cabinets.length !== 1 ? 's' : ''}</div>
+                </div>
+                
+                <div className="p-2 space-y-2">
+                  {/* Horizontal Alignment */}
+                  <div>
+                    <div className="text-[10px] text-muted-foreground mb-1 px-1">Horizontal</div>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={alignLeft}
+                        disabled={cabinets.length < 2}
+                        title="Align Left"
+                      >
+                        <AlignLeft className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={alignCenterHorizontal}
+                        disabled={cabinets.length < 2}
+                        title="Center Horizontally"
+                      >
+                        <AlignCenterHorizontal className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={alignRight}
+                        disabled={cabinets.length < 2}
+                        title="Align Right"
+                      >
+                        <AlignRight className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Vertical Alignment */}
+                  <div>
+                    <div className="text-[10px] text-muted-foreground mb-1 px-1">Vertical</div>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={alignTop}
+                        disabled={cabinets.length < 2}
+                        title="Align Top"
+                      >
+                        <AlignVerticalJustifyStart className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={alignCenterVertical}
+                        disabled={cabinets.length < 2}
+                        title="Center Vertically"
+                      >
+                        <AlignCenterVertical className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={alignBottom}
+                        disabled={cabinets.length < 2}
+                        title="Align Bottom"
+                      >
+                        <AlignVerticalJustifyEnd className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Distribution */}
+                  <div>
+                    <div className="text-[10px] text-muted-foreground mb-1 px-1">Distribute</div>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 flex-1 text-[10px]"
+                        onClick={distributeHorizontally}
+                        disabled={cabinets.length < 3}
+                        title="Distribute Horizontally"
+                      >
+                        H-Even
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 flex-1 text-[10px]"
+                        onClick={distributeVertically}
+                        disabled={cabinets.length < 3}
+                        title="Distribute Vertically"
+                      >
+                        V-Even
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Info overlay */}
+              <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-sm p-2 rounded-lg border border-border shadow-lg text-[10px] text-muted-foreground pointer-events-none">
+                <div>• Drag cabinets to position</div>
+                <div>• Snaps to {gridSize}px grid</div>
               </div>
             </div>
           ) : (
