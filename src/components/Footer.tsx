@@ -66,7 +66,7 @@ const Footer = () => {
         </div>
         
         <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          <p>Since 2010 Green Cabinets. &copy; All rights reserved.</p>
+          <p>&copy; 2025 Green Cabinets. All rights reserved.</p>
         </div>
       </div>
     </footer>
