@@ -69,19 +69,22 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
   const [selectedHandleType, setSelectedHandleType] = useState<keyof typeof HARDWARE_OPTIONS.handles>("bar");
   const [numHandles, setNumHandles] = useState(2);
   const [comparisonStyles, setComparisonStyles] = useState<string[]>([]);
+  const [comparisonFinishes, setComparisonFinishes] = useState<string[]>([]);
   const [isExporting, setIsExporting] = useState(false);
   
   const comparisonRef = useRef<HTMLDivElement>(null);
+  const finishComparisonRef = useRef<HTMLDivElement>(null);
 
   const totalSteps = 5;
 
   // Export comparison as image
   const exportAsImage = async () => {
-    if (!comparisonRef.current || comparisonStyles.length === 0) return;
+    const ref = comparisonStyles.length > 0 ? comparisonRef.current : finishComparisonRef.current;
+    if (!ref || (comparisonStyles.length === 0 && comparisonFinishes.length === 0)) return;
     
     setIsExporting(true);
     try {
-      const canvas = await html2canvas(comparisonRef.current, {
+      const canvas = await html2canvas(ref, {
         backgroundColor: "#ffffff",
         scale: 2,
         logging: false,
@@ -92,7 +95,8 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
           const url = URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = url;
-          link.download = `door-style-comparison-${Date.now()}.png`;
+          const type = comparisonStyles.length > 0 ? 'door-style' : 'finish';
+          link.download = `${type}-comparison-${Date.now()}.png`;
           link.click();
           URL.revokeObjectURL(url);
           toast.success("Comparison exported as image!");
@@ -108,11 +112,12 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
 
   // Export comparison as PDF
   const exportAsPDF = async () => {
-    if (!comparisonRef.current || comparisonStyles.length === 0) return;
+    const ref = comparisonStyles.length > 0 ? comparisonRef.current : finishComparisonRef.current;
+    if (!ref || (comparisonStyles.length === 0 && comparisonFinishes.length === 0)) return;
     
     setIsExporting(true);
     try {
-      const canvas = await html2canvas(comparisonRef.current, {
+      const canvas = await html2canvas(ref, {
         backgroundColor: "#ffffff",
         scale: 2,
         logging: false,
@@ -126,7 +131,8 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
       });
       
       pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-      pdf.save(`door-style-comparison-${Date.now()}.pdf`);
+      const type = comparisonStyles.length > 0 ? 'door-style' : 'finish';
+      pdf.save(`${type}-comparison-${Date.now()}.pdf`);
       toast.success("Comparison exported as PDF!");
     } catch (error) {
       console.error("Error exporting PDF:", error);
@@ -148,6 +154,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
       setSelectedHandleType("bar");
       setNumHandles(2);
       setComparisonStyles([]);
+      setComparisonFinishes([]);
     }
     onOpenChange(open);
   };
@@ -622,6 +629,88 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                 </Tabs>
               </div>
 
+              {/* Finish Comparison View */}
+              {comparisonFinishes.length > 0 && (
+                <div className="bg-muted/30 border border-border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-semibold">Comparing {comparisonFinishes.length} Finishes</Label>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={exportAsImage}
+                        disabled={isExporting}
+                        className="h-7 text-xs"
+                      >
+                        <FileImage className="h-3 w-3 mr-1" />
+                        PNG
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={exportAsPDF}
+                        disabled={isExporting}
+                        className="h-7 text-xs"
+                      >
+                        <FileText className="h-3 w-3 mr-1" />
+                        PDF
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setComparisonFinishes([])}
+                        className="h-7 text-xs"
+                      >
+                        Clear
+                      </Button>
+                    </div>
+                  </div>
+                  <div ref={finishComparisonRef} className={`grid gap-3 ${comparisonFinishes.length === 2 ? 'grid-cols-2' : 'grid-cols-3'} bg-white p-4 rounded-lg`}>
+                    {comparisonFinishes.map((finishId) => {
+                      const finish = MATERIAL_FINISHES.find(f => f.id === finishId);
+                      if (!finish) return null;
+                      return (
+                        <Card key={finishId} className="p-3 space-y-2 bg-card">
+                          <div className="flex items-center justify-between">
+                            <h5 className="font-semibold text-xs text-foreground">{finish.name}</h5>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setComparisonFinishes(comparisonFinishes.filter(id => id !== finishId))}
+                              className="h-6 w-6 p-0 print:hidden"
+                            >
+                              ×
+                            </Button>
+                          </div>
+                          <div className="w-full h-24 border border-border rounded bg-gradient-to-br from-muted to-background flex items-center justify-center">
+                            <span className="text-xs text-muted-foreground">{finish.brand}</span>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-[10px] text-muted-foreground">{finish.brand}</p>
+                            <div className="flex gap-1">
+                              <Badge variant="secondary" className="text-[10px]">
+                                {finish.brand}
+                              </Badge>
+                              <Badge variant="outline" className="text-[10px]">
+                                {finish.priceMultiplier}x
+                              </Badge>
+                            </div>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant={selectedFinishId === finishId ? "default" : "outline"}
+                            onClick={() => setSelectedFinishId(finishId)}
+                            className="w-full h-7 text-xs print:hidden"
+                          >
+                            {selectedFinishId === finishId ? "Selected" : "Select"}
+                          </Button>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Finish */}
               <div>
                 <Label className="text-sm font-semibold mb-3 block">Finish</Label>
@@ -634,20 +723,38 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                           <Card
                             key={finish.id}
                             className={`p-2 cursor-pointer transition-all hover:border-primary ${
-                              selectedFinishId === finish.id ? "border-primary bg-primary/5" : ""
+                              selectedFinishId === finish.id ? "border-primary bg-primary/5 ring-2 ring-primary ring-offset-2" : ""
                             }`}
                             onClick={() => setSelectedFinishId(finish.id)}
                           >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2 flex-1 min-w-0">
                                 <div className="text-sm font-medium">{finish.name}</div>
                                 <Badge variant="outline" className="text-xs">
                                   {finish.priceMultiplier}x
                                 </Badge>
                               </div>
-                              {selectedFinishId === finish.id && (
-                                <Check className="h-4 w-4 text-primary" />
-                              )}
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                {selectedFinishId === finish.id && (
+                                  <Check className="h-4 w-4 text-primary" />
+                                )}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (comparisonFinishes.includes(finish.id)) {
+                                      setComparisonFinishes(comparisonFinishes.filter(id => id !== finish.id));
+                                    } else if (comparisonFinishes.length < 3) {
+                                      setComparisonFinishes([...comparisonFinishes, finish.id]);
+                                    }
+                                  }}
+                                  disabled={comparisonFinishes.length >= 3 && !comparisonFinishes.includes(finish.id)}
+                                  className="h-6 text-[10px] px-2"
+                                >
+                                  {comparisonFinishes.includes(finish.id) ? "Remove" : "Compare"}
+                                </Button>
+                              </div>
                             </div>
                           </Card>
                         ))}
