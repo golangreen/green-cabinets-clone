@@ -138,8 +138,8 @@ const suppliers: Supplier[] = [
 ];
 
 // Import all gallery images
-const galleryImages = import.meta.glob('../assets/gallery/*.{jpg,jpeg,png,webp}', { eager: true, as: 'url' });
-const allGalleryImages = Object.values(galleryImages);
+const galleryImages = import.meta.glob('../assets/gallery/*.{jpg,jpeg,png,webp}', { eager: true, query: '?url', import: 'default' });
+const allGalleryImages = Object.values(galleryImages) as string[];
 
 const Suppliers = () => {
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);

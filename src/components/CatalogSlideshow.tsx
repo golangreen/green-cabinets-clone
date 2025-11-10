@@ -172,7 +172,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
           <div className="absolute inset-0 flex items-center justify-center">
             <div
               key={currentIndex}
-              className={`absolute inset-0 transition-transform duration-[2000ms] ease-in-out ${direction}`}
+              className={`absolute inset-0 transition-transform duration-2000 ease-in-out ${direction}`}
               style={{
                 animation: "slideIn 2s ease-in-out forwards",
               }}
