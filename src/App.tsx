@@ -57,6 +57,7 @@ const App = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/designer" element={<VanityDesigner />} />
+            <Route path="/vanity-designer" element={<VanityDesigner />} />
             <Route path="/admin/security" element={<AdminSecurity />} />
             <Route path="/scan" element={<RoomScan />} />
             <Route path="/security" element={<SecurityPolicy />} />
