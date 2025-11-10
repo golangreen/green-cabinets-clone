@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Plus,
@@ -169,6 +170,12 @@ const VanityDesigner = () => {
   const [openings, setOpenings] = useState<Opening[]>([]);
   const [selectedOpeningId, setSelectedOpeningId] = useState<number | null>(null);
   
+  // Track which elements came from scan
+  const [scanSourced, setScanSourced] = useState<{
+    walls: number[];
+    openings: number[];
+  }>({ walls: [], openings: [] });
+  
   // Collision detection state
   const [cabinetCollisions, setCabinetCollisions] = useState<Map<number, string[]>>(new Map());
   
@@ -275,6 +282,12 @@ const VanityDesigner = () => {
       
       setWalls(newWalls);
       
+      // Track that these walls are from scan
+      setScanSourced(prev => ({
+        ...prev,
+        walls: newWalls.map(w => w.id)
+      }));
+      
       // Apply detected windows and doors if available
       const newOpenings: Opening[] = [];
       let openingId = 1;
@@ -309,6 +322,11 @@ const VanityDesigner = () => {
       
       if (newOpenings.length > 0) {
         setOpenings(newOpenings);
+        // Track that these openings are from scan
+        setScanSourced(prev => ({
+          ...prev,
+          openings: newOpenings.map(o => o.id)
+        }));
       }
       
       const widthFeet = (scan.measurements.width * 3.28084).toFixed(1);
@@ -664,6 +682,29 @@ const VanityDesigner = () => {
     }));
     toast.success("Cabinet rotated");
   }, [cabinets]);
+
+  // Calculate wall length in inches
+  const calculateWallLength = useCallback((wall: Wall): number => {
+    const dx = wall.x2 - wall.x1;
+    const dy = wall.y2 - wall.y1;
+    const lengthPx = Math.sqrt(dx * dx + dy * dy);
+    // Convert pixels to inches (2px = 1 inch)
+    return Math.round(lengthPx / 2);
+  }, []);
+
+  // Update wall endpoint
+  const updateWallEndpoint = useCallback((wallId: number, endpoint: 'start' | 'end', axis: 'x' | 'y', value: number) => {
+    setWalls(walls.map(wall => {
+      if (wall.id === wallId) {
+        if (endpoint === 'start') {
+          return axis === 'x' ? { ...wall, x1: value } : { ...wall, y1: value };
+        } else {
+          return axis === 'x' ? { ...wall, x2: value } : { ...wall, y2: value };
+        }
+      }
+      return wall;
+    }));
+  }, [walls]);
 
   const changeCabinetSize = useCallback((cabinetId: number, dimension: 'width' | 'height' | 'depth', value: number) => {
     setCabinets(cabinets.map(c => {
@@ -1174,14 +1215,6 @@ const VanityDesigner = () => {
     ));
   }, [openings, selectedOpeningId]);
 
-  const calculateWallLength = (wall: Wall) => {
-    const dx = wall.x2 - wall.x1;
-    const dy = wall.y2 - wall.y1;
-    const lengthPx = Math.sqrt(dx * dx + dy * dy);
-    const lengthInches = lengthPx / 2; // 2px per inch
-    return Math.round(lengthInches);
-  };
-
   // Render ribbon content based on active tab
   const renderRibbonContent = () => {
     switch (activeTab) {
@@ -1578,94 +1611,210 @@ const VanityDesigner = () => {
                   <TabsContent value="properties" className="space-y-3 mt-3">
                     {walls.length > 0 && (
                       <div className="space-y-2">
-                        <Label className="text-xs font-semibold">Walls</Label>
-                        {walls.map((wall, idx) => (
-                          <Card key={wall.id} className="p-2">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs font-medium">Wall #{idx + 1}</span>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                className="h-6 w-6 p-0"
-                                onClick={() => {
-                                  setWalls(walls.filter(w => w.id !== wall.id));
-                                  toast.success("Wall removed");
-                                }}
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              Length: {calculateWallLength(wall)}"
-                            </div>
-                          </Card>
-                        ))}
+                        <div className="flex items-center justify-between">
+                          <Label className="text-xs font-semibold">Walls</Label>
+                          {scanSourced.walls.length > 0 && (
+                            <Badge variant="secondary" className="text-[10px] h-5">
+                              <Scan className="h-2.5 w-2.5 mr-1" />
+                              From Scan
+                            </Badge>
+                          )}
+                        </div>
+                        {walls.map((wall, idx) => {
+                          const isFromScan = scanSourced.walls.includes(wall.id);
+                          return (
+                            <Card key={wall.id} className={`p-3 ${isFromScan ? 'border-blue-200 dark:border-blue-800' : ''}`}>
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs font-medium">Wall #{idx + 1}</span>
+                                  {isFromScan && (
+                                    <Badge variant="outline" className="text-[9px] h-4 px-1">
+                                      <Scan className="h-2 w-2 mr-0.5" />
+                                      Scanned
+                                    </Badge>
+                                  )}
+                                </div>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  className="h-6 w-6 p-0"
+                                  onClick={() => {
+                                    setWalls(walls.filter(w => w.id !== wall.id));
+                                    setScanSourced(prev => ({
+                                      ...prev,
+                                      walls: prev.walls.filter(id => id !== wall.id)
+                                    }));
+                                    toast.success("Wall removed");
+                                  }}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <div className="text-xs text-muted-foreground mb-2">
+                                  Length: {calculateWallLength(wall)}"
+                                </div>
+                                
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div>
+                                    <Label className="text-[10px]">Start X</Label>
+                                    <Input 
+                                      type="number"
+                                      value={Math.round(wall.x1)}
+                                      onChange={(e) => updateWallEndpoint(wall.id, 'start', 'x', parseInt(e.target.value) || 0)}
+                                      className="h-6 text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label className="text-[10px]">Start Y</Label>
+                                    <Input 
+                                      type="number"
+                                      value={Math.round(wall.y1)}
+                                      onChange={(e) => updateWallEndpoint(wall.id, 'start', 'y', parseInt(e.target.value) || 0)}
+                                      className="h-6 text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label className="text-[10px]">End X</Label>
+                                    <Input 
+                                      type="number"
+                                      value={Math.round(wall.x2)}
+                                      onChange={(e) => updateWallEndpoint(wall.id, 'end', 'x', parseInt(e.target.value) || 0)}
+                                      className="h-6 text-xs"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label className="text-[10px]">End Y</Label>
+                                    <Input 
+                                      type="number"
+                                      value={Math.round(wall.y2)}
+                                      onChange={(e) => updateWallEndpoint(wall.id, 'end', 'y', parseInt(e.target.value) || 0)}
+                                      className="h-6 text-xs"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </Card>
+                          );
+                        })}
                       </div>
                     )}
                     
                     {openings.length > 0 && (
                       <div className="space-y-2">
-                        <Label className="text-xs font-semibold">Openings</Label>
-                        {openings.map((opening) => (
-                          <Card key={opening.id} className="p-2">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs font-medium capitalize">{opening.type}</span>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                className="h-6 w-6 p-0"
-                                onClick={() => {
-                                  setOpenings(openings.filter(o => o.id !== opening.id));
-                                  toast.success("Opening removed");
-                                }}
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
-                            <div className="space-y-1">
-                              <Label className="text-[10px]">Width (inches)</Label>
-                              <Input 
-                                type="number"
-                                value={opening.width}
-                                onChange={(e) => {
-                                  const newWidth = Math.max(24, Math.min(96, parseInt(e.target.value) || 24));
-                                  setOpenings(openings.map(o => 
-                                    o.id === opening.id ? { ...o, width: newWidth } : o
-                                  ));
-                                }}
-                                className="h-7 text-xs"
-                              />
-                            </div>
-                            <div className="space-y-1 mt-2">
-                              <Label className="text-[10px]">Height (inches)</Label>
-                              <Input 
-                                type="number"
-                                value={opening.height}
-                                onChange={(e) => {
-                                  const newHeight = Math.max(12, Math.min(96, parseInt(e.target.value) || 30));
-                                  setOpenings(openings.map(o => 
-                                    o.id === opening.id ? { ...o, height: newHeight } : o
-                                  ));
-                                }}
-                                className="h-7 text-xs"
-                              />
-                            </div>
-                            <div className="space-y-1 mt-2">
-                              <Label className="text-[10px]">Height from Floor (inches)</Label>
-                              <Input 
-                                type="number"
-                                value={opening.yPosition}
-                                onChange={(e) => {
-                                  const newY = Math.max(0, Math.min(84, parseInt(e.target.value) || 0));
-                                  setOpenings(openings.map(o => 
-                                    o.id === opening.id ? { ...o, yPosition: newY } : o
-                                  ));
-                                }}
-                                className="h-7 text-xs"
-                              />
-                            </div>
-                          </Card>
-                        ))}
+                        <div className="flex items-center justify-between">
+                          <Label className="text-xs font-semibold">Openings</Label>
+                          {scanSourced.openings.length > 0 && (
+                            <Badge variant="secondary" className="text-[10px] h-5">
+                              <Scan className="h-2.5 w-2.5 mr-1" />
+                              From Scan
+                            </Badge>
+                          )}
+                        </div>
+                        {openings.map((opening) => {
+                          const isFromScan = scanSourced.openings.includes(opening.id);
+                          return (
+                            <Card key={opening.id} className={`p-3 ${isFromScan ? 'border-blue-200 dark:border-blue-800' : ''}`}>
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs font-medium capitalize">{opening.type}</span>
+                                  {isFromScan && (
+                                    <Badge variant="outline" className="text-[9px] h-4 px-1">
+                                      <Scan className="h-2 w-2 mr-0.5" />
+                                      Scanned
+                                    </Badge>
+                                  )}
+                                </div>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  className="h-6 w-6 p-0"
+                                  onClick={() => {
+                                    setOpenings(openings.filter(o => o.id !== opening.id));
+                                    setScanSourced(prev => ({
+                                      ...prev,
+                                      openings: prev.openings.filter(id => id !== opening.id)
+                                    }));
+                                    toast.success("Opening removed");
+                                  }}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <div>
+                                  <Label className="text-[10px]">Position on Wall (0-1)</Label>
+                                  <div className="flex items-center gap-2">
+                                    <Input 
+                                      type="number"
+                                      min="0"
+                                      max="1"
+                                      step="0.1"
+                                      value={opening.position}
+                                      onChange={(e) => {
+                                        const newPos = Math.max(0, Math.min(1, parseFloat(e.target.value) || 0));
+                                        setOpenings(openings.map(o => 
+                                          o.id === opening.id ? { ...o, position: newPos } : o
+                                        ));
+                                      }}
+                                      className="h-7 text-xs"
+                                    />
+                                  </div>
+                                  <p className="text-[9px] text-muted-foreground mt-0.5">
+                                    0 = start, 0.5 = center, 1 = end
+                                  </p>
+                                </div>
+                                
+                                <div>
+                                  <Label className="text-[10px]">Width (inches)</Label>
+                                  <Input 
+                                    type="number"
+                                    value={opening.width}
+                                    onChange={(e) => {
+                                      const newWidth = Math.max(24, Math.min(96, parseInt(e.target.value) || 24));
+                                      setOpenings(openings.map(o => 
+                                        o.id === opening.id ? { ...o, width: newWidth } : o
+                                      ));
+                                    }}
+                                    className="h-7 text-xs"
+                                  />
+                                </div>
+                                
+                                <div>
+                                  <Label className="text-[10px]">Height (inches)</Label>
+                                  <Input 
+                                    type="number"
+                                    value={opening.height}
+                                    onChange={(e) => {
+                                      const newHeight = Math.max(12, Math.min(96, parseInt(e.target.value) || 30));
+                                      setOpenings(openings.map(o => 
+                                        o.id === opening.id ? { ...o, height: newHeight } : o
+                                      ));
+                                    }}
+                                    className="h-7 text-xs"
+                                  />
+                                </div>
+                                
+                                <div>
+                                  <Label className="text-[10px]">Height from Floor (inches)</Label>
+                                  <Input 
+                                    type="number"
+                                    value={opening.yPosition}
+                                    onChange={(e) => {
+                                      const newY = Math.max(0, Math.min(84, parseInt(e.target.value) || 0));
+                                      setOpenings(openings.map(o => 
+                                        o.id === opening.id ? { ...o, yPosition: newY } : o
+                                      ));
+                                    }}
+                                    className="h-7 text-xs"
+                                  />
+                                </div>
+                              </div>
+                            </Card>
+                          );
+                        })}
                       </div>
                     )}
                   </TabsContent>
