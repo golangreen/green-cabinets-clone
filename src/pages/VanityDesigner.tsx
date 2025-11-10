@@ -1651,9 +1651,10 @@ const VanityDesigner = () => {
                 const widthPx = cabinet.width * 2;
                 const depthPx = cabinet.depth * 2;
                 const rotation = cabinet.rotation || 0;
-                const isLShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("LS");
+                const isLShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("LS") && !cabinet.label?.startsWith("LSB");
                 const isUShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("US");
                 const isDiagonal = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("DC");
+                const isLazySusan = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("LSBC") || cabinet.label?.startsWith("LSWC");
                 
                 return (
                   <ContextMenu key={cabinet.id}>
@@ -1723,8 +1724,45 @@ const VanityDesigner = () => {
                           </svg>
                         )}
                         
+                        {/* Lazy Susan (Circular) rendering */}
+                        {isLazySusan && (
+                          <svg 
+                            width="100%" 
+                            height="100%" 
+                            style={{ position: 'absolute', inset: 0 }}
+                          >
+                            <circle
+                              cx={widthPx / 2}
+                              cy={depthPx / 2}
+                              r={Math.min(widthPx, depthPx) / 2 - 2}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                            />
+                            {/* Rotating indicator lines */}
+                            <line
+                              x1={widthPx / 2}
+                              y1={depthPx / 2}
+                              x2={widthPx / 2}
+                              y2={4}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth="1"
+                              opacity="0.5"
+                            />
+                            <line
+                              x1={widthPx / 2}
+                              y1={depthPx / 2}
+                              x2={widthPx - 4}
+                              y2={depthPx / 2}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth="1"
+                              opacity="0.5"
+                            />
+                          </svg>
+                        )}
+                        
                         {/* Standard rectangle for non-corner cabinets */}
-                        {!isLShaped && !isUShaped && !isDiagonal && (
+                        {!isLShaped && !isUShaped && !isDiagonal && !isLazySusan && (
                           <div 
                             style={{
                               width: '100%',

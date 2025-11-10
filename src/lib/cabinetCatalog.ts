@@ -424,6 +424,63 @@ export const CABINET_CATALOG: CabinetSpec[] = [
     basePrice: 335,
     category: "Corner - Wall"
   },
+  
+  // ===== LAZY SUSAN CORNER CABINETS (Circular) =====
+  {
+    type: "Corner Cabinet",
+    subType: "lazy-susan",
+    width: 33,
+    height: 34.5,
+    depth: 33,
+    label: "LSBC33",
+    description: "33\" Lazy Susan Corner Base",
+    basePrice: 525,
+    category: "Corner - Base"
+  },
+  {
+    type: "Corner Cabinet",
+    subType: "lazy-susan",
+    width: 36,
+    height: 34.5,
+    depth: 36,
+    label: "LSBC36",
+    description: "36\" Lazy Susan Corner Base",
+    basePrice: 565,
+    category: "Corner - Base"
+  },
+  {
+    type: "Corner Cabinet",
+    subType: "lazy-susan",
+    width: 39,
+    height: 34.5,
+    depth: 39,
+    label: "LSBC39",
+    description: "39\" Lazy Susan Corner Base",
+    basePrice: 595,
+    category: "Corner - Base"
+  },
+  {
+    type: "Corner Cabinet",
+    subType: "lazy-susan-wall",
+    width: 24,
+    height: 30,
+    depth: 24,
+    label: "LSWC24",
+    description: "24\" Lazy Susan Corner Wall",
+    basePrice: 365,
+    category: "Corner - Wall"
+  },
+  {
+    type: "Corner Cabinet",
+    subType: "lazy-susan-wall",
+    width: 30,
+    height: 30,
+    depth: 30,
+    label: "LSWC30",
+    description: "30\" Lazy Susan Corner Wall",
+    basePrice: 425,
+    category: "Corner - Wall"
+  },
 ];
 
 // Helper function to calculate cabinet price with finish
