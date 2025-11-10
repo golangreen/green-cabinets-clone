@@ -8,9 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ResponsiveDesignerLayout } from "@/components/ResponsiveDesignerLayout";
-import { useResponsiveDesigner } from "@/hooks/useResponsiveDesigner";
-import { MobileDesignerControls } from "@/components/MobileDesignerControls";
 import LoadingState from "@/components/LoadingState";
 import { 
   Plus,
@@ -132,7 +129,6 @@ const CABINET_LIBRARY = CABINET_CATALOG;
 
 const VanityDesigner = () => {
   const navigate = useNavigate();
-  const { isMobile, isTablet, shouldUseBottomSheet, touchTargetSize, canvasPadding } = useResponsiveDesigner();
   
   // Templates hook
   const { templates, isLoading: templatesLoading, saveTemplate, deleteTemplate, loadTemplate, duplicateTemplate } = useRoomTemplates();
@@ -148,7 +144,7 @@ const VanityDesigner = () => {
   // View mode: 'floorplan' or 'render'
   const [viewMode, setViewMode] = useState<"floorplan" | "render">("floorplan");
   const [activeTab, setActiveTab] = useState("room-layout");
-  const [showLeftPanel, setShowLeftPanel] = useState(!isMobile); // Auto-hide on mobile
+  const [showLeftPanel, setShowLeftPanel] = useState(false); // Start hidden on mobile
   const [showGrid, setShowGrid] = useState(true);
   const [showDimensions, setShowDimensions] = useState(true);
   const [drawingTool, setDrawingTool] = useState<"select" | "wall" | "door" | "window">("select");

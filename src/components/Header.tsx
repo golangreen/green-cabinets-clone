@@ -162,6 +162,19 @@ const Header = () => {
           </div>
           
           <div className="flex items-center gap-4 font-display">
+            {/* Install PWA Button */}
+            {isInstallable && (
+              <Button
+                size="default"
+                variant="outline"
+                className="hidden sm:inline-flex text-sm px-4"
+                onClick={() => setShowInstallDialog(true)}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Install
+              </Button>
+            )}
+
             <CartDrawer />
 
             {/* Mobile Menu */}

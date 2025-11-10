@@ -15,8 +15,6 @@ import RoomScan from "./pages/RoomScan";
 import SecurityPolicy from "./pages/SecurityPolicy";
 import NotFound from "./pages/NotFound";
 import SplashScreen from "./components/SplashScreen";
-import CookieConsent from "./components/CookieConsent";
-import { InstallAppPrompt } from "./components/InstallAppPrompt";
 
 const queryClient = new QueryClient();
 
@@ -46,8 +44,6 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <CookieConsent />
-        <InstallAppPrompt />
         {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
         <BrowserRouter>
           <Routes>
@@ -57,7 +53,6 @@ const App = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/designer" element={<VanityDesigner />} />
-            <Route path="/vanity-designer" element={<VanityDesigner />} />
             <Route path="/admin/security" element={<AdminSecurity />} />
             <Route path="/scan" element={<RoomScan />} />
             <Route path="/security" element={<SecurityPolicy />} />
