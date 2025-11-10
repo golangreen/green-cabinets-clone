@@ -36,7 +36,8 @@ import {
   Upload,
   Scan,
   Undo,
-  Redo
+  Redo,
+  Sparkles
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
@@ -60,6 +61,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { CabinetWizard } from "@/components/CabinetWizard";
 import { useRoomTemplates } from "@/hooks/useRoomTemplates";
 
 interface Cabinet {
@@ -129,6 +131,9 @@ const VanityDesigner = () => {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const [templateDescription, setTemplateDescription] = useState("");
+  
+  // Cabinet wizard
+  const [showWizard, setShowWizard] = useState(false);
   
   // View mode: 'floorplan' or 'render'
   const [viewMode, setViewMode] = useState<"floorplan" | "render">("floorplan");
@@ -579,6 +584,63 @@ const VanityDesigner = () => {
     setSelectedCabinetId(newCabinet.id);
     toast.success(`${template.description} added - ${formatPrice(price)}`);
   }, [cabinets, snapToGrid]);
+
+  // Handle wizard completion
+  const handleWizardComplete = useCallback((
+    template: CabinetSpec,
+    config: {
+      finishId: string;
+      doorStyleId: string;
+      handleType: keyof typeof HARDWARE_OPTIONS.handles;
+      numHandles: number;
+    }
+  ) => {
+    const price = calculateCabinetPrice(
+      template,
+      config.finishId,
+      config.doorStyleId,
+      config.handleType,
+      config.numHandles
+    );
+    
+    const finish = MATERIAL_FINISHES.find(f => f.id === config.finishId);
+    
+    // Set Y position based on cabinet type - professional standards
+    let yPosition: number;
+    if (template.type === "Base Cabinet") {
+      yPosition = DEFAULTS.BASE_CABINET_Y * 2;
+    } else if (template.type === "Wall Cabinet") {
+      yPosition = DEFAULTS.WALL_CABINET_Y * 2;
+    } else {
+      yPosition = 300; // Default center position for other types
+    }
+    
+    const newCabinet: Cabinet = {
+      id: Math.max(...cabinets.map(c => c.id), 0) + 1,
+      type: template.type,
+      width: template.width,
+      height: template.height,
+      depth: template.depth,
+      x: 300, // Center position
+      y: yPosition,
+      brand: finish?.brand || "Tafisa",
+      finish: finish?.name || "White",
+      finishId: config.finishId,
+      doorStyleId: config.doorStyleId,
+      label: template.label,
+      price: price,
+      catalogRef: template.label,
+      rotation: 0,
+      handleType: config.handleType,
+      numHandles: config.numHandles,
+      hasDrawers: template.subType === "drawer",
+      numDrawers: template.subType === "drawer" ? 3 : 0,
+    };
+    
+    setCabinets([...cabinets, newCabinet]);
+    setSelectedCabinetId(newCabinet.id);
+    toast.success(`${template.description} added - ${formatPrice(price)}`);
+  }, [cabinets]);
 
   // Remove selected cabinet
   const removeCabinet = useCallback(() => {
@@ -1604,6 +1666,19 @@ const VanityDesigner = () => {
       case "items":
         return (
           <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => setShowWizard(true)} 
+                variant="default" 
+                size="sm" 
+                className="h-12 px-4 flex items-center gap-2 bg-primary hover:bg-primary/90"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span className="text-xs font-medium">Quick Add Wizard</span>
+              </Button>
+              <span className="text-[10px]">Guided Setup</span>
+            </div>
+            <div className="w-px h-12 bg-border" />
             <div className="flex flex-col items-center gap-1">
               <Button onClick={addCabinet} variant="ghost" size="sm" className="h-12 w-12 flex flex-col gap-1 hover:bg-accent">
                 <Plus className="h-5 w-5" />
@@ -3746,6 +3821,13 @@ const VanityDesigner = () => {
         onSelectState={jumpToHistoryState}
         canUndo={canUndo}
         canRedo={canRedo}
+      />
+
+      {/* Cabinet Wizard */}
+      <CabinetWizard
+        open={showWizard}
+        onOpenChange={setShowWizard}
+        onComplete={handleWizardComplete}
       />
     </div>
   );
