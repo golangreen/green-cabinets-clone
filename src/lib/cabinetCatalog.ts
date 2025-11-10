@@ -34,6 +34,8 @@ export const HARDWARE_OPTIONS = {
   handles: {
     bar: { name: "Bar Handle", pricePerUnit: 8.50 },
     knob: { name: "Knob", pricePerUnit: 5.00 },
+    fingerPull: { name: "Finger Pull", pricePerUnit: 30.00 },
+    fingerPull45: { name: "45° Finger Pull", pricePerUnit: 30.00 },
     none: { name: "Push-to-Open", pricePerUnit: 15.00 },
   },
   hinges: {
