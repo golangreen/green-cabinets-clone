@@ -23,6 +23,35 @@ export interface MaterialFinish {
   priceMultiplier: number; // 1.0 = base price, 1.2 = 20% increase, etc.
 }
 
+export interface DoorStyle {
+  id: string;
+  name: string;
+  description: string;
+  priceMultiplier: number; // Additional cost modifier for door style
+}
+
+// Door style options
+export const DOOR_STYLES: DoorStyle[] = [
+  {
+    id: "flat",
+    name: "Flat/Slab",
+    description: "Modern flat panel door",
+    priceMultiplier: 1.0, // Base price
+  },
+  {
+    id: "shaker",
+    name: "Shaker",
+    description: "Classic shaker style with traditional frame",
+    priceMultiplier: 1.10, // 10% premium
+  },
+  {
+    id: "slim-shaker",
+    name: "Slim Shaker",
+    description: "Modern slim shaker with narrow frame",
+    priceMultiplier: 1.15, // 15% premium
+  },
+];
+
 // Material/Finish pricing modifiers - Your existing brands
 export const MATERIAL_FINISHES: MaterialFinish[] = [
   { id: "tafisa-white", name: "White", brand: "Tafisa", priceMultiplier: 1.0 },
@@ -480,19 +509,279 @@ export const CABINET_CATALOG: CabinetSpec[] = [
     basePrice: 3600,
     category: "Tall - Specialty"
   },
+
+  // ==================== BASE CABINETS - CORNER ====================
+  {
+    code: "BCL3634",
+    type: "Base Cabinet",
+    subType: "corner-left",
+    width: 36,
+    height: 34.5,
+    depth: 24,
+    label: "BCL3634",
+    description: "36\" Corner Base Left",
+    basePrice: 1650,
+    category: "Base - Corner",
+    notes: "Left corner base with lazy susan hardware included"
+  },
+  {
+    code: "BCR3634",
+    type: "Base Cabinet",
+    subType: "corner-right",
+    width: 36,
+    height: 34.5,
+    depth: 24,
+    label: "BCR3634",
+    description: "36\" Corner Base Right",
+    basePrice: 1650,
+    category: "Base - Corner",
+    notes: "Right corner base with lazy susan hardware included"
+  },
+
+  // ==================== BASE CABINETS - SINK ====================
+  {
+    code: "SB3034",
+    type: "Base Cabinet",
+    subType: "sink",
+    width: 30,
+    height: 34.5,
+    depth: 24,
+    label: "SB3034",
+    description: "30\" Sink Base",
+    basePrice: 1050,
+    category: "Base - Sink",
+    notes: "False front, no shelf"
+  },
+  {
+    code: "SB3634",
+    type: "Base Cabinet",
+    subType: "sink",
+    width: 36,
+    height: 34.5,
+    depth: 24,
+    label: "SB3634",
+    description: "36\" Sink Base",
+    basePrice: 1150,
+    category: "Base - Sink"
+  },
+  {
+    code: "SB4234",
+    type: "Base Cabinet",
+    subType: "sink",
+    width: 42,
+    height: 34.5,
+    depth: 24,
+    label: "SB4234",
+    description: "42\" Sink Base",
+    basePrice: 1300,
+    category: "Base - Sink"
+  },
+
+  // ==================== MOLDINGS ====================
+  {
+    code: "CM96",
+    type: "Specialty",
+    subType: "crown-molding",
+    width: 96,
+    height: 4,
+    depth: 4,
+    label: "CM96",
+    description: "96\" Crown Molding",
+    basePrice: 120,
+    category: "Moldings",
+    notes: "Standard crown molding, 4\" profile"
+  },
+  {
+    code: "LM96",
+    type: "Specialty",
+    subType: "light-rail",
+    width: 96,
+    height: 1.5,
+    depth: 1.5,
+    label: "LM96",
+    description: "96\" Light Rail Molding",
+    basePrice: 45,
+    category: "Moldings",
+    notes: "Under-cabinet light rail"
+  },
+  {
+    code: "BM96",
+    type: "Specialty",
+    subType: "base-molding",
+    width: 96,
+    height: 4,
+    depth: 1,
+    label: "BM96",
+    description: "96\" Base Molding",
+    basePrice: 65,
+    category: "Moldings",
+    notes: "Toe kick molding"
+  },
+  {
+    code: "SM96",
+    type: "Specialty",
+    subType: "scribe-molding",
+    width: 96,
+    height: 1,
+    depth: 1,
+    label: "SM96",
+    description: "96\" Scribe Molding",
+    basePrice: 35,
+    category: "Moldings",
+    notes: "For fitting cabinets to walls"
+  },
+
+  // ==================== FILLERS ====================
+  {
+    code: "F384",
+    type: "Specialty",
+    subType: "filler",
+    width: 3,
+    height: 84,
+    depth: 0.75,
+    label: "F384",
+    description: "3\" x 84\" Filler",
+    basePrice: 75,
+    category: "Fillers",
+    notes: "Standard filler strip"
+  },
+  {
+    code: "F684",
+    type: "Specialty",
+    subType: "filler",
+    width: 6,
+    height: 84,
+    depth: 0.75,
+    label: "F684",
+    description: "6\" x 84\" Filler",
+    basePrice: 95,
+    category: "Fillers"
+  },
+  {
+    code: "F396",
+    type: "Specialty",
+    subType: "filler",
+    width: 3,
+    height: 96,
+    depth: 0.75,
+    label: "F396",
+    description: "3\" x 96\" Tall Filler",
+    basePrice: 85,
+    category: "Fillers",
+    notes: "Tall cabinet filler"
+  },
+
+  // ==================== DECORATIVE PANELS ====================
+  {
+    code: "EP2496",
+    type: "Specialty",
+    subType: "end-panel",
+    width: 24,
+    height: 96,
+    depth: 0.75,
+    label: "EP2496",
+    description: "24\" x 96\" End Panel",
+    basePrice: 450,
+    category: "Panels",
+    notes: "Finished end panel for tall cabinets"
+  },
+  {
+    code: "EP2484",
+    type: "Specialty",
+    subType: "end-panel",
+    width: 24,
+    height: 84,
+    depth: 0.75,
+    label: "EP2484",
+    description: "24\" x 84\" End Panel",
+    basePrice: 380,
+    category: "Panels",
+    notes: "Finished end panel"
+  },
+  {
+    code: "DWP2434",
+    type: "Specialty",
+    subType: "dishwasher-panel",
+    width: 24,
+    height: 34.5,
+    depth: 0.75,
+    label: "DWP2434",
+    description: "24\" Dishwasher Panel",
+    basePrice: 285,
+    category: "Panels",
+    notes: "Finished panel for dishwasher"
+  },
+  {
+    code: "REF3696",
+    type: "Specialty",
+    subType: "refrigerator-panel",
+    width: 36,
+    height: 96,
+    depth: 0.75,
+    label: "REF3696",
+    description: "36\" Refrigerator Panel",
+    basePrice: 650,
+    category: "Panels",
+    notes: "Full height refrigerator panel"
+  },
+
+  // ==================== ADDITIONAL BASE CABINETS ====================
+  {
+    code: "B4234",
+    type: "Base Cabinet",
+    subType: "standard",
+    width: 42,
+    height: 34.5,
+    depth: 24,
+    label: "B4234",
+    description: "42\" Base Cabinet",
+    basePrice: 1550,
+    category: "Base - Standard"
+  },
+  {
+    code: "B4834",
+    type: "Base Cabinet",
+    subType: "standard",
+    width: 48,
+    height: 34.5,
+    depth: 24,
+    label: "B4834",
+    description: "48\" Base Cabinet",
+    basePrice: 1700,
+    category: "Base - Standard"
+  },
+
+  // ==================== MORE DRAWER BASES ====================
+  {
+    code: "DB3634",
+    type: "Base Cabinet",
+    subType: "drawer",
+    width: 36,
+    height: 34.5,
+    depth: 24,
+    label: "DB3634",
+    description: "36\" 3-Drawer Base",
+    basePrice: 1950,
+    category: "Base - Drawer"
+  },
 ];
 
-// Helper function to calculate cabinet price with finish multiplier and hardware
+// Helper function to calculate cabinet price with finish multiplier, door style, and hardware
 export function calculateCabinetPrice(
   cabinet: CabinetSpec,
   finishId: string,
+  doorStyleId: string = "flat",
   handleType: keyof typeof HARDWARE_OPTIONS.handles = "bar",
   numHandles: number = 2
 ): number {
   const finish = MATERIAL_FINISHES.find(f => f.id === finishId);
-  const priceMultiplier = finish?.priceMultiplier || 1.0;
+  const finishMultiplier = finish?.priceMultiplier || 1.0;
   
-  let price = cabinet.basePrice * priceMultiplier;
+  const doorStyle = DOOR_STYLES.find(d => d.id === doorStyleId);
+  const doorMultiplier = doorStyle?.priceMultiplier || 1.0;
+  
+  // Apply both finish and door style multipliers
+  let price = cabinet.basePrice * finishMultiplier * doorMultiplier;
   
   // Add hardware costs
   const handleOption = HARDWARE_OPTIONS.handles[handleType];

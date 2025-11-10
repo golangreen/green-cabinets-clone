@@ -40,7 +40,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
-import { CABINET_CATALOG, calculateCabinetPrice, formatPrice, MATERIAL_FINISHES, HARDWARE_OPTIONS, type CabinetSpec } from "@/lib/cabinetCatalog";
+import { CABINET_CATALOG, calculateCabinetPrice, formatPrice, MATERIAL_FINISHES, HARDWARE_OPTIONS, DOOR_STYLES, type CabinetSpec } from "@/lib/cabinetCatalog";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -73,6 +73,7 @@ interface Cabinet {
   brand: string;
   finish: string;
   finishId?: string; // Material finish ID
+  doorStyleId?: string; // Door style ID
   label?: string;
   price?: number; // Calculated price
   catalogRef?: string; // Reference to catalog item
@@ -150,6 +151,7 @@ const VanityDesigner = () => {
       brand: "Tafisa",
       finish: "White",
       finishId: "tafisa-white",
+      doorStyleId: "flat",
       label: "DB36",
       rotation: 0,
       handleType: "bar",
@@ -537,9 +539,10 @@ const VanityDesigner = () => {
   // Add cabinet from template
   const addCabinetFromTemplate = useCallback((template: CabinetSpec, x: number, y: number) => {
     const defaultFinishId = "tafisa-white";
+    const defaultDoorStyleId = "flat";
     const defaultHandleType = "bar";
     const numHandles = template.subType === "drawer" ? 3 : 2;
-    const price = calculateCabinetPrice(template, defaultFinishId, defaultHandleType, numHandles);
+    const price = calculateCabinetPrice(template, defaultFinishId, defaultDoorStyleId, defaultHandleType, numHandles);
     
     // Set Y position based on cabinet type - professional standards
     let yPosition: number;
@@ -562,6 +565,7 @@ const VanityDesigner = () => {
       brand: "Tafisa",
       finish: "White",
       finishId: defaultFinishId,
+      doorStyleId: defaultDoorStyleId,
       label: template.label,
       price: price,
       catalogRef: template.label,
@@ -780,6 +784,7 @@ const VanityDesigner = () => {
             updated.price = calculateCabinetPrice(
               { ...template, [dimension]: value },
               c.finishId,
+              c.doorStyleId || "flat",
               c.handleType || "bar",
               c.numHandles || 2
             );
@@ -812,6 +817,7 @@ const VanityDesigner = () => {
             updated.price = calculateCabinetPrice(
               template,
               finishId,
+              c.doorStyleId || "flat",
               c.handleType || "bar",
               c.numHandles || 2
             );
@@ -836,6 +842,7 @@ const VanityDesigner = () => {
             updated.price = calculateCabinetPrice(
               template,
               c.finishId,
+              c.doorStyleId || "flat",
               handleType,
               c.numHandles || 2
             );
@@ -2268,6 +2275,32 @@ const VanityDesigner = () => {
                               </div>
                             </div>
                             
+                            {/* Door Style */}
+                            <div>
+                              <Label className="text-[10px]">Door Style</Label>
+                              <select
+                                value={cabinet.doorStyleId || "flat"}
+                                onChange={(e) => {
+                                  const doorStyle = DOOR_STYLES.find(d => d.id === e.target.value);
+                                  setCabinets(cabinets.map(c => 
+                                    c.id === selectedCabinetId 
+                                      ? { ...c, doorStyleId: e.target.value } 
+                                      : c
+                                  ));
+                                }}
+                                className="w-full h-7 text-xs border rounded-md px-2 bg-background"
+                              >
+                                {DOOR_STYLES.map(style => (
+                                  <option key={style.id} value={style.id}>
+                                    {style.name}
+                                  </option>
+                                ))}
+                              </select>
+                              <p className="text-[9px] text-muted-foreground mt-1">
+                                {DOOR_STYLES.find(d => d.id === (cabinet.doorStyleId || "flat"))?.description}
+                              </p>
+                            </div>
+                            
                             {/* Finish */}
                             <div>
                               <Label className="text-[10px]">Finish</Label>
@@ -2557,6 +2590,81 @@ const VanityDesigner = () => {
                           </Card>
                         );
                       })}
+                    </div>
+                  </div>
+                  
+                  {/* Moldings */}
+                  <div>
+                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">MOLDINGS</h4>
+                    <div className="space-y-1">
+                      {CABINET_LIBRARY.filter(c => c.category === "Moldings").map((template, idx) => (
+                        <Card
+                          key={idx}
+                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
+                          draggable
+                          onDragStart={() => handleLibraryDragStart(template)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-xs font-medium">{template.label}</p>
+                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
+                            </div>
+                            <div className="text-[10px] text-muted-foreground">
+                              {template.width}"L
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Fillers */}
+                  <div>
+                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">FILLERS</h4>
+                    <div className="space-y-1">
+                      {CABINET_LIBRARY.filter(c => c.category === "Fillers").map((template, idx) => (
+                        <Card
+                          key={idx}
+                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
+                          draggable
+                          onDragStart={() => handleLibraryDragStart(template)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-xs font-medium">{template.label}</p>
+                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
+                            </div>
+                            <div className="text-[10px] text-muted-foreground">
+                              {template.width}" × {template.height}"
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Panels */}
+                  <div>
+                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">PANELS</h4>
+                    <div className="space-y-1">
+                      {CABINET_LIBRARY.filter(c => c.category === "Panels").map((template, idx) => (
+                        <Card
+                          key={idx}
+                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
+                          draggable
+                          onDragStart={() => handleLibraryDragStart(template)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-xs font-medium">{template.label}</p>
+                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
+                            </div>
+                            <div className="text-[10px] text-muted-foreground">
+                              {template.width}" × {template.height}"
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
                     </div>
                   </div>
                 </>
