@@ -176,6 +176,12 @@ const VanityDesigner = () => {
     openings: number[];
   }>({ walls: [], openings: [] });
   
+  // Drag handle state
+  const [draggingHandle, setDraggingHandle] = useState<{
+    type: 'wall-start' | 'wall-end' | 'opening';
+    id: number;
+  } | null>(null);
+  
   // Collision detection state
   const [cabinetCollisions, setCabinetCollisions] = useState<Map<number, string[]>>(new Map());
   
@@ -705,6 +711,15 @@ const VanityDesigner = () => {
       return wall;
     }));
   }, [walls]);
+  
+  // Update opening position along wall
+  const updateOpeningPosition = useCallback((openingId: number, newPosition: number) => {
+    setOpenings(openings.map(opening => 
+      opening.id === openingId 
+        ? { ...opening, position: Math.max(0, Math.min(1, newPosition)) }
+        : opening
+    ));
+  }, [openings]);
 
   const changeCabinetSize = useCallback((cabinetId: number, dimension: 'width' | 'height' | 'depth', value: number) => {
     setCabinets(cabinets.map(c => {
@@ -1026,6 +1041,39 @@ const VanityDesigner = () => {
       return;
     }
     
+    // Handle drag handle movement
+    if (draggingHandle) {
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      if (draggingHandle.type === 'wall-start') {
+        const wall = walls.find(w => w.id === draggingHandle.id);
+        if (wall) {
+          updateWallEndpoint(wall.id, 'start', 'x', snapToGrid(x));
+          updateWallEndpoint(wall.id, 'start', 'y', snapToGrid(y));
+        }
+      } else if (draggingHandle.type === 'wall-end') {
+        const wall = walls.find(w => w.id === draggingHandle.id);
+        if (wall) {
+          updateWallEndpoint(wall.id, 'end', 'x', snapToGrid(x));
+          updateWallEndpoint(wall.id, 'end', 'y', snapToGrid(y));
+        }
+      } else if (draggingHandle.type === 'opening') {
+        const opening = openings.find(o => o.id === draggingHandle.id);
+        if (opening) {
+          const wall = walls.find(w => w.id === opening.wallId);
+          if (wall) {
+            const newPosition = getPositionOnWall({ x, y }, wall);
+            updateOpeningPosition(opening.id, newPosition);
+          }
+        }
+      }
+      return;
+    }
+    
     if (draggingId === null) return;
     
     const newX = snapToGrid(e.clientX - dragOffset.x);
@@ -1034,14 +1082,18 @@ const VanityDesigner = () => {
     setCabinets(cabinets.map(c => 
       c.id === draggingId ? { ...c, x: newX, y: newY } : c
     ));
-  }, [draggingId, dragOffset, snapToGrid, cabinets, rotatingCabinet, handleRotateMove]);
+  }, [draggingId, dragOffset, snapToGrid, cabinets, rotatingCabinet, handleRotateMove, draggingHandle, walls, openings, updateWallEndpoint, updateOpeningPosition]);
 
   const handleMouseUp = useCallback(() => {
     if (rotatingCabinet !== null) {
       handleRotateEnd();
     }
+    if (draggingHandle) {
+      setDraggingHandle(null);
+      toast.success("Position updated");
+    }
     setDraggingId(null);
-  }, [rotatingCabinet, handleRotateEnd]);
+  }, [rotatingCabinet, handleRotateEnd, draggingHandle]);
   
   // Library drag handlers
   const handleLibraryDragStart = useCallback((template: CabinetSpec) => {
@@ -2492,6 +2544,102 @@ const VanityDesigner = () => {
                           </g>
                         );
                       })}
+                    </g>
+                  );
+                })}
+                
+                {/* Drag handles for wall endpoints */}
+                {walls.map(wall => (
+                  <g key={`handles-${wall.id}`}>
+                    {/* Start point handle */}
+                    <circle
+                      cx={wall.x1}
+                      cy={wall.y1}
+                      r="8"
+                      fill="white"
+                      stroke="#3B82F6"
+                      strokeWidth="2"
+                      style={{ 
+                        cursor: 'grab',
+                        pointerEvents: 'auto'
+                      }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        setDraggingHandle({ type: 'wall-start', id: wall.id });
+                      }}
+                    />
+                    <circle
+                      cx={wall.x1}
+                      cy={wall.y1}
+                      r="3"
+                      fill="#3B82F6"
+                      style={{ pointerEvents: 'none' }}
+                    />
+                    
+                    {/* End point handle */}
+                    <circle
+                      cx={wall.x2}
+                      cy={wall.y2}
+                      r="8"
+                      fill="white"
+                      stroke="#3B82F6"
+                      strokeWidth="2"
+                      style={{ 
+                        cursor: 'grab',
+                        pointerEvents: 'auto'
+                      }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        setDraggingHandle({ type: 'wall-end', id: wall.id });
+                      }}
+                    />
+                    <circle
+                      cx={wall.x2}
+                      cy={wall.y2}
+                      r="3"
+                      fill="#3B82F6"
+                      style={{ pointerEvents: 'none' }}
+                    />
+                  </g>
+                ))}
+                
+                {/* Drag handles for openings */}
+                {openings.map(opening => {
+                  const wall = walls.find(w => w.id === opening.wallId);
+                  if (!wall) return null;
+                  
+                  const handleX = wall.x1 + (wall.x2 - wall.x1) * opening.position;
+                  const handleY = wall.y1 + (wall.y2 - wall.y1) * opening.position;
+                  
+                  return (
+                    <g key={`opening-handle-${opening.id}`}>
+                      <circle
+                        cx={handleX}
+                        cy={handleY}
+                        r="10"
+                        fill="white"
+                        stroke={opening.type === 'door' ? "#F59E0B" : "#10B981"}
+                        strokeWidth="2"
+                        style={{ 
+                          cursor: 'grab',
+                          pointerEvents: 'auto'
+                        }}
+                        onMouseDown={(e) => {
+                          e.stopPropagation();
+                          setDraggingHandle({ type: 'opening', id: opening.id });
+                        }}
+                      />
+                      <text
+                        x={handleX}
+                        y={handleY}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fontSize="10"
+                        fill={opening.type === 'door' ? "#F59E0B" : "#10B981"}
+                        style={{ pointerEvents: 'none', fontWeight: 'bold' }}
+                      >
+                        {opening.type === 'door' ? 'D' : 'W'}
+                      </text>
                     </g>
                   );
                 })}
