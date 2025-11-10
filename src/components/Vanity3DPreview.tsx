@@ -3,7 +3,8 @@ import { OrbitControls, PerspectiveCamera, Environment, Line, Html } from "@reac
 import { useMemo, useState, useRef } from "react";
 import * as THREE from "three";
 import { Button } from "./ui/button";
-import { Ruler } from "lucide-react";
+import { Ruler, Camera, FileDown } from "lucide-react";
+import { toast } from "sonner";
 
 interface Vanity3DPreviewProps {
   width: number;
@@ -645,6 +646,7 @@ const DimensionLabels = ({ width, height, depth }: { width: number; height: numb
 export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle }: Vanity3DPreviewProps) => {
   const [measurementMode, setMeasurementMode] = useState(false);
   const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const hasValidDimensions = useMemo(() => {
     return width > 0 && height > 0 && depth > 0;
@@ -666,6 +668,40 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
     }
   };
 
+  const downloadScreenshot = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      toast.error("Canvas not ready");
+      return;
+    }
+
+    try {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `vanity-${width}x${height}x${depth}-${Date.now()}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          toast.success("Screenshot downloaded!");
+        }
+      });
+    } catch (error) {
+      console.error("Screenshot error:", error);
+      toast.error("Failed to capture screenshot");
+    }
+  };
+
+  const printView = () => {
+    toast.info("Opening print dialog...");
+    setTimeout(() => {
+      window.print();
+    }, 500);
+  };
+
   if (!hasValidDimensions) {
     return (
       <div className="w-full aspect-square bg-secondary/20 rounded-lg flex items-center justify-center">
@@ -676,7 +712,7 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
 
   return (
     <div className="relative w-full aspect-square bg-gradient-to-br from-secondary/10 to-secondary/30 rounded-lg overflow-hidden border border-border">
-      <div className="absolute top-4 right-4 z-10">
+      <div className="absolute top-4 right-4 z-10 flex gap-2">
         <Button
           variant={measurementMode ? "default" : "outline"}
           size="sm"
@@ -686,9 +722,29 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
           <Ruler className="w-4 h-4 mr-2" />
           {measurementMode ? "Measuring" : "Measure"}
         </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={downloadScreenshot}
+          className="shadow-lg"
+        >
+          <Camera className="w-4 h-4 mr-2" />
+          Save
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={printView}
+          className="shadow-lg"
+        >
+          <FileDown className="w-4 h-4 mr-2" />
+          Print
+        </Button>
       </div>
       
-      <Canvas shadows>
+      <Canvas shadows onCreated={({ gl }) => {
+        canvasRef.current = gl.domElement;
+      }}>
         <PerspectiveCamera makeDefault position={[3, 2, 3]} />
         <OrbitControls 
           enablePan={false}
@@ -739,7 +795,7 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
       
       <DimensionLabels width={width} height={height} depth={depth} />
       
-      <div className="absolute top-4 left-4 right-20 flex flex-col items-center gap-2">
+      <div className="absolute top-4 left-4 right-32 flex flex-col items-center gap-2">
         {measurementMode ? (
           <p className="text-xs text-muted-foreground bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-border">
             Click on vanity parts to measure
@@ -755,6 +811,20 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
           {materialType === 'glossy' && '💎 High Gloss'}
           {materialType === 'matte' && '🎨 Matte Finish'}
         </p>
+      </div>
+      
+      {/* Print-only specs */}
+      <div className="hidden print:block absolute top-4 right-4 bg-background p-4 rounded-lg shadow-lg border border-border max-w-xs">
+        <h3 className="font-bold text-lg mb-3">Vanity Specifications</h3>
+        <ul className="text-sm space-y-2">
+          <li><strong>Dimensions:</strong> {width}" W × {height}" H × {depth}" D</li>
+          <li><strong>Brand:</strong> {brand}</li>
+          <li><strong>Finish:</strong> {finish}</li>
+          <li><strong>Door Style:</strong> {doorStyle}</li>
+          {doorStyle === 'drawers' && <li><strong>Drawers:</strong> {numDrawers}</li>}
+          <li><strong>Handle:</strong> {handleStyle}</li>
+          <li className="pt-2 text-xs text-muted-foreground">Generated: {new Date().toLocaleDateString()}</li>
+        </ul>
       </div>
     </div>
   );
