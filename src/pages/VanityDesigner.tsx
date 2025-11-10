@@ -92,7 +92,22 @@ interface Opening {
   wallId: number;
   position: number; // Position along the wall (0-1)
   width: number; // Width in inches
+  height: number; // Height in inches
+  yPosition: number; // Height from floor in inches
 }
+
+// Professional default dimensions
+const DEFAULTS = {
+  WALL_HEIGHT: 96, // 96" wall height
+  BASE_CABINET_Y: 0, // Base cabinets on floor
+  WALL_CABINET_Y: 54, // Wall cabinets 54" from floor
+  DOOR_WIDTH: 30, // 30" door width
+  DOOR_HEIGHT: 84, // 84" door height
+  DOOR_Y: 0, // Doors at floor level
+  WINDOW_WIDTH: 30, // 30" window width
+  WINDOW_HEIGHT: 30, // 30" window height (default)
+  WINDOW_Y: 42, // Windows 42" from floor
+};
 
 // Use cabinet library from catalog
 const CABINET_LIBRARY = CABINET_CATALOG;
@@ -209,6 +224,16 @@ const VanityDesigner = () => {
     const numHandles = template.subType === "drawer" ? 3 : 2;
     const price = calculateCabinetPrice(template, defaultFinishId, defaultHandleType, numHandles);
     
+    // Set Y position based on cabinet type - professional standards
+    let yPosition: number;
+    if (template.type === "Base Cabinet") {
+      yPosition = DEFAULTS.BASE_CABINET_Y * 2; // Convert to pixels (2px per inch)
+    } else if (template.type === "Wall Cabinet") {
+      yPosition = DEFAULTS.WALL_CABINET_Y * 2; // Convert to pixels (2px per inch)
+    } else {
+      yPosition = snapToGrid(y); // Use clicked position for other types
+    }
+    
     const newCabinet: Cabinet = {
       id: Math.max(...cabinets.map(c => c.id), 0) + 1,
       type: template.type,
@@ -216,7 +241,7 @@ const VanityDesigner = () => {
       height: template.height,
       depth: template.depth,
       x: snapToGrid(x),
-      y: snapToGrid(y),
+      y: yPosition,
       brand: "Tafisa",
       finish: "White",
       finishId: defaultFinishId,
@@ -535,7 +560,10 @@ const VanityDesigner = () => {
       const newOpenings = template.openings.map((o: any, idx: number) => ({
         ...o,
         id: maxOpeningId + idx + 1,
-        wallId: wallIdMap.get(o.wallId) || o.wallId
+        wallId: wallIdMap.get(o.wallId) || o.wallId,
+        // Add defaults for legacy templates missing new properties
+        height: o.height ?? (o.type === "door" ? DEFAULTS.DOOR_HEIGHT : DEFAULTS.WINDOW_HEIGHT),
+        yPosition: o.yPosition ?? (o.type === "door" ? DEFAULTS.DOOR_Y : DEFAULTS.WINDOW_Y),
       }));
       
       const newCabinets = template.cabinets.map((c: any, idx: number) => ({
@@ -796,7 +824,9 @@ const VanityDesigner = () => {
           type: drawingTool,
           wallId: nearestWall.id,
           position: wallPosition,
-          width: drawingTool === "door" ? 36 : 48 // Default: 36" door, 48" window
+          width: drawingTool === "door" ? DEFAULTS.DOOR_WIDTH : DEFAULTS.WINDOW_WIDTH,
+          height: drawingTool === "door" ? DEFAULTS.DOOR_HEIGHT : DEFAULTS.WINDOW_HEIGHT,
+          yPosition: drawingTool === "door" ? DEFAULTS.DOOR_Y : DEFAULTS.WINDOW_Y,
         };
         setOpenings([...openings, newOpening]);
         setSelectedOpeningId(newOpening.id);
@@ -1340,6 +1370,34 @@ const VanityDesigner = () => {
                                   const newWidth = Math.max(24, Math.min(96, parseInt(e.target.value) || 24));
                                   setOpenings(openings.map(o => 
                                     o.id === opening.id ? { ...o, width: newWidth } : o
+                                  ));
+                                }}
+                                className="h-7 text-xs"
+                              />
+                            </div>
+                            <div className="space-y-1 mt-2">
+                              <Label className="text-[10px]">Height (inches)</Label>
+                              <Input 
+                                type="number"
+                                value={opening.height}
+                                onChange={(e) => {
+                                  const newHeight = Math.max(12, Math.min(96, parseInt(e.target.value) || 30));
+                                  setOpenings(openings.map(o => 
+                                    o.id === opening.id ? { ...o, height: newHeight } : o
+                                  ));
+                                }}
+                                className="h-7 text-xs"
+                              />
+                            </div>
+                            <div className="space-y-1 mt-2">
+                              <Label className="text-[10px]">Height from Floor (inches)</Label>
+                              <Input 
+                                type="number"
+                                value={opening.yPosition}
+                                onChange={(e) => {
+                                  const newY = Math.max(0, Math.min(84, parseInt(e.target.value) || 0));
+                                  setOpenings(openings.map(o => 
+                                    o.id === opening.id ? { ...o, yPosition: newY } : o
                                   ));
                                 }}
                                 className="h-7 text-xs"
@@ -2063,39 +2121,152 @@ const VanityDesigner = () => {
                 const isSelected = selectedOpeningId === opening.id;
                 
                 return (
-                  <div
-                    key={opening.id}
-                    className={`absolute cursor-pointer transition-all ${
-                      isSelected ? "z-20" : "z-10"
-                    }`}
-                    style={{
-                      left: x,
-                      top: y,
-                      width: opening.width * 2, // px
-                      height: 16,
-                      transform: `translate(-50%, -50%) rotate(${angle}rad)`,
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedOpeningId(opening.id);
-                    }}
-                  >
-                    {opening.type === "door" ? (
-                      <div className={`h-full flex items-center justify-center border-2 rounded ${
-                        isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-blue-500 bg-blue-100"
-                      }`}>
-                        <DoorOpen className="h-3 w-3" />
-                        <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
+                  <ContextMenu key={opening.id}>
+                    <ContextMenuTrigger>
+                      <div
+                        className={`absolute cursor-pointer transition-all ${
+                          isSelected ? "z-20" : "z-10"
+                        }`}
+                        style={{
+                          left: x,
+                          top: y,
+                          width: opening.width * 2, // px
+                          height: 16,
+                          transform: `translate(-50%, -50%) rotate(${angle}rad)`,
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedOpeningId(opening.id);
+                        }}
+                      >
+                        {opening.type === "door" ? (
+                          <div className={`h-full flex items-center justify-center border-2 rounded ${
+                            isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-blue-500 bg-blue-100"
+                          }`}>
+                            <DoorOpen className="h-3 w-3" />
+                            <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
+                          </div>
+                        ) : (
+                          <div className={`h-full flex items-center justify-center border-2 rounded ${
+                            isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-cyan-500 bg-cyan-100"
+                          }`}>
+                            <RectangleHorizontal className="h-3 w-3" />
+                            <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      <div className={`h-full flex items-center justify-center border-2 rounded ${
-                        isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-cyan-500 bg-cyan-100"
-                      }`}>
-                        <RectangleHorizontal className="h-3 w-3" />
-                        <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent className="w-64">
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                        {opening.type === "door" ? "Door" : "Window"} Properties
                       </div>
-                    )}
-                  </div>
+                      <ContextMenuSeparator />
+                      
+                      <ContextMenuSub>
+                        <ContextMenuSubTrigger>
+                          <Maximize2 className="mr-2 h-4 w-4" />
+                          Width
+                        </ContextMenuSubTrigger>
+                        <ContextMenuSubContent className="w-48">
+                          {[24, 30, 36, 42, 48, 60, 72].map(w => (
+                            <ContextMenuItem 
+                              key={w}
+                              onClick={() => {
+                                setOpenings(openings.map(o => 
+                                  o.id === opening.id ? { ...o, width: w } : o
+                                ));
+                              }}
+                            >
+                              {w}" {opening.width === w && "✓"}
+                            </ContextMenuItem>
+                          ))}
+                        </ContextMenuSubContent>
+                      </ContextMenuSub>
+                      
+                      <ContextMenuSub>
+                        <ContextMenuSubTrigger>
+                          <Maximize2 className="mr-2 h-4 w-4" />
+                          Height
+                        </ContextMenuSubTrigger>
+                        <ContextMenuSubContent className="w-48">
+                          {opening.type === "door" 
+                            ? [78, 80, 84, 90, 96].map(h => (
+                                <ContextMenuItem 
+                                  key={h}
+                                  onClick={() => {
+                                    setOpenings(openings.map(o => 
+                                      o.id === opening.id ? { ...o, height: h } : o
+                                    ));
+                                  }}
+                                >
+                                  {h}" {opening.height === h && "✓"}
+                                </ContextMenuItem>
+                              ))
+                            : [24, 30, 36, 42, 48].map(h => (
+                                <ContextMenuItem 
+                                  key={h}
+                                  onClick={() => {
+                                    setOpenings(openings.map(o => 
+                                      o.id === opening.id ? { ...o, height: h } : o
+                                    ));
+                                  }}
+                                >
+                                  {h}" {opening.height === h && "✓"}
+                                </ContextMenuItem>
+                              ))
+                          }
+                        </ContextMenuSubContent>
+                      </ContextMenuSub>
+                      
+                      <ContextMenuSub>
+                        <ContextMenuSubTrigger>
+                          <ArrowRight className="mr-2 h-4 w-4" />
+                          Height from Floor
+                        </ContextMenuSubTrigger>
+                        <ContextMenuSubContent className="w-48">
+                          {opening.type === "door"
+                            ? [0].map(y => (
+                                <ContextMenuItem 
+                                  key={y}
+                                  onClick={() => {
+                                    setOpenings(openings.map(o => 
+                                      o.id === opening.id ? { ...o, yPosition: y } : o
+                                    ));
+                                  }}
+                                >
+                                  {y}" (Floor level) {opening.yPosition === y && "✓"}
+                                </ContextMenuItem>
+                              ))
+                            : [0, 24, 36, 42, 48, 54].map(y => (
+                                <ContextMenuItem 
+                                  key={y}
+                                  onClick={() => {
+                                    setOpenings(openings.map(o => 
+                                      o.id === opening.id ? { ...o, yPosition: y } : o
+                                    ));
+                                  }}
+                                >
+                                  {y}" {opening.yPosition === y && "✓"}
+                                </ContextMenuItem>
+                              ))
+                          }
+                        </ContextMenuSubContent>
+                      </ContextMenuSub>
+                      
+                      <ContextMenuSeparator />
+                      
+                      <ContextMenuItem 
+                        onClick={() => {
+                          setOpenings(openings.filter(o => o.id !== opening.id));
+                          setSelectedOpeningId(null);
+                          toast.success(`${opening.type === "door" ? "Door" : "Window"} removed`);
+                        }}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete
+                      </ContextMenuItem>
+                    </ContextMenuContent>
+                  </ContextMenu>
                 );
               })}
               
