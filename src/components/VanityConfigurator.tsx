@@ -228,6 +228,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [countertopEdge, setCountertopEdge] = useState<'straight' | 'beveled' | 'bullnose' | 'waterfall'>('straight');
   const [countertopColor, setCountertopColor] = useState<string>('white');
   
+  // Sink state
+  const [sinkStyle, setSinkStyle] = useState<'undermount' | 'vessel' | 'integrated'>('undermount');
+  const [sinkShape, setSinkShape] = useState<'oval' | 'rectangular' | 'square'>('oval');
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -900,6 +904,31 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                         </Select>
                       </div>
                       
+                      {/* Sink Controls */}
+                      <div className="pt-2 border-t border-border space-y-2">
+                        <Label className="text-xs font-medium">Sink</Label>
+                        <Select value={sinkStyle} onValueChange={(value: any) => setSinkStyle(value)}>
+                          <SelectTrigger className="bg-background h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-[100]">
+                            <SelectItem value="undermount">Undermount</SelectItem>
+                            <SelectItem value="vessel">Vessel</SelectItem>
+                            <SelectItem value="integrated">Integrated</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Select value={sinkShape} onValueChange={(value: any) => setSinkShape(value)}>
+                          <SelectTrigger className="bg-background h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-[100]">
+                            <SelectItem value="oval">Oval</SelectItem>
+                            <SelectItem value="rectangular">Rectangular</SelectItem>
+                            <SelectItem value="square">Square</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
                       {/* Bathroom Accessories Controls */}
                       <div className="pt-2 border-t border-border space-y-2">
                         <Label className="text-xs font-medium">Accessories</Label>
@@ -1055,6 +1084,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         countertopMaterial={countertopMaterial}
         countertopEdge={countertopEdge}
         countertopColor={countertopColor}
+        sinkStyle={sinkStyle}
+        sinkShape={sinkShape}
       />
             </div>
           </div>
@@ -1118,6 +1149,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               countertopMaterial={countertopMaterial}
               countertopEdge={countertopEdge}
               countertopColor={countertopColor}
+              sinkStyle={sinkStyle}
+              sinkShape={sinkShape}
             />
             {/* Fullscreen Button */}
             <Button
@@ -2111,6 +2144,39 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                       <SelectItem value="beveled">Beveled Edge</SelectItem>
                       <SelectItem value="bullnose">Bullnose Edge</SelectItem>
                       <SelectItem value="waterfall">Waterfall Edge</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Sink Options */}
+              <div className="space-y-4 pt-4 border-t">
+                <h4 className="font-medium">Sink</h4>
+                
+                <div>
+                  <Label htmlFor="sinkStyle">Style</Label>
+                  <Select value={sinkStyle} onValueChange={(value: any) => setSinkStyle(value)}>
+                    <SelectTrigger id="sinkStyle">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="undermount">Undermount</SelectItem>
+                      <SelectItem value="vessel">Vessel</SelectItem>
+                      <SelectItem value="integrated">Integrated</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="sinkShape">Shape</Label>
+                  <Select value={sinkShape} onValueChange={(value: any) => setSinkShape(value)}>
+                    <SelectTrigger id="sinkShape">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="oval">Oval</SelectItem>
+                      <SelectItem value="rectangular">Rectangular</SelectItem>
+                      <SelectItem value="square">Square</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
