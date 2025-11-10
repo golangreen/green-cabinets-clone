@@ -20,7 +20,8 @@ const config: CapacitorConfig = {
     }
   },
   ios: {
-    contentInset: 'automatic'
+    contentInset: 'automatic',
+    icon: 'public/logo.png'
   },
   android: {
     allowMixedContent: true
