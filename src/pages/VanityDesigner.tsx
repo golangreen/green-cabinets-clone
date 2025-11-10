@@ -1600,7 +1600,7 @@ const VanityDesigner = () => {
                 onClick={() => setDrawingTool("select")}
                 variant={drawingTool === "select" ? "default" : "ghost"}
                 size="sm" 
-                className="h-12 w-12 flex flex-col gap-1"
+                className={drawingTool === "select" ? "h-12 w-12 flex flex-col gap-1 bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <Move className="h-5 w-5" />
               </Button>
@@ -1611,7 +1611,7 @@ const VanityDesigner = () => {
                 onClick={() => setDrawingTool("wall")}
                 variant={drawingTool === "wall" ? "default" : "ghost"}
                 size="sm" 
-                className="h-12 w-12 flex flex-col gap-1"
+                className={drawingTool === "wall" ? "h-12 w-12 flex flex-col gap-1 bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <Minus className="h-5 w-5" />
               </Button>
@@ -1622,7 +1622,7 @@ const VanityDesigner = () => {
                 onClick={() => setDrawingTool("door")}
                 variant={drawingTool === "door" ? "default" : "ghost"}
                 size="sm" 
-                className="h-12 w-12 flex flex-col gap-1"
+                className={drawingTool === "door" ? "h-12 w-12 flex flex-col gap-1 bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <DoorOpen className="h-5 w-5" />
               </Button>
@@ -1633,7 +1633,7 @@ const VanityDesigner = () => {
                 onClick={() => setDrawingTool("window")}
                 variant={drawingTool === "window" ? "default" : "ghost"}
                 size="sm" 
-                className="h-12 w-12 flex flex-col gap-1"
+                className={drawingTool === "window" ? "h-12 w-12 flex flex-col gap-1 bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <RectangleHorizontal className="h-5 w-5" />
               </Button>
@@ -1970,7 +1970,7 @@ const VanityDesigner = () => {
                 onClick={() => setShowGrid(!showGrid)} 
                 variant={showGrid ? "default" : "ghost"}
                 size="sm" 
-                className="h-12 w-12 flex flex-col gap-1"
+                className={showGrid ? "h-12 w-12 flex flex-col gap-1 bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <Grid3x3 className="h-5 w-5" />
               </Button>
@@ -1981,7 +1981,7 @@ const VanityDesigner = () => {
                 onClick={() => setShowDimensions(!showDimensions)} 
                 variant={showDimensions ? "default" : "ghost"}
                 size="sm" 
-                className="h-12 w-12 flex flex-col gap-1"
+                className={showDimensions ? "h-12 w-12 flex flex-col gap-1 bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <FileText className="h-5 w-5" />
               </Button>
@@ -4220,7 +4220,7 @@ const VanityDesigner = () => {
             <Button variant="outline" onClick={() => setShowSaveDialog(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSaveTemplate} disabled={!templateName.trim()}>
+            <Button onClick={handleSaveTemplate} disabled={!templateName.trim()} className="bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300">
               <Save className="h-4 w-4 mr-2" />
               Save Template
             </Button>
