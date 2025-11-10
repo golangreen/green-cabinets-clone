@@ -82,7 +82,7 @@ const VanityDesigner = () => {
   // Drag and drop state
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const gridSize = 50; // Snap to 50px grid
+  const gridSize = 24; // 12 inches at 2px per inch scale
   
   // Get current cabinet
   const currentCabinet = cabinets.find(c => c.id === selectedCabinetId) || cabinets[0];
@@ -1330,7 +1330,7 @@ const VanityDesigner = () => {
               {/* Info overlay */}
               <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-sm p-2 rounded-lg border border-border shadow-lg text-[10px] text-muted-foreground pointer-events-none">
                 <div>• Drag cabinets to position</div>
-                <div>• Snaps to {gridSize}px grid</div>
+                <div>• Grid: 12" × 12" squares</div>
               </div>
             </div>
           ) : (
