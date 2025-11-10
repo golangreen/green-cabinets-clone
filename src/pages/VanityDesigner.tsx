@@ -2013,13 +2013,14 @@ const VanityDesigner = () => {
         <div className="flex items-center h-10 md:h-12 px-1 md:px-2 overflow-x-auto">
           <button
             onClick={() => navigate("/")}
-            className="h-8 md:h-10 px-2 flex-shrink-0 hover:opacity-90 transition-opacity bg-black"
+            className="h-10 md:h-12 px-3 flex-shrink-0 hover:opacity-90 transition-opacity flex items-center gap-2"
           >
             <img 
               src="/logo.png" 
-              alt="Green Cabinets Logo" 
-              className="h-full w-auto object-contain"
+              alt="Green Cabinets" 
+              className="h-6 md:h-8 w-auto object-contain brightness-0 invert"
             />
+            <span className="text-white font-semibold text-sm hidden md:inline">Green Cabinets</span>
           </button>
           
           <Button
