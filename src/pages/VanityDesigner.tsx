@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import LoadingState from "@/components/LoadingState";
 import { 
   Plus,
   Trash2,
@@ -130,7 +131,7 @@ const VanityDesigner = () => {
   const navigate = useNavigate();
   
   // Templates hook
-  const { templates, saveTemplate, deleteTemplate, loadTemplate, duplicateTemplate } = useRoomTemplates();
+  const { templates, isLoading: templatesLoading, saveTemplate, deleteTemplate, loadTemplate, duplicateTemplate } = useRoomTemplates();
   
   // Save template dialog
   const [showSaveDialog, setShowSaveDialog] = useState(false);
@@ -2005,6 +2006,10 @@ const VanityDesigner = () => {
         return <div className="px-4 py-2 text-sm text-muted-foreground bg-muted/30">Select a tool from above</div>;
     }
   };
+
+  if (templatesLoading) {
+    return <LoadingState message="Loading Kitchen Designer..." fullScreen />;
+  }
 
   return (
     <div className="h-screen flex flex-col bg-background">
