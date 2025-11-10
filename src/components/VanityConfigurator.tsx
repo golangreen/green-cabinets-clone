@@ -166,15 +166,27 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     }
   }, [selectedBrand]);
 
-  // Calculate price
+  // Calculate price based on total square footage
   const calculatePrice = () => {
-    if (!width || !selectedBrand) return 0;
+    if (!width || !height || !depth || !selectedBrand) return 0;
     
     const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
-    const widthFeet = widthInches / 12;
-    const pricePerFoot = BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.price || 0;
+    const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
+    const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
     
-    return widthFeet * pricePerFoot;
+    // Calculate square footage for all surfaces
+    // Front/Back: width × height (×2)
+    // Sides: depth × height (×2)
+    // Top/Bottom: width × depth (×2)
+    const frontBackSqIn = widthInches * heightInches * 2;
+    const sidesSqIn = depthInches * heightInches * 2;
+    const topBottomSqIn = widthInches * depthInches * 2;
+    const totalSqIn = frontBackSqIn + sidesSqIn + topBottomSqIn;
+    const totalSqFt = totalSqIn / 144; // Convert to square feet (12×12)
+    
+    const pricePerSqFt = BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.price || 0;
+    
+    return totalSqFt * pricePerSqFt;
   };
 
   const calculateTax = (subtotal: number) => {
@@ -325,7 +337,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               <strong>Available Brands:</strong> Tafisa (60+ melamine colors), Egger (98+ TFL & HPL finishes), and Shinnoki (prefinished wood veneer)
             </p>
             <p>
-              <strong>Pricing:</strong> Tafisa $250/ft • Egger $300/ft • Shinnoki $350/ft
+              <strong>Pricing:</strong> Tafisa $250/sq ft • Egger $300/sq ft • Shinnoki $350/sq ft
             </p>
             <p>
               <strong>Shipping:</strong> Approximately 14-21 business days
@@ -350,7 +362,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 <SelectContent className="bg-background z-50">
                   {brands.map((brand) => (
                     <SelectItem key={brand} value={brand} className="cursor-pointer">
-                      {brand} - ${BRAND_INFO[brand as keyof typeof BRAND_INFO]?.price}/ft
+                      {brand} - ${BRAND_INFO[brand as keyof typeof BRAND_INFO]?.price}/sq ft
                     </SelectItem>
                   ))}
                 </SelectContent>
