@@ -9,6 +9,9 @@ interface Vanity3DPreviewProps {
   depth: number;
   brand: string;
   finish: string;
+  doorStyle: string;
+  numDrawers: number;
+  handleStyle: string;
 }
 
 // Convert inches to a normalized scale for 3D visualization
@@ -118,7 +121,7 @@ const getMaterialProps = (brand: string, finish: string) => {
   }
 };
 
-const VanityBox = ({ width, height, depth, brand, finish }: Vanity3DPreviewProps) => {
+const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle }: Vanity3DPreviewProps) => {
   // Scale dimensions for better visualization
   const scaledWidth = width * SCALE_FACTOR;
   const scaledHeight = height * SCALE_FACTOR;
@@ -225,21 +228,224 @@ const VanityBox = ({ width, height, depth, brand, finish }: Vanity3DPreviewProps
         />
       </mesh>
 
-      {/* Door panels (front) */}
-      <mesh position={[0, scaledHeight / 2, scaledDepth / 2 + 0.01]} castShadow>
-        <boxGeometry args={[scaledWidth * 0.95, scaledHeight * 0.9, 0.02]} />
-        <meshStandardMaterial 
-          color={materialProps.color}
-          map={woodTexture}
-          bumpMap={bumpMap}
-          bumpScale={materialProps.bumpScale}
-          roughness={materialProps.roughness * 0.9}
-          metalness={materialProps.metalness}
-          envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
-        />
-      </mesh>
+      {/* Door/Drawer Configuration */}
+      {doorStyle === 'single' && (
+        <>
+          <mesh position={[0, scaledHeight / 2, scaledDepth / 2 + 0.01]} castShadow>
+            <boxGeometry args={[scaledWidth * 0.95, scaledHeight * 0.9, 0.02]} />
+            <meshStandardMaterial 
+              color={materialProps.color}
+              map={woodTexture}
+              bumpMap={bumpMap}
+              bumpScale={materialProps.bumpScale}
+              roughness={materialProps.roughness * 0.9}
+              metalness={materialProps.metalness}
+              envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+            />
+          </mesh>
+          {handleStyle === 'bar' && (
+            <mesh position={[scaledWidth * 0.35, scaledHeight / 2, scaledDepth / 2 + 0.03]} rotation={[0, 0, Math.PI / 2]} castShadow>
+              <cylinderGeometry args={[0.01, 0.01, 0.2, 16]} />
+              <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+            </mesh>
+          )}
+          {handleStyle === 'knob' && (
+            <mesh position={[scaledWidth * 0.35, scaledHeight / 2, scaledDepth / 2 + 0.04]} castShadow>
+              <sphereGeometry args={[0.025, 16, 16]} />
+              <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+            </mesh>
+          )}
+        </>
+      )}
 
-      {/* Side panels detail */}
+      {doorStyle === 'double' && (
+        <>
+          <mesh position={[-scaledWidth * 0.25, scaledHeight / 2, scaledDepth / 2 + 0.01]} castShadow>
+            <boxGeometry args={[scaledWidth * 0.45, scaledHeight * 0.9, 0.02]} />
+            <meshStandardMaterial 
+              color={materialProps.color}
+              map={woodTexture}
+              bumpMap={bumpMap}
+              bumpScale={materialProps.bumpScale}
+              roughness={materialProps.roughness * 0.9}
+              metalness={materialProps.metalness}
+              envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+            />
+          </mesh>
+          <mesh position={[scaledWidth * 0.25, scaledHeight / 2, scaledDepth / 2 + 0.01]} castShadow>
+            <boxGeometry args={[scaledWidth * 0.45, scaledHeight * 0.9, 0.02]} />
+            <meshStandardMaterial 
+              color={materialProps.color}
+              map={woodTexture}
+              bumpMap={bumpMap}
+              bumpScale={materialProps.bumpScale}
+              roughness={materialProps.roughness * 0.9}
+              metalness={materialProps.metalness}
+              envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+            />
+          </mesh>
+          {handleStyle === 'bar' && (
+            <>
+              <mesh position={[-scaledWidth * 0.1, scaledHeight / 2, scaledDepth / 2 + 0.03]} rotation={[0, 0, Math.PI / 2]} castShadow>
+                <cylinderGeometry args={[0.01, 0.01, 0.15, 16]} />
+                <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+              </mesh>
+              <mesh position={[scaledWidth * 0.1, scaledHeight / 2, scaledDepth / 2 + 0.03]} rotation={[0, 0, Math.PI / 2]} castShadow>
+                <cylinderGeometry args={[0.01, 0.01, 0.15, 16]} />
+                <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+              </mesh>
+            </>
+          )}
+          {handleStyle === 'knob' && (
+            <>
+              <mesh position={[-scaledWidth * 0.1, scaledHeight / 2, scaledDepth / 2 + 0.04]} castShadow>
+                <sphereGeometry args={[0.025, 16, 16]} />
+                <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+              </mesh>
+              <mesh position={[scaledWidth * 0.1, scaledHeight / 2, scaledDepth / 2 + 0.04]} castShadow>
+                <sphereGeometry args={[0.025, 16, 16]} />
+                <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+              </mesh>
+            </>
+          )}
+        </>
+      )}
+
+      {doorStyle === 'drawers' && (
+        <>
+          {Array.from({ length: numDrawers }).map((_, i) => {
+            const drawerHeight = (scaledHeight * 0.9) / numDrawers;
+            const drawerY = scaledHeight * 0.05 + drawerHeight * i + drawerHeight / 2;
+            return (
+              <group key={i}>
+                <mesh position={[0, drawerY, scaledDepth / 2 + 0.01]} castShadow>
+                  <boxGeometry args={[scaledWidth * 0.95, drawerHeight * 0.95, 0.02]} />
+                  <meshStandardMaterial 
+                    color={materialProps.color}
+                    map={woodTexture}
+                    bumpMap={bumpMap}
+                    bumpScale={materialProps.bumpScale}
+                    roughness={materialProps.roughness * 0.9}
+                    metalness={materialProps.metalness}
+                    envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+                  />
+                </mesh>
+                {handleStyle === 'bar' && (
+                  <mesh position={[0, drawerY, scaledDepth / 2 + 0.03]} rotation={[0, 0, Math.PI / 2]} castShadow>
+                    <cylinderGeometry args={[0.01, 0.01, Math.min(0.2, scaledWidth * 0.4), 16]} />
+                    <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+                  </mesh>
+                )}
+                {handleStyle === 'knob' && (
+                  <>
+                    <mesh position={[-scaledWidth * 0.15, drawerY, scaledDepth / 2 + 0.04]} castShadow>
+                      <sphereGeometry args={[0.02, 16, 16]} />
+                      <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+                    </mesh>
+                    <mesh position={[scaledWidth * 0.15, drawerY, scaledDepth / 2 + 0.04]} castShadow>
+                      <sphereGeometry args={[0.02, 16, 16]} />
+                      <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+                    </mesh>
+                  </>
+                )}
+              </group>
+            );
+          })}
+        </>
+      )}
+
+      {doorStyle === 'mixed' && (
+        <>
+          {Array.from({ length: numDrawers }).map((_, i) => {
+            const drawerHeight = (scaledHeight * 0.45) / numDrawers;
+            const drawerY = scaledHeight * 0.5 + drawerHeight * i + drawerHeight / 2;
+            return (
+              <group key={`drawer-${i}`}>
+                <mesh position={[0, drawerY, scaledDepth / 2 + 0.01]} castShadow>
+                  <boxGeometry args={[scaledWidth * 0.95, drawerHeight * 0.95, 0.02]} />
+                  <meshStandardMaterial 
+                    color={materialProps.color}
+                    map={woodTexture}
+                    bumpMap={bumpMap}
+                    bumpScale={materialProps.bumpScale}
+                    roughness={materialProps.roughness * 0.9}
+                    metalness={materialProps.metalness}
+                    envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+                  />
+                </mesh>
+                {handleStyle === 'bar' && (
+                  <mesh position={[0, drawerY, scaledDepth / 2 + 0.03]} rotation={[0, 0, Math.PI / 2]} castShadow>
+                    <cylinderGeometry args={[0.008, 0.008, Math.min(0.15, scaledWidth * 0.3), 16]} />
+                    <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+                  </mesh>
+                )}
+                {handleStyle === 'knob' && (
+                  <>
+                    <mesh position={[-scaledWidth * 0.12, drawerY, scaledDepth / 2 + 0.04]} castShadow>
+                      <sphereGeometry args={[0.018, 16, 16]} />
+                      <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+                    </mesh>
+                    <mesh position={[scaledWidth * 0.12, drawerY, scaledDepth / 2 + 0.04]} castShadow>
+                      <sphereGeometry args={[0.018, 16, 16]} />
+                      <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+                    </mesh>
+                  </>
+                )}
+              </group>
+            );
+          })}
+          <mesh position={[-scaledWidth * 0.25, scaledHeight * 0.225, scaledDepth / 2 + 0.01]} castShadow>
+            <boxGeometry args={[scaledWidth * 0.45, scaledHeight * 0.4, 0.02]} />
+            <meshStandardMaterial 
+              color={materialProps.color}
+              map={woodTexture}
+              bumpMap={bumpMap}
+              bumpScale={materialProps.bumpScale}
+              roughness={materialProps.roughness * 0.9}
+              metalness={materialProps.metalness}
+              envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+            />
+          </mesh>
+          <mesh position={[scaledWidth * 0.25, scaledHeight * 0.225, scaledDepth / 2 + 0.01]} castShadow>
+            <boxGeometry args={[scaledWidth * 0.45, scaledHeight * 0.4, 0.02]} />
+            <meshStandardMaterial 
+              color={materialProps.color}
+              map={woodTexture}
+              bumpMap={bumpMap}
+              bumpScale={materialProps.bumpScale}
+              roughness={materialProps.roughness * 0.9}
+              metalness={materialProps.metalness}
+              envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+            />
+          </mesh>
+          {handleStyle === 'bar' && (
+            <>
+              <mesh position={[-scaledWidth * 0.1, scaledHeight * 0.225, scaledDepth / 2 + 0.03]} rotation={[0, 0, Math.PI / 2]} castShadow>
+                <cylinderGeometry args={[0.01, 0.01, 0.12, 16]} />
+                <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+              </mesh>
+              <mesh position={[scaledWidth * 0.1, scaledHeight * 0.225, scaledDepth / 2 + 0.03]} rotation={[0, 0, Math.PI / 2]} castShadow>
+                <cylinderGeometry args={[0.01, 0.01, 0.12, 16]} />
+                <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+              </mesh>
+            </>
+          )}
+          {handleStyle === 'knob' && (
+            <>
+              <mesh position={[-scaledWidth * 0.1, scaledHeight * 0.225, scaledDepth / 2 + 0.04]} castShadow>
+                <sphereGeometry args={[0.022, 16, 16]} />
+                <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+              </mesh>
+              <mesh position={[scaledWidth * 0.1, scaledHeight * 0.225, scaledDepth / 2 + 0.04]} castShadow>
+                <sphereGeometry args={[0.022, 16, 16]} />
+                <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+              </mesh>
+            </>
+          )}
+        </>
+      )}
+
+      {/* Side panels */}
       <mesh position={[-scaledWidth / 2 - 0.005, scaledHeight / 2, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.01, scaledHeight * 0.98, scaledDepth * 0.98]} />
         <meshStandardMaterial 
@@ -260,26 +466,6 @@ const VanityBox = ({ width, height, depth, brand, finish }: Vanity3DPreviewProps
           bumpScale={materialProps.bumpScale}
           roughness={materialProps.roughness}
           metalness={materialProps.metalness}
-        />
-      </mesh>
-
-      {/* Hardware - handles (brushed metal) */}
-      <mesh position={[scaledWidth * 0.3, scaledHeight * 0.6, scaledDepth / 2 + 0.03]} castShadow>
-        <cylinderGeometry args={[0.02, 0.02, 0.15, 16]} />
-        <meshStandardMaterial 
-          color="#B8B8B8"
-          roughness={0.25}
-          metalness={0.85}
-          envMapIntensity={1.5}
-        />
-      </mesh>
-      <mesh position={[-scaledWidth * 0.3, scaledHeight * 0.6, scaledDepth / 2 + 0.03]} castShadow>
-        <cylinderGeometry args={[0.02, 0.02, 0.15, 16]} />
-        <meshStandardMaterial 
-          color="#B8B8B8"
-          roughness={0.25}
-          metalness={0.85}
-          envMapIntensity={1.5}
         />
       </mesh>
     </group>
@@ -305,13 +491,11 @@ const DimensionLabels = ({ width, height, depth }: { width: number; height: numb
   );
 };
 
-export const Vanity3DPreview = ({ width, height, depth, brand, finish }: Vanity3DPreviewProps) => {
-  // Only render if we have valid dimensions
+export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle }: Vanity3DPreviewProps) => {
   const hasValidDimensions = useMemo(() => {
     return width > 0 && height > 0 && depth > 0;
   }, [width, height, depth]);
 
-  // Get material type for display
   const materialType = useMemo(() => {
     const props = getMaterialProps(brand, finish);
     return props.type;
@@ -336,7 +520,6 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish }: Vanity3
           maxPolarAngle={Math.PI / 2}
         />
         
-        {/* Lighting */}
         <ambientLight intensity={0.5} />
         <directionalLight 
           position={[5, 5, 5]} 
@@ -351,10 +534,8 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish }: Vanity3
         />
         <pointLight position={[0, 2, 0]} intensity={0.3} />
         
-        {/* Environment for reflections */}
         <Environment preset="apartment" />
         
-        {/* Ground plane */}
         <mesh 
           rotation={[-Math.PI / 2, 0, 0]} 
           position={[0, 0, 0]} 
@@ -364,14 +545,20 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish }: Vanity3
           <shadowMaterial opacity={0.2} />
         </mesh>
         
-        {/* Vanity model */}
-        <VanityBox width={width} height={height} depth={depth} brand={brand} finish={finish} />
+        <VanityBox 
+          width={width} 
+          height={height} 
+          depth={depth} 
+          brand={brand} 
+          finish={finish}
+          doorStyle={doorStyle}
+          numDrawers={numDrawers}
+          handleStyle={handleStyle}
+        />
       </Canvas>
       
-      {/* Dimension labels */}
       <DimensionLabels width={width} height={height} depth={depth} />
       
-      {/* Instructions and material type */}
       <div className="absolute top-4 left-4 right-4 flex flex-col items-center gap-2">
         <p className="text-xs text-muted-foreground bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-border">
           Drag to rotate • Scroll to zoom

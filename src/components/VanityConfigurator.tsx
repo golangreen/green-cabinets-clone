@@ -145,6 +145,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [state, setState] = useState<string>("");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; alt: string } | null>(null);
+  const [doorStyle, setDoorStyle] = useState<string>("double");
+  const [numDrawers, setNumDrawers] = useState<number>(2);
+  const [handleStyle, setHandleStyle] = useState<string>("bar");
   const addItem = useCartStore((state) => state.addItem);
 
   const openLightbox = (imageUrl: string, imageAlt: string) => {
@@ -283,6 +286,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         { key: "Depth", value: `${depthInches.toFixed(4)}"` },
         { key: "Zip Code", value: zipCode },
         { key: "State", value: state || "Unknown" },
+        { key: "Door Style", value: doorStyle === "single" ? "Single Door" : doorStyle === "double" ? "Double Doors" : doorStyle === "drawers" ? "All Drawers" : "Doors + Drawers" },
+        { key: "Number of Drawers", value: numDrawers.toString() },
+        { key: "Handle Style", value: handleStyle === "bar" ? "Bar Handles" : handleStyle === "knob" ? "Knobs" : "Push-to-Open" },
         { key: "Calculated Price", value: `$${basePrice.toFixed(2)}` },
         { key: "Tax", value: `$${tax.toFixed(2)}` },
         { key: "Shipping", value: `$${shipping.toFixed(2)}` },
@@ -310,6 +316,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               depth={dimensionsInInches.depthInches}
               brand={selectedBrand}
               finish={selectedFinish}
+              doorStyle={doorStyle}
+              numDrawers={numDrawers}
+              handleStyle={handleStyle}
             />
           </div>
 
@@ -656,6 +665,68 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   Detected state: {state}
                 </p>
               )}
+            </div>
+
+            {/* Door Style Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="doorStyle">Cabinet Configuration</Label>
+              <Select value={doorStyle} onValueChange={setDoorStyle}>
+                <SelectTrigger id="doorStyle" className="bg-background">
+                  <SelectValue placeholder="Select configuration" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="single">Single Door</SelectItem>
+                  <SelectItem value="double">Double Doors</SelectItem>
+                  <SelectItem value="drawers">All Drawers</SelectItem>
+                  <SelectItem value="mixed">Drawers + Doors</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                {doorStyle === 'single' && 'One large door for full access'}
+                {doorStyle === 'double' && 'Two doors opening from center'}
+                {doorStyle === 'drawers' && 'Multiple drawers for organized storage'}
+                {doorStyle === 'mixed' && 'Drawers on top, cabinet doors below'}
+              </p>
+            </div>
+
+            {/* Number of Drawers (only show if drawers or mixed) */}
+            {(doorStyle === 'drawers' || doorStyle === 'mixed') && (
+              <div className="space-y-2">
+                <Label htmlFor="numDrawers">Number of Drawers</Label>
+                <Select value={numDrawers.toString()} onValueChange={(val) => setNumDrawers(parseInt(val))}>
+                  <SelectTrigger id="numDrawers" className="bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="1">1 Drawer</SelectItem>
+                    <SelectItem value="2">2 Drawers</SelectItem>
+                    <SelectItem value="3">3 Drawers</SelectItem>
+                    <SelectItem value="4">4 Drawers</SelectItem>
+                    <SelectItem value="5">5 Drawers</SelectItem>
+                    <SelectItem value="6">6 Drawers</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Handle Style Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="handleStyle">Handle Style</Label>
+              <Select value={handleStyle} onValueChange={setHandleStyle}>
+                <SelectTrigger id="handleStyle" className="bg-background">
+                  <SelectValue placeholder="Select handle style" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="bar">Bar Handles</SelectItem>
+                  <SelectItem value="knob">Knobs</SelectItem>
+                  <SelectItem value="recessed">Push-to-Open (No Handles)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                {handleStyle === 'bar' && 'Modern horizontal bar handles'}
+                {handleStyle === 'knob' && 'Classic round knob handles'}
+                {handleStyle === 'recessed' && 'Minimalist handleless design with push mechanism'}
+              </p>
             </div>
           </CardContent>
         </Card>
