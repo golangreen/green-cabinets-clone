@@ -1,7 +1,9 @@
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
-import { useMemo } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
+import { OrbitControls, PerspectiveCamera, Environment, Line, Html } from "@react-three/drei";
+import { useMemo, useState, useRef } from "react";
 import * as THREE from "three";
+import { Button } from "./ui/button";
+import { Ruler } from "lucide-react";
 
 interface Vanity3DPreviewProps {
   width: number;
@@ -16,6 +18,43 @@ interface Vanity3DPreviewProps {
 
 // Convert inches to a normalized scale for 3D visualization
 const SCALE_FACTOR = 0.02;
+
+type MeasurementType = 'height' | 'width' | 'depth' | 'door' | null;
+
+interface MeasurementLineProps {
+  start: [number, number, number];
+  end: [number, number, number];
+  label: string;
+  color?: string;
+}
+
+const MeasurementLine = ({ start, end, label, color = "#00ff00" }: MeasurementLineProps) => {
+  const midpoint: [number, number, number] = [
+    (start[0] + end[0]) / 2,
+    (start[1] + end[1]) / 2,
+    (start[2] + end[2]) / 2,
+  ];
+
+  return (
+    <group>
+      <Line points={[start, end]} color={color} lineWidth={2} />
+      <Html position={midpoint} center>
+        <div className="bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs font-mono font-semibold whitespace-nowrap shadow-lg border border-primary">
+          {label}
+        </div>
+      </Html>
+      {/* End caps */}
+      <mesh position={start}>
+        <sphereGeometry args={[0.02, 8, 8]} />
+        <meshBasicMaterial color={color} />
+      </mesh>
+      <mesh position={end}>
+        <sphereGeometry args={[0.02, 8, 8]} />
+        <meshBasicMaterial color={color} />
+      </mesh>
+    </group>
+  );
+};
 
 // Determine material properties based on finish
 const getMaterialProps = (brand: string, finish: string) => {
@@ -121,7 +160,13 @@ const getMaterialProps = (brand: string, finish: string) => {
   }
 };
 
-const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle }: Vanity3DPreviewProps) => {
+interface VanityBoxProps extends Vanity3DPreviewProps {
+  measurementMode: boolean;
+  onMeasurementClick: (type: MeasurementType) => void;
+  activeMeasurement: MeasurementType;
+}
+
+const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle, measurementMode, onMeasurementClick, activeMeasurement }: VanityBoxProps) => {
   // Scale dimensions for better visualization
   const scaledWidth = width * SCALE_FACTOR;
   const scaledHeight = height * SCALE_FACTOR;
@@ -201,10 +246,75 @@ const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers,
     return texture;
   }, [materialProps.bumpScale]);
 
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  const handleClick = (type: MeasurementType) => {
+    if (measurementMode) {
+      onMeasurementClick(type);
+    }
+  };
+
   return (
     <group>
+      {/* Measurement lines */}
+      {activeMeasurement === 'height' && (
+        <MeasurementLine
+          start={[scaledWidth / 2 + 0.2, 0, 0]}
+          end={[scaledWidth / 2 + 0.2, scaledHeight, 0]}
+          label={`${height.toFixed(1)}"`}
+          color="#00ff00"
+        />
+      )}
+      {activeMeasurement === 'width' && (
+        <MeasurementLine
+          start={[-scaledWidth / 2, scaledHeight + 0.15, scaledDepth / 2 + 0.2]}
+          end={[scaledWidth / 2, scaledHeight + 0.15, scaledDepth / 2 + 0.2]}
+          label={`${width.toFixed(1)}"`}
+          color="#0099ff"
+        />
+      )}
+      {activeMeasurement === 'depth' && (
+        <MeasurementLine
+          start={[scaledWidth / 2 + 0.2, scaledHeight / 2, -scaledDepth / 2]}
+          end={[scaledWidth / 2 + 0.2, scaledHeight / 2, scaledDepth / 2]}
+          label={`${depth.toFixed(1)}"`}
+          color="#ff9900"
+        />
+      )}
+      {activeMeasurement === 'door' && doorStyle === 'single' && (
+        <>
+          <MeasurementLine
+            start={[-scaledWidth * 0.475, scaledHeight * 0.95, scaledDepth / 2 + 0.05]}
+            end={[scaledWidth * 0.475, scaledHeight * 0.95, scaledDepth / 2 + 0.05]}
+            label={`${(width * 0.95).toFixed(1)}"`}
+            color="#ff00ff"
+          />
+          <MeasurementLine
+            start={[scaledWidth * 0.48, scaledHeight * 0.05, scaledDepth / 2 + 0.05]}
+            end={[scaledWidth * 0.48, scaledHeight * 0.9, scaledDepth / 2 + 0.05]}
+            label={`${(height * 0.85).toFixed(1)}"`}
+            color="#ff00ff"
+          />
+        </>
+      )}
+
       {/* Main cabinet body */}
-      <mesh position={[0, scaledHeight / 2, 0]} castShadow receiveShadow>
+      <mesh 
+        ref={meshRef}
+        position={[0, scaledHeight / 2, 0]} 
+        castShadow 
+        receiveShadow
+        onClick={() => handleClick('height')}
+        onPointerOver={(e) => {
+          if (measurementMode) {
+            e.stopPropagation();
+            document.body.style.cursor = 'pointer';
+          }
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = 'default';
+        }}
+      >
         <boxGeometry args={[scaledWidth, scaledHeight, scaledDepth]} />
         <meshStandardMaterial 
           color={materialProps.color}
@@ -218,7 +328,21 @@ const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers,
       </mesh>
 
       {/* Top countertop (marble/stone appearance) */}
-      <mesh position={[0, scaledHeight + thickness / 2, 0]} castShadow receiveShadow>
+      <mesh 
+        position={[0, scaledHeight + thickness / 2, 0]} 
+        castShadow 
+        receiveShadow
+        onClick={() => handleClick('width')}
+        onPointerOver={(e) => {
+          if (measurementMode) {
+            e.stopPropagation();
+            document.body.style.cursor = 'pointer';
+          }
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = 'default';
+        }}
+      >
         <boxGeometry args={[scaledWidth + 0.1, thickness, scaledDepth + 0.1]} />
         <meshStandardMaterial 
           color="#FAFAFA"
@@ -231,7 +355,20 @@ const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers,
       {/* Door/Drawer Configuration */}
       {doorStyle === 'single' && (
         <>
-          <mesh position={[0, scaledHeight / 2, scaledDepth / 2 + 0.01]} castShadow>
+          <mesh 
+            position={[0, scaledHeight / 2, scaledDepth / 2 + 0.01]} 
+            castShadow
+            onClick={() => handleClick('door')}
+            onPointerOver={(e) => {
+              if (measurementMode) {
+                e.stopPropagation();
+                document.body.style.cursor = 'pointer';
+              }
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = 'default';
+            }}
+          >
             <boxGeometry args={[scaledWidth * 0.95, scaledHeight * 0.9, 0.02]} />
             <meshStandardMaterial 
               color={materialProps.color}
@@ -446,7 +583,21 @@ const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers,
       )}
 
       {/* Side panels */}
-      <mesh position={[-scaledWidth / 2 - 0.005, scaledHeight / 2, 0]} castShadow receiveShadow>
+      <mesh 
+        position={[-scaledWidth / 2 - 0.005, scaledHeight / 2, 0]} 
+        castShadow 
+        receiveShadow
+        onClick={() => handleClick('depth')}
+        onPointerOver={(e) => {
+          if (measurementMode) {
+            e.stopPropagation();
+            document.body.style.cursor = 'pointer';
+          }
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = 'default';
+        }}
+      >
         <boxGeometry args={[0.01, scaledHeight * 0.98, scaledDepth * 0.98]} />
         <meshStandardMaterial 
           color={materialProps.color}
@@ -492,6 +643,9 @@ const DimensionLabels = ({ width, height, depth }: { width: number; height: numb
 };
 
 export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle }: Vanity3DPreviewProps) => {
+  const [measurementMode, setMeasurementMode] = useState(false);
+  const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
+
   const hasValidDimensions = useMemo(() => {
     return width > 0 && height > 0 && depth > 0;
   }, [width, height, depth]);
@@ -500,6 +654,17 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
     const props = getMaterialProps(brand, finish);
     return props.type;
   }, [brand, finish]);
+
+  const handleMeasurementClick = (type: MeasurementType) => {
+    setActiveMeasurement(type);
+  };
+
+  const toggleMeasurementMode = () => {
+    setMeasurementMode(!measurementMode);
+    if (measurementMode) {
+      setActiveMeasurement(null);
+    }
+  };
 
   if (!hasValidDimensions) {
     return (
@@ -511,6 +676,18 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
 
   return (
     <div className="relative w-full aspect-square bg-gradient-to-br from-secondary/10 to-secondary/30 rounded-lg overflow-hidden border border-border">
+      <div className="absolute top-4 right-4 z-10">
+        <Button
+          variant={measurementMode ? "default" : "outline"}
+          size="sm"
+          onClick={toggleMeasurementMode}
+          className="shadow-lg"
+        >
+          <Ruler className="w-4 h-4 mr-2" />
+          {measurementMode ? "Measuring" : "Measure"}
+        </Button>
+      </div>
+      
       <Canvas shadows>
         <PerspectiveCamera makeDefault position={[3, 2, 3]} />
         <OrbitControls 
@@ -554,15 +731,24 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
           doorStyle={doorStyle}
           numDrawers={numDrawers}
           handleStyle={handleStyle}
+          measurementMode={measurementMode}
+          onMeasurementClick={handleMeasurementClick}
+          activeMeasurement={activeMeasurement}
         />
       </Canvas>
       
       <DimensionLabels width={width} height={height} depth={depth} />
       
-      <div className="absolute top-4 left-4 right-4 flex flex-col items-center gap-2">
-        <p className="text-xs text-muted-foreground bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-border">
-          Drag to rotate • Scroll to zoom
-        </p>
+      <div className="absolute top-4 left-4 right-20 flex flex-col items-center gap-2">
+        {measurementMode ? (
+          <p className="text-xs text-muted-foreground bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-border">
+            Click on vanity parts to measure
+          </p>
+        ) : (
+          <p className="text-xs text-muted-foreground bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-border">
+            Drag to rotate • Scroll to zoom
+          </p>
+        )}
         <p className="text-xs font-medium bg-primary/90 text-primary-foreground backdrop-blur-sm rounded-lg px-3 py-1.5 border border-primary">
           {materialType === 'wood' && '🌲 Wood Grain'}
           {materialType === 'metallic' && '✨ Metallic'}
