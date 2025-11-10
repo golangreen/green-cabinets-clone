@@ -38,6 +38,9 @@ import { useSavedTemplates } from "@/hooks/useSavedTemplates";
 import jsPDF from 'jspdf';
 import { CartItem } from "@/stores/cartStore";
 import { supabase } from "@/integrations/supabase/client";
+import html2canvas from 'html2canvas';
+import { SharePreviewCard } from "./SharePreviewCard";
+import { useRef } from "react";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -169,6 +172,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [recipientName, setRecipientName] = useState("");
   const [isEmailSending, setIsEmailSending] = useState(false);
   const [socialShareOpen, setSocialShareOpen] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
   const [texturePreviewOpen, setTexturePreviewOpen] = useState(false);
   const [previewFinish, setPreviewFinish] = useState("");
   const [fullscreenPreview, setFullscreenPreview] = useState(false);
@@ -434,6 +439,61 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       else setState("other");
     }
   }, [zipCode]);
+
+  const generateShareImage = async (): Promise<Blob | null> => {
+    if (!shareCardRef.current) return null;
+
+    try {
+      const canvas = await html2canvas(shareCardRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null,
+        logging: false,
+      });
+
+      return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, 'image/png');
+      });
+    } catch (error) {
+      console.error('Error generating share image:', error);
+      return null;
+    }
+  };
+
+  const handleDownloadShareImage = async () => {
+    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+      toast.error("Please complete the configuration first");
+      return;
+    }
+
+    setIsGeneratingImage(true);
+    toast.info("Generating share image...");
+
+    try {
+      const blob = await generateShareImage();
+      if (!blob) {
+        throw new Error("Failed to generate image");
+      }
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `vanity-config-${Date.now()}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success("Share image downloaded!");
+    } catch (error) {
+      console.error('Error downloading share image:', error);
+      toast.error("Failed to generate share image");
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
 
   const getShareText = () => {
     const widthFrac = getFractionDisplay(widthFraction);
@@ -2905,7 +2965,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
       {/* Social Media Share Dialog */}
       <Dialog open={socialShareOpen} onOpenChange={setSocialShareOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Share on Social Media</DialogTitle>
             <DialogDescription>
@@ -2918,6 +2978,25 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               <p className="text-muted-foreground">
                 {selectedBrand} - {selectedFinish} • {width}×{height}×{depth}" • ${totalPrice.toFixed(2)}
               </p>
+            </div>
+
+            <div className="mb-6">
+              <Button
+                onClick={handleDownloadShareImage}
+                disabled={isGeneratingImage}
+                className="w-full justify-start gap-3 h-auto py-4"
+                size="lg"
+              >
+                <FileDown className="h-6 w-6" />
+                <div className="text-left">
+                  <p className="font-semibold">
+                    {isGeneratingImage ? "Generating..." : "Download Share Image"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Beautiful preview card for social posts
+                  </p>
+                </div>
+              </Button>
             </div>
             
             <div className="space-y-3">
@@ -2967,6 +3046,24 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Hidden Share Preview Card */}
+      <SharePreviewCard
+        ref={shareCardRef}
+        brand={selectedBrand}
+        finish={selectedFinish}
+        dimensions={`${width}${getFractionDisplay(widthFraction) ? ' ' + getFractionDisplay(widthFraction) : ''}" W × ${height}${getFractionDisplay(heightFraction) ? ' ' + getFractionDisplay(heightFraction) : ''}" H × ${depth}${getFractionDisplay(depthFraction) ? ' ' + getFractionDisplay(depthFraction) : ''}" D`}
+        doorStyle={
+          doorStyle === "single" ? "Single Door" : 
+          doorStyle === "double" ? "Double Doors" : 
+          doorStyle === "drawers" ? "All Drawers" : 
+          doorStyle === "mixed" ? "Drawers + Doors" :
+          "Custom Configuration"
+        }
+        countertop={`${countertopMaterial} - ${countertopColor}`}
+        sink={`${sinkStyle} - ${sinkShape}`}
+        price={`$${totalPrice.toFixed(2)}`}
+      />
 
       {/* Email Configuration Dialog */}
       <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
