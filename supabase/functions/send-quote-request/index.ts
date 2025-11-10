@@ -140,10 +140,10 @@ const handler = async (req: Request): Promise<Response> => {
         details: { errors: validationResult.error.errors }
       });
       
-      console.error("Validation error:", validationResult.error);
+      console.error("Validation error:", validationResult.error, `IP: ${clientIp}`);
       return new Response(
         JSON.stringify({ 
-          error: "Invalid input data. Please check your form and try again." 
+          error: "Invalid request. Please check your input." 
         }),
         {
           status: 400,

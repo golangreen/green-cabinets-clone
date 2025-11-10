@@ -160,7 +160,7 @@ const handler = async (req: Request): Promise<Response> => {
       
       return new Response(
         JSON.stringify({ 
-          error: "Invalid input data. Please check your configuration." 
+          error: "Invalid request. Please check your input." 
         }),
         {
           status: 400,
