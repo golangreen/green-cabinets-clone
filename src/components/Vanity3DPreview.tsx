@@ -56,6 +56,9 @@ interface Vanity3DPreviewProps {
   includeFaucet?: boolean;
   faucetStyle?: 'modern' | 'traditional' | 'waterfall';
   faucetFinish?: 'chrome' | 'brushed-nickel' | 'matte-black' | 'gold';
+  countertopMaterial?: 'marble' | 'quartz' | 'granite';
+  countertopEdge?: 'straight' | 'beveled' | 'bullnose' | 'waterfall';
+  countertopColor?: string;
 }
 
 // Convert inches to a normalized scale for 3D visualization
@@ -1628,13 +1631,240 @@ const MirrorCabinet: React.FC<{
   );
 };
 
+// Countertop Component with different materials and edge profiles
+const Countertop: React.FC<{
+  width: number;
+  height: number;
+  depth: number;
+  material: 'marble' | 'quartz' | 'granite';
+  edge: 'straight' | 'beveled' | 'bullnose' | 'waterfall';
+  color: string;
+}> = ({ width, height, depth, material, edge, color }) => {
+  const scaledWidth = width * SCALE_FACTOR;
+  const scaledHeight = height * SCALE_FACTOR;
+  const scaledDepth = depth * SCALE_FACTOR;
+  const thickness = 0.05;
+
+  // Get material color
+  const getMaterialColor = () => {
+    const colors: { [key: string]: string } = {
+      'white': '#FAFAFA',
+      'cream': '#F5F5DC',
+      'gray': '#8B8B8B',
+      'black': '#2B2B2B',
+      'beige': '#D4C5B9',
+      'brown': '#6B5B4D'
+    };
+    return colors[color] || '#FAFAFA';
+  };
+
+  // Get material properties
+  const getMaterialProps = () => {
+    const baseColor = getMaterialColor();
+    
+    switch (material) {
+      case 'marble':
+        return {
+          color: baseColor,
+          roughness: 0.1,
+          metalness: 0.4,
+          envMapIntensity: 1.5
+        };
+      case 'quartz':
+        return {
+          color: baseColor,
+          roughness: 0.15,
+          metalness: 0.3,
+          envMapIntensity: 1.2
+        };
+      case 'granite':
+        return {
+          color: baseColor,
+          roughness: 0.2,
+          metalness: 0.35,
+          envMapIntensity: 1.3
+        };
+      default:
+        return {
+          color: baseColor,
+          roughness: 0.15,
+          metalness: 0.3,
+          envMapIntensity: 1.2
+        };
+    }
+  };
+
+  // Create texture based on material
+  const materialTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    const baseColorRgb = new THREE.Color(getMaterialColor());
+    ctx.fillStyle = baseColorRgb.getStyle();
+    ctx.fillRect(0, 0, 512, 512);
+
+    if (material === 'marble') {
+      // Add marble veining
+      ctx.strokeStyle = new THREE.Color(baseColorRgb).multiplyScalar(0.85).getStyle();
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 8; i++) {
+        ctx.beginPath();
+        const startX = Math.random() * 512;
+        const startY = Math.random() * 512;
+        ctx.moveTo(startX, startY);
+        for (let j = 0; j < 5; j++) {
+          ctx.lineTo(
+            startX + (Math.random() - 0.5) * 200,
+            startY + j * 100 + (Math.random() - 0.5) * 80
+          );
+        }
+        ctx.stroke();
+      }
+    } else if (material === 'granite') {
+      // Add granite speckles
+      const imageData = ctx.getImageData(0, 0, 512, 512);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (Math.random() > 0.97) {
+          const brightness = Math.random() > 0.5 ? 40 : -40;
+          imageData.data[i] += brightness;
+          imageData.data[i + 1] += brightness;
+          imageData.data[i + 2] += brightness;
+        }
+      }
+      ctx.putImageData(imageData, 0, 0);
+    } else if (material === 'quartz') {
+      // Add subtle quartz shimmer
+      const imageData = ctx.getImageData(0, 0, 512, 512);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (Math.random() > 0.98) {
+          const shimmer = 30;
+          imageData.data[i] += shimmer;
+          imageData.data[i + 1] += shimmer;
+          imageData.data[i + 2] += shimmer;
+        }
+      }
+      ctx.putImageData(imageData, 0, 0);
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(2, 2);
+    return texture;
+  }, [material, color]);
+
+  const matProps = getMaterialProps();
+
+  if (edge === 'waterfall') {
+    // Waterfall edge - countertop extends down the sides
+    return (
+      <group>
+        {/* Main top surface */}
+        <mesh position={[0, scaledHeight + thickness / 2, 0]} castShadow receiveShadow>
+          <boxGeometry args={[scaledWidth + 0.1, thickness, scaledDepth + 0.1]} />
+          <meshStandardMaterial 
+            map={materialTexture}
+            {...matProps}
+          />
+        </mesh>
+        
+        {/* Left waterfall edge */}
+        <mesh 
+          position={[-scaledWidth / 2 - 0.05, scaledHeight / 2, 0]} 
+          castShadow 
+          receiveShadow
+        >
+          <boxGeometry args={[thickness, scaledHeight, scaledDepth + 0.1]} />
+          <meshStandardMaterial 
+            map={materialTexture}
+            {...matProps}
+          />
+        </mesh>
+        
+        {/* Right waterfall edge */}
+        <mesh 
+          position={[scaledWidth / 2 + 0.05, scaledHeight / 2, 0]} 
+          castShadow 
+          receiveShadow
+        >
+          <boxGeometry args={[thickness, scaledHeight, scaledDepth + 0.1]} />
+          <meshStandardMaterial 
+            map={materialTexture}
+            {...matProps}
+          />
+        </mesh>
+      </group>
+    );
+  }
+
+  // For other edge types, create custom geometry with edge profile
+  const countertopGeometry = useMemo(() => {
+    const shape = new THREE.Shape();
+    const w = (scaledWidth + 0.1) / 2;
+    const d = (scaledDepth + 0.1) / 2;
+    
+    // Create the top rectangle
+    shape.moveTo(-w, -d);
+    shape.lineTo(w, -d);
+    shape.lineTo(w, d);
+    shape.lineTo(-w, d);
+    shape.closePath();
+    
+    const extrudeSettings = {
+      steps: 1,
+      depth: thickness,
+      bevelEnabled: edge !== 'straight',
+      bevelThickness: edge === 'bullnose' ? 0.02 : 0.01,
+      bevelSize: edge === 'bullnose' ? 0.02 : 0.01,
+      bevelOffset: 0,
+      bevelSegments: edge === 'bullnose' ? 8 : 3
+    };
+    
+    return new THREE.ExtrudeGeometry(shape, extrudeSettings);
+  }, [scaledWidth, scaledDepth, edge, thickness]);
+
+  return (
+    <mesh 
+      geometry={countertopGeometry}
+      position={[0, scaledHeight + thickness / 2, 0]} 
+      rotation={[-Math.PI / 2, 0, 0]}
+      castShadow 
+      receiveShadow
+    >
+      <meshStandardMaterial 
+        map={materialTexture}
+        {...matProps}
+      />
+    </mesh>
+  );
+};
+
 interface VanityBoxProps extends Vanity3DPreviewProps {
   measurementMode: boolean;
   onMeasurementClick: (type: MeasurementType) => void;
   activeMeasurement: MeasurementType;
 }
 
-const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle, cabinetPosition = "left", measurementMode, onMeasurementClick, activeMeasurement }: VanityBoxProps) => {
+const VanityBox = ({ 
+  width, 
+  height, 
+  depth, 
+  brand, 
+  finish, 
+  doorStyle, 
+  numDrawers, 
+  handleStyle, 
+  cabinetPosition = "left", 
+  measurementMode, 
+  onMeasurementClick, 
+  activeMeasurement,
+  countertopMaterial = 'quartz',
+  countertopEdge = 'straight',
+  countertopColor = 'white'
+}: VanityBoxProps) => {
   // Scale dimensions for better visualization
   const scaledWidth = width * SCALE_FACTOR;
   const scaledHeight = height * SCALE_FACTOR;
@@ -1795,30 +2025,15 @@ const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers,
         />
       </mesh>
 
-      {/* Top countertop (marble/stone appearance) */}
-      <mesh 
-        position={[0, scaledHeight + thickness / 2, 0]} 
-        castShadow 
-        receiveShadow
-        onClick={() => handleClick('width')}
-        onPointerOver={(e) => {
-          if (measurementMode) {
-            e.stopPropagation();
-            document.body.style.cursor = 'pointer';
-          }
-        }}
-        onPointerOut={() => {
-          document.body.style.cursor = 'default';
-        }}
-      >
-        <boxGeometry args={[scaledWidth + 0.1, thickness, scaledDepth + 0.1]} />
-        <meshStandardMaterial 
-          color="#FAFAFA"
-          roughness={0.15}
-          metalness={0.3}
-          envMapIntensity={1.2}
-        />
-      </mesh>
+      {/* Countertop with custom material and edge */}
+      <Countertop
+        width={width}
+        height={height}
+        depth={depth}
+        material={countertopMaterial}
+        edge={countertopEdge}
+        color={countertopColor}
+      />
 
       {/* Door/Drawer Configuration */}
       {doorStyle === 'single' && (
@@ -2349,7 +2564,10 @@ export const Vanity3DPreview = ({
   shelvingType = 'floating',
   includeFaucet = true,
   faucetStyle = 'modern',
-  faucetFinish = 'chrome'
+  faucetFinish = 'chrome',
+  countertopMaterial = 'quartz',
+  countertopEdge = 'straight',
+  countertopColor = 'white'
 }: Vanity3DPreviewProps) => {
   const [measurementMode, setMeasurementMode] = useState(false);
   const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
@@ -2589,6 +2807,9 @@ export const Vanity3DPreview = ({
             measurementMode={measurementMode}
             onMeasurementClick={handleMeasurementClick}
             activeMeasurement={activeMeasurement}
+            countertopMaterial={countertopMaterial}
+            countertopEdge={countertopEdge}
+            countertopColor={countertopColor}
           />
           
           {/* Mirror or Medicine Cabinet above vanity */}

@@ -223,6 +223,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [faucetStyle, setFaucetStyle] = useState<'modern' | 'traditional' | 'waterfall'>('modern');
   const [faucetFinish, setFaucetFinish] = useState<'chrome' | 'brushed-nickel' | 'matte-black' | 'gold'>('chrome');
   
+  // Countertop state
+  const [countertopMaterial, setCountertopMaterial] = useState<'marble' | 'quartz' | 'granite'>('quartz');
+  const [countertopEdge, setCountertopEdge] = useState<'straight' | 'beveled' | 'bullnose' | 'waterfall'>('straight');
+  const [countertopColor, setCountertopColor] = useState<string>('white');
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -856,6 +861,45 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                         )}
                       </div>
                       
+                      {/* Countertop Controls */}
+                      <div className="pt-2 border-t border-border space-y-2">
+                        <Label className="text-xs font-medium">Countertop</Label>
+                        <Select value={countertopMaterial} onValueChange={(value: any) => setCountertopMaterial(value)}>
+                          <SelectTrigger className="bg-background h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-[100]">
+                            <SelectItem value="marble">Marble</SelectItem>
+                            <SelectItem value="quartz">Quartz</SelectItem>
+                            <SelectItem value="granite">Granite</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Select value={countertopColor} onValueChange={setCountertopColor}>
+                          <SelectTrigger className="bg-background h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-[100]">
+                            <SelectItem value="white">White</SelectItem>
+                            <SelectItem value="cream">Cream</SelectItem>
+                            <SelectItem value="gray">Gray</SelectItem>
+                            <SelectItem value="black">Black</SelectItem>
+                            <SelectItem value="beige">Beige</SelectItem>
+                            <SelectItem value="brown">Brown</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Select value={countertopEdge} onValueChange={(value: any) => setCountertopEdge(value)}>
+                          <SelectTrigger className="bg-background h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-[100]">
+                            <SelectItem value="straight">Straight</SelectItem>
+                            <SelectItem value="beveled">Beveled</SelectItem>
+                            <SelectItem value="bullnose">Bullnose</SelectItem>
+                            <SelectItem value="waterfall">Waterfall</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
                       {/* Bathroom Accessories Controls */}
                       <div className="pt-2 border-t border-border space-y-2">
                         <Label className="text-xs font-medium">Accessories</Label>
@@ -1005,10 +1049,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               robeHookCount={robeHookCount}
               includeShelving={includeShelving}
               shelvingType={shelvingType}
-              includeFaucet={includeFaucet}
-              faucetStyle={faucetStyle}
-              faucetFinish={faucetFinish}
-            />
+        includeFaucet={includeFaucet}
+        faucetStyle={faucetStyle}
+        faucetFinish={faucetFinish}
+        countertopMaterial={countertopMaterial}
+        countertopEdge={countertopEdge}
+        countertopColor={countertopColor}
+      />
             </div>
           </div>
         </div>
@@ -1065,10 +1112,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         robeHookCount={robeHookCount}
         includeShelving={includeShelving}
         shelvingType={shelvingType}
-        includeFaucet={includeFaucet}
-        faucetStyle={faucetStyle}
-        faucetFinish={faucetFinish}
-      />
+              includeFaucet={includeFaucet}
+              faucetStyle={faucetStyle}
+              faucetFinish={faucetFinish}
+              countertopMaterial={countertopMaterial}
+              countertopEdge={countertopEdge}
+              countertopColor={countertopColor}
+            />
             {/* Fullscreen Button */}
             <Button
               variant="secondary"
@@ -2013,6 +2063,57 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     </div>
                   </>
                 )}
+              </div>
+
+              {/* Countertop Options */}
+              <div className="space-y-4 pt-4 border-t">
+                <h4 className="font-medium">Countertop</h4>
+                
+                <div>
+                  <Label htmlFor="countertopMaterial">Material</Label>
+                  <Select value={countertopMaterial} onValueChange={(value: any) => setCountertopMaterial(value)}>
+                    <SelectTrigger id="countertopMaterial">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="marble">Marble ($120/sqft)</SelectItem>
+                      <SelectItem value="quartz">Quartz ($85/sqft)</SelectItem>
+                      <SelectItem value="granite">Granite ($75/sqft)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="countertopColor">Color</Label>
+                  <Select value={countertopColor} onValueChange={setCountertopColor}>
+                    <SelectTrigger id="countertopColor">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="white">White</SelectItem>
+                      <SelectItem value="cream">Cream</SelectItem>
+                      <SelectItem value="gray">Gray</SelectItem>
+                      <SelectItem value="black">Black</SelectItem>
+                      <SelectItem value="beige">Beige</SelectItem>
+                      <SelectItem value="brown">Brown</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="countertopEdge">Edge Profile</Label>
+                  <Select value={countertopEdge} onValueChange={(value: any) => setCountertopEdge(value)}>
+                    <SelectTrigger id="countertopEdge">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="straight">Straight Edge</SelectItem>
+                      <SelectItem value="beveled">Beveled Edge</SelectItem>
+                      <SelectItem value="bullnose">Bullnose Edge</SelectItem>
+                      <SelectItem value="waterfall">Waterfall Edge</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               {/* Bathroom Accessories */}
