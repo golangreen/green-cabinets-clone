@@ -481,6 +481,63 @@ export const CABINET_CATALOG: CabinetSpec[] = [
     basePrice: 425,
     category: "Corner - Wall"
   },
+  
+  // ===== PENINSULA CABINETS (Extended Layouts) =====
+  {
+    type: "Base Cabinet",
+    subType: "peninsula",
+    width: 48,
+    height: 34.5,
+    depth: 36,
+    label: "PEN48",
+    description: "48\" Peninsula Base",
+    basePrice: 625,
+    category: "Base - Peninsula"
+  },
+  {
+    type: "Base Cabinet",
+    subType: "peninsula",
+    width: 60,
+    height: 34.5,
+    depth: 36,
+    label: "PEN60",
+    description: "60\" Peninsula Base",
+    basePrice: 725,
+    category: "Base - Peninsula"
+  },
+  {
+    type: "Base Cabinet",
+    subType: "peninsula",
+    width: 72,
+    height: 34.5,
+    depth: 36,
+    label: "PEN72",
+    description: "72\" Peninsula Base",
+    basePrice: 825,
+    category: "Base - Peninsula"
+  },
+  {
+    type: "Base Cabinet",
+    subType: "peninsula",
+    width: 84,
+    height: 34.5,
+    depth: 36,
+    label: "PEN84",
+    description: "84\" Peninsula Base",
+    basePrice: 925,
+    category: "Base - Peninsula"
+  },
+  {
+    type: "Base Cabinet",
+    subType: "peninsula",
+    width: 96,
+    height: 34.5,
+    depth: 36,
+    label: "PEN96",
+    description: "96\" Peninsula Base",
+    basePrice: 1025,
+    category: "Base - Peninsula"
+  },
 ];
 
 // Helper function to calculate cabinet price with finish

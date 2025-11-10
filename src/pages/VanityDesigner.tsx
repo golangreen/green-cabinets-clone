@@ -1655,6 +1655,7 @@ const VanityDesigner = () => {
                 const isUShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("US");
                 const isDiagonal = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("DC");
                 const isLazySusan = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("LSBC") || cabinet.label?.startsWith("LSWC");
+                const isPeninsula = cabinet.label?.startsWith("PEN");
                 
                 return (
                   <ContextMenu key={cabinet.id}>
@@ -1761,8 +1762,54 @@ const VanityDesigner = () => {
                           </svg>
                         )}
                         
-                        {/* Standard rectangle for non-corner cabinets */}
-                        {!isLShaped && !isUShaped && !isDiagonal && !isLazySusan && (
+                        {/* Peninsula rendering - extended with end panel indicator */}
+                        {isPeninsula && (
+                          <svg 
+                            width="100%" 
+                            height="100%" 
+                            style={{ position: 'absolute', inset: 0 }}
+                          >
+                            {/* Main cabinet body */}
+                            <rect
+                              x="0"
+                              y="0"
+                              width={widthPx}
+                              height={depthPx}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                            />
+                            {/* End panel indicator (thicker line on one end) */}
+                            <line
+                              x1={widthPx}
+                              y1="0"
+                              x2={widthPx}
+                              y2={depthPx}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#6B7280'}
+                              strokeWidth="4"
+                            />
+                            {/* Divider lines to show multiple cabinets */}
+                            {Array.from({ length: Math.floor(cabinet.width / 24) - 1 }).map((_, i) => {
+                              const xPos = ((i + 1) * 24 * 2);
+                              return (
+                                <line
+                                  key={i}
+                                  x1={xPos}
+                                  y1="0"
+                                  x2={xPos}
+                                  y2={depthPx}
+                                  stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                                  strokeWidth="1"
+                                  strokeDasharray="4,4"
+                                  opacity="0.4"
+                                />
+                              );
+                            })}
+                          </svg>
+                        )}
+                        
+                        {/* Standard rectangle for non-corner/non-peninsula cabinets */}
+                        {!isLShaped && !isUShaped && !isDiagonal && !isLazySusan && !isPeninsula && (
                           <div 
                             style={{
                               width: '100%',
