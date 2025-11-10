@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useRecaptcha } from "@/hooks/useRecaptcha";
 
 interface QuoteFormProps {
   isOpen: boolean;
@@ -39,6 +40,7 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { executeRecaptcha, isConfigured } = useRecaptcha();
   const totalSteps = 4;
 
   const {
@@ -81,6 +83,21 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
     setIsSubmitting(true);
     
     try {
+      // Execute reCAPTCHA if configured
+      let recaptchaToken = null;
+      if (isConfigured) {
+        recaptchaToken = await executeRecaptcha('quote_request');
+        if (!recaptchaToken) {
+          toast({
+            title: "Verification Failed",
+            description: "Please try again or contact us directly.",
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      }
+      
       // Sanitize all user inputs
       const sanitizedData = {
         projectType: sanitizeInput(data.projectType),
@@ -92,7 +109,8 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
         email: sanitizeInput(data.email),
         phone: sanitizeInput(data.phone),
         address: sanitizeInput(data.address),
-        message: data.message ? sanitizeInput(data.message) : "None"
+        message: data.message ? sanitizeInput(data.message) : "None",
+        recaptchaToken: recaptchaToken || undefined
       };
       
       // Format the quote request

@@ -3,7 +3,10 @@ import { Resend } from "https://esm.sh/resend@4.0.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const RECAPTCHA_SECRET_KEY = Deno.env.get("RECAPTCHA_SECRET_KEY");
+
+const resend = new Resend(RESEND_API_KEY);
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
@@ -13,6 +16,7 @@ const supabase = createClient(
 const emailConfigSchema = z.object({
   recipientEmail: z.string().trim().email().max(255),
   recipientName: z.string().trim().max(100).optional(),
+  recaptchaToken: z.string().optional(),
   config: z.object({
     brand: z.string().trim().min(1).max(50),
     finish: z.string().trim().min(1).max(50),
@@ -69,6 +73,7 @@ const corsHeaders = {
 interface EmailConfigRequest {
   recipientEmail: string;
   recipientName?: string;
+  recaptchaToken?: string;
   config: {
     brand: string;
     finish: string;
@@ -143,6 +148,46 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const rawData = await req.json();
+    
+    // Verify reCAPTCHA token if provided and configured
+    if (RECAPTCHA_SECRET_KEY && rawData.recaptchaToken) {
+      try {
+        const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `secret=${RECAPTCHA_SECRET_KEY}&response=${rawData.recaptchaToken}`,
+        });
+
+        const recaptchaResult = await recaptchaResponse.json();
+        
+        // Check score threshold (0.5 recommended for v3, lower = more likely bot)
+        if (!recaptchaResult.success || (recaptchaResult.score && recaptchaResult.score < 0.5)) {
+          // Log failed verification
+          supabase.from('security_events').insert({
+            event_type: 'recaptcha_failed',
+            function_name: 'email-vanity-config',
+            client_ip: clientIp,
+            severity: 'medium',
+            details: { 
+              score: recaptchaResult.score,
+              action: recaptchaResult.action,
+              errors: recaptchaResult['error-codes']
+            }
+          });
+          
+          console.warn(`reCAPTCHA verification failed for IP: ${clientIp}, Score: ${recaptchaResult.score || 'N/A'}`);
+          return new Response(
+            JSON.stringify({ error: "Request verification failed" }),
+            { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+        
+        console.log(`reCAPTCHA verified for IP: ${clientIp}, Score: ${recaptchaResult.score}`);
+      } catch (error) {
+        console.error('reCAPTCHA verification error:', error);
+        // Continue without blocking if reCAPTCHA service fails
+      }
+    }
     
     // Validate input data
     const validationResult = emailConfigSchema.safeParse(rawData);
