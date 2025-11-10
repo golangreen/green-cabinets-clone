@@ -15,7 +15,9 @@ import {
   ChevronRight,
   Move,
   Square,
-  Minus
+  Minus,
+  DoorOpen,
+  RectangleHorizontal
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
@@ -42,6 +44,14 @@ interface Wall {
   thickness: number;
 }
 
+interface Opening {
+  id: number;
+  type: "door" | "window";
+  wallId: number;
+  position: number; // Position along the wall (0-1)
+  width: number; // Width in inches
+}
+
 const VanityDesigner = () => {
   const navigate = useNavigate();
   
@@ -51,7 +61,7 @@ const VanityDesigner = () => {
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showGrid, setShowGrid] = useState(true);
   const [showDimensions, setShowDimensions] = useState(true);
-  const [drawingTool, setDrawingTool] = useState<"select" | "wall" | "door">("select");
+  const [drawingTool, setDrawingTool] = useState<"select" | "wall" | "door" | "window">("select");
   
   // Cabinets state
   const [cabinets, setCabinets] = useState<Cabinet[]>([
@@ -74,6 +84,10 @@ const VanityDesigner = () => {
   const [walls, setWalls] = useState<Wall[]>([]);
   const [drawingWall, setDrawingWall] = useState<{ x: number; y: number } | null>(null);
   const [tempWallEnd, setTempWallEnd] = useState<{ x: number; y: number } | null>(null);
+  
+  // Openings state (doors and windows)
+  const [openings, setOpenings] = useState<Opening[]>([]);
+  const [selectedOpeningId, setSelectedOpeningId] = useState<number | null>(null);
   
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -182,33 +196,108 @@ const VanityDesigner = () => {
 
   // Wall drawing handlers
   const handleCanvasClick = useCallback((e: React.MouseEvent) => {
-    if (drawingTool !== "wall") return;
-    
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
     
     const x = snapToGrid(e.clientX - rect.left);
     const y = snapToGrid(e.clientY - rect.top);
     
-    if (!drawingWall) {
-      // Start drawing wall
-      setDrawingWall({ x, y });
-    } else {
-      // Finish drawing wall
-      const newWall: Wall = {
-        id: Math.max(...walls.map(w => w.id), 0) + 1,
-        x1: drawingWall.x,
-        y1: drawingWall.y,
-        x2: x,
-        y2: y,
-        thickness: wallThickness
-      };
-      setWalls([...walls, newWall]);
-      setDrawingWall(null);
-      setTempWallEnd(null);
-      toast.success("Wall added");
+    if (drawingTool === "wall") {
+      if (!drawingWall) {
+        // Start drawing wall
+        setDrawingWall({ x, y });
+      } else {
+        // Finish drawing wall
+        const newWall: Wall = {
+          id: Math.max(...walls.map(w => w.id), 0) + 1,
+          x1: drawingWall.x,
+          y1: drawingWall.y,
+          x2: x,
+          y2: y,
+          thickness: wallThickness
+        };
+        setWalls([...walls, newWall]);
+        setDrawingWall(null);
+        setTempWallEnd(null);
+        toast.success("Wall added");
+      }
+    } else if (drawingTool === "door" || drawingTool === "window") {
+      // Find nearest wall
+      const clickPoint = { x, y };
+      let nearestWall: Wall | null = null;
+      let minDistance = Infinity;
+      let wallPosition = 0;
+      
+      walls.forEach(wall => {
+        const distance = pointToLineDistance(clickPoint, wall);
+        if (distance < 20 && distance < minDistance) { // Within 20px of wall
+          minDistance = distance;
+          nearestWall = wall;
+          wallPosition = getPositionOnWall(clickPoint, wall);
+        }
+      });
+      
+      if (nearestWall) {
+        const newOpening: Opening = {
+          id: Math.max(...openings.map(o => o.id), 0) + 1,
+          type: drawingTool,
+          wallId: nearestWall.id,
+          position: wallPosition,
+          width: drawingTool === "door" ? 36 : 48 // Default: 36" door, 48" window
+        };
+        setOpenings([...openings, newOpening]);
+        setSelectedOpeningId(newOpening.id);
+        toast.success(`${drawingTool === "door" ? "Door" : "Window"} added`);
+      } else {
+        toast.error("Click near a wall to place opening");
+      }
     }
-  }, [drawingTool, drawingWall, walls, snapToGrid, wallThickness]);
+  }, [drawingTool, drawingWall, walls, openings, snapToGrid, wallThickness]);
+  
+  // Helper: Calculate distance from point to line segment
+  const pointToLineDistance = (point: { x: number; y: number }, wall: Wall) => {
+    const { x1, y1, x2, y2 } = wall;
+    const A = point.x - x1;
+    const B = point.y - y1;
+    const C = x2 - x1;
+    const D = y2 - y1;
+    
+    const dot = A * C + B * D;
+    const lenSq = C * C + D * D;
+    let param = -1;
+    
+    if (lenSq !== 0) param = dot / lenSq;
+    
+    let xx, yy;
+    
+    if (param < 0) {
+      xx = x1;
+      yy = y1;
+    } else if (param > 1) {
+      xx = x2;
+      yy = y2;
+    } else {
+      xx = x1 + param * C;
+      yy = y1 + param * D;
+    }
+    
+    const dx = point.x - xx;
+    const dy = point.y - yy;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+  
+  // Helper: Get position along wall (0-1)
+  const getPositionOnWall = (point: { x: number; y: number }, wall: Wall) => {
+    const { x1, y1, x2, y2 } = wall;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const lenSq = dx * dx + dy * dy;
+    
+    if (lenSq === 0) return 0;
+    
+    const t = ((point.x - x1) * dx + (point.y - y1) * dy) / lenSq;
+    return Math.max(0, Math.min(1, t));
+  };
 
   const handleCanvasMouseMove = useCallback((e: React.MouseEvent) => {
     if (drawingTool === "wall" && drawingWall) {
@@ -228,6 +317,27 @@ const VanityDesigner = () => {
       toast.success("Wall removed");
     }
   }, [walls]);
+  
+  const deleteSelectedOpening = useCallback(() => {
+    if (selectedOpeningId) {
+      setOpenings(openings.filter(o => o.id !== selectedOpeningId));
+      setSelectedOpeningId(null);
+      toast.success("Opening removed");
+    } else if (openings.length > 0) {
+      // Delete last opening if none selected
+      setOpenings(openings.slice(0, -1));
+      toast.success("Opening removed");
+    }
+  }, [openings, selectedOpeningId]);
+  
+  const adjustOpeningWidth = useCallback((delta: number) => {
+    if (!selectedOpeningId) return;
+    setOpenings(openings.map(o => 
+      o.id === selectedOpeningId 
+        ? { ...o, width: Math.max(24, Math.min(96, o.width + delta)) } // 24" to 96"
+        : o
+    ));
+  }, [openings, selectedOpeningId]);
 
   const calculateWallLength = (wall: Wall) => {
     const dx = wall.x2 - wall.x1;
@@ -265,6 +375,28 @@ const VanityDesigner = () => {
               </Button>
               <span className="text-[10px]">Draw Wall</span>
             </div>
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => setDrawingTool("door")}
+                variant={drawingTool === "door" ? "default" : "ghost"}
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1"
+              >
+                <DoorOpen className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Add Door</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => setDrawingTool("window")}
+                variant={drawingTool === "window" ? "default" : "ghost"}
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1"
+              >
+                <RectangleHorizontal className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Add Window</span>
+            </div>
             <div className="w-px h-12 bg-border" />
             <div className="flex flex-col items-center gap-1">
               <Button 
@@ -277,6 +409,18 @@ const VanityDesigner = () => {
                 <Trash2 className="h-5 w-5" />
               </Button>
               <span className="text-[10px]">Delete Wall</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={deleteSelectedOpening}
+                variant="ghost"
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1 hover:bg-accent"
+                disabled={openings.length === 0}
+              >
+                <Trash2 className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Delete Opening</span>
             </div>
             <div className="w-px h-12 bg-border" />
             <div className="flex flex-col items-center gap-1">
@@ -291,6 +435,32 @@ const VanityDesigner = () => {
               </Button>
               <span className="text-[10px]">Clear Room</span>
             </div>
+            {selectedOpeningId && (
+              <>
+                <div className="w-px h-12 bg-border" />
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex gap-1">
+                    <Button 
+                      onClick={() => adjustOpeningWidth(-6)}
+                      variant="ghost"
+                      size="sm" 
+                      className="h-8 w-8 p-0"
+                    >
+                      -
+                    </Button>
+                    <Button 
+                      onClick={() => adjustOpeningWidth(6)}
+                      variant="ghost"
+                      size="sm" 
+                      className="h-8 w-8 p-0"
+                    >
+                      +
+                    </Button>
+                  </div>
+                  <span className="text-[10px]">Adjust Width</span>
+                </div>
+              </>
+            )}
           </div>
         );
       case "items":
@@ -509,55 +679,170 @@ const VanityDesigner = () => {
                 />
               )}
 
-              {/* Walls */}
-              {walls.map(wall => {
+              {/* Walls with openings */}
+              <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
+                {walls.map(wall => {
+                  const length = calculateWallLength(wall);
+                  const wallOpenings = openings.filter(o => o.wallId === wall.id);
+                  
+                  // If no openings, draw solid wall
+                  if (wallOpenings.length === 0) {
+                    return (
+                      <g key={wall.id}>
+                        <line
+                          x1={wall.x1}
+                          y1={wall.y1}
+                          x2={wall.x2}
+                          y2={wall.y2}
+                          stroke="#6B7280"
+                          strokeWidth={wall.thickness + 2}
+                          strokeLinecap="square"
+                          opacity={0.3}
+                        />
+                        <line
+                          x1={wall.x1}
+                          y1={wall.y1}
+                          x2={wall.x2}
+                          y2={wall.y2}
+                          stroke="#1F2937"
+                          strokeWidth={wall.thickness}
+                          strokeLinecap="square"
+                        />
+                      </g>
+                    );
+                  }
+                  
+                  // Draw wall segments around openings
+                  const segments: Array<{ start: number; end: number }> = [];
+                  let currentStart = 0;
+                  
+                  // Sort openings by position
+                  const sortedOpenings = [...wallOpenings].sort((a, b) => a.position - b.position);
+                  
+                  sortedOpenings.forEach(opening => {
+                    const openingWidthPx = opening.width * 2; // inches to px
+                    const wallLengthPx = Math.sqrt(
+                      Math.pow(wall.x2 - wall.x1, 2) + Math.pow(wall.y2 - wall.y1, 2)
+                    );
+                    const openingWidthRatio = openingWidthPx / wallLengthPx;
+                    const openingStart = Math.max(0, opening.position - openingWidthRatio / 2);
+                    const openingEnd = Math.min(1, opening.position + openingWidthRatio / 2);
+                    
+                    if (openingStart > currentStart) {
+                      segments.push({ start: currentStart, end: openingStart });
+                    }
+                    currentStart = openingEnd;
+                  });
+                  
+                  if (currentStart < 1) {
+                    segments.push({ start: currentStart, end: 1 });
+                  }
+                  
+                  return (
+                    <g key={wall.id}>
+                      {/* Draw wall segments */}
+                      {segments.map((seg, idx) => {
+                        const x1 = wall.x1 + (wall.x2 - wall.x1) * seg.start;
+                        const y1 = wall.y1 + (wall.y2 - wall.y1) * seg.start;
+                        const x2 = wall.x1 + (wall.x2 - wall.x1) * seg.end;
+                        const y2 = wall.y1 + (wall.y2 - wall.y1) * seg.end;
+                        
+                        return (
+                          <g key={idx}>
+                            <line
+                              x1={x1}
+                              y1={y1}
+                              x2={x2}
+                              y2={y2}
+                              stroke="#6B7280"
+                              strokeWidth={wall.thickness + 2}
+                              strokeLinecap="square"
+                              opacity={0.3}
+                            />
+                            <line
+                              x1={x1}
+                              y1={y1}
+                              x2={x2}
+                              y2={y2}
+                              stroke="#1F2937"
+                              strokeWidth={wall.thickness}
+                              strokeLinecap="square"
+                            />
+                          </g>
+                        );
+                      })}
+                    </g>
+                  );
+                })}
+              </svg>
+              
+              {/* Wall dimensions */}
+              {showDimensions && walls.map(wall => {
                 const length = calculateWallLength(wall);
-                const angle = Math.atan2(wall.y2 - wall.y1, wall.x2 - wall.x1);
                 const midX = (wall.x1 + wall.x2) / 2;
                 const midY = (wall.y1 + wall.y2) / 2;
                 
                 return (
-                  <g key={wall.id}>
-                    <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
-                      {/* Wall line */}
-                      <line
-                        x1={wall.x1}
-                        y1={wall.y1}
-                        x2={wall.x2}
-                        y2={wall.y2}
-                        stroke="#1F2937"
-                        strokeWidth={wall.thickness}
-                        strokeLinecap="square"
-                      />
-                      {/* Wall outline */}
-                      <line
-                        x1={wall.x1}
-                        y1={wall.y1}
-                        x2={wall.x2}
-                        y2={wall.y2}
-                        stroke="#6B7280"
-                        strokeWidth={wall.thickness + 2}
-                        strokeLinecap="square"
-                        opacity={0.3}
-                      />
-                    </svg>
-                    
-                    {/* Wall dimension */}
-                    {showDimensions && (
-                      <div 
-                        className="absolute text-[11px] font-medium bg-white px-2 py-0.5 rounded shadow-sm pointer-events-none"
-                        style={{
-                          left: midX,
-                          top: midY - 20,
-                          transform: 'translateX(-50%)',
-                          color: '#0066CC',
-                          border: '1px solid #0066CC'
-                        }}
-                      >
-                        {length}"
+                  <div 
+                    key={`dim-${wall.id}`}
+                    className="absolute text-[11px] font-medium bg-white px-2 py-0.5 rounded shadow-sm pointer-events-none"
+                    style={{
+                      left: midX,
+                      top: midY - 20,
+                      transform: 'translateX(-50%)',
+                      color: '#0066CC',
+                      border: '1px solid #0066CC'
+                    }}
+                  >
+                    {length}"
+                  </div>
+                );
+              })}
+              
+              {/* Openings (doors and windows) */}
+              {openings.map(opening => {
+                const wall = walls.find(w => w.id === opening.wallId);
+                if (!wall) return null;
+                
+                const x = wall.x1 + (wall.x2 - wall.x1) * opening.position;
+                const y = wall.y1 + (wall.y2 - wall.y1) * opening.position;
+                const angle = Math.atan2(wall.y2 - wall.y1, wall.x2 - wall.x1);
+                const isSelected = selectedOpeningId === opening.id;
+                
+                return (
+                  <div
+                    key={opening.id}
+                    className={`absolute cursor-pointer transition-all ${
+                      isSelected ? "z-20" : "z-10"
+                    }`}
+                    style={{
+                      left: x,
+                      top: y,
+                      width: opening.width * 2, // px
+                      height: 16,
+                      transform: `translate(-50%, -50%) rotate(${angle}rad)`,
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedOpeningId(opening.id);
+                    }}
+                  >
+                    {opening.type === "door" ? (
+                      <div className={`h-full flex items-center justify-center border-2 rounded ${
+                        isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-blue-500 bg-blue-100"
+                      }`}>
+                        <DoorOpen className="h-3 w-3" />
+                        <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
+                      </div>
+                    ) : (
+                      <div className={`h-full flex items-center justify-center border-2 rounded ${
+                        isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-cyan-500 bg-cyan-100"
+                      }`}>
+                        <RectangleHorizontal className="h-3 w-3" />
+                        <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
                       </div>
                     )}
-                  </g>
+                  </div>
                 );
               })}
               
@@ -680,8 +965,12 @@ const VanityDesigner = () => {
                 <div>Grid: 12" × 12"</div>
                 <div>Scale: 2px = 1"</div>
                 <div>Walls: {walls.length}</div>
+                <div>Openings: {openings.length}</div>
                 <div>Cabinets: {cabinets.length}</div>
                 {drawingTool === "wall" && <div className="text-[#FF8C00] font-medium mt-1">Click to place wall points</div>}
+                {(drawingTool === "door" || drawingTool === "window") && (
+                  <div className="text-[#FF8C00] font-medium mt-1">Click on a wall to place {drawingTool}</div>
+                )}
               </div>
             </div>
           ) : (
