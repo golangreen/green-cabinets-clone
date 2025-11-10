@@ -16,6 +16,7 @@ import SecurityPolicy from "./pages/SecurityPolicy";
 import NotFound from "./pages/NotFound";
 import SplashScreen from "./components/SplashScreen";
 import CookieConsent from "./components/CookieConsent";
+import { InstallAppPrompt } from "./components/InstallAppPrompt";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <CookieConsent />
+        <InstallAppPrompt />
         {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
         <BrowserRouter>
           <Routes>
