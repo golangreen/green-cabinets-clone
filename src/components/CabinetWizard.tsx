@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,9 +28,15 @@ import {
   ChevronRight, 
   ChevronLeft,
   Check,
-  Sparkles
+  Sparkles,
+  Download,
+  FileImage,
+  FileText
 } from "lucide-react";
 import { z } from "zod";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { toast } from "sonner";
 
 // Validation schema
 const cabinetSelectionSchema = z.object({
@@ -63,8 +69,72 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
   const [selectedHandleType, setSelectedHandleType] = useState<keyof typeof HARDWARE_OPTIONS.handles>("bar");
   const [numHandles, setNumHandles] = useState(2);
   const [comparisonStyles, setComparisonStyles] = useState<string[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
+  
+  const comparisonRef = useRef<HTMLDivElement>(null);
 
   const totalSteps = 5;
+
+  // Export comparison as image
+  const exportAsImage = async () => {
+    if (!comparisonRef.current || comparisonStyles.length === 0) return;
+    
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(comparisonRef.current, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        logging: false,
+      });
+      
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `door-style-comparison-${Date.now()}.png`;
+          link.click();
+          URL.revokeObjectURL(url);
+          toast.success("Comparison exported as image!");
+        }
+      });
+    } catch (error) {
+      console.error("Error exporting image:", error);
+      toast.error("Failed to export image");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  // Export comparison as PDF
+  const exportAsPDF = async () => {
+    if (!comparisonRef.current || comparisonStyles.length === 0) return;
+    
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(comparisonRef.current, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        logging: false,
+      });
+      
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: canvas.width > canvas.height ? "landscape" : "portrait",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+      
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      pdf.save(`door-style-comparison-${Date.now()}.pdf`);
+      toast.success("Comparison exported as PDF!");
+    } catch (error) {
+      console.error("Error exporting PDF:", error);
+      toast.error("Failed to export PDF");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   // Reset wizard when closed
   const handleOpenChange = (open: boolean) => {
@@ -297,28 +367,50 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                 <div className="bg-muted/30 border border-border rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-semibold">Comparing {comparisonStyles.length} Styles</Label>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => setComparisonStyles([])}
-                      className="h-7 text-xs"
-                    >
-                      Clear
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={exportAsImage}
+                        disabled={isExporting}
+                        className="h-7 text-xs"
+                      >
+                        <FileImage className="h-3 w-3 mr-1" />
+                        PNG
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={exportAsPDF}
+                        disabled={isExporting}
+                        className="h-7 text-xs"
+                      >
+                        <FileText className="h-3 w-3 mr-1" />
+                        PDF
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setComparisonStyles([])}
+                        className="h-7 text-xs"
+                      >
+                        Clear
+                      </Button>
+                    </div>
                   </div>
-                  <div className={`grid gap-3 ${comparisonStyles.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                  <div ref={comparisonRef} className={`grid gap-3 ${comparisonStyles.length === 2 ? 'grid-cols-2' : 'grid-cols-3'} bg-white p-4 rounded-lg`}>
                     {comparisonStyles.map((styleId) => {
                       const style = DOOR_STYLES.find(s => s.id === styleId);
                       if (!style) return null;
                       return (
-                        <Card key={styleId} className="p-3 space-y-2">
+                        <Card key={styleId} className="p-3 space-y-2 bg-card">
                           <div className="flex items-center justify-between">
-                            <h5 className="font-semibold text-xs">{style.name}</h5>
+                            <h5 className="font-semibold text-xs text-foreground">{style.name}</h5>
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => setComparisonStyles(comparisonStyles.filter(id => id !== styleId))}
-                              className="h-6 w-6 p-0"
+                              className="h-6 w-6 p-0 print:hidden"
                             >
                               ×
                             </Button>
@@ -328,18 +420,20 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                           </div>
                           <div className="space-y-1">
                             <p className="text-[10px] text-muted-foreground">{style.description}</p>
-                            <Badge variant="secondary" className="text-[10px]">
-                              {style.frameType?.toUpperCase()}
-                            </Badge>
-                            <Badge variant="outline" className="text-[10px] ml-1">
-                              +{((style.priceMultiplier - 1) * 100).toFixed(0)}%
-                            </Badge>
+                            <div className="flex gap-1">
+                              <Badge variant="secondary" className="text-[10px]">
+                                {style.frameType?.toUpperCase()}
+                              </Badge>
+                              <Badge variant="outline" className="text-[10px]">
+                                +{((style.priceMultiplier - 1) * 100).toFixed(0)}%
+                              </Badge>
+                            </div>
                           </div>
                           <Button
                             size="sm"
                             variant={selectedDoorStyleId === styleId ? "default" : "outline"}
                             onClick={() => setSelectedDoorStyleId(styleId)}
-                            className="w-full h-7 text-xs"
+                            className="w-full h-7 text-xs print:hidden"
                           >
                             {selectedDoorStyleId === styleId ? "Selected" : "Select"}
                           </Button>
