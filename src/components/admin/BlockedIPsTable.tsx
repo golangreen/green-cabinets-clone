@@ -60,6 +60,26 @@ export const BlockedIPsTable = () => {
       });
 
       if (error) throw error;
+
+      // Send email notification
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          await supabase.functions.invoke('send-security-alert', {
+            body: {
+              type: 'ip_unblocked',
+              ipAddress: ipAddress,
+              reason: 'Manual unblock from admin dashboard'
+            },
+            headers: {
+              Authorization: `Bearer ${session.access_token}`
+            }
+          });
+        }
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError);
+      }
+
       return data;
     },
     onSuccess: () => {
@@ -72,15 +92,37 @@ export const BlockedIPsTable = () => {
   });
 
   const blockMutation = useMutation({
-    mutationFn: async (data: { ip: string; reason: string; hours: number }) => {
+    mutationFn: async (blockData: { ip: string; reason: string; hours: number }) => {
       const { data: result, error } = await supabase.rpc('manual_block_ip', {
-        target_ip: data.ip,
-        block_reason: data.reason,
-        block_duration_hours: data.hours,
+        target_ip: blockData.ip,
+        block_reason: blockData.reason,
+        block_duration_hours: blockData.hours,
         performed_by_user: 'admin'
       });
 
       if (error) throw error;
+
+      // Send email notification
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const blockedUntil = new Date(Date.now() + blockData.hours * 60 * 60 * 1000).toISOString();
+          await supabase.functions.invoke('send-security-alert', {
+            body: {
+              type: 'ip_blocked',
+              ipAddress: blockData.ip,
+              reason: blockData.reason,
+              blockedUntil: blockedUntil
+            },
+            headers: {
+              Authorization: `Bearer ${session.access_token}`
+            }
+          });
+        }
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError);
+      }
+
       return result;
     },
     onSuccess: () => {

@@ -4,8 +4,9 @@ import Footer from '@/components/Footer';
 import { SecurityCharts } from '@/components/admin/SecurityCharts';
 import { SecurityEventsTable } from '@/components/admin/SecurityEventsTable';
 import { BlockedIPsTable } from '@/components/admin/BlockedIPsTable';
+import { SecurityAlertSettings } from '@/components/admin/SecurityAlertSettings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Shield, Activity, Ban, Bell } from 'lucide-react';
+import { Shield, Activity, Ban, Bell, Settings } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -64,7 +65,7 @@ const AdminSecurity = () => {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview" className="gap-2">
               <Activity className="h-4 w-4" />
               Overview
@@ -80,6 +81,10 @@ const AdminSecurity = () => {
             <TabsTrigger value="alerts" className="gap-2">
               <Bell className="h-4 w-4" />
               Alerts
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="gap-2">
+              <Settings className="h-4 w-4" />
+              Settings
             </TabsTrigger>
           </TabsList>
 
@@ -164,6 +169,10 @@ const AdminSecurity = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <SecurityAlertSettings />
           </TabsContent>
         </Tabs>
       </main>
