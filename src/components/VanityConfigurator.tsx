@@ -18,9 +18,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
@@ -29,6 +30,7 @@ import { z } from "zod";
 import { Vanity3DPreview } from "./Vanity3DPreview";
 import { TemplateGallery } from "./TemplateGallery";
 import { VanityTemplate } from "@/lib/vanityTemplates";
+import { useSavedTemplates } from "@/hooks/useSavedTemplates";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -151,7 +153,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [numDrawers, setNumDrawers] = useState<number>(2);
   const [handleStyle, setHandleStyle] = useState<string>("bar");
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [templateName, setTemplateName] = useState("");
+  const [templateDescription, setTemplateDescription] = useState("");
   const addItem = useCartStore((state) => state.addItem);
+  const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
   const handleSelectTemplate = (template: VanityTemplate) => {
     setSelectedTemplateId(template.id);
@@ -170,6 +176,62 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     toast.success(`Applied ${template.name} template`, {
       description: "Customize the configuration to your needs",
     });
+  };
+
+  const handleSaveTemplate = () => {
+    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+      toast.error("Please complete the configuration first", {
+        description: "All dimensions and selections are required",
+      });
+      return;
+    }
+    setSaveDialogOpen(true);
+  };
+
+  const confirmSaveTemplate = () => {
+    if (!templateName.trim()) {
+      toast.error("Please enter a template name");
+      return;
+    }
+
+    const newTemplate = {
+      id: `custom-${Date.now()}`,
+      name: templateName.trim(),
+      description: templateDescription.trim() || "Custom saved configuration",
+      config: {
+        brand: selectedBrand,
+        finish: selectedFinish,
+        width,
+        widthFraction,
+        height,
+        heightFraction,
+        depth,
+        depthFraction,
+        doorStyle,
+        numDrawers,
+        handleStyle,
+      },
+      tags: ["custom", selectedBrand.toLowerCase()],
+    };
+
+    saveTemplate(newTemplate);
+    setSelectedTemplateId(newTemplate.id);
+    
+    toast.success("Template saved!", {
+      description: `"${templateName}" has been saved to your templates`,
+    });
+
+    setSaveDialogOpen(false);
+    setTemplateName("");
+    setTemplateDescription("");
+  };
+
+  const handleDeleteTemplate = (id: string) => {
+    deleteTemplate(id);
+    if (selectedTemplateId === id) {
+      setSelectedTemplateId("");
+    }
+    toast.success("Template deleted");
   };
 
   const openLightbox = (imageUrl: string, imageAlt: string) => {
@@ -404,6 +466,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         <TemplateGallery 
           onSelectTemplate={handleSelectTemplate}
           selectedTemplateId={selectedTemplateId}
+          savedTemplates={savedTemplates}
+          onDeleteTemplate={handleDeleteTemplate}
         />
 
         <div className="space-y-6">
@@ -797,12 +861,73 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </p>
         </div>
 
-        <Button onClick={handleAddToCart} className="w-full touch-manipulation" size="lg">
-          <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-          <span className="text-sm sm:text-base">Add to Cart</span>
-        </Button>
+        <div className="flex gap-3">
+          <Button 
+            onClick={handleSaveTemplate} 
+            variant="outline"
+            className="flex-1 touch-manipulation" 
+            size="lg"
+          >
+            <Save className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Save Template</span>
+          </Button>
+          <Button 
+            onClick={handleAddToCart} 
+            className="flex-1 touch-manipulation" 
+            size="lg"
+          >
+            <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Add to Cart</span>
+          </Button>
+        </div>
       </div>
     </div>
+
+      {/* Save Template Dialog */}
+      <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Save Configuration as Template</DialogTitle>
+            <DialogDescription>
+              Save your current configuration to quickly access it later
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="template-name">Template Name *</Label>
+              <Input
+                id="template-name"
+                placeholder="e.g., Master Bathroom Vanity"
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="template-description">Description (optional)</Label>
+              <Input
+                id="template-description"
+                placeholder="e.g., Double door with modern finish"
+                value={templateDescription}
+                onChange={(e) => setTemplateDescription(e.target.value)}
+              />
+            </div>
+            <div className="bg-muted/50 p-3 rounded-lg text-sm space-y-1">
+              <p className="font-medium">Current Configuration:</p>
+              <p className="text-muted-foreground">
+                {selectedBrand} - {selectedFinish} • {width}×{height}×{depth}" • {doorStyle}
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={confirmSaveTemplate}>
+              Save Template
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Image Lightbox */}
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
