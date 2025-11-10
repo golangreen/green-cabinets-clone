@@ -102,15 +102,15 @@ const SHINNOKI_FINISHES = [
 
 const BRAND_INFO = {
   'Tafisa': {
-    price: 250,
+    price: 400,
     description: 'Premium melamine panels - 60+ colors available',
   },
   'Egger': {
-    price: 300,
+    price: 500,
     description: 'Premium TFL & HPL panels - 98+ woodgrain and solid colors',
   },
   'Shinnoki': {
-    price: 350,
+    price: 600,
     description: 'Prefinished wood veneer panels - Natural wood beauty',
   },
 };
@@ -274,27 +274,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     }
   }, [selectedBrand]);
 
-  // Calculate price based on total square footage
+  // Calculate price based on linear feet (width)
   const calculatePrice = () => {
-    if (!width || !height || !depth || !selectedBrand) return 0;
+    if (!width || !selectedBrand) return 0;
     
     const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
-    const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
-    const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
+    const linearFeet = widthInches / 12; // Convert inches to feet
     
-    // Calculate square footage for all surfaces
-    // Front/Back: width × height (×2)
-    // Sides: depth × height (×2)
-    // Top/Bottom: width × depth (×2)
-    const frontBackSqIn = widthInches * heightInches * 2;
-    const sidesSqIn = depthInches * heightInches * 2;
-    const topBottomSqIn = widthInches * depthInches * 2;
-    const totalSqIn = frontBackSqIn + sidesSqIn + topBottomSqIn;
-    const totalSqFt = totalSqIn / 144; // Convert to square feet (12×12)
+    const pricePerLinearFoot = BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.price || 0;
     
-    const pricePerSqFt = BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.price || 0;
-    
-    return totalSqFt * pricePerSqFt;
+    return linearFeet * pricePerLinearFoot;
   };
 
   const calculateTax = (subtotal: number) => {
