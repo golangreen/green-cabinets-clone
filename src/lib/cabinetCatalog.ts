@@ -378,6 +378,52 @@ export const CABINET_CATALOG: CabinetSpec[] = [
     basePrice: 795,
     category: "Corner - Base"
   },
+  
+  // ===== DIAGONAL CORNER CABINETS (45°) =====
+  {
+    type: "Corner Cabinet",
+    subType: "diagonal",
+    width: 36,
+    height: 34.5,
+    depth: 36,
+    label: "DCB36",
+    description: "36\" Diagonal Corner Base",
+    basePrice: 425,
+    category: "Corner - Base"
+  },
+  {
+    type: "Corner Cabinet",
+    subType: "diagonal",
+    width: 42,
+    height: 34.5,
+    depth: 42,
+    label: "DCB42",
+    description: "42\" Diagonal Corner Base",
+    basePrice: 485,
+    category: "Corner - Base"
+  },
+  {
+    type: "Corner Cabinet",
+    subType: "diagonal-wall",
+    width: 24,
+    height: 30,
+    depth: 24,
+    label: "DCW24",
+    description: "24\" Diagonal Corner Wall",
+    basePrice: 285,
+    category: "Corner - Wall"
+  },
+  {
+    type: "Corner Cabinet",
+    subType: "diagonal-wall",
+    width: 30,
+    height: 30,
+    depth: 30,
+    label: "DCW30",
+    description: "30\" Diagonal Corner Wall",
+    basePrice: 335,
+    category: "Corner - Wall"
+  },
 ];
 
 // Helper function to calculate cabinet price with finish

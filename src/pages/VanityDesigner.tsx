@@ -1653,6 +1653,7 @@ const VanityDesigner = () => {
                 const rotation = cabinet.rotation || 0;
                 const isLShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("LS");
                 const isUShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("US");
+                const isDiagonal = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("DC");
                 
                 return (
                   <ContextMenu key={cabinet.id}>
@@ -1706,8 +1707,24 @@ const VanityDesigner = () => {
                           </svg>
                         )}
                         
-                        {/* Standard rectangle for non-L/U shaped cabinets */}
-                        {!isLShaped && !isUShaped && (
+                        {/* Diagonal 45° Shape rendering */}
+                        {isDiagonal && (
+                          <svg 
+                            width="100%" 
+                            height="100%" 
+                            style={{ position: 'absolute', inset: 0 }}
+                          >
+                            <path
+                              d={`M 0 0 L ${widthPx} 0 L ${widthPx} ${depthPx} L 0 0 Z`}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                            />
+                          </svg>
+                        )}
+                        
+                        {/* Standard rectangle for non-corner cabinets */}
+                        {!isLShaped && !isUShaped && !isDiagonal && (
                           <div 
                             style={{
                               width: '100%',
