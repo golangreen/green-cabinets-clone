@@ -30,7 +30,8 @@ import {
   ArrowRight,
   FolderOpen,
   Edit,
-  Upload
+  Upload,
+  Scan
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
@@ -200,6 +201,126 @@ const VanityDesigner = () => {
     }
     return angle;
   }, []);
+
+  // Load scanned measurements and create room layout
+  useEffect(() => {
+    const loadScannedMeasurements = () => {
+      try {
+        // Check sessionStorage first (from recent scan)
+        const currentScanStr = sessionStorage.getItem('current_scan');
+        if (currentScanStr) {
+          const scan = JSON.parse(currentScanStr);
+          applyScannedMeasurementsToWalls(scan);
+          return;
+        }
+
+        // Check localStorage for saved scans
+        const savedScansStr = localStorage.getItem('room_scans');
+        if (savedScansStr) {
+          const scans = JSON.parse(savedScansStr);
+          if (scans.length > 0) {
+            // Use the most recent scan
+            const latestScan = scans[scans.length - 1];
+            applyScannedMeasurementsToWalls(latestScan);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading scanned measurements:', error);
+      }
+    };
+
+    const applyScannedMeasurementsToWalls = (scan: any) => {
+      // Convert meters to pixels (1 meter = 39.3701 inches, 2px per inch)
+      const widthPx = Math.round(scan.measurements.width * 39.3701 * 2);
+      const depthPx = Math.round(scan.measurements.depth * 39.3701 * 2);
+      
+      const baseX = 200;
+      const baseY = 200;
+      
+      // Create a closed rectangular room based on scanned dimensions
+      const newWalls: Wall[] = [
+        {
+          id: 1,
+          x1: baseX,
+          y1: baseY,
+          x2: baseX + widthPx,
+          y2: baseY,
+          thickness: wallThickness
+        },
+        {
+          id: 2,
+          x1: baseX + widthPx,
+          y1: baseY,
+          x2: baseX + widthPx,
+          y2: baseY + depthPx,
+          thickness: wallThickness
+        },
+        {
+          id: 3,
+          x1: baseX + widthPx,
+          y1: baseY + depthPx,
+          x2: baseX,
+          y2: baseY + depthPx,
+          thickness: wallThickness
+        },
+        {
+          id: 4,
+          x1: baseX,
+          y1: baseY + depthPx,
+          x2: baseX,
+          y2: baseY,
+          thickness: wallThickness
+        }
+      ];
+      
+      setWalls(newWalls);
+      
+      // Apply detected windows and doors if available
+      const newOpenings: Opening[] = [];
+      let openingId = 1;
+      
+      // Add windows from scan
+      scan.measurements.windows?.forEach((window: any, idx: number) => {
+        const wallId = idx % 4 + 1; // Distribute across walls
+        newOpenings.push({
+          id: openingId++,
+          type: 'window',
+          wallId: wallId,
+          position: 0.5, // Center of wall
+          width: Math.round(window.width * 39.3701), // Convert meters to inches
+          height: Math.round(window.height * 39.3701),
+          yPosition: DEFAULTS.WINDOW_Y
+        });
+      });
+      
+      // Add doors from scan
+      scan.measurements.doors?.forEach((door: any, idx: number) => {
+        const wallId = idx % 4 + 1; // Distribute across walls
+        newOpenings.push({
+          id: openingId++,
+          type: 'door',
+          wallId: wallId,
+          position: 0.3, // Near edge of wall
+          width: Math.round(door.width * 39.3701), // Convert meters to inches
+          height: Math.round(door.height * 39.3701),
+          yPosition: DEFAULTS.DOOR_Y
+        });
+      });
+      
+      if (newOpenings.length > 0) {
+        setOpenings(newOpenings);
+      }
+      
+      const widthFeet = (scan.measurements.width * 3.28084).toFixed(1);
+      const depthFeet = (scan.measurements.depth * 3.28084).toFixed(1);
+      
+      toast.success(`Room layout loaded from ${scan.roomName}`, {
+        description: `${widthFeet}' × ${depthFeet}' with ${scan.measurements.windows?.length || 0} windows, ${scan.measurements.doors?.length || 0} doors`,
+      });
+    };
+
+    loadScannedMeasurements();
+  }, [wallThickness]);
   
   // Collision detection helpers
   const checkCabinetWallCollision = useCallback((cabinet: Cabinet, walls: Wall[]): boolean => {
@@ -1372,6 +1493,22 @@ const VanityDesigner = () => {
                   </TabsList>
                   
                   <TabsContent value="presets" className="space-y-2 mt-3">
+                    <div>
+                      <Label className="text-xs font-semibold mb-2 block">3D Room Scanner</Label>
+                      <Button 
+                        variant="default" 
+                        size="sm"
+                        onClick={() => navigate('/scan')}
+                        className="w-full h-auto py-3 flex items-center justify-center gap-2"
+                      >
+                        <Scan className="h-4 w-4" />
+                        <span className="text-xs">Scan Room with Camera</span>
+                      </Button>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Automatically measure your space with LiDAR or camera
+                      </p>
+                    </div>
+                    
                     <div>
                       <Label className="text-xs font-semibold mb-2 block">Quick Layouts</Label>
                       <div className="grid grid-cols-2 gap-2">
