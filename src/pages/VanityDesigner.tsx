@@ -1389,24 +1389,78 @@ const VanityDesigner = () => {
                   <div>
                     <h4 className="text-xs font-semibold mb-2 text-muted-foreground">CORNER CABINETS</h4>
                     <div className="space-y-1">
-                      {CABINET_LIBRARY.filter(c => c.type === "Corner Cabinet").map((template, idx) => (
-                        <Card
-                          key={idx}
-                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
-                          draggable
-                          onDragStart={() => handleLibraryDragStart(template)}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-xs font-medium">{template.label}</p>
-                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
+                      {CABINET_LIBRARY.filter(c => c.type === "Corner Cabinet").map((template, idx) => {
+                        const isLShape = template.label?.startsWith("LSB") || template.label?.startsWith("LSW");
+                        const isUShape = template.label?.startsWith("USB");
+                        const isDiagonal = template.label?.startsWith("DCB") || template.label?.startsWith("DCW");
+                        const isLazySusan = template.label?.startsWith("LSBC") || template.label?.startsWith("LSWC");
+                        
+                        return (
+                          <Card
+                            key={idx}
+                            className="p-2 cursor-move hover:bg-accent/50 transition-colors"
+                            draggable
+                            onDragStart={() => handleLibraryDragStart(template)}
+                          >
+                            <div className="flex items-center gap-2">
+                              {/* Shape Icon Preview */}
+                              <div className="flex-shrink-0 w-8 h-8 border border-border rounded">
+                                <svg width="100%" height="100%" viewBox="0 0 32 32">
+                                  {isLShape && (
+                                    <path
+                                      d="M 2 2 L 12 2 L 12 20 L 30 20 L 30 30 L 2 30 Z"
+                                      fill="hsl(var(--muted))"
+                                      stroke="hsl(var(--foreground))"
+                                      strokeWidth="1"
+                                    />
+                                  )}
+                                  {isUShape && (
+                                    <path
+                                      d="M 2 2 L 30 2 L 30 30 L 22 30 L 22 10 L 10 10 L 10 30 L 2 30 Z"
+                                      fill="hsl(var(--muted))"
+                                      stroke="hsl(var(--foreground))"
+                                      strokeWidth="1"
+                                    />
+                                  )}
+                                  {isDiagonal && (
+                                    <path
+                                      d="M 2 2 L 30 2 L 30 30 L 2 2 Z"
+                                      fill="hsl(var(--muted))"
+                                      stroke="hsl(var(--foreground))"
+                                      strokeWidth="1"
+                                    />
+                                  )}
+                                  {isLazySusan && (
+                                    <>
+                                      <circle
+                                        cx="16"
+                                        cy="16"
+                                        r="13"
+                                        fill="hsl(var(--muted))"
+                                        stroke="hsl(var(--foreground))"
+                                        strokeWidth="1"
+                                      />
+                                      <line x1="16" y1="16" x2="16" y2="5" stroke="hsl(var(--foreground))" strokeWidth="1" opacity="0.5" />
+                                      <line x1="16" y1="16" x2="27" y2="16" stroke="hsl(var(--foreground))" strokeWidth="1" opacity="0.5" />
+                                    </>
+                                  )}
+                                </svg>
+                              </div>
+                              
+                              {/* Label and Description */}
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium">{template.label}</p>
+                                <p className="text-[10px] text-muted-foreground truncate">{template.description}</p>
+                              </div>
+                              
+                              {/* Width */}
+                              <div className="text-[10px] text-muted-foreground flex-shrink-0">
+                                {template.width}"W
+                              </div>
                             </div>
-                            <div className="text-[10px] text-muted-foreground">
-                              {template.width}"W
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
+                          </Card>
+                        );
+                      })}
                     </div>
                   </div>
                 </>
