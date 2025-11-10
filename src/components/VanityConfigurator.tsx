@@ -3077,6 +3077,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         sink={`${sinkStyle} - ${sinkShape}`}
         price={`$${totalPrice.toFixed(2)}`}
         previewImage={previewImageUrl}
+        configUrl={window.location.href}
       />
 
       {/* Email Configuration Dialog */}

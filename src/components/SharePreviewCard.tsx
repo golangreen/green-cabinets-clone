@@ -1,4 +1,5 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
+import QRCode from "qrcode";
 
 interface SharePreviewCardProps {
   brand: string;
@@ -9,10 +10,28 @@ interface SharePreviewCardProps {
   sink: string;
   price: string;
   previewImage?: string;
+  configUrl?: string;
 }
 
 export const SharePreviewCard = forwardRef<HTMLDivElement, SharePreviewCardProps>(
-  ({ brand, finish, dimensions, doorStyle, countertop, sink, price, previewImage }, ref) => {
+  ({ brand, finish, dimensions, doorStyle, countertop, sink, price, previewImage, configUrl }, ref) => {
+    const [qrCode, setQrCode] = useState<string>("");
+
+    useEffect(() => {
+      if (configUrl) {
+        QRCode.toDataURL(configUrl, {
+          width: 150,
+          margin: 1,
+          color: {
+            dark: "#000000",
+            light: "#ffffff",
+          },
+        })
+          .then(setQrCode)
+          .catch(console.error);
+      }
+    }, [configUrl]);
+
     return (
       <div
         ref={ref}
@@ -96,6 +115,14 @@ export const SharePreviewCard = forwardRef<HTMLDivElement, SharePreviewCardProps
             <p className="text-xl">Visit us at</p>
             <p className="text-2xl font-semibold text-foreground">greencabinetsny.com</p>
           </div>
+          
+          {qrCode && (
+            <div className="flex flex-col items-center gap-2 bg-white p-3 rounded-lg shadow-lg">
+              <img src={qrCode} alt="QR Code" className="w-32 h-32" />
+              <p className="text-xs text-black font-medium">Scan to view</p>
+            </div>
+          )}
+          
           <div className="text-right">
             <p className="text-lg text-muted-foreground">Custom Cabinet Solutions</p>
             <p className="text-lg text-muted-foreground">Premium Quality Since 2020</p>
