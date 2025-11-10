@@ -132,9 +132,11 @@ All colors MUST be HSL.
   }
 }
 
-/* Prevent pull-to-refresh on mobile */
+/* Prevent pull-to-refresh on mobile while allowing scroll */
 body {
   overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 /* Smooth scrolling */
