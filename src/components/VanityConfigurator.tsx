@@ -102,15 +102,15 @@ const SHINNOKI_FINISHES = [
 
 const BRAND_INFO = {
   'Tafisa': {
-    price: 400,
+    price: 250,
     description: 'Premium melamine panels - 60+ colors available',
   },
   'Egger': {
-    price: 500,
+    price: 300,
     description: 'Premium TFL & HPL panels - 98+ woodgrain and solid colors',
   },
   'Shinnoki': {
-    price: 600,
+    price: 350,
     description: 'Prefinished wood veneer panels - Natural wood beauty',
   },
 };
