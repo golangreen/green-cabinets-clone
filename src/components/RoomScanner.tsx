@@ -31,6 +31,11 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
     hasARCore: false,
     canScan: false
   });
+  const [permissionStatus, setPermissionStatus] = useState({
+    camera: 'prompt',
+    photos: 'prompt',
+    needsRequest: true
+  });
   const [isScanning, setIsScanning] = useState(false);
   const [roomName, setRoomName] = useState('');
   const [savedScans, setSavedScans] = useState<ScanSession[]>([]);
@@ -38,6 +43,7 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
 
   useEffect(() => {
     checkDeviceCapabilities();
+    checkPermissions();
     loadSavedScans();
   }, []);
 
@@ -45,10 +51,27 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
     const caps = await roomScanner.checkCapabilities();
     setCapabilities(caps);
   };
+  
+  const checkPermissions = async () => {
+    const status = await roomScanner.getPermissionStatus();
+    setPermissionStatus(status);
+  };
 
   const loadSavedScans = () => {
     const scans = roomScanner.getSavedScans();
     setSavedScans(scans);
+  };
+
+  const handleRequestPermissions = async () => {
+    toast.info('Requesting camera permissions...');
+    const result = await roomScanner.requestPermissions();
+    
+    if (result.granted) {
+      toast.success('Camera permissions granted!');
+      checkPermissions();
+    } else {
+      toast.error(result.message || 'Camera permission denied');
+    }
   };
 
   const handleStartScan = async () => {
@@ -57,9 +80,9 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
       return;
     }
 
-    const hasPermission = await roomScanner.requestPermissions();
-    if (!hasPermission) {
-      toast.error('Camera permission is required for scanning');
+    const result = await roomScanner.requestPermissions();
+    if (!result.granted) {
+      toast.error(result.message || 'Camera permission is required for scanning');
       return;
     }
 
@@ -76,6 +99,7 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
       // Save the scan
       roomScanner.saveScanToStorage(scan);
       loadSavedScans();
+      checkPermissions();
       
       toast.success('Room scan completed successfully!');
       
@@ -182,6 +206,40 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
                     3D room scanning requires a mobile device with a camera. Please open this app on your smartphone or tablet.
                   </p>
                 </div>
+              </div>
+            </div>
+          )}
+          
+          {capabilities.canScan && permissionStatus.needsRequest && (
+            <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-lg">
+              <div className="flex items-start gap-3">
+                <Camera className="h-5 w-5 text-blue-600 dark:text-blue-500 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="font-medium text-blue-900 dark:text-blue-100 text-sm">
+                    Camera Access Required
+                  </p>
+                  <p className="text-blue-700 dark:text-blue-300 text-sm mt-1">
+                    This app needs access to your camera and photo library to scan rooms and capture measurements.
+                  </p>
+                  <Button 
+                    onClick={handleRequestPermissions}
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 border-blue-300 text-blue-700 hover:bg-blue-100 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-950"
+                  >
+                    <Camera className="h-4 w-4 mr-2" />
+                    Grant Camera Access
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {capabilities.canScan && !permissionStatus.needsRequest && (
+            <div className="p-3 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900 rounded-lg">
+              <div className="flex items-center gap-2 text-sm text-green-800 dark:text-green-200">
+                <Check className="h-4 w-4" />
+                <span>Camera permissions granted</span>
               </div>
             </div>
           )}

@@ -11,11 +11,11 @@ const config: CapacitorConfig = {
   plugins: {
     Camera: {
       iosPermissions: {
-        cameraUsageDescription: 'Take photos of your space to design custom cabinets with accurate measurements.',
-        photosUsageDescription: 'Access your photos to load room images for cabinet design and measurements.'
+        cameraUsageDescription: 'This app requires camera access to scan your room in 3D and capture accurate measurements for designing custom cabinets. Your photos are processed locally and never uploaded without your permission.',
+        photosUsageDescription: 'This app needs access to your photo library to save room scans and load images for accurate cabinet design and measurements.'
       },
       androidPermissions: {
-        permissions: ['camera', 'read_external_storage', 'write_external_storage']
+        permissions: ['android.permission.CAMERA', 'android.permission.READ_MEDIA_IMAGES', 'android.permission.WRITE_EXTERNAL_STORAGE']
       }
     }
   },
