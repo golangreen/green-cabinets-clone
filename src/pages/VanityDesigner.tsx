@@ -1408,26 +1408,26 @@ const VanityDesigner = () => {
                                 <svg width="100%" height="100%" viewBox="0 0 32 32">
                                   {isLShape && (
                                     <path
-                                      d="M 2 2 L 12 2 L 12 20 L 30 20 L 30 30 L 2 30 Z"
+                                      d="M 2 2 L 13 2 L 13 19 L 30 19 L 30 30 L 2 30 Z"
                                       fill="hsl(var(--muted))"
                                       stroke="hsl(var(--foreground))"
-                                      strokeWidth="1"
+                                      strokeWidth="1.5"
                                     />
                                   )}
                                   {isUShape && (
                                     <path
-                                      d="M 2 2 L 30 2 L 30 30 L 22 30 L 22 10 L 10 10 L 10 30 L 2 30 Z"
+                                      d="M 2 2 L 30 2 L 30 30 L 20 30 L 20 12 L 12 12 L 12 30 L 2 30 Z"
                                       fill="hsl(var(--muted))"
                                       stroke="hsl(var(--foreground))"
-                                      strokeWidth="1"
+                                      strokeWidth="1.5"
                                     />
                                   )}
                                   {isDiagonal && (
                                     <path
-                                      d="M 2 2 L 30 2 L 30 30 L 2 2 Z"
+                                      d="M 2 2 L 30 2 L 30 30 Z"
                                       fill="hsl(var(--muted))"
                                       stroke="hsl(var(--foreground))"
-                                      strokeWidth="1"
+                                      strokeWidth="1.5"
                                     />
                                   )}
                                   {isLazySusan && (
@@ -1435,13 +1435,13 @@ const VanityDesigner = () => {
                                       <circle
                                         cx="16"
                                         cy="16"
-                                        r="13"
+                                        r="12"
                                         fill="hsl(var(--muted))"
                                         stroke="hsl(var(--foreground))"
-                                        strokeWidth="1"
+                                        strokeWidth="1.5"
                                       />
-                                      <line x1="16" y1="16" x2="16" y2="5" stroke="hsl(var(--foreground))" strokeWidth="1" opacity="0.5" />
-                                      <line x1="16" y1="16" x2="27" y2="16" stroke="hsl(var(--foreground))" strokeWidth="1" opacity="0.5" />
+                                      <line x1="16" y1="16" x2="16" y2="6" stroke="hsl(var(--foreground))" strokeWidth="1" opacity="0.5" />
+                                      <line x1="16" y1="16" x2="26" y2="16" stroke="hsl(var(--foreground))" strokeWidth="1" opacity="0.5" />
                                     </>
                                   )}
                                 </svg>
