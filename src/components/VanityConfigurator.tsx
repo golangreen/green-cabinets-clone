@@ -187,6 +187,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [brightness, setBrightness] = useState<number>(80);
   const [colorTemperature, setColorTemperature] = useState<number>(4000);
   
+  // Bathroom fixtures state
+  const [includeToilet, setIncludeToilet] = useState(false);
+  const [toiletStyle, setToiletStyle] = useState<'modern' | 'traditional' | 'wall-mounted'>('modern');
+  const [toiletPosition, setToiletPosition] = useState<'left' | 'right'>('left');
+  const [includeShower, setIncludeShower] = useState(false);
+  const [showerStyle, setShowerStyle] = useState<'walk-in' | 'enclosed' | 'corner'>('walk-in');
+  const [includeBathtub, setIncludeBathtub] = useState(false);
+  const [bathtubStyle, setBathtubStyle] = useState<'freestanding' | 'alcove' | 'corner'>('freestanding');
+  const [bathtubPosition, setBathtubPosition] = useState<'left' | 'right' | 'back'>('back');
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -812,10 +822,18 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 includeWalls={includeWalls}
                 hasWindow={hasWindow}
                 hasDoor={hasDoor}
-                lightingType={lightingType}
-                brightness={brightness}
-                colorTemperature={colorTemperature}
-              />
+        lightingType={lightingType}
+        brightness={brightness}
+        colorTemperature={colorTemperature}
+        includeToilet={includeToilet}
+        toiletStyle={toiletStyle}
+        toiletPosition={toiletPosition}
+        includeShower={includeShower}
+        showerStyle={showerStyle}
+        includeBathtub={includeBathtub}
+        bathtubStyle={bathtubStyle}
+        bathtubPosition={bathtubPosition}
+      />
             </div>
           </div>
         </div>
