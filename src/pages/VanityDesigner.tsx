@@ -1247,7 +1247,7 @@ const VanityDesigner = () => {
                   {selectedCabinetId && cabinets.find(c => c.id === selectedCabinetId) && (
                     <Card className="p-3 mb-3">
                       <div className="flex items-center justify-between mb-3">
-                        <Label className="text-xs font-semibold">Selected Cabinet</Label>
+                        <Label className="text-xs font-semibold">Cabinet Properties</Label>
                         <Button 
                           variant="ghost" 
                           size="sm"
@@ -1262,7 +1262,8 @@ const VanityDesigner = () => {
                         if (!cabinet) return null;
                         
                         return (
-                          <div className="space-y-2">
+                          <div className="space-y-3">
+                            {/* Basic Info */}
                             <div>
                               <Label className="text-[10px]">Label</Label>
                               <Input 
@@ -1275,58 +1276,199 @@ const VanityDesigner = () => {
                                 className="h-7 text-xs"
                               />
                             </div>
-                            <div className="grid grid-cols-3 gap-2">
-                              <div>
-                                <Label className="text-[10px]">Width</Label>
-                                <Input 
-                                  type="number"
-                                  value={cabinet.width}
-                                  onChange={(e) => changeCabinetSize(cabinet.id, 'width', parseFloat(e.target.value) || cabinet.width)}
-                                  className="h-7 text-xs"
-                                />
-                              </div>
-                              <div>
-                                <Label className="text-[10px]">Height</Label>
-                                <Input 
-                                  type="number"
-                                  value={cabinet.height}
-                                  onChange={(e) => changeCabinetSize(cabinet.id, 'height', parseFloat(e.target.value) || cabinet.height)}
-                                  className="h-7 text-xs"
-                                />
-                              </div>
-                              <div>
-                                <Label className="text-[10px]">Depth</Label>
-                                <Input 
-                                  type="number"
-                                  value={cabinet.depth}
-                                  onChange={(e) => changeCabinetSize(cabinet.id, 'depth', parseFloat(e.target.value) || cabinet.depth)}
-                                  className="h-7 text-xs"
-                                />
+                            
+                            {/* Dimensions */}
+                            <div>
+                              <Label className="text-[10px] font-semibold mb-2 block">Dimensions</Label>
+                              <div className="grid grid-cols-3 gap-2">
+                                <div>
+                                  <Label className="text-[10px]">Width</Label>
+                                  <Input 
+                                    type="number"
+                                    value={cabinet.width}
+                                    onChange={(e) => changeCabinetSize(cabinet.id, 'width', parseFloat(e.target.value) || cabinet.width)}
+                                    className="h-7 text-xs"
+                                  />
+                                </div>
+                                <div>
+                                  <Label className="text-[10px]">Height</Label>
+                                  <Input 
+                                    type="number"
+                                    value={cabinet.height}
+                                    onChange={(e) => changeCabinetSize(cabinet.id, 'height', parseFloat(e.target.value) || cabinet.height)}
+                                    className="h-7 text-xs"
+                                  />
+                                </div>
+                                <div>
+                                  <Label className="text-[10px]">Depth</Label>
+                                  <Input 
+                                    type="number"
+                                    value={cabinet.depth}
+                                    onChange={(e) => changeCabinetSize(cabinet.id, 'depth', parseFloat(e.target.value) || cabinet.depth)}
+                                    className="h-7 text-xs"
+                                  />
+                                </div>
                               </div>
                             </div>
+                            
+                            {/* Rotation */}
                             <div>
                               <Label className="text-[10px]">Rotation (degrees)</Label>
-                              <Input 
-                                type="number"
-                                value={cabinet.rotation || 0}
+                              <div className="flex gap-2">
+                                <Input 
+                                  type="number"
+                                  value={cabinet.rotation || 0}
+                                  onChange={(e) => {
+                                    const newRotation = parseInt(e.target.value) % 360;
+                                    setCabinets(cabinets.map(c => 
+                                      c.id === selectedCabinetId ? { ...c, rotation: newRotation as 0 | 90 | 180 | 270 } : c
+                                    ));
+                                  }}
+                                  className="h-7 text-xs flex-1"
+                                />
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-7 px-2"
+                                  onClick={() => {
+                                    const currentRot = cabinet.rotation || 0;
+                                    const newRot = (currentRot + 90) % 360;
+                                    setCabinets(cabinets.map(c => 
+                                      c.id === selectedCabinetId ? { ...c, rotation: newRot as 0 | 90 | 180 | 270 } : c
+                                    ));
+                                  }}
+                                >
+                                  <RotateCw className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                            
+                            {/* Finish */}
+                            <div>
+                              <Label className="text-[10px]">Finish</Label>
+                              <select
+                                value={cabinet.finishId || "tafisa-white"}
                                 onChange={(e) => {
-                                  const newRotation = parseInt(e.target.value) % 360;
+                                  const finish = MATERIAL_FINISHES.find(f => f.id === e.target.value);
                                   setCabinets(cabinets.map(c => 
-                                    c.id === selectedCabinetId ? { ...c, rotation: newRotation as 0 | 90 | 180 | 270 } : c
+                                    c.id === selectedCabinetId 
+                                      ? { 
+                                          ...c, 
+                                          finishId: e.target.value,
+                                          finish: finish?.name || "White",
+                                          brand: finish?.brand || "Tafisa"
+                                        } 
+                                      : c
                                   ));
                                 }}
-                                className="h-7 text-xs"
-                              />
+                                className="w-full h-7 text-xs border rounded-md px-2 bg-background"
+                              >
+                                <optgroup label="Tafisa">
+                                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
+                                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                  ))}
+                                </optgroup>
+                                <optgroup label="EGGER">
+                                  {MATERIAL_FINISHES.filter(f => f.brand === "EGGER").map(finish => (
+                                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                  ))}
+                                </optgroup>
+                              </select>
                             </div>
+                            
+                            {/* Hardware */}
+                            <div>
+                              <Label className="text-[10px] font-semibold mb-2 block">Hardware</Label>
+                              <div className="space-y-2">
+                                <div>
+                                  <Label className="text-[10px]">Handle Type</Label>
+                                  <select
+                                    value={cabinet.handleType || "bar"}
+                                    onChange={(e) => {
+                                      setCabinets(cabinets.map(c => 
+                                        c.id === selectedCabinetId 
+                                          ? { ...c, handleType: e.target.value as keyof typeof HARDWARE_OPTIONS.handles } 
+                                          : c
+                                      ));
+                                    }}
+                                    className="w-full h-7 text-xs border rounded-md px-2 bg-background"
+                                  >
+                                    {Object.entries(HARDWARE_OPTIONS.handles).map(([key, handle]) => (
+                                      <option key={key} value={key}>{handle.name}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div>
+                                  <Label className="text-[10px]">Number of Handles</Label>
+                                  <Input 
+                                    type="number"
+                                    min={1}
+                                    max={6}
+                                    value={cabinet.numHandles || 2}
+                                    onChange={(e) => {
+                                      setCabinets(cabinets.map(c => 
+                                        c.id === selectedCabinetId 
+                                          ? { ...c, numHandles: parseInt(e.target.value) || 2 } 
+                                          : c
+                                      ));
+                                    }}
+                                    className="h-7 text-xs"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Drawer Configuration */}
+                            <div>
+                              <Label className="text-[10px] font-semibold mb-2 block">Drawer Configuration</Label>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <input
+                                    type="checkbox"
+                                    checked={cabinet.hasDrawers || false}
+                                    onChange={(e) => {
+                                      setCabinets(cabinets.map(c => 
+                                        c.id === selectedCabinetId 
+                                          ? { ...c, hasDrawers: e.target.checked } 
+                                          : c
+                                      ));
+                                    }}
+                                    className="h-3 w-3"
+                                  />
+                                  <Label className="text-[10px]">Has Drawers</Label>
+                                </div>
+                                {cabinet.hasDrawers && (
+                                  <div>
+                                    <Label className="text-[10px]">Number of Drawers</Label>
+                                    <Input 
+                                      type="number"
+                                      min={1}
+                                      max={6}
+                                      value={cabinet.numDrawers || 3}
+                                      onChange={(e) => {
+                                        setCabinets(cabinets.map(c => 
+                                          c.id === selectedCabinetId 
+                                            ? { ...c, numDrawers: parseInt(e.target.value) || 3 } 
+                                            : c
+                                        ));
+                                      }}
+                                      className="h-7 text-xs"
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            
                             {cabinet.price && (
                               <div className="pt-2 border-t text-xs">
-                                <span className="font-medium">Price: </span>
-                                <span className="text-primary">{formatPrice(cabinet.price)}</span>
+                                <span className="font-medium">Estimated Price: </span>
+                                <span className="text-primary font-semibold">{formatPrice(cabinet.price)}</span>
                               </div>
                             )}
-                            <div className="pt-1 text-[10px] text-muted-foreground">
-                              💡 Desktop: Shift+Drag to rotate<br/>
-                              📱 Mobile: Two-finger touch to rotate
+                            
+                            <div className="pt-1 text-[10px] text-muted-foreground border-t">
+                              💡 Shift+Drag to rotate<br/>
+                              📱 Two-finger touch to rotate
                             </div>
                           </div>
                         );
