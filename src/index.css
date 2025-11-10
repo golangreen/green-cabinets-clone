@@ -135,8 +135,10 @@ All colors MUST be HSL.
 /* Prevent pull-to-refresh on mobile while allowing scroll */
 body {
   overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+  touch-action: pan-y; /* Allow vertical scrolling on all touch devices */
+  overflow-y: auto; /* Ensure scrolling works on Android */
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 /* Smooth scrolling */
