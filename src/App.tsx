@@ -15,6 +15,7 @@ import RoomScan from "./pages/RoomScan";
 import SecurityPolicy from "./pages/SecurityPolicy";
 import NotFound from "./pages/NotFound";
 import SplashScreen from "./components/SplashScreen";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <CookieConsent />
         {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
         <BrowserRouter>
           <Routes>
