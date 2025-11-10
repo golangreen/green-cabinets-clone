@@ -62,6 +62,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
   const [selectedDoorStyleId, setSelectedDoorStyleId] = useState<string>("flat-framed");
   const [selectedHandleType, setSelectedHandleType] = useState<keyof typeof HARDWARE_OPTIONS.handles>("bar");
   const [numHandles, setNumHandles] = useState(2);
+  const [comparisonStyles, setComparisonStyles] = useState<string[]>([]);
 
   const totalSteps = 5;
 
@@ -76,6 +77,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
       setSelectedDoorStyleId("flat-framed");
       setSelectedHandleType("bar");
       setNumHandles(2);
+      setComparisonStyles([]);
     }
     onOpenChange(open);
   };
@@ -290,6 +292,64 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
           {/* Step 4: Finish & Door Style */}
           {step === 4 && selectedCabinet && (
             <div className="space-y-6 py-4">
+              {/* Comparison View */}
+              {comparisonStyles.length > 0 && (
+                <div className="bg-muted/30 border border-border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-semibold">Comparing {comparisonStyles.length} Styles</Label>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setComparisonStyles([])}
+                      className="h-7 text-xs"
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                  <div className={`grid gap-3 ${comparisonStyles.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                    {comparisonStyles.map((styleId) => {
+                      const style = DOOR_STYLES.find(s => s.id === styleId);
+                      if (!style) return null;
+                      return (
+                        <Card key={styleId} className="p-3 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <h5 className="font-semibold text-xs">{style.name}</h5>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setComparisonStyles(comparisonStyles.filter(id => id !== styleId))}
+                              className="h-6 w-6 p-0"
+                            >
+                              ×
+                            </Button>
+                          </div>
+                          <div className="w-full h-24 border border-border rounded bg-background">
+                            <DoorStylePreview styleId={styleId} className="w-full h-full" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-[10px] text-muted-foreground">{style.description}</p>
+                            <Badge variant="secondary" className="text-[10px]">
+                              {style.frameType?.toUpperCase()}
+                            </Badge>
+                            <Badge variant="outline" className="text-[10px] ml-1">
+                              +{((style.priceMultiplier - 1) * 100).toFixed(0)}%
+                            </Badge>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant={selectedDoorStyleId === styleId ? "default" : "outline"}
+                            onClick={() => setSelectedDoorStyleId(styleId)}
+                            className="w-full h-7 text-xs"
+                          >
+                            {selectedDoorStyleId === styleId ? "Selected" : "Select"}
+                          </Button>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Door Style with Tabs for Frame Types */}
               <div>
                 <Label className="text-sm font-semibold mb-3 block">Door Style & Frame Type</Label>
@@ -325,10 +385,28 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                             </Badge>
                           </div>
                           
-                          {/* Checkmark */}
-                          {selectedDoorStyleId === style.id && (
-                            <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                          )}
+                          {/* Actions */}
+                          <div className="flex flex-col gap-2 flex-shrink-0">
+                            {selectedDoorStyleId === style.id && (
+                              <Check className="h-5 w-5 text-primary" />
+                            )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (comparisonStyles.includes(style.id)) {
+                                  setComparisonStyles(comparisonStyles.filter(id => id !== style.id));
+                                } else if (comparisonStyles.length < 3) {
+                                  setComparisonStyles([...comparisonStyles, style.id]);
+                                }
+                              }}
+                              disabled={comparisonStyles.length >= 3 && !comparisonStyles.includes(style.id)}
+                              className="h-7 text-[10px] px-2"
+                            >
+                              {comparisonStyles.includes(style.id) ? "Remove" : "Compare"}
+                            </Button>
+                          </div>
                         </div>
                       </Card>
                     ))}
@@ -364,10 +442,28 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                             </Badge>
                           </div>
                           
-                          {/* Checkmark */}
-                          {selectedDoorStyleId === style.id && (
-                            <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                          )}
+                          {/* Actions */}
+                          <div className="flex flex-col gap-2 flex-shrink-0">
+                            {selectedDoorStyleId === style.id && (
+                              <Check className="h-5 w-5 text-primary" />
+                            )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (comparisonStyles.includes(style.id)) {
+                                  setComparisonStyles(comparisonStyles.filter(id => id !== style.id));
+                                } else if (comparisonStyles.length < 3) {
+                                  setComparisonStyles([...comparisonStyles, style.id]);
+                                }
+                              }}
+                              disabled={comparisonStyles.length >= 3 && !comparisonStyles.includes(style.id)}
+                              className="h-7 text-[10px] px-2"
+                            >
+                              {comparisonStyles.includes(style.id) ? "Remove" : "Compare"}
+                            </Button>
+                          </div>
                         </div>
                       </Card>
                     ))}
@@ -403,10 +499,28 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                             </Badge>
                           </div>
                           
-                          {/* Checkmark */}
-                          {selectedDoorStyleId === style.id && (
-                            <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                          )}
+                          {/* Actions */}
+                          <div className="flex flex-col gap-2 flex-shrink-0">
+                            {selectedDoorStyleId === style.id && (
+                              <Check className="h-5 w-5 text-primary" />
+                            )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (comparisonStyles.includes(style.id)) {
+                                  setComparisonStyles(comparisonStyles.filter(id => id !== style.id));
+                                } else if (comparisonStyles.length < 3) {
+                                  setComparisonStyles([...comparisonStyles, style.id]);
+                                }
+                              }}
+                              disabled={comparisonStyles.length >= 3 && !comparisonStyles.includes(style.id)}
+                              className="h-7 text-[10px] px-2"
+                            >
+                              {comparisonStyles.includes(style.id) ? "Remove" : "Compare"}
+                            </Button>
+                          </div>
                         </div>
                       </Card>
                     ))}
