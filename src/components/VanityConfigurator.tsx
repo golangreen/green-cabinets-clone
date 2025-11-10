@@ -23,6 +23,8 @@ import {
 import { toast } from "sonner";
 import { ShoppingCart, ZoomIn, Save } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
+import { TextureSwatch } from "./TextureSwatch";
+import { TexturePreviewModal } from "./TexturePreviewModal";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
 import { useCartStore } from "@/stores/cartStore";
@@ -157,8 +159,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const [templateDescription, setTemplateDescription] = useState("");
+  const [texturePreviewOpen, setTexturePreviewOpen] = useState(false);
+  const [previewFinish, setPreviewFinish] = useState("");
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
+
+  const handleTextureClick = (finish: string) => {
+    setSelectedFinish(finish);
+    setPreviewFinish(finish);
+  };
+
+  const handleTextureRightClick = (e: React.MouseEvent, finish: string) => {
+    e.preventDefault();
+    setPreviewFinish(finish);
+    setTexturePreviewOpen(true);
+  };
 
   const handleSelectTemplate = (template: VanityTemplate) => {
     setSelectedTemplateId(template.id);
@@ -569,6 +584,38 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   {selectedBrand === 'Tafisa' && ` across ${TAFISA_CATEGORIES.length} categories`}
                   {selectedBrand === 'Egger' && ` across ${EGGER_CATEGORIES.length} categories`}
                 </p>
+              )}
+              
+              {/* Texture Swatch Gallery */}
+              {selectedBrand && availableFinishes.length > 0 && (
+                <div className="space-y-2 pt-2">
+                  <Label className="text-xs font-medium">Material Textures (Click to select, Right-click for details)</Label>
+                  <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto p-2 bg-secondary/10 rounded-lg">
+                    {availableFinishes.slice(0, 24).map((finish) => (
+                      <div 
+                        key={finish} 
+                        className="flex flex-col items-center gap-1"
+                        onContextMenu={(e) => handleTextureRightClick(e, finish)}
+                      >
+                        <TextureSwatch
+                          finishName={finish}
+                          brand={selectedBrand}
+                          selected={selectedFinish === finish}
+                          onClick={() => handleTextureClick(finish)}
+                          size="md"
+                        />
+                        <span className="text-xs text-center text-muted-foreground max-w-[64px] truncate">
+                          {finish}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {availableFinishes.length > 24 && (
+                    <p className="text-xs text-muted-foreground text-center">
+                      Showing 24 of {availableFinishes.length} finishes. Use dropdown to see all options.
+                    </p>
+                  )}
+                </div>
               )}
             </div>
 
@@ -986,6 +1033,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Texture Preview Modal */}
+      {previewFinish && (
+        <TexturePreviewModal
+          open={texturePreviewOpen}
+          onOpenChange={setTexturePreviewOpen}
+          finishName={previewFinish}
+          brand={selectedBrand}
+        />
+      )}
     </>
   );
 };
