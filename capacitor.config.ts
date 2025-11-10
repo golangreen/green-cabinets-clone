@@ -24,7 +24,12 @@ const config: CapacitorConfig = {
     icon: 'public/logo.png'
   },
   android: {
-    allowMixedContent: true
+    allowMixedContent: true,
+    icon: 'public/logo.png',
+    adaptiveIcon: {
+      foreground: 'public/logo.png',
+      background: '#1e7b5f'
+    }
   }
 };
 
