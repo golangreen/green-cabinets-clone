@@ -147,9 +147,9 @@ const VanityDesigner = () => {
       depth: 24,
       x: 100,
       y: 200,
-      brand: "Tafisa",
-      finish: "White",
-      finishId: "tafisa-white",
+      brand: "Painted",
+      finish: "Bright White",
+      finishId: "bright-white",
       label: "DB36",
       rotation: 0,
       handleType: "bar",
@@ -536,10 +536,10 @@ const VanityDesigner = () => {
   
   // Add cabinet from template
   const addCabinetFromTemplate = useCallback((template: CabinetSpec, x: number, y: number) => {
-    const defaultFinishId = "tafisa-white";
+    const defaultFinishId = "bright-white";
     const defaultHandleType = "bar";
     const numHandles = template.subType === "drawer" ? 3 : 2;
-    const price = calculateCabinetPrice(template, defaultFinishId, defaultHandleType, numHandles);
+    const price = calculateCabinetPrice(template, defaultFinishId);
     
     // Set Y position based on cabinet type - professional standards
     let yPosition: number;
@@ -779,9 +779,7 @@ const VanityDesigner = () => {
           if (template) {
             updated.price = calculateCabinetPrice(
               { ...template, [dimension]: value },
-              c.finishId,
-              c.handleType || "bar",
-              c.numHandles || 2
+              c.finishId
             );
           }
         }
@@ -802,7 +800,7 @@ const VanityDesigner = () => {
           ...c, 
           finishId,
           finish: finish.name,
-          brand: finish.brand
+          brand: finish.type // Painted or Stained
         };
         
         // Recalculate price
@@ -811,9 +809,7 @@ const VanityDesigner = () => {
           if (template) {
             updated.price = calculateCabinetPrice(
               template,
-              finishId,
-              c.handleType || "bar",
-              c.numHandles || 2
+              finishId
             );
           }
         }
@@ -835,9 +831,7 @@ const VanityDesigner = () => {
           if (template) {
             updated.price = calculateCabinetPrice(
               template,
-              c.finishId,
-              handleType,
-              c.numHandles || 2
+              c.finishId
             );
           }
         }
@@ -2272,7 +2266,7 @@ const VanityDesigner = () => {
                             <div>
                               <Label className="text-[10px]">Finish</Label>
                               <select
-                                value={cabinet.finishId || "tafisa-white"}
+                                value={cabinet.finishId || "bright-white"}
                                 onChange={(e) => {
                                   const finish = MATERIAL_FINISHES.find(f => f.id === e.target.value);
                                   setCabinets(cabinets.map(c => 
@@ -2280,21 +2274,21 @@ const VanityDesigner = () => {
                                       ? { 
                                           ...c, 
                                           finishId: e.target.value,
-                                          finish: finish?.name || "White",
-                                          brand: finish?.brand || "Tafisa"
+                                          finish: finish?.name || "Bright White",
+                                          brand: finish?.type || "Painted"
                                         } 
                                       : c
                                   ));
                                 }}
                                 className="w-full h-7 text-xs border rounded-md px-2 bg-background"
                               >
-                                <optgroup label="Tafisa">
-                                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
+                                <optgroup label="Painted Finishes">
+                                  {MATERIAL_FINISHES.filter(f => f.type === "Painted").map(finish => (
                                     <option key={finish.id} value={finish.id}>{finish.name}</option>
                                   ))}
                                 </optgroup>
-                                <optgroup label="EGGER">
-                                  {MATERIAL_FINISHES.filter(f => f.brand === "EGGER").map(finish => (
+                                <optgroup label="Stained Finishes">
+                                  {MATERIAL_FINISHES.filter(f => f.type === "Stained").map(finish => (
                                     <option key={finish.id} value={finish.id}>{finish.name}</option>
                                   ))}
                                 </optgroup>
@@ -3456,7 +3450,7 @@ const VanityDesigner = () => {
                             >
                               <div className="flex flex-col">
                                 <span>{finish.name}</span>
-                                <span className="text-xs text-muted-foreground">{finish.brand}</span>
+                                <span className="text-xs text-muted-foreground">{finish.type} - {finish.priceGroup}</span>
                               </div>
                               {cabinet.finishId === finish.id && <span className="ml-auto">✓</span>}
                             </ContextMenuItem>
