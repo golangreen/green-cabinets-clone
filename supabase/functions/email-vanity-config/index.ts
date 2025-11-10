@@ -1,7 +1,60 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+// Validation schema for email configuration
+const emailConfigSchema = z.object({
+  recipientEmail: z.string().trim().email().max(255),
+  recipientName: z.string().trim().max(100).optional(),
+  config: z.object({
+    brand: z.string().trim().min(1).max(50),
+    finish: z.string().trim().min(1).max(50),
+    dimensions: z.string().trim().min(1).max(50),
+    doorStyle: z.string().trim().min(1).max(50),
+    countertop: z.string().trim().min(1).max(50),
+    sink: z.string().trim().min(1).max(50),
+    pricing: z.object({
+      vanity: z.string().trim().regex(/^[\d,$.]+$/).max(20),
+      tax: z.string().trim().regex(/^[\d,$.]+$/).max(20),
+      shipping: z.string().trim().regex(/^[\d,$.]+$/).max(20),
+      total: z.string().trim().regex(/^[\d,$.]+$/).max(20),
+    })
+  })
+});
+
+// Rate limiting
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+const MAX_REQUESTS_PER_WINDOW = 5;
+
+const checkRateLimit = (ip: string): boolean => {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+  
+  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    return false;
+  }
+  
+  record.count++;
+  return true;
+};
+
+// HTML escape function to prevent XSS
+const escapeHtml = (unsafe: string): string => {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -33,9 +86,63 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { recipientEmail, recipientName, config }: EmailConfigRequest = await req.json();
+    // Get client IP for rate limiting and logging
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0] || 
+                     req.headers.get("x-real-ip") || 
+                     "unknown";
+    
+    // Check rate limit
+    if (!checkRateLimit(clientIp)) {
+      console.warn(`Rate limit exceeded for IP: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Too many requests. Please try again later.",
+          retryAfter: 3600
+        }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
-    console.log("Sending vanity configuration email to:", recipientEmail);
+    const rawData = await req.json();
+    
+    // Validate input data
+    const validationResult = emailConfigSchema.safeParse(rawData);
+    if (!validationResult.success) {
+      console.error("Validation error:", validationResult.error, `IP: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Invalid input data. Please check your configuration." 
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const { recipientEmail, recipientName, config }: EmailConfigRequest = validationResult.data;
+    
+    console.log(`Sending vanity configuration email to: ${recipientEmail}, IP: ${clientIp}`);
+
+    // Escape all user-controlled strings to prevent XSS
+    const safeName = recipientName ? escapeHtml(recipientName) : null;
+    const safeConfig = {
+      dimensions: escapeHtml(config.dimensions),
+      brand: escapeHtml(config.brand),
+      finish: escapeHtml(config.finish),
+      doorStyle: escapeHtml(config.doorStyle),
+      countertop: escapeHtml(config.countertop),
+      sink: escapeHtml(config.sink),
+      pricing: {
+        vanity: escapeHtml(config.pricing.vanity),
+        tax: escapeHtml(config.pricing.tax),
+        shipping: escapeHtml(config.pricing.shipping),
+        total: escapeHtml(config.pricing.total),
+      }
+    };
 
     const emailHtml = `
       <!DOCTYPE html>
@@ -65,26 +172,26 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div class="content">
-              ${recipientName ? `<p>Hi ${recipientName},</p>` : '<p>Hello,</p>'}
+              ${safeName ? `<p>Hi ${safeName},</p>` : '<p>Hello,</p>'}
               <p>Thank you for using our Custom Vanity Configurator! Here are the details of your design:</p>
               
               <div class="section">
                 <div class="section-title">Vanity Specifications</div>
                 <div class="detail-row">
                   <span class="label">Dimensions:</span>
-                  <span class="value">${config.dimensions}</span>
+                  <span class="value">${safeConfig.dimensions}</span>
                 </div>
                 <div class="detail-row">
                   <span class="label">Brand:</span>
-                  <span class="value">${config.brand}</span>
+                  <span class="value">${safeConfig.brand}</span>
                 </div>
                 <div class="detail-row">
                   <span class="label">Finish:</span>
-                  <span class="value">${config.finish}</span>
+                  <span class="value">${safeConfig.finish}</span>
                 </div>
                 <div class="detail-row">
                   <span class="label">Cabinet Style:</span>
-                  <span class="value">${config.doorStyle}</span>
+                  <span class="value">${safeConfig.doorStyle}</span>
                 </div>
               </div>
 
@@ -92,11 +199,11 @@ const handler = async (req: Request): Promise<Response> => {
                 <div class="section-title">Countertop & Sink</div>
                 <div class="detail-row">
                   <span class="label">Countertop:</span>
-                  <span class="value">${config.countertop}</span>
+                  <span class="value">${safeConfig.countertop}</span>
                 </div>
                 <div class="detail-row">
                   <span class="label">Sink:</span>
-                  <span class="value">${config.sink}</span>
+                  <span class="value">${safeConfig.sink}</span>
                 </div>
               </div>
 
@@ -104,20 +211,20 @@ const handler = async (req: Request): Promise<Response> => {
                 <div class="section-title">Price Estimate</div>
                 <div class="detail-row">
                   <span class="label">Vanity Price:</span>
-                  <span class="value">${config.pricing.vanity}</span>
+                  <span class="value">${safeConfig.pricing.vanity}</span>
                 </div>
                 <div class="detail-row">
                   <span class="label">Tax:</span>
-                  <span class="value">${config.pricing.tax}</span>
+                  <span class="value">${safeConfig.pricing.tax}</span>
                 </div>
                 <div class="detail-row">
                   <span class="label">Shipping:</span>
-                  <span class="value">${config.pricing.shipping}</span>
+                  <span class="value">${safeConfig.pricing.shipping}</span>
                 </div>
                 <div class="total">
                   <div class="detail-row" style="border: none;">
                     <span>Total Estimate:</span>
-                    <span>${config.pricing.total}</span>
+                    <span>${safeConfig.pricing.total}</span>
                   </div>
                 </div>
               </div>
