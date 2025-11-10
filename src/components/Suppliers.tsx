@@ -176,7 +176,7 @@ const Suppliers = () => {
                     <img 
                       src={supplier.logo} 
                       alt={`${supplier.name} logo`}
-                      className="h-20 w-20 object-contain flex-shrink-0"
+                      className="h-20 w-20 object-contain flex-shrink-0 rounded-xl"
                     />
                   )}
                   <div className="flex-1 min-w-0">
