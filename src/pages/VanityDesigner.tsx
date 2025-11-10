@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
+import { CABINET_CATALOG, calculateCabinetPrice, formatPrice, type CabinetSpec } from "@/lib/cabinetCatalog";
 
 interface Cabinet {
   id: number;
@@ -33,16 +34,8 @@ interface Cabinet {
   brand: string;
   finish: string;
   label?: string;
-}
-
-interface CabinetTemplate {
-  type: string;
-  subType: string;
-  width: number;
-  height: number;
-  depth: number;
-  label: string;
-  description: string;
+  price?: number; // Calculated price
+  catalogRef?: string; // Reference to catalog item
 }
 
 interface Wall {
@@ -62,30 +55,8 @@ interface Opening {
   width: number; // Width in inches
 }
 
-// Cabinet Library Templates
-const CABINET_LIBRARY: CabinetTemplate[] = [
-  // Base Cabinets
-  { type: "Base Cabinet", subType: "standard", width: 24, height: 34.5, depth: 24, label: "B24", description: "24\" Base" },
-  { type: "Base Cabinet", subType: "standard", width: 30, height: 34.5, depth: 24, label: "B30", description: "30\" Base" },
-  { type: "Base Cabinet", subType: "standard", width: 36, height: 34.5, depth: 24, label: "B36", description: "36\" Base" },
-  { type: "Base Cabinet", subType: "drawer", width: 18, height: 34.5, depth: 24, label: "DB18", description: "18\" Drawer Base" },
-  { type: "Base Cabinet", subType: "drawer", width: 24, height: 34.5, depth: 24, label: "DB24", description: "24\" Drawer Base" },
-  
-  // Wall Cabinets
-  { type: "Wall Cabinet", subType: "standard", width: 24, height: 30, depth: 12, label: "W2430", description: "24\" Wall 30\"H" },
-  { type: "Wall Cabinet", subType: "standard", width: 30, height: 30, depth: 12, label: "W3030", description: "30\" Wall 30\"H" },
-  { type: "Wall Cabinet", subType: "standard", width: 36, height: 30, depth: 12, label: "W3630", description: "36\" Wall 30\"H" },
-  { type: "Wall Cabinet", subType: "standard", width: 24, height: 42, depth: 12, label: "W2442", description: "24\" Wall 42\"H" },
-  
-  // Tall Cabinets
-  { type: "Tall Cabinet", subType: "pantry", width: 18, height: 84, depth: 24, label: "T1884", description: "18\" Pantry" },
-  { type: "Tall Cabinet", subType: "pantry", width: 24, height: 84, depth: 24, label: "T2484", description: "24\" Pantry" },
-  { type: "Tall Cabinet", subType: "oven", width: 30, height: 84, depth: 24, label: "TO30", description: "30\" Oven Cabinet" },
-  
-  // Corner Cabinets
-  { type: "Corner Cabinet", subType: "base", width: 36, height: 34.5, depth: 36, label: "LSB36", description: "36\" L-Corner Base" },
-  { type: "Corner Cabinet", subType: "wall", width: 24, height: 30, depth: 24, label: "LSW24", description: "24\" L-Corner Wall" },
-];
+// Use cabinet library from catalog
+const CABINET_LIBRARY = CABINET_CATALOG;
 
 const VanityDesigner = () => {
   const navigate = useNavigate();
@@ -125,7 +96,7 @@ const VanityDesigner = () => {
   const [selectedOpeningId, setSelectedOpeningId] = useState<number | null>(null);
   
   // Drag from library state
-  const [draggingFromLibrary, setDraggingFromLibrary] = useState<CabinetTemplate | null>(null);
+  const [draggingFromLibrary, setDraggingFromLibrary] = useState<CabinetSpec | null>(null);
   
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -158,7 +129,8 @@ const VanityDesigner = () => {
   }, [cabinets]);
   
   // Add cabinet from template
-  const addCabinetFromTemplate = useCallback((template: CabinetTemplate, x: number, y: number) => {
+  const addCabinetFromTemplate = useCallback((template: CabinetSpec, x: number, y: number) => {
+    const price = calculateCabinetPrice(template, "tafisa-white");
     const newCabinet: Cabinet = {
       id: Math.max(...cabinets.map(c => c.id), 0) + 1,
       type: template.type,
@@ -169,11 +141,13 @@ const VanityDesigner = () => {
       y: snapToGrid(y),
       brand: "Tafisa",
       finish: "White",
-      label: template.label
+      label: template.label,
+      price: price,
+      catalogRef: template.label,
     };
     setCabinets([...cabinets, newCabinet]);
     setSelectedCabinetId(newCabinet.id);
-    toast.success(`${template.description} added`);
+    toast.success(`${template.description} added - ${formatPrice(price)}`);
   }, [cabinets, snapToGrid]);
 
   // Remove selected cabinet
@@ -251,7 +225,7 @@ const VanityDesigner = () => {
   }, []);
   
   // Library drag handlers
-  const handleLibraryDragStart = useCallback((template: CabinetTemplate) => {
+  const handleLibraryDragStart = useCallback((template: CabinetSpec) => {
     setDraggingFromLibrary(template);
   }, []);
   
