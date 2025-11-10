@@ -10,6 +10,7 @@ import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import VanityDesigner from "./pages/VanityDesigner";
 import AdminSecurity from "./pages/AdminSecurity";
+import RoomScan from "./pages/RoomScan";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/designer" element={<VanityDesigner />} />
           <Route path="/admin/security" element={<AdminSecurity />} />
+          <Route path="/scan" element={<RoomScan />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
