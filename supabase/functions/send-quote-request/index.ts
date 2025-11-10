@@ -1,7 +1,12 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 const quoteRequestSchema = z.object({
   customerName: z.string().trim().min(1).max(100),
@@ -78,8 +83,36 @@ const handler = async (req: Request): Promise<Response> => {
                      req.headers.get("x-real-ip") || 
                      "unknown";
     
+    // Check if IP is blocked
+    const { data: isBlocked } = await supabase.rpc('is_ip_blocked', { check_ip: clientIp });
+    
+    if (isBlocked) {
+      const { data: blockInfo } = await supabase.rpc('get_blocked_ip_info', { check_ip: clientIp });
+      
+      console.warn(`Blocked IP attempted access: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Access denied. Your IP address has been temporarily blocked due to security concerns.',
+          blockedUntil: blockInfo?.blocked_until
+        }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+    
     // Check rate limit
     if (!checkRateLimit(clientIp)) {
+      // Log security event
+      await supabase.from('security_events').insert({
+        event_type: 'rate_limit_exceeded',
+        function_name: 'send-quote-request',
+        client_ip: clientIp,
+        severity: 'medium',
+        details: { max_requests: MAX_REQUESTS_PER_WINDOW, window_minutes: 60 }
+      });
+      
       console.warn(`Rate limit exceeded for IP: ${clientIp}`);
       return new Response(
         JSON.stringify({ 
@@ -98,6 +131,15 @@ const handler = async (req: Request): Promise<Response> => {
     // Validate input data
     const validationResult = quoteRequestSchema.safeParse(rawData);
     if (!validationResult.success) {
+      // Log security event
+      await supabase.from('security_events').insert({
+        event_type: 'validation_failed',
+        function_name: 'send-quote-request',
+        client_ip: clientIp,
+        severity: 'low',
+        details: { errors: validationResult.error.errors }
+      });
+      
       console.error("Validation error:", validationResult.error);
       return new Response(
         JSON.stringify({ 
