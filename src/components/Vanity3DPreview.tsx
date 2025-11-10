@@ -3,10 +3,7 @@ import { OrbitControls, PerspectiveCamera, Environment, Line, Html } from "@reac
 import { useMemo, useState, useRef } from "react";
 import * as THREE from "three";
 import { Button } from "./ui/button";
-import { Ruler, Download, Camera } from "lucide-react";
-import { toast } from "sonner";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import { Ruler } from "lucide-react";
 
 interface Vanity3DPreviewProps {
   width: number;
@@ -648,7 +645,6 @@ const DimensionLabels = ({ width, height, depth }: { width: number; height: numb
 export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle }: Vanity3DPreviewProps) => {
   const [measurementMode, setMeasurementMode] = useState(false);
   const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const hasValidDimensions = useMemo(() => {
     return width > 0 && height > 0 && depth > 0;
@@ -670,95 +666,6 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
     }
   };
 
-  const downloadAsImage = async () => {
-    try {
-      if (!containerRef.current) return;
-      
-      toast.loading("Capturing screenshot...", { id: "screenshot" });
-      
-      const canvas = await html2canvas(containerRef.current, {
-        backgroundColor: "#ffffff",
-        scale: 2,
-        logging: false,
-        useCORS: true,
-      });
-      
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          toast.error("Failed to generate image", { id: "screenshot" });
-          return;
-        }
-        
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.download = `vanity-preview-${width}x${height}x${depth}.png`;
-        link.href = url;
-        link.click();
-        URL.revokeObjectURL(url);
-        
-        toast.success("Image downloaded successfully!", { id: "screenshot" });
-      });
-    } catch (error) {
-      console.error("Error downloading image:", error);
-      toast.error("Failed to download image", { id: "screenshot" });
-    }
-  };
-
-  const downloadAsPDF = async () => {
-    try {
-      if (!containerRef.current) return;
-      
-      toast.loading("Generating PDF...", { id: "pdf" });
-      
-      const canvas = await html2canvas(containerRef.current, {
-        backgroundColor: "#ffffff",
-        scale: 2,
-        logging: false,
-        useCORS: true,
-      });
-      
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
-      });
-      
-      const imgWidth = 190;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      // Add title
-      pdf.setFontSize(16);
-      pdf.text("Custom Vanity Configuration", 105, 15, { align: "center" });
-      
-      // Add image
-      pdf.addImage(imgData, "PNG", 10, 25, imgWidth, imgHeight);
-      
-      // Add specifications
-      const yPos = 25 + imgHeight + 10;
-      pdf.setFontSize(12);
-      pdf.text("Specifications:", 10, yPos);
-      pdf.setFontSize(10);
-      pdf.text(`Width: ${width.toFixed(2)}"`, 20, yPos + 7);
-      pdf.text(`Height: ${height.toFixed(2)}"`, 20, yPos + 14);
-      pdf.text(`Depth: ${depth.toFixed(2)}"`, 20, yPos + 21);
-      pdf.text(`Finish: ${finish}`, 20, yPos + 28);
-      pdf.text(`Brand: ${brand}`, 20, yPos + 35);
-      pdf.text(`Door Style: ${doorStyle}`, 20, yPos + 42);
-      if (doorStyle === 'drawers' || doorStyle === 'mixed') {
-        pdf.text(`Number of Drawers: ${numDrawers}`, 20, yPos + 49);
-      }
-      pdf.text(`Handle Style: ${handleStyle}`, 20, yPos + 56);
-      
-      pdf.save(`vanity-preview-${width}x${height}x${depth}.pdf`);
-      
-      toast.success("PDF downloaded successfully!", { id: "pdf" });
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      toast.error("Failed to generate PDF", { id: "pdf" });
-    }
-  };
-
   if (!hasValidDimensions) {
     return (
       <div className="w-full aspect-square bg-secondary/20 rounded-lg flex items-center justify-center">
@@ -768,29 +675,8 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
   }
 
   return (
-    <div 
-      ref={containerRef}
-      className="relative w-full aspect-square bg-gradient-to-br from-secondary/10 to-secondary/30 rounded-lg overflow-hidden border border-border"
-    >
-      <div className="absolute top-4 right-4 z-10 flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={downloadAsImage}
-          className="shadow-lg"
-          title="Download as PNG"
-        >
-          <Camera className="w-4 h-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={downloadAsPDF}
-          className="shadow-lg"
-          title="Download as PDF"
-        >
-          <Download className="w-4 h-4" />
-        </Button>
+    <div className="relative w-full aspect-square bg-gradient-to-br from-secondary/10 to-secondary/30 rounded-lg overflow-hidden border border-border">
+      <div className="absolute top-4 right-4 z-10">
         <Button
           variant={measurementMode ? "default" : "outline"}
           size="sm"
