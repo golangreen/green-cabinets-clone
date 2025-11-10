@@ -21,7 +21,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { Checkbox } from "@/components/ui/checkbox";
 import logoImage from "@/assets/logo.jpg";
@@ -35,6 +35,8 @@ import { Vanity3DPreview } from "./Vanity3DPreview";
 import { TemplateGallery } from "./TemplateGallery";
 import { VanityTemplate } from "@/lib/vanityTemplates";
 import { useSavedTemplates } from "@/hooks/useSavedTemplates";
+import jsPDF from 'jspdf';
+import { CartItem } from "@/stores/cartStore";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -427,6 +429,60 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     }
   }, [zipCode]);
 
+  const handleExportPDF = () => {
+    if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
+      toast.error("Please complete all required fields", {
+        description: "All dimensions and selections are required for export",
+      });
+      return;
+    }
+
+    try {
+      const doc = new jsPDF();
+      const widthFrac = getFractionDisplay(widthFraction);
+      const heightFrac = getFractionDisplay(heightFraction);
+      const depthFrac = getFractionDisplay(depthFraction);
+      
+      doc.setFontSize(20);
+      doc.text('Custom Vanity Configuration', 20, 20);
+      
+      doc.setFontSize(12);
+      let yPos = 40;
+      
+      doc.text(`Dimensions: ${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D`, 20, yPos);
+      yPos += 10;
+      doc.text(`Brand: ${selectedBrand}`, 20, yPos);
+      yPos += 10;
+      doc.text(`Finish: ${selectedFinish}`, 20, yPos);
+      yPos += 10;
+      doc.text(`Cabinet: ${doorStyle}`, 20, yPos);
+      yPos += 10;
+      doc.text(`Countertop: ${countertopMaterial} - ${countertopColor}`, 20, yPos);
+      yPos += 10;
+      doc.text(`Sink: ${sinkStyle} - ${sinkShape}`, 20, yPos);
+      yPos += 15;
+      
+      doc.setFontSize(14);
+      doc.text('Price Breakdown', 20, yPos);
+      yPos += 10;
+      doc.setFontSize(12);
+      doc.text(`Vanity Price: $${basePrice.toFixed(2)}`, 20, yPos);
+      yPos += 10;
+      doc.text(`Tax: $${tax.toFixed(2)}`, 20, yPos);
+      yPos += 10;
+      doc.text(`Shipping to ${state}: $${shipping.toFixed(2)}`, 20, yPos);
+      yPos += 10;
+      doc.setFontSize(14);
+      doc.text(`Total: $${totalPrice.toFixed(2)}`, 20, yPos);
+      
+      doc.save(`vanity-configuration-${Date.now()}.pdf`);
+      toast.success("PDF exported successfully!");
+    } catch (error) {
+      console.error("Export error:", error);
+      toast.error("Failed to export PDF");
+    }
+  };
+
   const handleAddToCart = () => {
     if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
       toast.error("Please complete all fields", {
@@ -467,36 +523,29 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
     const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
 
-    // Use the first available variant (custom products typically have one default variant)
-    const matchingVariant = product.node.variants.edges[0];
+    const widthFrac = getFractionDisplay(widthFraction);
+    const heightFrac = getFractionDisplay(heightFraction);
+    const depthFrac = getFractionDisplay(depthFraction);
 
-    if (!matchingVariant) {
-      toast.error("Configuration error", {
-        description: "Product variant not available.",
-      });
-      return;
-    }
-
-    const cartItem = {
-      product,
-      variantId: matchingVariant.node.id,
-      variantTitle: matchingVariant.node.title,
+    const cartItem: CartItem = {
+      product: product,
+      variantId: product.node.variants.edges[0]?.node.id || '',
+      variantTitle: `${selectedBrand} - ${selectedFinish}`,
       price: {
-        amount: totalPrice.toFixed(2),
-        currencyCode: matchingVariant.node.price.currencyCode
+        amount: product.node.priceRange.minVariantPrice.amount,
+        currencyCode: product.node.priceRange.minVariantPrice.currencyCode,
       },
       quantity: 1,
       selectedOptions: [
         { name: "Brand", value: selectedBrand },
-        { name: "Finish", value: selectedFinish }
+        { name: "Finish", value: selectedFinish },
       ],
       customAttributes: [
-        { key: "Brand", value: selectedBrand },
-        { key: "Finish", value: selectedFinish },
-        { key: "Width", value: `${widthInches.toFixed(4)}"` },
-        { key: "Height", value: `${heightInches.toFixed(4)}"` },
-        { key: "Depth", value: `${depthInches.toFixed(4)}"` },
-        { key: "Zip Code", value: zipCode },
+        { 
+          key: "Dimensions", 
+          value: `${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D` 
+        },
+        { key: "ZIP Code", value: zipCode },
         { key: "State", value: state || "Unknown" },
         { 
           key: "Door Style", 
@@ -2622,23 +2671,32 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <Button 
             onClick={handleSaveTemplate} 
             variant="outline"
-            className="flex-1 touch-manipulation" 
+            className="touch-manipulation" 
             size="lg"
           >
             <Save className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">Save Template</span>
+            <span className="text-sm sm:text-base">Save</span>
+          </Button>
+          <Button 
+            onClick={handleExportPDF} 
+            variant="outline"
+            className="touch-manipulation" 
+            size="lg"
+          >
+            <FileDown className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Export</span>
           </Button>
           <Button 
             onClick={handleAddToCart} 
-            className="flex-1 touch-manipulation" 
+            className="touch-manipulation" 
             size="lg"
           >
             <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">Add to Cart</span>
+            <span className="text-sm sm:text-base">Cart</span>
           </Button>
         </div>
       </div>
