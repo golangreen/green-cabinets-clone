@@ -170,10 +170,10 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={scrollToTop}
-          className="fixed bottom-[180px] right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
+          className="fixed bottom-[140px] right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
           size="icon"
         >
-          <ChevronUp className="h-5 w-5" />
+          <ChevronUp className="h-4 w-4" />
         </Button>
       )}
 
@@ -187,10 +187,10 @@ const Chatbot = () => {
               setIsOpen(true);
             }
           }}
-          className="fixed bottom-[100px] right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
+          className="fixed bottom-[80px] right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
           size="icon"
         >
-          <MessageCircle className="h-5 w-5" />
+          <MessageCircle className="h-4 w-4" />
         </Button>
       )}
 
@@ -198,10 +198,10 @@ const Chatbot = () => {
       {!isOpen && (
         <Button
           onClick={scrollPageToBottom}
-          className="fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
+          className="fixed bottom-6 right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
           size="icon"
         >
-          <ChevronDown className="h-5 w-5" />
+          <ChevronDown className="h-4 w-4" />
         </Button>
       )}
 
