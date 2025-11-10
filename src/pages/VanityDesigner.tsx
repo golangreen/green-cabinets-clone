@@ -35,6 +35,16 @@ interface Cabinet {
   label?: string;
 }
 
+interface CabinetTemplate {
+  type: string;
+  subType: string;
+  width: number;
+  height: number;
+  depth: number;
+  label: string;
+  description: string;
+}
+
 interface Wall {
   id: number;
   x1: number;
@@ -51,6 +61,31 @@ interface Opening {
   position: number; // Position along the wall (0-1)
   width: number; // Width in inches
 }
+
+// Cabinet Library Templates
+const CABINET_LIBRARY: CabinetTemplate[] = [
+  // Base Cabinets
+  { type: "Base Cabinet", subType: "standard", width: 24, height: 34.5, depth: 24, label: "B24", description: "24\" Base" },
+  { type: "Base Cabinet", subType: "standard", width: 30, height: 34.5, depth: 24, label: "B30", description: "30\" Base" },
+  { type: "Base Cabinet", subType: "standard", width: 36, height: 34.5, depth: 24, label: "B36", description: "36\" Base" },
+  { type: "Base Cabinet", subType: "drawer", width: 18, height: 34.5, depth: 24, label: "DB18", description: "18\" Drawer Base" },
+  { type: "Base Cabinet", subType: "drawer", width: 24, height: 34.5, depth: 24, label: "DB24", description: "24\" Drawer Base" },
+  
+  // Wall Cabinets
+  { type: "Wall Cabinet", subType: "standard", width: 24, height: 30, depth: 12, label: "W2430", description: "24\" Wall 30\"H" },
+  { type: "Wall Cabinet", subType: "standard", width: 30, height: 30, depth: 12, label: "W3030", description: "30\" Wall 30\"H" },
+  { type: "Wall Cabinet", subType: "standard", width: 36, height: 30, depth: 12, label: "W3630", description: "36\" Wall 30\"H" },
+  { type: "Wall Cabinet", subType: "standard", width: 24, height: 42, depth: 12, label: "W2442", description: "24\" Wall 42\"H" },
+  
+  // Tall Cabinets
+  { type: "Tall Cabinet", subType: "pantry", width: 18, height: 84, depth: 24, label: "T1884", description: "18\" Pantry" },
+  { type: "Tall Cabinet", subType: "pantry", width: 24, height: 84, depth: 24, label: "T2484", description: "24\" Pantry" },
+  { type: "Tall Cabinet", subType: "oven", width: 30, height: 84, depth: 24, label: "TO30", description: "30\" Oven Cabinet" },
+  
+  // Corner Cabinets
+  { type: "Corner Cabinet", subType: "base", width: 36, height: 34.5, depth: 36, label: "LSB36", description: "36\" L-Corner Base" },
+  { type: "Corner Cabinet", subType: "wall", width: 24, height: 30, depth: 24, label: "LSW24", description: "24\" L-Corner Wall" },
+];
 
 const VanityDesigner = () => {
   const navigate = useNavigate();
@@ -89,11 +124,19 @@ const VanityDesigner = () => {
   const [openings, setOpenings] = useState<Opening[]>([]);
   const [selectedOpeningId, setSelectedOpeningId] = useState<number | null>(null);
   
+  // Drag from library state
+  const [draggingFromLibrary, setDraggingFromLibrary] = useState<CabinetTemplate | null>(null);
+  
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const gridSize = 24; // 12" grid at 2px per inch scale
   const wallThickness = 9; // 9px = 4.5 inches at 2px per inch scale
   const canvasRef = useRef<HTMLDivElement>(null);
+  
+  // Snap to grid helper
+  const snapToGrid = useCallback((value: number) => {
+    return Math.round(value / gridSize) * gridSize;
+  }, [gridSize]);
   
   // Add a new cabinet
   const addCabinet = useCallback(() => {
@@ -113,6 +156,25 @@ const VanityDesigner = () => {
     setSelectedCabinetId(newCabinet.id);
     toast.success("Cabinet added");
   }, [cabinets]);
+  
+  // Add cabinet from template
+  const addCabinetFromTemplate = useCallback((template: CabinetTemplate, x: number, y: number) => {
+    const newCabinet: Cabinet = {
+      id: Math.max(...cabinets.map(c => c.id), 0) + 1,
+      type: template.type,
+      width: template.width,
+      height: template.height,
+      depth: template.depth,
+      x: snapToGrid(x),
+      y: snapToGrid(y),
+      brand: "Tafisa",
+      finish: "White",
+      label: template.label
+    };
+    setCabinets([...cabinets, newCabinet]);
+    setSelectedCabinetId(newCabinet.id);
+    toast.success(`${template.description} added`);
+  }, [cabinets, snapToGrid]);
 
   // Remove selected cabinet
   const removeCabinet = useCallback(() => {
@@ -156,15 +218,9 @@ const VanityDesigner = () => {
     toast.success("Design exported");
   }, [cabinets]);
 
-  // Share configuration
   const handleShare = useCallback(() => {
     toast.success("Share link copied");
   }, []);
-
-  // Snap to grid helper
-  const snapToGrid = useCallback((value: number) => {
-    return Math.round(value / gridSize) * gridSize;
-  }, [gridSize]);
 
   // Drag handlers
   const handleMouseDown = useCallback((e: React.MouseEvent, cabinetId: number) => {
@@ -193,6 +249,24 @@ const VanityDesigner = () => {
   const handleMouseUp = useCallback(() => {
     setDraggingId(null);
   }, []);
+  
+  // Library drag handlers
+  const handleLibraryDragStart = useCallback((template: CabinetTemplate) => {
+    setDraggingFromLibrary(template);
+  }, []);
+  
+  const handleCanvasDrop = useCallback((e: React.MouseEvent) => {
+    if (!draggingFromLibrary) return;
+    
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    addCabinetFromTemplate(draggingFromLibrary, x, y);
+    setDraggingFromLibrary(null);
+  }, [draggingFromLibrary, addCabinetFromTemplate]);
 
   // Wall drawing handlers
   const handleCanvasClick = useCallback((e: React.MouseEvent) => {
@@ -607,7 +681,9 @@ const VanityDesigner = () => {
         {showLeftPanel && (
           <div className="w-64 border-r border-border bg-card flex flex-col">
             <div className="p-3 border-b border-border flex items-center justify-between">
-              <h3 className="font-semibold text-sm">Place Items</h3>
+              <h3 className="font-semibold text-sm">
+                {activeTab === "room-layout" ? "Room Tools" : "Cabinet Library"}
+              </h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -618,23 +694,124 @@ const VanityDesigner = () => {
               </Button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-3 space-y-2">
-              {cabinets.map(cabinet => (
-                <Card
-                  key={cabinet.id}
-                  className={`p-2 cursor-pointer transition-colors ${
-                    selectedCabinetId === cabinet.id 
-                      ? "border-[#FF8C00] bg-[#FF8C00]/10" 
-                      : "hover:bg-muted/50"
-                  }`}
-                  onClick={() => setSelectedCabinetId(cabinet.id)}
-                >
-                  <p className="text-xs font-medium">{cabinet.label || cabinet.type}</p>
-                  <p className="text-[10px] text-muted-foreground">
-                    {cabinet.width}" × {cabinet.depth}"
+            <div className="flex-1 overflow-y-auto p-3 space-y-3">
+              {activeTab === "room-layout" ? (
+                <div className="space-y-2">
+                  <p className="text-xs text-muted-foreground">
+                    Use the tools above to draw walls, add doors and windows
                   </p>
-                </Card>
-              ))}
+                  <div className="p-3 bg-muted/50 rounded text-xs">
+                    <div className="font-medium mb-1">Tips:</div>
+                    <ul className="space-y-1 list-disc list-inside">
+                      <li>Click twice to draw a wall</li>
+                      <li>Click on walls to add openings</li>
+                      <li>Select openings to adjust size</li>
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {/* Base Cabinets */}
+                  <div>
+                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">BASE CABINETS</h4>
+                    <div className="space-y-1">
+                      {CABINET_LIBRARY.filter(c => c.type === "Base Cabinet").map((template, idx) => (
+                        <Card
+                          key={idx}
+                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
+                          draggable
+                          onDragStart={() => handleLibraryDragStart(template)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-xs font-medium">{template.label}</p>
+                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
+                            </div>
+                            <div className="text-[10px] text-muted-foreground">
+                              {template.width}"W
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Wall Cabinets */}
+                  <div>
+                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">WALL CABINETS</h4>
+                    <div className="space-y-1">
+                      {CABINET_LIBRARY.filter(c => c.type === "Wall Cabinet").map((template, idx) => (
+                        <Card
+                          key={idx}
+                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
+                          draggable
+                          onDragStart={() => handleLibraryDragStart(template)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-xs font-medium">{template.label}</p>
+                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
+                            </div>
+                            <div className="text-[10px] text-muted-foreground">
+                              {template.width}"W
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Tall Cabinets */}
+                  <div>
+                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">TALL CABINETS</h4>
+                    <div className="space-y-1">
+                      {CABINET_LIBRARY.filter(c => c.type === "Tall Cabinet").map((template, idx) => (
+                        <Card
+                          key={idx}
+                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
+                          draggable
+                          onDragStart={() => handleLibraryDragStart(template)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-xs font-medium">{template.label}</p>
+                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
+                            </div>
+                            <div className="text-[10px] text-muted-foreground">
+                              {template.width}"W
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Corner Cabinets */}
+                  <div>
+                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">CORNER CABINETS</h4>
+                    <div className="space-y-1">
+                      {CABINET_LIBRARY.filter(c => c.type === "Corner Cabinet").map((template, idx) => (
+                        <Card
+                          key={idx}
+                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
+                          draggable
+                          onDragStart={() => handleLibraryDragStart(template)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-xs font-medium">{template.label}</p>
+                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
+                            </div>
+                            <div className="text-[10px] text-muted-foreground">
+                              {template.width}"W
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -663,7 +840,9 @@ const VanityDesigner = () => {
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
               onClick={handleCanvasClick}
-              style={{ cursor: drawingTool === "wall" ? "crosshair" : "default" }}
+              onDrop={handleCanvasDrop}
+              onDragOver={(e) => e.preventDefault()}
+              style={{ cursor: drawingTool === "wall" ? "crosshair" : draggingFromLibrary ? "copy" : "default" }}
             >
               {/* Grid */}
               {showGrid && (
@@ -970,6 +1149,9 @@ const VanityDesigner = () => {
                 {drawingTool === "wall" && <div className="text-[#FF8C00] font-medium mt-1">Click to place wall points</div>}
                 {(drawingTool === "door" || drawingTool === "window") && (
                   <div className="text-[#FF8C00] font-medium mt-1">Click on a wall to place {drawingTool}</div>
+                )}
+                {draggingFromLibrary && (
+                  <div className="text-[#FF8C00] font-medium mt-1">Drop to place {draggingFromLibrary.label}</div>
                 )}
               </div>
             </div>
