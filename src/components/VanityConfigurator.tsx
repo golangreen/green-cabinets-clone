@@ -209,6 +209,15 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [mirrorShape, setMirrorShape] = useState<'rectangular' | 'round' | 'oval' | 'arched'>('rectangular');
   const [mirrorFrame, setMirrorFrame] = useState<'none' | 'black' | 'chrome' | 'gold' | 'wood'>('chrome');
   
+  // Bathroom accessories state
+  const [includeTowelBar, setIncludeTowelBar] = useState(false);
+  const [towelBarPosition, setTowelBarPosition] = useState<'left' | 'right' | 'center'>('center');
+  const [includeToiletPaperHolder, setIncludeToiletPaperHolder] = useState(false);
+  const [includeRobeHooks, setIncludeRobeHooks] = useState(false);
+  const [robeHookCount, setRobeHookCount] = useState(2);
+  const [includeShelving, setIncludeShelving] = useState(false);
+  const [shelvingType, setShelvingType] = useState<'floating' | 'corner' | 'ladder'>('floating');
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -896,6 +905,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         mirrorSize={mirrorSize}
         mirrorShape={mirrorShape}
         mirrorFrame={mirrorFrame}
+        includeTowelBar={includeTowelBar}
+        towelBarPosition={towelBarPosition}
+        includeToiletPaperHolder={includeToiletPaperHolder}
+        includeRobeHooks={includeRobeHooks}
+        robeHookCount={robeHookCount}
+        includeShelving={includeShelving}
+        shelvingType={shelvingType}
       />
             </div>
           </div>
@@ -930,6 +946,29 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               lightingType={lightingType}
               brightness={brightness}
               colorTemperature={colorTemperature}
+              includeToilet={includeToilet}
+              toiletStyle={toiletStyle}
+              toiletPosition={toiletPosition}
+              includeShower={includeShower}
+              showerStyle={showerStyle}
+              includeBathtub={includeBathtub}
+              bathtubStyle={bathtubStyle}
+              bathtubPosition={bathtubPosition}
+              wallFinishType={wallFinishType}
+              wallPaintColor={wallPaintColor}
+              wallTileColor={wallTileColor}
+              includeMirror={includeMirror}
+              mirrorType={mirrorType}
+              mirrorSize={mirrorSize}
+              mirrorShape={mirrorShape}
+              mirrorFrame={mirrorFrame}
+              includeTowelBar={includeTowelBar}
+              towelBarPosition={towelBarPosition}
+              includeToiletPaperHolder={includeToiletPaperHolder}
+              includeRobeHooks={includeRobeHooks}
+              robeHookCount={robeHookCount}
+              includeShelving={includeShelving}
+              shelvingType={shelvingType}
             />
             {/* Fullscreen Button */}
             <Button
