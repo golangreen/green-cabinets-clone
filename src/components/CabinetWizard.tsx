@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   CABINET_CATALOG, 
   MATERIAL_FINISHES, 
@@ -21,6 +22,7 @@ import {
   formatPrice,
   type CabinetSpec 
 } from "@/lib/cabinetCatalog";
+import { DoorStylePreview } from "@/components/DoorStylePreview";
 import { 
   Box, 
   ChevronRight, 
@@ -57,7 +59,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCabinet, setSelectedCabinet] = useState<CabinetSpec | null>(null);
   const [selectedFinishId, setSelectedFinishId] = useState<string>("tafisa-white");
-  const [selectedDoorStyleId, setSelectedDoorStyleId] = useState<string>("flat");
+  const [selectedDoorStyleId, setSelectedDoorStyleId] = useState<string>("flat-framed");
   const [selectedHandleType, setSelectedHandleType] = useState<keyof typeof HARDWARE_OPTIONS.handles>("bar");
   const [numHandles, setNumHandles] = useState(2);
 
@@ -71,7 +73,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
       setSelectedCategory(null);
       setSelectedCabinet(null);
       setSelectedFinishId("tafisa-white");
-      setSelectedDoorStyleId("flat");
+      setSelectedDoorStyleId("flat-framed");
       setSelectedHandleType("bar");
       setNumHandles(2);
     }
@@ -288,33 +290,128 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
           {/* Step 4: Finish & Door Style */}
           {step === 4 && selectedCabinet && (
             <div className="space-y-6 py-4">
-              {/* Door Style */}
+              {/* Door Style with Tabs for Frame Types */}
               <div>
-                <Label className="text-sm font-semibold mb-3 block">Door Style</Label>
-                <div className="grid grid-cols-1 gap-2">
-                  {DOOR_STYLES.map((style) => (
-                    <Card
-                      key={style.id}
-                      className={`p-3 cursor-pointer transition-all hover:border-primary ${
-                        selectedDoorStyleId === style.id ? "border-primary bg-primary/5" : ""
-                      }`}
-                      onClick={() => setSelectedDoorStyleId(style.id)}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h5 className="font-medium text-sm mb-1">{style.name}</h5>
-                          <p className="text-xs text-muted-foreground">{style.description}</p>
-                          <Badge variant="secondary" className="mt-2 text-xs">
-                            +{((style.priceMultiplier - 1) * 100).toFixed(0)}% premium
-                          </Badge>
+                <Label className="text-sm font-semibold mb-3 block">Door Style & Frame Type</Label>
+                <Tabs defaultValue="framed" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="framed">Framed</TabsTrigger>
+                    <TabsTrigger value="frameless">Frameless</TabsTrigger>
+                    <TabsTrigger value="inset">Inset</TabsTrigger>
+                  </TabsList>
+                  
+                  {/* Framed Styles */}
+                  <TabsContent value="framed" className="space-y-2 mt-3">
+                    {DOOR_STYLES.filter(s => s.frameType === "framed").map((style) => (
+                      <Card
+                        key={style.id}
+                        className={`p-3 cursor-pointer transition-all hover:border-primary ${
+                          selectedDoorStyleId === style.id ? "border-primary bg-primary/5 ring-2 ring-primary ring-offset-2" : ""
+                        }`}
+                        onClick={() => setSelectedDoorStyleId(style.id)}
+                      >
+                        <div className="flex items-start gap-3">
+                          {/* Visual Preview */}
+                          <div className="flex-shrink-0 w-16 h-16 border border-border rounded bg-background">
+                            <DoorStylePreview styleId={style.id} className="w-full h-full" />
+                          </div>
+                          
+                          {/* Details */}
+                          <div className="flex-1 min-w-0">
+                            <h5 className="font-medium text-sm mb-1">{style.name}</h5>
+                            <p className="text-xs text-muted-foreground">{style.description}</p>
+                            <Badge variant="secondary" className="mt-2 text-xs">
+                              +{((style.priceMultiplier - 1) * 100).toFixed(0)}% premium
+                            </Badge>
+                          </div>
+                          
+                          {/* Checkmark */}
+                          {selectedDoorStyleId === style.id && (
+                            <Check className="h-5 w-5 text-primary flex-shrink-0" />
+                          )}
                         </div>
-                        {selectedDoorStyleId === style.id && (
-                          <Check className="h-5 w-5 text-primary" />
-                        )}
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                      </Card>
+                    ))}
+                  </TabsContent>
+                  
+                  {/* Frameless Styles */}
+                  <TabsContent value="frameless" className="space-y-2 mt-3">
+                    <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-lg p-3 mb-3">
+                      <p className="text-xs text-blue-900 dark:text-blue-100">
+                        <span className="font-semibold">Frameless (European Style):</span> Full overlay doors with no face frame. Modern, seamless look with easier cleaning.
+                      </p>
+                    </div>
+                    {DOOR_STYLES.filter(s => s.frameType === "frameless").map((style) => (
+                      <Card
+                        key={style.id}
+                        className={`p-3 cursor-pointer transition-all hover:border-primary ${
+                          selectedDoorStyleId === style.id ? "border-primary bg-primary/5 ring-2 ring-primary ring-offset-2" : ""
+                        }`}
+                        onClick={() => setSelectedDoorStyleId(style.id)}
+                      >
+                        <div className="flex items-start gap-3">
+                          {/* Visual Preview */}
+                          <div className="flex-shrink-0 w-16 h-16 border border-border rounded bg-background">
+                            <DoorStylePreview styleId={style.id} className="w-full h-full" />
+                          </div>
+                          
+                          {/* Details */}
+                          <div className="flex-1 min-w-0">
+                            <h5 className="font-medium text-sm mb-1">{style.name}</h5>
+                            <p className="text-xs text-muted-foreground">{style.description}</p>
+                            <Badge variant="secondary" className="mt-2 text-xs">
+                              +{((style.priceMultiplier - 1) * 100).toFixed(0)}% premium
+                            </Badge>
+                          </div>
+                          
+                          {/* Checkmark */}
+                          {selectedDoorStyleId === style.id && (
+                            <Check className="h-5 w-5 text-primary flex-shrink-0" />
+                          )}
+                        </div>
+                      </Card>
+                    ))}
+                  </TabsContent>
+                  
+                  {/* Inset Styles */}
+                  <TabsContent value="inset" className="space-y-2 mt-3">
+                    <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-lg p-3 mb-3">
+                      <p className="text-xs text-amber-900 dark:text-amber-100">
+                        <span className="font-semibold">Inset Construction:</span> Premium doors sit flush inside the face frame. Fine furniture quality with precise fit and traditional craftsmanship.
+                      </p>
+                    </div>
+                    {DOOR_STYLES.filter(s => s.frameType === "inset").map((style) => (
+                      <Card
+                        key={style.id}
+                        className={`p-3 cursor-pointer transition-all hover:border-primary ${
+                          selectedDoorStyleId === style.id ? "border-primary bg-primary/5 ring-2 ring-primary ring-offset-2" : ""
+                        }`}
+                        onClick={() => setSelectedDoorStyleId(style.id)}
+                      >
+                        <div className="flex items-start gap-3">
+                          {/* Visual Preview */}
+                          <div className="flex-shrink-0 w-16 h-16 border border-border rounded bg-background">
+                            <DoorStylePreview styleId={style.id} className="w-full h-full" />
+                          </div>
+                          
+                          {/* Details */}
+                          <div className="flex-1 min-w-0">
+                            <h5 className="font-medium text-sm mb-1">{style.name}</h5>
+                            <p className="text-xs text-muted-foreground">{style.description}</p>
+                            <Badge variant="secondary" className="mt-2 text-xs">
+                              +{((style.priceMultiplier - 1) * 100).toFixed(0)}% premium
+                            </Badge>
+                          </div>
+                          
+                          {/* Checkmark */}
+                          {selectedDoorStyleId === style.id && (
+                            <Check className="h-5 w-5 text-primary flex-shrink-0" />
+                          )}
+                        </div>
+                      </Card>
+                    ))}
+                  </TabsContent>
+                </Tabs>
               </div>
 
               {/* Finish */}

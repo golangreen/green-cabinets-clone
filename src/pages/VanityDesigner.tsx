@@ -156,7 +156,7 @@ const VanityDesigner = () => {
       brand: "Tafisa",
       finish: "White",
       finishId: "tafisa-white",
-      doorStyleId: "flat",
+      doorStyleId: "flat-framed",
       label: "DB36",
       rotation: 0,
       handleType: "bar",
@@ -544,7 +544,7 @@ const VanityDesigner = () => {
   // Add cabinet from template
   const addCabinetFromTemplate = useCallback((template: CabinetSpec, x: number, y: number) => {
     const defaultFinishId = "tafisa-white";
-    const defaultDoorStyleId = "flat";
+    const defaultDoorStyleId = "flat-framed";
     const defaultHandleType = "bar";
     const numHandles = template.subType === "drawer" ? 3 : 2;
     const price = calculateCabinetPrice(template, defaultFinishId, defaultDoorStyleId, defaultHandleType, numHandles);
@@ -2354,9 +2354,8 @@ const VanityDesigner = () => {
                             <div>
                               <Label className="text-[10px]">Door Style</Label>
                               <select
-                                value={cabinet.doorStyleId || "flat"}
+                                value={cabinet.doorStyleId || "flat-framed"}
                                 onChange={(e) => {
-                                  const doorStyle = DOOR_STYLES.find(d => d.id === e.target.value);
                                   setCabinets(cabinets.map(c => 
                                     c.id === selectedCabinetId 
                                       ? { ...c, doorStyleId: e.target.value } 
@@ -2365,14 +2364,30 @@ const VanityDesigner = () => {
                                 }}
                                 className="w-full h-7 text-xs border rounded-md px-2 bg-background"
                               >
-                                {DOOR_STYLES.map(style => (
-                                  <option key={style.id} value={style.id}>
-                                    {style.name}
-                                  </option>
-                                ))}
+                                <optgroup label="Framed (Standard Overlay)">
+                                  {DOOR_STYLES.filter(d => d.frameType === "framed").map(style => (
+                                    <option key={style.id} value={style.id}>
+                                      {style.name}
+                                    </option>
+                                  ))}
+                                </optgroup>
+                                <optgroup label="Frameless (European)">
+                                  {DOOR_STYLES.filter(d => d.frameType === "frameless").map(style => (
+                                    <option key={style.id} value={style.id}>
+                                      {style.name}
+                                    </option>
+                                  ))}
+                                </optgroup>
+                                <optgroup label="Inset (Premium)">
+                                  {DOOR_STYLES.filter(d => d.frameType === "inset").map(style => (
+                                    <option key={style.id} value={style.id}>
+                                      {style.name}
+                                    </option>
+                                  ))}
+                                </optgroup>
                               </select>
                               <p className="text-[9px] text-muted-foreground mt-1">
-                                {DOOR_STYLES.find(d => d.id === (cabinet.doorStyleId || "flat"))?.description}
+                                {DOOR_STYLES.find(d => d.id === (cabinet.doorStyleId || "flat-framed"))?.description}
                               </p>
                             </div>
                             

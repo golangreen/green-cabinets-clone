@@ -28,27 +28,78 @@ export interface DoorStyle {
   name: string;
   description: string;
   priceMultiplier: number; // Additional cost modifier for door style
+  frameType?: "framed" | "frameless" | "inset"; // Cabinet frame type
 }
 
-// Door style options
+// Door style options with frame types
 export const DOOR_STYLES: DoorStyle[] = [
+  // Framed options (standard overlay)
   {
-    id: "flat",
+    id: "flat-framed",
     name: "Flat/Slab",
-    description: "Modern flat panel door",
+    description: "Modern flat panel door with standard overlay",
     priceMultiplier: 1.0, // Base price
+    frameType: "framed",
   },
   {
-    id: "shaker",
+    id: "shaker-framed",
     name: "Shaker",
-    description: "Classic shaker style with traditional frame",
+    description: "Classic shaker with traditional frame and overlay",
     priceMultiplier: 1.10, // 10% premium
+    frameType: "framed",
   },
   {
-    id: "slim-shaker",
+    id: "slim-shaker-framed",
     name: "Slim Shaker",
-    description: "Modern slim shaker with narrow frame",
+    description: "Modern slim shaker with narrow frame and overlay",
     priceMultiplier: 1.15, // 15% premium
+    frameType: "framed",
+  },
+  
+  // Frameless options (full overlay, European style)
+  {
+    id: "flat-frameless",
+    name: "Flat/Slab Frameless",
+    description: "Sleek frameless flat panel, full overlay European style",
+    priceMultiplier: 1.25, // 25% premium for frameless construction
+    frameType: "frameless",
+  },
+  {
+    id: "shaker-frameless",
+    name: "Shaker Frameless",
+    description: "Contemporary shaker frameless, full overlay design",
+    priceMultiplier: 1.35, // 35% premium
+    frameType: "frameless",
+  },
+  {
+    id: "slim-shaker-frameless",
+    name: "Slim Shaker Frameless",
+    description: "Ultra-modern slim shaker frameless with full overlay",
+    priceMultiplier: 1.40, // 40% premium
+    frameType: "frameless",
+  },
+  
+  // Inset options (door sits inside frame)
+  {
+    id: "flat-inset",
+    name: "Flat/Slab Inset",
+    description: "Premium flat panel inset into face frame",
+    priceMultiplier: 1.50, // 50% premium for inset craftsmanship
+    frameType: "inset",
+  },
+  {
+    id: "shaker-inset",
+    name: "Shaker Inset",
+    description: "Traditional shaker inset for fine furniture look",
+    priceMultiplier: 1.60, // 60% premium
+    frameType: "inset",
+  },
+  {
+    id: "slim-shaker-inset",
+    name: "Slim Shaker Inset",
+    description: "Refined slim shaker inset with precision fit",
+    priceMultiplier: 1.65, // 65% premium
+    frameType: "inset",
   },
 ];
 
