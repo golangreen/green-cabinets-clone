@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { ShopifyProduct } from "@/lib/shopify";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -21,7 +22,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown, Mail, MessageCircle, Facebook, Twitter, Share2 } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown, Mail, MessageCircle, Facebook, Twitter, Share2, Scan } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { Checkbox } from "@/components/ui/checkbox";
 import logoImage from "@/assets/logo.jpg";
@@ -147,6 +148,7 @@ const getFractionDisplay = (sixteenths: string): string => {
 };
 
 export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
+  const navigate = useNavigate();
   const [selectedBrand, setSelectedBrand] = useState<string>("Tafisa");
   const [selectedFinish, setSelectedFinish] = useState<string>("");
   const [width, setWidth] = useState<string>("");
@@ -260,6 +262,57 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
+
+  // Load scanned measurements on mount
+  useEffect(() => {
+    const loadScannedMeasurements = () => {
+      try {
+        // Check sessionStorage first (from recent scan)
+        const currentScanStr = sessionStorage.getItem('current_scan');
+        if (currentScanStr) {
+          const scan = JSON.parse(currentScanStr);
+          applyScannedMeasurements(scan);
+          return;
+        }
+
+        // Check localStorage for saved scans
+        const savedScansStr = localStorage.getItem('room_scans');
+        if (savedScansStr) {
+          const scans = JSON.parse(savedScansStr);
+          if (scans.length > 0) {
+            // Use the most recent scan
+            const latestScan = scans[scans.length - 1];
+            applyScannedMeasurements(latestScan);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading scanned measurements:', error);
+      }
+    };
+
+    const applyScannedMeasurements = (scan: any) => {
+      // Convert meters to inches (1 meter = 39.3701 inches)
+      const widthInches = Math.round(scan.measurements.width * 39.3701);
+      const heightInches = Math.round(scan.measurements.height * 39.3701);
+      const depthInches = Math.round(scan.measurements.depth * 39.3701);
+
+      // Set whole inches
+      setWidth(Math.floor(widthInches).toString());
+      setHeight(Math.floor(heightInches).toString());
+      setDepth(Math.floor(depthInches).toString());
+
+      // Set fractions (0/16 for now - rounded to whole inches)
+      setWidthFraction("0");
+      setHeightFraction("0");
+      setDepthFraction("0");
+
+      toast.success(`Measurements loaded from ${scan.roomName}`, {
+        description: `${widthInches}" W × ${depthInches}" D × ${heightInches}" H`,
+      });
+    };
+
+    loadScannedMeasurements();
+  }, []);
 
   const handleTextureClick = (finish: string) => {
     setSelectedFinish(finish);
@@ -914,7 +967,18 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-sm">Dimensions</h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-sm">Dimensions</h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/scan')}
+                      className="h-7 text-xs gap-1"
+                    >
+                      <Scan className="h-3 w-3" />
+                      3D Scan
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-3 gap-2">
                     <div>
                       <Label className="text-xs">Width</Label>
