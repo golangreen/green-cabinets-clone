@@ -21,7 +21,8 @@ const config: CapacitorConfig = {
   },
   ios: {
     contentInset: 'automatic',
-    icon: 'public/logo.png'
+    icon: 'public/logo.png',
+    buildNumber: '1'
   },
   android: {
     allowMixedContent: true,
@@ -29,7 +30,9 @@ const config: CapacitorConfig = {
     adaptiveIcon: {
       foreground: 'public/logo.png',
       background: '#1e7b5f'
-    }
+    },
+    versionCode: 1,
+    versionName: '1.0.0'
   }
 };
 
