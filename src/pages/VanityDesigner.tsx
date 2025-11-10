@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useUndoRedo } from "@/hooks/useUndoRedo";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,7 +33,9 @@ import {
   FolderOpen,
   Edit,
   Upload,
-  Scan
+  Scan,
+  Undo,
+  Redo
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
@@ -156,8 +159,34 @@ const VanityDesigner = () => {
   ]);
   const [selectedCabinetId, setSelectedCabinetId] = useState<number | null>(1);
   
-  // Walls state
-  const [walls, setWalls] = useState<Wall[]>([]);
+  // Walls and Openings state with undo/redo
+  const {
+    state: layoutState,
+    setState: setLayoutState,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useUndoRedo<{ walls: Wall[]; openings: Opening[] }>({ walls: [], openings: [] });
+  
+  const walls = layoutState.walls;
+  const openings = layoutState.openings;
+  
+  // Helper functions to update walls and openings with history tracking
+  const setWalls = useCallback((newWalls: Wall[] | ((prev: Wall[]) => Wall[])) => {
+    setLayoutState(prev => ({
+      ...prev,
+      walls: typeof newWalls === 'function' ? newWalls(prev.walls) : newWalls
+    }));
+  }, [setLayoutState]);
+  
+  const setOpenings = useCallback((newOpenings: Opening[] | ((prev: Opening[]) => Opening[])) => {
+    setLayoutState(prev => ({
+      ...prev,
+      openings: typeof newOpenings === 'function' ? newOpenings(prev.openings) : newOpenings
+    }));
+  }, [setLayoutState]);
+  
   const [drawingWall, setDrawingWall] = useState<{ x: number; y: number } | null>(null);
   const [tempWallEnd, setTempWallEnd] = useState<{ x: number; y: number } | null>(null);
   
@@ -166,8 +195,6 @@ const VanityDesigner = () => {
   const [rotationStartAngle, setRotationStartAngle] = useState<number>(0);
   const [currentRotation, setCurrentRotation] = useState<number>(0);
   
-  // Openings state (doors and windows)
-  const [openings, setOpenings] = useState<Opening[]>([]);
   const [selectedOpeningId, setSelectedOpeningId] = useState<number | null>(null);
   
   // Track which elements came from scan
@@ -1399,6 +1426,39 @@ const VanityDesigner = () => {
                 <Square className="h-5 w-5" />
               </Button>
               <span className="text-[10px]">Clear Room</span>
+            </div>
+            <div className="w-px h-12 bg-border" />
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => {
+                  undo();
+                  toast.success("Undone");
+                }}
+                variant="ghost"
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1 hover:bg-accent"
+                disabled={!canUndo}
+                title="Undo (Ctrl+Z)"
+              >
+                <Undo className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Undo</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => {
+                  redo();
+                  toast.success("Redone");
+                }}
+                variant="ghost"
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1 hover:bg-accent"
+                disabled={!canRedo}
+                title="Redo (Ctrl+Y)"
+              >
+                <Redo className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Redo</span>
             </div>
             {selectedOpeningId && (
               <>
