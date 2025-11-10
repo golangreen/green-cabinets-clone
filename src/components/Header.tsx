@@ -7,13 +7,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Menu, Download } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/components/CartDrawer";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
+import { InstallPWADialog } from "@/components/InstallPWADialog";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showInstallDialog, setShowInstallDialog] = useState(false);
+  const { isInstallable, promptInstall } = usePWAInstall();
+
+  const handleInstall = async () => {
+    const installed = await promptInstall();
+    if (installed) {
+      setShowInstallDialog(false);
+    }
+  };
 
   const scrollToGallery = (category: string, event?: React.MouseEvent) => {
     // Prevent any default behavior
@@ -151,6 +162,19 @@ const Header = () => {
           </div>
           
           <div className="flex items-center gap-4 font-display">
+            {/* Install PWA Button */}
+            {isInstallable && (
+              <Button
+                size="default"
+                variant="outline"
+                className="hidden sm:inline-flex text-sm px-4"
+                onClick={() => setShowInstallDialog(true)}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Install
+              </Button>
+            )}
+
             {/* Get Quote Button - Desktop */}
             <Button
               size="default"
@@ -255,6 +279,12 @@ const Header = () => {
           </div>
         </div>
       </nav>
+
+      <InstallPWADialog 
+        open={showInstallDialog} 
+        onOpenChange={setShowInstallDialog}
+        onInstall={handleInstall}
+      />
     </header>;
 };
 export default Header;
