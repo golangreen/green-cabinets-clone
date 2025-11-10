@@ -165,6 +165,10 @@ const VanityDesigner = () => {
       numDrawers: 3
     }
   ]);
+  
+  // Global design settings
+  const [globalFinishId, setGlobalFinishId] = useState<string>("tafisa-white");
+  const [globalDoorStyleId, setGlobalDoorStyleId] = useState<string>("flat-framed");
   const [selectedCabinetId, setSelectedCabinetId] = useState<number | null>(1);
   
   // Walls and Openings state with undo/redo
@@ -641,6 +645,19 @@ const VanityDesigner = () => {
     setSelectedCabinetId(newCabinet.id);
     toast.success(`${template.description} added - ${formatPrice(price)}`);
   }, [cabinets]);
+
+  // Apply global design settings to all cabinets
+  const applyGlobalDesignToAll = useCallback(() => {
+    const updatedCabinets = cabinets.map(cabinet => ({
+      ...cabinet,
+      finishId: globalFinishId,
+      doorStyleId: globalDoorStyleId,
+      finish: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.name || cabinet.finish,
+      brand: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.brand || cabinet.brand,
+    }));
+    setCabinets(updatedCabinets);
+    toast.success("Global design applied to all cabinets!");
+  }, [cabinets, globalFinishId, globalDoorStyleId]);
 
   // Remove selected cabinet
   const removeCabinet = useCallback(() => {
@@ -1700,6 +1717,80 @@ const VanityDesigner = () => {
             </div>
           </div>
         );
+      case "design":
+        return (
+          <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
+            <div className="flex flex-col gap-2">
+              <Label className="text-xs font-semibold">Global Finish</Label>
+              <select
+                value={globalFinishId}
+                onChange={(e) => setGlobalFinishId(e.target.value)}
+                className="w-48 h-9 text-xs border rounded-md px-2 bg-background z-50"
+              >
+                <optgroup label="Tafisa">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Egger">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Shinnoki">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+            
+            <div className="w-px h-12 bg-border" />
+            
+            <div className="flex flex-col gap-2">
+              <Label className="text-xs font-semibold">Global Door Style</Label>
+              <select
+                value={globalDoorStyleId}
+                onChange={(e) => setGlobalDoorStyleId(e.target.value)}
+                className="w-48 h-9 text-xs border rounded-md px-2 bg-background z-50"
+              >
+                <optgroup label="Framed (Standard Overlay)">
+                  {DOOR_STYLES.filter(d => d.frameType === "framed").map(style => (
+                    <option key={style.id} value={style.id}>{style.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Frameless (European)">
+                  {DOOR_STYLES.filter(d => d.frameType === "frameless").map(style => (
+                    <option key={style.id} value={style.id}>{style.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Inset (Premium)">
+                  {DOOR_STYLES.filter(d => d.frameType === "inset").map(style => (
+                    <option key={style.id} value={style.id}>{style.name}</option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+            
+            <div className="w-px h-12 bg-border" />
+            
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={applyGlobalDesignToAll}
+                variant="default"
+                size="sm" 
+                className="h-12 px-6 flex items-center gap-2"
+                disabled={cabinets.length === 0}
+              >
+                <Paintbrush className="h-5 w-5" />
+                <span className="text-xs font-medium">Apply to All Cabinets</span>
+              </Button>
+              <span className="text-[10px] text-muted-foreground">
+                {cabinets.length} cabinet{cabinets.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+          </div>
+        );
       case "templates":
         return (
           <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
@@ -1794,6 +1885,15 @@ const VanityDesigner = () => {
             className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
           >
             ITEMS
+          </Button>
+          
+          <Button
+            variant={activeTab === "design" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab("design")}
+            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
+          >
+            DESIGN
           </Button>
           
           <Button
