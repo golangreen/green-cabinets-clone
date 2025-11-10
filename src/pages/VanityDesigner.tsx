@@ -37,7 +37,8 @@ import {
   Scan,
   Undo,
   Redo,
-  Sparkles
+  Sparkles,
+  RefreshCw
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
@@ -690,6 +691,30 @@ const VanityDesigner = () => {
     });
     setCabinets(updatedCabinets);
     toast.success("Global design applied to all cabinets!");
+  }, [cabinets, globalFinishId, globalDoorStyleId, globalHandleType, globalToeKickFinishId, globalMoldingFinishId, globalLightMoldingFinishId]);
+
+  // Reset single cabinet to global design settings
+  const resetCabinetToGlobal = useCallback((cabinetId: number) => {
+    const cabinet = cabinets.find(c => c.id === cabinetId);
+    if (!cabinet) return;
+    
+    const numHandles = cabinet.hasDrawers ? 3 : 2;
+    const updatedCabinet = {
+      ...cabinet,
+      finishId: globalFinishId,
+      doorStyleId: globalDoorStyleId,
+      handleType: globalHandleType,
+      numHandles: numHandles,
+      toeKickHeight: 4.5,
+      toeKickFinishId: globalToeKickFinishId === "match-door" ? globalFinishId : globalToeKickFinishId,
+      moldingFinishId: globalMoldingFinishId === "match-door" ? globalFinishId : globalMoldingFinishId,
+      lightMoldingFinishId: globalLightMoldingFinishId === "match-door" ? globalFinishId : globalLightMoldingFinishId,
+      finish: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.name || cabinet.finish,
+      brand: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.brand || cabinet.brand,
+    };
+    
+    setCabinets(cabinets.map(c => c.id === cabinetId ? updatedCabinet : c));
+    toast.success("Cabinet reset to global design!");
   }, [cabinets, globalFinishId, globalDoorStyleId, globalHandleType, globalToeKickFinishId, globalMoldingFinishId, globalLightMoldingFinishId]);
 
   // Remove selected cabinet
@@ -2491,16 +2516,27 @@ const VanityDesigner = () => {
                               cabinet.finishId !== globalFinishId ||
                               cabinet.doorStyleId !== globalDoorStyleId ||
                               cabinet.handleType !== globalHandleType ||
-                              (cabinet.toeKickFinishId && cabinet.toeKickFinishId !== "match-door") ||
-                              (cabinet.moldingFinishId && cabinet.moldingFinishId !== "match-door") ||
-                              (cabinet.lightMoldingFinishId && cabinet.lightMoldingFinishId !== "match-door");
+                              (cabinet.toeKickFinishId && cabinet.toeKickFinishId !== "match-door" && cabinet.toeKickFinishId !== (globalToeKickFinishId === "match-door" ? globalFinishId : globalToeKickFinishId)) ||
+                              (cabinet.moldingFinishId && cabinet.moldingFinishId !== "match-door" && cabinet.moldingFinishId !== (globalMoldingFinishId === "match-door" ? globalFinishId : globalMoldingFinishId)) ||
+                              (cabinet.lightMoldingFinishId && cabinet.lightMoldingFinishId !== "match-door" && cabinet.lightMoldingFinishId !== (globalLightMoldingFinishId === "match-door" ? globalFinishId : globalLightMoldingFinishId));
                             
                             if (hasOverrides) {
                               return (
-                                <Badge variant="secondary" className="text-[9px] h-5">
-                                  <Edit className="h-2.5 w-2.5 mr-1" />
-                                  Custom
-                                </Badge>
+                                <>
+                                  <Badge variant="secondary" className="text-[9px] h-5">
+                                    <Edit className="h-2.5 w-2.5 mr-1" />
+                                    Custom
+                                  </Badge>
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    className="h-6 text-[10px] px-2"
+                                    onClick={() => resetCabinetToGlobal(selectedCabinetId)}
+                                  >
+                                    <RefreshCw className="h-3 w-3 mr-1" />
+                                    Reset
+                                  </Button>
+                                </>
                               );
                             }
                             return null;
