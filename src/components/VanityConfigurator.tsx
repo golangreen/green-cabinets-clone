@@ -21,7 +21,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown, Mail } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { Checkbox } from "@/components/ui/checkbox";
 import logoImage from "@/assets/logo.jpg";
@@ -37,6 +37,7 @@ import { VanityTemplate } from "@/lib/vanityTemplates";
 import { useSavedTemplates } from "@/hooks/useSavedTemplates";
 import jsPDF from 'jspdf';
 import { CartItem } from "@/stores/cartStore";
+import { supabase } from "@/integrations/supabase/client";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -163,6 +164,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const [templateDescription, setTemplateDescription] = useState("");
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [recipientEmail, setRecipientEmail] = useState("");
+  const [recipientName, setRecipientName] = useState("");
+  const [isEmailSending, setIsEmailSending] = useState(false);
   const [texturePreviewOpen, setTexturePreviewOpen] = useState(false);
   const [previewFinish, setPreviewFinish] = useState("");
   const [fullscreenPreview, setFullscreenPreview] = useState(false);
@@ -428,6 +433,75 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       else setState("other");
     }
   }, [zipCode]);
+
+  const handleEmailConfig = async () => {
+    if (!recipientEmail.trim()) {
+      toast.error("Please enter an email address");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(recipientEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+      toast.error("Please complete the configuration first");
+      return;
+    }
+
+    setIsEmailSending(true);
+
+    try {
+      const widthFrac = getFractionDisplay(widthFraction);
+      const heightFrac = getFractionDisplay(heightFraction);
+      const depthFrac = getFractionDisplay(depthFraction);
+
+      const { data, error } = await supabase.functions.invoke('email-vanity-config', {
+        body: {
+          recipientEmail: recipientEmail.trim(),
+          recipientName: recipientName.trim() || undefined,
+          config: {
+            brand: selectedBrand,
+            finish: selectedFinish,
+            dimensions: `${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D`,
+            doorStyle: doorStyle === "single" ? "Single Door" : 
+                       doorStyle === "double" ? "Double Doors" : 
+                       doorStyle === "drawers" ? "All Drawers" : 
+                       doorStyle === "mixed" ? "Drawers + Doors" :
+                       doorStyle === "door-drawer-split" ? `Door + Drawer (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+                       "Custom Configuration",
+            countertop: `${countertopMaterial} - ${countertopColor} (${countertopEdge} edge)`,
+            sink: `${sinkStyle} - ${sinkShape}`,
+            pricing: {
+              vanity: `$${basePrice.toFixed(2)}`,
+              tax: `$${tax.toFixed(2)}`,
+              shipping: `$${shipping.toFixed(2)} (${state})`,
+              total: `$${totalPrice.toFixed(2)}`,
+            },
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      toast.success("Configuration emailed successfully!", {
+        description: `Sent to ${recipientEmail}`,
+      });
+
+      setEmailDialogOpen(false);
+      setRecipientEmail("");
+      setRecipientName("");
+    } catch (error) {
+      console.error("Email error:", error);
+      toast.error("Failed to send email", {
+        description: error instanceof Error ? error.message : "Please try again",
+      });
+    } finally {
+      setIsEmailSending(false);
+    }
+  };
 
   const handleExportPDF = () => {
     if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
@@ -2671,7 +2745,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <Button 
             onClick={handleSaveTemplate} 
             variant="outline"
@@ -2682,15 +2756,6 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             <span className="text-sm sm:text-base">Save</span>
           </Button>
           <Button 
-            onClick={handleExportPDF} 
-            variant="outline"
-            className="touch-manipulation" 
-            size="lg"
-          >
-            <FileDown className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">Export</span>
-          </Button>
-          <Button 
             onClick={handleAddToCart} 
             className="touch-manipulation" 
             size="lg"
@@ -2699,8 +2764,84 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             <span className="text-sm sm:text-base">Cart</span>
           </Button>
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Button 
+            onClick={handleExportPDF} 
+            variant="outline"
+            className="touch-manipulation" 
+            size="lg"
+          >
+            <FileDown className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Export PDF</span>
+          </Button>
+          <Button 
+            onClick={() => setEmailDialogOpen(true)} 
+            variant="outline"
+            className="touch-manipulation" 
+            size="lg"
+          >
+            <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Email</span>
+          </Button>
+        </div>
       </div>
     </div>
+
+      {/* Email Configuration Dialog */}
+      <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Email Configuration</DialogTitle>
+            <DialogDescription>
+              Send this vanity configuration to yourself or your sales team
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="recipient-name">Recipient Name (optional)</Label>
+              <Input
+                id="recipient-name"
+                placeholder="John Doe"
+                value={recipientName}
+                onChange={(e) => setRecipientName(e.target.value)}
+                disabled={isEmailSending}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="recipient-email">Email Address *</Label>
+              <Input
+                id="recipient-email"
+                type="email"
+                placeholder="customer@example.com"
+                value={recipientEmail}
+                onChange={(e) => setRecipientEmail(e.target.value)}
+                disabled={isEmailSending}
+              />
+            </div>
+            <div className="bg-muted/50 p-3 rounded-lg text-sm space-y-1">
+              <p className="font-medium">Configuration Summary:</p>
+              <p className="text-muted-foreground">
+                {selectedBrand} - {selectedFinish} • {width}×{height}×{depth}" • ${totalPrice.toFixed(2)}
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setEmailDialogOpen(false)}
+              disabled={isEmailSending}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleEmailConfig}
+              disabled={isEmailSending}
+            >
+              {isEmailSending ? "Sending..." : "Send Email"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Save Template Dialog */}
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
