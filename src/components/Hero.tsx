@@ -154,7 +154,7 @@ const Hero = () => {
       {/* Hero Content */}
       <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
-          Design Your Perfect Cabinet
+          Design Your Dream
         </h1>
         <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-8 drop-shadow-lg max-w-2xl mx-auto">
           Create custom cabinets with our intuitive 3D design tool. See your vision come to life in real-time.
