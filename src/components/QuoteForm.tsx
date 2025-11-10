@@ -83,18 +83,13 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
     setIsSubmitting(true);
     
     try {
-      // Execute reCAPTCHA if configured
+      // Execute reCAPTCHA if configured (optional - app works without it)
       let recaptchaToken = null;
       if (isConfigured) {
         recaptchaToken = await executeRecaptcha('quote_request');
+        // Don't block submission if reCAPTCHA fails - just continue without token
         if (!recaptchaToken) {
-          toast({
-            title: "Verification Failed",
-            description: "Please try again or contact us directly.",
-            variant: "destructive",
-          });
-          setIsSubmitting(false);
-          return;
+          console.warn('reCAPTCHA verification skipped');
         }
       }
       

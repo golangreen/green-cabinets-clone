@@ -4,9 +4,12 @@ import { useEffect, useState } from 'react';
 // Get it from: https://www.google.com/recaptcha/admin
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
 
+// Gracefully handle missing site key - app works without reCAPTCHA if not configured
+const IS_RECAPTCHA_ENABLED = !!RECAPTCHA_SITE_KEY && RECAPTCHA_SITE_KEY.length > 0;
+
 declare global {
   interface Window {
-    grecaptcha: {
+    grecaptcha?: {
       ready: (callback: () => void) => void;
       execute: (siteKey: string, options: { action: string }) => Promise<string>;
     };
@@ -17,6 +20,12 @@ export const useRecaptcha = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    // Skip loading if reCAPTCHA is not enabled
+    if (!IS_RECAPTCHA_ENABLED) {
+      setIsLoaded(false);
+      return;
+    }
+
     // Check if reCAPTCHA script is already loaded
     if (window.grecaptcha) {
       setIsLoaded(true);
@@ -30,9 +39,16 @@ export const useRecaptcha = () => {
     script.defer = true;
     
     script.onload = () => {
-      window.grecaptcha.ready(() => {
-        setIsLoaded(true);
-      });
+      if (window.grecaptcha) {
+        window.grecaptcha.ready(() => {
+          setIsLoaded(true);
+        });
+      }
+    };
+
+    script.onerror = () => {
+      console.warn('reCAPTCHA script failed to load');
+      setIsLoaded(false);
     };
 
     document.head.appendChild(script);
@@ -47,8 +63,13 @@ export const useRecaptcha = () => {
   }, []);
 
   const executeRecaptcha = async (action: string): Promise<string | null> => {
-    if (!isLoaded || !window.grecaptcha || !RECAPTCHA_SITE_KEY) {
-      console.warn('reCAPTCHA not loaded or site key missing');
+    // Return null if not configured - forms will work without it
+    if (!IS_RECAPTCHA_ENABLED) {
+      return null;
+    }
+
+    if (!isLoaded || !window.grecaptcha) {
+      console.warn('reCAPTCHA not loaded');
       return null;
     }
 
@@ -61,5 +82,5 @@ export const useRecaptcha = () => {
     }
   };
 
-  return { isLoaded, executeRecaptcha, isConfigured: !!RECAPTCHA_SITE_KEY };
+  return { isLoaded, executeRecaptcha, isConfigured: IS_RECAPTCHA_ENABLED };
 };

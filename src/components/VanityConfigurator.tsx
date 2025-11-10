@@ -680,16 +680,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     setIsEmailSending(true);
 
     try {
-      // Execute reCAPTCHA if configured
+      // Execute reCAPTCHA if configured (optional - app works without it)
       let recaptchaToken = null;
       if (isRecaptchaConfigured) {
         recaptchaToken = await executeRecaptcha('email_config');
+        // Don't block submission if reCAPTCHA fails - just continue without token
         if (!recaptchaToken) {
-          toast.error("Verification failed", {
-            description: "Please try again or contact us directly.",
-          });
-          setIsEmailSending(false);
-          return;
+          console.warn('reCAPTCHA verification skipped');
         }
       }
 
