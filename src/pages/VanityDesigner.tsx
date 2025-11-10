@@ -45,6 +45,7 @@ const VanityDesigner = () => {
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
   
   // Configuration state
+  const [cabinetType, setCabinetType] = useState<"vanity" | "closet">("vanity");
   const [width, setWidth] = useState(48);
   const [height, setHeight] = useState(34);
   const [depth, setDepth] = useState(21);
@@ -55,6 +56,13 @@ const VanityDesigner = () => {
   const [handleStyle, setHandleStyle] = useState("bar");
   const [sinkStyle, setSinkStyle] = useState<"undermount" | "vessel" | "integrated">("undermount");
   const [sinkShape, setSinkShape] = useState<"rectangular" | "oval" | "square">("rectangular");
+  
+  // Closet-specific options
+  const [shelfCount, setShelfCount] = useState(3);
+  const [drawerCount, setDrawerCount] = useState(2);
+  const [hangingRodCount, setHangingRodCount] = useState(1);
+  const [hasShoeRack, setHasShoeRack] = useState(false);
+  const [hasMirror, setHasMirror] = useState(false);
 
   // View controls
   const [zoom, setZoom] = useState(1);
@@ -301,6 +309,35 @@ const VanityDesigner = () => {
               {activeView === "measurement" ? (
                 // Measurement View - Simple dimension controls
                 <div className="p-4 space-y-4">
+                  {/* Cabinet Type Selection */}
+                  <div>
+                    <Label className="text-sm mb-2 block">Cabinet Type</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        variant={cabinetType === "vanity" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => {
+                          setCabinetType("vanity");
+                          saveToHistory();
+                        }}
+                      >
+                        Vanity
+                      </Button>
+                      <Button
+                        variant={cabinetType === "closet" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => {
+                          setCabinetType("closet");
+                          saveToHistory();
+                        }}
+                      >
+                        Closet
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
                   <div>
                     <Label className="text-sm">Width (inches)</Label>
                     <Input
@@ -340,16 +377,128 @@ const VanityDesigner = () => {
                   
                   <Separator className="my-4" />
                   
-                  <div>
-                    <Label className="text-sm mb-2 block">Cabinet Type</Label>
-                    <div className="grid grid-cols-1 gap-2">
-                      {["Base Cabinet", "Wall Cabinet", "Tall Cabinet"].map((type) => (
-                        <Button key={type} variant="outline" size="sm">
-                          {type}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
+                  {/* Type-specific options */}
+                  {cabinetType === "vanity" ? (
+                    <>
+                      <div>
+                        <Label className="text-sm mb-2 block">Sink Configuration</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button variant="outline" size="sm">Single Sink</Button>
+                          <Button variant="outline" size="sm">Double Sink</Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm mb-2 block">Vanity Style</Label>
+                        <div className="grid grid-cols-1 gap-2">
+                          <Button variant="outline" size="sm">Floating</Button>
+                          <Button variant="outline" size="sm">Floor Standing</Button>
+                          <Button variant="outline" size="sm">Wall Mounted</Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm mb-2 block">Drawer Count</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="6"
+                          value={drawerCount}
+                          onChange={(e) => {
+                            setDrawerCount(Number(e.target.value));
+                            saveToHistory();
+                          }}
+                          className="mt-1.5"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <Label className="text-sm mb-2 block">Closet Type</Label>
+                        <div className="grid grid-cols-1 gap-2">
+                          <Button variant="outline" size="sm">Walk-in</Button>
+                          <Button variant="outline" size="sm">Reach-in</Button>
+                          <Button variant="outline" size="sm">Wardrobe</Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm mb-2 block">Shelf Count</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="10"
+                          value={shelfCount}
+                          onChange={(e) => {
+                            setShelfCount(Number(e.target.value));
+                            saveToHistory();
+                          }}
+                          className="mt-1.5"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm mb-2 block">Drawer Units</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="8"
+                          value={drawerCount}
+                          onChange={(e) => {
+                            setDrawerCount(Number(e.target.value));
+                            saveToHistory();
+                          }}
+                          className="mt-1.5"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm mb-2 block">Hanging Rods</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="4"
+                          value={hangingRodCount}
+                          onChange={(e) => {
+                            setHangingRodCount(Number(e.target.value));
+                            saveToHistory();
+                          }}
+                          className="mt-1.5"
+                        />
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-sm">Shoe Rack</Label>
+                          <Button
+                            variant={hasShoeRack ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => {
+                              setHasShoeRack(!hasShoeRack);
+                              saveToHistory();
+                            }}
+                          >
+                            {hasShoeRack ? "Yes" : "No"}
+                          </Button>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <Label className="text-sm">Mirror Doors</Label>
+                          <Button
+                            variant={hasMirror ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => {
+                              setHasMirror(!hasMirror);
+                              saveToHistory();
+                            }}
+                          >
+                            {hasMirror ? "Yes" : "No"}
+                          </Button>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               ) : (
                 // 3D View - Full material controls
@@ -581,36 +730,54 @@ const VanityDesigner = () => {
                     </div>
                   </div>
                   
-                  {/* Specifications Panel */}
-                  <div className="mt-8 bg-card border border-border rounded-lg p-6">
-                    <h3 className="font-semibold text-sm mb-4">Cabinet Specifications</h3>
-                    <div className="grid grid-cols-3 gap-6">
-                      <div>
-                        <div className="text-xs text-muted-foreground mb-1">Dimensions</div>
-                        <div className="text-sm font-medium">{width}" W × {height}" H × {depth}" D</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-muted-foreground mb-1">Material Brand</div>
-                        <div className="text-sm font-medium">{brand}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-muted-foreground mb-1">Finish</div>
-                        <div className="text-sm font-medium">{finish}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-muted-foreground mb-1">Door Style</div>
-                        <div className="text-sm font-medium capitalize">{doorStyle}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-muted-foreground mb-1">Countertop</div>
-                        <div className="text-sm font-medium capitalize">{countertop}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-muted-foreground mb-1">Hardware</div>
-                        <div className="text-sm font-medium capitalize">{handleStyle}</div>
+                    <div className="mt-8 bg-card border border-border rounded-lg p-6">
+                      <h3 className="font-semibold text-sm mb-4">
+                        {cabinetType === "vanity" ? "Vanity" : "Closet"} Specifications
+                      </h3>
+                      <div className="grid grid-cols-2 gap-6">
+                        <div>
+                          <div className="text-xs text-muted-foreground mb-1">Type</div>
+                          <div className="text-sm font-medium capitalize">{cabinetType}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-muted-foreground mb-1">Dimensions</div>
+                          <div className="text-sm font-medium">{width}" W × {height}" H × {depth}" D</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-muted-foreground mb-1">Material Brand</div>
+                          <div className="text-sm font-medium">{brand}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-muted-foreground mb-1">Finish</div>
+                          <div className="text-sm font-medium">{finish}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-muted-foreground mb-1">Door Style</div>
+                          <div className="text-sm font-medium capitalize">{doorStyle}</div>
+                        </div>
+                        {cabinetType === "vanity" ? (
+                          <div>
+                            <div className="text-xs text-muted-foreground mb-1">Countertop</div>
+                            <div className="text-sm font-medium capitalize">{countertop}</div>
+                          </div>
+                        ) : (
+                          <>
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Shelves</div>
+                              <div className="text-sm font-medium">{shelfCount}</div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Hanging Rods</div>
+                              <div className="text-sm font-medium">{hangingRodCount}</div>
+                            </div>
+                          </>
+                        )}
+                        <div>
+                          <div className="text-xs text-muted-foreground mb-1">Hardware</div>
+                          <div className="text-sm font-medium capitalize">{handleStyle}</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -668,6 +835,10 @@ const VanityDesigner = () => {
                   <h3 className="text-xs font-semibold uppercase text-muted-foreground">Specifications</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Type</span>
+                      <span className="font-medium capitalize">{cabinetType}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Dimensions</span>
                       <span className="font-medium">{width}×{height}×{depth}"</span>
                     </div>
@@ -683,10 +854,23 @@ const VanityDesigner = () => {
                       <span className="text-muted-foreground">Door Style</span>
                       <span className="font-medium capitalize">{doorStyle}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Countertop</span>
-                      <span className="font-medium capitalize">{countertop}</span>
-                    </div>
+                    {cabinetType === "vanity" ? (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Countertop</span>
+                        <span className="font-medium capitalize">{countertop}</span>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Shelves</span>
+                          <span className="font-medium">{shelfCount}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Hanging Rods</span>
+                          <span className="font-medium">{hangingRodCount}</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
