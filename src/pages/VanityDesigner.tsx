@@ -1032,6 +1032,110 @@ const VanityDesigner = () => {
                 ` : 'none'
               }}
             >
+              {/* Dimension Lines - Draw before cabinets so they appear behind */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 5 }}>
+                {cabinets.map((cabinet, i) => {
+                  const scale = 2;
+                  const cab1Right = cabinet.x + (cabinet.width * scale);
+                  const cab1Bottom = cabinet.y + (cabinet.depth * scale);
+                  const cab1CenterX = cabinet.x + (cabinet.width * scale) / 2;
+                  const cab1CenterY = cabinet.y + (cabinet.depth * scale) / 2;
+                  
+                  return cabinets.slice(i + 1).map((otherCabinet) => {
+                    const cab2Right = otherCabinet.x + (otherCabinet.width * scale);
+                    const cab2Bottom = otherCabinet.y + (otherCabinet.depth * scale);
+                    const cab2CenterX = otherCabinet.x + (otherCabinet.width * scale) / 2;
+                    const cab2CenterY = otherCabinet.y + (otherCabinet.depth * scale) / 2;
+                    
+                    // Calculate horizontal gap (if aligned vertically)
+                    const verticallyAligned = Math.abs(cab1CenterY - cab2CenterY) < 50;
+                    const horizontalGap = cabinet.x < otherCabinet.x 
+                      ? otherCabinet.x - cab1Right 
+                      : cabinet.x - cab2Right;
+                    
+                    // Calculate vertical gap (if aligned horizontally)
+                    const horizontallyAligned = Math.abs(cab1CenterX - cab2CenterX) < 50;
+                    const verticalGap = cabinet.y < otherCabinet.y 
+                      ? otherCabinet.y - cab1Bottom 
+                      : cabinet.y - cab2Bottom;
+                    
+                    const lines = [];
+                    
+                    // Draw horizontal dimension line
+                    if (verticallyAligned && horizontalGap > 10 && horizontalGap < 300) {
+                      const startX = cabinet.x < otherCabinet.x ? cab1Right : cab2Right;
+                      const endX = cabinet.x < otherCabinet.x ? otherCabinet.x : cabinet.x;
+                      const lineY = Math.min(cab1CenterY, cab2CenterY);
+                      const distance = Math.round(horizontalGap / scale);
+                      
+                      lines.push(
+                        <g key={`h-${cabinet.id}-${otherCabinet.id}`}>
+                          <line
+                            x1={startX}
+                            y1={lineY}
+                            x2={endX}
+                            y2={lineY}
+                            stroke="hsl(var(--primary))"
+                            strokeWidth="2"
+                            strokeDasharray="4 2"
+                          />
+                          <line x1={startX} y1={lineY - 8} x2={startX} y2={lineY + 8} stroke="hsl(var(--primary))" strokeWidth="2" />
+                          <line x1={endX} y1={lineY - 8} x2={endX} y2={lineY + 8} stroke="hsl(var(--primary))" strokeWidth="2" />
+                          <text
+                            x={(startX + endX) / 2}
+                            y={lineY - 12}
+                            fill="hsl(var(--primary))"
+                            fontSize="12"
+                            fontWeight="600"
+                            textAnchor="middle"
+                            className="select-none"
+                          >
+                            {distance}"
+                          </text>
+                        </g>
+                      );
+                    }
+                    
+                    // Draw vertical dimension line
+                    if (horizontallyAligned && verticalGap > 10 && verticalGap < 300) {
+                      const startY = cabinet.y < otherCabinet.y ? cab1Bottom : cab2Bottom;
+                      const endY = cabinet.y < otherCabinet.y ? otherCabinet.y : cabinet.y;
+                      const lineX = Math.min(cab1CenterX, cab2CenterX);
+                      const distance = Math.round(verticalGap / scale);
+                      
+                      lines.push(
+                        <g key={`v-${cabinet.id}-${otherCabinet.id}`}>
+                          <line
+                            x1={lineX}
+                            y1={startY}
+                            x2={lineX}
+                            y2={endY}
+                            stroke="hsl(var(--primary))"
+                            strokeWidth="2"
+                            strokeDasharray="4 2"
+                          />
+                          <line x1={lineX - 8} y1={startY} x2={lineX + 8} y2={startY} stroke="hsl(var(--primary))" strokeWidth="2" />
+                          <line x1={lineX - 8} y1={endY} x2={lineX + 8} y2={endY} stroke="hsl(var(--primary))" strokeWidth="2" />
+                          <text
+                            x={lineX + 15}
+                            y={(startY + endY) / 2 + 4}
+                            fill="hsl(var(--primary))"
+                            fontSize="12"
+                            fontWeight="600"
+                            textAnchor="start"
+                            className="select-none"
+                          >
+                            {distance}"
+                          </text>
+                        </g>
+                      );
+                    }
+                    
+                    return lines;
+                  });
+                })}
+              </svg>
+              
               {/* Cabinets in 2D space */}
               {cabinets.map((cabinet) => {
                 const scale = 2; // 2px per inch for display
