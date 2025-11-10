@@ -189,6 +189,9 @@ const VanityDesigner = () => {
     label: string;
   } | null>(null);
   
+  // Drag trail state for visualizing movement path
+  const [dragTrail, setDragTrail] = useState<Array<{ x: number; y: number }>>([]);
+  
   // Collision detection state
   const [cabinetCollisions, setCabinetCollisions] = useState<Map<number, string[]>>(new Map());
   
@@ -1063,6 +1066,8 @@ const VanityDesigner = () => {
           const snappedY = snapToGrid(y);
           updateWallEndpoint(wall.id, 'start', 'x', snappedX);
           updateWallEndpoint(wall.id, 'start', 'y', snappedY);
+          // Add to trail
+          setDragTrail(prev => [...prev, { x: snappedX, y: snappedY }]);
           // Show feedback
           setDragFeedback({
             x: e.clientX,
@@ -1077,6 +1082,8 @@ const VanityDesigner = () => {
           const snappedY = snapToGrid(y);
           updateWallEndpoint(wall.id, 'end', 'x', snappedX);
           updateWallEndpoint(wall.id, 'end', 'y', snappedY);
+          // Add to trail
+          setDragTrail(prev => [...prev, { x: snappedX, y: snappedY }]);
           // Show feedback
           setDragFeedback({
             x: e.clientX,
@@ -1091,6 +1098,11 @@ const VanityDesigner = () => {
           if (wall) {
             const newPosition = getPositionOnWall({ x, y }, wall);
             updateOpeningPosition(opening.id, newPosition);
+            // Calculate position on wall for trail
+            const pos = getPositionOnWall({ x, y }, wall);
+            const wallX = wall.x1 + (wall.x2 - wall.x1) * pos;
+            const wallY = wall.y1 + (wall.y2 - wall.y1) * pos;
+            setDragTrail(prev => [...prev, { x: wallX, y: wallY }]);
             // Show feedback
             const wallLength = calculateWallLength(wall);
             const distanceFromStart = Math.round(newPosition * wallLength);
@@ -1122,6 +1134,7 @@ const VanityDesigner = () => {
     if (draggingHandle) {
       setDraggingHandle(null);
       setDragFeedback(null);
+      setDragTrail([]);
       toast.success("Position updated");
     }
     setDraggingId(null);
@@ -2675,6 +2688,40 @@ const VanityDesigner = () => {
                     </g>
                   );
                 })}
+                
+                {/* Drag trail visualization */}
+                {dragTrail.length > 1 && (
+                  <g>
+                    <defs>
+                      <linearGradient id="trailGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="rgb(59 130 246)" stopOpacity="0.2" />
+                        <stop offset="100%" stopColor="rgb(59 130 246)" stopOpacity="0.8" />
+                      </linearGradient>
+                    </defs>
+                    {/* Draw trail as connected line segments */}
+                    <polyline
+                      points={dragTrail.map(p => `${p.x},${p.y}`).join(' ')}
+                      fill="none"
+                      stroke="url(#trailGradient)"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeDasharray="5,5"
+                      opacity="0.6"
+                    />
+                    {/* Draw dots at each trail point */}
+                    {dragTrail.map((point, idx) => (
+                      <circle
+                        key={idx}
+                        cx={point.x}
+                        cy={point.y}
+                        r={2}
+                        fill="rgb(59 130 246)"
+                        opacity={0.3 + (idx / dragTrail.length) * 0.5}
+                      />
+                    ))}
+                  </g>
+                )}
               </svg>
               
               {/* Drag feedback tooltip */}
