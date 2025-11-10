@@ -47,6 +47,13 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Only run in browser, not during SSR/build
+    if (typeof window === 'undefined') {
+      setProduct(mockVanityProduct);
+      setLoading(false);
+      return;
+    }
+
     const loadProduct = async () => {
       try {
         const products = await fetchProducts(50);
