@@ -2011,14 +2011,16 @@ const VanityDesigner = () => {
       {/* Top Ribbon Tabs */}
       <div className="border-b border-border bg-card flex-shrink-0">
         <div className="flex items-center h-10 md:h-12 px-1 md:px-2 overflow-x-auto">
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={() => navigate("/")}
-            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm bg-[#FF8C00] hover:bg-[#FF8C00]/90 text-white flex-shrink-0"
+            className="h-8 md:h-10 px-2 flex-shrink-0 hover:opacity-80 transition-opacity"
           >
-            FILE
-          </Button>
+            <img 
+              src="/logo.png" 
+              alt="Green Cabinets Logo" 
+              className="h-full w-auto object-contain"
+            />
+          </button>
           
           <Button
             variant={activeTab === "room-layout" ? "default" : "ghost"}
