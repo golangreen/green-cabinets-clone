@@ -35,6 +35,75 @@ export type Database = {
         }
         Relationships: []
       }
+      block_history: {
+        Row: {
+          action: string
+          auto_blocked: boolean
+          blocked_until: string | null
+          created_at: string
+          id: string
+          ip_address: string
+          performed_by: string | null
+          reason: string | null
+        }
+        Insert: {
+          action: string
+          auto_blocked?: boolean
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          ip_address: string
+          performed_by?: string | null
+          reason?: string | null
+        }
+        Update: {
+          action?: string
+          auto_blocked?: boolean
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: string
+          performed_by?: string | null
+          reason?: string | null
+        }
+        Relationships: []
+      }
+      blocked_ips: {
+        Row: {
+          auto_blocked: boolean
+          blocked_at: string
+          blocked_until: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: string
+          reason: string
+          violation_count: number
+        }
+        Insert: {
+          auto_blocked?: boolean
+          blocked_at?: string
+          blocked_until: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address: string
+          reason: string
+          violation_count?: number
+        }
+        Update: {
+          auto_blocked?: boolean
+          blocked_at?: string
+          blocked_until?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: string
+          reason?: string
+          violation_count?: number
+        }
+        Relationships: []
+      }
       security_events: {
         Row: {
           client_ip: string
@@ -70,6 +139,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auto_block_ip: {
+        Args: {
+          block_duration_hours?: number
+          target_ip: string
+          violation_threshold?: number
+        }
+        Returns: Json
+      }
+      cleanup_expired_blocks: { Args: never; Returns: number }
+      get_blocked_ip_info: {
+        Args: { check_ip: string }
+        Returns: {
+          blocked: boolean
+          blocked_until: string
+          reason: string
+          violation_count: number
+        }[]
+      }
       get_security_summary: {
         Args: { time_window_minutes?: number }
         Returns: {
@@ -88,6 +175,24 @@ export type Database = {
           last_violation: string
           violation_count: number
         }[]
+      }
+      is_ip_blocked: { Args: { check_ip: string }; Returns: boolean }
+      manual_block_ip: {
+        Args: {
+          block_duration_hours?: number
+          block_reason: string
+          performed_by_user?: string
+          target_ip: string
+        }
+        Returns: Json
+      }
+      unblock_ip: {
+        Args: {
+          performed_by_user?: string
+          target_ip: string
+          unblock_reason?: string
+        }
+        Returns: Json
       }
     }
     Enums: {

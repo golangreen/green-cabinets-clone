@@ -85,9 +85,33 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Security Summary:", summary);
     console.log("Suspicious IPs:", suspiciousIPs);
 
+    // Check suspicious IPs for auto-blocking
+    const suspiciousIPsData = suspiciousIPs as SuspiciousIP[] || [];
+    
+    // Auto-block IPs with excessive violations
+    const AUTOBLOCK_THRESHOLD = 8; // Block after 8 violations
+    const AUTOBLOCK_DURATION_HOURS = 24; // Block for 24 hours
+    
+    for (const suspiciousIP of suspiciousIPsData) {
+      if (suspiciousIP.violation_count >= AUTOBLOCK_THRESHOLD) {
+        console.log(`Auto-blocking IP: ${suspiciousIP.client_ip} with ${suspiciousIP.violation_count} violations`);
+        
+        const { data: blockResult, error: blockError } = await supabase.rpc("auto_block_ip", {
+          target_ip: suspiciousIP.client_ip,
+          violation_threshold: AUTOBLOCK_THRESHOLD,
+          block_duration_hours: AUTOBLOCK_DURATION_HOURS,
+        });
+        
+        if (blockError) {
+          console.error("Error auto-blocking IP:", blockError);
+        } else {
+          console.log("Auto-block result:", blockResult);
+        }
+      }
+    }
+
     // Check if we need to send an alert
     const summaryData = summary as SecuritySummary[] || [];
-    const suspiciousIPsData = suspiciousIPs as SuspiciousIP[] || [];
     
     const criticalEvents = summaryData.filter(s => s.severity === "critical");
     const highEvents = summaryData.filter(s => s.severity === "high");
@@ -114,6 +138,7 @@ const handler = async (req: Request): Promise<Response> => {
               .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
               .alert-box { background: #fef2f2; border-left: 4px solid #dc2626; padding: 16px; margin: 20px 0; border-radius: 4px; }
               .warning-box { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; border-radius: 4px; }
+              .success-box { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 16px; margin: 20px 0; border-radius: 4px; }
               .section { margin-bottom: 25px; }
               .section-title { font-size: 18px; font-weight: bold; color: #dc2626; margin-bottom: 10px; border-bottom: 2px solid #dc2626; padding-bottom: 5px; }
               table { width: 100%; border-collapse: collapse; margin: 15px 0; }
@@ -121,6 +146,7 @@ const handler = async (req: Request): Promise<Response> => {
               td { padding: 10px; border-bottom: 1px solid #e5e7eb; }
               .ip { font-family: monospace; background: #f3f4f6; padding: 2px 6px; border-radius: 3px; }
               .count { font-weight: bold; color: #dc2626; }
+              .blocked-badge { background: #dc2626; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
             </style>
           </head>
           <body>
@@ -132,8 +158,14 @@ const handler = async (req: Request): Promise<Response> => {
               
               <div class="content">
                 <div class="alert-box">
-                  <strong>Action Required:</strong> Review and investigate the security events below. Consider blocking suspicious IP addresses if necessary.
+                  <strong>Action Required:</strong> Review and investigate the security events below. IPs with excessive violations have been automatically blocked.
                 </div>
+
+                ${suspiciousIPsData.filter(ip => ip.violation_count >= AUTOBLOCK_THRESHOLD).length > 0 ? `
+                  <div class="success-box">
+                    <strong>🛡️ Auto-Blocking Activated:</strong> ${suspiciousIPsData.filter(ip => ip.violation_count >= AUTOBLOCK_THRESHOLD).length} IP(s) have been automatically blocked for ${AUTOBLOCK_DURATION_HOURS} hours due to excessive violations.
+                  </div>
+                ` : ''}
 
                 ${summaryData.length > 0 ? `
                   <div class="section">
@@ -170,7 +202,7 @@ const handler = async (req: Request): Promise<Response> => {
                           <th>IP Address</th>
                           <th>Violations</th>
                           <th>Functions Affected</th>
-                          <th>First/Last Violation</th>
+                          <th>Status</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -179,10 +211,7 @@ const handler = async (req: Request): Promise<Response> => {
                             <td><span class="ip">${ip.client_ip}</span></td>
                             <td class="count">${ip.violation_count}</td>
                             <td>${ip.functions_affected.join(', ')}</td>
-                            <td style="font-size: 12px;">
-                              ${new Date(ip.first_violation).toLocaleString()}<br/>
-                              to ${new Date(ip.last_violation).toLocaleString()}
-                            </td>
+                            <td>${ip.violation_count >= AUTOBLOCK_THRESHOLD ? '<span class="blocked-badge">BLOCKED</span>' : '<span style="color: #f59e0b">⚠️ WARNING</span>'}</td>
                           </tr>
                         `).join('')}
                       </tbody>
@@ -193,10 +222,11 @@ const handler = async (req: Request): Promise<Response> => {
                 <div class="warning-box">
                   <strong>Recommended Actions:</strong>
                   <ul style="margin: 10px 0;">
-                    <li>Review the security_events table in your database for detailed information</li>
-                    <li>Consider implementing IP blocking for repeat offenders</li>
+                    <li>Review the blocked_ips and security_events tables for detailed information</li>
+                    <li>Manually review IPs with high violation counts but below auto-block threshold</li>
                     <li>Monitor edge function logs for additional context</li>
-                    <li>Adjust rate limiting thresholds if needed</li>
+                    <li>Consider adjusting auto-block thresholds if needed (currently ${AUTOBLOCK_THRESHOLD} violations)</li>
+                    <li>Blocked IPs will be automatically unblocked after ${AUTOBLOCK_DURATION_HOURS} hours</li>
                   </ul>
                 </div>
 

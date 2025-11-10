@@ -60,6 +60,27 @@ serve(async (req) => {
                      req.headers.get("x-real-ip") || 
                      "unknown";
     
+    // Check if IP is blocked
+    const { data: blockCheck } = await supabase.rpc("is_ip_blocked", { check_ip: clientIp });
+    if (blockCheck === true) {
+      const { data: blockInfo } = await supabase.rpc("get_blocked_ip_info", { check_ip: clientIp });
+      const blockedUntil = blockInfo && blockInfo.length > 0 ? blockInfo[0].blocked_until : null;
+      const reason = blockInfo && blockInfo.length > 0 ? blockInfo[0].reason : "Security violation";
+      
+      console.warn(`Blocked IP attempted access: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Access denied. Your IP has been temporarily blocked.",
+          reason: reason,
+          blocked_until: blockedUntil,
+        }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+    
     // Check rate limit
     if (!checkRateLimit(clientIp)) {
       console.warn(`Rate limit exceeded for IP: ${clientIp}`);
