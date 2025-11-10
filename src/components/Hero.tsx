@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import logo from "@/assets/logo.jpg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
@@ -94,7 +95,7 @@ const Hero = () => {
             zIndex: 1,
           }}
         >
-          <img 
+          <OptimizedImage 
             src={shuffledImages[currentImageIndex].src} 
             alt={shuffledImages[currentImageIndex].alt} 
             className="w-full h-full object-cover pointer-events-none" 
@@ -102,8 +103,7 @@ const Hero = () => {
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
               willChange: 'opacity'
             }}
-            loading="eager"
-            decoding="async"
+            eager
           />
         </div>
         
@@ -116,7 +116,7 @@ const Hero = () => {
             zIndex: 2,
           }}
         >
-          <img 
+          <OptimizedImage 
             src={shuffledImages[getNextIndex()].src} 
             alt={shuffledImages[getNextIndex()].alt} 
             className="w-full h-full object-cover pointer-events-none" 
@@ -124,8 +124,7 @@ const Hero = () => {
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
               willChange: 'opacity'
             }}
-            loading="eager"
-            decoding="async"
+            eager
           />
         </div>
         
@@ -134,7 +133,7 @@ const Hero = () => {
       
       {/* Logo Overlay - Full Size Glass Effect */}
       <div className="absolute inset-0" style={{ zIndex: 10 }}>
-        <img 
+        <OptimizedImage 
           src={logo} 
           alt="Company Logo" 
           className="pointer-events-none"
@@ -147,7 +146,7 @@ const Hero = () => {
             opacity: 0.18,
             mixBlendMode: 'overlay'
           }}
-          loading="eager"
+          eager
         />
       </div>
 
