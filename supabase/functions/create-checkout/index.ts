@@ -8,6 +8,11 @@ const customerDataSchema = z.object({
   customerName: z.string().trim().min(1).max(100),
 });
 
+const supabase = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+);
+
 const sanitizeString = (str: string): string => {
   return str.trim().replace(/[<>]/g, '');
 };
@@ -58,6 +63,16 @@ serve(async (req) => {
     // Check rate limit
     if (!checkRateLimit(clientIp)) {
       console.warn(`Rate limit exceeded for IP: ${clientIp}`);
+      
+      // Log security event (fire and forget)
+      supabase.from("security_events").insert({
+        event_type: "rate_limit_exceeded",
+        function_name: "create-checkout",
+        client_ip: clientIp,
+        details: { attempt: "checkout creation" },
+        severity: "medium",
+      });
+      
       return new Response(
         JSON.stringify({ 
           error: "Too many checkout attempts. Please try again later.",

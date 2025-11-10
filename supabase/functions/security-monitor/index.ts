@@ -1,0 +1,273 @@
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { Resend } from "https://esm.sh/resend@4.0.0";
+
+const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const resend = new Resend(resendApiKey);
+
+const ALERT_EMAIL = "info@greencabinets.com"; // Configure your alert email
+const TIME_WINDOW_MINUTES = 60;
+const RATE_LIMIT_THRESHOLD = 10; // Alert if same IP exceeds rate limit 10+ times
+const SUSPICIOUS_IP_THRESHOLD = 5; // Alert if IP has 5+ violations
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+interface SecuritySummary {
+  event_type: string;
+  event_count: number;
+  unique_ips: number;
+  severity: string;
+}
+
+interface SuspiciousIP {
+  client_ip: string;
+  violation_count: number;
+  functions_affected: string[];
+  first_violation: string;
+  last_violation: string;
+}
+
+const handler = async (req: Request): Promise<Response> => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    console.log("Running security monitor check...");
+
+    // Check if we've already sent an alert in the last hour to avoid spam
+    const { data: recentAlerts } = await supabase
+      .from("alert_history")
+      .select("sent_at")
+      .gte("sent_at", new Date(Date.now() - 60 * 60 * 1000).toISOString())
+      .order("sent_at", { ascending: false })
+      .limit(1);
+
+    if (recentAlerts && recentAlerts.length > 0) {
+      const minutesSinceLastAlert = (Date.now() - new Date(recentAlerts[0].sent_at).getTime()) / 60000;
+      if (minutesSinceLastAlert < 60) {
+        console.log(`Skipping alert - last alert sent ${Math.round(minutesSinceLastAlert)} minutes ago`);
+        return new Response(
+          JSON.stringify({ message: "Alert cooldown active", minutesSinceLastAlert }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
+    // Get security summary
+    const { data: summary, error: summaryError } = await supabase
+      .rpc("get_security_summary", { time_window_minutes: TIME_WINDOW_MINUTES });
+
+    if (summaryError) {
+      console.error("Error fetching security summary:", summaryError);
+      throw summaryError;
+    }
+
+    // Get suspicious IPs
+    const { data: suspiciousIPs, error: ipError } = await supabase
+      .rpc("get_suspicious_ips", { 
+        time_window_minutes: TIME_WINDOW_MINUTES,
+        threshold: SUSPICIOUS_IP_THRESHOLD 
+      });
+
+    if (ipError) {
+      console.error("Error fetching suspicious IPs:", ipError);
+      throw ipError;
+    }
+
+    console.log("Security Summary:", summary);
+    console.log("Suspicious IPs:", suspiciousIPs);
+
+    // Check if we need to send an alert
+    const summaryData = summary as SecuritySummary[] || [];
+    const suspiciousIPsData = suspiciousIPs as SuspiciousIP[] || [];
+    
+    const criticalEvents = summaryData.filter(s => s.severity === "critical");
+    const highEvents = summaryData.filter(s => s.severity === "high");
+    const rateLimitEvents = summaryData.find(s => s.event_type === "rate_limit_exceeded");
+
+    const shouldAlert = 
+      criticalEvents.length > 0 ||
+      highEvents.length > 0 ||
+      (rateLimitEvents && rateLimitEvents.event_count >= RATE_LIMIT_THRESHOLD) ||
+      suspiciousIPsData.length > 0;
+
+    if (shouldAlert) {
+      console.log("Security alert triggered - sending notification email");
+
+      // Build alert email
+      const alertHtml = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+              .header { background: #dc2626; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+              .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+              .alert-box { background: #fef2f2; border-left: 4px solid #dc2626; padding: 16px; margin: 20px 0; border-radius: 4px; }
+              .warning-box { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; border-radius: 4px; }
+              .section { margin-bottom: 25px; }
+              .section-title { font-size: 18px; font-weight: bold; color: #dc2626; margin-bottom: 10px; border-bottom: 2px solid #dc2626; padding-bottom: 5px; }
+              table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+              th { background: #f3f4f6; padding: 10px; text-align: left; border-bottom: 2px solid #e5e7eb; }
+              td { padding: 10px; border-bottom: 1px solid #e5e7eb; }
+              .ip { font-family: monospace; background: #f3f4f6; padding: 2px 6px; border-radius: 3px; }
+              .count { font-weight: bold; color: #dc2626; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>⚠️ Security Alert</h1>
+                <p>Suspicious activity detected in the last ${TIME_WINDOW_MINUTES} minutes</p>
+              </div>
+              
+              <div class="content">
+                <div class="alert-box">
+                  <strong>Action Required:</strong> Review and investigate the security events below. Consider blocking suspicious IP addresses if necessary.
+                </div>
+
+                ${summaryData.length > 0 ? `
+                  <div class="section">
+                    <div class="section-title">Security Events Summary</div>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Event Type</th>
+                          <th>Count</th>
+                          <th>Unique IPs</th>
+                          <th>Severity</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${summaryData.map(s => `
+                          <tr>
+                            <td>${s.event_type.replace(/_/g, ' ').toUpperCase()}</td>
+                            <td class="count">${s.event_count}</td>
+                            <td>${s.unique_ips}</td>
+                            <td><span style="color: ${s.severity === 'critical' ? '#dc2626' : s.severity === 'high' ? '#f59e0b' : '#6b7280'}">${s.severity.toUpperCase()}</span></td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                ` : ''}
+
+                ${suspiciousIPsData.length > 0 ? `
+                  <div class="section">
+                    <div class="section-title">Suspicious IP Addresses</div>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>IP Address</th>
+                          <th>Violations</th>
+                          <th>Functions Affected</th>
+                          <th>First/Last Violation</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${suspiciousIPsData.map(ip => `
+                          <tr>
+                            <td><span class="ip">${ip.client_ip}</span></td>
+                            <td class="count">${ip.violation_count}</td>
+                            <td>${ip.functions_affected.join(', ')}</td>
+                            <td style="font-size: 12px;">
+                              ${new Date(ip.first_violation).toLocaleString()}<br/>
+                              to ${new Date(ip.last_violation).toLocaleString()}
+                            </td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                ` : ''}
+
+                <div class="warning-box">
+                  <strong>Recommended Actions:</strong>
+                  <ul style="margin: 10px 0;">
+                    <li>Review the security_events table in your database for detailed information</li>
+                    <li>Consider implementing IP blocking for repeat offenders</li>
+                    <li>Monitor edge function logs for additional context</li>
+                    <li>Adjust rate limiting thresholds if needed</li>
+                  </ul>
+                </div>
+
+                <p style="margin-top: 30px; font-size: 14px; color: #666;">
+                  This alert was generated automatically by the security monitoring system. 
+                  Alerts are limited to once per hour to prevent spam.
+                </p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `;
+
+      // Send alert email
+      await resend.emails.send({
+        from: "Security Alerts <onboarding@resend.dev>",
+        to: [ALERT_EMAIL],
+        subject: `🚨 Security Alert: Suspicious Activity Detected`,
+        html: alertHtml,
+      });
+
+      // Log alert to history
+      await supabase
+        .from("alert_history")
+        .insert({
+          alert_type: "security_violation",
+          details: {
+            summary: summaryData,
+            suspicious_ips: suspiciousIPsData,
+            time_window_minutes: TIME_WINDOW_MINUTES,
+          },
+        });
+
+      console.log("Security alert email sent successfully");
+
+      return new Response(
+        JSON.stringify({ 
+          alert_sent: true,
+          summary: summaryData,
+          suspicious_ips: suspiciousIPsData,
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    console.log("No security issues detected - no alert needed");
+    return new Response(
+      JSON.stringify({ 
+        alert_sent: false,
+        message: "No suspicious activity detected",
+        summary: summaryData,
+      }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+
+  } catch (error: any) {
+    console.error("Error in security-monitor function:", error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  }
+};
+
+serve(handler);

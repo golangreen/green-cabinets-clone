@@ -14,13 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alert_history: {
+        Row: {
+          alert_type: string
+          details: Json | null
+          id: string
+          sent_at: string
+        }
+        Insert: {
+          alert_type: string
+          details?: Json | null
+          id?: string
+          sent_at?: string
+        }
+        Update: {
+          alert_type?: string
+          details?: Json | null
+          id?: string
+          sent_at?: string
+        }
+        Relationships: []
+      }
+      security_events: {
+        Row: {
+          client_ip: string
+          created_at: string
+          details: Json | null
+          event_type: string
+          function_name: string
+          id: string
+          severity: string
+        }
+        Insert: {
+          client_ip: string
+          created_at?: string
+          details?: Json | null
+          event_type: string
+          function_name: string
+          id?: string
+          severity: string
+        }
+        Update: {
+          client_ip?: string
+          created_at?: string
+          details?: Json | null
+          event_type?: string
+          function_name?: string
+          id?: string
+          severity?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_security_summary: {
+        Args: { time_window_minutes?: number }
+        Returns: {
+          event_count: number
+          event_type: string
+          severity: string
+          unique_ips: number
+        }[]
+      }
+      get_suspicious_ips: {
+        Args: { threshold?: number; time_window_minutes?: number }
+        Returns: {
+          client_ip: string
+          first_violation: string
+          functions_affected: string[]
+          last_violation: string
+          violation_count: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
