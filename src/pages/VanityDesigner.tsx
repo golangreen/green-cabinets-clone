@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -168,6 +168,9 @@ const VanityDesigner = () => {
   const [openings, setOpenings] = useState<Opening[]>([]);
   const [selectedOpeningId, setSelectedOpeningId] = useState<number | null>(null);
   
+  // Collision detection state
+  const [cabinetCollisions, setCabinetCollisions] = useState<Map<number, string[]>>(new Map());
+  
   // Drag from library state
   const [draggingFromLibrary, setDraggingFromLibrary] = useState<CabinetSpec | null>(null);
   
@@ -197,6 +200,127 @@ const VanityDesigner = () => {
     }
     return angle;
   }, []);
+  
+  // Collision detection helpers
+  const checkCabinetWallCollision = useCallback((cabinet: Cabinet, walls: Wall[]): boolean => {
+    const widthPx = cabinet.width * 2;
+    const depthPx = cabinet.depth * 2;
+    const rotation = cabinet.rotation || 0;
+    
+    // Get cabinet bounds (simplified for now - treats as rectangle)
+    const cabinetLeft = cabinet.x;
+    const cabinetRight = cabinet.x + widthPx;
+    const cabinetTop = cabinet.y;
+    const cabinetBottom = cabinet.y + depthPx;
+    
+    for (const wall of walls) {
+      // Check if cabinet intersects with wall line segment
+      const wallLeft = Math.min(wall.x1, wall.x2) - wall.thickness / 2;
+      const wallRight = Math.max(wall.x1, wall.x2) + wall.thickness / 2;
+      const wallTop = Math.min(wall.y1, wall.y2) - wall.thickness / 2;
+      const wallBottom = Math.max(wall.y1, wall.y2) + wall.thickness / 2;
+      
+      // Check for overlap
+      if (
+        cabinetLeft < wallRight &&
+        cabinetRight > wallLeft &&
+        cabinetTop < wallBottom &&
+        cabinetBottom > wallTop
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }, []);
+  
+  const checkCabinetOpeningCollision = useCallback((cabinet: Cabinet, openings: Opening[], walls: Wall[]): boolean => {
+    const widthPx = cabinet.width * 2;
+    const depthPx = cabinet.depth * 2;
+    
+    const cabinetLeft = cabinet.x;
+    const cabinetRight = cabinet.x + widthPx;
+    const cabinetTop = cabinet.y;
+    const cabinetBottom = cabinet.y + depthPx;
+    
+    for (const opening of openings) {
+      const wall = walls.find(w => w.id === opening.wallId);
+      if (!wall) continue;
+      
+      // Calculate opening position on wall
+      const openingX = wall.x1 + (wall.x2 - wall.x1) * opening.position;
+      const openingY = wall.y1 + (wall.y2 - wall.y1) * opening.position;
+      const openingWidth = opening.width * 2; // Convert to pixels
+      
+      // Simplified collision check - treat opening as a rectangle
+      const openingLeft = openingX - openingWidth / 2;
+      const openingRight = openingX + openingWidth / 2;
+      const openingTop = openingY - 10;
+      const openingBottom = openingY + 10;
+      
+      if (
+        cabinetLeft < openingRight &&
+        cabinetRight > openingLeft &&
+        cabinetTop < openingBottom &&
+        cabinetBottom > openingTop
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }, []);
+  
+  // Detect all collisions
+  const detectCollisions = useCallback(() => {
+    const collisionMap = new Map<number, string[]>();
+    
+    cabinets.forEach(cabinet => {
+      const collisions: string[] = [];
+      
+      if (checkCabinetWallCollision(cabinet, walls)) {
+        collisions.push("wall");
+      }
+      
+      if (checkCabinetOpeningCollision(cabinet, openings, walls)) {
+        collisions.push("opening");
+      }
+      
+      if (collisions.length > 0) {
+        collisionMap.set(cabinet.id, collisions);
+      }
+    });
+    
+    setCabinetCollisions(collisionMap);
+  }, [cabinets, walls, openings, checkCabinetWallCollision, checkCabinetOpeningCollision]);
+  
+  // Run collision detection when cabinets, walls, or openings change
+  useEffect(() => {
+    detectCollisions();
+  }, [detectCollisions]);
+  
+  // Show warnings for collisions
+  useEffect(() => {
+    if (cabinetCollisions.size > 0) {
+      const collisionDetails: string[] = [];
+      cabinetCollisions.forEach((types, cabinetId) => {
+        const cabinet = cabinets.find(c => c.id === cabinetId);
+        if (cabinet) {
+          types.forEach(type => {
+            if (type === "wall") {
+              collisionDetails.push(`${cabinet.label || "Cabinet"} overlaps with wall`);
+            } else if (type === "opening") {
+              collisionDetails.push(`${cabinet.label || "Cabinet"} overlaps with door/window`);
+            }
+          });
+        }
+      });
+      
+      if (collisionDetails.length > 0) {
+        toast.error(`⚠️ Collision detected: ${collisionDetails[0]}${collisionDetails.length > 1 ? ` (+${collisionDetails.length - 1} more)` : ''}`, {
+          duration: 3000,
+        });
+      }
+    }
+  }, [cabinetCollisions.size]); // Only trigger when the number of collisions changes
   
   // Add a new cabinet
   const addCabinet = useCallback(() => {
@@ -2297,6 +2421,8 @@ const VanityDesigner = () => {
                 const isDiagonal = cabinet.type === "Corner Cabinet" && (cabinet.label?.startsWith("DCB") || cabinet.label?.startsWith("DCW"));
                 const isLazySusan = cabinet.type === "Corner Cabinet" && (cabinet.label?.startsWith("LSBC") || cabinet.label?.startsWith("LSWC"));
                 const isPeninsula = cabinet.label?.startsWith("PEN");
+                const hasCollision = cabinetCollisions.has(cabinet.id);
+                const collisionTypes = cabinetCollisions.get(cabinet.id) || [];
                 
                 return (
                   <ContextMenu key={cabinet.id}>
@@ -2318,6 +2444,12 @@ const VanityDesigner = () => {
                         onMouseDown={(e) => handleMouseDown(e, cabinet.id)}
                         onTouchStart={(e) => handleTouchStart(e, cabinet.id)}
                       >
+                        {/* Collision warning indicator */}
+                        {hasCollision && (
+                          <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-destructive text-destructive-foreground px-2 py-0.5 rounded text-[9px] font-medium whitespace-nowrap shadow-lg animate-pulse">
+                            ⚠️ Collision
+                          </div>
+                        )}
                         {/* L-Shape rendering */}
                         {isLShaped && (
                           <svg 
@@ -2327,9 +2459,9 @@ const VanityDesigner = () => {
                           >
                             <path
                               d={`M 0 0 L ${widthPx * 0.4} 0 L ${widthPx * 0.4} ${depthPx * 0.6} L ${widthPx} ${depthPx * 0.6} L ${widthPx} ${depthPx} L 0 ${depthPx} Z`}
-                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
-                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
-                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
+                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
+                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
                             />
                           </svg>
                         )}
@@ -2343,9 +2475,9 @@ const VanityDesigner = () => {
                           >
                             <path
                               d={`M 0 0 L ${widthPx} 0 L ${widthPx} ${depthPx} L ${widthPx * 0.7} ${depthPx} L ${widthPx * 0.7} ${depthPx * 0.3} L ${widthPx * 0.3} ${depthPx * 0.3} L ${widthPx * 0.3} ${depthPx} L 0 ${depthPx} Z`}
-                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
-                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
-                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
+                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
+                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
                             />
                           </svg>
                         )}
@@ -2359,9 +2491,9 @@ const VanityDesigner = () => {
                           >
                             <path
                               d={`M 0 0 L ${widthPx} 0 L ${widthPx} ${depthPx} L 0 0 Z`}
-                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
-                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
-                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
+                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
+                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
                             />
                           </svg>
                         )}
@@ -2377,9 +2509,9 @@ const VanityDesigner = () => {
                               cx={widthPx / 2}
                               cy={depthPx / 2}
                               r={Math.min(widthPx, depthPx) / 2 - 2}
-                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
-                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
-                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
+                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
+                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
                             />
                             {/* Rotating indicator lines */}
                             <line
@@ -2387,7 +2519,7 @@ const VanityDesigner = () => {
                               y1={depthPx / 2}
                               x2={widthPx / 2}
                               y2={4}
-                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
                               strokeWidth="1"
                               opacity="0.5"
                             />
@@ -2396,7 +2528,7 @@ const VanityDesigner = () => {
                               y1={depthPx / 2}
                               x2={widthPx - 4}
                               y2={depthPx / 2}
-                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
                               strokeWidth="1"
                               opacity="0.5"
                             />
@@ -2416,9 +2548,9 @@ const VanityDesigner = () => {
                               y="0"
                               width={widthPx}
                               height={depthPx}
-                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
-                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
-                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
+                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
+                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
                             />
                             {/* End panel indicator (thicker line on one end) */}
                             <line
@@ -2426,7 +2558,7 @@ const VanityDesigner = () => {
                               y1="0"
                               x2={widthPx}
                               y2={depthPx}
-                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#6B7280'}
+                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#6B7280')}
                               strokeWidth="4"
                             />
                             {/* Divider lines to show multiple cabinets */}
@@ -2439,7 +2571,7 @@ const VanityDesigner = () => {
                                   y1="0"
                                   x2={xPos}
                                   y2={depthPx}
-                                  stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                                  stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
                                   strokeWidth="1"
                                   strokeDasharray="4,4"
                                   opacity="0.4"
@@ -2455,8 +2587,8 @@ const VanityDesigner = () => {
                             style={{
                               width: '100%',
                               height: '100%',
-                              backgroundColor: selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6',
-                              border: selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF',
+                              backgroundColor: hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'),
+                              border: hasCollision ? '3px solid #DC2626' : (selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF'),
                             }}
                           />
                         )}
@@ -2683,6 +2815,11 @@ const VanityDesigner = () => {
                 <div>Walls: {walls.length}</div>
                 <div>Openings: {openings.length}</div>
                 <div>Cabinets: {cabinets.length}</div>
+                {cabinetCollisions.size > 0 && (
+                  <div className="text-destructive font-medium mt-1 flex items-center gap-1">
+                    ⚠️ Collisions: {cabinetCollisions.size}
+                  </div>
+                )}
                 {drawingTool === "wall" && <div className="text-[#FF8C00] font-medium mt-1">Click to place wall points</div>}
                 {(drawingTool === "door" || drawingTool === "window") && (
                   <div className="text-[#FF8C00] font-medium mt-1">Click on a wall to place {drawingTool}</div>
