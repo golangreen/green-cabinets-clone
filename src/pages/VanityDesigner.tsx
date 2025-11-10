@@ -1746,7 +1746,7 @@ const VanityDesigner = () => {
                 onClick={() => setShowWizard(true)} 
                 variant="default" 
                 size="sm" 
-                className="h-12 px-4 flex items-center gap-2 bg-primary hover:bg-primary/90"
+                className="h-12 px-4 flex items-center gap-2 bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300"
               >
                 <Sparkles className="h-4 w-4" />
                 <span className="text-xs font-medium">Quick Add Wizard</span>
@@ -1930,7 +1930,7 @@ const VanityDesigner = () => {
                 onClick={applyGlobalDesignToAll}
                 variant="default"
                 size="sm" 
-                className="h-12 px-6 flex items-center gap-2"
+                className="h-12 px-6 flex items-center gap-2 bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300"
                 disabled={cabinets.length === 0}
               >
                 <Paintbrush className="h-5 w-5" />
@@ -2134,7 +2134,7 @@ const VanityDesigner = () => {
                         variant="default" 
                         size="sm"
                         onClick={() => navigate('/scan')}
-                        className="w-full h-auto py-3 flex items-center justify-center gap-2"
+                        className="w-full h-auto py-3 flex items-center justify-center gap-2 bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300"
                       >
                         <Scan className="h-4 w-4" />
                         <span className="text-xs">Scan Room with Camera</span>
@@ -3914,7 +3914,7 @@ const VanityDesigner = () => {
                               transform: `translateX(-50%) rotate(-${rotatingCabinet === cabinet.id ? currentRotation : rotation}deg)` 
                             }}
                           >
-                            <div className="bg-primary hover:bg-primary/90 text-primary-foreground p-1 rounded-full shadow-md">
+                            <div className="bg-green-500/30 hover:bg-green-400/40 border-2 border-green-400/50 backdrop-blur-sm text-white p-1 rounded-full shadow-md">
                               <RotateCw className="h-3 w-3" />
                             </div>
                           </div>
