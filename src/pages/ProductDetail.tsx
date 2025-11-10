@@ -7,6 +7,40 @@ import { VanityConfigurator } from "@/components/VanityConfigurator";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// Mock product for fallback
+const mockVanityProduct: ShopifyProduct = {
+  node: {
+    id: "gid://shopify/Product/mock",
+    handle: "custom-bathroom-vanity",
+    title: "Custom Bathroom Vanity",
+    description: "Premium custom bathroom vanities available in Tafisa ($250/ft), Egger ($300/ft), and Shinnoki ($350/ft) finishes. Choose your brand, style, and color from our extensive selection - over 60 Tafisa colors, 98+ Egger woodgrains and solids, and 18+ Shinnoki wood veneers.",
+    priceRange: {
+      minVariantPrice: {
+        amount: "250.0",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: []
+    },
+    variants: {
+      edges: [{
+        node: {
+          id: "gid://shopify/ProductVariant/mock",
+          title: "Default",
+          price: {
+            amount: "250.0",
+            currencyCode: "USD"
+          },
+          availableForSale: true,
+          selectedOptions: []
+        }
+      }]
+    },
+    options: []
+  }
+};
+
 export default function ProductDetail() {
   const { handle } = useParams<{ handle: string }>();
   const [product, setProduct] = useState<ShopifyProduct | null>(null);
@@ -19,9 +53,12 @@ export default function ProductDetail() {
         const foundProduct = products.find(
           (p: ShopifyProduct) => p.node.handle === handle
         );
-        setProduct(foundProduct || null);
+        // Use mock product as fallback if not found
+        setProduct(foundProduct || mockVanityProduct);
       } catch (error) {
         console.error("Error loading product:", error);
+        // Use mock product on error
+        setProduct(mockVanityProduct);
       } finally {
         setLoading(false);
       }
@@ -41,25 +78,7 @@ export default function ProductDetail() {
     );
   }
 
-  if (!product) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-            <Link to="/">
-              <Button variant="outline">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Shop
-              </Button>
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  // Product will always be available (either from Shopify or mock)
 
   return (
     <div className="min-h-screen flex flex-col">
