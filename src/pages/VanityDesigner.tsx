@@ -2013,16 +2013,17 @@ const VanityDesigner = () => {
         <div className="flex items-center h-10 md:h-12 px-1 md:px-2 overflow-x-auto">
           <button
             onClick={() => navigate("/")}
-            className="h-10 md:h-12 px-3 flex-shrink-0 hover:opacity-90 transition-opacity flex items-center gap-2"
+            className="h-10 md:h-12 px-3 flex-shrink-0 hover:opacity-90 transition-opacity flex items-center bg-black"
           >
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded flex items-center justify-center">
-                <span className="text-white font-bold text-lg">GC</span>
-              </div>
-              <span className="text-white font-bold text-base md:text-lg tracking-tight">
-                Green Cabinets
-              </span>
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="Green Cabinets" 
+              className="h-8 md:h-10 w-auto object-cover"
+              style={{ 
+                filter: 'drop-shadow(0 0 0 #000)',
+                clipPath: 'inset(5% 5% 5% 5%)'
+              }}
+            />
           </button>
           
           <Button
