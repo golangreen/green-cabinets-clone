@@ -218,6 +218,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [includeShelving, setIncludeShelving] = useState(false);
   const [shelvingType, setShelvingType] = useState<'floating' | 'corner' | 'ladder'>('floating');
   
+  // Faucet and fixtures state
+  const [includeFaucet, setIncludeFaucet] = useState(true);
+  const [faucetStyle, setFaucetStyle] = useState<'modern' | 'traditional' | 'waterfall'>('modern');
+  const [faucetFinish, setFaucetFinish] = useState<'chrome' | 'brushed-nickel' | 'matte-black' | 'gold'>('chrome');
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -811,6 +816,94 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                           </Select>
                         )}
                       </div>
+                      
+                      {/* Faucet & Fixtures Controls */}
+                      <div className="pt-2 border-t border-border space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox 
+                            id="includeFaucetFullscreen" 
+                            checked={includeFaucet}
+                            onCheckedChange={(checked) => setIncludeFaucet(checked as boolean)}
+                          />
+                          <Label htmlFor="includeFaucetFullscreen" className="text-xs font-medium cursor-pointer">
+                            Include Faucet
+                          </Label>
+                        </div>
+                        {includeFaucet && (
+                          <>
+                            <Select value={faucetStyle} onValueChange={(value: any) => setFaucetStyle(value)}>
+                              <SelectTrigger className="bg-background h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background z-[100]">
+                                <SelectItem value="modern">Modern</SelectItem>
+                                <SelectItem value="traditional">Traditional</SelectItem>
+                                <SelectItem value="waterfall">Waterfall</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Select value={faucetFinish} onValueChange={(value: any) => setFaucetFinish(value)}>
+                              <SelectTrigger className="bg-background h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background z-[100]">
+                                <SelectItem value="chrome">Chrome</SelectItem>
+                                <SelectItem value="brushed-nickel">Brushed Nickel</SelectItem>
+                                <SelectItem value="matte-black">Matte Black</SelectItem>
+                                <SelectItem value="gold">Gold</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </>
+                        )}
+                      </div>
+                      
+                      {/* Bathroom Accessories Controls */}
+                      <div className="pt-2 border-t border-border space-y-2">
+                        <Label className="text-xs font-medium">Accessories</Label>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox 
+                            id="includeTowelBarFullscreen" 
+                            checked={includeTowelBar}
+                            onCheckedChange={(checked) => setIncludeTowelBar(checked as boolean)}
+                          />
+                          <Label htmlFor="includeTowelBarFullscreen" className="text-xs cursor-pointer">
+                            Towel Bar
+                          </Label>
+                        </div>
+                        {includeTowelBar && (
+                          <Select value={towelBarPosition} onValueChange={(value: any) => setTowelBarPosition(value)}>
+                            <SelectTrigger className="bg-background h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-background z-[100]">
+                              <SelectItem value="left">Left</SelectItem>
+                              <SelectItem value="center">Center</SelectItem>
+                              <SelectItem value="right">Right</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                        <div className="flex items-center space-x-2">
+                          <Checkbox 
+                            id="includeShelvingFullscreen" 
+                            checked={includeShelving}
+                            onCheckedChange={(checked) => setIncludeShelving(checked as boolean)}
+                          />
+                          <Label htmlFor="includeShelvingFullscreen" className="text-xs cursor-pointer">
+                            Shelving
+                          </Label>
+                        </div>
+                        {includeShelving && (
+                          <Select value={shelvingType} onValueChange={(value: any) => setShelvingType(value)}>
+                            <SelectTrigger className="bg-background h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-background z-[100]">
+                              <SelectItem value="floating">Floating</SelectItem>
+                              <SelectItem value="corner">Corner</SelectItem>
+                              <SelectItem value="ladder">Ladder</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      </div>
                     </>
                   )}
                 </div>
@@ -908,11 +1001,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         includeTowelBar={includeTowelBar}
         towelBarPosition={towelBarPosition}
         includeToiletPaperHolder={includeToiletPaperHolder}
-        includeRobeHooks={includeRobeHooks}
-        robeHookCount={robeHookCount}
-        includeShelving={includeShelving}
-        shelvingType={shelvingType}
-      />
+              includeRobeHooks={includeRobeHooks}
+              robeHookCount={robeHookCount}
+              includeShelving={includeShelving}
+              shelvingType={shelvingType}
+              includeFaucet={includeFaucet}
+              faucetStyle={faucetStyle}
+              faucetFinish={faucetFinish}
+            />
             </div>
           </div>
         </div>
@@ -965,11 +1061,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               includeTowelBar={includeTowelBar}
               towelBarPosition={towelBarPosition}
               includeToiletPaperHolder={includeToiletPaperHolder}
-              includeRobeHooks={includeRobeHooks}
-              robeHookCount={robeHookCount}
-              includeShelving={includeShelving}
-              shelvingType={shelvingType}
-            />
+        includeRobeHooks={includeRobeHooks}
+        robeHookCount={robeHookCount}
+        includeShelving={includeShelving}
+        shelvingType={shelvingType}
+        includeFaucet={includeFaucet}
+        faucetStyle={faucetStyle}
+        faucetFinish={faucetFinish}
+      />
             {/* Fullscreen Button */}
             <Button
               variant="secondary"
@@ -1866,6 +1965,149 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                       </Select>
                     </div>
                   </>
+                )}
+              </div>
+
+              {/* Faucet & Fixtures */}
+              <div className="space-y-4 pt-4 border-t">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="includeFaucet" 
+                    checked={includeFaucet}
+                    onCheckedChange={(checked) => setIncludeFaucet(checked as boolean)}
+                  />
+                  <Label htmlFor="includeFaucet" className="font-medium cursor-pointer">
+                    Include Faucet & Fixtures
+                  </Label>
+                </div>
+                
+                {includeFaucet && (
+                  <>
+                    <div>
+                      <Label htmlFor="faucetStyle">Faucet Style</Label>
+                      <Select value={faucetStyle} onValueChange={(value: any) => setFaucetStyle(value)}>
+                        <SelectTrigger id="faucetStyle">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="modern">Modern (Single Hole)</SelectItem>
+                          <SelectItem value="traditional">Traditional (Widespread)</SelectItem>
+                          <SelectItem value="waterfall">Waterfall</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="faucetFinish">Faucet Finish</Label>
+                      <Select value={faucetFinish} onValueChange={(value: any) => setFaucetFinish(value)}>
+                        <SelectTrigger id="faucetFinish">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="chrome">Chrome</SelectItem>
+                          <SelectItem value="brushed-nickel">Brushed Nickel</SelectItem>
+                          <SelectItem value="matte-black">Matte Black</SelectItem>
+                          <SelectItem value="gold">Gold</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Bathroom Accessories */}
+              <div className="space-y-4 pt-4 border-t">
+                <h4 className="font-medium">Bathroom Accessories</h4>
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="includeTowelBar" 
+                    checked={includeTowelBar}
+                    onCheckedChange={(checked) => setIncludeTowelBar(checked as boolean)}
+                  />
+                  <Label htmlFor="includeTowelBar" className="cursor-pointer">
+                    Towel Bar
+                  </Label>
+                </div>
+                
+                {includeTowelBar && (
+                  <div>
+                    <Label htmlFor="towelBarPosition">Towel Bar Position</Label>
+                    <Select value={towelBarPosition} onValueChange={(value: any) => setTowelBarPosition(value)}>
+                      <SelectTrigger id="towelBarPosition">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="left">Left</SelectItem>
+                        <SelectItem value="center">Center</SelectItem>
+                        <SelectItem value="right">Right</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="includeToiletPaperHolder" 
+                    checked={includeToiletPaperHolder}
+                    onCheckedChange={(checked) => setIncludeToiletPaperHolder(checked as boolean)}
+                  />
+                  <Label htmlFor="includeToiletPaperHolder" className="cursor-pointer">
+                    Toilet Paper Holder
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="includeRobeHooks" 
+                    checked={includeRobeHooks}
+                    onCheckedChange={(checked) => setIncludeRobeHooks(checked as boolean)}
+                  />
+                  <Label htmlFor="includeRobeHooks" className="cursor-pointer">
+                    Robe Hooks
+                  </Label>
+                </div>
+                
+                {includeRobeHooks && (
+                  <div>
+                    <Label htmlFor="robeHookCount">Number of Hooks: {robeHookCount}</Label>
+                    <Slider
+                      id="robeHookCount"
+                      value={[robeHookCount]}
+                      onValueChange={(value) => setRobeHookCount(value[0])}
+                      min={1}
+                      max={4}
+                      step={1}
+                      className="w-full"
+                    />
+                  </div>
+                )}
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="includeShelving" 
+                    checked={includeShelving}
+                    onCheckedChange={(checked) => setIncludeShelving(checked as boolean)}
+                  />
+                  <Label htmlFor="includeShelving" className="cursor-pointer">
+                    Shelving Unit
+                  </Label>
+                </div>
+                
+                {includeShelving && (
+                  <div>
+                    <Label htmlFor="shelvingType">Shelving Type</Label>
+                    <Select value={shelvingType} onValueChange={(value: any) => setShelvingType(value)}>
+                      <SelectTrigger id="shelvingType">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="floating">Floating Shelves</SelectItem>
+                        <SelectItem value="corner">Corner Shelf Unit</SelectItem>
+                        <SelectItem value="ladder">Ladder Shelf</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 )}
               </div>
 
