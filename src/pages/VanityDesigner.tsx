@@ -2015,12 +2015,14 @@ const VanityDesigner = () => {
             onClick={() => navigate("/")}
             className="h-10 md:h-12 px-3 flex-shrink-0 hover:opacity-90 transition-opacity flex items-center gap-2"
           >
-            <img 
-              src="/logo.png" 
-              alt="Green Cabinets" 
-              className="h-6 md:h-8 w-auto object-contain brightness-0 invert"
-            />
-            <span className="text-white font-semibold text-sm hidden md:inline">Green Cabinets</span>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-lg">GC</span>
+              </div>
+              <span className="text-white font-bold text-base md:text-lg tracking-tight">
+                Green Cabinets
+              </span>
+            </div>
           </button>
           
           <Button
