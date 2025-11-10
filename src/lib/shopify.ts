@@ -142,38 +142,51 @@ const CART_CREATE_MUTATION = `
 `;
 
 export async function storefrontApiRequest(query: string, variables: any = {}) {
-  const response = await fetch(SHOPIFY_STOREFRONT_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
-    },
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
+  try {
+    const response = await fetch(SHOPIFY_STOREFRONT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
+      },
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+    });
 
-  if (response.status === 402) {
-    throw new Error('Shopify payment required - store needs to be on a paid plan');
+    if (response.status === 402) {
+      console.warn('Shopify payment required - store needs to be on a paid plan');
+      return { data: null };
+    }
+
+    if (!response.ok) {
+      console.warn(`Shopify HTTP error! status: ${response.status}`);
+      return { data: null };
+    }
+
+    const data = await response.json();
+    
+    if (data.errors) {
+      console.warn(`Shopify API errors:`, data.errors);
+      return { data: null };
+    }
+
+    return data;
+  } catch (error) {
+    console.warn('Shopify API request failed:', error);
+    return { data: null };
   }
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const data = await response.json();
-  
-  if (data.errors) {
-    throw new Error(`Error calling Shopify: ${data.errors.map((e: any) => e.message).join(', ')}`);
-  }
-
-  return data;
 }
 
 export async function fetchProducts(first: number = 50, query?: string) {
-  const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
-  return data?.data?.products?.edges || [];
+  try {
+    const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
+    return data?.data?.products?.edges || [];
+  } catch (error) {
+    console.warn('Failed to fetch products:', error);
+    return [];
+  }
 }
 
 export async function createStorefrontCheckout(items: any[]): Promise<string> {
