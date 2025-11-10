@@ -182,6 +182,13 @@ const VanityDesigner = () => {
     id: number;
   } | null>(null);
   
+  // Drag feedback state
+  const [dragFeedback, setDragFeedback] = useState<{
+    x: number;
+    y: number;
+    label: string;
+  } | null>(null);
+  
   // Collision detection state
   const [cabinetCollisions, setCabinetCollisions] = useState<Map<number, string[]>>(new Map());
   
@@ -1052,14 +1059,30 @@ const VanityDesigner = () => {
       if (draggingHandle.type === 'wall-start') {
         const wall = walls.find(w => w.id === draggingHandle.id);
         if (wall) {
-          updateWallEndpoint(wall.id, 'start', 'x', snapToGrid(x));
-          updateWallEndpoint(wall.id, 'start', 'y', snapToGrid(y));
+          const snappedX = snapToGrid(x);
+          const snappedY = snapToGrid(y);
+          updateWallEndpoint(wall.id, 'start', 'x', snappedX);
+          updateWallEndpoint(wall.id, 'start', 'y', snappedY);
+          // Show feedback
+          setDragFeedback({
+            x: e.clientX,
+            y: e.clientY - 40,
+            label: `X: ${Math.round(snappedX)}px, Y: ${Math.round(snappedY)}px`
+          });
         }
       } else if (draggingHandle.type === 'wall-end') {
         const wall = walls.find(w => w.id === draggingHandle.id);
         if (wall) {
-          updateWallEndpoint(wall.id, 'end', 'x', snapToGrid(x));
-          updateWallEndpoint(wall.id, 'end', 'y', snapToGrid(y));
+          const snappedX = snapToGrid(x);
+          const snappedY = snapToGrid(y);
+          updateWallEndpoint(wall.id, 'end', 'x', snappedX);
+          updateWallEndpoint(wall.id, 'end', 'y', snappedY);
+          // Show feedback
+          setDragFeedback({
+            x: e.clientX,
+            y: e.clientY - 40,
+            label: `X: ${Math.round(snappedX)}px, Y: ${Math.round(snappedY)}px`
+          });
         }
       } else if (draggingHandle.type === 'opening') {
         const opening = openings.find(o => o.id === draggingHandle.id);
@@ -1068,6 +1091,14 @@ const VanityDesigner = () => {
           if (wall) {
             const newPosition = getPositionOnWall({ x, y }, wall);
             updateOpeningPosition(opening.id, newPosition);
+            // Show feedback
+            const wallLength = calculateWallLength(wall);
+            const distanceFromStart = Math.round(newPosition * wallLength);
+            setDragFeedback({
+              x: e.clientX,
+              y: e.clientY - 40,
+              label: `${(newPosition * 100).toFixed(0)}% (${distanceFromStart}" from start)`
+            });
           }
         }
       }
@@ -1090,6 +1121,7 @@ const VanityDesigner = () => {
     }
     if (draggingHandle) {
       setDraggingHandle(null);
+      setDragFeedback(null);
       toast.success("Position updated");
     }
     setDraggingId(null);
@@ -2644,6 +2676,31 @@ const VanityDesigner = () => {
                   );
                 })}
               </svg>
+              
+              {/* Drag feedback tooltip */}
+              {dragFeedback && (
+                <div
+                  className="fixed z-50 pointer-events-none"
+                  style={{
+                    left: dragFeedback.x,
+                    top: dragFeedback.y,
+                    transform: 'translateX(-50%)'
+                  }}
+                >
+                  <div className="bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-md shadow-lg">
+                    {dragFeedback.label}
+                  </div>
+                  {/* Arrow pointing down */}
+                  <div 
+                    className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-0 h-0"
+                    style={{
+                      borderLeft: '4px solid transparent',
+                      borderRight: '4px solid transparent',
+                      borderTop: '4px solid rgb(37 99 235)'
+                    }}
+                  />
+                </div>
+              )}
               
               {/* Wall dimensions */}
               {showDimensions && walls.map(wall => {
