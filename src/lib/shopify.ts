@@ -142,6 +142,11 @@ const CART_CREATE_MUTATION = `
 `;
 
 export async function storefrontApiRequest(query: string, variables: any = {}) {
+  // Skip during SSR/build
+  if (typeof window === 'undefined') {
+    return { data: null };
+  }
+  
   try {
     const response = await fetch(SHOPIFY_STOREFRONT_URL, {
       method: 'POST',
@@ -180,6 +185,11 @@ export async function storefrontApiRequest(query: string, variables: any = {}) {
 }
 
 export async function fetchProducts(first: number = 50, query?: string) {
+  // Skip during SSR/build
+  if (typeof window === 'undefined') {
+    return [];
+  }
+  
   try {
     const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
     return data?.data?.products?.edges || [];
@@ -190,6 +200,11 @@ export async function fetchProducts(first: number = 50, query?: string) {
 }
 
 export async function createStorefrontCheckout(items: any[]): Promise<string> {
+  // Skip during SSR/build
+  if (typeof window === 'undefined') {
+    throw new Error('Checkout only available in browser');
+  }
+  
   try {
     console.log('Creating checkout with items:', items);
     
