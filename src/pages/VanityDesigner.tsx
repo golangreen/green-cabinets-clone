@@ -84,6 +84,10 @@ interface Cabinet {
   numHandles?: number; // Number of handles
   hasDrawers?: boolean; // Whether cabinet has drawers
   numDrawers?: number; // Number of drawers
+  toeKickHeight?: number; // Toe kick height in inches (default 4.5")
+  toeKickFinishId?: string; // Toe kick finish ID
+  moldingFinishId?: string; // Molding finish ID
+  lightMoldingFinishId?: string; // Light molding finish ID
 }
 
 interface Wall {
@@ -162,13 +166,21 @@ const VanityDesigner = () => {
       handleType: "bar",
       numHandles: 2,
       hasDrawers: true,
-      numDrawers: 3
+      numDrawers: 3,
+      toeKickHeight: 4.5,
+      toeKickFinishId: "tafisa-white",
+      moldingFinishId: "tafisa-white",
+      lightMoldingFinishId: "tafisa-white",
     }
   ]);
   
   // Global design settings
   const [globalFinishId, setGlobalFinishId] = useState<string>("tafisa-white");
   const [globalDoorStyleId, setGlobalDoorStyleId] = useState<string>("flat-framed");
+  const [globalHandleType, setGlobalHandleType] = useState<keyof typeof HARDWARE_OPTIONS.handles>("bar");
+  const [globalToeKickFinishId, setGlobalToeKickFinishId] = useState<string>("match-door"); // "match-door" or specific finish ID
+  const [globalMoldingFinishId, setGlobalMoldingFinishId] = useState<string>("match-door");
+  const [globalLightMoldingFinishId, setGlobalLightMoldingFinishId] = useState<string>("match-door");
   const [selectedCabinetId, setSelectedCabinetId] = useState<number | null>(1);
   
   // Walls and Openings state with undo/redo
@@ -538,7 +550,11 @@ const VanityDesigner = () => {
       y: 150,
       brand: "Tafisa",
       finish: "White",
-      label: `DB${36}`
+      label: `DB${36}`,
+      toeKickHeight: 4.5,
+      toeKickFinishId: "tafisa-white",
+      moldingFinishId: "tafisa-white",
+      lightMoldingFinishId: "tafisa-white",
     };
     setCabinets([...cabinets, newCabinet]);
     setSelectedCabinetId(newCabinet.id);
@@ -583,6 +599,10 @@ const VanityDesigner = () => {
       numHandles: numHandles,
       hasDrawers: template.subType === "drawer",
       numDrawers: template.subType === "drawer" ? 3 : 0,
+      toeKickHeight: 4.5,
+      toeKickFinishId: defaultFinishId,
+      moldingFinishId: defaultFinishId,
+      lightMoldingFinishId: defaultFinishId,
     };
     setCabinets([...cabinets, newCabinet]);
     setSelectedCabinetId(newCabinet.id);
@@ -639,6 +659,10 @@ const VanityDesigner = () => {
       numHandles: config.numHandles,
       hasDrawers: template.subType === "drawer",
       numDrawers: template.subType === "drawer" ? 3 : 0,
+      toeKickHeight: 4.5,
+      toeKickFinishId: config.finishId,
+      moldingFinishId: config.finishId,
+      lightMoldingFinishId: config.finishId,
     };
     
     setCabinets([...cabinets, newCabinet]);
@@ -648,16 +672,25 @@ const VanityDesigner = () => {
 
   // Apply global design settings to all cabinets
   const applyGlobalDesignToAll = useCallback(() => {
-    const updatedCabinets = cabinets.map(cabinet => ({
-      ...cabinet,
-      finishId: globalFinishId,
-      doorStyleId: globalDoorStyleId,
-      finish: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.name || cabinet.finish,
-      brand: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.brand || cabinet.brand,
-    }));
+    const updatedCabinets = cabinets.map(cabinet => {
+      const numHandles = cabinet.hasDrawers ? 3 : 2;
+      return {
+        ...cabinet,
+        finishId: globalFinishId,
+        doorStyleId: globalDoorStyleId,
+        handleType: globalHandleType,
+        numHandles: numHandles,
+        toeKickHeight: 4.5, // Standard 4.5" toe kick
+        toeKickFinishId: globalToeKickFinishId === "match-door" ? globalFinishId : globalToeKickFinishId,
+        moldingFinishId: globalMoldingFinishId === "match-door" ? globalFinishId : globalMoldingFinishId,
+        lightMoldingFinishId: globalLightMoldingFinishId === "match-door" ? globalFinishId : globalLightMoldingFinishId,
+        finish: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.name || cabinet.finish,
+        brand: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.brand || cabinet.brand,
+      };
+    });
     setCabinets(updatedCabinets);
     toast.success("Global design applied to all cabinets!");
-  }, [cabinets, globalFinishId, globalDoorStyleId]);
+  }, [cabinets, globalFinishId, globalDoorStyleId, globalHandleType, globalToeKickFinishId, globalMoldingFinishId, globalLightMoldingFinishId]);
 
   // Remove selected cabinet
   const removeCabinet = useCallback(() => {
@@ -1719,14 +1752,134 @@ const VanityDesigner = () => {
         );
       case "design":
         return (
-          <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
-            <div className="flex flex-col gap-2">
-              <Label className="text-xs font-semibold">Global Finish</Label>
+          <div className="flex items-center gap-4 px-4 py-3 bg-muted/30 overflow-x-auto">
+            <div className="flex flex-col gap-2 flex-shrink-0">
+              <Label className="text-xs font-semibold">Door/Drawer Finish</Label>
               <select
                 value={globalFinishId}
                 onChange={(e) => setGlobalFinishId(e.target.value)}
-                className="w-48 h-9 text-xs border rounded-md px-2 bg-background z-50"
+                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
               >
+                <optgroup label="Tafisa">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Egger">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Shinnoki">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+            
+            <div className="flex flex-col gap-2 flex-shrink-0">
+              <Label className="text-xs font-semibold">Door Style</Label>
+              <select
+                value={globalDoorStyleId}
+                onChange={(e) => setGlobalDoorStyleId(e.target.value)}
+                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
+              >
+                <optgroup label="Framed">
+                  {DOOR_STYLES.filter(d => d.frameType === "framed").map(style => (
+                    <option key={style.id} value={style.id}>{style.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Frameless">
+                  {DOOR_STYLES.filter(d => d.frameType === "frameless").map(style => (
+                    <option key={style.id} value={style.id}>{style.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Inset">
+                  {DOOR_STYLES.filter(d => d.frameType === "inset").map(style => (
+                    <option key={style.id} value={style.id}>{style.name}</option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+            
+            <div className="w-px h-12 bg-border" />
+            
+            <div className="flex flex-col gap-2 flex-shrink-0">
+              <Label className="text-xs font-semibold">Handle Type</Label>
+              <select
+                value={globalHandleType}
+                onChange={(e) => setGlobalHandleType(e.target.value as keyof typeof HARDWARE_OPTIONS.handles)}
+                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
+              >
+                {Object.entries(HARDWARE_OPTIONS.handles).map(([key, value]) => (
+                  <option key={key} value={key}>{value.name}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="w-px h-12 bg-border" />
+            
+            <div className="flex flex-col gap-2 flex-shrink-0">
+              <Label className="text-xs font-semibold">Toe Kick (4.5")</Label>
+              <select
+                value={globalToeKickFinishId}
+                onChange={(e) => setGlobalToeKickFinishId(e.target.value)}
+                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
+              >
+                <option value="match-door">Match Door</option>
+                <optgroup label="Tafisa">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Egger">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Shinnoki">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+            
+            <div className="flex flex-col gap-2 flex-shrink-0">
+              <Label className="text-xs font-semibold">Moldings</Label>
+              <select
+                value={globalMoldingFinishId}
+                onChange={(e) => setGlobalMoldingFinishId(e.target.value)}
+                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
+              >
+                <option value="match-door">Match Door</option>
+                <optgroup label="Tafisa">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Egger">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Shinnoki">
+                  {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
+                    <option key={finish.id} value={finish.id}>{finish.name}</option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+            
+            <div className="flex flex-col gap-2 flex-shrink-0">
+              <Label className="text-xs font-semibold">Light Moldings</Label>
+              <select
+                value={globalLightMoldingFinishId}
+                onChange={(e) => setGlobalLightMoldingFinishId(e.target.value)}
+                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
+              >
+                <option value="match-door">Match Door</option>
                 <optgroup label="Tafisa">
                   {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
                     <option key={finish.id} value={finish.id}>{finish.name}</option>
@@ -1747,34 +1900,7 @@ const VanityDesigner = () => {
             
             <div className="w-px h-12 bg-border" />
             
-            <div className="flex flex-col gap-2">
-              <Label className="text-xs font-semibold">Global Door Style</Label>
-              <select
-                value={globalDoorStyleId}
-                onChange={(e) => setGlobalDoorStyleId(e.target.value)}
-                className="w-48 h-9 text-xs border rounded-md px-2 bg-background z-50"
-              >
-                <optgroup label="Framed (Standard Overlay)">
-                  {DOOR_STYLES.filter(d => d.frameType === "framed").map(style => (
-                    <option key={style.id} value={style.id}>{style.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Frameless (European)">
-                  {DOOR_STYLES.filter(d => d.frameType === "frameless").map(style => (
-                    <option key={style.id} value={style.id}>{style.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Inset (Premium)">
-                  {DOOR_STYLES.filter(d => d.frameType === "inset").map(style => (
-                    <option key={style.id} value={style.id}>{style.name}</option>
-                  ))}
-                </optgroup>
-              </select>
-            </div>
-            
-            <div className="w-px h-12 bg-border" />
-            
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-1 flex-shrink-0">
               <Button 
                 onClick={applyGlobalDesignToAll}
                 variant="default"
@@ -1783,7 +1909,7 @@ const VanityDesigner = () => {
                 disabled={cabinets.length === 0}
               >
                 <Paintbrush className="h-5 w-5" />
-                <span className="text-xs font-medium">Apply to All Cabinets</span>
+                <span className="text-xs font-medium">Apply to All</span>
               </Button>
               <span className="text-[10px] text-muted-foreground">
                 {cabinets.length} cabinet{cabinets.length !== 1 ? 's' : ''}
