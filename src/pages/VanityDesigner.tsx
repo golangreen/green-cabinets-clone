@@ -529,6 +529,80 @@ const VanityDesigner = () => {
     setRotatingCabinet(null);
   }, [rotatingCabinet, cabinets, currentRotation]);
 
+  // Touch handlers for mobile
+  const handleTouchStart = useCallback((e: React.TouchEvent, cabinetId: number) => {
+    const touch = e.touches[0];
+    const cabinet = cabinets.find(c => c.id === cabinetId);
+    if (!cabinet) return;
+    
+    // Two-finger touch = rotation
+    if (e.touches.length === 2) {
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      
+      setRotatingCabinet(cabinetId);
+      setSelectedCabinetId(cabinetId);
+      
+      const centerX = cabinet.x + (cabinet.width * 2) / 2;
+      const centerY = cabinet.y + (cabinet.depth * 2) / 2;
+      const angle = Math.atan2(touch.clientY - rect.top - centerY, touch.clientX - rect.left - centerX) * (180 / Math.PI);
+      
+      setRotationStartAngle(angle - (cabinet.rotation || 0));
+      setCurrentRotation(cabinet.rotation || 0);
+    } else {
+      // Single touch = drag
+      setDraggingId(cabinetId);
+      setSelectedCabinetId(cabinetId);
+      setDragOffset({
+        x: touch.clientX - cabinet.x,
+        y: touch.clientY - cabinet.y
+      });
+    }
+  }, [cabinets]);
+  
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    
+    if (rotatingCabinet !== null && e.touches.length === 2) {
+      const cabinet = cabinets.find(c => c.id === rotatingCabinet);
+      if (!cabinet) return;
+      
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      
+      const centerX = cabinet.x + (cabinet.width * 2) / 2;
+      const centerY = cabinet.y + (cabinet.depth * 2) / 2;
+      const angle = Math.atan2(touch.clientY - rect.top - centerY, touch.clientX - rect.left - centerX) * (180 / Math.PI);
+      
+      let newRotation = angle - rotationStartAngle;
+      newRotation = ((newRotation % 360) + 360) % 360;
+      newRotation = snapAngle(newRotation);
+      
+      setCurrentRotation(newRotation);
+    } else if (draggingId !== null && e.touches.length === 1) {
+      const newX = snapToGrid(touch.clientX - dragOffset.x);
+      const newY = snapToGrid(touch.clientY - dragOffset.y);
+      
+      setCabinets(cabinets.map(c => 
+        c.id === draggingId ? { ...c, x: newX, y: newY } : c
+      ));
+    }
+  }, [draggingId, dragOffset, snapToGrid, cabinets, rotatingCabinet, rotationStartAngle, snapAngle]);
+  
+  const handleTouchEnd = useCallback(() => {
+    if (rotatingCabinet !== null) {
+      setCabinets(cabinets.map(c => {
+        if (c.id === rotatingCabinet) {
+          return { ...c, rotation: currentRotation as 0 | 90 | 180 | 270 };
+        }
+        return c;
+      }));
+      setRotatingCabinet(null);
+    }
+    setDraggingId(null);
+  }, [rotatingCabinet, cabinets, currentRotation]);
+
   // Drag handlers
   const handleMouseDown = useCallback((e: React.MouseEvent, cabinetId: number) => {
     // Check if shift key is pressed for rotation mode
@@ -930,12 +1004,12 @@ const VanityDesigner = () => {
     <div className="h-screen flex flex-col bg-background">
       {/* Top Ribbon Tabs */}
       <div className="border-b border-border bg-card flex-shrink-0">
-        <div className="flex items-center h-12 px-2">
+        <div className="flex items-center h-10 md:h-12 px-1 md:px-2 overflow-x-auto">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate("/")}
-            className="h-8 px-3 bg-[#FF8C00] hover:bg-[#FF8C00]/90 text-white"
+            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm bg-[#FF8C00] hover:bg-[#FF8C00]/90 text-white flex-shrink-0"
           >
             FILE
           </Button>
@@ -944,16 +1018,16 @@ const VanityDesigner = () => {
             variant={activeTab === "room-layout" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("room-layout")}
-            className="h-8 px-3"
+            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
           >
-            ROOM LAYOUT
+            ROOM
           </Button>
           
           <Button
             variant={activeTab === "items" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("items")}
-            className="h-8 px-3"
+            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
           >
             ITEMS
           </Button>
@@ -962,31 +1036,31 @@ const VanityDesigner = () => {
             variant={activeTab === "view" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("view")}
-            className="h-8 px-3"
+            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
           >
             VIEW
           </Button>
 
-          <div className="flex-1" />
+          <div className="flex-1 min-w-2" />
 
           <Button
             variant="ghost"
             size="sm"
             onClick={handleSave}
-            className="h-8"
+            className="h-7 md:h-8 px-2 md:px-3 flex-shrink-0"
           >
-            <Save className="h-4 w-4 mr-2" />
-            Save
+            <Save className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
+            <span className="hidden md:inline">Save</span>
           </Button>
           
           <Button
             variant="ghost"
             size="sm"
             onClick={handleExport}
-            className="h-8"
+            className="h-7 md:h-8 px-2 md:px-3 flex-shrink-0"
           >
-            <Download className="h-4 w-4 mr-2" />
-            Export
+            <Download className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
+            <span className="hidden md:inline">Export</span>
           </Button>
         </div>
         
@@ -1000,18 +1074,18 @@ const VanityDesigner = () => {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Collapsible */}
         {showLeftPanel && (
-          <div className="w-64 border-r border-border bg-card flex flex-col">
-            <div className="p-3 border-b border-border flex items-center justify-between">
-              <h3 className="font-semibold text-sm">
+          <div className="w-full md:w-64 border-r border-border bg-card flex flex-col absolute md:relative z-30 md:z-0 h-full md:h-auto">
+            <div className="p-2 md:p-3 border-b border-border flex items-center justify-between">
+              <h3 className="font-semibold text-xs md:text-sm">
                 {activeTab === "room-layout" ? "Room Tools" : "Cabinet Library"}
               </h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowLeftPanel(false)}
-                className="h-7 w-7 p-0"
+                className="h-6 w-6 md:h-7 md:w-7 p-0"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-3 w-3 md:h-4 md:w-4" />
               </Button>
             </div>
             
@@ -1227,7 +1301,8 @@ const VanityDesigner = () => {
                               </div>
                             )}
                             <div className="pt-1 text-[10px] text-muted-foreground">
-                              💡 Shift+Drag to rotate with mouse
+                              💡 Desktop: Shift+Drag to rotate<br/>
+                              📱 Mobile: Two-finger touch to rotate
                             </div>
                           </div>
                         );
@@ -1356,17 +1431,22 @@ const VanityDesigner = () => {
           {viewMode === "floorplan" ? (
             <div 
               ref={canvasRef}
-              className="flex-1 bg-white relative overflow-auto"
+              className="flex-1 bg-white relative overflow-auto touch-none"
               onMouseMove={(e) => {
                 handleMouseMove(e);
                 handleCanvasMouseMove(e);
               }}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
               onClick={handleCanvasClick}
               onDrop={handleCanvasDrop}
               onDragOver={(e) => e.preventDefault()}
-              style={{ cursor: drawingTool === "wall" ? "crosshair" : draggingFromLibrary ? "copy" : "default" }}
+              style={{ 
+                cursor: drawingTool === "wall" ? "crosshair" : draggingFromLibrary ? "copy" : "default",
+                minHeight: '600px'
+              }}
             >
               {/* Grid */}
               {showGrid && (
@@ -1580,7 +1660,7 @@ const VanityDesigner = () => {
                           selectedCabinetId === cabinet.id 
                             ? "shadow-lg z-10" 
                             : "hover:shadow-md"
-                        } ${rotatingCabinet === cabinet.id ? "cursor-grabbing" : "cursor-move"}`}
+                        } ${rotatingCabinet === cabinet.id ? "cursor-grabbing" : "cursor-move"} touch-none`}
                         style={{
                           left: cabinet.x,
                           top: cabinet.y,
@@ -1592,6 +1672,7 @@ const VanityDesigner = () => {
                           transformOrigin: 'center'
                         }}
                         onMouseDown={(e) => handleMouseDown(e, cabinet.id)}
+                        onTouchStart={(e) => handleTouchStart(e, cabinet.id)}
                       >
                         {/* Rotation handle */}
                         {selectedCabinetId === cabinet.id && (
