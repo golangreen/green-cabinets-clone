@@ -1651,10 +1651,10 @@ const VanityDesigner = () => {
                 const widthPx = cabinet.width * 2;
                 const depthPx = cabinet.depth * 2;
                 const rotation = cabinet.rotation || 0;
-                const isLShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("LS") && !cabinet.label?.startsWith("LSB");
-                const isUShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("US");
-                const isDiagonal = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("DC");
-                const isLazySusan = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("LSBC") || cabinet.label?.startsWith("LSWC");
+                const isLShaped = cabinet.type === "Corner Cabinet" && (cabinet.label?.startsWith("LSB") || cabinet.label?.startsWith("LSW"));
+                const isUShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("USB");
+                const isDiagonal = cabinet.type === "Corner Cabinet" && (cabinet.label?.startsWith("DCB") || cabinet.label?.startsWith("DCW"));
+                const isLazySusan = cabinet.type === "Corner Cabinet" && (cabinet.label?.startsWith("LSBC") || cabinet.label?.startsWith("LSWC"));
                 const isPeninsula = cabinet.label?.startsWith("PEN");
                 
                 return (
