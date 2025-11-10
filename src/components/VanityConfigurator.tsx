@@ -232,6 +232,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [sinkStyle, setSinkStyle] = useState<'undermount' | 'vessel' | 'integrated'>('undermount');
   const [sinkShape, setSinkShape] = useState<'oval' | 'rectangular' | 'square'>('oval');
   
+  // Backsplash state
+  const [includeBacksplash, setIncludeBacksplash] = useState(false);
+  const [backsplashMaterial, setBacksplashMaterial] = useState<'subway-tile' | 'marble-slab' | 'glass-tile' | 'stone'>('subway-tile');
+  const [backsplashHeight, setBacksplashHeight] = useState<'4-inch' | 'full-height'>('4-inch');
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -926,7 +931,43 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                             <SelectItem value="rectangular">Rectangular</SelectItem>
                             <SelectItem value="square">Square</SelectItem>
                           </SelectContent>
-                        </Select>
+                      </Select>
+                    </div>
+                      
+                      {/* Backsplash Controls */}
+                      <div className="pt-2 border-t border-border space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-xs font-medium">Backsplash</Label>
+                          <Checkbox 
+                            id="includeBacksplashFullscreen" 
+                            checked={includeBacksplash}
+                            onCheckedChange={(checked) => setIncludeBacksplash(checked as boolean)}
+                          />
+                        </div>
+                        {includeBacksplash && (
+                          <>
+                            <Select value={backsplashMaterial} onValueChange={(value: any) => setBacksplashMaterial(value)}>
+                              <SelectTrigger className="bg-background h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background z-[100]">
+                                <SelectItem value="subway-tile">Subway Tile</SelectItem>
+                                <SelectItem value="marble-slab">Marble Slab</SelectItem>
+                                <SelectItem value="glass-tile">Glass Tile</SelectItem>
+                                <SelectItem value="stone">Stone</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Select value={backsplashHeight} onValueChange={(value: any) => setBacksplashHeight(value)}>
+                              <SelectTrigger className="bg-background h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background z-[100]">
+                                <SelectItem value="4-inch">4 Inches</SelectItem>
+                                <SelectItem value="full-height">Full Height</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </>
+                        )}
                       </div>
                       
                       {/* Bathroom Accessories Controls */}
@@ -1086,6 +1127,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         countertopColor={countertopColor}
         sinkStyle={sinkStyle}
         sinkShape={sinkShape}
+        includeBacksplash={includeBacksplash}
+        backsplashMaterial={backsplashMaterial}
+        backsplashHeight={backsplashHeight}
       />
             </div>
           </div>
@@ -1151,6 +1195,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               countertopColor={countertopColor}
               sinkStyle={sinkStyle}
               sinkShape={sinkShape}
+              includeBacksplash={includeBacksplash}
+              backsplashMaterial={backsplashMaterial}
+              backsplashHeight={backsplashHeight}
             />
             {/* Fullscreen Button */}
             <Button
@@ -2180,6 +2227,50 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              {/* Backsplash Options */}
+              <div className="space-y-4 pt-4 border-t">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Backsplash</h4>
+                  <Checkbox 
+                    id="includeBacksplash" 
+                    checked={includeBacksplash}
+                    onCheckedChange={(checked) => setIncludeBacksplash(checked as boolean)}
+                  />
+                </div>
+                
+                {includeBacksplash && (
+                  <>
+                    <div>
+                      <Label htmlFor="backsplashMaterial">Material</Label>
+                      <Select value={backsplashMaterial} onValueChange={(value: any) => setBacksplashMaterial(value)}>
+                        <SelectTrigger id="backsplashMaterial">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="subway-tile">Subway Tile</SelectItem>
+                          <SelectItem value="marble-slab">Marble Slab</SelectItem>
+                          <SelectItem value="glass-tile">Glass Tile</SelectItem>
+                          <SelectItem value="stone">Natural Stone</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="backsplashHeight">Height</Label>
+                      <Select value={backsplashHeight} onValueChange={(value: any) => setBacksplashHeight(value)}>
+                        <SelectTrigger id="backsplashHeight">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="4-inch">4 Inches</SelectItem>
+                          <SelectItem value="full-height">Full Height (to mirror)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Bathroom Accessories */}
