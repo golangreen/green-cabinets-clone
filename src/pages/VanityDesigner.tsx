@@ -32,6 +32,7 @@ import {
   AlignVerticalJustifyStart,
   AlignVerticalJustifyEnd,
   AlignCenterVertical,
+  Maximize,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -234,6 +235,43 @@ const VanityDesigner = () => {
   const handleZoomOut = () => {
     setZoom(prev => Math.max(prev - 0.2, 0.5));
     toast.success("Zoomed out");
+  };
+
+  const handleZoomToFit = () => {
+    if (cabinets.length === 0) return;
+    
+    // Calculate bounding box of all cabinets
+    const scale = 2;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    
+    cabinets.forEach(cabinet => {
+      const x = cabinet.x;
+      const y = cabinet.y;
+      const w = cabinet.width * scale;
+      const h = cabinet.depth * scale;
+      
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x + w);
+      maxY = Math.max(maxY, y + h);
+    });
+    
+    // Add padding
+    const padding = 100;
+    const boundingWidth = maxX - minX + padding * 2;
+    const boundingHeight = maxY - minY + padding * 2;
+    
+    // Get viewport size (rough estimate)
+    const viewportWidth = window.innerWidth - (leftPanelOpen ? 320 : 0) - (rightPanelOpen ? 288 : 0);
+    const viewportHeight = window.innerHeight - 100;
+    
+    // Calculate zoom to fit
+    const zoomX = viewportWidth / boundingWidth;
+    const zoomY = viewportHeight / boundingHeight;
+    const newZoom = Math.min(zoomX, zoomY, 2); // Cap at 2x
+    
+    setZoom(Math.max(newZoom, 0.3)); // Min 0.3x
+    toast.success("Zoomed to fit all cabinets");
   };
 
   const toggleFullscreen = () => {
@@ -493,6 +531,9 @@ const VanityDesigner = () => {
           </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleZoomOut}>
             <ZoomOut className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleZoomToFit} title="Zoom to Fit">
+            <Maximize className="h-4 w-4" />
           </Button>
           
           <Separator orientation="vertical" className="h-6 mx-2" />
