@@ -55,6 +55,8 @@ const VanityDesigner = () => {
     width: 36,
     height: 34,
     depth: 24,
+    x: 100,
+    y: 100,
     brand: "EGGER",
     finish: "Walnut",
     doorStyle: "shaker",
@@ -69,6 +71,11 @@ const VanityDesigner = () => {
     hasMirror: false,
   }]);
   const [selectedCabinetId, setSelectedCabinetId] = useState(1);
+  
+  // Drag and drop state
+  const [draggingId, setDraggingId] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const gridSize = 50; // Snap to 50px grid
   
   // Get current cabinet
   const currentCabinet = cabinets.find(c => c.id === selectedCabinetId) || cabinets[0];
@@ -120,6 +127,8 @@ const VanityDesigner = () => {
       width: 36,
       height: 34,
       depth: 24,
+      x: 100 + (cabinets.length * 50),
+      y: 100,
       brand: "EGGER",
       finish: "Walnut",
       doorStyle: "shaker",
@@ -249,6 +258,8 @@ const VanityDesigner = () => {
       width: 36,
       height: 34,
       depth: 24,
+      x: 100,
+      y: 100,
       brand: "EGGER",
       finish: "Walnut",
       doorStyle: "shaker",
@@ -264,6 +275,42 @@ const VanityDesigner = () => {
     }]);
     setSelectedCabinetId(1);
     toast.success("New design started");
+  };
+
+  // Snap to grid helper
+  const snapToGrid = (value: number) => {
+    return Math.round(value / gridSize) * gridSize;
+  };
+
+  // Drag handlers
+  const handleMouseDown = (e: React.MouseEvent, cabinetId: number) => {
+    const cabinet = cabinets.find(c => c.id === cabinetId);
+    if (!cabinet) return;
+    
+    setDraggingId(cabinetId);
+    setSelectedCabinetId(cabinetId);
+    setDragOffset({
+      x: e.clientX - cabinet.x,
+      y: e.clientY - cabinet.y
+    });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (draggingId === null) return;
+    
+    const newX = snapToGrid(e.clientX - dragOffset.x);
+    const newY = snapToGrid(e.clientY - dragOffset.y);
+    
+    setCabinets(cabinets.map(c =>
+      c.id === draggingId ? { ...c, x: newX, y: newY } : c
+    ));
+  };
+
+  const handleMouseUp = () => {
+    if (draggingId !== null) {
+      saveToHistory();
+      setDraggingId(null);
+    }
   };
 
   return (
@@ -877,63 +924,64 @@ const VanityDesigner = () => {
         {/* Center - Main Viewport */}
         <div className="flex-1 bg-muted/30 relative flex items-center justify-center">
           {activeView === "measurement" ? (
-            // 2D Measurement View
-            <div className="w-full h-full overflow-auto">
-              <div 
-                className="min-w-full min-h-full p-8"
-                style={{
-                  backgroundImage: showGrid ? `
-                    linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
-                    linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
-                  ` : 'none',
-                  backgroundSize: '40px 40px',
-                  transform: `scale(${zoom})`,
-                  transformOrigin: 'center center',
-                  transition: 'transform 0.2s ease'
-                }}
-              >
-                <div className="max-w-6xl mx-auto">
-                  <h3 className="text-lg font-semibold mb-6">Layout - {cabinets.length} Cabinet(s)</h3>
-                  
-                  {/* All Cabinets Overview */}
-                  <div className="space-y-4">
-                    {cabinets.map((cabinet, index) => (
-                      <div 
-                        key={cabinet.id}
-                        className={`border-2 bg-card/50 relative p-4 rounded ${
-                          selectedCabinetId === cabinet.id ? 'border-primary' : 'border-border'
-                        }`}
-                        onClick={() => setSelectedCabinetId(cabinet.id)}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <div className="font-semibold capitalize">
-                              #{index + 1}: {cabinet.cabinetType} - {cabinet.subType}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {cabinet.width}" W × {cabinet.height}" H × {cabinet.depth}" D
-                            </div>
-                          </div>
-                          <div className="text-xs bg-primary/10 px-2 py-1 rounded">
-                            {cabinet.brand} {cabinet.finish}
-                          </div>
-                        </div>
-                        
-                        <div 
-                          className="border border-dashed border-muted-foreground/30 bg-accent/10 p-3 rounded"
-                          style={{
-                            minHeight: `${Math.min(cabinet.height * 2, 100)}px`
-                          }}
-                        >
-                          <div className="text-xs text-muted-foreground text-center">
-                            {cabinet.doorStyle} style • {cabinet.handleStyle} handles
-                          </div>
-                        </div>
+            // 2D Measurement View with Drag & Drop
+            <div 
+              className="w-full h-full relative overflow-hidden"
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              style={{
+                backgroundImage: showGrid ? `
+                  repeating-linear-gradient(0deg, hsl(var(--border)) 0px, hsl(var(--border)) 1px, transparent 1px, transparent ${gridSize}px),
+                  repeating-linear-gradient(90deg, hsl(var(--border)) 0px, hsl(var(--border)) 1px, transparent 1px, transparent ${gridSize}px)
+                ` : 'none'
+              }}
+            >
+              {/* Cabinets in 2D space */}
+              {cabinets.map((cabinet) => {
+                const scale = 2; // 2px per inch for display
+                const widthPx = cabinet.width * scale;
+                const depthPx = cabinet.depth * scale;
+                
+                return (
+                  <div
+                    key={cabinet.id}
+                    className={`absolute cursor-move transition-shadow ${
+                      selectedCabinetId === cabinet.id
+                        ? 'ring-2 ring-primary shadow-xl'
+                        : 'hover:ring-2 hover:ring-primary/50'
+                    } ${draggingId === cabinet.id ? 'opacity-70 z-50' : 'z-10'}`}
+                    style={{
+                      left: cabinet.x,
+                      top: cabinet.y,
+                      width: widthPx,
+                      height: depthPx,
+                      transform: `scale(${zoom})`,
+                      transformOrigin: 'top left',
+                    }}
+                    onMouseDown={(e) => handleMouseDown(e, cabinet.id)}
+                  >
+                    <div className="w-full h-full bg-primary/20 border-2 border-primary rounded flex flex-col items-center justify-center p-2">
+                      <div className="text-xs font-semibold capitalize text-center">
+                        {cabinet.cabinetType}
                       </div>
-                    ))}
+                      <div className="text-[10px] text-muted-foreground text-center">
+                        {cabinet.subType}
+                      </div>
+                      <div className="text-[10px] font-mono mt-1">
+                        {cabinet.width}×{cabinet.depth}"
+                      </div>
+                    </div>
                   </div>
-                </div>
+                );
+              })}
+              
+              {/* Helper overlay */}
+              <div className="absolute top-4 left-4 bg-card/95 backdrop-blur-sm p-3 rounded-lg border border-border shadow-lg text-xs pointer-events-none">
+                <div className="font-semibold mb-1">2D Layout View</div>
+                <div className="text-muted-foreground">• Drag cabinets to position</div>
+                <div className="text-muted-foreground">• Snaps to {gridSize}px grid</div>
+                <div className="text-muted-foreground mt-1">{cabinets.length} cabinet{cabinets.length !== 1 ? 's' : ''}</div>
               </div>
             </div>
           ) : (
@@ -1016,6 +1064,12 @@ const VanityDesigner = () => {
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Size</span>
                       <span className="font-medium">{width}×{height}×{depth}"</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Position</span>
+                      <span className="font-medium font-mono text-xs">
+                        X: {currentCabinet.x}px, Y: {currentCabinet.y}px
+                      </span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Material</span>
