@@ -12,7 +12,10 @@ import {
   FileText,
   Box,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Move,
+  Square,
+  Minus
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
@@ -30,15 +33,25 @@ interface Cabinet {
   label?: string;
 }
 
+interface Wall {
+  id: number;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  thickness: number;
+}
+
 const VanityDesigner = () => {
   const navigate = useNavigate();
   
   // View mode: 'floorplan' or 'render'
   const [viewMode, setViewMode] = useState<"floorplan" | "render">("floorplan");
-  const [activeTab, setActiveTab] = useState("home");
+  const [activeTab, setActiveTab] = useState("room-layout");
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showGrid, setShowGrid] = useState(true);
   const [showDimensions, setShowDimensions] = useState(true);
+  const [drawingTool, setDrawingTool] = useState<"select" | "wall" | "door">("select");
   
   // Cabinets state
   const [cabinets, setCabinets] = useState<Cabinet[]>([
@@ -57,9 +70,15 @@ const VanityDesigner = () => {
   ]);
   const [selectedCabinetId, setSelectedCabinetId] = useState<number | null>(1);
   
+  // Walls state
+  const [walls, setWalls] = useState<Wall[]>([]);
+  const [drawingWall, setDrawingWall] = useState<{ x: number; y: number } | null>(null);
+  const [tempWallEnd, setTempWallEnd] = useState<{ x: number; y: number } | null>(null);
+  
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const gridSize = 24; // 12" grid at 2px per inch scale
+  const wallThickness = 6; // 6px = 3 inches at 2px per inch scale
   const canvasRef = useRef<HTMLDivElement>(null);
   
   // Add a new cabinet
@@ -161,10 +180,120 @@ const VanityDesigner = () => {
     setDraggingId(null);
   }, []);
 
+  // Wall drawing handlers
+  const handleCanvasClick = useCallback((e: React.MouseEvent) => {
+    if (drawingTool !== "wall") return;
+    
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    
+    const x = snapToGrid(e.clientX - rect.left);
+    const y = snapToGrid(e.clientY - rect.top);
+    
+    if (!drawingWall) {
+      // Start drawing wall
+      setDrawingWall({ x, y });
+    } else {
+      // Finish drawing wall
+      const newWall: Wall = {
+        id: Math.max(...walls.map(w => w.id), 0) + 1,
+        x1: drawingWall.x,
+        y1: drawingWall.y,
+        x2: x,
+        y2: y,
+        thickness: wallThickness
+      };
+      setWalls([...walls, newWall]);
+      setDrawingWall(null);
+      setTempWallEnd(null);
+      toast.success("Wall added");
+    }
+  }, [drawingTool, drawingWall, walls, snapToGrid, wallThickness]);
+
+  const handleCanvasMouseMove = useCallback((e: React.MouseEvent) => {
+    if (drawingTool === "wall" && drawingWall) {
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      
+      const x = snapToGrid(e.clientX - rect.left);
+      const y = snapToGrid(e.clientY - rect.top);
+      setTempWallEnd({ x, y });
+    }
+  }, [drawingTool, drawingWall, snapToGrid]);
+
+  const deleteSelectedWall = useCallback(() => {
+    // For now, delete the last wall
+    if (walls.length > 0) {
+      setWalls(walls.slice(0, -1));
+      toast.success("Wall removed");
+    }
+  }, [walls]);
+
+  const calculateWallLength = (wall: Wall) => {
+    const dx = wall.x2 - wall.x1;
+    const dy = wall.y2 - wall.y1;
+    const lengthPx = Math.sqrt(dx * dx + dy * dy);
+    const lengthInches = lengthPx / 2; // 2px per inch
+    return Math.round(lengthInches);
+  };
+
   // Render ribbon content based on active tab
   const renderRibbonContent = () => {
     switch (activeTab) {
-      case "home":
+      case "room-layout":
+        return (
+          <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => setDrawingTool("select")}
+                variant={drawingTool === "select" ? "default" : "ghost"}
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1"
+              >
+                <Move className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Select</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => setDrawingTool("wall")}
+                variant={drawingTool === "wall" ? "default" : "ghost"}
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1"
+              >
+                <Minus className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Draw Wall</span>
+            </div>
+            <div className="w-px h-12 bg-border" />
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={deleteSelectedWall}
+                variant="ghost"
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1 hover:bg-accent"
+                disabled={walls.length === 0}
+              >
+                <Trash2 className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Delete Wall</span>
+            </div>
+            <div className="w-px h-12 bg-border" />
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => setWalls([])}
+                variant="ghost"
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1 hover:bg-accent"
+                disabled={walls.length === 0}
+              >
+                <Square className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Clear Room</span>
+            </div>
+          </div>
+        );
+      case "items":
         return (
           <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
             <div className="flex flex-col items-center gap-1">
@@ -247,12 +376,21 @@ const VanityDesigner = () => {
           </Button>
           
           <Button
-            variant={activeTab === "home" ? "default" : "ghost"}
+            variant={activeTab === "room-layout" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setActiveTab("home")}
+            onClick={() => setActiveTab("room-layout")}
             className="h-8 px-3"
           >
-            HOME
+            ROOM LAYOUT
+          </Button>
+          
+          <Button
+            variant={activeTab === "items" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab("items")}
+            className="h-8 px-3"
+          >
+            ITEMS
           </Button>
           
           <Button
@@ -348,9 +486,14 @@ const VanityDesigner = () => {
             <div 
               ref={canvasRef}
               className="flex-1 bg-white relative overflow-auto"
-              onMouseMove={handleMouseMove}
+              onMouseMove={(e) => {
+                handleMouseMove(e);
+                handleCanvasMouseMove(e);
+              }}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
+              onClick={handleCanvasClick}
+              style={{ cursor: drawingTool === "wall" ? "crosshair" : "default" }}
             >
               {/* Grid */}
               {showGrid && (
@@ -364,6 +507,75 @@ const VanityDesigner = () => {
                     backgroundSize: `${gridSize}px ${gridSize}px`
                   }}
                 />
+              )}
+
+              {/* Walls */}
+              {walls.map(wall => {
+                const length = calculateWallLength(wall);
+                const angle = Math.atan2(wall.y2 - wall.y1, wall.x2 - wall.x1);
+                const midX = (wall.x1 + wall.x2) / 2;
+                const midY = (wall.y1 + wall.y2) / 2;
+                
+                return (
+                  <g key={wall.id}>
+                    <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
+                      {/* Wall line */}
+                      <line
+                        x1={wall.x1}
+                        y1={wall.y1}
+                        x2={wall.x2}
+                        y2={wall.y2}
+                        stroke="#1F2937"
+                        strokeWidth={wall.thickness}
+                        strokeLinecap="square"
+                      />
+                      {/* Wall outline */}
+                      <line
+                        x1={wall.x1}
+                        y1={wall.y1}
+                        x2={wall.x2}
+                        y2={wall.y2}
+                        stroke="#6B7280"
+                        strokeWidth={wall.thickness + 2}
+                        strokeLinecap="square"
+                        opacity={0.3}
+                      />
+                    </svg>
+                    
+                    {/* Wall dimension */}
+                    {showDimensions && (
+                      <div 
+                        className="absolute text-[11px] font-medium bg-white px-2 py-0.5 rounded shadow-sm pointer-events-none"
+                        style={{
+                          left: midX,
+                          top: midY - 20,
+                          transform: 'translateX(-50%)',
+                          color: '#0066CC',
+                          border: '1px solid #0066CC'
+                        }}
+                      >
+                        {length}"
+                      </div>
+                    )}
+                  </g>
+                );
+              })}
+              
+              {/* Drawing preview wall */}
+              {drawingWall && tempWallEnd && (
+                <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
+                  <line
+                    x1={drawingWall.x}
+                    y1={drawingWall.y}
+                    x2={tempWallEnd.x}
+                    y2={tempWallEnd.y}
+                    stroke="#FF8C00"
+                    strokeWidth={wallThickness}
+                    strokeLinecap="square"
+                    strokeDasharray="5,5"
+                    opacity={0.7}
+                  />
+                </svg>
               )}
 
               {/* Cabinets */}
@@ -467,7 +679,9 @@ const VanityDesigner = () => {
               <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm p-3 rounded border border-border shadow-lg text-[10px] text-muted-foreground pointer-events-none">
                 <div>Grid: 12" × 12"</div>
                 <div>Scale: 2px = 1"</div>
+                <div>Walls: {walls.length}</div>
                 <div>Cabinets: {cabinets.length}</div>
+                {drawingTool === "wall" && <div className="text-[#FF8C00] font-medium mt-1">Click to place wall points</div>}
               </div>
             </div>
           ) : (
