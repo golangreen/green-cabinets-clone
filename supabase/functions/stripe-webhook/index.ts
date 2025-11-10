@@ -94,8 +94,7 @@ serve(async (req) => {
       if (!validationResult.success) {
         console.error("Order items validation failed:", validationResult.error);
         return new Response(JSON.stringify({ 
-          error: "Invalid order items data",
-          details: validationResult.error.errors 
+          error: "Invalid order data. Please contact support." 
         }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -316,9 +315,8 @@ serve(async (req) => {
 
   } catch (error) {
     console.error("Webhook error:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: "Failed to process webhook. Please contact support." }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

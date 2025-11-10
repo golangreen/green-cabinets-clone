@@ -30,7 +30,7 @@ serve(async (req) => {
     if (!validationResult.success) {
       console.error("Validation error:", validationResult.error);
       return new Response(
-        JSON.stringify({ error: "Invalid customer data", details: validationResult.error.errors }), 
+        JSON.stringify({ error: "Invalid customer information. Please check your details and try again." }), 
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
           status: 400,
@@ -128,9 +128,8 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error("Error creating checkout:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     return new Response(
-      JSON.stringify({ error: errorMessage }), 
+      JSON.stringify({ error: "Failed to create checkout session. Please try again." }), 
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500,

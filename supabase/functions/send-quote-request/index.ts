@@ -96,8 +96,7 @@ const handler = async (req: Request): Promise<Response> => {
       console.error("Validation error:", validationResult.error);
       return new Response(
         JSON.stringify({ 
-          error: "Invalid input data", 
-          details: validationResult.error.errors 
+          error: "Invalid input data. Please check your form and try again." 
         }),
         {
           status: 400,
@@ -213,7 +212,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in send-quote-request function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Failed to process quote request. Please try again or contact us directly." }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
