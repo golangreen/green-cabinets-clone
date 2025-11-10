@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import logo from "@/assets/logo.jpg";
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -25,7 +24,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-background transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       <div className="animate-scale-in">
         <img 
-          src={logo} 
+          src="/logo.png" 
           alt="Kitchen Designer Pro" 
           className="w-32 h-32 object-contain mb-8 rounded-xl shadow-2xl"
         />
