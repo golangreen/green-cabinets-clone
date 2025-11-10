@@ -4,7 +4,7 @@ import Services from "@/components/Services";
 import Features from "@/components/Features";
 import About from "@/components/About";
 import Gallery from "@/components/Gallery";
-import { VanityConfiguratorSection } from "@/components/VanityConfiguratorSection";
+import { VanityConfiguratorHomepage } from "@/components/VanityConfiguratorHomepage";
 import Suppliers from "@/components/Suppliers";
 import Contact from "@/components/Contact";
 import CTA from "@/components/CTA";
@@ -20,7 +20,7 @@ const Index = () => {
       <Features />
       <About />
       <Gallery />
-      <VanityConfiguratorSection />
+      <VanityConfiguratorHomepage />
       <Suppliers />
       <Contact />
       <CTA />
