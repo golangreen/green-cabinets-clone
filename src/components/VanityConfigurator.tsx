@@ -21,7 +21,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown, Mail } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown, Mail, MessageCircle } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { Checkbox } from "@/components/ui/checkbox";
 import logoImage from "@/assets/logo.jpg";
@@ -433,6 +433,50 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       else setState("other");
     }
   }, [zipCode]);
+
+  const handleWhatsAppShare = () => {
+    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+      toast.error("Please complete the configuration first", {
+        description: "All dimensions and selections are required",
+      });
+      return;
+    }
+
+    const widthFrac = getFractionDisplay(widthFraction);
+    const heightFrac = getFractionDisplay(heightFraction);
+    const depthFrac = getFractionDisplay(depthFraction);
+
+    const message = `🛁 *Custom Vanity Configuration*\n\n` +
+      `📏 *Dimensions:* ${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D\n\n` +
+      `🎨 *Materials:*\n` +
+      `• Brand: ${selectedBrand}\n` +
+      `• Finish: ${selectedFinish}\n\n` +
+      `🚪 *Cabinet:* ${
+        doorStyle === "single" ? "Single Door" : 
+        doorStyle === "double" ? "Double Doors" : 
+        doorStyle === "drawers" ? "All Drawers" : 
+        doorStyle === "mixed" ? "Drawers + Doors" :
+        doorStyle === "door-drawer-split" ? `Door + Drawer (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+        "Custom Configuration"
+      }\n\n` +
+      `🪨 *Countertop:* ${countertopMaterial} - ${countertopColor} (${countertopEdge} edge)\n` +
+      `🚰 *Sink:* ${sinkStyle} - ${sinkShape}\n\n` +
+      `💰 *Price Estimate:*\n` +
+      `• Vanity: $${basePrice.toFixed(2)}\n` +
+      `• Tax: $${tax.toFixed(2)}\n` +
+      `• Shipping (${state}): $${shipping.toFixed(2)}\n` +
+      `• *Total: $${totalPrice.toFixed(2)}*\n\n` +
+      `📍 Location: ${zipCode}\n\n` +
+      `For more details, visit: https://greencabinetsny.com`;
+
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
+    
+    toast.success("Opening WhatsApp...", {
+      description: "Share your configuration with contacts",
+    });
+  };
 
   const handleEmailConfig = async () => {
     if (!recipientEmail.trim()) {
@@ -2764,7 +2808,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             <span className="text-sm sm:text-base">Cart</span>
           </Button>
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <Button 
             onClick={handleExportPDF} 
             variant="outline"
@@ -2772,7 +2816,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             size="lg"
           >
             <FileDown className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">Export PDF</span>
+            <span className="text-sm sm:text-base">PDF</span>
           </Button>
           <Button 
             onClick={() => setEmailDialogOpen(true)} 
@@ -2782,6 +2826,15 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           >
             <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
             <span className="text-sm sm:text-base">Email</span>
+          </Button>
+          <Button 
+            onClick={handleWhatsAppShare} 
+            variant="outline"
+            className="touch-manipulation bg-[#25D366]/10 hover:bg-[#25D366]/20 border-[#25D366]/30" 
+            size="lg"
+          >
+            <MessageCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Share</span>
           </Button>
         </div>
       </div>
