@@ -1,63 +1,45 @@
-import { useEffect, useState } from "react";
-import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
+import { useState } from "react";
+import { ShopifyProduct } from "@/lib/shopify";
 import { VanityConfigurator } from "@/components/VanityConfigurator";
-import { Skeleton } from "@/components/ui/skeleton";
+
+// Create a mock product for the vanity configurator
+const mockVanityProduct: ShopifyProduct = {
+  node: {
+    id: "gid://shopify/Product/mock-vanity",
+    handle: "custom-bathroom-vanity",
+    title: "Custom Bathroom Vanity",
+    description: "Design your perfect custom bathroom vanity with premium materials and finishes",
+    priceRange: {
+      minVariantPrice: {
+        amount: "2500.00",
+        currencyCode: "USD"
+      }
+    },
+    images: {
+      edges: []
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: "gid://shopify/ProductVariant/mock-variant",
+            title: "Custom Configuration",
+            price: {
+              amount: "2500.00",
+              currencyCode: "USD"
+            },
+            availableForSale: true,
+            selectedOptions: []
+          }
+        }
+      ]
+    },
+    options: []
+  }
+};
 
 export const VanityConfiguratorHomepage = () => {
-  const [product, setProduct] = useState<ShopifyProduct | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadProduct = async () => {
-      try {
-        const products = await fetchProducts(50);
-        // Find the custom bathroom vanity product or use the first product
-        const vanityProduct = products.find(
-          (p: ShopifyProduct) => p.node.handle === "custom-bathroom-vanity"
-        ) || products[0];
-        setProduct(vanityProduct || null);
-      } catch (error) {
-        console.error("Error loading vanity product:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadProduct();
-  }, []);
-
-  if (loading) {
-    return (
-      <section className="py-20 bg-gradient-to-b from-muted/20 to-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <Skeleton className="h-12 w-96 mx-auto mb-4" />
-            <Skeleton className="h-6 w-[600px] mx-auto" />
-          </div>
-          <Skeleton className="h-[600px] w-full" />
-        </div>
-      </section>
-    );
-  }
-
-  if (!product) {
-    return (
-      <section className="py-20 bg-gradient-to-b from-muted/20 to-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-foreground">
-              Custom Vanity Designer
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              Configure your perfect bathroom vanity with custom dimensions, premium finishes, and instant pricing
-            </p>
-            <p className="text-muted-foreground">
-              Please add a product with handle "custom-bathroom-vanity" to enable the configurator
-            </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  const [product] = useState<ShopifyProduct>(mockVanityProduct);
 
   return (
     <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-muted/20 to-background">
