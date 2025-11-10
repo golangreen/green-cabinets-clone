@@ -15,6 +15,7 @@ interface Vanity3DPreviewProps {
   doorStyle: string;
   numDrawers: number;
   handleStyle: string;
+  cabinetPosition?: string;
 }
 
 // Convert inches to a normalized scale for 3D visualization
@@ -167,7 +168,7 @@ interface VanityBoxProps extends Vanity3DPreviewProps {
   activeMeasurement: MeasurementType;
 }
 
-const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle, measurementMode, onMeasurementClick, activeMeasurement }: VanityBoxProps) => {
+const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle, cabinetPosition = "left", measurementMode, onMeasurementClick, activeMeasurement }: VanityBoxProps) => {
   // Scale dimensions for better visualization
   const scaledWidth = width * SCALE_FACTOR;
   const scaledHeight = height * SCALE_FACTOR;
@@ -583,6 +584,196 @@ const VanityBox = ({ width, height, depth, brand, finish, doorStyle, numDrawers,
         </>
       )}
 
+      {/* Door + Drawer Side-by-Side */}
+      {doorStyle === 'door-drawer-split' && (
+        <>
+          {/* Cabinet side (door) */}
+          <mesh 
+            position={[
+              cabinetPosition === 'left' ? -scaledWidth * 0.25 : scaledWidth * 0.25, 
+              scaledHeight / 2, 
+              scaledDepth / 2 + 0.01
+            ]} 
+            castShadow
+          >
+            <boxGeometry args={[scaledWidth * 0.45, scaledHeight * 0.9, 0.02]} />
+            <meshStandardMaterial 
+              color={materialProps.color}
+              map={woodTexture}
+              bumpMap={bumpMap}
+              bumpScale={materialProps.bumpScale}
+              roughness={materialProps.roughness * 0.9}
+              metalness={materialProps.metalness}
+              envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+            />
+          </mesh>
+          {handleStyle === 'bar' && (
+            <mesh 
+              position={[
+                cabinetPosition === 'left' ? -scaledWidth * 0.1 : scaledWidth * 0.1, 
+                scaledHeight / 2, 
+                scaledDepth / 2 + 0.03
+              ]} 
+              rotation={[0, 0, Math.PI / 2]} 
+              castShadow
+            >
+              <cylinderGeometry args={[0.01, 0.01, 0.15, 16]} />
+              <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+            </mesh>
+          )}
+          {handleStyle === 'knob' && (
+            <mesh 
+              position={[
+                cabinetPosition === 'left' ? -scaledWidth * 0.1 : scaledWidth * 0.1, 
+                scaledHeight / 2, 
+                scaledDepth / 2 + 0.04
+              ]} 
+              castShadow
+            >
+              <sphereGeometry args={[0.025, 16, 16]} />
+              <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+            </mesh>
+          )}
+          
+          {/* Drawer side */}
+          {Array.from({ length: numDrawers }).map((_, i) => {
+            const drawerHeight = (scaledHeight * 0.9) / numDrawers;
+            const drawerY = scaledHeight * 0.05 + drawerHeight * i + drawerHeight / 2;
+            const drawerX = cabinetPosition === 'left' ? scaledWidth * 0.25 : -scaledWidth * 0.25;
+            return (
+              <group key={`drawer-split-${i}`}>
+                <mesh position={[drawerX, drawerY, scaledDepth / 2 + 0.01]} castShadow>
+                  <boxGeometry args={[scaledWidth * 0.45, drawerHeight * 0.95, 0.02]} />
+                  <meshStandardMaterial 
+                    color={materialProps.color}
+                    map={woodTexture}
+                    bumpMap={bumpMap}
+                    bumpScale={materialProps.bumpScale}
+                    roughness={materialProps.roughness * 0.9}
+                    metalness={materialProps.metalness}
+                    envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+                  />
+                </mesh>
+                {handleStyle === 'bar' && (
+                  <mesh 
+                    position={[drawerX, drawerY, scaledDepth / 2 + 0.03]} 
+                    rotation={[0, 0, Math.PI / 2]} 
+                    castShadow
+                  >
+                    <cylinderGeometry args={[0.008, 0.008, Math.min(0.15, scaledWidth * 0.3), 16]} />
+                    <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+                  </mesh>
+                )}
+                {handleStyle === 'knob' && (
+                  <mesh position={[drawerX, drawerY, scaledDepth / 2 + 0.04]} castShadow>
+                    <sphereGeometry args={[0.018, 16, 16]} />
+                    <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+                  </mesh>
+                )}
+              </group>
+            );
+          })}
+        </>
+      )}
+
+      {/* Door + Open Shelf Side-by-Side */}
+      {doorStyle === 'door-shelf-split' && (
+        <>
+          {/* Cabinet side (door) */}
+          <mesh 
+            position={[
+              cabinetPosition === 'left' ? -scaledWidth * 0.25 : scaledWidth * 0.25, 
+              scaledHeight / 2, 
+              scaledDepth / 2 + 0.01
+            ]} 
+            castShadow
+          >
+            <boxGeometry args={[scaledWidth * 0.45, scaledHeight * 0.9, 0.02]} />
+            <meshStandardMaterial 
+              color={materialProps.color}
+              map={woodTexture}
+              bumpMap={bumpMap}
+              bumpScale={materialProps.bumpScale}
+              roughness={materialProps.roughness * 0.9}
+              metalness={materialProps.metalness}
+              envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
+            />
+          </mesh>
+          {handleStyle === 'bar' && (
+            <mesh 
+              position={[
+                cabinetPosition === 'left' ? -scaledWidth * 0.1 : scaledWidth * 0.1, 
+                scaledHeight / 2, 
+                scaledDepth / 2 + 0.03
+              ]} 
+              rotation={[0, 0, Math.PI / 2]} 
+              castShadow
+            >
+              <cylinderGeometry args={[0.01, 0.01, 0.15, 16]} />
+              <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+            </mesh>
+          )}
+          {handleStyle === 'knob' && (
+            <mesh 
+              position={[
+                cabinetPosition === 'left' ? -scaledWidth * 0.1 : scaledWidth * 0.1, 
+                scaledHeight / 2, 
+                scaledDepth / 2 + 0.04
+              ]} 
+              castShadow
+            >
+              <sphereGeometry args={[0.025, 16, 16]} />
+              <meshStandardMaterial color="#B8B8B8" roughness={0.25} metalness={0.85} />
+            </mesh>
+          )}
+          
+          {/* Open shelf side - 2 shelves */}
+          {[0.33, 0.67].map((ratio, i) => {
+            const shelfY = scaledHeight * ratio;
+            const shelfX = cabinetPosition === 'left' ? scaledWidth * 0.25 : -scaledWidth * 0.25;
+            return (
+              <mesh 
+                key={`shelf-${i}`}
+                position={[shelfX, shelfY, 0]} 
+                castShadow
+              >
+                <boxGeometry args={[scaledWidth * 0.44, 0.02, scaledDepth * 0.95]} />
+                <meshStandardMaterial 
+                  color={materialProps.color}
+                  map={woodTexture}
+                  roughness={materialProps.roughness}
+                  metalness={materialProps.metalness}
+                />
+              </mesh>
+            );
+          })}
+        </>
+      )}
+
+      {/* Open Shelves Only */}
+      {doorStyle === 'open-shelves' && (
+        <>
+          {[0.25, 0.5, 0.75].map((ratio, i) => {
+            const shelfY = scaledHeight * ratio;
+            return (
+              <mesh 
+                key={`open-shelf-${i}`}
+                position={[0, shelfY, 0]} 
+                castShadow
+              >
+                <boxGeometry args={[scaledWidth * 0.95, 0.02, scaledDepth * 0.95]} />
+                <meshStandardMaterial 
+                  color={materialProps.color}
+                  map={woodTexture}
+                  roughness={materialProps.roughness}
+                  metalness={materialProps.metalness}
+                />
+              </mesh>
+            );
+          })}
+        </>
+      )}
+
       {/* Side panels */}
       <mesh 
         position={[-scaledWidth / 2 - 0.005, scaledHeight / 2, 0]} 
@@ -643,7 +834,7 @@ const DimensionLabels = ({ width, height, depth }: { width: number; height: numb
   );
 };
 
-export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle }: Vanity3DPreviewProps) => {
+export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle, cabinetPosition = "left" }: Vanity3DPreviewProps) => {
   const [measurementMode, setMeasurementMode] = useState(false);
   const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -787,6 +978,7 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
           doorStyle={doorStyle}
           numDrawers={numDrawers}
           handleStyle={handleStyle}
+          cabinetPosition={cabinetPosition}
           measurementMode={measurementMode}
           onMeasurementClick={handleMeasurementClick}
           activeMeasurement={activeMeasurement}

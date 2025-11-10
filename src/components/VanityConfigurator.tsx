@@ -152,6 +152,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [doorStyle, setDoorStyle] = useState<string>("double");
   const [numDrawers, setNumDrawers] = useState<number>(2);
   const [handleStyle, setHandleStyle] = useState<string>("bar");
+  const [cabinetPosition, setCabinetPosition] = useState<string>("left");
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
@@ -172,6 +173,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     setDoorStyle(template.config.doorStyle);
     setNumDrawers(template.config.numDrawers);
     setHandleStyle(template.config.handleStyle);
+    if (template.config.cabinetPosition) {
+      setCabinetPosition(template.config.cabinetPosition);
+    }
     
     toast.success(`Applied ${template.name} template`, {
       description: "Customize the configuration to your needs",
@@ -210,6 +214,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         doorStyle,
         numDrawers,
         handleStyle,
+        cabinetPosition,
       },
       tags: ["custom", selectedBrand.toLowerCase()],
     };
@@ -370,7 +375,17 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         { key: "Depth", value: `${depthInches.toFixed(4)}"` },
         { key: "Zip Code", value: zipCode },
         { key: "State", value: state || "Unknown" },
-        { key: "Door Style", value: doorStyle === "single" ? "Single Door" : doorStyle === "double" ? "Double Doors" : doorStyle === "drawers" ? "All Drawers" : "Doors + Drawers" },
+        { 
+          key: "Door Style", 
+          value: doorStyle === "single" ? "Single Door" : 
+                 doorStyle === "double" ? "Double Doors" : 
+                 doorStyle === "drawers" ? "All Drawers" : 
+                 doorStyle === "mixed" ? "Drawers + Doors" :
+                 doorStyle === "door-drawer-split" ? `Door + Drawer Side-by-Side (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+                 doorStyle === "door-shelf-split" ? `Door + Open Shelf (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+                 doorStyle === "open-shelves" ? "Open Shelves Only" :
+                 "Custom Configuration"
+        },
         { key: "Number of Drawers", value: numDrawers.toString() },
         { key: "Handle Style", value: handleStyle === "bar" ? "Bar Handles" : handleStyle === "knob" ? "Knobs" : "Push-to-Open" },
         { key: "Calculated Price", value: `$${basePrice.toFixed(2)}` },
@@ -403,6 +418,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               doorStyle={doorStyle}
               numDrawers={numDrawers}
               handleStyle={handleStyle}
+              cabinetPosition={cabinetPosition}
             />
           </div>
 
@@ -771,6 +787,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   <SelectItem value="double">Double Doors</SelectItem>
                   <SelectItem value="drawers">All Drawers</SelectItem>
                   <SelectItem value="mixed">Drawers + Doors</SelectItem>
+                  <SelectItem value="door-drawer-split">Door + Drawer Side-by-Side</SelectItem>
+                  <SelectItem value="door-shelf-split">Door + Open Shelf Side-by-Side</SelectItem>
+                  <SelectItem value="open-shelves">Open Shelves Only</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
@@ -778,11 +797,33 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 {doorStyle === 'double' && 'Two doors opening from center'}
                 {doorStyle === 'drawers' && 'Multiple drawers for organized storage'}
                 {doorStyle === 'mixed' && 'Drawers on top, cabinet doors below'}
+                {doorStyle === 'door-drawer-split' && 'Door and drawers side-by-side'}
+                {doorStyle === 'door-shelf-split' && 'Door with open shelf storage'}
+                {doorStyle === 'open-shelves' && 'Open shelving for easy access'}
               </p>
             </div>
 
-            {/* Number of Drawers (only show if drawers or mixed) */}
-            {(doorStyle === 'drawers' || doorStyle === 'mixed') && (
+            {/* Position selector for split configurations */}
+            {(doorStyle === 'door-drawer-split' || doorStyle === 'door-shelf-split') && (
+              <div className="space-y-2">
+                <Label htmlFor="cabinetPosition">Cabinet Position</Label>
+                <Select value={cabinetPosition} onValueChange={setCabinetPosition}>
+                  <SelectTrigger id="cabinetPosition" className="bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="left">Cabinet on Left</SelectItem>
+                    <SelectItem value="right">Cabinet on Right</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  {cabinetPosition === 'left' ? 'Door/drawers on the left side' : 'Door/drawers on the right side'}
+                </p>
+              </div>
+            )}
+
+            {/* Number of Drawers (only show if drawers or mixed or door-drawer-split) */}
+            {(doorStyle === 'drawers' || doorStyle === 'mixed' || doorStyle === 'door-drawer-split') && (
               <div className="space-y-2">
                 <Label htmlFor="numDrawers">Number of Drawers</Label>
                 <Select value={numDrawers.toString()} onValueChange={(val) => setNumDrawers(parseInt(val))}>
@@ -801,25 +842,27 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               </div>
             )}
 
-            {/* Handle Style Selection */}
-            <div className="space-y-2">
-              <Label htmlFor="handleStyle">Handle Style</Label>
-              <Select value={handleStyle} onValueChange={setHandleStyle}>
-                <SelectTrigger id="handleStyle" className="bg-background">
-                  <SelectValue placeholder="Select handle style" />
-                </SelectTrigger>
-                <SelectContent className="bg-background z-50">
-                  <SelectItem value="bar">Bar Handles</SelectItem>
-                  <SelectItem value="knob">Knobs</SelectItem>
-                  <SelectItem value="recessed">Push-to-Open (No Handles)</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                {handleStyle === 'bar' && 'Modern horizontal bar handles'}
-                {handleStyle === 'knob' && 'Classic round knob handles'}
-                {handleStyle === 'recessed' && 'Minimalist handleless design with push mechanism'}
-              </p>
-            </div>
+            {/* Handle Style Selection (hide for open shelves) */}
+            {doorStyle !== 'open-shelves' && (
+              <div className="space-y-2">
+                <Label htmlFor="handleStyle">Handle Style</Label>
+                <Select value={handleStyle} onValueChange={setHandleStyle}>
+                  <SelectTrigger id="handleStyle" className="bg-background">
+                    <SelectValue placeholder="Select handle style" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="bar">Bar Handles</SelectItem>
+                    <SelectItem value="knob">Knobs</SelectItem>
+                    <SelectItem value="recessed">Push-to-Open (No Handles)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  {handleStyle === 'bar' && 'Modern horizontal bar handles'}
+                  {handleStyle === 'knob' && 'Classic round knob handles'}
+                  {handleStyle === 'recessed' && 'Minimalist handleless design with push mechanism'}
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

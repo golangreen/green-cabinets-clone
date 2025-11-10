@@ -15,6 +15,7 @@ export interface VanityTemplate {
     doorStyle: string;
     numDrawers: number;
     handleStyle: string;
+    cabinetPosition?: string;
   };
   tags: string[];
 }
