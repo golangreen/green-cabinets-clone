@@ -17,11 +17,26 @@ import {
   Square,
   Minus,
   DoorOpen,
-  RectangleHorizontal
+  RectangleHorizontal,
+  RotateCw,
+  Maximize2,
+  Paintbrush,
+  CircleDot,
+  Settings
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
-import { CABINET_CATALOG, calculateCabinetPrice, formatPrice, type CabinetSpec } from "@/lib/cabinetCatalog";
+import { CABINET_CATALOG, calculateCabinetPrice, formatPrice, MATERIAL_FINISHES, HARDWARE_OPTIONS, type CabinetSpec } from "@/lib/cabinetCatalog";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 interface Cabinet {
   id: number;
@@ -33,9 +48,15 @@ interface Cabinet {
   y: number;
   brand: string;
   finish: string;
+  finishId?: string; // Material finish ID
   label?: string;
   price?: number; // Calculated price
   catalogRef?: string; // Reference to catalog item
+  rotation?: 0 | 90 | 180 | 270; // Rotation in degrees
+  handleType?: keyof typeof HARDWARE_OPTIONS.handles; // Handle type
+  numHandles?: number; // Number of handles
+  hasDrawers?: boolean; // Whether cabinet has drawers
+  numDrawers?: number; // Number of drawers
 }
 
 interface Wall {
@@ -81,7 +102,13 @@ const VanityDesigner = () => {
       y: 200,
       brand: "Tafisa",
       finish: "White",
-      label: "DB36"
+      finishId: "tafisa-white",
+      label: "DB36",
+      rotation: 0,
+      handleType: "bar",
+      numHandles: 2,
+      hasDrawers: true,
+      numDrawers: 3
     }
   ]);
   const [selectedCabinetId, setSelectedCabinetId] = useState<number | null>(1);
@@ -130,7 +157,11 @@ const VanityDesigner = () => {
   
   // Add cabinet from template
   const addCabinetFromTemplate = useCallback((template: CabinetSpec, x: number, y: number) => {
-    const price = calculateCabinetPrice(template, "tafisa-white");
+    const defaultFinishId = "tafisa-white";
+    const defaultHandleType = "bar";
+    const numHandles = template.subType === "drawer" ? 3 : 2;
+    const price = calculateCabinetPrice(template, defaultFinishId, defaultHandleType, numHandles);
+    
     const newCabinet: Cabinet = {
       id: Math.max(...cabinets.map(c => c.id), 0) + 1,
       type: template.type,
@@ -141,9 +172,15 @@ const VanityDesigner = () => {
       y: snapToGrid(y),
       brand: "Tafisa",
       finish: "White",
+      finishId: defaultFinishId,
       label: template.label,
       price: price,
       catalogRef: template.label,
+      rotation: 0,
+      handleType: defaultHandleType,
+      numHandles: numHandles,
+      hasDrawers: template.subType === "drawer",
+      numDrawers: template.subType === "drawer" ? 3 : 0,
     };
     setCabinets([...cabinets, newCabinet]);
     setSelectedCabinetId(newCabinet.id);
@@ -195,6 +232,122 @@ const VanityDesigner = () => {
   const handleShare = useCallback(() => {
     toast.success("Share link copied");
   }, []);
+
+  // Context menu handlers
+  const rotateCabinet = useCallback((cabinetId: number) => {
+    setCabinets(cabinets.map(c => {
+      if (c.id === cabinetId) {
+        const newRotation = ((c.rotation || 0) + 90) % 360 as 0 | 90 | 180 | 270;
+        return { ...c, rotation: newRotation };
+      }
+      return c;
+    }));
+    toast.success("Cabinet rotated");
+  }, [cabinets]);
+
+  const changeCabinetSize = useCallback((cabinetId: number, dimension: 'width' | 'height' | 'depth', value: number) => {
+    setCabinets(cabinets.map(c => {
+      if (c.id === cabinetId) {
+        const updated = { ...c, [dimension]: value };
+        // Recalculate price if we have a catalog reference
+        if (c.catalogRef && c.finishId) {
+          const template = CABINET_CATALOG.find(t => t.label === c.catalogRef);
+          if (template) {
+            updated.price = calculateCabinetPrice(
+              { ...template, [dimension]: value },
+              c.finishId,
+              c.handleType || "bar",
+              c.numHandles || 2
+            );
+          }
+        }
+        return updated;
+      }
+      return c;
+    }));
+    toast.success(`Cabinet ${dimension} updated`);
+  }, [cabinets]);
+
+  const changeCabinetFinish = useCallback((cabinetId: number, finishId: string) => {
+    setCabinets(cabinets.map(c => {
+      if (c.id === cabinetId) {
+        const finish = MATERIAL_FINISHES.find(f => f.id === finishId);
+        if (!finish) return c;
+        
+        const updated = { 
+          ...c, 
+          finishId,
+          finish: finish.name,
+          brand: finish.brand
+        };
+        
+        // Recalculate price
+        if (c.catalogRef) {
+          const template = CABINET_CATALOG.find(t => t.label === c.catalogRef);
+          if (template) {
+            updated.price = calculateCabinetPrice(
+              template,
+              finishId,
+              c.handleType || "bar",
+              c.numHandles || 2
+            );
+          }
+        }
+        return updated;
+      }
+      return c;
+    }));
+    toast.success("Finish updated");
+  }, [cabinets]);
+
+  const changeCabinetHardware = useCallback((cabinetId: number, handleType: keyof typeof HARDWARE_OPTIONS.handles) => {
+    setCabinets(cabinets.map(c => {
+      if (c.id === cabinetId) {
+        const updated = { ...c, handleType };
+        
+        // Recalculate price
+        if (c.catalogRef && c.finishId) {
+          const template = CABINET_CATALOG.find(t => t.label === c.catalogRef);
+          if (template) {
+            updated.price = calculateCabinetPrice(
+              template,
+              c.finishId,
+              handleType,
+              c.numHandles || 2
+            );
+          }
+        }
+        return updated;
+      }
+      return c;
+    }));
+    toast.success("Hardware updated");
+  }, [cabinets]);
+
+  const toggleCabinetDrawers = useCallback((cabinetId: number) => {
+    setCabinets(cabinets.map(c => {
+      if (c.id === cabinetId) {
+        const newHasDrawers = !c.hasDrawers;
+        return { 
+          ...c, 
+          hasDrawers: newHasDrawers,
+          numDrawers: newHasDrawers ? (c.numDrawers || 3) : 0
+        };
+      }
+      return c;
+    }));
+    toast.success("Cabinet configuration updated");
+  }, [cabinets]);
+
+  const resetToStandardHeight = useCallback((cabinetId: number) => {
+    setCabinets(cabinets.map(c => {
+      if (c.id === cabinetId && c.type === "Base Cabinet") {
+        return { ...c, height: 34.5 };
+      }
+      return c;
+    }));
+    toast.success("Height reset to standard 34.5\"");
+  }, [cabinets]);
 
   // Drag handlers
   const handleMouseDown = useCallback((e: React.MouseEvent, cabinetId: number) => {
@@ -1020,96 +1173,219 @@ const VanityDesigner = () => {
               {cabinets.map(cabinet => {
                 const widthPx = cabinet.width * 2;
                 const depthPx = cabinet.depth * 2;
+                const rotation = cabinet.rotation || 0;
                 
                 return (
-                  <div
-                    key={cabinet.id}
-                    className={`absolute cursor-move transition-all ${
-                      selectedCabinetId === cabinet.id 
-                        ? "shadow-lg z-10" 
-                        : "hover:shadow-md"
-                    }`}
-                    style={{
-                      left: cabinet.x,
-                      top: cabinet.y,
-                      width: widthPx,
-                      height: depthPx,
-                      backgroundColor: selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6',
-                      border: selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF'
-                    }}
-                    onMouseDown={(e) => handleMouseDown(e, cabinet.id)}
-                  >
-                    {/* Cabinet label */}
-                    <div className="absolute inset-0 flex items-center justify-center text-[11px] font-medium pointer-events-none select-none">
-                      {cabinet.label || cabinet.type}
-                    </div>
-                    
-                    {/* Auto-dimensions */}
-                    {showDimensions && selectedCabinetId === cabinet.id && (
-                      <>
-                        {/* Width dimension line and text */}
-                        <div 
-                          className="absolute pointer-events-none"
-                          style={{ 
-                            top: -25, 
-                            left: 0,
-                            right: 0,
-                            height: 20
-                          }}
-                        >
-                          {/* Dimension line */}
-                          <svg className="absolute inset-0" style={{ width: '100%', height: 20 }}>
-                            <line x1="0" y1="15" x2="100%" y2="15" stroke="#0066CC" strokeWidth="1" />
-                            <line x1="0" y1="10" x2="0" y2="20" stroke="#0066CC" strokeWidth="1" />
-                            <line x1="100%" y1="10" x2="100%" y2="20" stroke="#0066CC" strokeWidth="1" />
-                          </svg>
-                          {/* Dimension text */}
-                          <div 
-                            className="absolute text-[11px] font-medium bg-white px-1"
-                            style={{ 
-                              top: 8, 
-                              left: '50%', 
-                              transform: 'translateX(-50%)',
-                              color: '#0066CC'
-                            }}
-                          >
-                            {cabinet.width}"
+                  <ContextMenu key={cabinet.id}>
+                    <ContextMenuTrigger>
+                      <div
+                        className={`absolute cursor-move transition-all ${
+                          selectedCabinetId === cabinet.id 
+                            ? "shadow-lg z-10" 
+                            : "hover:shadow-md"
+                        }`}
+                        style={{
+                          left: cabinet.x,
+                          top: cabinet.y,
+                          width: rotation === 90 || rotation === 270 ? depthPx : widthPx,
+                          height: rotation === 90 || rotation === 270 ? widthPx : depthPx,
+                          backgroundColor: selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6',
+                          border: selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF',
+                          transform: `rotate(${rotation}deg)`,
+                          transformOrigin: 'center'
+                        }}
+                        onMouseDown={(e) => handleMouseDown(e, cabinet.id)}
+                      >
+                        {/* Cabinet label */}
+                        <div className="absolute inset-0 flex items-center justify-center text-[11px] font-medium pointer-events-none select-none">
+                          <div style={{ transform: `rotate(-${rotation}deg)` }}>
+                            {cabinet.label || cabinet.type}
                           </div>
                         </div>
                         
-                        {/* Depth dimension line and text */}
-                        <div 
-                          className="absolute pointer-events-none"
-                          style={{ 
-                            right: -30, 
-                            top: 0,
-                            bottom: 0,
-                            width: 25
-                          }}
-                        >
-                          {/* Dimension line */}
-                          <svg className="absolute inset-0" style={{ width: 25, height: '100%' }}>
-                            <line x1="10" y1="0" x2="10" y2="100%" stroke="#0066CC" strokeWidth="1" />
-                            <line x1="5" y1="0" x2="15" y2="0" stroke="#0066CC" strokeWidth="1" />
-                            <line x1="5" y1="100%" x2="15" y2="100%" stroke="#0066CC" strokeWidth="1" />
-                          </svg>
-                          {/* Dimension text */}
-                          <div 
-                            className="absolute text-[11px] font-medium bg-white px-1"
-                            style={{ 
-                              left: 12, 
-                              top: '50%', 
-                              transform: 'translateY(-50%)',
-                              color: '#0066CC',
-                              whiteSpace: 'nowrap'
-                            }}
-                          >
-                            {cabinet.depth}"
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
+                        {/* Auto-dimensions */}
+                        {showDimensions && selectedCabinetId === cabinet.id && (
+                          <>
+                            {/* Width dimension line and text */}
+                            <div 
+                              className="absolute pointer-events-none"
+                              style={{ 
+                                top: -25, 
+                                left: 0,
+                                right: 0,
+                                height: 20
+                              }}
+                            >
+                              {/* Dimension line */}
+                              <svg className="absolute inset-0" style={{ width: '100%', height: 20 }}>
+                                <line x1="0" y1="15" x2="100%" y2="15" stroke="#0066CC" strokeWidth="1" />
+                                <line x1="0" y1="10" x2="0" y2="20" stroke="#0066CC" strokeWidth="1" />
+                                <line x1="100%" y1="10" x2="100%" y2="20" stroke="#0066CC" strokeWidth="1" />
+                              </svg>
+                              {/* Dimension text */}
+                              <div 
+                                className="absolute text-[11px] font-medium bg-white px-1"
+                                style={{ 
+                                  top: 8, 
+                                  left: '50%', 
+                                  transform: 'translateX(-50%)',
+                                  color: '#0066CC'
+                                }}
+                              >
+                                {rotation === 90 || rotation === 270 ? cabinet.depth : cabinet.width}"
+                              </div>
+                            </div>
+                            
+                            {/* Depth dimension line and text */}
+                            <div 
+                              className="absolute pointer-events-none"
+                              style={{ 
+                                right: -30, 
+                                top: 0,
+                                bottom: 0,
+                                width: 25
+                              }}
+                            >
+                              {/* Dimension line */}
+                              <svg className="absolute inset-0" style={{ width: 25, height: '100%' }}>
+                                <line x1="10" y1="0" x2="10" y2="100%" stroke="#0066CC" strokeWidth="1" />
+                                <line x1="5" y1="0" x2="15" y2="0" stroke="#0066CC" strokeWidth="1" />
+                                <line x1="5" y1="100%" x2="15" y2="100%" stroke="#0066CC" strokeWidth="1" />
+                              </svg>
+                              {/* Dimension text */}
+                              <div 
+                                className="absolute text-[11px] font-medium bg-white px-1"
+                                style={{ 
+                                  left: 12, 
+                                  top: '50%', 
+                                  transform: 'translateY(-50%)',
+                                  color: '#0066CC',
+                                  whiteSpace: 'nowrap'
+                                }}
+                              >
+                                {rotation === 90 || rotation === 270 ? cabinet.width : cabinet.depth}"
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent className="w-64">
+                      <ContextMenuItem onClick={() => rotateCabinet(cabinet.id)}>
+                        <RotateCw className="mr-2 h-4 w-4" />
+                        Rotate 90°
+                      </ContextMenuItem>
+                      
+                      <ContextMenuSeparator />
+                      
+                      <ContextMenuSub>
+                        <ContextMenuSubTrigger>
+                          <Maximize2 className="mr-2 h-4 w-4" />
+                          Change Size
+                        </ContextMenuSubTrigger>
+                        <ContextMenuSubContent className="w-48">
+                          <div className="px-2 py-1.5 text-xs font-semibold">Width</div>
+                          {[12, 15, 18, 24, 30, 36, 42, 48].map(w => (
+                            <ContextMenuItem 
+                              key={w}
+                              onClick={() => changeCabinetSize(cabinet.id, 'width', w)}
+                            >
+                              {w}" {cabinet.width === w && "✓"}
+                            </ContextMenuItem>
+                          ))}
+                          <ContextMenuSeparator />
+                          <div className="px-2 py-1.5 text-xs font-semibold">Height</div>
+                          {[30, 34.5, 36, 42, 84, 90, 96].map(h => (
+                            <ContextMenuItem 
+                              key={h}
+                              onClick={() => changeCabinetSize(cabinet.id, 'height', h)}
+                            >
+                              {h}" {cabinet.height === h && "✓"}
+                            </ContextMenuItem>
+                          ))}
+                          <ContextMenuSeparator />
+                          <div className="px-2 py-1.5 text-xs font-semibold">Depth</div>
+                          {[12, 15, 18, 21, 24].map(d => (
+                            <ContextMenuItem 
+                              key={d}
+                              onClick={() => changeCabinetSize(cabinet.id, 'depth', d)}
+                            >
+                              {d}" {cabinet.depth === d && "✓"}
+                            </ContextMenuItem>
+                          ))}
+                        </ContextMenuSubContent>
+                      </ContextMenuSub>
+                      
+                      <ContextMenuSub>
+                        <ContextMenuSubTrigger>
+                          <Paintbrush className="mr-2 h-4 w-4" />
+                          Change Finish
+                        </ContextMenuSubTrigger>
+                        <ContextMenuSubContent className="w-48">
+                          {MATERIAL_FINISHES.map(finish => (
+                            <ContextMenuItem 
+                              key={finish.id}
+                              onClick={() => changeCabinetFinish(cabinet.id, finish.id)}
+                            >
+                              <div className="flex flex-col">
+                                <span>{finish.name}</span>
+                                <span className="text-xs text-muted-foreground">{finish.brand}</span>
+                              </div>
+                              {cabinet.finishId === finish.id && <span className="ml-auto">✓</span>}
+                            </ContextMenuItem>
+                          ))}
+                        </ContextMenuSubContent>
+                      </ContextMenuSub>
+                      
+                      <ContextMenuSub>
+                        <ContextMenuSubTrigger>
+                          <CircleDot className="mr-2 h-4 w-4" />
+                          Change Hardware
+                        </ContextMenuSubTrigger>
+                        <ContextMenuSubContent className="w-48">
+                          {Object.entries(HARDWARE_OPTIONS.handles).map(([key, value]) => (
+                            <ContextMenuItem 
+                              key={key}
+                              onClick={() => changeCabinetHardware(cabinet.id, key as keyof typeof HARDWARE_OPTIONS.handles)}
+                            >
+                              {value.name} {cabinet.handleType === key && "✓"}
+                            </ContextMenuItem>
+                          ))}
+                        </ContextMenuSubContent>
+                      </ContextMenuSub>
+                      
+                      <ContextMenuSeparator />
+                      
+                      <ContextMenuItem onClick={() => toggleCabinetDrawers(cabinet.id)}>
+                        <Settings className="mr-2 h-4 w-4" />
+                        {cabinet.hasDrawers ? "Convert to Doors" : "Convert to Drawers"}
+                      </ContextMenuItem>
+                      
+                      {cabinet.type === "Base Cabinet" && cabinet.height !== 34.5 && (
+                        <>
+                          <ContextMenuSeparator />
+                          <ContextMenuItem onClick={() => resetToStandardHeight(cabinet.id)}>
+                            Reset to Standard Height (34.5")
+                          </ContextMenuItem>
+                        </>
+                      )}
+                      
+                      <ContextMenuSeparator />
+                      
+                      <ContextMenuItem onClick={() => duplicateCabinet()}>
+                        <Copy className="mr-2 h-4 w-4" />
+                        Duplicate
+                      </ContextMenuItem>
+                      
+                      <ContextMenuItem 
+                        onClick={() => removeCabinet()}
+                        className="text-destructive focus:text-destructive"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete
+                      </ContextMenuItem>
+                    </ContextMenuContent>
+                  </ContextMenu>
                 );
               })}
 
