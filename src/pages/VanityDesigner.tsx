@@ -2013,7 +2013,7 @@ const VanityDesigner = () => {
         <div className="flex items-center h-10 md:h-12 px-1 md:px-2 overflow-x-auto">
           <button
             onClick={() => navigate("/")}
-            className="h-8 md:h-10 px-2 flex-shrink-0 hover:opacity-90 transition-opacity bg-black rounded"
+            className="h-8 md:h-10 px-2 flex-shrink-0 hover:opacity-90 transition-opacity bg-black"
           >
             <img 
               src="/logo.png" 
