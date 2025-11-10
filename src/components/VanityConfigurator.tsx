@@ -237,6 +237,12 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [backsplashMaterial, setBacksplashMaterial] = useState<'subway-tile' | 'marble-slab' | 'glass-tile' | 'stone'>('subway-tile');
   const [backsplashHeight, setBacksplashHeight] = useState<'4-inch' | 'full-height'>('4-inch');
   
+  // Vanity lighting state
+  const [includeVanityLighting, setIncludeVanityLighting] = useState(true);
+  const [vanityLightingStyle, setVanityLightingStyle] = useState<'sconce' | 'led-strip' | 'pendant'>('sconce');
+  const [vanityLightBrightness, setVanityLightBrightness] = useState<number>(85);
+  const [vanityLightTemp, setVanityLightTemp] = useState<number>(3000);
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -970,6 +976,60 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                         )}
                       </div>
                       
+                      {/* Vanity Lighting Controls */}
+                      <div className="pt-2 border-t border-border space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-xs font-medium">Vanity Lighting</Label>
+                          <Checkbox 
+                            id="includeVanityLightingFullscreen" 
+                            checked={includeVanityLighting}
+                            onCheckedChange={(checked) => setIncludeVanityLighting(checked as boolean)}
+                          />
+                        </div>
+                        {includeVanityLighting && (
+                          <>
+                            <Select value={vanityLightingStyle} onValueChange={(value: any) => setVanityLightingStyle(value)}>
+                              <SelectTrigger className="bg-background h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background z-[100]">
+                                <SelectItem value="sconce">Sconces</SelectItem>
+                                <SelectItem value="led-strip">LED Strip</SelectItem>
+                                <SelectItem value="pendant">Pendants</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-xs">
+                                <span>Brightness</span>
+                                <span>{vanityLightBrightness}%</span>
+                              </div>
+                              <Slider
+                                value={[vanityLightBrightness]}
+                                onValueChange={(value) => setVanityLightBrightness(value[0])}
+                                min={30}
+                                max={100}
+                                step={5}
+                                className="w-full"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-xs">
+                                <span>Temp</span>
+                                <span>{vanityLightTemp}K</span>
+                              </div>
+                              <Slider
+                                value={[vanityLightTemp]}
+                                onValueChange={(value) => setVanityLightTemp(value[0])}
+                                min={2700}
+                                max={6500}
+                                step={100}
+                                className="w-full"
+                              />
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      
                       {/* Bathroom Accessories Controls */}
                       <div className="pt-2 border-t border-border space-y-2">
                         <Label className="text-xs font-medium">Accessories</Label>
@@ -1130,6 +1190,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         includeBacksplash={includeBacksplash}
         backsplashMaterial={backsplashMaterial}
         backsplashHeight={backsplashHeight}
+        includeVanityLighting={includeVanityLighting}
+        vanityLightingStyle={vanityLightingStyle}
+        vanityLightBrightness={vanityLightBrightness}
+        vanityLightTemp={vanityLightTemp}
       />
             </div>
           </div>
@@ -1198,6 +1262,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               includeBacksplash={includeBacksplash}
               backsplashMaterial={backsplashMaterial}
               backsplashHeight={backsplashHeight}
+              includeVanityLighting={includeVanityLighting}
+              vanityLightingStyle={vanityLightingStyle}
+              vanityLightBrightness={vanityLightBrightness}
+              vanityLightTemp={vanityLightTemp}
             />
             {/* Fullscreen Button */}
             <Button
@@ -2268,6 +2336,78 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                           <SelectItem value="full-height">Full Height (to mirror)</SelectItem>
                         </SelectContent>
                       </Select>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Vanity Lighting Options */}
+              <div className="space-y-4 pt-4 border-t">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Vanity Lighting</h4>
+                  <Checkbox 
+                    id="includeVanityLighting" 
+                    checked={includeVanityLighting}
+                    onCheckedChange={(checked) => setIncludeVanityLighting(checked as boolean)}
+                  />
+                </div>
+                
+                {includeVanityLighting && (
+                  <>
+                    <div>
+                      <Label htmlFor="vanityLightingStyle">Fixture Style</Label>
+                      <Select value={vanityLightingStyle} onValueChange={(value: any) => setVanityLightingStyle(value)}>
+                        <SelectTrigger id="vanityLightingStyle">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sconce">Wall Sconces</SelectItem>
+                          <SelectItem value="led-strip">LED Strip Lighting</SelectItem>
+                          <SelectItem value="pendant">Pendant Lights</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {vanityLightingStyle === 'sconce' && 'Classic wall-mounted fixtures on both sides'}
+                        {vanityLightingStyle === 'led-strip' && 'Modern integrated LED strip around mirror'}
+                        {vanityLightingStyle === 'pendant' && 'Hanging pendant lights above vanity'}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="vanityLightBrightness">Brightness</Label>
+                        <span className="text-xs font-medium text-muted-foreground">{vanityLightBrightness}%</span>
+                      </div>
+                      <Slider
+                        id="vanityLightBrightness"
+                        value={[vanityLightBrightness]}
+                        onValueChange={(value) => setVanityLightBrightness(value[0])}
+                        min={30}
+                        max={100}
+                        step={5}
+                        className="w-full"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="vanityLightTemp">Color Temperature</Label>
+                        <span className="text-xs font-medium text-muted-foreground">{vanityLightTemp}K</span>
+                      </div>
+                      <Slider
+                        id="vanityLightTemp"
+                        value={[vanityLightTemp]}
+                        onValueChange={(value) => setVanityLightTemp(value[0])}
+                        min={2700}
+                        max={6500}
+                        step={100}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>Warm (2700K)</span>
+                        <span>Neutral (4000K)</span>
+                        <span>Cool (6500K)</span>
+                      </div>
                     </div>
                   </>
                 )}

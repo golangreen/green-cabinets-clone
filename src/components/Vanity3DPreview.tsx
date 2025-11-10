@@ -64,6 +64,10 @@ interface Vanity3DPreviewProps {
   includeBacksplash?: boolean;
   backsplashMaterial?: 'subway-tile' | 'marble-slab' | 'glass-tile' | 'stone';
   backsplashHeight?: '4-inch' | 'full-height';
+  includeVanityLighting?: boolean;
+  vanityLightingStyle?: 'sconce' | 'led-strip' | 'pendant';
+  vanityLightBrightness?: number;
+  vanityLightTemp?: number;
 }
 
 // Convert inches to a normalized scale for 3D visualization
@@ -1322,6 +1326,223 @@ const VanityBacksplash: React.FC<{
       </mesh>
     </group>
   );
+};
+
+// Vanity Lighting Component with different fixture styles
+const VanityLighting: React.FC<{
+  vanityWidth: number;
+  vanityHeight: number;
+  vanityDepth: number;
+  mirrorSize: 'small' | 'medium' | 'large';
+  includeVanityLighting: boolean;
+  vanityLightingStyle: 'sconce' | 'led-strip' | 'pendant';
+  vanityLightBrightness: number;
+  vanityLightTemp: number;
+}> = ({ 
+  vanityWidth, 
+  vanityHeight, 
+  vanityDepth, 
+  mirrorSize,
+  includeVanityLighting, 
+  vanityLightingStyle, 
+  vanityLightBrightness,
+  vanityLightTemp 
+}) => {
+  if (!includeVanityLighting) return null;
+
+  const scaledWidth = vanityWidth * SCALE_FACTOR;
+  const scaledHeight = vanityHeight * SCALE_FACTOR;
+  const scaledDepth = vanityDepth * SCALE_FACTOR;
+
+  // Calculate mirror dimensions for positioning
+  const mirrorHeight = (mirrorSize === 'small' ? 24 : mirrorSize === 'large' ? 36 : 30) * SCALE_FACTOR;
+  const mirrorY = scaledHeight + mirrorHeight / 2 + 0.1;
+
+  // Convert color temperature to RGB
+  const getTempColor = (temp: number): string => {
+    if (temp <= 3000) return '#ffd699'; // Warm white
+    if (temp <= 4000) return '#fff5e6'; // Neutral white
+    if (temp <= 5000) return '#fffef0'; // Cool white
+    return '#f0f8ff'; // Daylight
+  };
+
+  const lightColor = getTempColor(vanityLightTemp);
+  const intensity = (vanityLightBrightness / 100) * 2;
+
+  if (vanityLightingStyle === 'sconce') {
+    // Wall sconce fixtures on both sides of mirror
+    const sconcePositions: [number, number][] = [
+      [-scaledWidth * 0.4, mirrorY],
+      [scaledWidth * 0.4, mirrorY]
+    ];
+
+    return (
+      <group>
+        {sconcePositions.map((pos, i) => (
+          <group key={`sconce-${i}`} position={[pos[0], pos[1], -scaledDepth / 2 - 0.05]}>
+            {/* Base plate */}
+            <mesh castShadow>
+              <cylinderGeometry args={[0.05, 0.05, 0.01, 16]} />
+              <meshStandardMaterial color="#404040" metalness={0.7} roughness={0.3} />
+            </mesh>
+            
+            {/* Arm */}
+            <mesh position={[0, 0, 0.03]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.01, 0.01, 0.06, 8]} />
+              <meshStandardMaterial color="#404040" metalness={0.7} roughness={0.3} />
+            </mesh>
+            
+            {/* Glass shade */}
+            <mesh position={[0, 0, 0.08]}>
+              <sphereGeometry args={[0.04, 16, 16]} />
+              <meshPhysicalMaterial 
+                color={lightColor}
+                emissive={lightColor}
+                emissiveIntensity={intensity * 0.5}
+                transparent
+                opacity={0.8}
+                roughness={0.1}
+              />
+            </mesh>
+            
+            {/* Point light */}
+            <pointLight 
+              color={lightColor} 
+              intensity={intensity} 
+              distance={2}
+              decay={2}
+            />
+          </group>
+        ))}
+      </group>
+    );
+  }
+
+  if (vanityLightingStyle === 'led-strip') {
+    // LED strip around mirror perimeter
+    const stripWidth = scaledWidth * 0.7;
+    const stripSegments = 20;
+
+    return (
+      <group position={[0, mirrorY, -scaledDepth / 2 - 0.02]}>
+        {/* Top strip */}
+        <mesh position={[0, mirrorHeight / 2, 0]}>
+          <boxGeometry args={[stripWidth, 0.015, 0.01]} />
+          <meshStandardMaterial 
+            color={lightColor}
+            emissive={lightColor}
+            emissiveIntensity={intensity * 0.8}
+          />
+        </mesh>
+        
+        {/* Bottom strip */}
+        <mesh position={[0, -mirrorHeight / 2, 0]}>
+          <boxGeometry args={[stripWidth, 0.015, 0.01]} />
+          <meshStandardMaterial 
+            color={lightColor}
+            emissive={lightColor}
+            emissiveIntensity={intensity * 0.8}
+          />
+        </mesh>
+        
+        {/* Side strips */}
+        <mesh position={[-stripWidth / 2, 0, 0]}>
+          <boxGeometry args={[0.015, mirrorHeight, 0.01]} />
+          <meshStandardMaterial 
+            color={lightColor}
+            emissive={lightColor}
+            emissiveIntensity={intensity * 0.8}
+          />
+        </mesh>
+        <mesh position={[stripWidth / 2, 0, 0]}>
+          <boxGeometry args={[0.015, mirrorHeight, 0.01]} />
+          <meshStandardMaterial 
+            color={lightColor}
+            emissive={lightColor}
+            emissiveIntensity={intensity * 0.8}
+          />
+        </mesh>
+        
+        {/* Multiple point lights for even illumination */}
+        {Array.from({ length: stripSegments }).map((_, i) => {
+          const angle = (i / stripSegments) * Math.PI * 2;
+          const x = Math.cos(angle) * stripWidth / 2.2;
+          const y = Math.sin(angle) * mirrorHeight / 2.2;
+          return (
+            <pointLight 
+              key={`led-${i}`}
+              position={[x, y, 0.05]}
+              color={lightColor} 
+              intensity={intensity * 0.3} 
+              distance={1}
+              decay={2}
+            />
+          );
+        })}
+      </group>
+    );
+  }
+
+  if (vanityLightingStyle === 'pendant') {
+    // Pendant lights hanging above vanity
+    const pendantPositions: number[] = [-scaledWidth * 0.25, scaledWidth * 0.25];
+    const pendantHeight = mirrorY + mirrorHeight / 2 + 0.3;
+
+    return (
+      <group>
+        {pendantPositions.map((xPos, i) => (
+          <group key={`pendant-${i}`} position={[xPos, pendantHeight, -scaledDepth * 0.15]}>
+            {/* Ceiling mount */}
+            <mesh position={[0, 0.02, 0]}>
+              <cylinderGeometry args={[0.02, 0.02, 0.01, 16]} />
+              <meshStandardMaterial color="#303030" metalness={0.8} roughness={0.2} />
+            </mesh>
+            
+            {/* Cable */}
+            <mesh position={[0, -0.1, 0]}>
+              <cylinderGeometry args={[0.003, 0.003, 0.2, 8]} />
+              <meshStandardMaterial color="#202020" />
+            </mesh>
+            
+            {/* Shade */}
+            <mesh position={[0, -0.25, 0]} rotation={[Math.PI, 0, 0]}>
+              <coneGeometry args={[0.08, 0.12, 16, 1, true]} />
+              <meshStandardMaterial 
+                color="#e8e8e8"
+                metalness={0.3}
+                roughness={0.4}
+                side={THREE.DoubleSide}
+              />
+            </mesh>
+            
+            {/* Light bulb */}
+            <mesh position={[0, -0.28, 0]}>
+              <sphereGeometry args={[0.03, 16, 16]} />
+              <meshPhysicalMaterial 
+                color={lightColor}
+                emissive={lightColor}
+                emissiveIntensity={intensity * 0.6}
+                transparent
+                opacity={0.9}
+              />
+            </mesh>
+            
+            {/* Point light */}
+            <pointLight 
+              position={[0, -0.3, 0]}
+              color={lightColor} 
+              intensity={intensity * 1.2} 
+              distance={2.5}
+              decay={2}
+              castShadow
+            />
+          </group>
+        ))}
+      </group>
+    );
+  }
+
+  return null;
 };
 
 // Faucet and Fixtures Component
@@ -2931,7 +3152,11 @@ export const Vanity3DPreview = ({
   sinkShape = 'oval',
   includeBacksplash = false,
   backsplashMaterial = 'subway-tile',
-  backsplashHeight = '4-inch'
+  backsplashHeight = '4-inch',
+  includeVanityLighting = true,
+  vanityLightingStyle = 'sconce',
+  vanityLightBrightness = 85,
+  vanityLightTemp = 3000
 }: Vanity3DPreviewProps) => {
   const [measurementMode, setMeasurementMode] = useState(false);
   const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
@@ -3232,6 +3457,18 @@ export const Vanity3DPreview = ({
             backsplashMaterial={backsplashMaterial}
             backsplashHeight={backsplashHeight}
             mirrorHeight={mirrorSize === 'small' ? 24 : mirrorSize === 'large' ? 36 : 30}
+          />
+          
+          {/* Vanity Lighting */}
+          <VanityLighting
+            vanityWidth={width}
+            vanityHeight={height}
+            vanityDepth={depth}
+            mirrorSize={mirrorSize}
+            includeVanityLighting={includeVanityLighting}
+            vanityLightingStyle={vanityLightingStyle}
+            vanityLightBrightness={vanityLightBrightness}
+            vanityLightTemp={vanityLightTemp}
           />
         </group>
       </Canvas>
