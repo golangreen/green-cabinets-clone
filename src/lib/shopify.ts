@@ -5,10 +5,6 @@ const SHOPIFY_STORE_PERMANENT_DOMAIN = 'green-cabinets-clone-5eeb3.myshopify.com
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
 
-if (!SHOPIFY_STOREFRONT_TOKEN) {
-  throw new Error('VITE_SHOPIFY_STOREFRONT_TOKEN is required. Please set it in your environment variables.');
-}
-
 export interface ShopifyProduct {
   node: {
     id: string;
@@ -148,6 +144,11 @@ const CART_CREATE_MUTATION = `
 `;
 
 export async function storefrontApiRequest(query: string, variables: any = {}) {
+  if (!SHOPIFY_STOREFRONT_TOKEN) {
+    console.warn('Shopify Storefront Access Token is not configured');
+    throw new Error('Shopify integration is not configured. Please contact support.');
+  }
+  
   const response = await fetch(SHOPIFY_STOREFRONT_URL, {
     method: 'POST',
     headers: {
