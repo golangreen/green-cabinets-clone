@@ -174,6 +174,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [hasMedicineCabinet, setHasMedicineCabinet] = useState(false);
   const [medicineCabinetDoorType, setMedicineCabinetDoorType] = useState<string>("mirror");
   
+  // Room & Floor configuration
+  const [includeRoom, setIncludeRoom] = useState(false);
+  const [roomLength, setRoomLength] = useState<string>("");
+  const [roomWidth, setRoomWidth] = useState<string>("");
+  const [floorType, setFloorType] = useState<string>("tile");
+  const [tileColor, setTileColor] = useState<string>("white-marble");
+  const [woodFloorFinish, setWoodFloorFinish] = useState<string>("natural-oak");
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -318,9 +326,22 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     return linearFeet * 200; // $200 per linear foot
   };
 
+  // Calculate floor price
+  const calculateFloorPrice = () => {
+    if (!includeRoom || !roomLength || !roomWidth) return 0;
+    const lengthFeet = parseFloat(roomLength);
+    const widthFeet = parseFloat(roomWidth);
+    const squareFeet = lengthFeet * widthFeet;
+    
+    // Tile: $15/sqft, Wood: $12/sqft
+    const pricePerSqFt = floorType === "tile" ? 15 : 12;
+    return squareFeet * pricePerSqFt;
+  };
+
   const basePrice = calculatePrice();
   const wallPrice = calculateWallPrice();
-  const subtotal = basePrice + wallPrice;
+  const floorPrice = calculateFloorPrice();
+  const subtotal = basePrice + wallPrice + floorPrice;
   const tax = calculateTax(subtotal);
   const shipping = calculateShipping();
   const totalPrice = subtotal + tax + shipping;
@@ -356,6 +377,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     if (includeWalls && (!wallWidth || !wallHeight)) {
       toast.error("Please complete wall dimensions", {
         description: "Wall width and height are required when walls are included",
+      });
+      return;
+    }
+
+    if (includeRoom && (!roomLength || !roomWidth)) {
+      toast.error("Please complete room dimensions", {
+        description: "Room length and width are required when room layout is included",
       });
       return;
     }
@@ -431,6 +459,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             hasMedicineCabinet && `Medicine Cabinet (${medicineCabinetDoorType === "mirror" ? "Mirror Door" : "Glass Door"})`
           ].filter(Boolean).join(", ") || "None" },
           { key: "Wall Price", value: `$${wallPrice.toFixed(2)}` },
+        ] : []),
+        ...(includeRoom ? [
+          { key: "Includes Room Layout", value: "Yes" },
+          { key: "Room Dimensions", value: `${roomLength}' × ${roomWidth}'` },
+          { key: "Floor Type", value: floorType === "tile" ? "Tile" : "Wood" },
+          { key: "Floor Finish", value: floorType === "tile" ? tileColor.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) : woodFloorFinish.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) },
+          { key: "Floor Square Feet", value: `${(parseFloat(roomLength) * parseFloat(roomWidth)).toFixed(2)} sq ft` },
+          { key: "Floor Price", value: `$${floorPrice.toFixed(2)}` },
         ] : []),
         { key: "Vanity Price", value: `$${basePrice.toFixed(2)}` },
         { key: "Tax", value: `$${tax.toFixed(2)}` },
@@ -601,6 +637,77 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   )}
                 </div>
 
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-sm flex items-center justify-between">
+                    <span>Room Layout</span>
+                    <div className="flex items-center gap-1">
+                      <Checkbox
+                        id="fs-includeRoom"
+                        checked={includeRoom}
+                        onCheckedChange={(checked) => setIncludeRoom(checked as boolean)}
+                      />
+                      <Label htmlFor="fs-includeRoom" className="text-xs font-normal cursor-pointer">
+                        Include
+                      </Label>
+                    </div>
+                  </h3>
+                  {includeRoom && (
+                    <>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Input
+                          type="number"
+                          placeholder="Length (ft)"
+                          value={roomLength}
+                          onChange={(e) => setRoomLength(e.target.value)}
+                          className="h-8 text-xs"
+                        />
+                        <Input
+                          type="number"
+                          placeholder="Width (ft)"
+                          value={roomWidth}
+                          onChange={(e) => setRoomWidth(e.target.value)}
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                      <Select value={floorType} onValueChange={setFloorType}>
+                        <SelectTrigger className="bg-background h-8 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background z-[100]">
+                          <SelectItem value="tile">Tile ($15/sqft)</SelectItem>
+                          <SelectItem value="wood">Wood ($12/sqft)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {floorType === "tile" ? (
+                        <Select value={tileColor} onValueChange={setTileColor}>
+                          <SelectTrigger className="bg-background h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-[100]">
+                            <SelectItem value="white-marble">White Marble</SelectItem>
+                            <SelectItem value="gray-marble">Gray Marble</SelectItem>
+                            <SelectItem value="black-marble">Black Marble</SelectItem>
+                            <SelectItem value="cream-travertine">Cream Travertine</SelectItem>
+                            <SelectItem value="beige-porcelain">Beige Porcelain</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Select value={woodFloorFinish} onValueChange={setWoodFloorFinish}>
+                          <SelectTrigger className="bg-background h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-[100]">
+                            <SelectItem value="natural-oak">Natural Oak</SelectItem>
+                            <SelectItem value="honey-oak">Honey Oak</SelectItem>
+                            <SelectItem value="dark-walnut">Dark Walnut</SelectItem>
+                            <SelectItem value="gray-oak">Gray Oak</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </>
+                  )}
+                </div>
+
                 {basePrice > 0 && (
                   <div className="space-y-2 pt-2 border-t border-border">
                     <h3 className="font-semibold text-sm">Price Summary</h3>
@@ -615,7 +722,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                           <span className="font-medium">${wallPrice.toFixed(2)}</span>
                         </div>
                       )}
-                      {includeWalls && wallPrice > 0 && (
+                      {includeRoom && floorPrice > 0 && (
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Flooring:</span>
+                          <span className="font-medium">${floorPrice.toFixed(2)}</span>
+                        </div>
+                      )}
+                      {((includeWalls && wallPrice > 0) || (includeRoom && floorPrice > 0)) && (
                         <div className="flex justify-between font-semibold border-t pt-1">
                           <span>Subtotal:</span>
                           <span>${subtotal.toFixed(2)}</span>
@@ -1288,6 +1401,157 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             </CardContent>
           )}
         </Card>
+
+        {/* Room Layout & Flooring */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Room Layout & Flooring</span>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="includeRoom"
+                  checked={includeRoom}
+                  onCheckedChange={(checked) => setIncludeRoom(checked as boolean)}
+                />
+                <Label htmlFor="includeRoom" className="text-sm font-normal cursor-pointer">
+                  Include Room
+                </Label>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          {includeRoom && (
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Create a complete room layout with automatic floor generation based on your dimensions.
+              </p>
+
+              {/* Room Dimensions */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="roomLength">Room Length (feet)</Label>
+                  <Input
+                    id="roomLength"
+                    type="number"
+                    placeholder="Length"
+                    value={roomLength}
+                    onChange={(e) => setRoomLength(e.target.value)}
+                    min="0"
+                    max="50"
+                    step="0.5"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="roomWidth">Room Width (feet)</Label>
+                  <Input
+                    id="roomWidth"
+                    type="number"
+                    placeholder="Width"
+                    value={roomWidth}
+                    onChange={(e) => setRoomWidth(e.target.value)}
+                    min="0"
+                    max="50"
+                    step="0.5"
+                  />
+                </div>
+              </div>
+
+              {roomLength && roomWidth && (
+                <div className="bg-secondary/20 rounded-lg p-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Floor Area:</span>
+                    <span className="font-medium">
+                      {(parseFloat(roomLength) * parseFloat(roomWidth)).toFixed(2)} sq ft
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Floor Type Selection */}
+              <div className="space-y-2">
+                <Label htmlFor="floorType">Floor Type</Label>
+                <Select value={floorType} onValueChange={setFloorType}>
+                  <SelectTrigger id="floorType" className="bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-[100]">
+                    <SelectItem value="tile">Tile Flooring ($15/sq ft)</SelectItem>
+                    <SelectItem value="wood">Wood Flooring ($12/sq ft)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Tile Color Options */}
+              {floorType === "tile" && (
+                <div className="space-y-2">
+                  <Label htmlFor="tileColor">Tile Color & Pattern</Label>
+                  <Select value={tileColor} onValueChange={setTileColor}>
+                    <SelectTrigger id="tileColor" className="bg-background">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background z-[100]">
+                      <SelectItem value="white-marble">White Marble</SelectItem>
+                      <SelectItem value="gray-marble">Gray Marble</SelectItem>
+                      <SelectItem value="black-marble">Black Marble</SelectItem>
+                      <SelectItem value="cream-travertine">Cream Travertine</SelectItem>
+                      <SelectItem value="beige-porcelain">Beige Porcelain</SelectItem>
+                      <SelectItem value="charcoal-slate">Charcoal Slate</SelectItem>
+                      <SelectItem value="white-subway">White Subway Tile</SelectItem>
+                      <SelectItem value="gray-hexagon">Gray Hexagon</SelectItem>
+                      <SelectItem value="black-white-pattern">Black & White Pattern</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Premium porcelain and ceramic tiles in various patterns
+                  </p>
+                </div>
+              )}
+
+              {/* Wood Floor Options */}
+              {floorType === "wood" && (
+                <div className="space-y-2">
+                  <Label htmlFor="woodFloorFinish">Wood Floor Finish</Label>
+                  <Select value={woodFloorFinish} onValueChange={setWoodFloorFinish}>
+                    <SelectTrigger id="woodFloorFinish" className="bg-background">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background z-[100]">
+                      <SelectItem value="natural-oak">Natural Oak</SelectItem>
+                      <SelectItem value="honey-oak">Honey Oak</SelectItem>
+                      <SelectItem value="dark-walnut">Dark Walnut</SelectItem>
+                      <SelectItem value="espresso-maple">Espresso Maple</SelectItem>
+                      <SelectItem value="gray-oak">Gray Oak</SelectItem>
+                      <SelectItem value="white-washed-oak">White-Washed Oak</SelectItem>
+                      <SelectItem value="cherry-mahogany">Cherry Mahogany</SelectItem>
+                      <SelectItem value="hickory-natural">Natural Hickory</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Premium engineered hardwood flooring
+                  </p>
+                </div>
+              )}
+
+              {/* Floor Price Preview */}
+              {roomLength && roomWidth && (
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-muted-foreground">
+                        {floorType === "tile" ? "Tile" : "Wood"} Floor ({(parseFloat(roomLength) * parseFloat(roomWidth)).toFixed(2)} sq ft × ${floorType === "tile" ? "15" : "12"}):
+                      </span>
+                      <span className="font-semibold text-primary">
+                        ${calculateFloorPrice().toFixed(2)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Includes installation and underlayment
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          )}
+        </Card>
       </div>
 
         {/* Price Breakdown */}
@@ -1307,7 +1571,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   <span className="font-medium">${wallPrice.toFixed(2)}</span>
                 </div>
               )}
-              {includeWalls && wallPrice > 0 && (
+              {includeRoom && floorPrice > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span>Room & Flooring:</span>
+                  <span className="font-medium">${floorPrice.toFixed(2)}</span>
+                </div>
+              )}
+              {((includeWalls && wallPrice > 0) || (includeRoom && floorPrice > 0)) && (
                 <div className="flex justify-between text-sm font-semibold border-t pt-2">
                   <span>Subtotal:</span>
                   <span>${subtotal.toFixed(2)}</span>
