@@ -257,7 +257,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       product,
       variantId: matchingVariant.node.id,
       variantTitle: matchingVariant.node.title,
-      price: matchingVariant.node.price,
+      price: {
+        amount: totalPrice.toFixed(2),
+        currencyCode: matchingVariant.node.price.currencyCode
+      },
       quantity: 1,
       selectedOptions: [
         { name: "Brand", value: selectedBrand },

@@ -40,12 +40,8 @@ export default function Checkout() {
     phone: "",
   });
 
-  // Calculate totals including custom attributes
+  // Calculate totals
   const calculateItemTotal = (item: any) => {
-    const customTotal = item.customAttributes?.find((attr: any) => attr.key === "Total Estimate");
-    if (customTotal) {
-      return parseFloat(customTotal.value.replace(/[^0-9.]/g, ''));
-    }
     return parseFloat(item.price.amount) * item.quantity;
   };
 
