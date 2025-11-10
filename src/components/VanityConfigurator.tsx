@@ -21,8 +21,9 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, Save, Maximize2, X } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
+import { Checkbox } from "@/components/ui/checkbox";
 import logoImage from "@/assets/logo.jpg";
 import { TextureSwatch } from "./TextureSwatch";
 import { TexturePreviewModal } from "./TexturePreviewModal";
@@ -163,6 +164,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [texturePreviewOpen, setTexturePreviewOpen] = useState(false);
   const [previewFinish, setPreviewFinish] = useState("");
   const [fullscreenPreview, setFullscreenPreview] = useState(false);
+  
+  // Wall configuration
+  const [includeWalls, setIncludeWalls] = useState(false);
+  const [wallWidth, setWallWidth] = useState<string>("");
+  const [wallHeight, setWallHeight] = useState<string>("");
+  const [hasWindow, setHasWindow] = useState(false);
+  const [hasDoor, setHasDoor] = useState(false);
+  const [hasMedicineCabinet, setHasMedicineCabinet] = useState(false);
+  const [medicineCabinetDoorType, setMedicineCabinetDoorType] = useState<string>("mirror");
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -299,10 +310,20 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     return SHIPPING_RATES[state] || SHIPPING_RATES["other"];
   };
 
+  // Calculate wall price
+  const calculateWallPrice = () => {
+    if (!includeWalls || !wallWidth) return 0;
+    const widthInches = parseFloat(wallWidth);
+    const linearFeet = widthInches / 12;
+    return linearFeet * 200; // $200 per linear foot
+  };
+
   const basePrice = calculatePrice();
-  const tax = calculateTax(basePrice);
+  const wallPrice = calculateWallPrice();
+  const subtotal = basePrice + wallPrice;
+  const tax = calculateTax(subtotal);
   const shipping = calculateShipping();
-  const totalPrice = basePrice + tax + shipping;
+  const totalPrice = subtotal + tax + shipping;
 
   // Calculate dimensions in inches (with fractions) for 3D preview
   const dimensionsInInches = useMemo(() => {
@@ -328,6 +349,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
       toast.error("Please complete all fields", {
         description: "Brand, finish, measurements, and zip code are required",
+      });
+      return;
+    }
+
+    if (includeWalls && (!wallWidth || !wallHeight)) {
+      toast.error("Please complete wall dimensions", {
+        description: "Wall width and height are required when walls are included",
       });
       return;
     }
@@ -394,7 +422,17 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         },
         { key: "Number of Drawers", value: numDrawers.toString() },
         { key: "Handle Style", value: handleStyle === "bar" ? "Bar Handles" : handleStyle === "knob" ? "Knobs" : "Push-to-Open" },
-        { key: "Calculated Price", value: `$${basePrice.toFixed(2)}` },
+        ...(includeWalls ? [
+          { key: "Includes Walls", value: "Yes" },
+          { key: "Wall Dimensions", value: `${wallWidth}" W × ${wallHeight}" H` },
+          { key: "Wall Features", value: [
+            hasWindow && "Window",
+            hasDoor && "Door", 
+            hasMedicineCabinet && `Medicine Cabinet (${medicineCabinetDoorType === "mirror" ? "Mirror Door" : "Glass Door"})`
+          ].filter(Boolean).join(", ") || "None" },
+          { key: "Wall Price", value: `$${wallPrice.toFixed(2)}` },
+        ] : []),
+        { key: "Vanity Price", value: `$${basePrice.toFixed(2)}` },
         { key: "Tax", value: `$${tax.toFixed(2)}` },
         { key: "Shipping", value: `$${shipping.toFixed(2)}` },
         { key: "Total Estimate", value: `$${totalPrice.toFixed(2)}` },
@@ -568,9 +606,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     <h3 className="font-semibold text-sm">Price Summary</h3>
                     <div className="space-y-1 text-xs">
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Base Price:</span>
+                        <span className="text-muted-foreground">Vanity:</span>
                         <span className="font-medium">${basePrice.toFixed(2)}</span>
                       </div>
+                      {includeWalls && wallPrice > 0 && (
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Walls:</span>
+                          <span className="font-medium">${wallPrice.toFixed(2)}</span>
+                        </div>
+                      )}
+                      {includeWalls && wallPrice > 0 && (
+                        <div className="flex justify-between font-semibold border-t pt-1">
+                          <span>Subtotal:</span>
+                          <span>${subtotal.toFixed(2)}</span>
+                        </div>
+                      )}
                       {tax > 0 && (
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Tax:</span>
@@ -1115,6 +1165,129 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             )}
           </CardContent>
         </Card>
+
+        {/* Wall Configuration */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Wall Configuration</span>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="includeWalls"
+                  checked={includeWalls}
+                  onCheckedChange={(checked) => setIncludeWalls(checked as boolean)}
+                />
+                <Label htmlFor="includeWalls" className="text-sm font-normal cursor-pointer">
+                  Include Walls
+                </Label>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          {includeWalls && (
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Add custom walls with windows, doors, and medicine cabinets. Priced at $200 per linear foot.
+              </p>
+
+              {/* Wall Dimensions */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="wallWidth">Wall Width (inches)</Label>
+                  <Input
+                    id="wallWidth"
+                    type="number"
+                    placeholder="Width"
+                    value={wallWidth}
+                    onChange={(e) => setWallWidth(e.target.value)}
+                    min="0"
+                    max="240"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="wallHeight">Wall Height (inches)</Label>
+                  <Input
+                    id="wallHeight"
+                    type="number"
+                    placeholder="Height"
+                    value={wallHeight}
+                    onChange={(e) => setWallHeight(e.target.value)}
+                    min="0"
+                    max="120"
+                  />
+                </div>
+              </div>
+
+              {/* Wall Features */}
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Wall Features</Label>
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="hasWindow"
+                    checked={hasWindow}
+                    onCheckedChange={(checked) => setHasWindow(checked as boolean)}
+                  />
+                  <Label htmlFor="hasWindow" className="text-sm font-normal cursor-pointer">
+                    Include Window
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="hasDoor"
+                    checked={hasDoor}
+                    onCheckedChange={(checked) => setHasDoor(checked as boolean)}
+                  />
+                  <Label htmlFor="hasDoor" className="text-sm font-normal cursor-pointer">
+                    Include Door
+                  </Label>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="hasMedicineCabinet"
+                      checked={hasMedicineCabinet}
+                      onCheckedChange={(checked) => setHasMedicineCabinet(checked as boolean)}
+                    />
+                    <Label htmlFor="hasMedicineCabinet" className="text-sm font-normal cursor-pointer">
+                      Include Medicine Cabinet
+                    </Label>
+                  </div>
+                  
+                  {hasMedicineCabinet && (
+                    <div className="ml-6 space-y-2">
+                      <Label htmlFor="medicineCabinetDoor" className="text-xs">Door Type</Label>
+                      <Select value={medicineCabinetDoorType} onValueChange={setMedicineCabinetDoorType}>
+                        <SelectTrigger id="medicineCabinetDoor" className="bg-background h-9">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background z-50">
+                          <SelectItem value="mirror">Mirror Door</SelectItem>
+                          <SelectItem value="glass">Glass Door</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Wall Price Preview */}
+              {wallWidth && (
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">
+                      Wall Price ({(parseFloat(wallWidth) / 12).toFixed(2)} linear feet × $200):
+                    </span>
+                    <span className="font-semibold text-primary">
+                      ${calculateWallPrice().toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          )}
+        </Card>
       </div>
 
         {/* Price Breakdown */}
@@ -1125,9 +1298,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>Base Price ({selectedBrand}):</span>
+                <span>Vanity Base Price ({selectedBrand}):</span>
                 <span className="font-medium">${basePrice.toFixed(2)}</span>
               </div>
+              {includeWalls && wallPrice > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span>Wall Configuration:</span>
+                  <span className="font-medium">${wallPrice.toFixed(2)}</span>
+                </div>
+              )}
+              {includeWalls && wallPrice > 0 && (
+                <div className="flex justify-between text-sm font-semibold border-t pt-2">
+                  <span>Subtotal:</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
+              )}
               {tax > 0 && (
                 <div className="flex justify-between text-sm">
                   <span>Sales Tax ({state} - {(TAX_RATES[state] * 100).toFixed(3)}%):</span>
