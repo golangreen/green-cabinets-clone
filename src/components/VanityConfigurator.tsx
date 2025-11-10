@@ -197,6 +197,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [bathtubStyle, setBathtubStyle] = useState<'freestanding' | 'alcove' | 'corner'>('freestanding');
   const [bathtubPosition, setBathtubPosition] = useState<'left' | 'right' | 'back'>('back');
   
+  // Wall finish state
+  const [wallFinishType, setWallFinishType] = useState<'paint' | 'tile'>('paint');
+  const [wallPaintColor, setWallPaintColor] = useState<string>('white');
+  const [wallTileColor, setWallTileColor] = useState<string>('white-subway');
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -747,6 +752,49 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                           />
                         </div>
                       </div>
+                      
+                      {/* Wall Finishes Controls */}
+                      <div className="pt-2 border-t border-border space-y-2">
+                        <Label className="text-xs font-medium">Wall Finishes</Label>
+                        <Select value={wallFinishType} onValueChange={(value: any) => setWallFinishType(value)}>
+                          <SelectTrigger className="bg-background h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-[100]">
+                            <SelectItem value="paint">Paint</SelectItem>
+                            <SelectItem value="tile">Tile</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {wallFinishType === 'paint' ? (
+                          <Select value={wallPaintColor} onValueChange={setWallPaintColor}>
+                            <SelectTrigger className="bg-background h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-background z-[100]">
+                              <SelectItem value="white">White</SelectItem>
+                              <SelectItem value="beige">Beige</SelectItem>
+                              <SelectItem value="light-gray">Light Gray</SelectItem>
+                              <SelectItem value="sage-green">Sage Green</SelectItem>
+                              <SelectItem value="light-blue">Light Blue</SelectItem>
+                              <SelectItem value="cream">Cream</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <Select value={wallTileColor} onValueChange={setWallTileColor}>
+                            <SelectTrigger className="bg-background h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-background z-[100]">
+                              <SelectItem value="white-subway">White Subway</SelectItem>
+                              <SelectItem value="gray-subway">Gray Subway</SelectItem>
+                              <SelectItem value="marble">Marble</SelectItem>
+                              <SelectItem value="travertine">Travertine</SelectItem>
+                              <SelectItem value="porcelain">Porcelain</SelectItem>
+                              <SelectItem value="mosaic">Mosaic</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      </div>
                     </>
                   )}
                 </div>
@@ -833,6 +881,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         includeBathtub={includeBathtub}
         bathtubStyle={bathtubStyle}
         bathtubPosition={bathtubPosition}
+        wallFinishType={wallFinishType}
+        wallPaintColor={wallPaintColor}
+        wallTileColor={wallTileColor}
       />
             </div>
           </div>
@@ -1686,6 +1737,60 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 <p className="text-xs text-muted-foreground bg-secondary/50 p-2 rounded">
                   💡 Lighting adjustments affect 3D preview only. Contact us for actual lighting quotes.
                 </p>
+              </div>
+
+              {/* Wall Finishes */}
+              <div className="space-y-4 pt-4 border-t">
+                <h4 className="font-medium">Wall Finishes</h4>
+                
+                <div>
+                  <Label htmlFor="wallFinishType">Wall Material</Label>
+                  <Select value={wallFinishType} onValueChange={(value: any) => setWallFinishType(value)}>
+                    <SelectTrigger id="wallFinishType">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="paint">Paint</SelectItem>
+                      <SelectItem value="tile">Tile</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {wallFinishType === 'paint' ? (
+                  <div>
+                    <Label htmlFor="wallPaintColor">Paint Color</Label>
+                    <Select value={wallPaintColor} onValueChange={setWallPaintColor}>
+                      <SelectTrigger id="wallPaintColor">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="white">White</SelectItem>
+                        <SelectItem value="beige">Beige</SelectItem>
+                        <SelectItem value="light-gray">Light Gray</SelectItem>
+                        <SelectItem value="sage-green">Sage Green</SelectItem>
+                        <SelectItem value="light-blue">Light Blue</SelectItem>
+                        <SelectItem value="cream">Cream</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : (
+                  <div>
+                    <Label htmlFor="wallTileColor">Tile Style</Label>
+                    <Select value={wallTileColor} onValueChange={setWallTileColor}>
+                      <SelectTrigger id="wallTileColor">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="white-subway">White Subway</SelectItem>
+                        <SelectItem value="gray-subway">Gray Subway</SelectItem>
+                        <SelectItem value="marble">Marble</SelectItem>
+                        <SelectItem value="travertine">Travertine</SelectItem>
+                        <SelectItem value="porcelain">Porcelain</SelectItem>
+                        <SelectItem value="mosaic">Mosaic</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
             </CardContent>
           )}

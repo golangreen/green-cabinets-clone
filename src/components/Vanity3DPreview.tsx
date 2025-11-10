@@ -38,6 +38,9 @@ interface Vanity3DPreviewProps {
   includeBathtub?: boolean;
   bathtubStyle?: 'freestanding' | 'alcove' | 'corner';
   bathtubPosition?: 'left' | 'right' | 'back';
+  wallFinishType?: 'paint' | 'tile';
+  wallPaintColor?: string;
+  wallTileColor?: string;
 }
 
 // Convert inches to a normalized scale for 3D visualization
@@ -232,7 +235,10 @@ const Room = ({
   woodFloorFinish,
   includeWalls,
   hasWindow,
-  hasDoor
+  hasDoor,
+  wallFinishType,
+  wallPaintColor,
+  wallTileColor
 }: {
   roomLength: number;
   roomWidth: number;
@@ -243,6 +249,9 @@ const Room = ({
   includeWalls: boolean;
   hasWindow: boolean;
   hasDoor: boolean;
+  wallFinishType: string;
+  wallPaintColor: string;
+  wallTileColor: string;
 }) => {
   const scaledLength = roomLength * SCALE_FACTOR;
   const scaledWidth = roomWidth * SCALE_FACTOR;
@@ -252,6 +261,41 @@ const Room = ({
     getFloorMaterial(floorType, tileColor, woodFloorFinish),
     [floorType, tileColor, woodFloorFinish]
   );
+
+  // Get wall material based on finish type
+  const getWallMaterial = () => {
+    if (wallFinishType === 'paint') {
+      const paintColors: { [key: string]: string } = {
+        'white': '#ffffff',
+        'beige': '#f5f5dc',
+        'light-gray': '#d3d3d3',
+        'sage-green': '#9dc183',
+        'light-blue': '#add8e6',
+        'cream': '#fffdd0'
+      };
+      return {
+        color: paintColors[wallPaintColor] || '#ffffff',
+        roughness: 0.9,
+        metalness: 0.0
+      };
+    } else {
+      const tileColors: { [key: string]: string } = {
+        'white-subway': '#ffffff',
+        'gray-subway': '#808080',
+        'marble': '#f8f8f8',
+        'travertine': '#d8c8b8',
+        'porcelain': '#e8e8e8',
+        'mosaic': '#c0c0c0'
+      };
+      return {
+        color: tileColors[wallTileColor] || '#ffffff',
+        roughness: 0.2,
+        metalness: 0.1
+      };
+    }
+  };
+
+  const wallMaterial = useMemo(() => getWallMaterial(), [wallFinishType, wallPaintColor, wallTileColor]);
 
   // Create floor texture
   const floorTexture = useMemo(() => {
@@ -316,6 +360,46 @@ const Room = ({
     return texture;
   }, [floorType, floorMaterial.color]);
 
+  // Create wall texture for tiles
+  const wallTexture = useMemo(() => {
+    if (wallFinishType !== 'tile') return null;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    // Base tile color
+    ctx.fillStyle = wallMaterial.color;
+    ctx.fillRect(0, 0, 1024, 1024);
+    
+    // Grout lines
+    ctx.strokeStyle = '#999999';
+    ctx.lineWidth = wallTileColor === 'mosaic' ? 1 : 2;
+    
+    const tileSize = wallTileColor === 'mosaic' ? 32 : 
+                    wallTileColor.includes('subway') ? 96 : 64;
+    
+    for (let x = 0; x <= 1024; x += tileSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, 1024);
+      ctx.stroke();
+    }
+    for (let y = 0; y <= 1024; y += (wallTileColor.includes('subway') ? 48 : tileSize)) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(1024, y);
+      ctx.stroke();
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(3, 3);
+    return texture;
+  }, [wallFinishType, wallTileColor, wallMaterial.color]);
+
   return (
     <group>
       {/* Floor */}
@@ -339,13 +423,23 @@ const Room = ({
           {/* Back wall */}
           <mesh position={[0, scaledHeight / 2, -scaledWidth / 2]} receiveShadow castShadow>
             <boxGeometry args={[scaledLength, scaledHeight, 0.1]} />
-            <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+            <meshStandardMaterial 
+              map={wallTexture}
+              color={wallMaterial.color} 
+              roughness={wallMaterial.roughness}
+              metalness={wallMaterial.metalness}
+            />
           </mesh>
 
           {/* Left wall */}
           <mesh position={[-scaledLength / 2, scaledHeight / 2, 0]} receiveShadow castShadow>
             <boxGeometry args={[0.1, scaledHeight, scaledWidth]} />
-            <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+            <meshStandardMaterial 
+              map={wallTexture}
+              color={wallMaterial.color} 
+              roughness={wallMaterial.roughness}
+              metalness={wallMaterial.metalness}
+            />
           </mesh>
 
           {/* Right wall with optional door */}
@@ -354,12 +448,22 @@ const Room = ({
               {/* Wall segment below door */}
               <mesh position={[scaledLength / 2, 0.5, 0]} receiveShadow castShadow>
                 <boxGeometry args={[0.1, 1, scaledWidth]} />
-                <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+                <meshStandardMaterial 
+                  map={wallTexture}
+                  color={wallMaterial.color} 
+                  roughness={wallMaterial.roughness}
+                  metalness={wallMaterial.metalness}
+                />
               </mesh>
               {/* Wall segment above door */}
               <mesh position={[scaledLength / 2, scaledHeight - 0.5, 0]} receiveShadow castShadow>
                 <boxGeometry args={[0.1, 1, scaledWidth]} />
-                <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+                <meshStandardMaterial 
+                  map={wallTexture}
+                  color={wallMaterial.color} 
+                  roughness={wallMaterial.roughness}
+                  metalness={wallMaterial.metalness}
+                />
               </mesh>
               {/* Door */}
               <mesh position={[scaledLength / 2, scaledHeight / 2, 0]} castShadow>
@@ -370,7 +474,12 @@ const Room = ({
           ) : (
             <mesh position={[scaledLength / 2, scaledHeight / 2, 0]} receiveShadow castShadow>
               <boxGeometry args={[0.1, scaledHeight, scaledWidth]} />
-              <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+              <meshStandardMaterial 
+                map={wallTexture}
+                color={wallMaterial.color} 
+                roughness={wallMaterial.roughness}
+                metalness={wallMaterial.metalness}
+              />
             </mesh>
           )}
 
@@ -380,12 +489,22 @@ const Room = ({
               {/* Wall segment below window */}
               <mesh position={[0, 1, scaledWidth / 2]} receiveShadow castShadow>
                 <boxGeometry args={[scaledLength, 2, 0.1]} />
-                <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+                <meshStandardMaterial 
+                  map={wallTexture}
+                  color={wallMaterial.color} 
+                  roughness={wallMaterial.roughness}
+                  metalness={wallMaterial.metalness}
+                />
               </mesh>
               {/* Wall segment above window */}
               <mesh position={[0, scaledHeight - 0.5, scaledWidth / 2]} receiveShadow castShadow>
                 <boxGeometry args={[scaledLength, 1, 0.1]} />
-                <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+                <meshStandardMaterial 
+                  map={wallTexture}
+                  color={wallMaterial.color} 
+                  roughness={wallMaterial.roughness}
+                  metalness={wallMaterial.metalness}
+                />
               </mesh>
               {/* Window frame */}
               <mesh position={[0, scaledHeight / 2, scaledWidth / 2]} castShadow>
@@ -402,7 +521,12 @@ const Room = ({
           ) : (
             <mesh position={[0, scaledHeight / 2, scaledWidth / 2]} receiveShadow castShadow>
               <boxGeometry args={[scaledLength, scaledHeight, 0.1]} />
-              <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+              <meshStandardMaterial 
+                map={wallTexture}
+                color={wallMaterial.color} 
+                roughness={wallMaterial.roughness}
+                metalness={wallMaterial.metalness}
+              />
             </mesh>
           )}
         </>
@@ -1526,7 +1650,10 @@ export const Vanity3DPreview = ({
   showerStyle = 'walk-in',
   includeBathtub = false,
   bathtubStyle = 'freestanding',
-  bathtubPosition = 'back'
+  bathtubPosition = 'back',
+  wallFinishType = 'paint',
+  wallPaintColor = 'white',
+  wallTileColor = 'white-subway'
 }: Vanity3DPreviewProps) => {
   const [measurementMode, setMeasurementMode] = useState(false);
   const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
@@ -1707,6 +1834,9 @@ export const Vanity3DPreview = ({
             includeWalls={includeWalls}
             hasWindow={hasWindow}
             hasDoor={hasDoor}
+            wallFinishType={wallFinishType}
+            wallPaintColor={wallPaintColor}
+            wallTileColor={wallTileColor}
           />
         ) : (
           /* Default shadow plane when no room */
