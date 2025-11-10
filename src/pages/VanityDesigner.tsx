@@ -1116,7 +1116,14 @@ const VanityDesigner = () => {
                           onClick={() => createRoomLayout('l-shaped')}
                           className="h-auto py-3 flex flex-col gap-1"
                         >
-                          <ArrowRight className="h-4 w-4 rotate-[-90deg]" />
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="h-4 w-4">
+                            <path
+                              d="M 2 2 L 6 2 L 6 10 L 14 10 L 14 14 L 2 14 Z"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              fill="none"
+                            />
+                          </svg>
                           <span className="text-xs">L-Shaped</span>
                         </Button>
                         <Button 
@@ -1125,7 +1132,14 @@ const VanityDesigner = () => {
                           onClick={() => createRoomLayout('u-shaped')}
                           className="h-auto py-3 flex flex-col gap-1"
                         >
-                          <Layout className="h-4 w-4" />
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="h-4 w-4">
+                            <path
+                              d="M 2 2 L 14 2 L 14 14 L 10 14 L 10 6 L 6 6 L 6 14 L 2 14 Z"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              fill="none"
+                            />
+                          </svg>
                           <span className="text-xs">U-Shaped</span>
                         </Button>
                         <Button 
