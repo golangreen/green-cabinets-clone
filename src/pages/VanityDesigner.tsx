@@ -2,6 +2,9 @@ import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Plus,
   Trash2,
@@ -22,7 +25,9 @@ import {
   Maximize2,
   Paintbrush,
   CircleDot,
-  Settings
+  Settings,
+  Layout,
+  ArrowRight
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
@@ -118,6 +123,11 @@ const VanityDesigner = () => {
   const [drawingWall, setDrawingWall] = useState<{ x: number; y: number } | null>(null);
   const [tempWallEnd, setTempWallEnd] = useState<{ x: number; y: number } | null>(null);
   
+  // Rotation state
+  const [rotatingCabinet, setRotatingCabinet] = useState<number | null>(null);
+  const [rotationStartAngle, setRotationStartAngle] = useState<number>(0);
+  const [currentRotation, setCurrentRotation] = useState<number>(0);
+  
   // Openings state (doors and windows)
   const [openings, setOpenings] = useState<Opening[]>([]);
   const [selectedOpeningId, setSelectedOpeningId] = useState<number | null>(null);
@@ -135,6 +145,19 @@ const VanityDesigner = () => {
   const snapToGrid = useCallback((value: number) => {
     return Math.round(value / gridSize) * gridSize;
   }, [gridSize]);
+  
+  // Snap angle to common angles (0, 45, 90, 135, 180, 225, 270, 315)
+  const snapAngle = useCallback((angle: number) => {
+    const snapAngles = [0, 45, 90, 135, 180, 225, 270, 315];
+    const threshold = 10; // degrees
+    
+    for (const snapAngle of snapAngles) {
+      if (Math.abs(angle - snapAngle) < threshold) {
+        return snapAngle;
+      }
+    }
+    return angle;
+  }, []);
   
   // Add a new cabinet
   const addCabinet = useCallback(() => {
@@ -232,6 +255,109 @@ const VanityDesigner = () => {
   const handleShare = useCallback(() => {
     toast.success("Share link copied");
   }, []);
+
+  // Room layout presets
+  const createRoomLayout = useCallback((type: 'straight' | 'l-shaped' | 'u-shaped' | 'closed') => {
+    const baseY = 200;
+    const baseX = 200;
+    const wallLength = 400;
+    const newWalls: Wall[] = [];
+    
+    switch (type) {
+      case 'straight':
+        newWalls.push({
+          id: 1,
+          x1: baseX,
+          y1: baseY,
+          x2: baseX + wallLength,
+          y2: baseY,
+          thickness: wallThickness
+        });
+        break;
+      case 'l-shaped':
+        newWalls.push({
+          id: 1,
+          x1: baseX,
+          y1: baseY,
+          x2: baseX + wallLength,
+          y2: baseY,
+          thickness: wallThickness
+        });
+        newWalls.push({
+          id: 2,
+          x1: baseX + wallLength,
+          y1: baseY,
+          x2: baseX + wallLength,
+          y2: baseY + wallLength,
+          thickness: wallThickness
+        });
+        break;
+      case 'u-shaped':
+        newWalls.push({
+          id: 1,
+          x1: baseX,
+          y1: baseY,
+          x2: baseX + wallLength,
+          y2: baseY,
+          thickness: wallThickness
+        });
+        newWalls.push({
+          id: 2,
+          x1: baseX + wallLength,
+          y1: baseY,
+          x2: baseX + wallLength,
+          y2: baseY + wallLength,
+          thickness: wallThickness
+        });
+        newWalls.push({
+          id: 3,
+          x1: baseX + wallLength,
+          y1: baseY + wallLength,
+          x2: baseX,
+          y2: baseY + wallLength,
+          thickness: wallThickness
+        });
+        break;
+      case 'closed':
+        newWalls.push({
+          id: 1,
+          x1: baseX,
+          y1: baseY,
+          x2: baseX + wallLength,
+          y2: baseY,
+          thickness: wallThickness
+        });
+        newWalls.push({
+          id: 2,
+          x1: baseX + wallLength,
+          y1: baseY,
+          x2: baseX + wallLength,
+          y2: baseY + wallLength,
+          thickness: wallThickness
+        });
+        newWalls.push({
+          id: 3,
+          x1: baseX + wallLength,
+          y1: baseY + wallLength,
+          x2: baseX,
+          y2: baseY + wallLength,
+          thickness: wallThickness
+        });
+        newWalls.push({
+          id: 4,
+          x1: baseX,
+          y1: baseY + wallLength,
+          x2: baseX,
+          y2: baseY,
+          thickness: wallThickness
+        });
+        break;
+    }
+    
+    setWalls(newWalls);
+    setOpenings([]);
+    toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} room created`);
+  }, [wallThickness]);
 
   // Context menu handlers
   const rotateCabinet = useCallback((cabinetId: number) => {
@@ -349,8 +475,68 @@ const VanityDesigner = () => {
     toast.success("Height reset to standard 34.5\"");
   }, [cabinets]);
 
+  // Rotation handlers
+  const handleRotateStart = useCallback((e: React.MouseEvent, cabinetId: number) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const cabinet = cabinets.find(c => c.id === cabinetId);
+    if (!cabinet) return;
+    
+    setRotatingCabinet(cabinetId);
+    setSelectedCabinetId(cabinetId);
+    
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    
+    const centerX = cabinet.x + (cabinet.width * 2) / 2;
+    const centerY = cabinet.y + (cabinet.depth * 2) / 2;
+    const angle = Math.atan2(e.clientY - rect.top - centerY, e.clientX - rect.left - centerX) * (180 / Math.PI);
+    
+    setRotationStartAngle(angle - (cabinet.rotation || 0));
+    setCurrentRotation(cabinet.rotation || 0);
+  }, [cabinets]);
+  
+  const handleRotateMove = useCallback((e: React.MouseEvent) => {
+    if (rotatingCabinet === null) return;
+    
+    const cabinet = cabinets.find(c => c.id === rotatingCabinet);
+    if (!cabinet) return;
+    
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    
+    const centerX = cabinet.x + (cabinet.width * 2) / 2;
+    const centerY = cabinet.y + (cabinet.depth * 2) / 2;
+    const angle = Math.atan2(e.clientY - rect.top - centerY, e.clientX - rect.left - centerX) * (180 / Math.PI);
+    
+    let newRotation = angle - rotationStartAngle;
+    newRotation = ((newRotation % 360) + 360) % 360; // Normalize to 0-360
+    newRotation = snapAngle(newRotation);
+    
+    setCurrentRotation(newRotation);
+  }, [rotatingCabinet, cabinets, rotationStartAngle, snapAngle]);
+  
+  const handleRotateEnd = useCallback(() => {
+    if (rotatingCabinet === null) return;
+    
+    setCabinets(cabinets.map(c => {
+      if (c.id === rotatingCabinet) {
+        return { ...c, rotation: currentRotation as 0 | 90 | 180 | 270 };
+      }
+      return c;
+    }));
+    
+    setRotatingCabinet(null);
+  }, [rotatingCabinet, cabinets, currentRotation]);
+
   // Drag handlers
   const handleMouseDown = useCallback((e: React.MouseEvent, cabinetId: number) => {
+    // Check if shift key is pressed for rotation mode
+    if (e.shiftKey) {
+      handleRotateStart(e, cabinetId);
+      return;
+    }
+    
     const cabinet = cabinets.find(c => c.id === cabinetId);
     if (!cabinet) return;
     
@@ -360,9 +546,14 @@ const VanityDesigner = () => {
       x: e.clientX - cabinet.x,
       y: e.clientY - cabinet.y
     });
-  }, [cabinets]);
+  }, [cabinets, handleRotateStart]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (rotatingCabinet !== null) {
+      handleRotateMove(e);
+      return;
+    }
+    
     if (draggingId === null) return;
     
     const newX = snapToGrid(e.clientX - dragOffset.x);
@@ -371,11 +562,14 @@ const VanityDesigner = () => {
     setCabinets(cabinets.map(c => 
       c.id === draggingId ? { ...c, x: newX, y: newY } : c
     ));
-  }, [draggingId, dragOffset, snapToGrid, cabinets]);
+  }, [draggingId, dragOffset, snapToGrid, cabinets, rotatingCabinet, handleRotateMove]);
 
   const handleMouseUp = useCallback(() => {
+    if (rotatingCabinet !== null) {
+      handleRotateEnd();
+    }
     setDraggingId(null);
-  }, []);
+  }, [rotatingCabinet, handleRotateEnd]);
   
   // Library drag handlers
   const handleLibraryDragStart = useCallback((template: CabinetSpec) => {
@@ -823,21 +1017,224 @@ const VanityDesigner = () => {
             
             <div className="flex-1 overflow-y-auto p-3 space-y-3">
               {activeTab === "room-layout" ? (
-                <div className="space-y-2">
-                  <p className="text-xs text-muted-foreground">
-                    Use the tools above to draw walls, add doors and windows
-                  </p>
-                  <div className="p-3 bg-muted/50 rounded text-xs">
-                    <div className="font-medium mb-1">Tips:</div>
-                    <ul className="space-y-1 list-disc list-inside">
-                      <li>Click twice to draw a wall</li>
-                      <li>Click on walls to add openings</li>
-                      <li>Select openings to adjust size</li>
-                    </ul>
-                  </div>
-                </div>
+                <Tabs defaultValue="presets" className="w-full">
+                  <TabsList className="w-full grid grid-cols-2">
+                    <TabsTrigger value="presets">Presets</TabsTrigger>
+                    <TabsTrigger value="properties">Properties</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="presets" className="space-y-2 mt-3">
+                    <div>
+                      <Label className="text-xs font-semibold mb-2 block">Quick Layouts</Label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => createRoomLayout('straight')}
+                          className="h-auto py-3 flex flex-col gap-1"
+                        >
+                          <Minus className="h-4 w-4" />
+                          <span className="text-xs">Straight</span>
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => createRoomLayout('l-shaped')}
+                          className="h-auto py-3 flex flex-col gap-1"
+                        >
+                          <ArrowRight className="h-4 w-4 rotate-[-90deg]" />
+                          <span className="text-xs">L-Shaped</span>
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => createRoomLayout('u-shaped')}
+                          className="h-auto py-3 flex flex-col gap-1"
+                        >
+                          <Layout className="h-4 w-4" />
+                          <span className="text-xs">U-Shaped</span>
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => createRoomLayout('closed')}
+                          className="h-auto py-3 flex flex-col gap-1"
+                        >
+                          <Square className="h-4 w-4" />
+                          <span className="text-xs">Closed</span>
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="p-3 bg-muted/50 rounded text-xs">
+                      <div className="font-medium mb-1">Tips:</div>
+                      <ul className="space-y-1 list-disc list-inside">
+                        <li>Click twice to draw a wall</li>
+                        <li>Click on walls to add openings</li>
+                        <li>Select openings to adjust size</li>
+                      </ul>
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="properties" className="space-y-3 mt-3">
+                    {walls.length > 0 && (
+                      <div className="space-y-2">
+                        <Label className="text-xs font-semibold">Walls</Label>
+                        {walls.map((wall, idx) => (
+                          <Card key={wall.id} className="p-2">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs font-medium">Wall #{idx + 1}</span>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="h-6 w-6 p-0"
+                                onClick={() => {
+                                  setWalls(walls.filter(w => w.id !== wall.id));
+                                  toast.success("Wall removed");
+                                }}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Length: {calculateWallLength(wall)}"
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {openings.length > 0 && (
+                      <div className="space-y-2">
+                        <Label className="text-xs font-semibold">Openings</Label>
+                        {openings.map((opening) => (
+                          <Card key={opening.id} className="p-2">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs font-medium capitalize">{opening.type}</span>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="h-6 w-6 p-0"
+                                onClick={() => {
+                                  setOpenings(openings.filter(o => o.id !== opening.id));
+                                  toast.success("Opening removed");
+                                }}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-[10px]">Width (inches)</Label>
+                              <Input 
+                                type="number"
+                                value={opening.width}
+                                onChange={(e) => {
+                                  const newWidth = Math.max(24, Math.min(96, parseInt(e.target.value) || 24));
+                                  setOpenings(openings.map(o => 
+                                    o.id === opening.id ? { ...o, width: newWidth } : o
+                                  ));
+                                }}
+                                className="h-7 text-xs"
+                              />
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
               ) : (
                 <>
+                  {/* Cabinet Properties Panel when one is selected */}
+                  {selectedCabinetId && cabinets.find(c => c.id === selectedCabinetId) && (
+                    <Card className="p-3 mb-3">
+                      <div className="flex items-center justify-between mb-3">
+                        <Label className="text-xs font-semibold">Selected Cabinet</Label>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={() => setSelectedCabinetId(null)}
+                        >
+                          ×
+                        </Button>
+                      </div>
+                      {(() => {
+                        const cabinet = cabinets.find(c => c.id === selectedCabinetId);
+                        if (!cabinet) return null;
+                        
+                        return (
+                          <div className="space-y-2">
+                            <div>
+                              <Label className="text-[10px]">Label</Label>
+                              <Input 
+                                value={cabinet.label || ""}
+                                onChange={(e) => {
+                                  setCabinets(cabinets.map(c => 
+                                    c.id === selectedCabinetId ? { ...c, label: e.target.value } : c
+                                  ));
+                                }}
+                                className="h-7 text-xs"
+                              />
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div>
+                                <Label className="text-[10px]">Width</Label>
+                                <Input 
+                                  type="number"
+                                  value={cabinet.width}
+                                  onChange={(e) => changeCabinetSize(cabinet.id, 'width', parseFloat(e.target.value) || cabinet.width)}
+                                  className="h-7 text-xs"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-[10px]">Height</Label>
+                                <Input 
+                                  type="number"
+                                  value={cabinet.height}
+                                  onChange={(e) => changeCabinetSize(cabinet.id, 'height', parseFloat(e.target.value) || cabinet.height)}
+                                  className="h-7 text-xs"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-[10px]">Depth</Label>
+                                <Input 
+                                  type="number"
+                                  value={cabinet.depth}
+                                  onChange={(e) => changeCabinetSize(cabinet.id, 'depth', parseFloat(e.target.value) || cabinet.depth)}
+                                  className="h-7 text-xs"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <Label className="text-[10px]">Rotation (degrees)</Label>
+                              <Input 
+                                type="number"
+                                value={cabinet.rotation || 0}
+                                onChange={(e) => {
+                                  const newRotation = parseInt(e.target.value) % 360;
+                                  setCabinets(cabinets.map(c => 
+                                    c.id === selectedCabinetId ? { ...c, rotation: newRotation as 0 | 90 | 180 | 270 } : c
+                                  ));
+                                }}
+                                className="h-7 text-xs"
+                              />
+                            </div>
+                            {cabinet.price && (
+                              <div className="pt-2 border-t text-xs">
+                                <span className="font-medium">Price: </span>
+                                <span className="text-primary">{formatPrice(cabinet.price)}</span>
+                              </div>
+                            )}
+                            <div className="pt-1 text-[10px] text-muted-foreground">
+                              💡 Shift+Drag to rotate with mouse
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </Card>
+                  )}
+                  
                   {/* Base Cabinets */}
                   <div>
                     <h4 className="text-xs font-semibold mb-2 text-muted-foreground">BASE CABINETS</h4>
@@ -1179,11 +1576,11 @@ const VanityDesigner = () => {
                   <ContextMenu key={cabinet.id}>
                     <ContextMenuTrigger>
                       <div
-                        className={`absolute cursor-move transition-all ${
+                        className={`absolute transition-all group ${
                           selectedCabinetId === cabinet.id 
                             ? "shadow-lg z-10" 
                             : "hover:shadow-md"
-                        }`}
+                        } ${rotatingCabinet === cabinet.id ? "cursor-grabbing" : "cursor-move"}`}
                         style={{
                           left: cabinet.x,
                           top: cabinet.y,
@@ -1191,15 +1588,38 @@ const VanityDesigner = () => {
                           height: rotation === 90 || rotation === 270 ? widthPx : depthPx,
                           backgroundColor: selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6',
                           border: selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF',
-                          transform: `rotate(${rotation}deg)`,
+                          transform: `rotate(${rotatingCabinet === cabinet.id ? currentRotation : rotation}deg)`,
                           transformOrigin: 'center'
                         }}
                         onMouseDown={(e) => handleMouseDown(e, cabinet.id)}
                       >
+                        {/* Rotation handle */}
+                        {selectedCabinetId === cabinet.id && (
+                          <div
+                            className="absolute -top-8 left-1/2 -translate-x-1/2 cursor-grab hover:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+                            onMouseDown={(e) => {
+                              e.stopPropagation();
+                              handleRotateStart(e, cabinet.id);
+                            }}
+                            style={{ 
+                              transform: `translateX(-50%) rotate(-${rotatingCabinet === cabinet.id ? currentRotation : rotation}deg)` 
+                            }}
+                          >
+                            <div className="bg-primary hover:bg-primary/90 text-primary-foreground p-1 rounded-full shadow-md">
+                              <RotateCw className="h-3 w-3" />
+                            </div>
+                          </div>
+                        )}
+                        
                         {/* Cabinet label */}
                         <div className="absolute inset-0 flex items-center justify-center text-[11px] font-medium pointer-events-none select-none">
-                          <div style={{ transform: `rotate(-${rotation}deg)` }}>
+                          <div style={{ transform: `rotate(-${rotatingCabinet === cabinet.id ? currentRotation : rotation}deg)` }}>
                             {cabinet.label || cabinet.type}
+                            {rotatingCabinet === cabinet.id && (
+                              <div className="text-[9px] text-primary mt-0.5">
+                                {Math.round(currentRotation)}°
+                              </div>
+                            )}
                           </div>
                         </div>
                         
