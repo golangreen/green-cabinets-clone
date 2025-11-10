@@ -92,7 +92,7 @@ const VanityDesigner = () => {
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const gridSize = 24; // 12" grid at 2px per inch scale
-  const wallThickness = 6; // 6px = 3 inches at 2px per inch scale
+  const wallThickness = 9; // 9px = 4.5 inches at 2px per inch scale
   const canvasRef = useRef<HTMLDivElement>(null);
   
   // Add a new cabinet
