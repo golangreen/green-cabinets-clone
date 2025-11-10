@@ -16,7 +16,4 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.security-monitor]
-verify_jwt = true
-
-[functions.send-security-alert]
-verify_jwt = true
+verify_jwt = false

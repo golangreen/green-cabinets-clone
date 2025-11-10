@@ -144,13 +144,10 @@ const VanityDesigner = () => {
   // View mode: 'floorplan' or 'render'
   const [viewMode, setViewMode] = useState<"floorplan" | "render">("floorplan");
   const [activeTab, setActiveTab] = useState("room-layout");
-  const [showLeftPanel, setShowLeftPanel] = useState(false); // Start hidden on mobile
+  const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showGrid, setShowGrid] = useState(true);
   const [showDimensions, setShowDimensions] = useState(true);
   const [drawingTool, setDrawingTool] = useState<"select" | "wall" | "door" | "window">("select");
-  
-  // Mobile-specific state
-  const [mobileControlsOpen, setMobileControlsOpen] = useState(false);
   
   // Cabinets state
   const [cabinets, setCabinets] = useState<Cabinet[]>([

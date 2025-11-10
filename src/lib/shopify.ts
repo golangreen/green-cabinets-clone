@@ -3,7 +3,7 @@ import { toast } from "sonner";
 const SHOPIFY_API_VERSION = '2025-07';
 const SHOPIFY_STORE_PERMANENT_DOMAIN = 'green-cabinets-clone-5eeb3.myshopify.com';
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
-const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
+const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN || '585dda31c3bbc355eb6f937d3307f76b';
 
 export interface ShopifyProduct {
   node: {
@@ -144,11 +144,6 @@ const CART_CREATE_MUTATION = `
 `;
 
 export async function storefrontApiRequest(query: string, variables: any = {}) {
-  if (!SHOPIFY_STOREFRONT_TOKEN) {
-    console.warn('Shopify Storefront Access Token is not configured');
-    throw new Error('Shopify integration is not configured. Please contact support.');
-  }
-  
   const response = await fetch(SHOPIFY_STOREFRONT_URL, {
     method: 'POST',
     headers: {

@@ -98,7 +98,7 @@ const Hero = () => {
             src={shuffledImages[currentImageIndex].src} 
             alt={shuffledImages[currentImageIndex].alt} 
             className="w-full h-full object-cover pointer-events-none" 
-            style={{
+            style={{ 
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
               willChange: 'opacity'
             }}
@@ -120,7 +120,7 @@ const Hero = () => {
             src={shuffledImages[getNextIndex()].src} 
             alt={shuffledImages[getNextIndex()].alt} 
             className="w-full h-full object-cover pointer-events-none" 
-            style={{
+            style={{ 
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
               willChange: 'opacity'
             }}

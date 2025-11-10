@@ -13,22 +13,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 
-const formatAlertDetails = (details: any) => {
-  if (!details) return 'No additional details';
-  
-  const { event_count, unique_ips, violation_count, critical_events, high_events, rate_limit_events } = details;
-  
-  const parts = [];
-  if (event_count) parts.push(`${event_count} events`);
-  if (unique_ips) parts.push(`${unique_ips} unique IPs`);
-  if (violation_count) parts.push(`${violation_count} violations`);
-  if (critical_events) parts.push(`${critical_events} critical`);
-  if (high_events) parts.push(`${high_events} high severity`);
-  if (rate_limit_events) parts.push(`${rate_limit_events} rate limit violations`);
-  
-  return parts.length > 0 ? parts.join(', ') : 'Security alert triggered';
-};
-
 const AdminSecurity = () => {
   const { isAdmin, isLoading } = useAdminCheck();
 
@@ -169,7 +153,7 @@ const AdminSecurity = () => {
                             <span className="font-medium">{alert.alert_type}</span>
                           </div>
                           <p className="text-sm text-muted-foreground mt-1">
-                            {formatAlertDetails(alert.details)}
+                            {JSON.stringify(alert.details)}
                           </p>
                         </div>
                         <span className="text-sm text-muted-foreground">
