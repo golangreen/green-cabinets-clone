@@ -309,6 +309,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               height={dimensionsInInches.heightInches}
               depth={dimensionsInInches.depthInches}
               brand={selectedBrand}
+              finish={selectedFinish}
             />
           </div>
 

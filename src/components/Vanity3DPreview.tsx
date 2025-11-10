@@ -1,107 +1,292 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
 import { useMemo } from "react";
+import * as THREE from "three";
 
 interface Vanity3DPreviewProps {
   width: number;
   height: number;
   depth: number;
   brand: string;
+  finish: string;
 }
 
 // Convert inches to a normalized scale for 3D visualization
 const SCALE_FACTOR = 0.02;
 
-const VanityBox = ({ width, height, depth, brand }: Vanity3DPreviewProps) => {
+// Determine material properties based on finish
+const getMaterialProps = (brand: string, finish: string) => {
+  const finishLower = finish.toLowerCase();
+  
+  // Wood finishes (Shinnoki or wood-like Egger/Tafisa)
+  const isWoodFinish = brand === 'Shinnoki' || 
+    finishLower.includes('oak') || 
+    finishLower.includes('walnut') || 
+    finishLower.includes('wood') ||
+    finishLower.includes('maple') ||
+    finishLower.includes('cherry') ||
+    finishLower.includes('eucalyptus') ||
+    finishLower.includes('sapele') ||
+    finishLower.includes('triba');
+  
+  // Metallic finishes
+  const isMetallic = finishLower.includes('metal') || 
+    finishLower.includes('chrome') || 
+    finishLower.includes('silver') ||
+    finishLower.includes('gold') ||
+    finishLower.includes('bronze') ||
+    finishLower.includes('copper');
+  
+  // Glossy/High-gloss finishes
+  const isGlossy = finishLower.includes('gloss') || 
+    finishLower.includes('lacquer') ||
+    finishLower.includes('shine');
+  
+  // White and light finishes
+  const isWhite = finishLower.includes('white') || 
+    finishLower.includes('snow') ||
+    finishLower.includes('ivory') ||
+    finishLower.includes('cream');
+  
+  // Dark finishes
+  const isDark = finishLower.includes('black') || 
+    finishLower.includes('dark') || 
+    finishLower.includes('espresso') ||
+    finishLower.includes('raven') ||
+    finishLower.includes('shadow') ||
+    finishLower.includes('smoked');
+  
+  // Gray finishes
+  const isGray = finishLower.includes('gray') || 
+    finishLower.includes('grey') ||
+    finishLower.includes('slate') ||
+    finishLower.includes('concrete');
+  
+  // Color mapping based on finish name
+  let baseColor = '#8B7355'; // Default warm wood tone
+  
+  if (isWhite) {
+    baseColor = '#F5F5F0';
+  } else if (isDark) {
+    baseColor = '#2C2420';
+  } else if (isGray) {
+    baseColor = '#7D7D7D';
+  } else if (isMetallic) {
+    baseColor = '#C0C0C0';
+  } else if (brand === 'Tafisa') {
+    baseColor = '#8B7355'; // Melamine warm tone
+  } else if (brand === 'Egger') {
+    baseColor = '#6B5B4D'; // TFL/HPL tone
+  } else if (brand === 'Shinnoki') {
+    baseColor = '#9B8B7E'; // Natural wood veneer
+  }
+  
+  // Material properties
+  if (isWoodFinish) {
+    return {
+      color: baseColor,
+      roughness: 0.6,
+      metalness: 0,
+      bumpScale: 0.02,
+      type: 'wood' as const,
+    };
+  } else if (isMetallic) {
+    return {
+      color: baseColor,
+      roughness: 0.15,
+      metalness: 0.9,
+      bumpScale: 0.005,
+      type: 'metallic' as const,
+    };
+  } else if (isGlossy) {
+    return {
+      color: baseColor,
+      roughness: 0.1,
+      metalness: 0.2,
+      bumpScale: 0,
+      type: 'glossy' as const,
+    };
+  } else {
+    // Matte/standard finish
+    return {
+      color: baseColor,
+      roughness: 0.4,
+      metalness: 0.1,
+      bumpScale: 0.01,
+      type: 'matte' as const,
+    };
+  }
+};
+
+const VanityBox = ({ width, height, depth, brand, finish }: Vanity3DPreviewProps) => {
   // Scale dimensions for better visualization
   const scaledWidth = width * SCALE_FACTOR;
   const scaledHeight = height * SCALE_FACTOR;
   const scaledDepth = depth * SCALE_FACTOR;
 
-  // Brand colors
-  const brandColors: { [key: string]: string } = {
-    'Tafisa': '#8B7355',
-    'Egger': '#6B5B4D',
-    'Shinnoki': '#9B8B7E',
-  };
-
-  const color = brandColors[brand] || '#8B7355';
+  // Get material properties based on finish
+  const materialProps = useMemo(() => getMaterialProps(brand, finish), [brand, finish]);
 
   // Material thickness
   const thickness = 0.05;
 
+  // Create procedural wood grain texture
+  const woodTexture = useMemo(() => {
+    if (materialProps.type !== 'wood') return null;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    // Create wood grain pattern
+    const gradient = ctx.createLinearGradient(0, 0, 512, 0);
+    const baseColorRgb = new THREE.Color(materialProps.color);
+    const darkColor = baseColorRgb.clone().multiplyScalar(0.7);
+    const lightColor = baseColorRgb.clone().multiplyScalar(1.2);
+    
+    gradient.addColorStop(0, `rgb(${darkColor.r * 255}, ${darkColor.g * 255}, ${darkColor.b * 255})`);
+    gradient.addColorStop(0.5, `rgb(${baseColorRgb.r * 255}, ${baseColorRgb.g * 255}, ${baseColorRgb.b * 255})`);
+    gradient.addColorStop(1, `rgb(${lightColor.r * 255}, ${lightColor.g * 255}, ${lightColor.b * 255})`);
+    
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 512, 512);
+    
+    // Add noise for grain texture
+    const imageData = ctx.getImageData(0, 0, 512, 512);
+    for (let i = 0; i < imageData.data.length; i += 4) {
+      const noise = (Math.random() - 0.5) * 15;
+      imageData.data[i] += noise;
+      imageData.data[i + 1] += noise;
+      imageData.data[i + 2] += noise;
+    }
+    ctx.putImageData(imageData, 0, 0);
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(4, 4);
+    return texture;
+  }, [materialProps.color, materialProps.type]);
+
+  // Create bump map for surface detail
+  const bumpMap = useMemo(() => {
+    if (materialProps.bumpScale === 0) return null;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    // Create noise pattern for bump
+    const imageData = ctx.createImageData(256, 256);
+    for (let i = 0; i < imageData.data.length; i += 4) {
+      const value = Math.random() * 255;
+      imageData.data[i] = value;
+      imageData.data[i + 1] = value;
+      imageData.data[i + 2] = value;
+      imageData.data[i + 3] = 255;
+    }
+    ctx.putImageData(imageData, 0, 0);
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(8, 8);
+    return texture;
+  }, [materialProps.bumpScale]);
+
   return (
     <group>
       {/* Main cabinet body */}
-      <mesh position={[0, scaledHeight / 2, 0]}>
+      <mesh position={[0, scaledHeight / 2, 0]} castShadow receiveShadow>
         <boxGeometry args={[scaledWidth, scaledHeight, scaledDepth]} />
         <meshStandardMaterial 
-          color={color} 
-          roughness={0.3} 
-          metalness={0.1}
+          color={materialProps.color}
+          map={woodTexture}
+          bumpMap={bumpMap}
+          bumpScale={materialProps.bumpScale}
+          roughness={materialProps.roughness}
+          metalness={materialProps.metalness}
+          envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
         />
       </mesh>
 
-      {/* Top countertop (slightly larger and different color) */}
-      <mesh position={[0, scaledHeight + thickness / 2, 0]}>
+      {/* Top countertop (marble/stone appearance) */}
+      <mesh position={[0, scaledHeight + thickness / 2, 0]} castShadow receiveShadow>
         <boxGeometry args={[scaledWidth + 0.1, thickness, scaledDepth + 0.1]} />
         <meshStandardMaterial 
-          color="#E5E5E5" 
-          roughness={0.1} 
-          metalness={0.5}
+          color="#FAFAFA"
+          roughness={0.15}
+          metalness={0.3}
+          envMapIntensity={1.2}
         />
       </mesh>
 
       {/* Door panels (front) */}
-      <mesh position={[0, scaledHeight / 2, scaledDepth / 2 + 0.01]}>
+      <mesh position={[0, scaledHeight / 2, scaledDepth / 2 + 0.01]} castShadow>
         <boxGeometry args={[scaledWidth * 0.95, scaledHeight * 0.9, 0.02]} />
         <meshStandardMaterial 
-          color={color} 
-          roughness={0.2} 
-          metalness={0.2}
+          color={materialProps.color}
+          map={woodTexture}
+          bumpMap={bumpMap}
+          bumpScale={materialProps.bumpScale}
+          roughness={materialProps.roughness * 0.9}
+          metalness={materialProps.metalness}
+          envMapIntensity={materialProps.type === 'metallic' ? 1.5 : 0.8}
         />
       </mesh>
 
       {/* Side panels detail */}
-      <mesh position={[-scaledWidth / 2 - 0.005, scaledHeight / 2, 0]}>
+      <mesh position={[-scaledWidth / 2 - 0.005, scaledHeight / 2, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.01, scaledHeight * 0.98, scaledDepth * 0.98]} />
         <meshStandardMaterial 
-          color={color} 
-          roughness={0.3} 
-          metalness={0.1}
+          color={materialProps.color}
+          map={woodTexture}
+          bumpMap={bumpMap}
+          bumpScale={materialProps.bumpScale}
+          roughness={materialProps.roughness}
+          metalness={materialProps.metalness}
         />
       </mesh>
-      <mesh position={[scaledWidth / 2 + 0.005, scaledHeight / 2, 0]}>
+      <mesh position={[scaledWidth / 2 + 0.005, scaledHeight / 2, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.01, scaledHeight * 0.98, scaledDepth * 0.98]} />
         <meshStandardMaterial 
-          color={color} 
-          roughness={0.3} 
-          metalness={0.1}
+          color={materialProps.color}
+          map={woodTexture}
+          bumpMap={bumpMap}
+          bumpScale={materialProps.bumpScale}
+          roughness={materialProps.roughness}
+          metalness={materialProps.metalness}
         />
       </mesh>
 
-      {/* Hardware - handles */}
-      <mesh position={[scaledWidth * 0.3, scaledHeight * 0.6, scaledDepth / 2 + 0.03]}>
+      {/* Hardware - handles (brushed metal) */}
+      <mesh position={[scaledWidth * 0.3, scaledHeight * 0.6, scaledDepth / 2 + 0.03]} castShadow>
         <cylinderGeometry args={[0.02, 0.02, 0.15, 16]} />
         <meshStandardMaterial 
-          color="#C0C0C0" 
-          roughness={0.1} 
-          metalness={0.9}
+          color="#B8B8B8"
+          roughness={0.25}
+          metalness={0.85}
+          envMapIntensity={1.5}
         />
       </mesh>
-      <mesh position={[-scaledWidth * 0.3, scaledHeight * 0.6, scaledDepth / 2 + 0.03]}>
+      <mesh position={[-scaledWidth * 0.3, scaledHeight * 0.6, scaledDepth / 2 + 0.03]} castShadow>
         <cylinderGeometry args={[0.02, 0.02, 0.15, 16]} />
         <meshStandardMaterial 
-          color="#C0C0C0" 
-          roughness={0.1} 
-          metalness={0.9}
+          color="#B8B8B8"
+          roughness={0.25}
+          metalness={0.85}
+          envMapIntensity={1.5}
         />
       </mesh>
     </group>
   );
 };
 
-const DimensionLabels = ({ width, height, depth }: Omit<Vanity3DPreviewProps, 'brand'>) => {
+const DimensionLabels = ({ width, height, depth }: { width: number; height: number; depth: number }) => {
   return (
     <div className="absolute bottom-4 left-4 right-4 flex justify-between text-xs font-mono bg-background/90 backdrop-blur-sm rounded-lg p-3 border border-border">
       <div className="text-center">
@@ -120,11 +305,17 @@ const DimensionLabels = ({ width, height, depth }: Omit<Vanity3DPreviewProps, 'b
   );
 };
 
-export const Vanity3DPreview = ({ width, height, depth, brand }: Vanity3DPreviewProps) => {
+export const Vanity3DPreview = ({ width, height, depth, brand, finish }: Vanity3DPreviewProps) => {
   // Only render if we have valid dimensions
   const hasValidDimensions = useMemo(() => {
     return width > 0 && height > 0 && depth > 0;
   }, [width, height, depth]);
+
+  // Get material type for display
+  const materialType = useMemo(() => {
+    const props = getMaterialProps(brand, finish);
+    return props.type;
+  }, [brand, finish]);
 
   if (!hasValidDimensions) {
     return (
@@ -174,16 +365,22 @@ export const Vanity3DPreview = ({ width, height, depth, brand }: Vanity3DPreview
         </mesh>
         
         {/* Vanity model */}
-        <VanityBox width={width} height={height} depth={depth} brand={brand} />
+        <VanityBox width={width} height={height} depth={depth} brand={brand} finish={finish} />
       </Canvas>
       
       {/* Dimension labels */}
       <DimensionLabels width={width} height={height} depth={depth} />
       
-      {/* Instructions */}
-      <div className="absolute top-4 left-4 right-4 text-center">
-        <p className="text-xs text-muted-foreground bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1.5 inline-block border border-border">
+      {/* Instructions and material type */}
+      <div className="absolute top-4 left-4 right-4 flex flex-col items-center gap-2">
+        <p className="text-xs text-muted-foreground bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-border">
           Drag to rotate • Scroll to zoom
+        </p>
+        <p className="text-xs font-medium bg-primary/90 text-primary-foreground backdrop-blur-sm rounded-lg px-3 py-1.5 border border-primary">
+          {materialType === 'wood' && '🌲 Wood Grain'}
+          {materialType === 'metallic' && '✨ Metallic'}
+          {materialType === 'glossy' && '💎 High Gloss'}
+          {materialType === 'matte' && '🎨 Matte Finish'}
         </p>
       </div>
     </div>
