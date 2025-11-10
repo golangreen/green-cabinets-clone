@@ -27,7 +27,10 @@ import {
   CircleDot,
   Settings,
   Layout,
-  ArrowRight
+  ArrowRight,
+  FolderOpen,
+  Edit,
+  Upload
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
@@ -42,6 +45,16 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { useRoomTemplates } from "@/hooks/useRoomTemplates";
 
 interface Cabinet {
   id: number;
@@ -86,6 +99,14 @@ const CABINET_LIBRARY = CABINET_CATALOG;
 
 const VanityDesigner = () => {
   const navigate = useNavigate();
+  
+  // Templates hook
+  const { templates, saveTemplate, deleteTemplate, loadTemplate, duplicateTemplate } = useRoomTemplates();
+  
+  // Save template dialog
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [templateName, setTemplateName] = useState("");
+  const [templateDescription, setTemplateDescription] = useState("");
   
   // View mode: 'floorplan' or 'render'
   const [viewMode, setViewMode] = useState<"floorplan" | "render">("floorplan");
@@ -477,6 +498,66 @@ const VanityDesigner = () => {
     }));
     toast.success("Height reset to standard 34.5\"");
   }, [cabinets]);
+
+  // Template handlers
+  const handleSaveTemplate = useCallback(() => {
+    if (!templateName.trim()) {
+      toast.error("Please enter a template name");
+      return;
+    }
+    
+    if (walls.length === 0 && cabinets.length === 0) {
+      toast.error("Nothing to save - add walls or cabinets first");
+      return;
+    }
+    
+    saveTemplate(templateName.trim(), walls, openings, cabinets, templateDescription.trim() || undefined);
+    setShowSaveDialog(false);
+    setTemplateName("");
+    setTemplateDescription("");
+  }, [templateName, templateDescription, walls, openings, cabinets, saveTemplate]);
+
+  const handleLoadTemplate = useCallback((templateId: string) => {
+    const template = loadTemplate(templateId);
+    if (template) {
+      // Regenerate IDs to avoid conflicts
+      const maxWallId = walls.length > 0 ? Math.max(...walls.map(w => w.id)) : 0;
+      const maxOpeningId = openings.length > 0 ? Math.max(...openings.map(o => o.id)) : 0;
+      const maxCabinetId = cabinets.length > 0 ? Math.max(...cabinets.map(c => c.id)) : 0;
+      
+      const newWalls = template.walls.map((w: any, idx: number) => ({
+        ...w,
+        id: maxWallId + idx + 1
+      }));
+      
+      const wallIdMap = new Map(template.walls.map((w: any, idx: number) => [w.id, maxWallId + idx + 1]));
+      
+      const newOpenings = template.openings.map((o: any, idx: number) => ({
+        ...o,
+        id: maxOpeningId + idx + 1,
+        wallId: wallIdMap.get(o.wallId) || o.wallId
+      }));
+      
+      const newCabinets = template.cabinets.map((c: any, idx: number) => ({
+        ...c,
+        id: maxCabinetId + idx + 1
+      }));
+      
+      setWalls(newWalls);
+      setOpenings(newOpenings);
+      setCabinets(newCabinets);
+      setSelectedCabinetId(null);
+      setActiveTab("items");
+    }
+  }, [walls, openings, cabinets, loadTemplate]);
+
+  const openSaveDialog = useCallback(() => {
+    if (walls.length === 0 && cabinets.length === 0) {
+      toast.error("Nothing to save - add walls or cabinets first");
+      return;
+    }
+    setShowSaveDialog(true);
+  }, [walls, cabinets]);
 
   // Rotation handlers
   const handleRotateStart = useCallback((e: React.MouseEvent, cabinetId: number) => {
@@ -966,6 +1047,26 @@ const VanityDesigner = () => {
             </div>
           </div>
         );
+      case "templates":
+        return (
+          <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={openSaveDialog}
+                variant="ghost"
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1 hover:bg-accent"
+              >
+                <Save className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Save Template</span>
+            </div>
+            <div className="w-px h-12 bg-border" />
+            <div className="text-xs text-muted-foreground">
+              {templates.length} saved template{templates.length !== 1 ? 's' : ''}
+            </div>
+          </div>
+        );
       case "view":
         return (
           <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
@@ -1043,6 +1144,15 @@ const VanityDesigner = () => {
           </Button>
           
           <Button
+            variant={activeTab === "templates" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab("templates")}
+            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
+          >
+            TEMPLATES
+          </Button>
+          
+          <Button
             variant={activeTab === "view" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("view")}
@@ -1087,7 +1197,7 @@ const VanityDesigner = () => {
           <div className="w-full md:w-64 border-r border-border bg-card flex flex-col absolute md:relative z-30 md:z-0 h-full md:h-auto">
             <div className="p-2 md:p-3 border-b border-border flex items-center justify-between">
               <h3 className="font-semibold text-xs md:text-sm">
-                {activeTab === "room-layout" ? "Room Tools" : "Cabinet Library"}
+                {activeTab === "room-layout" ? "Room Tools" : activeTab === "templates" ? "Saved Templates" : "Cabinet Library"}
               </h3>
               <Button
                 variant="ghost"
@@ -1241,6 +1351,90 @@ const VanityDesigner = () => {
                     )}
                   </TabsContent>
                 </Tabs>
+              ) : activeTab === "templates" ? (
+                <>
+                  {templates.length === 0 ? (
+                    <div className="text-center py-8 space-y-3">
+                      <FolderOpen className="h-12 w-12 mx-auto text-muted-foreground opacity-50" />
+                      <div>
+                        <p className="text-sm font-medium">No templates saved</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Create a room layout, then save it as a template for later use.
+                        </p>
+                      </div>
+                      <Button onClick={openSaveDialog} size="sm" className="mt-2">
+                        <Save className="h-4 w-4 mr-2" />
+                        Save Current Layout
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {templates.map((template) => (
+                        <Card key={template.id} className="p-3 hover:bg-accent/50 transition-colors">
+                          <div className="space-y-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-medium text-sm truncate">{template.name}</h4>
+                                {template.description && (
+                                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                                    {template.description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
+                              <div className="flex items-center gap-1">
+                                <Minus className="h-3 w-3" />
+                                <span>{template.walls.length}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <DoorOpen className="h-3 w-3" />
+                                <span>{template.openings.length}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Box className="h-3 w-3" />
+                                <span>{template.cabinets.length}</span>
+                              </div>
+                            </div>
+                            
+                            <div className="flex gap-1 pt-2 border-t">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1 h-7 text-xs"
+                                onClick={() => handleLoadTemplate(template.id)}
+                              >
+                                <Upload className="h-3 w-3 mr-1" />
+                                Load
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-7 px-2"
+                                onClick={() => duplicateTemplate(template.id)}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-7 px-2 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                                onClick={() => deleteTemplate(template.id)}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            
+                            <div className="text-[10px] text-muted-foreground">
+                              Saved {new Date(template.createdAt).toLocaleDateString()}
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </>
               ) : (
                 <>
                   {/* Cabinet Properties Panel when one is selected */}
@@ -2350,6 +2544,71 @@ const VanityDesigner = () => {
           )}
         </div>
       </div>
+      
+      {/* Save Template Dialog */}
+      <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Save Room Template</DialogTitle>
+            <DialogDescription>
+              Save your current room layout as a reusable template
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="template-name">Template Name *</Label>
+              <Input
+                id="template-name"
+                placeholder="e.g., L-Shaped Kitchen with Island"
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && templateName.trim()) {
+                    handleSaveTemplate();
+                  }
+                }}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="template-description">Description (Optional)</Label>
+              <Textarea
+                id="template-description"
+                placeholder="Add notes about this layout..."
+                value={templateDescription}
+                onChange={(e) => setTemplateDescription(e.target.value)}
+                rows={3}
+              />
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4 p-3 bg-muted/50 rounded-md text-sm">
+              <div className="text-center">
+                <div className="font-semibold">{walls.length}</div>
+                <div className="text-xs text-muted-foreground">Walls</div>
+              </div>
+              <div className="text-center">
+                <div className="font-semibold">{openings.length}</div>
+                <div className="text-xs text-muted-foreground">Openings</div>
+              </div>
+              <div className="text-center">
+                <div className="font-semibold">{cabinets.length}</div>
+                <div className="text-xs text-muted-foreground">Cabinets</div>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSaveDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveTemplate} disabled={!templateName.trim()}>
+              <Save className="h-4 w-4 mr-2" />
+              Save Template
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
