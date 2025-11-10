@@ -17,6 +17,16 @@ interface Vanity3DPreviewProps {
   handleStyle: string;
   cabinetPosition?: string;
   fullscreen?: boolean;
+  includeRoom?: boolean;
+  roomLength?: number;
+  roomWidth?: number;
+  roomHeight?: number;
+  floorType?: string;
+  tileColor?: string;
+  woodFloorFinish?: string;
+  includeWalls?: boolean;
+  hasWindow?: boolean;
+  hasDoor?: boolean;
 }
 
 // Convert inches to a normalized scale for 3D visualization
@@ -161,6 +171,233 @@ const getMaterialProps = (brand: string, finish: string) => {
       type: 'matte' as const,
     };
   }
+};
+
+// Get floor material properties based on type and selection
+const getFloorMaterial = (floorType: string, tileColor: string, woodFloorFinish: string) => {
+  if (floorType === 'tile') {
+    const tileColors: Record<string, string> = {
+      'white-marble': '#f8f8f8',
+      'gray-marble': '#a0a0a0',
+      'black-marble': '#2a2a2a',
+      'cream-travertine': '#f5e6d3',
+      'beige-porcelain': '#d4c5b9',
+      'charcoal-slate': '#4a4a4a',
+      'white-subway': '#ffffff',
+      'gray-hexagon': '#8b8b8b',
+      'black-white-pattern': '#cccccc',
+    };
+    return {
+      color: tileColors[tileColor] || '#ffffff',
+      roughness: 0.3,
+      metalness: 0.1,
+    };
+  } else {
+    const woodColors: Record<string, string> = {
+      'natural-oak': '#c19a6b',
+      'honey-oak': '#d4a574',
+      'dark-walnut': '#5c4033',
+      'espresso-maple': '#3e2723',
+      'gray-oak': '#8b8680',
+      'white-washed-oak': '#e8e0d5',
+      'cherry-mahogany': '#8b4513',
+      'hickory-natural': '#b8956a',
+    };
+    return {
+      color: woodColors[woodFloorFinish] || '#c19a6b',
+      roughness: 0.6,
+      metalness: 0.0,
+    };
+  }
+};
+
+// Room component with walls and floor
+const Room = ({ 
+  roomLength, 
+  roomWidth, 
+  roomHeight, 
+  floorType, 
+  tileColor, 
+  woodFloorFinish,
+  includeWalls,
+  hasWindow,
+  hasDoor
+}: {
+  roomLength: number;
+  roomWidth: number;
+  roomHeight: number;
+  floorType: string;
+  tileColor: string;
+  woodFloorFinish: string;
+  includeWalls: boolean;
+  hasWindow: boolean;
+  hasDoor: boolean;
+}) => {
+  const scaledLength = roomLength * SCALE_FACTOR;
+  const scaledWidth = roomWidth * SCALE_FACTOR;
+  const scaledHeight = roomHeight * SCALE_FACTOR;
+  
+  const floorMaterial = useMemo(() => 
+    getFloorMaterial(floorType, tileColor, woodFloorFinish),
+    [floorType, tileColor, woodFloorFinish]
+  );
+
+  // Create floor texture
+  const floorTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    if (floorType === 'tile') {
+      // Tile pattern
+      ctx.fillStyle = floorMaterial.color;
+      ctx.fillRect(0, 0, 1024, 1024);
+      
+      // Grout lines
+      ctx.strokeStyle = '#888888';
+      ctx.lineWidth = 2;
+      const tileSize = 64;
+      for (let x = 0; x <= 1024; x += tileSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 1024);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= 1024; y += tileSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(1024, y);
+        ctx.stroke();
+      }
+    } else {
+      // Wood plank pattern
+      ctx.fillStyle = floorMaterial.color;
+      ctx.fillRect(0, 0, 1024, 1024);
+      
+      // Wood grain lines
+      ctx.strokeStyle = new THREE.Color(floorMaterial.color).multiplyScalar(0.8).getStyle();
+      ctx.lineWidth = 1;
+      const plankHeight = 128;
+      for (let y = 0; y <= 1024; y += plankHeight) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(1024, y);
+        ctx.stroke();
+        
+        // Add wood grain detail
+        for (let i = 0; i < 10; i++) {
+          const grainY = y + Math.random() * plankHeight;
+          ctx.beginPath();
+          ctx.moveTo(0, grainY);
+          ctx.lineTo(1024, grainY);
+          ctx.globalAlpha = 0.1;
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      }
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(4, 4);
+    return texture;
+  }, [floorType, floorMaterial.color]);
+
+  return (
+    <group>
+      {/* Floor */}
+      <mesh 
+        rotation={[-Math.PI / 2, 0, 0]} 
+        position={[0, 0, 0]} 
+        receiveShadow
+      >
+        <planeGeometry args={[scaledLength, scaledWidth]} />
+        <meshStandardMaterial 
+          map={floorTexture}
+          color={floorMaterial.color}
+          roughness={floorMaterial.roughness}
+          metalness={floorMaterial.metalness}
+        />
+      </mesh>
+
+      {/* Walls */}
+      {includeWalls && (
+        <>
+          {/* Back wall */}
+          <mesh position={[0, scaledHeight / 2, -scaledWidth / 2]} receiveShadow castShadow>
+            <boxGeometry args={[scaledLength, scaledHeight, 0.1]} />
+            <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+          </mesh>
+
+          {/* Left wall */}
+          <mesh position={[-scaledLength / 2, scaledHeight / 2, 0]} receiveShadow castShadow>
+            <boxGeometry args={[0.1, scaledHeight, scaledWidth]} />
+            <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+          </mesh>
+
+          {/* Right wall with optional door */}
+          {hasDoor ? (
+            <>
+              {/* Wall segment below door */}
+              <mesh position={[scaledLength / 2, 0.5, 0]} receiveShadow castShadow>
+                <boxGeometry args={[0.1, 1, scaledWidth]} />
+                <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+              </mesh>
+              {/* Wall segment above door */}
+              <mesh position={[scaledLength / 2, scaledHeight - 0.5, 0]} receiveShadow castShadow>
+                <boxGeometry args={[0.1, 1, scaledWidth]} />
+                <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+              </mesh>
+              {/* Door */}
+              <mesh position={[scaledLength / 2, scaledHeight / 2, 0]} castShadow>
+                <boxGeometry args={[0.05, scaledHeight - 2, 1.5]} />
+                <meshStandardMaterial color="#8b7355" roughness={0.7} />
+              </mesh>
+            </>
+          ) : (
+            <mesh position={[scaledLength / 2, scaledHeight / 2, 0]} receiveShadow castShadow>
+              <boxGeometry args={[0.1, scaledHeight, scaledWidth]} />
+              <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+            </mesh>
+          )}
+
+          {/* Front wall with optional window */}
+          {hasWindow ? (
+            <>
+              {/* Wall segment below window */}
+              <mesh position={[0, 1, scaledWidth / 2]} receiveShadow castShadow>
+                <boxGeometry args={[scaledLength, 2, 0.1]} />
+                <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+              </mesh>
+              {/* Wall segment above window */}
+              <mesh position={[0, scaledHeight - 0.5, scaledWidth / 2]} receiveShadow castShadow>
+                <boxGeometry args={[scaledLength, 1, 0.1]} />
+                <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+              </mesh>
+              {/* Window frame */}
+              <mesh position={[0, scaledHeight / 2, scaledWidth / 2]} castShadow>
+                <boxGeometry args={[2, 1.5, 0.05]} />
+                <meshStandardMaterial 
+                  color="#87ceeb" 
+                  transparent 
+                  opacity={0.3} 
+                  roughness={0.1}
+                  metalness={0.1}
+                />
+              </mesh>
+            </>
+          ) : (
+            <mesh position={[0, scaledHeight / 2, scaledWidth / 2]} receiveShadow castShadow>
+              <boxGeometry args={[scaledLength, scaledHeight, 0.1]} />
+              <meshStandardMaterial color="#f5f5f5" roughness={0.8} />
+            </mesh>
+          )}
+        </>
+      )}
+    </group>
+  );
 };
 
 interface VanityBoxProps extends Vanity3DPreviewProps {
@@ -835,11 +1072,39 @@ const DimensionLabels = ({ width, height, depth }: { width: number; height: numb
   );
 };
 
-export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle, cabinetPosition = "left", fullscreen = false }: Vanity3DPreviewProps) => {
+export const Vanity3DPreview = ({ 
+  width, 
+  height, 
+  depth, 
+  brand, 
+  finish, 
+  doorStyle, 
+  numDrawers, 
+  handleStyle, 
+  cabinetPosition = "left", 
+  fullscreen = false,
+  includeRoom = false,
+  roomLength = 0,
+  roomWidth = 0,
+  roomHeight = 96,
+  floorType = "tile",
+  tileColor = "white-marble",
+  woodFloorFinish = "natural-oak",
+  includeWalls = false,
+  hasWindow = false,
+  hasDoor = false
+}: Vanity3DPreviewProps) => {
   const [measurementMode, setMeasurementMode] = useState(false);
   const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
-  const [zoom, setZoom] = useState(3);
+  const [zoom, setZoom] = useState(includeRoom && roomLength > 0 ? 5 : 3);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // Update zoom when room is toggled
+  useMemo(() => {
+    if (includeRoom && roomLength > 0) {
+      setZoom(5);
+    }
+  }, [includeRoom, roomLength]);
 
   const hasValidDimensions = useMemo(() => {
     return width > 0 && height > 0 && depth > 0;
@@ -958,7 +1223,7 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setZoom(3)}
+          onClick={() => setZoom(includeRoom && roomLength > 0 ? 5 : 3)}
           className="shadow-lg h-10 w-10 p-0"
           title="Reset zoom"
         >
@@ -969,7 +1234,10 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
       <Canvas shadows onCreated={({ gl }) => {
         canvasRef.current = gl.domElement;
       }}>
-        <PerspectiveCamera makeDefault position={[zoom, zoom * 0.7, zoom]} />
+        <PerspectiveCamera 
+          makeDefault 
+          position={includeRoom && roomLength > 0 ? [zoom * 1.5, zoom, zoom * 1.5] : [zoom, zoom * 0.7, zoom]} 
+        />
         <OrbitControls 
           enablePan={false}
           minDistance={zoom}
@@ -993,34 +1261,58 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
         
         <Environment preset="apartment" />
         
-        <mesh 
-          rotation={[-Math.PI / 2, 0, 0]} 
-          position={[0, 0, 0]} 
-          receiveShadow
-        >
-          <planeGeometry args={[10, 10]} />
-          <shadowMaterial opacity={0.2} />
-        </mesh>
+        {/* Room with floor and walls */}
+        {includeRoom && roomLength > 0 && roomWidth > 0 ? (
+          <Room
+            roomLength={roomLength}
+            roomWidth={roomWidth}
+            roomHeight={roomHeight}
+            floorType={floorType}
+            tileColor={tileColor}
+            woodFloorFinish={woodFloorFinish}
+            includeWalls={includeWalls}
+            hasWindow={hasWindow}
+            hasDoor={hasDoor}
+          />
+        ) : (
+          /* Default shadow plane when no room */
+          <mesh 
+            rotation={[-Math.PI / 2, 0, 0]} 
+            position={[0, 0, 0]} 
+            receiveShadow
+          >
+            <planeGeometry args={[10, 10]} />
+            <shadowMaterial opacity={0.2} />
+          </mesh>
+        )}
         
-        <VanityBox 
-          width={width} 
-          height={height} 
-          depth={depth} 
-          brand={brand} 
-          finish={finish}
-          doorStyle={doorStyle}
-          numDrawers={numDrawers}
-          handleStyle={handleStyle}
-          cabinetPosition={cabinetPosition}
-          measurementMode={measurementMode}
-          onMeasurementClick={handleMeasurementClick}
-          activeMeasurement={activeMeasurement}
-        />
+        {/* Vanity positioned in center of room or at origin */}
+        <group position={[0, 0, 0]}>
+          <VanityBox 
+            width={width} 
+            height={height} 
+            depth={depth} 
+            brand={brand} 
+            finish={finish}
+            doorStyle={doorStyle}
+            numDrawers={numDrawers}
+            handleStyle={handleStyle}
+            cabinetPosition={cabinetPosition}
+            measurementMode={measurementMode}
+            onMeasurementClick={handleMeasurementClick}
+            activeMeasurement={activeMeasurement}
+          />
+        </group>
       </Canvas>
       
       <DimensionLabels width={width} height={height} depth={depth} />
       
       <div className="absolute top-4 left-4 right-32 flex flex-col items-center gap-2">
+        {includeRoom && roomLength > 0 ? (
+          <p className="text-xs font-medium bg-primary/90 text-primary-foreground backdrop-blur-sm rounded-lg px-3 py-1.5 border border-primary">
+            🏠 Full Bathroom Layout • {(roomLength / 12).toFixed(1)}' × {(roomWidth / 12).toFixed(1)}'
+          </p>
+        ) : null}
         {measurementMode ? (
           <p className="text-xs text-muted-foreground bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-border">
             Click on vanity parts to measure

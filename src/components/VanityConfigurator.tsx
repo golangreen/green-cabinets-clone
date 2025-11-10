@@ -769,6 +769,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 handleStyle={handleStyle}
                 cabinetPosition={cabinetPosition}
                 fullscreen={true}
+                includeRoom={includeRoom}
+                roomLength={roomLength ? parseFloat(roomLength) * 12 : 0}
+                roomWidth={roomWidth ? parseFloat(roomWidth) * 12 : 0}
+                roomHeight={wallHeight ? parseFloat(wallHeight) : 96}
+                floorType={floorType}
+                tileColor={tileColor}
+                woodFloorFinish={woodFloorFinish}
+                includeWalls={includeWalls}
+                hasWindow={hasWindow}
+                hasDoor={hasDoor}
               />
             </div>
           </div>
@@ -790,6 +800,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               numDrawers={numDrawers}
               handleStyle={handleStyle}
               cabinetPosition={cabinetPosition}
+              includeRoom={includeRoom}
+              roomLength={roomLength ? parseFloat(roomLength) * 12 : 0}
+              roomWidth={roomWidth ? parseFloat(roomWidth) * 12 : 0}
+              roomHeight={wallHeight ? parseFloat(wallHeight) : 96}
+              floorType={floorType}
+              tileColor={tileColor}
+              woodFloorFinish={woodFloorFinish}
+              includeWalls={includeWalls}
+              hasWindow={hasWindow}
+              hasDoor={hasDoor}
             />
             {/* Fullscreen Button */}
             <Button
