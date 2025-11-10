@@ -1,4 +1,5 @@
 @import './styles/designer-responsive.css';
+@import './styles/ios-native.css';
 
 @tailwind base;
 @tailwind components;
