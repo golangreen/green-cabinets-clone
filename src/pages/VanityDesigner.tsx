@@ -1,333 +1,140 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
-import { Vanity3DPreview } from "@/components/Vanity3DPreview";
-import {
-  Save,
-  Share2,
-  Undo,
-  Redo,
-  ZoomIn,
-  ZoomOut,
-  Grid3x3,
-  Eye,
-  Ruler,
-  Palette,
-  Package,
-  FileDown,
-  HelpCircle,
-  ChevronLeft,
-  ChevronRight,
-  Maximize2,
-  View,
+import { Card } from "@/components/ui/card";
+import { 
   Plus,
   Trash2,
   Copy,
-  AlignLeft,
-  AlignRight,
-  AlignCenterHorizontal,
-  AlignVerticalJustifyStart,
-  AlignVerticalJustifyEnd,
-  AlignCenterVertical,
-  Maximize,
+  Save,
+  Download,
+  Grid3x3,
+  FileText,
+  Box,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { Vanity3DPreview } from "@/components/Vanity3DPreview";
+
+interface Cabinet {
+  id: number;
+  type: string;
+  width: number;
+  height: number;
+  depth: number;
+  x: number;
+  y: number;
+  brand: string;
+  finish: string;
+  label?: string;
+}
 
 const VanityDesigner = () => {
-  const [activeView, setActiveView] = useState<"measurement" | "render">("measurement");
-  const [leftPanelOpen, setLeftPanelOpen] = useState(true);
-  const [rightPanelOpen, setRightPanelOpen] = useState(true);
+  const navigate = useNavigate();
   
-  // Multi-cabinet system
-  const [cabinets, setCabinets] = useState<any[]>([{
-    id: 1,
-    cabinetType: "kitchen",
-    subType: "base",
-    width: 36,
-    height: 34,
-    depth: 24,
-    x: 100,
-    y: 100,
-    brand: "EGGER",
-    finish: "Walnut",
-    doorStyle: "shaker",
-    countertop: "quartz",
-    handleStyle: "bar",
-    sinkStyle: "undermount",
-    sinkShape: "rectangular",
-    drawerCount: 2,
-    shelfCount: 3,
-    hangingRodCount: 1,
-    hasShoeRack: false,
-    hasMirror: false,
-  }]);
-  const [selectedCabinetId, setSelectedCabinetId] = useState(1);
-  
-  // Drag and drop state
-  const [draggingId, setDraggingId] = useState<number | null>(null);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const gridSize = 24; // 12 inches at 2px per inch scale
-  
-  // Get current cabinet
-  const currentCabinet = cabinets.find(c => c.id === selectedCabinetId) || cabinets[0];
-  
-  // Configuration state (for current cabinet)
-  const [cabinetType, setCabinetType] = useState<"vanity" | "closet" | "kitchen">(currentCabinet.cabinetType);
-  const [subType, setSubType] = useState(currentCabinet.subType);
-  const [width, setWidth] = useState(currentCabinet.width);
-  const [height, setHeight] = useState(currentCabinet.height);
-  const [depth, setDepth] = useState(currentCabinet.depth);
-  const [brand, setBrand] = useState<"EGGER" | "TAFISA">(currentCabinet.brand);
-  const [finish, setFinish] = useState(currentCabinet.finish);
-  const [doorStyle, setDoorStyle] = useState(currentCabinet.doorStyle);
-  const [countertop, setCountertop] = useState(currentCabinet.countertop);
-  const [handleStyle, setHandleStyle] = useState(currentCabinet.handleStyle);
-  const [sinkStyle, setSinkStyle] = useState<"undermount" | "vessel" | "integrated">(currentCabinet.sinkStyle);
-  const [sinkShape, setSinkShape] = useState<"rectangular" | "oval" | "square">(currentCabinet.sinkShape);
-  
-  // Type-specific options
-  const [shelfCount, setShelfCount] = useState(currentCabinet.shelfCount);
-  const [drawerCount, setDrawerCount] = useState(currentCabinet.drawerCount);
-  const [hangingRodCount, setHangingRodCount] = useState(currentCabinet.hangingRodCount);
-  const [hasShoeRack, setHasShoeRack] = useState(currentCabinet.hasShoeRack);
-  const [hasMirror, setHasMirror] = useState(currentCabinet.hasMirror);
-
-  // View controls
-  const [zoom, setZoom] = useState(1);
+  // View mode: 'floorplan' or 'render'
+  const [viewMode, setViewMode] = useState<"floorplan" | "render">("floorplan");
+  const [activeTab, setActiveTab] = useState("home");
+  const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showGrid, setShowGrid] = useState(true);
-  const [wireframe, setWireframe] = useState(false);
-
-  // History management
-  const [history, setHistory] = useState<any[]>([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
-
-  // Update current cabinet in array
-  const updateCurrentCabinet = (updates: any) => {
-    setCabinets(cabinets.map(c => 
-      c.id === selectedCabinetId ? { ...c, ...updates } : c
-    ));
-  };
-
-  // Add new cabinet
-  const addCabinet = () => {
-    const newId = Math.max(...cabinets.map(c => c.id)) + 1;
-    const newCabinet = {
-      id: newId,
-      cabinetType: cabinetType,
-      subType: subType,
-      width: 36,
-      height: 34,
-      depth: 24,
-      x: 100 + (cabinets.length * 50),
-      y: 100,
-      brand: "EGGER",
-      finish: "Walnut",
-      doorStyle: "shaker",
-      countertop: "quartz",
-      handleStyle: "bar",
-      sinkStyle: "undermount",
-      sinkShape: "rectangular",
-      drawerCount: 2,
-      shelfCount: 3,
-      hangingRodCount: 1,
-      hasShoeRack: false,
-      hasMirror: false,
-    };
-    setCabinets([...cabinets, newCabinet]);
-    setSelectedCabinetId(newId);
-    toast.success("Cabinet added!");
-  };
-
-  // Remove cabinet
-  const removeCabinet = (id: number) => {
-    if (cabinets.length === 1) {
-      toast.error("Cannot remove the last cabinet");
-      return;
-    }
-    setCabinets(cabinets.filter(c => c.id !== id));
-    if (selectedCabinetId === id) {
-      setSelectedCabinetId(cabinets[0].id);
-    }
-    toast.success("Cabinet removed");
-  };
-
-  // Duplicate cabinet
-  const duplicateCabinet = (id: number) => {
-    const cabinetToDuplicate = cabinets.find(c => c.id === id);
-    if (cabinetToDuplicate) {
-      const newId = Math.max(...cabinets.map(c => c.id)) + 1;
-      setCabinets([...cabinets, { ...cabinetToDuplicate, id: newId }]);
-      setSelectedCabinetId(newId);
-      toast.success("Cabinet duplicated!");
-    }
-  };
-
-  const saveToHistory = () => {
-    const config = { cabinets };
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(config);
-    setHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
-  };
-
-  const undo = () => {
-    if (historyIndex > 0) {
-      const prevConfig = history[historyIndex - 1];
-      setCabinets(prevConfig.cabinets);
-      setHistoryIndex(historyIndex - 1);
-      toast.success("Undo successful");
-    }
-  };
-
-  const redo = () => {
-    if (historyIndex < history.length - 1) {
-      const nextConfig = history[historyIndex + 1];
-      setCabinets(nextConfig.cabinets);
-      setHistoryIndex(historyIndex + 1);
-      toast.success("Redo successful");
-    }
-  };
-
-  const handleSaveConfig = () => {
-    saveToHistory();
-    localStorage.setItem('cabinetDesign', JSON.stringify({ cabinets }));
-    toast.success("Configuration saved successfully!");
-  };
-
-  const handleExport = () => {
-    const dataStr = JSON.stringify({ cabinets }, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'cabinet-design.json';
-    link.click();
-    toast.success("Design exported!");
-  };
-
-  const handleShare = () => {
-    const shareUrl = `${window.location.origin}/designer?config=${btoa(JSON.stringify({ cabinets }))}`;
-    navigator.clipboard.writeText(shareUrl);
-    toast.success("Share link copied to clipboard!");
-  };
-
-  const handleZoomIn = () => {
-    setZoom(prev => Math.min(prev + 0.2, 3));
-    toast.success("Zoomed in");
-  };
-
-  const handleZoomOut = () => {
-    setZoom(prev => Math.max(prev - 0.2, 0.5));
-    toast.success("Zoomed out");
-  };
-
-  const handleZoomToFit = () => {
-    if (cabinets.length === 0) return;
-    
-    // Calculate bounding box of all cabinets
-    const scale = 2;
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    
-    cabinets.forEach(cabinet => {
-      const x = cabinet.x;
-      const y = cabinet.y;
-      const w = cabinet.width * scale;
-      const h = cabinet.depth * scale;
-      
-      minX = Math.min(minX, x);
-      minY = Math.min(minY, y);
-      maxX = Math.max(maxX, x + w);
-      maxY = Math.max(maxY, y + h);
-    });
-    
-    // Add padding
-    const padding = 100;
-    const boundingWidth = maxX - minX + padding * 2;
-    const boundingHeight = maxY - minY + padding * 2;
-    
-    // Get viewport size (rough estimate)
-    const viewportWidth = window.innerWidth - (leftPanelOpen ? 320 : 0) - (rightPanelOpen ? 288 : 0);
-    const viewportHeight = window.innerHeight - 100;
-    
-    // Calculate zoom to fit
-    const zoomX = viewportWidth / boundingWidth;
-    const zoomY = viewportHeight / boundingHeight;
-    const newZoom = Math.min(zoomX, zoomY, 2); // Cap at 2x
-    
-    setZoom(Math.max(newZoom, 0.3)); // Min 0.3x
-    toast.success("Zoomed to fit all cabinets");
-  };
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      toast.success("Fullscreen enabled");
-    } else {
-      document.exitFullscreen();
-      toast.success("Fullscreen disabled");
-    }
-  };
-
-  const toggleGrid = () => {
-    setShowGrid(!showGrid);
-    toast.success(showGrid ? "Grid hidden" : "Grid shown");
-  };
-
-  const toggleWireframe = () => {
-    setWireframe(!wireframe);
-    toast.success(wireframe ? "Wireframe disabled" : "Wireframe enabled");
-  };
-
-  const handleNewDesign = () => {
-    setCabinets([{
+  const [showDimensions, setShowDimensions] = useState(true);
+  
+  // Cabinets state
+  const [cabinets, setCabinets] = useState<Cabinet[]>([
+    {
       id: 1,
-      cabinetType: "kitchen",
-      subType: "base",
+      type: "Base Cabinet",
       width: 36,
-      height: 34,
+      height: 34.5,
       depth: 24,
       x: 100,
-      y: 100,
-      brand: "EGGER",
-      finish: "Walnut",
-      doorStyle: "shaker",
-      countertop: "quartz",
-      handleStyle: "bar",
-      sinkStyle: "undermount",
-      sinkShape: "rectangular",
-      drawerCount: 2,
-      shelfCount: 3,
-      hangingRodCount: 1,
-      hasShoeRack: false,
-      hasMirror: false,
-    }]);
-    setSelectedCabinetId(1);
-    toast.success("New design started");
-  };
+      y: 200,
+      brand: "Tafisa",
+      finish: "White",
+      label: "DB36"
+    }
+  ]);
+  const [selectedCabinetId, setSelectedCabinetId] = useState<number | null>(1);
+  
+  const [draggingId, setDraggingId] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const gridSize = 24; // 12" grid at 2px per inch scale
+  const canvasRef = useRef<HTMLDivElement>(null);
+  
+  // Add a new cabinet
+  const addCabinet = useCallback(() => {
+    const newCabinet: Cabinet = {
+      id: Math.max(...cabinets.map(c => c.id), 0) + 1,
+      type: "Base Cabinet",
+      width: 36,
+      height: 34.5,
+      depth: 24,
+      x: 150 + (cabinets.length * 50),
+      y: 150,
+      brand: "Tafisa",
+      finish: "White",
+      label: `DB${36}`
+    };
+    setCabinets([...cabinets, newCabinet]);
+    setSelectedCabinetId(newCabinet.id);
+    toast.success("Cabinet added");
+  }, [cabinets]);
+
+  // Remove selected cabinet
+  const removeCabinet = useCallback(() => {
+    if (!selectedCabinetId) return;
+    const newCabinets = cabinets.filter(c => c.id !== selectedCabinetId);
+    setCabinets(newCabinets);
+    setSelectedCabinetId(newCabinets[0]?.id || null);
+    toast.success("Cabinet removed");
+  }, [cabinets, selectedCabinetId]);
+
+  // Duplicate selected cabinet
+  const duplicateCabinet = useCallback(() => {
+    if (!selectedCabinetId) return;
+    const cabinet = cabinets.find(c => c.id === selectedCabinetId);
+    if (!cabinet) return;
+    const newCabinet = {
+      ...cabinet,
+      id: Math.max(...cabinets.map(c => c.id), 0) + 1,
+      x: cabinet.x + 48,
+      y: cabinet.y + 48
+    };
+    setCabinets([...cabinets, newCabinet]);
+    setSelectedCabinetId(newCabinet.id);
+    toast.success("Cabinet duplicated");
+  }, [cabinets, selectedCabinetId]);
+
+  // Save configuration
+  const handleSave = useCallback(() => {
+    toast.success("Design saved");
+  }, []);
+
+  // Export configuration
+  const handleExport = useCallback(() => {
+    const dataStr = JSON.stringify(cabinets, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'vanity-design.json';
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    toast.success("Design exported");
+  }, [cabinets]);
+
+  // Share configuration
+  const handleShare = useCallback(() => {
+    toast.success("Share link copied");
+  }, []);
 
   // Snap to grid helper
-  const snapToGrid = (value: number) => {
+  const snapToGrid = useCallback((value: number) => {
     return Math.round(value / gridSize) * gridSize;
-  };
+  }, [gridSize]);
 
   // Drag handlers
-  const handleMouseDown = (e: React.MouseEvent, cabinetId: number) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent, cabinetId: number) => {
     const cabinet = cabinets.find(c => c.id === cabinetId);
     if (!cabinet) return;
     
@@ -337,1131 +144,354 @@ const VanityDesigner = () => {
       x: e.clientX - cabinet.x,
       y: e.clientY - cabinet.y
     });
-  };
+  }, [cabinets]);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (draggingId === null) return;
     
     const newX = snapToGrid(e.clientX - dragOffset.x);
     const newY = snapToGrid(e.clientY - dragOffset.y);
     
-    setCabinets(cabinets.map(c =>
+    setCabinets(cabinets.map(c => 
       c.id === draggingId ? { ...c, x: newX, y: newY } : c
     ));
-  };
+  }, [draggingId, dragOffset, snapToGrid, cabinets]);
 
-  const handleMouseUp = () => {
-    if (draggingId !== null) {
-      saveToHistory();
-      setDraggingId(null);
+  const handleMouseUp = useCallback(() => {
+    setDraggingId(null);
+  }, []);
+
+  // Render ribbon content based on active tab
+  const renderRibbonContent = () => {
+    switch (activeTab) {
+      case "home":
+        return (
+          <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
+            <div className="flex flex-col items-center gap-1">
+              <Button onClick={addCabinet} variant="ghost" size="sm" className="h-12 w-12 flex flex-col gap-1 hover:bg-accent">
+                <Plus className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Add Cabinet</span>
+            </div>
+            <div className="w-px h-12 bg-border" />
+            <div className="flex flex-col items-center gap-1">
+              <Button onClick={duplicateCabinet} variant="ghost" size="sm" className="h-12 w-12 flex flex-col gap-1 hover:bg-accent" disabled={!selectedCabinetId}>
+                <Copy className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Duplicate</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Button onClick={removeCabinet} variant="ghost" size="sm" className="h-12 w-12 flex flex-col gap-1 hover:bg-accent" disabled={!selectedCabinetId}>
+                <Trash2 className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Delete</span>
+            </div>
+          </div>
+        );
+      case "view":
+        return (
+          <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => setShowGrid(!showGrid)} 
+                variant={showGrid ? "default" : "ghost"}
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1"
+              >
+                <Grid3x3 className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Grid</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => setShowDimensions(!showDimensions)} 
+                variant={showDimensions ? "default" : "ghost"}
+                size="sm" 
+                className="h-12 w-12 flex flex-col gap-1"
+              >
+                <FileText className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">Dimensions</span>
+            </div>
+            <div className="w-px h-12 bg-border" />
+            <div className="flex flex-col items-center gap-1">
+              <Button 
+                onClick={() => setViewMode(viewMode === "floorplan" ? "render" : "floorplan")} 
+                variant="ghost"
+                size="sm" 
+                className="h-12 w-16 flex flex-col gap-1 hover:bg-accent"
+              >
+                <Box className="h-5 w-5" />
+              </Button>
+              <span className="text-[10px]">3D View</span>
+            </div>
+          </div>
+        );
+      default:
+        return <div className="px-4 py-2 text-sm text-muted-foreground bg-muted/30">Select a tool from above</div>;
     }
   };
 
-  // Alignment functions
-  const alignLeft = () => {
-    if (cabinets.length < 2) return;
-    const minX = Math.min(...cabinets.map(c => c.x));
-    setCabinets(cabinets.map(c => ({ ...c, x: minX })));
-    saveToHistory();
-    toast.success("Cabinets aligned left");
-  };
-
-  const alignRight = () => {
-    if (cabinets.length < 2) return;
-    const maxRight = Math.max(...cabinets.map(c => c.x + (c.width * 2)));
-    setCabinets(cabinets.map(c => ({ ...c, x: maxRight - (c.width * 2) })));
-    saveToHistory();
-    toast.success("Cabinets aligned right");
-  };
-
-  const alignTop = () => {
-    if (cabinets.length < 2) return;
-    const minY = Math.min(...cabinets.map(c => c.y));
-    setCabinets(cabinets.map(c => ({ ...c, y: minY })));
-    saveToHistory();
-    toast.success("Cabinets aligned top");
-  };
-
-  const alignBottom = () => {
-    if (cabinets.length < 2) return;
-    const maxBottom = Math.max(...cabinets.map(c => c.y + (c.depth * 2)));
-    setCabinets(cabinets.map(c => ({ ...c, y: maxBottom - (c.depth * 2) })));
-    saveToHistory();
-    toast.success("Cabinets aligned bottom");
-  };
-
-  const alignCenterHorizontal = () => {
-    if (cabinets.length < 2) return;
-    const avgX = cabinets.reduce((sum, c) => sum + c.x + (c.width * 2) / 2, 0) / cabinets.length;
-    setCabinets(cabinets.map(c => ({ ...c, x: avgX - (c.width * 2) / 2 })));
-    saveToHistory();
-    toast.success("Cabinets centered horizontally");
-  };
-
-  const alignCenterVertical = () => {
-    if (cabinets.length < 2) return;
-    const avgY = cabinets.reduce((sum, c) => sum + c.y + (c.depth * 2) / 2, 0) / cabinets.length;
-    setCabinets(cabinets.map(c => ({ ...c, y: avgY - (c.depth * 2) / 2 })));
-    saveToHistory();
-    toast.success("Cabinets centered vertically");
-  };
-
-  const distributeHorizontally = () => {
-    if (cabinets.length < 3) return;
-    const sorted = [...cabinets].sort((a, b) => a.x - b.x);
-    const leftmost = sorted[0].x;
-    const rightmost = sorted[sorted.length - 1].x + (sorted[sorted.length - 1].width * 2);
-    const totalWidth = cabinets.reduce((sum, c) => sum + (c.width * 2), 0);
-    const spacing = (rightmost - leftmost - totalWidth) / (cabinets.length - 1);
-    
-    let currentX = leftmost;
-    const distributed = sorted.map(c => {
-      const newCabinet = { ...c, x: currentX };
-      currentX += (c.width * 2) + spacing;
-      return newCabinet;
-    });
-    
-    setCabinets(distributed);
-    saveToHistory();
-    toast.success("Cabinets distributed horizontally");
-  };
-
-  const distributeVertically = () => {
-    if (cabinets.length < 3) return;
-    const sorted = [...cabinets].sort((a, b) => a.y - b.y);
-    const topmost = sorted[0].y;
-    const bottommost = sorted[sorted.length - 1].y + (sorted[sorted.length - 1].depth * 2);
-    const totalHeight = cabinets.reduce((sum, c) => sum + (c.depth * 2), 0);
-    const spacing = (bottommost - topmost - totalHeight) / (cabinets.length - 1);
-    
-    let currentY = topmost;
-    const distributed = sorted.map(c => {
-      const newCabinet = { ...c, y: currentY };
-      currentY += (c.depth * 2) + spacing;
-      return newCabinet;
-    });
-    
-    setCabinets(distributed);
-    saveToHistory();
-    toast.success("Cabinets distributed vertically");
-  };
-
   return (
-    <div className="h-screen w-full bg-background flex flex-col overflow-hidden">
-      {/* Streamlined Top Menu */}
-      <div className="h-12 bg-card border-b border-border flex items-center px-4 justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-sm font-semibold">Cabinet Designer</h1>
-          <Separator orientation="vertical" className="h-6" />
+    <div className="h-screen flex flex-col bg-background">
+      {/* Top Ribbon Tabs */}
+      <div className="border-b border-border bg-card flex-shrink-0">
+        <div className="flex items-center h-12 px-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/")}
+            className="h-8 px-3 bg-[#FF8C00] hover:bg-[#FF8C00]/90 text-white"
+          >
+            FILE
+          </Button>
           
-          {/* View Mode Tabs */}
-          <Tabs value={activeView} onValueChange={(v) => setActiveView(v as "measurement" | "render")}>
-            <TabsList>
-              <TabsTrigger value="measurement" className="gap-2 text-xs">
-                <Ruler className="h-3.5 w-3.5" />
-                Measurements
-              </TabsTrigger>
-              <TabsTrigger value="render" className="gap-2 text-xs">
-                <View className="h-3.5 w-3.5" />
-                3D View
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <Button
+            variant={activeTab === "home" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab("home")}
+            className="h-8 px-3"
+          >
+            HOME
+          </Button>
           
-          <Separator orientation="vertical" className="h-6" />
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8">
-                File
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem onClick={handleNewDesign}>New Design</DropdownMenuItem>
-              <DropdownMenuItem>Open...</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSaveConfig}>
-                <Save className="h-4 w-4 mr-2" />
-                Save
-              </DropdownMenuItem>
-              <DropdownMenuItem>Save As...</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleExport}>
-                <FileDown className="h-4 w-4 mr-2" />
-                Export
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            variant={activeTab === "view" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab("view")}
+            className="h-8 px-3"
+          >
+            VIEW
+          </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8">
-                View
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem onClick={toggleGrid}>
-                <Grid3x3 className="h-4 w-4 mr-2" />
-                {showGrid ? "Hide" : "Show"} Grid
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={toggleWireframe}>
-                <Eye className="h-4 w-4 mr-2" />
-                {wireframe ? "Disable" : "Enable"} Wireframe
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={toggleFullscreen}>
-                <Maximize2 className="h-4 w-4 mr-2" />
-                Fullscreen
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex-1" />
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleSave}
+            className="h-8"
+          >
+            <Save className="h-4 w-4 mr-2" />
+            Save
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleExport}
+            className="h-8"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
         </div>
-
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={undo} disabled={historyIndex <= 0}>
-            <Undo className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={redo} disabled={historyIndex >= history.length - 1}>
-            <Redo className="h-4 w-4" />
-          </Button>
-          
-          <Separator orientation="vertical" className="h-6 mx-2" />
-          
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleZoomIn}>
-            <ZoomIn className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleZoomOut}>
-            <ZoomOut className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleZoomToFit} title="Zoom to Fit">
-            <Maximize className="h-4 w-4" />
-          </Button>
-          
-          <Separator orientation="vertical" className="h-6 mx-2" />
-          
-          <Button variant="ghost" size="sm" className="h-8" onClick={handleShare}>
-            <Share2 className="h-4 w-4 mr-2" />
-            Share
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <HelpCircle className="h-4 w-4" />
-          </Button>
+        
+        {/* Ribbon Content */}
+        <div className="border-t border-border">
+          {renderRibbonContent()}
         </div>
       </div>
 
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Panel - Controls */}
-        {leftPanelOpen && (
-          <aside className="w-80 bg-card border-r border-border flex flex-col">
-            <div className="p-4 border-b border-border flex items-center justify-between">
-              <h2 className="text-sm font-semibold">
-                {activeView === "measurement" ? "Design Controls" : "Materials"}
-              </h2>
+        {/* Left Sidebar - Collapsible */}
+        {showLeftPanel && (
+          <div className="w-64 border-r border-border bg-card flex flex-col">
+            <div className="p-3 border-b border-border flex items-center justify-between">
+              <h3 className="font-semibold text-sm">Place Items</h3>
               <Button
                 variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setLeftPanelOpen(false)}
+                size="sm"
+                onClick={() => setShowLeftPanel(false)}
+                className="h-7 w-7 p-0"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
             </div>
             
-            <div className="flex-1 overflow-y-auto">
-              {activeView === "measurement" ? (
-                // Measurement View - Cabinet list and controls
-                <div className="flex flex-col h-full">
-                  {/* Cabinet List */}
-                  <div className="p-4 border-b border-border">
-                    <div className="flex items-center justify-between mb-3">
-                      <Label className="text-sm font-semibold">Cabinets ({cabinets.length})</Label>
-                      <Button size="sm" onClick={addCabinet} className="h-7">
-                        <Plus className="h-3.5 w-3.5 mr-1" />
-                        Add
-                      </Button>
-                    </div>
-                    <div className="space-y-2 max-h-40 overflow-y-auto">
-                      {cabinets.map((cabinet) => (
-                        <div
-                          key={cabinet.id}
-                          className={`flex items-center justify-between p-2 rounded border cursor-pointer transition-colors ${
-                            selectedCabinetId === cabinet.id
-                              ? 'border-primary bg-primary/10'
-                              : 'border-border hover:bg-muted/50'
-                          }`}
-                          onClick={() => setSelectedCabinetId(cabinet.id)}
-                        >
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium truncate capitalize">
-                              {cabinet.cabinetType} - {cabinet.subType}
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              {cabinet.width}×{cabinet.height}×{cabinet.depth}"
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-1 ml-2">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                duplicateCabinet(cabinet.id);
-                              }}
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6 text-destructive"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                removeCabinet(cabinet.id);
-                              }}
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Current Cabinet Configuration */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    <div>
-                      <Label className="text-sm mb-2 block font-semibold">Edit Cabinet #{selectedCabinetId}</Label>
-                    </div>
-                    
-                    {/* Cabinet Category Selection */}
-                    <div>
-                      <Label className="text-sm mb-2 block">Cabinet Category</Label>
-                      <div className="grid grid-cols-3 gap-2">
-                        <Button
-                          variant={cabinetType === "kitchen" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => {
-                            setCabinetType("kitchen");
-                            setSubType("base");
-                            updateCurrentCabinet({ cabinetType: "kitchen", subType: "base" });
-                            saveToHistory();
-                          }}
-                        >
-                          Kitchen
-                        </Button>
-                        <Button
-                          variant={cabinetType === "vanity" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => {
-                            setCabinetType("vanity");
-                            setSubType("base");
-                            updateCurrentCabinet({ cabinetType: "vanity", subType: "base" });
-                            saveToHistory();
-                          }}
-                        >
-                          Vanity
-                        </Button>
-                        <Button
-                          variant={cabinetType === "closet" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => {
-                            setCabinetType("closet");
-                            setSubType("wardrobe");
-                            updateCurrentCabinet({ cabinetType: "closet", subType: "wardrobe" });
-                            saveToHistory();
-                          }}
-                        >
-                          Closet
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Sub-type Selection - Kitchen/Vanity/Closet specific types */}
-                    <div>
-                      <Label className="text-sm mb-2 block">Type</Label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {cabinetType === "kitchen" && (
-                          <>
-                            <Button
-                              variant={subType === "base" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("base");
-                                setHeight(34);
-                                updateCurrentCabinet({ subType: "base", height: 34 });
-                              }}
-                            >
-                              Base
-                            </Button>
-                            <Button
-                              variant={subType === "wall" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("wall");
-                                setHeight(30);
-                                updateCurrentCabinet({ subType: "wall", height: 30 });
-                              }}
-                            >
-                              Wall
-                            </Button>
-                            <Button
-                              variant={subType === "tall" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("tall");
-                                setHeight(84);
-                                updateCurrentCabinet({ subType: "tall", height: 84 });
-                              }}
-                            >
-                              Tall
-                            </Button>
-                            <Button
-                              variant={subType === "pantry" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("pantry");
-                                setHeight(90);
-                                updateCurrentCabinet({ subType: "pantry", height: 90 });
-                              }}
-                            >
-                              Pantry
-                            </Button>
-                          </>
-                        )}
-                        {cabinetType === "vanity" && (
-                          <>
-                            <Button
-                              variant={subType === "base" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("base");
-                                updateCurrentCabinet({ subType: "base" });
-                              }}
-                            >
-                              Base
-                            </Button>
-                            <Button
-                              variant={subType === "floating" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("floating");
-                                updateCurrentCabinet({ subType: "floating" });
-                              }}
-                            >
-                              Floating
-                            </Button>
-                            <Button
-                              variant={subType === "tower" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("tower");
-                                setHeight(72);
-                                updateCurrentCabinet({ subType: "tower", height: 72 });
-                              }}
-                            >
-                              Tower
-                            </Button>
-                            <Button
-                              variant={subType === "medicine" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("medicine");
-                                setHeight(24);
-                                updateCurrentCabinet({ subType: "medicine", height: 24 });
-                              }}
-                            >
-                              Medicine
-                            </Button>
-                          </>
-                        )}
-                        {cabinetType === "closet" && (
-                          <>
-                            <Button
-                              variant={subType === "wardrobe" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("wardrobe");
-                                updateCurrentCabinet({ subType: "wardrobe" });
-                              }}
-                            >
-                              Wardrobe
-                            </Button>
-                            <Button
-                              variant={subType === "reach-in" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("reach-in");
-                                updateCurrentCabinet({ subType: "reach-in" });
-                              }}
-                            >
-                              Reach-in
-                            </Button>
-                            <Button
-                              variant={subType === "walk-in" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("walk-in");
-                                setWidth(96);
-                                updateCurrentCabinet({ subType: "walk-in", width: 96 });
-                              }}
-                            >
-                              Walk-in
-                            </Button>
-                            <Button
-                              variant={subType === "drawer-unit" ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => {
-                                setSubType("drawer-unit");
-                                setHeight(48);
-                                updateCurrentCabinet({ subType: "drawer-unit", height: 48 });
-                              }}
-                            >
-                              Drawer Unit
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* Dimensions */}
-                    <div>
-                      <Label className="text-sm">Width (inches)</Label>
-                      <Input
-                        type="number"
-                        value={width}
-                        onChange={(e) => {
-                          setWidth(Number(e.target.value));
-                          updateCurrentCabinet({ width: Number(e.target.value) });
-                        }}
-                        className="mt-1.5"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-sm">Height (inches)</Label>
-                      <Input
-                        type="number"
-                        value={height}
-                        onChange={(e) => {
-                          setHeight(Number(e.target.value));
-                          updateCurrentCabinet({ height: Number(e.target.value) });
-                        }}
-                        className="mt-1.5"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-sm">Depth (inches)</Label>
-                      <Input
-                        type="number"
-                        value={depth}
-                        onChange={(e) => {
-                          setDepth(Number(e.target.value));
-                          updateCurrentCabinet({ depth: Number(e.target.value) });
-                        }}
-                        className="mt-1.5"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                // 3D View - Material controls
-                <Accordion type="multiple" defaultValue={["materials", "hardware"]} className="w-full">
-                  <AccordionItem value="materials" className="border-b border-border">
-                    <AccordionTrigger className="px-4 py-3 hover:bg-muted/50">
-                      <div className="flex items-center gap-2">
-                        <Palette className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">Materials & Finishes</span>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="px-4 pb-4">
-                      <div className="space-y-4">
-                        <div>
-                          <Label className="text-sm mb-2 block">Cabinet Brand</Label>
-                          <div className="grid grid-cols-2 gap-2">
-                            {["EGGER", "TAFISA"].map((b) => (
-                              <Button
-                                key={b}
-                                variant={brand === b ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => {
-                                  setBrand(b as "EGGER" | "TAFISA");
-                                  updateCurrentCabinet({ brand: b });
-                                  saveToHistory();
-                                }}
-                              >
-                                {b}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <Label className="text-sm mb-2 block">Finish</Label>
-                          <div className="grid grid-cols-2 gap-2">
-                            {(brand === "EGGER"
-                              ? ["Walnut", "White Oak", "Casella Oak"]
-                              : ["White", "Cream Puff", "Milky Way Grey"]
-                            ).map((f) => (
-                              <Button
-                                key={f}
-                                variant={finish === f ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => {
-                                  setFinish(f);
-                                  updateCurrentCabinet({ finish: f });
-                                  saveToHistory();
-                                }}
-                              >
-                                {f}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <Label className="text-sm mb-2 block">Door Style</Label>
-                          <div className="grid grid-cols-2 gap-2">
-                            {["shaker", "flat", "raised", "slab"].map((style) => (
-                              <Button
-                                key={style}
-                                variant={doorStyle === style ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => {
-                                  setDoorStyle(style);
-                                  updateCurrentCabinet({ doorStyle: style });
-                                  saveToHistory();
-                                }}
-                              >
-                                {style.charAt(0).toUpperCase() + style.slice(1)}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-
-                        {cabinetType === "vanity" && (
-                          <div>
-                            <Label className="text-sm mb-2 block">Countertop Material</Label>
-                            <div className="grid grid-cols-2 gap-2">
-                              {["quartz", "granite", "marble", "laminate"].map((c) => (
-                                <Button
-                                  key={c}
-                                  variant={countertop === c ? "default" : "outline"}
-                                  size="sm"
-                                  onClick={() => {
-                                    setCountertop(c);
-                                    updateCurrentCabinet({ countertop: c });
-                                    saveToHistory();
-                                  }}
-                                >
-                                  {c.charAt(0).toUpperCase() + c.slice(1)}
-                                </Button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="hardware" className="border-b-0">
-                    <AccordionTrigger className="px-4 py-3 hover:bg-muted/50">
-                      <div className="flex items-center gap-2">
-                        <Package className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">Hardware & Fixtures</span>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="px-4 pb-4">
-                      <div className="space-y-4">
-                        <div>
-                          <Label className="text-sm mb-2 block">Handle Style</Label>
-                          <div className="grid grid-cols-2 gap-2">
-                            {["bar", "knob", "cup", "edge"].map((h) => (
-                              <Button
-                                key={h}
-                                variant={handleStyle === h ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => {
-                                  setHandleStyle(h);
-                                  updateCurrentCabinet({ handleStyle: h });
-                                  saveToHistory();
-                                }}
-                              >
-                                {h.charAt(0).toUpperCase() + h.slice(1)}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-
-                        {cabinetType === "vanity" && (
-                          <>
-                            <div>
-                              <Label className="text-sm mb-2 block">Sink Style</Label>
-                              <div className="grid grid-cols-2 gap-2">
-                                {(["undermount", "vessel", "integrated"] as const).map((s) => (
-                                  <Button
-                                    key={s}
-                                    variant={sinkStyle === s ? "default" : "outline"}
-                                    size="sm"
-                                    onClick={() => {
-                                      setSinkStyle(s);
-                                      updateCurrentCabinet({ sinkStyle: s });
-                                      saveToHistory();
-                                    }}
-                                  >
-                                    {s.charAt(0).toUpperCase() + s.slice(1)}
-                                  </Button>
-                                ))}
-                              </div>
-                            </div>
-
-                            <div>
-                              <Label className="text-sm mb-2 block">Sink Shape</Label>
-                              <div className="grid grid-cols-2 gap-2">
-                                {(["rectangular", "oval", "square"] as const).map((s) => (
-                                  <Button
-                                    key={s}
-                                    variant={sinkShape === s ? "default" : "outline"}
-                                    size="sm"
-                                    onClick={() => {
-                                      setSinkShape(s);
-                                      updateCurrentCabinet({ sinkShape: s });
-                                      saveToHistory();
-                                    }}
-                                  >
-                                    {s.charAt(0).toUpperCase() + s.slice(1)}
-                                  </Button>
-                                ))}
-                              </div>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              )}
+            <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              {cabinets.map(cabinet => (
+                <Card
+                  key={cabinet.id}
+                  className={`p-2 cursor-pointer transition-colors ${
+                    selectedCabinetId === cabinet.id 
+                      ? "border-[#FF8C00] bg-[#FF8C00]/10" 
+                      : "hover:bg-muted/50"
+                  }`}
+                  onClick={() => setSelectedCabinetId(cabinet.id)}
+                >
+                  <p className="text-xs font-medium">{cabinet.label || cabinet.type}</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {cabinet.width}" × {cabinet.depth}"
+                  </p>
+                </Card>
+              ))}
             </div>
-          </aside>
+          </div>
         )}
 
-        {!leftPanelOpen && (
+        {!showLeftPanel && (
           <Button
             variant="ghost"
-            size="icon"
-            className="m-2 h-10 w-10"
-            onClick={() => setLeftPanelOpen(true)}
+            size="sm"
+            onClick={() => setShowLeftPanel(true)}
+            className="absolute left-0 top-32 h-12 w-6 rounded-none rounded-r-md z-10 bg-card border border-l-0"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-4 w-4" />
           </Button>
         )}
 
-        {/* Center - Main Viewport */}
-        <div className="flex-1 bg-muted/30 relative flex items-center justify-center">
-          {activeView === "measurement" ? (
-            // 2D Measurement View with Drag & Drop
+        {/* Main Canvas */}
+        <div className="flex-1 flex flex-col overflow-hidden relative">
+          {viewMode === "floorplan" ? (
             <div 
-              className="w-full h-full relative overflow-hidden"
+              ref={canvasRef}
+              className="flex-1 bg-white relative overflow-auto"
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
-              style={{
-                backgroundImage: showGrid ? `
-                  repeating-linear-gradient(0deg, hsl(var(--border)) 0px, hsl(var(--border)) 1px, transparent 1px, transparent ${gridSize}px),
-                  repeating-linear-gradient(90deg, hsl(var(--border)) 0px, hsl(var(--border)) 1px, transparent 1px, transparent ${gridSize}px)
-                ` : 'none'
-              }}
             >
-              {/* Dimension Lines - Draw before cabinets so they appear behind */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 5 }}>
-                {cabinets.map((cabinet, i) => {
-                  const scale = 2;
-                  const cab1Right = cabinet.x + (cabinet.width * scale);
-                  const cab1Bottom = cabinet.y + (cabinet.depth * scale);
-                  const cab1CenterX = cabinet.x + (cabinet.width * scale) / 2;
-                  const cab1CenterY = cabinet.y + (cabinet.depth * scale) / 2;
-                  
-                  return cabinets.slice(i + 1).map((otherCabinet) => {
-                    const cab2Right = otherCabinet.x + (otherCabinet.width * scale);
-                    const cab2Bottom = otherCabinet.y + (otherCabinet.depth * scale);
-                    const cab2CenterX = otherCabinet.x + (otherCabinet.width * scale) / 2;
-                    const cab2CenterY = otherCabinet.y + (otherCabinet.depth * scale) / 2;
-                    
-                    // Calculate horizontal gap (if aligned vertically)
-                    const verticallyAligned = Math.abs(cab1CenterY - cab2CenterY) < 50;
-                    const horizontalGap = cabinet.x < otherCabinet.x 
-                      ? otherCabinet.x - cab1Right 
-                      : cabinet.x - cab2Right;
-                    
-                    // Calculate vertical gap (if aligned horizontally)
-                    const horizontallyAligned = Math.abs(cab1CenterX - cab2CenterX) < 50;
-                    const verticalGap = cabinet.y < otherCabinet.y 
-                      ? otherCabinet.y - cab1Bottom 
-                      : cabinet.y - cab2Bottom;
-                    
-                    const lines = [];
-                    
-                    // Draw horizontal dimension line
-                    if (verticallyAligned && horizontalGap > 10 && horizontalGap < 300) {
-                      const startX = cabinet.x < otherCabinet.x ? cab1Right : cab2Right;
-                      const endX = cabinet.x < otherCabinet.x ? otherCabinet.x : cabinet.x;
-                      const lineY = Math.min(cab1CenterY, cab2CenterY);
-                      const distance = Math.round(horizontalGap / scale);
-                      
-                      lines.push(
-                        <g key={`h-${cabinet.id}-${otherCabinet.id}`}>
-                          <line
-                            x1={startX}
-                            y1={lineY}
-                            x2={endX}
-                            y2={lineY}
-                            stroke="hsl(var(--primary))"
-                            strokeWidth="2"
-                            strokeDasharray="4 2"
-                          />
-                          <line x1={startX} y1={lineY - 8} x2={startX} y2={lineY + 8} stroke="hsl(var(--primary))" strokeWidth="2" />
-                          <line x1={endX} y1={lineY - 8} x2={endX} y2={lineY + 8} stroke="hsl(var(--primary))" strokeWidth="2" />
-                          <text
-                            x={(startX + endX) / 2}
-                            y={lineY - 12}
-                            fill="hsl(var(--primary))"
-                            fontSize="12"
-                            fontWeight="600"
-                            textAnchor="middle"
-                            className="select-none"
-                          >
-                            {distance}"
-                          </text>
-                        </g>
-                      );
-                    }
-                    
-                    // Draw vertical dimension line
-                    if (horizontallyAligned && verticalGap > 10 && verticalGap < 300) {
-                      const startY = cabinet.y < otherCabinet.y ? cab1Bottom : cab2Bottom;
-                      const endY = cabinet.y < otherCabinet.y ? otherCabinet.y : cabinet.y;
-                      const lineX = Math.min(cab1CenterX, cab2CenterX);
-                      const distance = Math.round(verticalGap / scale);
-                      
-                      lines.push(
-                        <g key={`v-${cabinet.id}-${otherCabinet.id}`}>
-                          <line
-                            x1={lineX}
-                            y1={startY}
-                            x2={lineX}
-                            y2={endY}
-                            stroke="hsl(var(--primary))"
-                            strokeWidth="2"
-                            strokeDasharray="4 2"
-                          />
-                          <line x1={lineX - 8} y1={startY} x2={lineX + 8} y2={startY} stroke="hsl(var(--primary))" strokeWidth="2" />
-                          <line x1={lineX - 8} y1={endY} x2={lineX + 8} y2={endY} stroke="hsl(var(--primary))" strokeWidth="2" />
-                          <text
-                            x={lineX + 15}
-                            y={(startY + endY) / 2 + 4}
-                            fill="hsl(var(--primary))"
-                            fontSize="12"
-                            fontWeight="600"
-                            textAnchor="start"
-                            className="select-none"
-                          >
-                            {distance}"
-                          </text>
-                        </g>
-                      );
-                    }
-                    
-                    return lines;
-                  });
-                })}
-              </svg>
-              
-              {/* Cabinets in 2D space */}
-              {cabinets.map((cabinet) => {
-                const scale = 2; // 2px per inch for display
-                const widthPx = cabinet.width * scale;
-                const depthPx = cabinet.depth * scale;
+              {/* Grid */}
+              {showGrid && (
+                <div 
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    backgroundImage: `
+                      linear-gradient(to right, #E5E7EB 1px, transparent 1px),
+                      linear-gradient(to bottom, #E5E7EB 1px, transparent 1px)
+                    `,
+                    backgroundSize: `${gridSize}px ${gridSize}px`
+                  }}
+                />
+              )}
+
+              {/* Cabinets */}
+              {cabinets.map(cabinet => {
+                const widthPx = cabinet.width * 2;
+                const depthPx = cabinet.depth * 2;
                 
                 return (
                   <div
                     key={cabinet.id}
-                    className={`absolute cursor-move transition-shadow ${
-                      selectedCabinetId === cabinet.id
-                        ? 'ring-2 ring-primary shadow-xl'
-                        : 'hover:ring-2 hover:ring-primary/50'
-                    } ${draggingId === cabinet.id ? 'opacity-70 z-50' : 'z-10'}`}
+                    className={`absolute cursor-move transition-all ${
+                      selectedCabinetId === cabinet.id 
+                        ? "shadow-lg z-10" 
+                        : "hover:shadow-md"
+                    }`}
                     style={{
                       left: cabinet.x,
                       top: cabinet.y,
                       width: widthPx,
                       height: depthPx,
-                      transform: `scale(${zoom})`,
-                      transformOrigin: 'top left',
+                      backgroundColor: selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6',
+                      border: selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF'
                     }}
                     onMouseDown={(e) => handleMouseDown(e, cabinet.id)}
                   >
-                    <div className="w-full h-full bg-primary/20 border-2 border-primary rounded flex flex-col items-center justify-center p-2">
-                      <div className="text-xs font-semibold capitalize text-center">
-                        {cabinet.cabinetType}
-                      </div>
-                      <div className="text-[10px] text-muted-foreground text-center">
-                        {cabinet.subType}
-                      </div>
-                      <div className="text-[10px] font-mono mt-1">
-                        {cabinet.width}×{cabinet.depth}"
-                      </div>
+                    {/* Cabinet label */}
+                    <div className="absolute inset-0 flex items-center justify-center text-[11px] font-medium pointer-events-none select-none">
+                      {cabinet.label || cabinet.type}
                     </div>
+                    
+                    {/* Auto-dimensions */}
+                    {showDimensions && selectedCabinetId === cabinet.id && (
+                      <>
+                        {/* Width dimension line and text */}
+                        <div 
+                          className="absolute pointer-events-none"
+                          style={{ 
+                            top: -25, 
+                            left: 0,
+                            right: 0,
+                            height: 20
+                          }}
+                        >
+                          {/* Dimension line */}
+                          <svg className="absolute inset-0" style={{ width: '100%', height: 20 }}>
+                            <line x1="0" y1="15" x2="100%" y2="15" stroke="#0066CC" strokeWidth="1" />
+                            <line x1="0" y1="10" x2="0" y2="20" stroke="#0066CC" strokeWidth="1" />
+                            <line x1="100%" y1="10" x2="100%" y2="20" stroke="#0066CC" strokeWidth="1" />
+                          </svg>
+                          {/* Dimension text */}
+                          <div 
+                            className="absolute text-[11px] font-medium bg-white px-1"
+                            style={{ 
+                              top: 8, 
+                              left: '50%', 
+                              transform: 'translateX(-50%)',
+                              color: '#0066CC'
+                            }}
+                          >
+                            {cabinet.width}"
+                          </div>
+                        </div>
+                        
+                        {/* Depth dimension line and text */}
+                        <div 
+                          className="absolute pointer-events-none"
+                          style={{ 
+                            right: -30, 
+                            top: 0,
+                            bottom: 0,
+                            width: 25
+                          }}
+                        >
+                          {/* Dimension line */}
+                          <svg className="absolute inset-0" style={{ width: 25, height: '100%' }}>
+                            <line x1="10" y1="0" x2="10" y2="100%" stroke="#0066CC" strokeWidth="1" />
+                            <line x1="5" y1="0" x2="15" y2="0" stroke="#0066CC" strokeWidth="1" />
+                            <line x1="5" y1="100%" x2="15" y2="100%" stroke="#0066CC" strokeWidth="1" />
+                          </svg>
+                          {/* Dimension text */}
+                          <div 
+                            className="absolute text-[11px] font-medium bg-white px-1"
+                            style={{ 
+                              left: 12, 
+                              top: '50%', 
+                              transform: 'translateY(-50%)',
+                              color: '#0066CC',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            {cabinet.depth}"
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 );
               })}
-              
-              {/* Alignment Toolbar */}
-              <div className="absolute top-4 left-4 bg-card/95 backdrop-blur-sm rounded-lg border border-border shadow-lg overflow-hidden">
-                <div className="p-2 border-b border-border">
-                  <div className="font-semibold text-xs mb-1">Alignment Tools</div>
-                  <div className="text-[10px] text-muted-foreground">{cabinets.length} cabinet{cabinets.length !== 1 ? 's' : ''}</div>
-                </div>
-                
-                <div className="p-2 space-y-2">
-                  {/* Horizontal Alignment */}
-                  <div>
-                    <div className="text-[10px] text-muted-foreground mb-1 px-1">Horizontal</div>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={alignLeft}
-                        disabled={cabinets.length < 2}
-                        title="Align Left"
-                      >
-                        <AlignLeft className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={alignCenterHorizontal}
-                        disabled={cabinets.length < 2}
-                        title="Center Horizontally"
-                      >
-                        <AlignCenterHorizontal className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={alignRight}
-                        disabled={cabinets.length < 2}
-                        title="Align Right"
-                      >
-                        <AlignRight className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Vertical Alignment */}
-                  <div>
-                    <div className="text-[10px] text-muted-foreground mb-1 px-1">Vertical</div>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={alignTop}
-                        disabled={cabinets.length < 2}
-                        title="Align Top"
-                      >
-                        <AlignVerticalJustifyStart className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={alignCenterVertical}
-                        disabled={cabinets.length < 2}
-                        title="Center Vertically"
-                      >
-                        <AlignCenterVertical className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={alignBottom}
-                        disabled={cabinets.length < 2}
-                        title="Align Bottom"
-                      >
-                        <AlignVerticalJustifyEnd className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Distribution */}
-                  <div>
-                    <div className="text-[10px] text-muted-foreground mb-1 px-1">Distribute</div>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 flex-1 text-[10px]"
-                        onClick={distributeHorizontally}
-                        disabled={cabinets.length < 3}
-                        title="Distribute Horizontally"
-                      >
-                        H-Even
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 flex-1 text-[10px]"
-                        onClick={distributeVertically}
-                        disabled={cabinets.length < 3}
-                        title="Distribute Vertically"
-                      >
-                        V-Even
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {/* Info overlay */}
-              <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-sm p-2 rounded-lg border border-border shadow-lg text-[10px] text-muted-foreground pointer-events-none">
-                <div>• Drag cabinets to position</div>
-                <div>• Grid: 12" × 12" squares</div>
+              <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm p-3 rounded border border-border shadow-lg text-[10px] text-muted-foreground pointer-events-none">
+                <div>Grid: 12" × 12"</div>
+                <div>Scale: 2px = 1"</div>
+                <div>Cabinets: {cabinets.length}</div>
               </div>
             </div>
           ) : (
-            // 3D Render View
-            <div style={{ transform: `scale(${zoom})`, transformOrigin: 'center', transition: 'transform 0.2s ease' }} className="w-full h-full flex items-center justify-center">
-              <Vanity3DPreview
-                width={width}
-                height={height}
-                depth={depth}
-                brand={brand}
-                finish={finish}
-                doorStyle={doorStyle}
-                handleStyle={handleStyle}
-                numDrawers={drawerCount}
-                sinkStyle={sinkStyle}
-                sinkShape={sinkShape}
-              />
-
-              {/* Info Overlay */}
-              <div className="absolute bottom-6 left-6 bg-card/95 backdrop-blur-sm border border-border rounded-lg px-4 py-3 shadow-lg">
-                <div className="flex items-center gap-6 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Ruler className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">{width}" × {height}" × {depth}"</span>
-                  </div>
-                  <Separator orientation="vertical" className="h-4" />
-                  <div className="text-muted-foreground">
-                    {brand} • {finish}
-                  </div>
-                </div>
+            <div className="flex-1 bg-muted flex flex-col">
+              <div className="flex-1 relative">
+                <Vanity3DPreview
+                  width={selectedCabinetId ? cabinets.find(c => c.id === selectedCabinetId)?.width || 36 : 36}
+                  height={selectedCabinetId ? cabinets.find(c => c.id === selectedCabinetId)?.height || 34.5 : 34.5}
+                  depth={selectedCabinetId ? cabinets.find(c => c.id === selectedCabinetId)?.depth || 24 : 24}
+                  doorStyle="shaker"
+                  handleStyle="modern"
+                  finish="white"
+                  brand="Tafisa"
+                  numDrawers={3}
+                />
+              </div>
+              <div className="p-4 bg-card border-t border-border flex items-center justify-end">
+                <Button className="bg-[#FF8C00] hover:bg-[#FF8C00]/90 text-white">
+                  Save View
+                </Button>
               </div>
             </div>
           )}
         </div>
-
-        {/* Right Panel - Summary */}
-        {rightPanelOpen && (
-          <aside className="w-72 bg-card border-l border-border flex flex-col">
-            <div className="p-4 border-b border-border flex items-center justify-between">
-              <h2 className="text-sm font-semibold">Summary</h2>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setRightPanelOpen(false)}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto p-4">
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <h3 className="text-xs font-semibold uppercase text-muted-foreground">Project Overview</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Total Cabinets</span>
-                      <span className="font-medium">{cabinets.length}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Categories</span>
-                      <span className="font-medium capitalize">
-                        {Array.from(new Set(cabinets.map(c => c.cabinetType))).join(", ")}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="space-y-3">
-                  <h3 className="text-xs font-semibold uppercase text-muted-foreground">
-                    Selected Cabinet #{selectedCabinetId}
-                  </h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Type</span>
-                      <span className="font-medium capitalize">{cabinetType} - {subType}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Size</span>
-                      <span className="font-medium">{width}×{height}×{depth}"</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Position</span>
-                      <span className="font-medium font-mono text-xs">
-                        X: {currentCabinet.x}px, Y: {currentCabinet.y}px
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Material</span>
-                      <span className="font-medium">{brand}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Finish</span>
-                      <span className="font-medium">{finish}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="space-y-3">
-                  <h3 className="text-xs font-semibold uppercase text-muted-foreground">Estimated</h3>
-                  <div className="bg-muted/50 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-foreground">
-                      ${(cabinets.length * 1200).toLocaleString()}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">Base price estimate</div>
-                  </div>
-                </div>
-
-                <Button onClick={handleSaveConfig} className="w-full">
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Configuration
-                </Button>
-              </div>
-            </div>
-          </aside>
-        )}
-
-        {!rightPanelOpen && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="m-2 h-10 w-10"
-            onClick={() => setRightPanelOpen(true)}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-        )}
       </div>
     </div>
   );
