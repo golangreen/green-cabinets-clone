@@ -202,6 +202,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [wallPaintColor, setWallPaintColor] = useState<string>('white');
   const [wallTileColor, setWallTileColor] = useState<string>('white-subway');
   
+  // Mirror and medicine cabinet state
+  const [includeMirror, setIncludeMirror] = useState(true);
+  const [mirrorType, setMirrorType] = useState<'mirror' | 'medicine-cabinet'>('mirror');
+  const [mirrorSize, setMirrorSize] = useState<'small' | 'medium' | 'large'>('medium');
+  const [mirrorShape, setMirrorShape] = useState<'rectangular' | 'round' | 'oval' | 'arched'>('rectangular');
+  const [mirrorFrame, setMirrorFrame] = useState<'none' | 'black' | 'chrome' | 'gold' | 'wood'>('chrome');
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -884,6 +891,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         wallFinishType={wallFinishType}
         wallPaintColor={wallPaintColor}
         wallTileColor={wallTileColor}
+        includeMirror={includeMirror}
+        mirrorType={mirrorType}
+        mirrorSize={mirrorSize}
+        mirrorShape={mirrorShape}
+        mirrorFrame={mirrorFrame}
       />
             </div>
           </div>
@@ -1737,6 +1749,85 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 <p className="text-xs text-muted-foreground bg-secondary/50 p-2 rounded">
                   💡 Lighting adjustments affect 3D preview only. Contact us for actual lighting quotes.
                 </p>
+              </div>
+
+              {/* Mirror & Medicine Cabinet */}
+              <div className="space-y-4 pt-4 border-t">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Mirror & Medicine Cabinet</h4>
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="includeMirror"
+                      checked={includeMirror}
+                      onCheckedChange={(checked) => setIncludeMirror(checked as boolean)}
+                    />
+                    <Label htmlFor="includeMirror" className="text-sm font-normal cursor-pointer">
+                      Include
+                    </Label>
+                  </div>
+                </div>
+                
+                {includeMirror && (
+                  <>
+                    <div>
+                      <Label htmlFor="mirrorType">Type</Label>
+                      <Select value={mirrorType} onValueChange={(value: any) => setMirrorType(value)}>
+                        <SelectTrigger id="mirrorType">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="mirror">Mirror Only</SelectItem>
+                          <SelectItem value="medicine-cabinet">Medicine Cabinet</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="mirrorSize">Size</Label>
+                      <Select value={mirrorSize} onValueChange={(value: any) => setMirrorSize(value)}>
+                        <SelectTrigger id="mirrorSize">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="small">Small (24" W)</SelectItem>
+                          <SelectItem value="medium">Medium (36" W)</SelectItem>
+                          <SelectItem value="large">Large (48" W)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="mirrorShape">Shape</Label>
+                      <Select value={mirrorShape} onValueChange={(value: any) => setMirrorShape(value)}>
+                        <SelectTrigger id="mirrorShape">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="rectangular">Rectangular</SelectItem>
+                          <SelectItem value="round">Round</SelectItem>
+                          <SelectItem value="oval">Oval</SelectItem>
+                          <SelectItem value="arched">Arched Top</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="mirrorFrame">Frame Style</Label>
+                      <Select value={mirrorFrame} onValueChange={(value: any) => setMirrorFrame(value)}>
+                        <SelectTrigger id="mirrorFrame">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">Frameless</SelectItem>
+                          <SelectItem value="black">Black Frame</SelectItem>
+                          <SelectItem value="chrome">Chrome Frame</SelectItem>
+                          <SelectItem value="gold">Gold Frame</SelectItem>
+                          <SelectItem value="wood">Wood Frame</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Wall Finishes */}
