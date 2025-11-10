@@ -14,6 +14,12 @@ export const ShopProducts = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Only run in browser, not during SSR/build
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+
     const loadProducts = async () => {
       try {
         const productsData = await fetchProducts();
