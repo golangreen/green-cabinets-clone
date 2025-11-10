@@ -27,6 +27,9 @@ interface Vanity3DPreviewProps {
   includeWalls?: boolean;
   hasWindow?: boolean;
   hasDoor?: boolean;
+  lightingType?: string;
+  brightness?: number;
+  colorTemperature?: number;
 }
 
 // Convert inches to a normalized scale for 3D visualization
@@ -398,6 +401,182 @@ const Room = ({
       )}
     </group>
   );
+};
+
+// Lighting fixtures component
+const LightingFixtures = ({
+  lightingType,
+  roomLength,
+  roomWidth,
+  roomHeight,
+  brightness,
+  colorTemperature
+}: {
+  lightingType: string;
+  roomLength: number;
+  roomWidth: number;
+  roomHeight: number;
+  brightness: number;
+  colorTemperature: number;
+}) => {
+  const scaledLength = roomLength * SCALE_FACTOR;
+  const scaledWidth = roomWidth * SCALE_FACTOR;
+  const scaledHeight = roomHeight * SCALE_FACTOR;
+
+  // Convert color temperature to RGB
+  const getLightColor = (temp: number) => {
+    // Warm (2700K) to Cool (6500K)
+    if (temp < 3000) return new THREE.Color(1, 0.8, 0.6); // Warm white
+    if (temp < 4000) return new THREE.Color(1, 0.95, 0.9); // Neutral
+    if (temp < 5000) return new THREE.Color(0.95, 0.95, 1); // Cool white
+    return new THREE.Color(0.9, 0.95, 1); // Daylight
+  };
+
+  const lightColor = getLightColor(colorTemperature);
+  const intensityMultiplier = brightness / 100;
+
+  if (lightingType === 'recessed') {
+    // 4 recessed ceiling lights
+    const positions: [number, number, number][] = [
+      [-scaledLength * 0.25, scaledHeight - 0.1, -scaledWidth * 0.25],
+      [scaledLength * 0.25, scaledHeight - 0.1, -scaledWidth * 0.25],
+      [-scaledLength * 0.25, scaledHeight - 0.1, scaledWidth * 0.25],
+      [scaledLength * 0.25, scaledHeight - 0.1, scaledWidth * 0.25],
+    ];
+
+    return (
+      <group>
+        {positions.map((pos, i) => (
+          <group key={`recessed-${i}`} position={pos}>
+            {/* Recessed housing */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.15, 0.12, 0.15, 16]} />
+              <meshStandardMaterial color="#f5f5f5" metalness={0.3} roughness={0.7} />
+            </mesh>
+            {/* Light bulb glow */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]}>
+              <cylinderGeometry args={[0.1, 0.1, 0.02, 16]} />
+              <meshStandardMaterial 
+                color={lightColor}
+                emissive={lightColor}
+                emissiveIntensity={2 * intensityMultiplier}
+              />
+            </mesh>
+            {/* Point light */}
+            <pointLight 
+              position={[0, -0.1, 0]} 
+              color={lightColor}
+              intensity={1.5 * intensityMultiplier}
+              distance={8}
+              castShadow
+            />
+          </group>
+        ))}
+      </group>
+    );
+  }
+
+  if (lightingType === 'sconce') {
+    // 2 wall sconces on sides
+    const positions: [number, number, number, number][] = [
+      [-scaledLength * 0.45, scaledHeight * 0.6, 0, Math.PI / 2],
+      [scaledLength * 0.45, scaledHeight * 0.6, 0, -Math.PI / 2],
+    ];
+
+    return (
+      <group>
+        {positions.map((pos, i) => (
+          <group key={`sconce-${i}`} position={[pos[0], pos[1], pos[2]]} rotation={[0, pos[3], 0]}>
+            {/* Wall plate */}
+            <mesh position={[0, 0, -0.05]}>
+              <cylinderGeometry args={[0.12, 0.12, 0.02, 16]} />
+              <meshStandardMaterial color="#e0e0e0" metalness={0.5} roughness={0.3} />
+            </mesh>
+            {/* Sconce arm */}
+            <mesh position={[0, 0, 0.05]} rotation={[0, 0, Math.PI / 2]}>
+              <cylinderGeometry args={[0.02, 0.02, 0.15, 8]} />
+              <meshStandardMaterial color="#c0c0c0" metalness={0.7} roughness={0.4} />
+            </mesh>
+            {/* Glass shade */}
+            <mesh position={[0, 0, 0.15]}>
+              <sphereGeometry args={[0.1, 16, 16]} />
+              <meshPhysicalMaterial 
+                color={lightColor}
+                emissive={lightColor}
+                emissiveIntensity={1.5 * intensityMultiplier}
+                transparent
+                opacity={0.7}
+                roughness={0.1}
+              />
+            </mesh>
+            {/* Point light */}
+            <pointLight 
+              position={[0, 0, 0.15]} 
+              color={lightColor}
+              intensity={1.2 * intensityMultiplier}
+              distance={6}
+              castShadow
+            />
+          </group>
+        ))}
+      </group>
+    );
+  }
+
+  if (lightingType === 'pendant') {
+    // 2 pendant lights over vanity area
+    const positions: [number, number, number][] = [
+      [-scaledLength * 0.15, scaledHeight * 0.7, 0],
+      [scaledLength * 0.15, scaledHeight * 0.7, 0],
+    ];
+
+    return (
+      <group>
+        {positions.map((pos, i) => (
+          <group key={`pendant-${i}`} position={pos}>
+            {/* Ceiling mount */}
+            <mesh>
+              <cylinderGeometry args={[0.04, 0.04, 0.02, 8]} />
+              <meshStandardMaterial color="#4a4a4a" metalness={0.8} roughness={0.3} />
+            </mesh>
+            {/* Cable/rod */}
+            <mesh position={[0, -0.3, 0]}>
+              <cylinderGeometry args={[0.008, 0.008, 0.6, 8]} />
+              <meshStandardMaterial color="#2a2a2a" metalness={0.5} roughness={0.5} />
+            </mesh>
+            {/* Pendant shade - cone shape */}
+            <mesh position={[0, -0.65, 0]}>
+              <coneGeometry args={[0.15, 0.25, 16]} />
+              <meshStandardMaterial 
+                color="#d0d0d0"
+                metalness={0.4}
+                roughness={0.5}
+              />
+            </mesh>
+            {/* Light bulb */}
+            <mesh position={[0, -0.75, 0]}>
+              <sphereGeometry args={[0.06, 16, 16]} />
+              <meshStandardMaterial 
+                color={lightColor}
+                emissive={lightColor}
+                emissiveIntensity={2 * intensityMultiplier}
+              />
+            </mesh>
+            {/* Point light */}
+            <pointLight 
+              position={[0, -0.75, 0]} 
+              color={lightColor}
+              intensity={1.8 * intensityMultiplier}
+              distance={7}
+              castShadow
+            />
+          </group>
+        ))}
+      </group>
+    );
+  }
+
+  return null;
 };
 
 interface VanityBoxProps extends Vanity3DPreviewProps {
@@ -1092,7 +1271,10 @@ export const Vanity3DPreview = ({
   woodFloorFinish = "natural-oak",
   includeWalls = false,
   hasWindow = false,
-  hasDoor = false
+  hasDoor = false,
+  lightingType = "recessed",
+  brightness = 80,
+  colorTemperature = 4000
 }: Vanity3DPreviewProps) => {
   const [measurementMode, setMeasurementMode] = useState(false);
   const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
@@ -1284,6 +1466,18 @@ export const Vanity3DPreview = ({
             <planeGeometry args={[10, 10]} />
             <shadowMaterial opacity={0.2} />
           </mesh>
+        )}
+        
+        {/* Lighting fixtures (only when room is included) */}
+        {includeRoom && roomLength > 0 && roomWidth > 0 && (
+          <LightingFixtures
+            lightingType={lightingType}
+            roomLength={roomLength}
+            roomWidth={roomWidth}
+            roomHeight={roomHeight}
+            brightness={brightness}
+            colorTemperature={colorTemperature}
+          />
         )}
         
         {/* Vanity positioned in center of room or at origin */}

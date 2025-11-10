@@ -182,6 +182,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [tileColor, setTileColor] = useState<string>("white-marble");
   const [woodFloorFinish, setWoodFloorFinish] = useState<string>("natural-oak");
   
+  // Lighting configuration
+  const [lightingType, setLightingType] = useState<string>("recessed");
+  const [brightness, setBrightness] = useState<number>(80);
+  const [colorTemperature, setColorTemperature] = useState<number>(4000);
+  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -704,6 +709,34 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                           </SelectContent>
                         </Select>
                       )}
+                      
+                      {/* Lighting Controls in Fullscreen */}
+                      <div className="pt-2 border-t border-border space-y-2">
+                        <Label className="text-xs font-medium">Lighting</Label>
+                        <Select value={lightingType} onValueChange={setLightingType}>
+                          <SelectTrigger className="bg-background h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-[100]">
+                            <SelectItem value="recessed">Recessed</SelectItem>
+                            <SelectItem value="sconce">Sconces</SelectItem>
+                            <SelectItem value="pendant">Pendant</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-xs">Brightness: {brightness}%</Label>
+                          </div>
+                          <Slider
+                            value={[brightness]}
+                            onValueChange={(value) => setBrightness(value[0])}
+                            min={20}
+                            max={100}
+                            step={5}
+                            className="w-full"
+                          />
+                        </div>
+                      </div>
                     </>
                   )}
                 </div>
@@ -779,6 +812,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 includeWalls={includeWalls}
                 hasWindow={hasWindow}
                 hasDoor={hasDoor}
+                lightingType={lightingType}
+                brightness={brightness}
+                colorTemperature={colorTemperature}
               />
             </div>
           </div>
@@ -810,6 +846,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               includeWalls={includeWalls}
               hasWindow={hasWindow}
               hasDoor={hasDoor}
+              lightingType={lightingType}
+              brightness={brightness}
+              colorTemperature={colorTemperature}
             />
             {/* Fullscreen Button */}
             <Button
@@ -1569,6 +1608,67 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   </div>
                 </div>
               )}
+
+              {/* Lighting Configuration */}
+              <div className="space-y-3 pt-4 border-t border-border">
+                <Label className="text-sm font-medium">Lighting (3D Preview Only)</Label>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="lightingType" className="text-xs">Fixture Type</Label>
+                  <Select value={lightingType} onValueChange={setLightingType}>
+                    <SelectTrigger id="lightingType" className="bg-background">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background z-[100]">
+                      <SelectItem value="recessed">Recessed Ceiling Lights</SelectItem>
+                      <SelectItem value="sconce">Wall Sconces</SelectItem>
+                      <SelectItem value="pendant">Pendant Lights</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="brightness" className="text-xs">Brightness</Label>
+                    <span className="text-xs font-medium text-muted-foreground">{brightness}%</span>
+                  </div>
+                  <Slider
+                    id="brightness"
+                    value={[brightness]}
+                    onValueChange={(value) => setBrightness(value[0])}
+                    min={20}
+                    max={100}
+                    step={5}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="colorTemperature" className="text-xs">Color Temperature</Label>
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {colorTemperature < 3000 ? 'Warm' : colorTemperature < 4000 ? 'Neutral' : colorTemperature < 5000 ? 'Cool' : 'Daylight'}
+                    </span>
+                  </div>
+                  <Slider
+                    id="colorTemperature"
+                    value={[colorTemperature]}
+                    onValueChange={(value) => setColorTemperature(value[0])}
+                    min={2700}
+                    max={6500}
+                    step={100}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>2700K (Warm)</span>
+                    <span>6500K (Daylight)</span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-muted-foreground bg-secondary/50 p-2 rounded">
+                  💡 Lighting adjustments affect 3D preview only. Contact us for actual lighting quotes.
+                </p>
+              </div>
             </CardContent>
           )}
         </Card>
