@@ -56,8 +56,127 @@ const VanityDesigner = () => {
   const [sinkStyle, setSinkStyle] = useState<"undermount" | "vessel" | "integrated">("undermount");
   const [sinkShape, setSinkShape] = useState<"rectangular" | "oval" | "square">("rectangular");
 
+  // View controls
+  const [zoom, setZoom] = useState(1);
+  const [showGrid, setShowGrid] = useState(true);
+  const [wireframe, setWireframe] = useState(false);
+
+  // History management
+  const [history, setHistory] = useState<any[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
+  const saveToHistory = () => {
+    const config = { width, height, depth, brand, finish, doorStyle, countertop, handleStyle, sinkStyle, sinkShape };
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(config);
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  };
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      const prevConfig = history[historyIndex - 1];
+      setWidth(prevConfig.width);
+      setHeight(prevConfig.height);
+      setDepth(prevConfig.depth);
+      setBrand(prevConfig.brand);
+      setFinish(prevConfig.finish);
+      setDoorStyle(prevConfig.doorStyle);
+      setCountertop(prevConfig.countertop);
+      setHandleStyle(prevConfig.handleStyle);
+      setSinkStyle(prevConfig.sinkStyle);
+      setSinkShape(prevConfig.sinkShape);
+      setHistoryIndex(historyIndex - 1);
+      toast.success("Undo successful");
+    }
+  };
+
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      const nextConfig = history[historyIndex + 1];
+      setWidth(nextConfig.width);
+      setHeight(nextConfig.height);
+      setDepth(nextConfig.depth);
+      setBrand(nextConfig.brand);
+      setFinish(nextConfig.finish);
+      setDoorStyle(nextConfig.doorStyle);
+      setCountertop(nextConfig.countertop);
+      setHandleStyle(nextConfig.handleStyle);
+      setSinkStyle(nextConfig.sinkStyle);
+      setSinkShape(nextConfig.sinkShape);
+      setHistoryIndex(historyIndex + 1);
+      toast.success("Redo successful");
+    }
+  };
+
   const handleSaveConfig = () => {
-    toast.success("Configuration saved!");
+    saveToHistory();
+    const config = { width, height, depth, brand, finish, doorStyle, countertop, handleStyle, sinkStyle, sinkShape };
+    localStorage.setItem('cabinetDesign', JSON.stringify(config));
+    toast.success("Configuration saved successfully!");
+  };
+
+  const handleExport = () => {
+    const config = { width, height, depth, brand, finish, doorStyle, countertop, handleStyle, sinkStyle, sinkShape };
+    const dataStr = JSON.stringify(config, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'cabinet-design.json';
+    link.click();
+    toast.success("Design exported!");
+  };
+
+  const handleShare = () => {
+    const config = { width, height, depth, brand, finish, doorStyle, countertop, handleStyle, sinkStyle, sinkShape };
+    const shareUrl = `${window.location.origin}/designer?config=${btoa(JSON.stringify(config))}`;
+    navigator.clipboard.writeText(shareUrl);
+    toast.success("Share link copied to clipboard!");
+  };
+
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 0.2, 3));
+    toast.success("Zoomed in");
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 0.2, 0.5));
+    toast.success("Zoomed out");
+  };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      toast.success("Fullscreen enabled");
+    } else {
+      document.exitFullscreen();
+      toast.success("Fullscreen disabled");
+    }
+  };
+
+  const toggleGrid = () => {
+    setShowGrid(!showGrid);
+    toast.success(showGrid ? "Grid hidden" : "Grid shown");
+  };
+
+  const toggleWireframe = () => {
+    setWireframe(!wireframe);
+    toast.success(wireframe ? "Wireframe disabled" : "Wireframe enabled");
+  };
+
+  const handleNewDesign = () => {
+    setWidth(48);
+    setHeight(34);
+    setDepth(21);
+    setBrand("EGGER");
+    setFinish("Walnut");
+    setDoorStyle("shaker");
+    setCountertop("quartz");
+    setHandleStyle("bar");
+    setSinkStyle("undermount");
+    setSinkShape("rectangular");
+    toast.success("New design started");
   };
 
   return (
@@ -91,7 +210,7 @@ const VanityDesigner = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuItem>New Design</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleNewDesign}>New Design</DropdownMenuItem>
               <DropdownMenuItem>Open...</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSaveConfig}>
@@ -100,7 +219,7 @@ const VanityDesigner = () => {
               </DropdownMenuItem>
               <DropdownMenuItem>Save As...</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExport}>
                 <FileDown className="h-4 w-4 mr-2" />
                 Export
               </DropdownMenuItem>
@@ -114,15 +233,15 @@ const VanityDesigner = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={toggleGrid}>
                 <Grid3x3 className="h-4 w-4 mr-2" />
-                Grid View
+                {showGrid ? "Hide" : "Show"} Grid
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={toggleWireframe}>
                 <Eye className="h-4 w-4 mr-2" />
-                Wireframe
+                {wireframe ? "Disable" : "Enable"} Wireframe
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={toggleFullscreen}>
                 <Maximize2 className="h-4 w-4 mr-2" />
                 Fullscreen
               </DropdownMenuItem>
@@ -131,25 +250,25 @@ const VanityDesigner = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={undo} disabled={historyIndex <= 0}>
             <Undo className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={redo} disabled={historyIndex >= history.length - 1}>
             <Redo className="h-4 w-4" />
           </Button>
           
           <Separator orientation="vertical" className="h-6 mx-2" />
           
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleZoomIn}>
             <ZoomIn className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleZoomOut}>
             <ZoomOut className="h-4 w-4" />
           </Button>
           
           <Separator orientation="vertical" className="h-6 mx-2" />
           
-          <Button variant="ghost" size="sm" className="h-8">
+          <Button variant="ghost" size="sm" className="h-8" onClick={handleShare}>
             <Share2 className="h-4 w-4 mr-2" />
             Share
           </Button>
@@ -187,7 +306,10 @@ const VanityDesigner = () => {
                     <Input
                       type="number"
                       value={width}
-                      onChange={(e) => setWidth(Number(e.target.value))}
+                      onChange={(e) => {
+                        setWidth(Number(e.target.value));
+                        saveToHistory();
+                      }}
                       className="mt-1.5"
                     />
                   </div>
@@ -196,7 +318,10 @@ const VanityDesigner = () => {
                     <Input
                       type="number"
                       value={height}
-                      onChange={(e) => setHeight(Number(e.target.value))}
+                      onChange={(e) => {
+                        setHeight(Number(e.target.value));
+                        saveToHistory();
+                      }}
                       className="mt-1.5"
                     />
                   </div>
@@ -205,7 +330,10 @@ const VanityDesigner = () => {
                     <Input
                       type="number"
                       value={depth}
-                      onChange={(e) => setDepth(Number(e.target.value))}
+                      onChange={(e) => {
+                        setDepth(Number(e.target.value));
+                        saveToHistory();
+                      }}
                       className="mt-1.5"
                     />
                   </div>
@@ -243,7 +371,10 @@ const VanityDesigner = () => {
                                 key={b}
                                 variant={brand === b ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => setBrand(b as "EGGER" | "TAFISA")}
+                                onClick={() => {
+                                  setBrand(b as "EGGER" | "TAFISA");
+                                  saveToHistory();
+                                }}
                               >
                                 {b}
                               </Button>
@@ -262,7 +393,10 @@ const VanityDesigner = () => {
                                 key={f}
                                 variant={finish === f ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => setFinish(f)}
+                                onClick={() => {
+                                  setFinish(f);
+                                  saveToHistory();
+                                }}
                               >
                                 {f}
                               </Button>
@@ -278,7 +412,10 @@ const VanityDesigner = () => {
                                 key={style}
                                 variant={doorStyle === style ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => setDoorStyle(style)}
+                                onClick={() => {
+                                  setDoorStyle(style);
+                                  saveToHistory();
+                                }}
                               >
                                 {style.charAt(0).toUpperCase() + style.slice(1)}
                               </Button>
@@ -294,7 +431,10 @@ const VanityDesigner = () => {
                                 key={c}
                                 variant={countertop === c ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => setCountertop(c)}
+                                onClick={() => {
+                                  setCountertop(c);
+                                  saveToHistory();
+                                }}
                               >
                                 {c.charAt(0).toUpperCase() + c.slice(1)}
                               </Button>
@@ -322,7 +462,10 @@ const VanityDesigner = () => {
                                 key={h}
                                 variant={handleStyle === h ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => setHandleStyle(h)}
+                                onClick={() => {
+                                  setHandleStyle(h);
+                                  saveToHistory();
+                                }}
                               >
                                 {h.charAt(0).toUpperCase() + h.slice(1)}
                               </Button>
@@ -338,7 +481,10 @@ const VanityDesigner = () => {
                                 key={s}
                                 variant={sinkStyle === s ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => setSinkStyle(s)}
+                                onClick={() => {
+                                  setSinkStyle(s);
+                                  saveToHistory();
+                                }}
                               >
                                 {s.charAt(0).toUpperCase() + s.slice(1)}
                               </Button>
@@ -354,7 +500,10 @@ const VanityDesigner = () => {
                                 key={s}
                                 variant={sinkShape === s ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => setSinkShape(s)}
+                                onClick={() => {
+                                  setSinkShape(s);
+                                  saveToHistory();
+                                }}
                               >
                                 {s.charAt(0).toUpperCase() + s.slice(1)}
                               </Button>
@@ -389,11 +538,14 @@ const VanityDesigner = () => {
               <div 
                 className="min-w-full min-h-full p-8"
                 style={{
-                  backgroundImage: `
+                  backgroundImage: showGrid ? `
                     linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
                     linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
-                  `,
-                  backgroundSize: '40px 40px'
+                  ` : 'none',
+                  backgroundSize: '40px 40px',
+                  transform: `scale(${zoom})`,
+                  transformOrigin: 'center center',
+                  transition: 'transform 0.2s ease'
                 }}
               >
                 <div className="max-w-4xl mx-auto">
@@ -464,7 +616,7 @@ const VanityDesigner = () => {
             </div>
           ) : (
             // 3D Render View
-            <>
+            <div style={{ transform: `scale(${zoom})`, transformOrigin: 'center', transition: 'transform 0.2s ease' }} className="w-full h-full flex items-center justify-center">
               <Vanity3DPreview
                 width={width}
                 height={height}
@@ -491,7 +643,7 @@ const VanityDesigner = () => {
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </div>
 
