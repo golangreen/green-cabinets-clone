@@ -354,6 +354,30 @@ export const CABINET_CATALOG: CabinetSpec[] = [
     basePrice: 375,
     category: "Corner - Wall"
   },
+  
+  // ===== U-SHAPED CORNER CABINETS =====
+  {
+    type: "Corner Cabinet",
+    subType: "base-u",
+    width: 48,
+    height: 34.5,
+    depth: 48,
+    label: "USB48",
+    description: "48\" U-Shaped Corner Base",
+    basePrice: 685,
+    category: "Corner - Base"
+  },
+  {
+    type: "Corner Cabinet",
+    subType: "base-u",
+    width: 60,
+    height: 34.5,
+    depth: 60,
+    label: "USB60",
+    description: "60\" U-Shaped Corner Base",
+    basePrice: 795,
+    category: "Corner - Base"
+  },
 ];
 
 // Helper function to calculate cabinet price with finish

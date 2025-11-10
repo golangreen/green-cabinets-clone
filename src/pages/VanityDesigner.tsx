@@ -1651,6 +1651,8 @@ const VanityDesigner = () => {
                 const widthPx = cabinet.width * 2;
                 const depthPx = cabinet.depth * 2;
                 const rotation = cabinet.rotation || 0;
+                const isLShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("LS");
+                const isUShaped = cabinet.type === "Corner Cabinet" && cabinet.label?.startsWith("US");
                 
                 return (
                   <ContextMenu key={cabinet.id}>
@@ -1666,14 +1668,55 @@ const VanityDesigner = () => {
                           top: cabinet.y,
                           width: rotation === 90 || rotation === 270 ? depthPx : widthPx,
                           height: rotation === 90 || rotation === 270 ? widthPx : depthPx,
-                          backgroundColor: selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6',
-                          border: selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF',
                           transform: `rotate(${rotatingCabinet === cabinet.id ? currentRotation : rotation}deg)`,
                           transformOrigin: 'center'
                         }}
                         onMouseDown={(e) => handleMouseDown(e, cabinet.id)}
                         onTouchStart={(e) => handleTouchStart(e, cabinet.id)}
                       >
+                        {/* L-Shape rendering */}
+                        {isLShaped && (
+                          <svg 
+                            width="100%" 
+                            height="100%" 
+                            style={{ position: 'absolute', inset: 0 }}
+                          >
+                            <path
+                              d={`M 0 0 L ${widthPx * 0.4} 0 L ${widthPx * 0.4} ${depthPx * 0.6} L ${widthPx} ${depthPx * 0.6} L ${widthPx} ${depthPx} L 0 ${depthPx} Z`}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                            />
+                          </svg>
+                        )}
+                        
+                        {/* U-Shape rendering */}
+                        {isUShaped && (
+                          <svg 
+                            width="100%" 
+                            height="100%" 
+                            style={{ position: 'absolute', inset: 0 }}
+                          >
+                            <path
+                              d={`M 0 0 L ${widthPx} 0 L ${widthPx} ${depthPx} L ${widthPx * 0.7} ${depthPx} L ${widthPx * 0.7} ${depthPx * 0.3} L ${widthPx * 0.3} ${depthPx * 0.3} L ${widthPx * 0.3} ${depthPx} L 0 ${depthPx} Z`}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
+                            />
+                          </svg>
+                        )}
+                        
+                        {/* Standard rectangle for non-L/U shaped cabinets */}
+                        {!isLShaped && !isUShaped && (
+                          <div 
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              backgroundColor: selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6',
+                              border: selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF',
+                            }}
+                          />
+                        )}
                         {/* Rotation handle */}
                         {selectedCabinetId === cabinet.id && (
                           <div
