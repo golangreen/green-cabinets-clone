@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
-import { imagetools } from "vite-imagetools";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -14,19 +13,6 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(), 
     mode === "development" && componentTagger(),
-    imagetools({
-      defaultDirectives: (url) => {
-        if (mode === 'production') {
-          return new URLSearchParams({
-            format: 'webp;avif;jpg',
-            quality: '80',
-            w: '1920',
-            withoutEnlargement: 'true',
-          });
-        }
-        return new URLSearchParams();
-      },
-    }),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['logo.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
