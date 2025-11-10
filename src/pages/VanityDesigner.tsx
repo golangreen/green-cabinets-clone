@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
+import { HistoryTimeline } from "@/components/HistoryTimeline";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -230,6 +231,16 @@ const VanityDesigner = () => {
   const gridSize = 24; // 12" grid at 2px per inch scale
   const wallThickness = 9; // 9px = 4.5 inches at 2px per inch scale
   const canvasRef = useRef<HTMLDivElement>(null);
+  const svgCanvasRef = useRef<SVGSVGElement>(null);
+  
+  // History timeline state
+  const [historyThumbnails, setHistoryThumbnails] = useState<Array<{
+    id: number;
+    thumbnail: string;
+    timestamp: Date;
+    description: string;
+  }>>([]);
+  const [historyIndex, setHistoryIndex] = useState(0);
   
   // Selected wall for context menu
   const [selectedWallId, setSelectedWallId] = useState<number | null>(null);
@@ -836,6 +847,101 @@ const VanityDesigner = () => {
     }));
     toast.success("Hardware updated");
   }, [cabinets]);
+
+  // Capture canvas thumbnail for history
+  const captureCanvasThumbnail = useCallback((): string => {
+    if (!svgCanvasRef.current) return '';
+    
+    try {
+      const svgElement = svgCanvasRef.current;
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const canvas = document.createElement('canvas');
+      canvas.width = 200;
+      canvas.height = 150;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return '';
+      
+      const img = new Image();
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+      
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, 200, 150);
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+      
+      return canvas.toDataURL('image/png');
+    } catch (error) {
+      console.error('Failed to capture thumbnail:', error);
+      return '';
+    }
+  }, []);
+
+  // Track layout changes for history
+  useEffect(() => {
+    const description = walls.length === 0 && openings.length === 0 
+      ? 'Initial state'
+      : `${walls.length} walls, ${openings.length} openings`;
+    
+    // Use a timeout to ensure SVG is rendered before capturing
+    const timer = setTimeout(() => {
+      const thumbnail = captureCanvasThumbnail();
+      
+      setHistoryThumbnails(prev => {
+        // Check if this is a new state or an undo/redo navigation
+        const lastState = prev[prev.length - 1];
+        const stateKey = `${walls.length}-${openings.length}`;
+        const lastKey = lastState ? `${lastState.description}` : '';
+        
+        // Only add new thumbnail if state actually changed
+        if (lastKey !== description) {
+          return [
+            ...prev,
+            {
+              id: Date.now(),
+              thumbnail: thumbnail || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+              timestamp: new Date(),
+              description
+            }
+          ];
+        }
+        return prev;
+      });
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [layoutState, captureCanvasThumbnail, walls.length, openings.length]);
+
+  // Update history index based on undo/redo
+  useEffect(() => {
+    // Calculate index based on past states
+    const pastLength = historyThumbnails.length > 0 ? historyThumbnails.length - 1 : 0;
+    setHistoryIndex(pastLength);
+  }, [historyThumbnails.length]);
+
+  // Jump to specific history state
+  const jumpToHistoryState = useCallback((index: number) => {
+    if (index < 0 || index >= historyThumbnails.length) return;
+    
+    const diff = index - historyIndex;
+    
+    if (diff < 0) {
+      // Going backwards - undo
+      for (let i = 0; i < Math.abs(diff); i++) {
+        undo();
+      }
+    } else if (diff > 0) {
+      // Going forwards - redo
+      for (let i = 0; i < diff; i++) {
+        redo();
+      }
+    }
+    
+    setHistoryIndex(index);
+    toast.success(`Jumped to state ${index + 1}`);
+  }, [historyIndex, historyThumbnails.length, undo, redo]);
+
 
   const toggleCabinetDrawers = useCallback((cabinetId: number) => {
     setCabinets(cabinets.map(c => {
@@ -2558,7 +2664,11 @@ const VanityDesigner = () => {
               })}
               
               {/* SVG walls rendering */}
-              <svg className="absolute inset-0" style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
+              <svg 
+                ref={svgCanvasRef}
+                className="absolute inset-0" 
+                style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
+              >
                 {walls.map(wall => {
                   const length = calculateWallLength(wall);
                   const wallOpenings = openings.filter(o => o.wallId === wall.id);
@@ -3515,6 +3625,15 @@ const VanityDesigner = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* History Timeline */}
+      <HistoryTimeline
+        history={historyThumbnails}
+        currentIndex={historyIndex}
+        onSelectState={jumpToHistoryState}
+        canUndo={canUndo}
+        canRedo={canRedo}
+      />
     </div>
   );
 };
