@@ -1,12 +1,13 @@
 {
-  "name": "Green Cabinets - Custom Cabinetry NYC",
-  "short_name": "Green Cabinets",
-  "description": "Premium custom cabinetry for kitchens, bathrooms, and closets in Brooklyn, NYC since 2009",
-  "start_url": "/",
+  "name": "Kitchen Designer Pro - Custom Cabinet Design",
+  "short_name": "Kitchen Designer",
+  "description": "Professional kitchen and cabinet design tool with 2D/3D visualization, room scanning, and custom measurements",
+  "start_url": "/designer",
   "display": "standalone",
   "background_color": "#030303",
   "theme_color": "#1e7b5f",
   "orientation": "portrait-primary",
+  "categories": ["productivity", "utilities", "design"],
   "icons": [
     {
       "src": "/icon-192.png",
