@@ -174,6 +174,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [socialShareOpen, setSocialShareOpen] = useState(false);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const shareCardRef = useRef<HTMLDivElement>(null);
+  const preview3DRef = useRef<HTMLDivElement>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string>("");
   const [texturePreviewOpen, setTexturePreviewOpen] = useState(false);
   const [previewFinish, setPreviewFinish] = useState("");
   const [fullscreenPreview, setFullscreenPreview] = useState(false);
@@ -444,6 +446,17 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     if (!shareCardRef.current) return null;
 
     try {
+      // Capture the 3D preview canvas
+      if (preview3DRef.current) {
+        const canvasElement = preview3DRef.current.querySelector('canvas');
+        if (canvasElement) {
+          const dataUrl = canvasElement.toDataURL('image/png');
+          setPreviewImageUrl(dataUrl);
+          // Wait a bit for the state to update and the image to render
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      }
+
       const canvas = await html2canvas(shareCardRef.current, {
         scale: 2,
         useCORS: true,
@@ -1485,7 +1498,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         {/* 3D Preview and Product Images */}
         <div className="space-y-4 lg:col-span-1">
           {/* 3D Preview */}
-          <div className="animate-fade-in relative group">
+          <div ref={preview3DRef} className="animate-fade-in relative group">
             <Vanity3DPreview
               width={dimensionsInInches.widthInches}
               height={dimensionsInInches.heightInches}
@@ -3063,6 +3076,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         countertop={`${countertopMaterial} - ${countertopColor}`}
         sink={`${sinkStyle} - ${sinkShape}`}
         price={`$${totalPrice.toFixed(2)}`}
+        previewImage={previewImageUrl}
       />
 
       {/* Email Configuration Dialog */}

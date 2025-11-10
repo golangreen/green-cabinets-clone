@@ -8,10 +8,11 @@ interface SharePreviewCardProps {
   countertop: string;
   sink: string;
   price: string;
+  previewImage?: string;
 }
 
 export const SharePreviewCard = forwardRef<HTMLDivElement, SharePreviewCardProps>(
-  ({ brand, finish, dimensions, doorStyle, countertop, sink, price }, ref) => {
+  ({ brand, finish, dimensions, doorStyle, countertop, sink, price, previewImage }, ref) => {
     return (
       <div
         ref={ref}
@@ -45,6 +46,17 @@ export const SharePreviewCard = forwardRef<HTMLDivElement, SharePreviewCardProps
             </h2>
             
             <div className="grid grid-cols-2 gap-6 mb-6">
+              {/* 3D Preview Image */}
+              {previewImage && (
+                <div className="col-span-2 mb-4">
+                  <img 
+                    src={previewImage} 
+                    alt="3D Vanity Preview" 
+                    className="w-full h-64 object-cover rounded-lg border-2 border-border shadow-lg"
+                  />
+                </div>
+              )}
+              
               <div className="space-y-4">
                 <div>
                   <p className="text-sm text-muted-foreground uppercase tracking-wider mb-1">Dimensions</p>
