@@ -20,7 +20,8 @@ export const ShopProducts = () => {
         setProducts(productsData);
       } catch (error) {
         console.error('Error loading products:', error);
-        toast.error('Failed to load products');
+        // Silently fail - don't show error toast, just show no products
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -61,21 +62,9 @@ export const ShopProducts = () => {
     );
   }
 
+  // Hide shop section if no products (including Shopify errors)
   if (products.length === 0) {
-    return (
-      <div className="py-24 px-4">
-        <div className="container mx-auto text-center max-w-2xl">
-          <Package className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
-          <h2 className="text-3xl font-bold mb-4">No Products Yet</h2>
-          <p className="text-muted-foreground mb-8">
-            Start building your product catalog by telling me what products you'd like to add!
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Example: "Add a custom kitchen cabinet priced at $2,500"
-          </p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
