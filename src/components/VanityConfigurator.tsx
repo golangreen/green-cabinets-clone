@@ -21,7 +21,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { Checkbox } from "@/components/ui/checkbox";
 import logoImage from "@/assets/logo.jpg";
@@ -35,6 +35,8 @@ import { Vanity3DPreview } from "./Vanity3DPreview";
 import { TemplateGallery } from "./TemplateGallery";
 import { VanityTemplate } from "@/lib/vanityTemplates";
 import { useSavedTemplates } from "@/hooks/useSavedTemplates";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -541,6 +543,198 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       description: "Your custom vanity configuration has been added. Note: Final pricing will be confirmed by our team.",
       position: "top-center",
     });
+  };
+
+  const handleExportPDF = async () => {
+    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+      toast.error("Please complete the configuration first", {
+        description: "All dimensions and selections are required",
+      });
+      return;
+    }
+
+    toast.info("Generating PDF specification sheet...", {
+      description: "This may take a few moments",
+    });
+
+    try {
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let yPosition = 20;
+
+      // Header
+      pdf.setFontSize(24);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Custom Vanity Specification Sheet', pageWidth / 2, yPosition, { align: 'center' });
+      
+      yPosition += 10;
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(100);
+      pdf.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPosition, { align: 'center' });
+      
+      yPosition += 15;
+      pdf.setDrawColor(0);
+      pdf.line(20, yPosition, pageWidth - 20, yPosition);
+      yPosition += 10;
+
+      // Dimensions Section
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(0);
+      pdf.text('Dimensions', 20, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
+      const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
+      const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
+      
+      pdf.text(`Width: ${widthInches.toFixed(2)}" (${(widthInches / 12).toFixed(2)} linear feet)`, 25, yPosition);
+      yPosition += 6;
+      pdf.text(`Height: ${heightInches.toFixed(2)}"`, 25, yPosition);
+      yPosition += 6;
+      pdf.text(`Depth: ${depthInches.toFixed(2)}"`, 25, yPosition);
+      yPosition += 10;
+
+      // Cabinet Configuration
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Cabinet Configuration', 20, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`Brand: ${selectedBrand}`, 25, yPosition);
+      yPosition += 6;
+      pdf.text(`Finish: ${selectedFinish}`, 25, yPosition);
+      yPosition += 6;
+      pdf.text(`Door Style: ${doorStyle.charAt(0).toUpperCase() + doorStyle.slice(1)}`, 25, yPosition);
+      yPosition += 6;
+      if (doorStyle === 'drawers') {
+        pdf.text(`Number of Drawers: ${numDrawers}`, 25, yPosition);
+        yPosition += 6;
+      }
+      pdf.text(`Handle Style: ${handleStyle.charAt(0).toUpperCase() + handleStyle.slice(1)}`, 25, yPosition);
+      yPosition += 10;
+
+      // Countertop & Sink
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Countertop & Sink', 20, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`Countertop Material: ${countertopMaterial.charAt(0).toUpperCase() + countertopMaterial.slice(1)}`, 25, yPosition);
+      yPosition += 6;
+      pdf.text(`Edge Profile: ${countertopEdge.charAt(0).toUpperCase() + countertopEdge.slice(1)}`, 25, yPosition);
+      yPosition += 6;
+      pdf.text(`Countertop Color: ${countertopColor}`, 25, yPosition);
+      yPosition += 6;
+      pdf.text(`Sink Style: ${sinkStyle.charAt(0).toUpperCase() + sinkStyle.slice(1)}`, 25, yPosition);
+      yPosition += 6;
+      pdf.text(`Sink Shape: ${sinkShape.charAt(0).toUpperCase() + sinkShape.slice(1)}`, 25, yPosition);
+      yPosition += 10;
+
+      // Fixtures & Lighting
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Fixtures & Lighting', 20, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      if (includeFaucet) {
+        pdf.text(`Faucet Style: ${faucetStyle.charAt(0).toUpperCase() + faucetStyle.slice(1)}`, 25, yPosition);
+        yPosition += 6;
+        pdf.text(`Faucet Finish: ${faucetFinish.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`, 25, yPosition);
+        yPosition += 6;
+      }
+      if (includeBacksplash) {
+        pdf.text(`Backsplash: ${backsplashMaterial.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} (${backsplashHeight === '4-inch' ? '4 inches' : 'Full height'})`, 25, yPosition);
+        yPosition += 6;
+      }
+      if (includeVanityLighting) {
+        pdf.text(`Vanity Lighting: ${vanityLightingStyle.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`, 25, yPosition);
+        yPosition += 6;
+        pdf.text(`Brightness: ${vanityLightBrightness}%, Color Temp: ${vanityLightTemp}K`, 25, yPosition);
+        yPosition += 6;
+      }
+      
+      // Mirror
+      if (includeMirror) {
+        yPosition += 4;
+        pdf.text(`Mirror: ${mirrorSize.charAt(0).toUpperCase() + mirrorSize.slice(1)} ${mirrorShape} with ${mirrorFrame} frame`, 25, yPosition);
+        yPosition += 6;
+      }
+
+      // Pricing Section
+      if (yPosition > pageHeight - 60) {
+        pdf.addPage();
+        yPosition = 20;
+      }
+      
+      yPosition += 10;
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Pricing Summary', 20, yPosition);
+      yPosition += 8;
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`Vanity Base Price: $${basePrice.toFixed(2)}`, 25, yPosition);
+      yPosition += 6;
+      
+      if (includeWalls && wallPrice > 0) {
+        pdf.text(`Wall Price: $${wallPrice.toFixed(2)}`, 25, yPosition);
+        yPosition += 6;
+      }
+      
+      if (includeRoom && floorPrice > 0) {
+        pdf.text(`Floor Price: $${floorPrice.toFixed(2)}`, 25, yPosition);
+        yPosition += 6;
+      }
+      
+      if (zipCode) {
+        pdf.text(`Tax (${state}): $${tax.toFixed(2)}`, 25, yPosition);
+        yPosition += 6;
+        pdf.text(`Shipping: $${shipping.toFixed(2)}`, 25, yPosition);
+        yPosition += 6;
+      }
+      
+      yPosition += 4;
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`Total Estimate: $${totalPrice.toFixed(2)}`, 25, yPosition);
+      
+      yPosition += 10;
+      pdf.setFontSize(9);
+      pdf.setFont('helvetica', 'italic');
+      pdf.setTextColor(100);
+      pdf.text('Note: This is an estimate. Final pricing will be confirmed by our team.', 25, yPosition);
+
+      // Footer
+      pdf.setFontSize(8);
+      pdf.setTextColor(150);
+      const footerY = pageHeight - 10;
+      pdf.text('Green Cabinets - Custom Bathroom Vanities', pageWidth / 2, footerY, { align: 'center' });
+
+      // Save PDF
+      const fileName = `Vanity-Spec-${Date.now()}.pdf`;
+      pdf.save(fileName);
+
+      toast.success("PDF generated successfully!", {
+        description: `Saved as ${fileName}`,
+      });
+    } catch (error) {
+      console.error("PDF generation error:", error);
+      toast.error("Failed to generate PDF", {
+        description: "Please try again",
+      });
+    }
   };
 
   return (
@@ -2622,7 +2816,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <Button 
             onClick={handleSaveTemplate} 
             variant="outline"
@@ -2631,6 +2825,15 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           >
             <Save className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
             <span className="text-sm sm:text-base">Save Template</span>
+          </Button>
+          <Button 
+            onClick={handleExportPDF} 
+            variant="outline"
+            className="flex-1 touch-manipulation" 
+            size="lg"
+          >
+            <FileDown className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Export PDF</span>
           </Button>
           <Button 
             onClick={handleAddToCart} 
