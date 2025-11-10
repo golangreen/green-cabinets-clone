@@ -1,0 +1,99 @@
+# Quick Copy-Paste Store Listing Template
+# Use this for easy copy-paste into app store consoles
+
+---
+
+## APP NAME
+Kitchen Designer Pro
+
+---
+
+## SUBTITLE / SHORT DESCRIPTION (80 characters max)
+Design custom kitchens with 2D/3D tools & real measurements
+
+---
+
+## KEYWORDS (100 characters, comma-separated)
+kitchen,cabinet,design,3d,planner,renovation,interior,home,remodel,blueprint
+
+---
+
+## PROMOTIONAL TEXT (170 characters - iOS only)
+Design your dream kitchen in minutes! Professional 2D/3D tools, real materials, accurate measurements. Perfect for homeowners and designers. Try it free!
+
+---
+
+## FULL DESCRIPTION
+
+Transform Your Kitchen Design Process
+
+Kitchen Designer Pro is the ultimate tool for designing custom kitchens, bathrooms, and cabinets. Whether you're a homeowner planning a renovation or a professional designer, our powerful yet intuitive app makes it easy to create stunning, functional spaces.
+
+KEY FEATURES:
+
+🏠 Professional Design Tools
+• 2D floor planning with precise measurements
+• Real-time 3D visualization of your design
+• Extensive cabinet library with real products
+• Custom dimensions for any space
+
+📐 Accurate Measurements
+• Room scanning with AR camera
+• Manual input with imperial/metric units
+• Automatic dimension calculations
+• Export measurements for contractors
+
+🎨 Premium Materials & Finishes
+• Real cabinet materials from leading brands
+• Hardware options from Blum and Richelieu
+• Countertop materials and finishes
+• Door styles and configurations
+
+💡 Smart Design Features
+• Pre-designed kitchen templates
+• Drag-and-drop cabinet placement
+• Automatic collision detection
+• Undo/redo with complete history
+
+💾 Save & Share
+• Save unlimited design projects
+• Export high-quality renderings
+• Share designs via email or social media
+• Generate detailed quote documents
+
+📱 Works Everywhere
+• Native mobile app for iOS and Android
+• Optimized for all screen sizes
+• Offline mode available
+• Cloud sync across devices
+
+WHO IT'S FOR:
+• Homeowners planning kitchen renovations
+• Interior designers and architects
+• Contractors and cabinet makers
+• Real estate professionals
+
+Start designing your dream kitchen today!
+
+---
+
+## CATEGORY
+Primary: Productivity
+Secondary: Lifestyle
+
+---
+
+## CONTENT RATING
+Everyone / PEGI 3 / 4+
+
+---
+
+## SUPPORT INFORMATION
+Support Email: support@greencabinets.com
+Website: [your-website-url]
+Privacy Policy: [your-privacy-policy-url]
+
+---
+
+## COPYRIGHT
+© 2024 Green Cabinets. All rights reserved.
