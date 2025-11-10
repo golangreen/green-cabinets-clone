@@ -2480,7 +2480,32 @@ const VanityDesigner = () => {
                   {selectedCabinetId && cabinets.find(c => c.id === selectedCabinetId) && (
                     <Card className="p-3 mb-3">
                       <div className="flex items-center justify-between mb-3">
-                        <Label className="text-xs font-semibold">Cabinet Properties</Label>
+                        <div className="flex items-center gap-2">
+                          <Label className="text-xs font-semibold">Cabinet Properties</Label>
+                          {(() => {
+                            const cabinet = cabinets.find(c => c.id === selectedCabinetId);
+                            if (!cabinet) return null;
+                            
+                            // Check if any property differs from global settings
+                            const hasOverrides = 
+                              cabinet.finishId !== globalFinishId ||
+                              cabinet.doorStyleId !== globalDoorStyleId ||
+                              cabinet.handleType !== globalHandleType ||
+                              (cabinet.toeKickFinishId && cabinet.toeKickFinishId !== "match-door") ||
+                              (cabinet.moldingFinishId && cabinet.moldingFinishId !== "match-door") ||
+                              (cabinet.lightMoldingFinishId && cabinet.lightMoldingFinishId !== "match-door");
+                            
+                            if (hasOverrides) {
+                              return (
+                                <Badge variant="secondary" className="text-[9px] h-5">
+                                  <Edit className="h-2.5 w-2.5 mr-1" />
+                                  Custom
+                                </Badge>
+                              );
+                            }
+                            return null;
+                          })()}
+                        </div>
                         <Button 
                           variant="ghost" 
                           size="sm"
@@ -2693,6 +2718,112 @@ const VanityDesigner = () => {
                                     }}
                                     className="h-7 text-xs"
                                   />
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Toe Kick */}
+                            <div>
+                              <Label className="text-[10px] font-semibold mb-2 block">Toe Kick (4.5")</Label>
+                              <div>
+                                <Label className="text-[10px]">Toe Kick Finish</Label>
+                                <select
+                                  value={cabinet.toeKickFinishId || "match-door"}
+                                  onChange={(e) => {
+                                    setCabinets(cabinets.map(c => 
+                                      c.id === selectedCabinetId 
+                                        ? { ...c, toeKickFinishId: e.target.value } 
+                                        : c
+                                    ));
+                                  }}
+                                  className="w-full h-7 text-xs border rounded-md px-2 bg-background"
+                                >
+                                  <option value="match-door">Match Door Finish</option>
+                                  <optgroup label="Tafisa">
+                                    {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
+                                      <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                    ))}
+                                  </optgroup>
+                                  <optgroup label="Egger">
+                                    {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
+                                      <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                    ))}
+                                  </optgroup>
+                                  <optgroup label="Shinnoki">
+                                    {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
+                                      <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                    ))}
+                                  </optgroup>
+                                </select>
+                              </div>
+                            </div>
+                            
+                            {/* Moldings */}
+                            <div>
+                              <Label className="text-[10px] font-semibold mb-2 block">Moldings</Label>
+                              <div className="space-y-2">
+                                <div>
+                                  <Label className="text-[10px]">Standard Molding</Label>
+                                  <select
+                                    value={cabinet.moldingFinishId || "match-door"}
+                                    onChange={(e) => {
+                                      setCabinets(cabinets.map(c => 
+                                        c.id === selectedCabinetId 
+                                          ? { ...c, moldingFinishId: e.target.value } 
+                                          : c
+                                      ));
+                                    }}
+                                    className="w-full h-7 text-xs border rounded-md px-2 bg-background"
+                                  >
+                                    <option value="match-door">Match Door Finish</option>
+                                    <optgroup label="Tafisa">
+                                      {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
+                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                      ))}
+                                    </optgroup>
+                                    <optgroup label="Egger">
+                                      {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
+                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                      ))}
+                                    </optgroup>
+                                    <optgroup label="Shinnoki">
+                                      {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
+                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                      ))}
+                                    </optgroup>
+                                  </select>
+                                </div>
+                                
+                                <div>
+                                  <Label className="text-[10px]">Light Molding</Label>
+                                  <select
+                                    value={cabinet.lightMoldingFinishId || "match-door"}
+                                    onChange={(e) => {
+                                      setCabinets(cabinets.map(c => 
+                                        c.id === selectedCabinetId 
+                                          ? { ...c, lightMoldingFinishId: e.target.value } 
+                                          : c
+                                      ));
+                                    }}
+                                    className="w-full h-7 text-xs border rounded-md px-2 bg-background"
+                                  >
+                                    <option value="match-door">Match Door Finish</option>
+                                    <optgroup label="Tafisa">
+                                      {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
+                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                      ))}
+                                    </optgroup>
+                                    <optgroup label="Egger">
+                                      {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
+                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                      ))}
+                                    </optgroup>
+                                    <optgroup label="Shinnoki">
+                                      {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
+                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
+                                      ))}
+                                    </optgroup>
+                                  </select>
                                 </div>
                               </div>
                             </div>
