@@ -175,25 +175,6 @@ const Header = () => {
               </Button>
             )}
 
-            {/* Get Quote Button - Desktop */}
-            <Button
-              size="default"
-              className="hidden md:inline-flex text-sm px-4"
-              onClick={() => {
-                const ctaSection = document.querySelector('section[class*="py-32"]');
-                if (ctaSection) {
-                  ctaSection.scrollIntoView({ behavior: 'smooth' });
-                  // Trigger the quote form after scrolling
-                  setTimeout(() => {
-                    const button = ctaSection.querySelector('button') as HTMLButtonElement;
-                    button?.click();
-                  }, 500);
-                }
-              }}
-            >
-              Get Quote
-            </Button>
-
             <CartDrawer />
 
             {/* Mobile Menu */}
