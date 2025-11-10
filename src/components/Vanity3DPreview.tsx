@@ -16,6 +16,7 @@ interface Vanity3DPreviewProps {
   numDrawers: number;
   handleStyle: string;
   cabinetPosition?: string;
+  fullscreen?: boolean;
 }
 
 // Convert inches to a normalized scale for 3D visualization
@@ -834,9 +835,10 @@ const DimensionLabels = ({ width, height, depth }: { width: number; height: numb
   );
 };
 
-export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle, cabinetPosition = "left" }: Vanity3DPreviewProps) => {
+export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle, numDrawers, handleStyle, cabinetPosition = "left", fullscreen = false }: Vanity3DPreviewProps) => {
   const [measurementMode, setMeasurementMode] = useState(false);
   const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
+  const [zoom, setZoom] = useState(3);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const hasValidDimensions = useMemo(() => {
@@ -895,14 +897,14 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
 
   if (!hasValidDimensions) {
     return (
-      <div className="w-full aspect-square bg-secondary/20 rounded-lg flex items-center justify-center">
+      <div className={`w-full ${fullscreen ? 'h-full' : 'aspect-square'} bg-secondary/20 rounded-lg flex items-center justify-center`}>
         <p className="text-muted-foreground text-sm">Enter dimensions to see preview</p>
       </div>
     );
   }
 
   return (
-    <div className="relative w-full aspect-square bg-gradient-to-br from-secondary/10 to-secondary/30 rounded-lg overflow-hidden border border-border">
+    <div className={`relative w-full ${fullscreen ? 'h-full' : 'aspect-square'} bg-gradient-to-br from-secondary/10 to-secondary/30 rounded-lg overflow-hidden border border-border`}>
       <div className="absolute top-4 right-4 z-10 flex gap-2">
         <Button
           variant={measurementMode ? "default" : "outline"}
@@ -932,15 +934,46 @@ export const Vanity3DPreview = ({ width, height, depth, brand, finish, doorStyle
           Print
         </Button>
       </div>
+
+      {/* Zoom Controls */}
+      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setZoom(Math.max(2, zoom - 0.5))}
+          className="shadow-lg h-10 w-10 p-0"
+          title="Zoom out"
+        >
+          <span className="text-lg font-bold">−</span>
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setZoom(Math.min(8, zoom + 0.5))}
+          className="shadow-lg h-10 w-10 p-0"
+          title="Zoom in"
+        >
+          <span className="text-lg font-bold">+</span>
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setZoom(3)}
+          className="shadow-lg h-10 w-10 p-0"
+          title="Reset zoom"
+        >
+          <span className="text-sm">⟲</span>
+        </Button>
+      </div>
       
       <Canvas shadows onCreated={({ gl }) => {
         canvasRef.current = gl.domElement;
       }}>
-        <PerspectiveCamera makeDefault position={[3, 2, 3]} />
+        <PerspectiveCamera makeDefault position={[zoom, zoom * 0.7, zoom]} />
         <OrbitControls 
           enablePan={false}
-          minDistance={2}
-          maxDistance={8}
+          minDistance={zoom}
+          maxDistance={zoom}
           maxPolarAngle={Math.PI / 2}
         />
         

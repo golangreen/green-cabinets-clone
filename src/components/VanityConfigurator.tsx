@@ -21,8 +21,9 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, Save } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save, Maximize2, X } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
+import logoImage from "@/assets/logo.jpg";
 import { TextureSwatch } from "./TextureSwatch";
 import { TexturePreviewModal } from "./TexturePreviewModal";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
@@ -161,6 +162,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [templateDescription, setTemplateDescription] = useState("");
   const [texturePreviewOpen, setTexturePreviewOpen] = useState(false);
   const [previewFinish, setPreviewFinish] = useState("");
+  const [fullscreenPreview, setFullscreenPreview] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
 
@@ -408,11 +410,213 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
   return (
     <>
+      {/* Fullscreen Preview Mode */}
+      {fullscreenPreview && (
+        <div className="fixed inset-0 z-50 bg-background">
+          {/* Header with Logo */}
+          <div className="absolute top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+            <div className="flex items-center justify-between px-4 py-3">
+              <div className="flex items-center gap-3">
+                <img src={logoImage} alt="Green Cabinets" className="h-10 w-auto" />
+                <div className="hidden sm:block">
+                  <h2 className="text-lg font-bold">Custom Vanity Configurator</h2>
+                  <p className="text-xs text-muted-foreground">Real-time 3D Preview</p>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setFullscreenPreview(false)}
+                className="h-10 w-10"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex h-full pt-16">
+            {/* Controls Sidebar */}
+            <div className="w-80 xl:w-96 border-r border-border overflow-y-auto bg-background/50 backdrop-blur-sm">
+              <div className="p-4 space-y-4">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-sm">Brand & Finish</h3>
+                  <Select value={selectedBrand} onValueChange={setSelectedBrand}>
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder="Select brand" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background z-50">
+                      {brands.map((brand) => (
+                        <SelectItem key={brand} value={brand}>
+                          {brand} - ${BRAND_INFO[brand as keyof typeof BRAND_INFO]?.price}/lf
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  
+                  <Select value={selectedFinish} onValueChange={setSelectedFinish}>
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder="Select finish" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background z-50 max-h-60">
+                      {availableFinishes.map((finish) => (
+                        <SelectItem key={finish} value={finish}>
+                          {finish}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Texture Swatches */}
+                  {selectedBrand && availableFinishes.length > 0 && (
+                    <div className="flex flex-wrap gap-2 p-2 bg-secondary/10 rounded-lg max-h-40 overflow-y-auto">
+                      {availableFinishes.slice(0, 12).map((finish) => (
+                        <TextureSwatch
+                          key={finish}
+                          finishName={finish}
+                          brand={selectedBrand}
+                          selected={selectedFinish === finish}
+                          onClick={() => handleTextureClick(finish)}
+                          size="sm"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-sm">Dimensions</h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <Label className="text-xs">Width</Label>
+                      <Input
+                        type="number"
+                        value={width}
+                        onChange={(e) => setWidth(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Height</Label>
+                      <Input
+                        type="number"
+                        value={height}
+                        onChange={(e) => setHeight(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Depth</Label>
+                      <Input
+                        type="number"
+                        value={depth}
+                        onChange={(e) => setDepth(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-sm">Configuration</h3>
+                  <Select value={doorStyle} onValueChange={setDoorStyle}>
+                    <SelectTrigger className="bg-background h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background z-50">
+                      <SelectItem value="single">Single Door</SelectItem>
+                      <SelectItem value="double">Double Doors</SelectItem>
+                      <SelectItem value="drawers">All Drawers</SelectItem>
+                      <SelectItem value="mixed">Drawers + Doors</SelectItem>
+                      <SelectItem value="door-drawer-split">Door + Drawer</SelectItem>
+                      <SelectItem value="door-shelf-split">Door + Shelf</SelectItem>
+                      <SelectItem value="open-shelves">Open Shelves</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {(doorStyle === 'drawers' || doorStyle === 'mixed' || doorStyle === 'door-drawer-split') && (
+                    <Select value={numDrawers.toString()} onValueChange={(val) => setNumDrawers(parseInt(val))}>
+                      <SelectTrigger className="bg-background h-8 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-background z-50">
+                        {[1, 2, 3, 4, 5, 6].map((num) => (
+                          <SelectItem key={num} value={num.toString()}>
+                            {num} Drawer{num > 1 ? 's' : ''}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+
+                  {doorStyle !== 'open-shelves' && (
+                    <Select value={handleStyle} onValueChange={setHandleStyle}>
+                      <SelectTrigger className="bg-background h-8 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-background z-50">
+                        <SelectItem value="bar">Bar Handles</SelectItem>
+                        <SelectItem value="knob">Knobs</SelectItem>
+                        <SelectItem value="recessed">Push-to-Open</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+
+                {basePrice > 0 && (
+                  <div className="space-y-2 pt-2 border-t border-border">
+                    <h3 className="font-semibold text-sm">Price Summary</h3>
+                    <div className="space-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Base Price:</span>
+                        <span className="font-medium">${basePrice.toFixed(2)}</span>
+                      </div>
+                      {tax > 0 && (
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Tax:</span>
+                          <span className="font-medium">${tax.toFixed(2)}</span>
+                        </div>
+                      )}
+                      {shipping > 0 && (
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Shipping:</span>
+                          <span className="font-medium">${shipping.toFixed(2)}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between text-base font-bold pt-2 border-t border-border">
+                        <span>Total:</span>
+                        <span>${totalPrice.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* 3D Preview */}
+            <div className="flex-1">
+              <Vanity3DPreview
+                width={dimensionsInInches.widthInches}
+                height={dimensionsInInches.heightInches}
+                depth={dimensionsInInches.depthInches}
+                brand={selectedBrand}
+                finish={selectedFinish}
+                doorStyle={doorStyle}
+                numDrawers={numDrawers}
+                handleStyle={handleStyle}
+                cabinetPosition={cabinetPosition}
+                fullscreen={true}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6 md:gap-8">
         {/* 3D Preview and Product Images */}
         <div className="space-y-4 lg:col-span-1">
           {/* 3D Preview */}
-          <div className="animate-fade-in">
+          <div className="animate-fade-in relative group">
             <Vanity3DPreview
               width={dimensionsInInches.widthInches}
               height={dimensionsInInches.heightInches}
@@ -424,6 +628,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               handleStyle={handleStyle}
               cabinetPosition={cabinetPosition}
             />
+            {/* Fullscreen Button */}
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setFullscreenPreview(true)}
+              className="absolute bottom-20 right-4 z-10 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <Maximize2 className="w-4 h-4 mr-2" />
+              Fullscreen
+            </Button>
           </div>
 
           {/* Product Images */}
@@ -474,7 +688,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               <strong>Available Brands:</strong> Tafisa (60+ melamine colors), Egger (98+ TFL & HPL finishes), and Shinnoki (prefinished wood veneer)
             </p>
             <p>
-              <strong>Pricing:</strong> Tafisa $250/sq ft • Egger $300/sq ft • Shinnoki $350/sq ft
+              <strong>Pricing:</strong> Tafisa $250/linear foot • Egger $300/linear foot • Shinnoki $350/linear foot
             </p>
             <p>
               <strong>Shipping:</strong> Approximately 14-21 business days
@@ -507,7 +721,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 <SelectContent className="bg-background z-50">
                   {brands.map((brand) => (
                     <SelectItem key={brand} value={brand} className="cursor-pointer">
-                      {brand} - ${BRAND_INFO[brand as keyof typeof BRAND_INFO]?.price}/sq ft
+                      {brand} - ${BRAND_INFO[brand as keyof typeof BRAND_INFO]?.price}/linear foot
                     </SelectItem>
                   ))}
                 </SelectContent>
