@@ -27,6 +27,8 @@ import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from
 import { useCartStore } from "@/stores/cartStore";
 import { z } from "zod";
 import { Vanity3DPreview } from "./Vanity3DPreview";
+import { TemplateGallery } from "./TemplateGallery";
+import { VanityTemplate } from "@/lib/vanityTemplates";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -148,7 +150,27 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [doorStyle, setDoorStyle] = useState<string>("double");
   const [numDrawers, setNumDrawers] = useState<number>(2);
   const [handleStyle, setHandleStyle] = useState<string>("bar");
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
   const addItem = useCartStore((state) => state.addItem);
+
+  const handleSelectTemplate = (template: VanityTemplate) => {
+    setSelectedTemplateId(template.id);
+    setSelectedBrand(template.config.brand);
+    setSelectedFinish(template.config.finish);
+    setWidth(template.config.width);
+    setWidthFraction(template.config.widthFraction);
+    setHeight(template.config.height);
+    setHeightFraction(template.config.heightFraction);
+    setDepth(template.config.depth);
+    setDepthFraction(template.config.depthFraction);
+    setDoorStyle(template.config.doorStyle);
+    setNumDrawers(template.config.numDrawers);
+    setHandleStyle(template.config.handleStyle);
+    
+    toast.success(`Applied ${template.name} template`, {
+      description: "Customize the configuration to your needs",
+    });
+  };
 
   const openLightbox = (imageUrl: string, imageAlt: string) => {
     setLightboxImage({ url: imageUrl, alt: imageAlt });
@@ -377,6 +399,12 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             </p>
           </div>
         </div>
+
+        {/* Template Gallery */}
+        <TemplateGallery 
+          onSelectTemplate={handleSelectTemplate}
+          selectedTemplateId={selectedTemplateId}
+        />
 
         <div className="space-y-6">
           {/* Configuration Form */}
