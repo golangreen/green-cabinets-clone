@@ -2030,7 +2030,7 @@ const VanityDesigner = () => {
             variant={activeTab === "room-layout" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("room-layout")}
-            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
+            className={activeTab === "room-layout" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             ROOM
           </Button>
@@ -2039,7 +2039,7 @@ const VanityDesigner = () => {
             variant={activeTab === "items" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("items")}
-            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
+            className={activeTab === "items" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             ITEMS
           </Button>
@@ -2048,7 +2048,7 @@ const VanityDesigner = () => {
             variant={activeTab === "design" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("design")}
-            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
+            className={activeTab === "design" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             DESIGN
           </Button>
@@ -2057,7 +2057,7 @@ const VanityDesigner = () => {
             variant={activeTab === "templates" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("templates")}
-            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
+            className={activeTab === "templates" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             TEMPLATES
           </Button>
@@ -2066,7 +2066,7 @@ const VanityDesigner = () => {
             variant={activeTab === "view" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("view")}
-            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
+            className={activeTab === "view" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             VIEW
           </Button>
