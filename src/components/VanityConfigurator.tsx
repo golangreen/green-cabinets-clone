@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ShopifyProduct } from "@/lib/shopify";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -26,6 +26,7 @@ import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } f
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
 import { useCartStore } from "@/stores/cartStore";
 import { z } from "zod";
+import { Vanity3DPreview } from "./Vanity3DPreview";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -205,6 +206,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const shipping = calculateShipping();
   const totalPrice = basePrice + tax + shipping;
 
+  // Calculate dimensions in inches (with fractions) for 3D preview
+  const dimensionsInInches = useMemo(() => {
+    const widthInches = (parseFloat(width || "0") + parseInt(widthFraction) / 16);
+    const heightInches = (parseFloat(height || "0") + parseInt(heightFraction) / 16);
+    const depthInches = (parseFloat(depth || "0") + parseInt(depthFraction) / 16);
+    return { widthInches, heightInches, depthInches };
+  }, [width, widthFraction, height, heightFraction, depth, depthFraction]);
+
   // Determine zip code state
   useEffect(() => {
     if (zipCode.length === 5) {
@@ -291,8 +300,19 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   return (
     <>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6 md:gap-8">
-        {/* Product Images */}
+        {/* 3D Preview and Product Images */}
         <div className="space-y-4 lg:col-span-1">
+          {/* 3D Preview */}
+          <div className="animate-fade-in">
+            <Vanity3DPreview
+              width={dimensionsInInches.widthInches}
+              height={dimensionsInInches.heightInches}
+              depth={dimensionsInInches.depthInches}
+              brand={selectedBrand}
+            />
+          </div>
+
+          {/* Product Images */}
           {product.node.images.edges[0] && (
             <div 
               className="aspect-square overflow-hidden rounded-lg bg-secondary/20 cursor-pointer group relative touch-manipulation"
