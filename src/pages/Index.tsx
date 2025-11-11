@@ -15,7 +15,6 @@ const Index = () => {
       <Features />
       <About />
       <Gallery />
-      <Suppliers />
       <FeatureErrorBoundary
         featureName="Product Catalog"
         featureTag="shop-products"
@@ -23,6 +22,7 @@ const Index = () => {
       >
         <ShopProducts />
       </FeatureErrorBoundary>
+      <Suppliers />
       <Contact />
       <CTA />
       <Footer />
