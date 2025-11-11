@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings } from "lucide-react";
-import logo from "@/assets/logo.jpg";
+import logoColor from "@/assets/logo-color.png";
+import logoWhite from "@/assets/logo-white.png";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/features/shopping-cart";
 import { ThemeToggle } from "@/features/theme";
@@ -23,9 +24,19 @@ import { ROUTES } from "@/constants/routes";
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showInstallDialog, setShowInstallDialog] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { isInstallable, promptInstall } = usePWAInstall();
   const { user, isAuthenticated, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleInstall = async () => {
     const installed = await promptInstall();
@@ -81,38 +92,48 @@ const Header = () => {
     }, 400);
   };
 
-  return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{
+  return <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden transition-colors duration-300 ${
+      isScrolled ? 'bg-background/95' : ''
+    }`} style={{
       position: 'relative'
     }}>
-      {/* Black to wood gradient overlay */}
-      <div className="absolute inset-0" style={{
-        background: `linear-gradient(to right, #000000 0%, #000000 15%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0) 70%)`,
-        zIndex: 1
-      }} />
-      {/* Wood texture background */}
-      <div className="absolute inset-0" style={{
-        backgroundImage: `url(${walnutTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        opacity: 1,
-        imageRendering: 'crisp-edges',
-        zIndex: 0
-      }} />
+      {/* Black to wood gradient overlay - only visible when not scrolled */}
+      {!isScrolled && (
+        <>
+          <div className="absolute inset-0" style={{
+            background: `linear-gradient(to right, #000000 0%, #000000 15%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0) 70%)`,
+            zIndex: 1
+          }} />
+          {/* Wood texture background */}
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url(${walnutTexture})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 1,
+            imageRendering: 'crisp-edges',
+            zIndex: 0
+          }} />
+        </>
+      )}
       <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
-              <img src={logo} alt="Green Cabinets Logo" className="h-16 md:h-20 w-auto" style={{
-              mixBlendMode: 'lighten'
-            }} />
+              <img 
+                src={isScrolled ? logoColor : logoWhite} 
+                alt="Green Cabinets Logo" 
+                className="h-16 md:h-20 w-auto transition-opacity duration-300" 
+              />
             </a>
           </div>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8 font-display ml-auto mr-8">
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger className="text-black hover:text-black/70 transition-colors flex items-center gap-1 outline-none text-xl font-semibold">
+              <DropdownMenuTrigger className={`${
+                isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
+              } transition-colors flex items-center gap-1 outline-none text-xl font-semibold`}>
                 Catalog
                 <ChevronDown className="h-5 w-5" />
               </DropdownMenuTrigger>
@@ -158,11 +179,15 @@ const Header = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <a href="#solutions" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
+            <a href="#solutions" className={`${
+              isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
+            } transition-colors text-xl font-semibold`}>
               Solutions
             </a>
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger className="text-black hover:text-black/70 transition-colors flex items-center gap-1 outline-none text-xl font-semibold">
+              <DropdownMenuTrigger className={`${
+                isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
+              } transition-colors flex items-center gap-1 outline-none text-xl font-semibold`}>
                 Documentation
                 <ChevronDown className="h-5 w-5" />
               </DropdownMenuTrigger>
@@ -199,10 +224,14 @@ const Header = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <a href="#about" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
+            <a href="#about" className={`${
+              isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
+            } transition-colors text-xl font-semibold`}>
               About
             </a>
-            <a href="#contact" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
+            <a href="#contact" className={`${
+              isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
+            } transition-colors text-xl font-semibold`}>
               Contact
             </a>
           </div>
