@@ -11,6 +11,7 @@ import kitchenIslandView from "@/assets/gallery/kitchen-island-view.jpg";
 import kitchenTraditional from "@/assets/gallery/kitchen-traditional.jpg";
 import bedroomCloset from "@/assets/gallery/bedroom-closet.jpg";
 import blackCabinet from "@/assets/gallery/black-cabinet.jpg";
+import laundryRoom from "@/assets/gallery/laundry-room.jpg";
 import radiatorCover from "@/assets/gallery/radiator-cover.jpg";
 import grayKitchenCorner from "@/assets/gallery/gray-kitchen-corner.jpg";
 import twoToneKitchenIsland from "@/assets/gallery/two-tone-kitchen-island.jpg";
@@ -187,6 +188,7 @@ const Gallery = () => {
     },
     { src: kitchenPendantLights, alt: "White kitchen with glass pendant lights", category: "kitchens" },
     { src: classicWhiteKitchen, alt: "Classic white kitchen with gray island", category: "kitchens" },
+    { src: laundryRoom, alt: "White laundry room cabinetry", category: "kitchens" },
     { src: whiteKitchenGlassPendants, alt: "White traditional kitchen with glass pendant lights and open shelving", category: "kitchens" },
     { src: whiteKitchenIslandCabinets, alt: "White kitchen island with custom cabinet installation", category: "kitchens" },
     { src: whiteKitchenCabinetsProgress, alt: "White kitchen cabinets installation progress", category: "kitchens" },
@@ -323,8 +325,8 @@ const Gallery = () => {
     ? galleryImages 
     : galleryImages.filter(img => img.category === activeCategory);
 
-  // Limit to 4 images unless "Show All" is clicked
-  const displayedImages = showAllImages ? filteredImages : filteredImages.slice(0, 4);
+  // Limit to 3 images unless "Show All" is clicked
+  const displayedImages = showAllImages ? filteredImages : filteredImages.slice(0, 3);
 
   const kitchens = galleryImages.filter(img => img.category === "kitchens");
   const vanities = galleryImages.filter(img => img.category === "vanities");
