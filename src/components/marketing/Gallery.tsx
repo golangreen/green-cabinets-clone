@@ -322,8 +322,8 @@ const Gallery = () => {
     ? galleryImages 
     : galleryImages.filter(img => img.category === activeCategory);
 
-  // Limit to 3 images unless "Show All" is clicked
-  const displayedImages = showAllImages ? filteredImages : filteredImages.slice(0, 3);
+  // Limit to 4 images unless "Show All" is clicked
+  const displayedImages = showAllImages ? filteredImages : filteredImages.slice(0, 4);
 
   const kitchens = galleryImages.filter(img => img.category === "kitchens");
   const vanities = galleryImages.filter(img => img.category === "vanities");
@@ -445,7 +445,7 @@ const Gallery = () => {
         </div>
 
         {/* Show All / Show Less Button */}
-        {filteredImages.length > 3 && (
+        {filteredImages.length > 4 && (
           <div className="flex justify-center mt-12">
             <Button
               variant="brand-outline"
