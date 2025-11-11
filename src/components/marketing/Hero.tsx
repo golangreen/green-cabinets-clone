@@ -98,10 +98,10 @@ const Hero = () => {
       {/* Hero Text Section - Above Images */}
       <section className="relative bg-gray-50 pt-32 md:pt-40 pb-20 md:pb-32">
         <div className="container mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-gray-900 mb-6 leading-tight">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-gray-900 mb-6 leading-tight drop-shadow-2xl animate-fade-in">
             Designs for lifestyle
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-light">
+          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-light drop-shadow-lg animate-fade-in" style={{ animationDelay: '200ms' }}>
             Custom cabinetry crafted for comfort and style
           </p>
         </div>

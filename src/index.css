@@ -141,6 +141,24 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Smooth scroll for all interactive elements */
+a[href^="#"], button {
+  scroll-behavior: smooth;
+}
+
+/* Additional animation delay utilities */
+@layer utilities {
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+}
+
 /* Print styles */
 @media print {
   @page {
