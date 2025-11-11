@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -17,35 +17,19 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { DocsSidebar } from "@/components/DocsSidebar";
 import CodeMirror from '@uiw/react-codemirror';
-import { sql, SQLNamespace } from '@codemirror/lang-sql';
+import { sql } from '@codemirror/lang-sql';
 import { autocompletion } from '@codemirror/autocomplete';
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-interface QueryHistoryItem {
-  id: string;
-  query: string;
-  timestamp: number;
-  success: boolean;
-  rowCount?: number;
-  error?: string;
-}
+// Hooks
+import { useQueryHistory, type QueryHistoryItem } from "@/hooks/useQueryHistory";
+import { useQueryBookmarks, type BookmarkItem } from "@/hooks/useQueryBookmarks";
+import { useDatabaseSchema } from "@/hooks/useDatabaseSchema";
 
-interface BookmarkItem {
-  id: string;
-  name: string;
-  query: string;
-  createdAt: number;
-}
-
-interface TableSchema {
-  tableName: string;
-  columns: string[];
-}
-
-interface ValidationError {
-  message: string;
-  type: 'error' | 'warning';
-}
+// Utilities
+import { validateQuery, type ValidationError, type TableSchema } from "@/lib/sqlValidator";
+import { createSqlCompletions } from "@/lib/sqlAutocompletion";
+import { executeQuery as runQuery } from "@/lib/queryExecution";
 
 const DocsTroubleshooting = () => {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -53,111 +37,15 @@ const DocsTroubleshooting = () => {
   const [sqlQuery, setSqlQuery] = useState("SELECT * FROM user_roles LIMIT 5;");
   const [queryResult, setQueryResult] = useState<any>(null);
   const [isExecuting, setIsExecuting] = useState(false);
-  const [queryHistory, setQueryHistory] = useState<QueryHistoryItem[]>([]);
-  const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
   const [bookmarkName, setBookmarkName] = useState("");
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
-  const [schemaInfo, setSchemaInfo] = useState<TableSchema[]>([]);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const { toast } = useToast();
 
-  // Load query history from localStorage on mount
-  useEffect(() => {
-    const savedHistory = localStorage.getItem('sql-query-history');
-    if (savedHistory) {
-      try {
-        setQueryHistory(JSON.parse(savedHistory));
-      } catch (e) {
-        console.error('Failed to parse query history:', e);
-      }
-    }
-  }, []);
-
-  // Save query history to localStorage whenever it changes
-  useEffect(() => {
-    if (queryHistory.length > 0) {
-      localStorage.setItem('sql-query-history', JSON.stringify(queryHistory));
-    }
-  }, [queryHistory]);
-
-  // Load bookmarks from localStorage on mount
-  useEffect(() => {
-    const savedBookmarks = localStorage.getItem('sql-query-bookmarks');
-    if (savedBookmarks) {
-      try {
-        setBookmarks(JSON.parse(savedBookmarks));
-      } catch (e) {
-        console.error('Failed to parse bookmarks:', e);
-      }
-    }
-  }, []);
-
-  // Save bookmarks to localStorage whenever they change
-  useEffect(() => {
-    if (bookmarks.length > 0) {
-      localStorage.setItem('sql-query-bookmarks', JSON.stringify(bookmarks));
-    }
-  }, [bookmarks]);
-
-  // Fetch database schema on mount
-  useEffect(() => {
-    const fetchSchema = async () => {
-      try {
-        // Fetch table names and columns from information_schema
-        const { data, error } = await supabase
-          .from('user_roles')
-          .select('*')
-          .limit(0);
-
-        if (error) {
-          console.error('Schema fetch error:', error);
-          return;
-        }
-
-        // Manual schema definition for known tables
-        const knownSchema: TableSchema[] = [
-          {
-            tableName: 'user_roles',
-            columns: ['id', 'user_id', 'role', 'created_at']
-          },
-          {
-            tableName: 'security_events',
-            columns: ['id', 'created_at', 'event_type', 'function_name', 'client_ip', 'severity', 'details']
-          },
-          {
-            tableName: 'blocked_ips',
-            columns: ['id', 'ip_address', 'reason', 'blocked_at', 'blocked_until', 'auto_blocked', 'violation_count', 'details', 'created_at']
-          },
-          {
-            tableName: 'block_history',
-            columns: ['id', 'ip_address', 'action', 'reason', 'blocked_until', 'auto_blocked', 'performed_by', 'created_at']
-          },
-          {
-            tableName: 'alert_history',
-            columns: ['id', 'alert_type', 'details', 'sent_at']
-          }
-        ];
-
-        setSchemaInfo(knownSchema);
-      } catch (err) {
-        console.error('Failed to fetch schema:', err);
-      }
-    };
-
-    fetchSchema();
-  }, []);
-
-  const addToHistory = (query: string, success: boolean, rowCount?: number, error?: string) => {
-    const historyItem: QueryHistoryItem = {
-      id: Date.now().toString(),
-      query,
-      timestamp: Date.now(),
-      success,
-      rowCount,
-      error
-    };
-    setQueryHistory(prev => [historyItem, ...prev].slice(0, 20)); // Keep last 20 queries
-  };
+  // Use custom hooks
+  const { history: queryHistory, addToHistory, clearHistory: clearHistoryHook } = useQueryHistory();
+  const { bookmarks, addBookmark: addBookmarkHook, deleteBookmark: deleteBookmarkHook } = useQueryBookmarks();
+  const { schema: schemaInfo } = useDatabaseSchema();
 
   const loadFromHistory = (item: QueryHistoryItem) => {
     setSqlQuery(item.query);
@@ -168,8 +56,7 @@ const DocsTroubleshooting = () => {
   };
 
   const clearHistory = () => {
-    setQueryHistory([]);
-    localStorage.removeItem('sql-query-history');
+    clearHistoryHook();
     toast({
       title: "History cleared",
       description: "Query history has been cleared",
@@ -186,14 +73,7 @@ const DocsTroubleshooting = () => {
       return;
     }
 
-    const bookmark: BookmarkItem = {
-      id: Date.now().toString(),
-      name: bookmarkName.trim(),
-      query: sqlQuery,
-      createdAt: Date.now(),
-    };
-
-    setBookmarks(prev => [bookmark, ...prev]);
+    const bookmark = addBookmarkHook(bookmarkName, sqlQuery);
     setBookmarkName("");
     setIsBookmarkDialogOpen(false);
     toast({
@@ -211,64 +91,46 @@ const DocsTroubleshooting = () => {
   };
 
   const deleteBookmark = (id: string) => {
-    setBookmarks(prev => prev.filter(b => b.id !== id));
-    if (bookmarks.length === 1) {
-      localStorage.removeItem('sql-query-bookmarks');
-    }
+    deleteBookmarkHook(id);
     toast({
       title: "Bookmark deleted",
       description: "Bookmark has been removed",
     });
   };
 
-  const validateQuery = (query: string): ValidationError[] => {
-    const errors: ValidationError[] = [];
-    const trimmedQuery = query.trim().toUpperCase();
+  const executeQuery = async () => {
+    setIsExecuting(true);
+    setQueryResult(null);
 
-    // Check if it's a SELECT query
-    if (!trimmedQuery.startsWith('SELECT')) {
-      errors.push({
-        message: 'Only SELECT queries are allowed for safety',
-        type: 'error'
+    // Validate query before execution
+    const errors = validateQuery(sqlQuery, schemaInfo);
+    const hasErrors = errors.some(e => e.type === 'error');
+    
+    if (hasErrors) {
+      setQueryResult({
+        error: errors.find(e => e.type === 'error')?.message || 'Query validation failed',
+        type: "error"
       });
+      setIsExecuting(false);
+      addToHistory(sqlQuery, false, undefined, errors.find(e => e.type === 'error')?.message);
+      return;
     }
 
-    // Check for table name
-    const tableMatch = query.match(/FROM\s+(\w+)/i);
-    if (tableMatch) {
-      const tableName = tableMatch[1].toLowerCase();
-      const tableExists = schemaInfo.some(t => t.tableName.toLowerCase() === tableName);
-      
-      if (!tableExists) {
-        errors.push({
-          message: `Table "${tableName}" not found. Available tables: ${schemaInfo.map(t => t.tableName).join(', ')}`,
-          type: 'error'
-        });
-      }
-    } else if (trimmedQuery.startsWith('SELECT')) {
-      errors.push({
-        message: 'No table specified in FROM clause',
-        type: 'error'
-      });
-    }
+    // Execute using extracted utility
+    const result = await runQuery(sqlQuery);
+    setQueryResult(result);
+    setIsExecuting(false);
 
-    // Check for common SQL injection patterns
-    if (query.match(/;\s*(DROP|DELETE|UPDATE|INSERT|ALTER|CREATE)/i)) {
-      errors.push({
-        message: 'Potentially dangerous SQL keywords detected',
-        type: 'error'
+    // Add to history
+    if (result.type === 'success') {
+      addToHistory(sqlQuery, true, result.rowCount);
+      toast({
+        title: "Query executed successfully",
+        description: `Retrieved ${result.rowCount} rows`,
       });
+    } else {
+      addToHistory(sqlQuery, false, undefined, result.error);
     }
-
-    // Warn if no LIMIT clause
-    if (!query.match(/LIMIT\s+\d+/i)) {
-      errors.push({
-        message: 'Consider adding a LIMIT clause to avoid retrieving too many rows',
-        type: 'warning'
-      });
-    }
-
-    return errors;
   };
 
   const copyToClipboard = (code: string, id: string) => {
@@ -360,87 +222,6 @@ const DocsTroubleshooting = () => {
     }
   };
 
-  const executeQuery = async () => {
-    setIsExecuting(true);
-    setQueryResult(null);
-
-    // Validate query before execution
-    const errors = validateQuery(sqlQuery);
-    const hasErrors = errors.some(e => e.type === 'error');
-    
-    if (hasErrors) {
-      setQueryResult({
-        error: errors.find(e => e.type === 'error')?.message || 'Query validation failed',
-        type: "error"
-      });
-      setIsExecuting(false);
-      return;
-    }
-
-    try {
-      // Basic safety check - only allow SELECT queries
-      const trimmedQuery = sqlQuery.trim().toUpperCase();
-      if (!trimmedQuery.startsWith("SELECT")) {
-        setQueryResult({
-          error: "Only SELECT queries are allowed for safety. Use the backend dashboard for data modifications.",
-          type: "error"
-        });
-        setIsExecuting(false);
-        return;
-      }
-
-      // Parse table name from query (basic parsing)
-      const tableMatch = sqlQuery.match(/FROM\s+(\w+)/i);
-      if (!tableMatch) {
-        setQueryResult({
-          error: "Could not parse table name from query. Use format: SELECT * FROM table_name",
-          type: "error"
-        });
-        setIsExecuting(false);
-        return;
-      }
-
-      const tableName = tableMatch[1];
-      const limitMatch = sqlQuery.match(/LIMIT\s+(\d+)/i);
-      const limit = limitMatch ? parseInt(limitMatch[1]) : 10;
-
-      // Execute query using Supabase client (with type casting for dynamic table)
-      const { data, error } = await (supabase as any)
-        .from(tableName)
-        .select('*')
-        .limit(limit);
-
-      if (error) {
-        setQueryResult({
-          error: error.message,
-          hint: error.hint || "Check your table name and RLS policies",
-          type: "error"
-        });
-        addToHistory(sqlQuery, false, undefined, error.message);
-      } else {
-        const rowCount = Array.isArray(data) ? data.length : 0;
-        setQueryResult({
-          data: data || [],
-          type: "success",
-          rowCount
-        });
-        addToHistory(sqlQuery, true, rowCount);
-        toast({
-          title: "Query executed successfully",
-          description: `Retrieved ${rowCount} rows from ${tableName}`,
-        });
-      }
-    } catch (err: any) {
-      setQueryResult({
-        error: err.message || "Failed to execute query",
-        type: "error"
-      });
-      addToHistory(sqlQuery, false, undefined, err.message);
-    } finally {
-      setIsExecuting(false);
-    }
-  };
-
   const exampleQueries = [
     {
       name: "View User Roles",
@@ -460,55 +241,8 @@ const DocsTroubleshooting = () => {
     }
   ];
 
-  // Create SQL autocompletion source
-  const sqlCompletions = (context: any) => {
-    const word = context.matchBefore(/\w*/);
-    if (!word || (word.from === word.to && !context.explicit)) return null;
-
-    const options: any[] = [];
-
-    // Add table names
-    schemaInfo.forEach(table => {
-      options.push({
-        label: table.tableName,
-        type: 'table',
-        detail: 'table',
-        boost: 99
-      });
-
-      // Add columns for each table
-      table.columns.forEach(column => {
-        options.push({
-          label: `${table.tableName}.${column}`,
-          type: 'property',
-          detail: `column in ${table.tableName}`,
-          boost: 90
-        });
-        options.push({
-          label: column,
-          type: 'property',
-          detail: 'column',
-          boost: 85
-        });
-      });
-    });
-
-    // Add SQL keywords
-    const keywords = ['SELECT', 'FROM', 'WHERE', 'ORDER BY', 'LIMIT', 'GROUP BY', 'HAVING', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'ON', 'AND', 'OR', 'NOT', 'IN', 'LIKE', 'BETWEEN', 'IS NULL', 'IS NOT NULL', 'COUNT', 'SUM', 'AVG', 'MAX', 'MIN', 'DISTINCT', 'AS'];
-    keywords.forEach(keyword => {
-      options.push({
-        label: keyword,
-        type: 'keyword',
-        boost: 70
-      });
-    });
-
-    return {
-      from: word.from,
-      options: options,
-      validFor: /^\w*$/
-    };
-  };
+  // Create SQL autocompletion using extracted utility
+  const sqlCompletions = createSqlCompletions(schemaInfo);
   
   return (
     <div className="min-h-screen bg-background">
@@ -696,7 +430,7 @@ const DocsTroubleshooting = () => {
                       onChange={(value) => {
                         setSqlQuery(value);
                         // Validate on change
-                        const errors = validateQuery(value);
+                        const errors = validateQuery(value, schemaInfo);
                         setValidationErrors(errors);
                       }}
                       theme="light"
