@@ -12,6 +12,7 @@ import { Vanity3DPreview } from "@/components/Vanity3DPreview";
 import { TextureSwatch } from "@/components/TextureSwatch";
 import { TexturePreviewModal } from "@/components/TexturePreviewModal";
 import { EmailQuoteDialog } from "./EmailQuoteDialog";
+import { SharePreviewCard } from "@/components/SharePreviewCard";
 import { useVanityConfig, useSavedTemplates } from "@/features/vanity-designer";
 import { calculateCompletePricing, formatPrice, generateVanityQuotePDF, generateShareableURL, copyToClipboard } from "@/features/vanity-designer/services";
 import { toast } from "sonner";
@@ -48,6 +49,8 @@ export const VanityDesignerApp = () => {
   const [textureModalOpen, setTextureModalOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
   
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -153,14 +156,14 @@ export const VanityDesignerApp = () => {
     }
   };
 
-  const handleShare = async () => {
+  const handleShare = () => {
     if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish) {
       toast.error("Please configure your vanity first");
       return;
     }
 
     try {
-      const shareUrl = generateShareableURL({
+      const url = generateShareableURL({
         brand: vanityConfig.selectedBrand,
         finish: vanityConfig.selectedFinish,
         width: vanityConfig.width,
@@ -184,13 +187,8 @@ export const VanityDesignerApp = () => {
         state: vanityConfig.state || '',
       });
 
-      const copied = await copyToClipboard(shareUrl);
-      
-      if (copied) {
-        toast.success("Share link copied to clipboard!");
-      } else {
-        toast.error("Failed to copy link. Please try again.");
-      }
+      setShareUrl(url);
+      setShareModalOpen(true);
     } catch (error) {
       console.error("Error generating share link:", error);
       toast.error("Failed to generate share link");
@@ -628,6 +626,13 @@ export const VanityDesignerApp = () => {
         open={emailDialogOpen}
         onOpenChange={setEmailDialogOpen}
         onSendEmail={handleEmailQuote}
+      />
+
+      {/* Share QR Code Modal */}
+      <SharePreviewCard
+        open={shareModalOpen}
+        onOpenChange={setShareModalOpen}
+        shareUrl={shareUrl}
       />
     </div>
   );
