@@ -13,15 +13,17 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  CABINET_CATALOG, 
-  MATERIAL_FINISHES, 
-  DOOR_STYLES,
-  HARDWARE_OPTIONS,
+import { type CabinetSpec } from "@/lib/cabinetCatalog";
+import {
+  getCabinetTypes,
+  getCategoriesForType,
+  getCabinetsByCategory,
+  getDoorStyle,
+  getMaterialFinish,
   calculateCabinetPrice,
   formatPrice,
-  type CabinetSpec 
-} from "@/lib/cabinetCatalog";
+  getCatalogData,
+} from "@/services/cabinetCatalogService";
 import { DoorStylePreview } from "@/components/DoorStylePreview";
 import { 
   Box, 
@@ -66,7 +68,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
   const [selectedCabinet, setSelectedCabinet] = useState<CabinetSpec | null>(null);
   const [selectedFinishId, setSelectedFinishId] = useState<string>("tafisa-white");
   const [selectedDoorStyleId, setSelectedDoorStyleId] = useState<string>("flat-framed");
-  const [selectedHandleType, setSelectedHandleType] = useState<keyof typeof HARDWARE_OPTIONS.handles>("bar");
+  const [selectedHandleType, setSelectedHandleType] = useState<"bar" | "knob" | "fingerPull" | "fingerPull45" | "none">("bar");
   const [numHandles, setNumHandles] = useState(2);
   const [comparisonStyles, setComparisonStyles] = useState<string[]>([]);
   const [comparisonFinishes, setComparisonFinishes] = useState<string[]>([]);
@@ -76,6 +78,9 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
   const finishComparisonRef = useRef<HTMLDivElement>(null);
 
   const totalSteps = 5;
+  
+  // Get catalog data once
+  const { doorStyles, materialFinishes, hardwareOptions } = getCatalogData();
 
   // Export comparison as image
   const exportAsImage = async () => {
@@ -191,20 +196,14 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
     }
   };
 
-  // Get unique cabinet types
-  const cabinetTypes = ["Base Cabinet", "Wall Cabinet", "Tall Cabinet", "Specialty"];
+  // Get unique cabinet types from service
+  const cabinetTypes = getCabinetTypes();
 
-  // Get categories for selected type
-  const getCategories = (type: string) => {
-    const cabinets = CABINET_CATALOG.filter(c => c.type === type);
-    return [...new Set(cabinets.map(c => c.category))];
-  };
+  // Get categories for selected type from service
+  const categories = selectedType ? getCategoriesForType(selectedType) : [];
 
-  // Get cabinets for selected category
-  const getCabinetsForCategory = () => {
-    if (!selectedCategory) return [];
-    return CABINET_CATALOG.filter(c => c.category === selectedCategory);
-  };
+  // Get cabinets for selected category from service
+  const cabinetsForCategory = selectedCategory ? getCabinetsByCategory(selectedCategory) : [];
 
   // Calculate current price
   const currentPrice = selectedCabinet 
@@ -260,7 +259,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-2 gap-3">
                 {cabinetTypes.map((type) => {
-                  const count = CABINET_CATALOG.filter(c => c.type === type).length;
+                  const count = getCabinetsByCategory(type).length;
                   return (
                     <Card
                       key={type}
@@ -293,8 +292,8 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
           {step === 2 && selectedType && (
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-1 gap-2">
-                {getCategories(selectedType).map((category) => {
-                  const count = CABINET_CATALOG.filter(c => c.category === category).length;
+                {categories.map((category) => {
+                  const count = getCabinetsByCategory(category).length;
                   return (
                     <Card
                       key={category}
@@ -326,7 +325,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
           {step === 3 && selectedCategory && (
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-1 gap-2">
-                {getCabinetsForCategory().map((cabinet) => (
+                {cabinetsForCategory.map((cabinet) => (
                   <Card
                     key={cabinet.code}
                     className={`p-3 cursor-pointer transition-all hover:border-primary ${
@@ -407,7 +406,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                   </div>
                   <div ref={comparisonRef} className={`grid gap-3 ${comparisonStyles.length === 2 ? 'grid-cols-2' : 'grid-cols-3'} bg-white p-4 rounded-lg`}>
                     {comparisonStyles.map((styleId) => {
-                      const style = DOOR_STYLES.find(s => s.id === styleId);
+                      const style = getDoorStyle(styleId);
                       if (!style) return null;
                       return (
                         <Card key={styleId} className="p-3 space-y-2 bg-card">
@@ -463,7 +462,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                   
                   {/* Framed Styles */}
                   <TabsContent value="framed" className="space-y-2 mt-3">
-                    {DOOR_STYLES.filter(s => s.frameType === "framed").map((style) => (
+                    {doorStyles.filter(s => s.frameType === "framed").map((style) => (
                       <Card
                         key={style.id}
                         className={`p-3 cursor-pointer transition-all hover:border-primary ${
@@ -520,7 +519,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                         <span className="font-semibold">Frameless (European Style):</span> Full overlay doors with no face frame. Modern, seamless look with easier cleaning.
                       </p>
                     </div>
-                    {DOOR_STYLES.filter(s => s.frameType === "frameless").map((style) => (
+                    {doorStyles.filter(s => s.frameType === "frameless").map((style) => (
                       <Card
                         key={style.id}
                         className={`p-3 cursor-pointer transition-all hover:border-primary ${
@@ -577,7 +576,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                         <span className="font-semibold">Inset Construction:</span> Premium doors sit flush inside the face frame. Fine furniture quality with precise fit and traditional craftsmanship.
                       </p>
                     </div>
-                    {DOOR_STYLES.filter(s => s.frameType === "inset").map((style) => (
+                    {doorStyles.filter(s => s.frameType === "inset").map((style) => (
                       <Card
                         key={style.id}
                         className={`p-3 cursor-pointer transition-all hover:border-primary ${
@@ -667,7 +666,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                   </div>
                   <div ref={finishComparisonRef} className={`grid gap-3 ${comparisonFinishes.length === 2 ? 'grid-cols-2' : 'grid-cols-3'} bg-white p-4 rounded-lg`}>
                     {comparisonFinishes.map((finishId) => {
-                      const finish = MATERIAL_FINISHES.find(f => f.id === finishId);
+                      const finish = getMaterialFinish(finishId);
                       if (!finish) return null;
                       return (
                         <Card key={finishId} className="p-3 space-y-2 bg-card">
@@ -719,7 +718,7 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                     <div key={brand}>
                       <Label className="text-xs text-muted-foreground mb-2 block">{brand}</Label>
                       <div className="grid grid-cols-1 gap-2">
-                        {MATERIAL_FINISHES.filter(f => f.brand === brand).map((finish) => (
+                        {materialFinishes.filter(f => f.brand === brand).map((finish) => (
                           <Card
                             key={finish.id}
                             className={`p-2 cursor-pointer transition-all hover:border-primary ${
@@ -771,13 +770,13 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                   <div>
                     <Label className="text-xs mb-2 block">Handle Type</Label>
                     <div className="grid grid-cols-1 gap-2">
-                      {Object.entries(HARDWARE_OPTIONS.handles).map(([key, value]) => (
+                      {Object.entries(hardwareOptions.handles).map(([key, value]) => (
                         <Card
                           key={key}
                           className={`p-2 cursor-pointer transition-all hover:border-primary ${
                             selectedHandleType === key ? "border-primary bg-primary/5" : ""
                           }`}
-                          onClick={() => setSelectedHandleType(key as keyof typeof HARDWARE_OPTIONS.handles)}
+                          onClick={() => setSelectedHandleType(key as "bar" | "knob" | "fingerPull" | "fingerPull45" | "none")}
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
@@ -838,21 +837,21 @@ export function CabinetWizard({ open, onOpenChange, onComplete }: CabinetWizardP
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Door Style:</span>
                     <span className="font-medium">
-                      {DOOR_STYLES.find(d => d.id === selectedDoorStyleId)?.name}
+                      {getDoorStyle(selectedDoorStyleId)?.name}
                     </span>
                   </div>
                   
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Finish:</span>
                     <span className="font-medium">
-                      {MATERIAL_FINISHES.find(f => f.id === selectedFinishId)?.brand} - {MATERIAL_FINISHES.find(f => f.id === selectedFinishId)?.name}
+                      {getMaterialFinish(selectedFinishId)?.brand} - {getMaterialFinish(selectedFinishId)?.name}
                     </span>
                   </div>
                   
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Hardware:</span>
                     <span className="font-medium">
-                      {numHandles}× {HARDWARE_OPTIONS.handles[selectedHandleType].name}
+                      {numHandles}× {hardwareOptions.handles[selectedHandleType].name}
                     </span>
                   </div>
                   

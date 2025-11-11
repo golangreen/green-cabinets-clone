@@ -10,7 +10,9 @@ import {
   HARDWARE_OPTIONS,
   CabinetSpec,
   DoorStyle,
-  MaterialFinish
+  MaterialFinish,
+  calculateCabinetPrice as libCalculateCabinetPrice,
+  formatPrice as libFormatPrice
 } from '@/lib/cabinetCatalog';
 
 export interface CabinetSearchFilters {
@@ -62,6 +64,22 @@ export function getCategories(): string[] {
 }
 
 /**
+ * Get categories for a specific cabinet type
+ */
+export function getCategoriesForType(type: string): string[] {
+  const cabinets = CABINET_CATALOG.filter(c => c.type === type);
+  const categories = new Set(cabinets.map(c => c.category));
+  return Array.from(categories);
+}
+
+/**
+ * Get cabinets by category
+ */
+export function getCabinetsByCategory(category: string): CabinetSpec[] {
+  return CABINET_CATALOG.filter(c => c.category === category);
+}
+
+/**
  * Get all unique cabinet types
  */
 export function getCabinetTypes(): string[] {
@@ -70,20 +88,38 @@ export function getCabinetTypes(): string[] {
 }
 
 /**
- * Calculate cabinet price with material and door style multipliers
+ * Calculate cabinet price with material, door style, and hardware
+ * Uses the full calculation including hardware costs
  */
 export function calculateCabinetPrice(
+  cabinet: CabinetSpec,
+  finishId: string,
+  doorStyleId: string = "flat-framed",
+  handleType: keyof typeof HARDWARE_OPTIONS.handles = "bar",
+  numHandles: number = 2
+): number {
+  return libCalculateCabinetPrice(cabinet, finishId, doorStyleId, handleType, numHandles);
+}
+
+/**
+ * Calculate cabinet price by code (simpler version without hardware)
+ */
+export function calculateCabinetPriceByCode(
   cabinetCode: string,
   materialFinishId: string,
   doorStyleId: string
 ): number {
   const cabinet = getCabinetByCode(cabinetCode);
-  const material = MATERIAL_FINISHES.find(m => m.id === materialFinishId);
-  const doorStyle = DOOR_STYLES.find(d => d.id === doorStyleId);
+  if (!cabinet) return 0;
   
-  if (!cabinet || !material || !doorStyle) return 0;
-  
-  return cabinet.basePrice * material.priceMultiplier * doorStyle.priceMultiplier;
+  return calculateCabinetPrice(cabinet, materialFinishId, doorStyleId, "none", 0);
+}
+
+/**
+ * Format price as currency string
+ */
+export function formatPrice(price: number): string {
+  return libFormatPrice(price);
 }
 
 /**
@@ -188,10 +224,15 @@ export function calculateProjectTotal(
   
   // Calculate cabinet costs
   cabinets.forEach(item => {
+    const cabinet = getCabinetByCode(item.code);
+    if (!cabinet) return;
+    
     const cabinetPrice = calculateCabinetPrice(
-      item.code,
+      cabinet,
       item.materialFinishId,
-      item.doorStyleId
+      item.doorStyleId,
+      hardwareConfig?.handleType || "none",
+      0
     );
     total += cabinetPrice * item.quantity;
     
@@ -207,6 +248,18 @@ export function calculateProjectTotal(
   });
   
   return total;
+}
+
+/**
+ * Export catalog data (for external use)
+ */
+export function getCatalogData() {
+  return {
+    cabinets: CABINET_CATALOG,
+    doorStyles: DOOR_STYLES,
+    materialFinishes: MATERIAL_FINISHES,
+    hardwareOptions: HARDWARE_OPTIONS,
+  };
 }
 
 /**
