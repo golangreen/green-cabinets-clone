@@ -103,7 +103,7 @@ const Header = () => {
         ? 'bg-white border-gray-200 shadow-sm' 
         : 'bg-[#1a1a1a] border-transparent'
     }`}>
-      <nav className="container relative mx-auto px-4 md:px-6 py-4 md:py-5">
+      <nav className="container relative mx-auto px-4 md:px-6 py-5 md:py-6">
         <div className="flex items-center justify-between">
           {/* Centered Logo */}
           <div className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ${
@@ -113,7 +113,7 @@ const Header = () => {
               <img 
                 src={logoTeal}
                 alt="Green Cabinets Logo" 
-                className="h-16 md:h-20 w-auto transition-all duration-300" 
+                className="h-24 md:h-28 w-auto transition-all duration-300" 
               />
             </a>
           </div>
