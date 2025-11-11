@@ -51,14 +51,14 @@ const Features = () => {
                   className="w-full h-full min-h-[300px] object-cover group-hover:scale-105 transition-transform duration-700"
                 />
               </div>
-              <div className="md:w-1/2 p-12 flex flex-col justify-center space-y-6">
-                <div className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold w-fit">
+              <div className="md:w-1/2 p-12 flex flex-col justify-center space-y-6 bg-white">
+                <div className="inline-block px-4 py-2 bg-[#2dd4bf]/10 text-[#2dd4bf] rounded-full text-sm font-semibold w-fit">
                   {feature.stats}
                 </div>
-                <h3 className="font-display text-4xl font-bold text-foreground">
+                <h3 className="font-display text-4xl font-bold text-gray-900">
                   {feature.title}
                 </h3>
-                <p className="text-lg text-muted-foreground leading-relaxed">
+                <p className="text-lg text-gray-600 leading-relaxed">
                   {feature.description}
                 </p>
               </div>

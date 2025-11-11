@@ -33,7 +33,7 @@ const Services = () => {
           <h2 className="text-5xl md:text-6xl font-serif text-gray-900">
             Our interior design services
           </h2>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-gray-600">
             From design to installation, we make premium cabinetry accessible to everyone.
           </p>
         </div>
@@ -42,18 +42,18 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={service.title}
-              className="group p-8 rounded-2xl bg-card border border-border shadow-sm hover:shadow-[var(--shadow-glow)] transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02]"
+              className="group p-8 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 ease-out hover:-translate-y-2"
               style={{
                 animationDelay: `${index * 150}ms`,
               }}
             >
-              <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <service.icon className="w-8 h-8 text-primary" />
+              <div className="w-16 h-16 rounded-xl bg-[#2dd4bf]/10 flex items-center justify-center mb-6 group-hover:bg-[#2dd4bf]/20 transition-colors">
+                <service.icon className="w-8 h-8 text-[#2dd4bf]" />
               </div>
-              <h3 className="font-display text-2xl font-bold text-foreground mb-3">
+              <h3 className="font-display text-2xl font-bold text-gray-900 mb-3">
                 {service.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-gray-600 leading-relaxed">
                 {service.description}
               </p>
             </div>
