@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { VanityConfig, VanityDimensions } from "@/types/vanity";
 import { inchesWithFractionToDecimal } from "../services/vanityPricingService";
+import { decodeShareableURL } from "../services/shareService";
 
 export interface UseVanityConfigReturn {
   // Brand & Finish
@@ -356,10 +357,50 @@ export const useVanityConfig = (): UseVanityConfigReturn => {
       setCabinetPosition(config.cabinetPosition);
     }
   };
+
+  // Load shared configuration from URL
+  const loadSharedConfiguration = () => {
+    const sharedConfig = decodeShareableURL();
+    if (sharedConfig) {
+      console.log('Loading shared configuration from URL', sharedConfig);
+      
+      if (sharedConfig.brand) setSelectedBrand(sharedConfig.brand);
+      if (sharedConfig.finish) setSelectedFinish(sharedConfig.finish);
+      if (sharedConfig.width) setWidth(sharedConfig.width);
+      if (sharedConfig.widthFraction) setWidthFraction(sharedConfig.widthFraction);
+      if (sharedConfig.height) setHeight(sharedConfig.height);
+      if (sharedConfig.heightFraction) setHeightFraction(sharedConfig.heightFraction);
+      if (sharedConfig.depth) setDepth(sharedConfig.depth);
+      if (sharedConfig.depthFraction) setDepthFraction(sharedConfig.depthFraction);
+      if (sharedConfig.doorStyle) setDoorStyle(sharedConfig.doorStyle);
+      if (sharedConfig.numDrawers) setNumDrawers(sharedConfig.numDrawers);
+      if (sharedConfig.handleStyle) setHandleStyle(sharedConfig.handleStyle);
+      if (sharedConfig.cabinetPosition) setCabinetPosition(sharedConfig.cabinetPosition);
+      if (sharedConfig.includeRoom !== undefined) setIncludeRoom(sharedConfig.includeRoom);
+      if (sharedConfig.roomLength) setRoomLength(sharedConfig.roomLength);
+      if (sharedConfig.roomWidth) setRoomWidth(sharedConfig.roomWidth);
+      if (sharedConfig.floorType) setFloorType(sharedConfig.floorType);
+      if (sharedConfig.tileColor) setTileColor(sharedConfig.tileColor);
+      if (sharedConfig.woodFloorFinish) setWoodFloorFinish(sharedConfig.woodFloorFinish);
+      if (sharedConfig.includeWalls !== undefined) setIncludeWalls(sharedConfig.includeWalls);
+      if (sharedConfig.wallTileColor) setWallTileColor(sharedConfig.wallTileColor);
+      if (sharedConfig.state) setState(sharedConfig.state);
+      
+      toast.success("Loaded shared vanity design!");
+      return true;
+    }
+    return false;
+  };
   
-  // Load scanned measurements on mount
+  // Load scanned measurements or shared config on mount
   useEffect(() => {
-    loadScannedMeasurements();
+    // Try to load shared configuration first
+    const loadedShared = loadSharedConfiguration();
+    
+    // If no shared config, load scanned measurements
+    if (!loadedShared) {
+      loadScannedMeasurements();
+    }
   }, []);
   
   return {

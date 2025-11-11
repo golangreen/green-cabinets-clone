@@ -12,7 +12,7 @@ import { Vanity3DPreview } from "@/components/Vanity3DPreview";
 import { TextureSwatch } from "@/components/TextureSwatch";
 import { TexturePreviewModal } from "@/components/TexturePreviewModal";
 import { useVanityConfig, useSavedTemplates } from "@/features/vanity-designer";
-import { calculateCompletePricing, formatPrice, generateVanityQuotePDF } from "@/features/vanity-designer/services";
+import { calculateCompletePricing, formatPrice, generateVanityQuotePDF, generateShareableURL, copyToClipboard } from "@/features/vanity-designer/services";
 import { toast } from "sonner";
 import { Save, Download, Share2, Maximize2, Scan, X } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
@@ -147,6 +147,50 @@ export const VanityDesignerApp = () => {
       toast.error("Failed to generate PDF");
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish) {
+      toast.error("Please configure your vanity first");
+      return;
+    }
+
+    try {
+      const shareUrl = generateShareableURL({
+        brand: vanityConfig.selectedBrand,
+        finish: vanityConfig.selectedFinish,
+        width: vanityConfig.width,
+        widthFraction: vanityConfig.widthFraction,
+        height: vanityConfig.height,
+        heightFraction: vanityConfig.heightFraction,
+        depth: vanityConfig.depth,
+        depthFraction: vanityConfig.depthFraction,
+        doorStyle: vanityConfig.doorStyle,
+        numDrawers: vanityConfig.numDrawers,
+        handleStyle: vanityConfig.handleStyle,
+        cabinetPosition: vanityConfig.cabinetPosition,
+        includeRoom: vanityConfig.includeRoom,
+        roomLength: vanityConfig.roomLength,
+        roomWidth: vanityConfig.roomWidth,
+        floorType: vanityConfig.floorType,
+        tileColor: vanityConfig.tileColor,
+        woodFloorFinish: vanityConfig.woodFloorFinish,
+        includeWalls: vanityConfig.includeWalls,
+        wallTileColor: vanityConfig.wallTileColor,
+        state: vanityConfig.state || '',
+      });
+
+      const copied = await copyToClipboard(shareUrl);
+      
+      if (copied) {
+        toast.success("Share link copied to clipboard!");
+      } else {
+        toast.error("Failed to copy link. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error generating share link:", error);
+      toast.error("Failed to generate share link");
     }
   };
 
@@ -437,7 +481,11 @@ export const VanityDesignerApp = () => {
                 <Download className="h-4 w-4" />
                 {isExporting ? "Generating..." : "Export PDF"}
               </Button>
-              <Button variant="outline" className="gap-2">
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={handleShare}
+              >
                 <Share2 className="h-4 w-4" />
                 Share
               </Button>
