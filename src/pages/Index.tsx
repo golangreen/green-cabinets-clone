@@ -11,19 +11,23 @@ const Index = () => {
       <SyncStatusIndicator />
       <Header />
       <Hero />
-      <Services />
-      <Features />
-      <About />
+      <div className="bg-geometric-pattern-subtle">
+        <Services />
+        <Features />
+        <About />
+      </div>
       <Gallery />
-      <FeatureErrorBoundary
-        featureName="Product Catalog"
-        featureTag="shop-products"
-        fallbackRoute="/"
-      >
-        <ShopProducts />
-      </FeatureErrorBoundary>
-      <Suppliers />
-      <Contact />
+      <div className="bg-geometric-pattern-subtle">
+        <FeatureErrorBoundary
+          featureName="Product Catalog"
+          featureTag="shop-products"
+          fallbackRoute="/"
+        >
+          <ShopProducts />
+        </FeatureErrorBoundary>
+        <Suppliers />
+        <Contact />
+      </div>
       <CTA />
       <Footer />
       <Chatbot />
