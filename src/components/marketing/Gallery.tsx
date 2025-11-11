@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import bathroomMarble from "@/assets/gallery/bathroom-marble.jpg";
 import kitchenModernWhite from "@/assets/gallery/kitchen-modern-white.jpg";
@@ -130,6 +132,7 @@ interface GalleryImage {
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState<Category>("all");
   const [showAllImages, setShowAllImages] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const { ref, isVisible } = useScrollReveal({ threshold: 0.1 });
 
   useEffect(() => {
@@ -330,6 +333,32 @@ const Gallery = () => {
   const closets = galleryImages.filter(img => img.category === "closets");
   const designToReality = galleryImages.filter(img => img.category === "design-to-reality");
 
+  const handlePrevImage = () => {
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex((selectedImageIndex - 1 + displayedImages.length) % displayedImages.length);
+    }
+  };
+
+  const handleNextImage = () => {
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex((selectedImageIndex + 1) % displayedImages.length);
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (selectedImageIndex !== null) {
+      if (e.key === "ArrowLeft") handlePrevImage();
+      if (e.key === "ArrowRight") handleNextImage();
+      if (e.key === "Escape") setSelectedImageIndex(null);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedImageIndex, displayedImages.length]);
+
+
   return (
     <section 
       ref={ref as React.RefObject<HTMLElement>}
@@ -399,8 +428,9 @@ const Gallery = () => {
           {displayedImages.map((image, index) => (
             <div 
               key={index}
-              className="group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 bg-card"
+              className="group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 bg-card cursor-pointer"
               style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => setSelectedImageIndex(index)}
             >
               <div className="relative">
                 <div className="aspect-[4/3] overflow-hidden bg-muted">
@@ -457,6 +487,61 @@ const Gallery = () => {
             </Button>
           </div>
         )}
+
+        {/* Lightbox Modal */}
+        <Dialog open={selectedImageIndex !== null} onOpenChange={() => setSelectedImageIndex(null)}>
+          <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-black/95 border-none">
+            {selectedImageIndex !== null && (
+              <div className="relative w-full h-full flex items-center justify-center">
+                {/* Close Button */}
+                <button
+                  onClick={() => setSelectedImageIndex(null)}
+                  className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                  aria-label="Close"
+                >
+                  <X className="w-6 h-6 text-white" />
+                </button>
+
+                {/* Previous Button */}
+                {displayedImages.length > 1 && (
+                  <button
+                    onClick={handlePrevImage}
+                    className="absolute left-4 z-50 p-3 rounded-full bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft className="w-6 h-6 text-white" />
+                  </button>
+                )}
+
+                {/* Image */}
+                <div className="flex flex-col items-center justify-center max-w-full max-h-full p-16">
+                  <img
+                    src={displayedImages[selectedImageIndex].src}
+                    alt={displayedImages[selectedImageIndex].alt}
+                    className="max-w-full max-h-[80vh] object-contain"
+                  />
+                  <p className="text-white text-center mt-4 text-sm md:text-base max-w-2xl">
+                    {displayedImages[selectedImageIndex].alt}
+                  </p>
+                  <p className="text-white/60 text-center mt-2 text-xs">
+                    {selectedImageIndex + 1} / {displayedImages.length}
+                  </p>
+                </div>
+
+                {/* Next Button */}
+                {displayedImages.length > 1 && (
+                  <button
+                    onClick={handleNextImage}
+                    className="absolute right-4 z-50 p-3 rounded-full bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight className="w-6 h-6 text-white" />
+                  </button>
+                )}
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );
