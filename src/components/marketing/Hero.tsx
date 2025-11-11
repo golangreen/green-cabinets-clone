@@ -96,7 +96,7 @@ const Hero = () => {
   return (
     <>
       {/* Hero Text Section - Above Images */}
-      <section className="relative bg-gray-50 pt-32 md:pt-40 pb-12 md:pb-16">
+      <section className="relative bg-gray-50 pt-36 md:pt-44 pb-12 md:pb-16">
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-gray-900 mb-6 leading-tight drop-shadow-2xl animate-fade-in">
             Transform Your Space

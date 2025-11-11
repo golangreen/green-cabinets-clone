@@ -103,17 +103,20 @@ const Header = () => {
       isScrolled ? 'bg-white shadow-lg' : 'bg-[#1a1a1a] shadow-lg'
     }`}>
       <nav className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex items-center">
+        <div className="flex items-center justify-between h-24 md:h-28">
+          {/* Empty space for balance on left */}
+          <div className="w-12"></div>
+          
+          {/* Centered Logo */}
+          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex items-center absolute left-1/2 transform -translate-x-1/2">
             <img 
               src={isScrolled ? logoBlack : logoTeal}
               alt="Green Cabinets Logo" 
-              className="h-14 w-auto transition-all duration-300"
+              className="h-16 md:h-20 w-auto transition-all duration-300"
             />
           </a>
           
-          {/* Mobile Menu Toggle - Now for all screens */}
+          {/* Hamburger Menu - Right Side */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button 
@@ -123,7 +126,7 @@ const Header = () => {
                   isScrolled ? 'text-gray-900 hover:text-gray-700' : 'text-[#2dd4bf] hover:text-[#2dd4bf]/80'
                 }`}
               >
-                <Menu className="h-6 w-6" />
+                <Menu className="h-7 w-7" />
               </Button>
             </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display overflow-y-auto">
