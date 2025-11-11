@@ -45,6 +45,7 @@ const Hero = () => {
   const [shuffledImages] = useState(() => shuffleArray(heroImages));
   const [recentIndices, setRecentIndices] = useState<number[]>([0]);
   const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
+  const [scrollY, setScrollY] = useState(0);
 
   const handleLaunchClick = () => {
     if (isMobile) {
@@ -71,6 +72,16 @@ const Hero = () => {
     return availableIndices[Math.floor(Math.random() * availableIndices.length)];
   };
 
+  // Parallax scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       const nextIdx = getNextRandomIndex();
@@ -95,7 +106,7 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden touch-pan-y pt-32 md:pt-40">
-      {/* Background Images with Enhanced Crossfade */}
+      {/* Background Images with Enhanced Crossfade and Parallax */}
       <div className="absolute inset-0 bg-black select-none">
         {/* Current Image - fades out */}
         <div
@@ -104,6 +115,7 @@ const Hero = () => {
             opacity: isTransitioning ? 0 : 1,
             transition: 'opacity 2500ms ease-in-out',
             zIndex: 1,
+            transform: `translateY(${scrollY * 0.5}px)`,
           }}
         >
           <img 
@@ -112,7 +124,8 @@ const Hero = () => {
             className="w-full h-full object-cover pointer-events-none" 
             style={{ 
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-              willChange: 'opacity'
+              willChange: 'opacity, transform',
+              transform: 'scale(1.15)',
             }}
             loading="eager"
             decoding="async"
@@ -126,6 +139,7 @@ const Hero = () => {
             opacity: isTransitioning ? 1 : 0,
             transition: 'opacity 2500ms ease-in-out',
             zIndex: 2,
+            transform: `translateY(${scrollY * 0.5}px)`,
           }}
         >
           <img 
@@ -134,7 +148,8 @@ const Hero = () => {
             className="w-full h-full object-cover pointer-events-none" 
             style={{ 
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-              willChange: 'opacity'
+              willChange: 'opacity, transform',
+              transform: 'scale(1.15)',
             }}
             loading="eager"
             decoding="async"
