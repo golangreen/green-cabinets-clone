@@ -13,7 +13,7 @@ const About = () => {
     >
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="font-display text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-5xl md:text-6xl font-serif text-gray-900 mb-6">
             About Green Cabinets
           </h2>
           <div className="space-y-6 text-lg text-gray-800 leading-relaxed">

@@ -340,8 +340,8 @@ const Gallery = () => {
     >
       <div className="container mx-auto px-6">
         <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Our Work</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-5xl md:text-6xl font-serif text-gray-900 mb-6">Our Work</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Explore our portfolio of custom cabinetry and woodwork projects
           </p>
         </div>

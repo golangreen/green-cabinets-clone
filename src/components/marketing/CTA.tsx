@@ -31,13 +31,13 @@ const CTA = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-6 text-center">
         <div className="max-w-4xl mx-auto space-y-8">
-          <h2 className="font-display text-5xl md:text-6xl font-bold text-white leading-tight">
+          <h2 className="text-5xl md:text-6xl font-serif text-white leading-tight drop-shadow-2xl">
             All your storage needs,
             <br />
             in one place.
           </h2>
           
-          <p className="text-xl text-primary-foreground/90 max-w-2xl mx-auto">
+          <p className="text-xl text-white/90 max-w-2xl mx-auto drop-shadow-lg">
             Join thousands of happy homeowners who transformed their spaces with Green Cabinets.
           </p>
           
