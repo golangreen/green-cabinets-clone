@@ -513,7 +513,6 @@ const Header = () => {
               </div>
               </SheetContent>
             </Sheet>
-          </div>
         </div>
       </nav>
 
@@ -522,7 +521,7 @@ const Header = () => {
         onOpenChange={setShowInstallDialog}
         onInstall={handleInstall}
       />
-     </header>
+    </header>
   );
 };
 export default Header;
