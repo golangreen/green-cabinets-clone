@@ -94,10 +94,10 @@ const Header = () => {
 
   return <header className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
       isScrolled 
-        ? 'bg-background/95 backdrop-blur-sm border-border shadow-sm' 
+        ? 'bg-white border-gray-200 shadow-sm' 
         : 'bg-[#1a1a1a] border-transparent'
     }`}>
-      <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4">
+      <nav className="container relative mx-auto px-4 md:px-6 py-4 md:py-5">
         <div className="flex items-center justify-between">
           {/* Centered Logo with Text */}
           <div className="absolute left-1/2 transform -translate-x-1/2">
@@ -105,9 +105,9 @@ const Header = () => {
               <img 
                 src={logoTeal}
                 alt="Green Cabinets Logo" 
-                className="h-12 md:h-14 w-auto transition-all duration-300" 
+                className="h-14 md:h-16 w-auto transition-all duration-300" 
               />
-              <span className={`font-display text-xs md:text-sm font-bold tracking-widest transition-colors duration-300 ${
+              <span className={`font-display text-xs md:text-sm font-bold tracking-[0.2em] transition-colors duration-300 ${
                 isScrolled ? 'text-[#D4AF37]' : 'text-white'
               }`}>
                 GREEN CABINETS
@@ -120,17 +120,13 @@ const Header = () => {
           
           {/* Right side utilities */}
           <div className="flex items-center gap-3 ml-auto">
-            <ThemeToggle />
-            <CartDrawer />
             {/* Hamburger Menu for ALL navigation */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className={`transition-colors duration-300 ${
-                    isScrolled ? 'text-foreground hover:text-primary' : 'text-[#2dd4bf] hover:text-white'
-                  }`}
+                  className="text-[#2dd4bf] hover:text-[#2dd4bf]/80 hover:bg-transparent transition-colors duration-300"
                 >
                   <Menu className="h-6 w-6" />
                 </Button>
