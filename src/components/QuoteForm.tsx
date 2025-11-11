@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useRecaptcha } from "@/hooks/useRecaptcha";
+import { validators } from "@/lib/formValidation";
 
 interface QuoteFormProps {
   isOpen: boolean;
@@ -27,11 +28,11 @@ const formSchema = z.object({
   style: z.string().min(1, "Please select a style"),
   budget: z.string().min(1, "Please select a budget range"),
   timeline: z.string().min(1, "Please select a timeline"),
-  name: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
-  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  phone: z.string().trim().min(10, "Please enter a valid phone number").max(20, "Phone number is too long"),
+  name: validators.name,
+  email: validators.email,
+  phone: validators.phone,
   address: z.string().trim().min(5, "Please enter your address").max(200, "Address is too long"),
-  message: z.string().trim().max(1000, "Message must be less than 1000 characters").optional(),
+  message: validators.message.optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;

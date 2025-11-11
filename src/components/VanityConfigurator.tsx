@@ -44,6 +44,7 @@ import { supabase } from "@/integrations/supabase/client";
 import html2canvas from 'html2canvas';
 import { SharePreviewCard } from "./SharePreviewCard";
 import { useRef } from "react";
+import { vanityEmailSchema, formatZodError } from "@/lib/formValidation";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -662,16 +663,22 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleEmailConfig = async () => {
-    if (!recipientEmail.trim()) {
-      toast.error("Please enter an email address");
+    // Validate email inputs using Zod schema
+    const validationResult = vanityEmailSchema.safeParse({
+      recipientName: recipientName.trim() || undefined,
+      recipientEmail: recipientEmail.trim(),
+    });
+
+    if (!validationResult.success) {
+      const errors = formatZodError(validationResult.error);
+      const errorMessage = Object.values(errors)[0];
+      toast.error("Invalid input", {
+        description: errorMessage,
+      });
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(recipientEmail)) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
+    const validatedData = validationResult.data;
 
     if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
       toast.error("Please complete the configuration first");
@@ -697,8 +704,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
       const { data, error } = await supabase.functions.invoke('email-vanity-config', {
         body: {
-          recipientEmail: recipientEmail.trim(),
-          recipientName: recipientName.trim() || undefined,
+          recipientEmail: validatedData.recipientEmail,
+          recipientName: validatedData.recipientName,
           recaptchaToken: recaptchaToken || undefined,
           config: {
             brand: selectedBrand,
@@ -725,7 +732,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       if (error) throw error;
 
       toast.success("Configuration emailed successfully!", {
-        description: `Sent to ${recipientEmail}`,
+        description: `Sent to ${validatedData.recipientEmail}`,
       });
 
       setEmailDialogOpen(false);

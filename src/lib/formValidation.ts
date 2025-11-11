@@ -68,9 +68,15 @@ export const authFormSchema = z.object({
   password: validators.password,
 });
 
+export const vanityEmailSchema = z.object({
+  recipientName: validators.name.optional(),
+  recipientEmail: validators.email,
+});
+
 export type ContactFormData = z.infer<typeof contactFormSchema>;
 export type QuoteFormData = z.infer<typeof quoteFormSchema>;
 export type AuthFormData = z.infer<typeof authFormSchema>;
+export type VanityEmailData = z.infer<typeof vanityEmailSchema>;
 
 /**
  * Format validation errors for display
