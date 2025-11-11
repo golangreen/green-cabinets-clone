@@ -44,7 +44,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { toast } from "sonner";
-import { Vanity3DPreview } from "@/components/Vanity3DPreview";
+import { Vanity3DPreview } from "@/features/vanity-designer";
 import { CABINET_CATALOG, calculateCabinetPrice, formatCabinetPrice, MATERIAL_FINISHES, HARDWARE_OPTIONS, DOOR_STYLES, type CabinetSpec } from "@/features/cabinet-catalog";
 import {
   ContextMenu,

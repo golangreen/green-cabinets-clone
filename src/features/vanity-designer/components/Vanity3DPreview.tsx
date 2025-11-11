@@ -2,7 +2,7 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Environment, Line, Html } from "@react-three/drei";
 import { useMemo, useState, useRef } from "react";
 import * as THREE from "three";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { Ruler, Camera, FileDown } from "lucide-react";
 import { toast } from "sonner";
 

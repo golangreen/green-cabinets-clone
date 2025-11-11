@@ -8,11 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Vanity3DPreview } from "@/components/Vanity3DPreview";
-import { TextureSwatch } from "@/components/TextureSwatch";
-import { TexturePreviewModal } from "@/components/TexturePreviewModal";
+import { Vanity3DPreview } from "./Vanity3DPreview";
+import { TextureSwatch } from "./TextureSwatch";
+import { TexturePreviewModal } from "./TexturePreviewModal";
 import { EmailQuoteDialog } from "./EmailQuoteDialog";
-import { SharePreviewCard } from "@/components/SharePreviewCard";
+import { SharePreviewCard } from "./SharePreviewCard";
 import { useVanityConfig, useSavedTemplates } from "@/features/vanity-designer";
 import { calculateCompletePricing, formatPrice, generateVanityQuotePDF, generateShareableURL, copyToClipboard } from "@/features/vanity-designer/services";
 import { toast } from "sonner";
