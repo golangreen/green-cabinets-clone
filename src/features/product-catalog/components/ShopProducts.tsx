@@ -9,24 +9,25 @@ import { useProductCacheStore } from "@/features/product-catalog/stores/productC
 import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-
 export const ShopProducts = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const addItem = useCartStore(state => state.addItem);
   const navigate = useNavigate();
-  const { productsList, isCacheValid, setProducts } = useProductCacheStore();
+  const {
+    productsList,
+    isCacheValid,
+    setProducts
+  } = useProductCacheStore();
 
   // Debounce search term to avoid excessive filtering
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-
   useEffect(() => {
     // Only run in browser, not during SSR/build
     if (typeof window === 'undefined') {
       setLoading(false);
       return;
     }
-
     const loadProducts = async () => {
       // Check if cache is valid
       if (isCacheValid()) {
@@ -34,7 +35,6 @@ export const ShopProducts = () => {
         setLoading(false);
         return;
       }
-
       try {
         console.log('Fetching fresh products from Shopify');
         const productsData = await fetchProducts();
@@ -49,14 +49,12 @@ export const ShopProducts = () => {
     };
     loadProducts();
   }, [isCacheValid, setProducts]);
-
   const handleAddToCart = (product: ShopifyProduct) => {
     const variant = product.node.variants.edges[0]?.node;
     if (!variant) {
       toast.error('Product variant not available');
       return;
     }
-
     const cartItem = {
       product,
       variantId: variant.id,
@@ -65,7 +63,6 @@ export const ShopProducts = () => {
       quantity: 1,
       selectedOptions: variant.selectedOptions || []
     };
-    
     addItem(cartItem);
     toast.success('Added to cart', {
       description: product.node.title,
@@ -74,33 +71,26 @@ export const ShopProducts = () => {
   };
 
   // Filter products based on debounced search term
-  const filteredProducts = productsList.filter((product) => {
+  const filteredProducts = productsList.filter(product => {
     if (!debouncedSearchTerm) return true;
-    
     const searchLower = debouncedSearchTerm.toLowerCase();
     const title = product.node.title.toLowerCase();
     const description = product.node.description.toLowerCase();
-    
     return title.includes(searchLower) || description.includes(searchLower);
   });
-
   if (loading) {
-    return (
-      <div className="py-24 px-4">
+    return <div className="py-24 px-4">
         <div className="container mx-auto text-center">
           <p className="text-muted-foreground">Loading products...</p>
         </div>
-      </div>
-    );
+      </div>;
   }
 
   // Hide shop section if no products (including Shopify errors)
   if (productsList.length === 0) {
     return null;
   }
-
-  return (
-    <section className="py-12 sm:py-16 md:py-24 px-4 bg-white">
+  return <section className="py-12 sm:py-16 md:py-24 px-4 bg-white">
       <div className="container mx-auto">
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900">Our Products</h2>
@@ -113,94 +103,31 @@ export const ShopProducts = () => {
         <div className="max-w-md mx-auto mb-8">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search products..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-10"
-            />
-            {searchTerm && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7"
-                onClick={() => setSearchTerm("")}
-              >
+            <Input type="text" placeholder="Search products..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-10" />
+            {searchTerm && <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7" onClick={() => setSearchTerm("")}>
                 <X className="h-4 w-4" />
-              </Button>
-            )}
+              </Button>}
           </div>
-          {debouncedSearchTerm && (
-            <p className="text-sm text-muted-foreground mt-2">
+          {debouncedSearchTerm && <p className="text-sm text-muted-foreground mt-2">
               Found {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
-            </p>
-          )}
+            </p>}
         </div>
         
         {/* Custom Product Cards */}
         <div className="mb-12">
-          <div className="flex justify-center">
-            <div className="w-full md:w-1/2">
-              {/* Custom Bathroom Vanity */}
-              <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform">
-                <div className="aspect-square overflow-hidden bg-secondary/20">
-                  <img
-                    src="/src/assets/gallery/contemporary-bathroom-wood-vanity-double-sink.jpg"
-                    alt="Custom Bathroom Vanity"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg sm:text-xl">Custom Bathroom Vanity</CardTitle>
-                  <CardDescription className="line-clamp-2 text-sm">
-                    Premium custom bathroom vanities available in Tafisa ($250/ft), Egger ($300/ft), and Shinnoki ($350/ft) finishes. Choose your brand, style, and color from our extensive selection. Provide your exact measurements for a perfectly fitted vanity.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pb-3">
-                  <p className="text-xl sm:text-2xl font-bold">
-                    USD 250.00
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Button 
-                    variant="hero"
-                    className="w-full touch-manipulation"
-                    onClick={() => navigate('/vanity-designer')}
-                  >
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    Design Now
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          </div>
+          
         </div>
 
 
-        {filteredProducts.length === 0 ? (
-          <div className="text-center py-12">
+        {filteredProducts.length === 0 ? <div className="text-center py-12">
             <p className="text-muted-foreground">
               {searchTerm ? 'No products found matching your search.' : 'No products available.'}
             </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {filteredProducts.map((product) => (
-            <Card 
-              key={product.node.id} 
-              className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform"
-              onClick={() => navigate(`/product/${product.node.handle}`)}
-            >
-              {product.node.images.edges[0] && (
-                <div className="aspect-square overflow-hidden bg-secondary/20">
-                  <img
-                    src={product.node.images.edges[0].node.url}
-                    alt={product.node.images.edges[0].node.altText || product.node.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-              )}
+          </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {filteredProducts.map(product => <Card key={product.node.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform" onClick={() => navigate(`/product/${product.node.handle}`)}>
+              {product.node.images.edges[0] && <div className="aspect-square overflow-hidden bg-secondary/20">
+                  <img src={product.node.images.edges[0].node.url} alt={product.node.images.edges[0].node.altText || product.node.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                </div>}
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg sm:text-xl">{product.node.title}</CardTitle>
                 <CardDescription className="line-clamp-2 text-sm">
@@ -214,23 +141,16 @@ export const ShopProducts = () => {
                 </p>
               </CardContent>
               <CardFooter>
-                <Button 
-                  variant="hero"
-                  className="w-full touch-manipulation"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToCart(product);
-                  }}
-                >
+                <Button variant="hero" className="w-full touch-manipulation" onClick={e => {
+              e.stopPropagation();
+              handleAddToCart(product);
+            }}>
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Add to Cart
                 </Button>
               </CardFooter>
-            </Card>
-            ))}
-          </div>
-        )}
+            </Card>)}
+          </div>}
       </div>
-    </section>
-  );
+    </section>;
 };
