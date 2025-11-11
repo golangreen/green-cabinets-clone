@@ -2,17 +2,23 @@ import { useEffect, useState } from "react";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingCart, Package } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ShoppingCart, Search, X } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { useProductCacheStore } from "@/stores/productCacheStore";
+import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 export const ShopProducts = () => {
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const addItem = useCartStore(state => state.addItem);
   const navigate = useNavigate();
   const { productsList, isCacheValid, setProducts } = useProductCacheStore();
+
+  // Debounce search term to avoid excessive filtering
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   useEffect(() => {
     // Only run in browser, not during SSR/build
@@ -67,6 +73,17 @@ export const ShopProducts = () => {
     });
   };
 
+  // Filter products based on debounced search term
+  const filteredProducts = productsList.filter((product) => {
+    if (!debouncedSearchTerm) return true;
+    
+    const searchLower = debouncedSearchTerm.toLowerCase();
+    const title = product.node.title.toLowerCase();
+    const description = product.node.description.toLowerCase();
+    
+    return title.includes(searchLower) || description.includes(searchLower);
+  });
+
   if (loading) {
     return (
       <div className="py-24 px-4">
@@ -91,9 +108,45 @@ export const ShopProducts = () => {
             Browse our collection of premium custom cabinetry
           </p>
         </div>
+
+        {/* Search Bar */}
+        <div className="max-w-md mx-auto mb-8">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-10"
+            />
+            {searchTerm && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7"
+                onClick={() => setSearchTerm("")}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+          {debouncedSearchTerm && (
+            <p className="text-sm text-muted-foreground mt-2">
+              Found {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {productsList.map((product) => (
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">
+              {searchTerm ? 'No products found matching your search.' : 'No products available.'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {filteredProducts.map((product) => (
             <Card 
               key={product.node.id} 
               className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform"
@@ -133,8 +186,9 @@ export const ShopProducts = () => {
                 </Button>
               </CardFooter>
             </Card>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
