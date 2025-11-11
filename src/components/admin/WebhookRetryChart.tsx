@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface RetryData {
   date: string;
@@ -65,6 +66,70 @@ export function WebhookRetryChart() {
     }
   };
 
+  const exportToCSV = async () => {
+    try {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      const { data: webhookEvents, error } = await supabase
+        .from('webhook_events')
+        .select('svix_id, event_type, client_ip, retry_count, created_at, processed_at')
+        .gte('created_at', sevenDaysAgo.toISOString())
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      if (!webhookEvents || webhookEvents.length === 0) {
+        toast.error('No data available to export');
+        return;
+      }
+
+      // Create CSV header
+      const headers = ['Date', 'Time', 'Webhook ID', 'Event Type', 'Client IP', 'Retry Count', 'Processed At'];
+      
+      // Create CSV rows
+      const rows = webhookEvents.map(event => {
+        const createdDate = new Date(event.created_at);
+        const processedDate = event.processed_at ? new Date(event.processed_at) : null;
+        
+        return [
+          createdDate.toLocaleDateString(),
+          createdDate.toLocaleTimeString(),
+          event.svix_id,
+          event.event_type,
+          event.client_ip || 'N/A',
+          event.retry_count.toString(),
+          processedDate ? processedDate.toLocaleString() : 'N/A'
+        ];
+      });
+
+      // Combine headers and rows
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+      ].join('\n');
+
+      // Create blob and download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `webhook-retry-history-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      URL.revokeObjectURL(url);
+      toast.success(`Exported ${webhookEvents.length} webhook events to CSV`);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      toast.error('Failed to export data');
+    }
+  };
+
   useEffect(() => {
     fetchRetryHistory();
     
@@ -80,14 +145,26 @@ export function WebhookRetryChart() {
           <CardTitle>Webhook Retry History</CardTitle>
           <CardDescription>Retry patterns over the last 7 days</CardDescription>
         </div>
-        <Button 
-          variant="outline" 
-          size="icon"
-          onClick={fetchRetryHistory}
-          disabled={loading}
-        >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={exportToCSV}
+            disabled={loading || data.length === 0}
+            title="Export to CSV"
+          >
+            <Download className="h-4 w-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={fetchRetryHistory}
+            disabled={loading}
+            title="Refresh data"
+          >
+            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         {loading && data.length === 0 ? (
