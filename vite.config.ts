@@ -15,6 +15,10 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      devOptions: {
+        enabled: false
+      },
       includeAssets: ['logo.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
       workbox: {
         runtimeCaching: [
