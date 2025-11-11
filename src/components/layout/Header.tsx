@@ -93,32 +93,14 @@ const Header = () => {
   };
 
   return <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden transition-colors duration-300 ${
-      isScrolled ? 'bg-background/95' : ''
+      isScrolled ? 'bg-background/95' : 'bg-background'
     }`} style={{
       position: 'relative'
     }}>
-      {/* Black to wood gradient overlay - only visible when not scrolled */}
-      {!isScrolled && (
-        <>
-          <div className="absolute inset-0" style={{
-            background: `linear-gradient(to right, #000000 0%, #000000 15%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0) 70%)`,
-            zIndex: 1
-          }} />
-          {/* Wood texture background */}
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url(${walnutTexture})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            opacity: 1,
-            imageRendering: 'crisp-edges',
-            zIndex: 0
-          }} />
-        </>
-      )}
       <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          {/* Centered Logo */}
+          <div className="absolute left-1/2 transform -translate-x-1/2">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
               <img 
                 src={isScrolled ? logoBlack : logoTeal} 
@@ -128,228 +110,149 @@ const Header = () => {
             </a>
           </div>
           
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8 font-display ml-auto mr-8">
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger className={`${
-                isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
-              } transition-colors flex items-center gap-1 outline-none text-xl font-semibold`}>
-                Catalog
-                <ChevronDown className="h-5 w-5" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-background border-border z-50">
-                <DropdownMenuItem 
-                  onClick={(e) => scrollToGallery('kitchens', e)}
-                  className="cursor-pointer"
-                >
-                  Kitchens
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={(e) => scrollToGallery('vanities', e)}
-                  className="cursor-pointer"
-                >
-                  Vanities
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={(e) => scrollToGallery('closets', e)}
-                  className="cursor-pointer"
-                >
-                  Closets
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={(e) => scrollToGallery('design-to-reality', e)}
-                  className="cursor-pointer"
-                >
-                  Design to Reality
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsMobileMenuOpen(false);
-                    setTimeout(() => {
-                      const suppliers = document.getElementById('suppliers');
-                      if (suppliers) {
-                        suppliers.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }, 100);
-                  }}
-                  className="cursor-pointer"
-                >
-                  Suppliers
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <a href="#solutions" className={`${
-              isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
-            } transition-colors text-xl font-semibold`}>
-              Solutions
-            </a>
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger className={`${
-                isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
-              } transition-colors flex items-center gap-1 outline-none text-xl font-semibold`}>
-                Documentation
-                <ChevronDown className="h-5 w-5" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-background border-border z-50">
-                <DropdownMenuItem 
-                  onClick={() => window.location.href = ROUTES.DOCS_GETTING_STARTED}
-                  className="cursor-pointer"
-                >
-                  Getting Started
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => window.location.href = ROUTES.DOCS_AUTH}
-                  className="cursor-pointer"
-                >
-                  Authentication Guide
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => window.location.href = ROUTES.DOCS_API}
-                  className="cursor-pointer"
-                >
-                  API Reference
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  disabled
-                  className="cursor-not-allowed opacity-50"
-                >
-                  Developer Guide (Coming Soon)
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => window.location.href = ROUTES.DOCS_TROUBLESHOOTING}
-                  className="cursor-pointer"
-                >
-                  Troubleshooting
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <a href="#about" className={`${
-              isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
-            } transition-colors text-xl font-semibold`}>
-              About
-            </a>
-            <a href="#contact" className={`${
-              isScrolled ? 'text-foreground hover:text-foreground/70' : 'text-white hover:text-white/70'
-            } transition-colors text-xl font-semibold`}>
-              Contact
-            </a>
-          </div>
+          {/* Spacer for left side */}
+          <div className="flex-1"></div>
           
-          <div className="flex items-center gap-4 font-display">
-            {/* Install PWA Button */}
-            {isInstallable && (
-              <Button
-                size="default"
-                variant="outline"
-                className="hidden sm:inline-flex text-sm px-4"
-                onClick={() => setShowInstallDialog(true)}
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Install
-              </Button>
-            )}
-
+          {/* Right side utilities */}
+          <div className="flex items-center gap-3 ml-auto">
             <ThemeToggle />
-
-            {/* User Menu or Auth Link */}
-            {isAuthenticated ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
-                    <User className="h-4 w-4" />
-                    <span className="sr-only">User menu</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium">My Account</p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {user?.email}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem 
-                    onClick={() => window.location.href = ROUTES.PROFILE}
-                    className="cursor-pointer"
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                  {isAdmin && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem 
-                        onClick={() => window.location.href = ROUTES.ADMIN_SECURITY}
-                        className="cursor-pointer"
-                      >
-                        <Shield className="mr-2 h-4 w-4" />
-                        <span>Security Dashboard</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => window.location.href = ROUTES.ADMIN_USERS}
-                        className="cursor-pointer"
-                      >
-                        <Users className="mr-2 h-4 w-4" />
-                        <span>User Management</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => window.location.href = ROUTES.ADMIN_AUDIT_LOG}
-                        className="cursor-pointer"
-                      >
-                        <FileText className="mr-2 h-4 w-4" />
-                        <span>Audit Log</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => window.location.href = ROUTES.ADMIN_CACHE}
-                        className="cursor-pointer"
-                      >
-                        <HardDrive className="mr-2 h-4 w-4" />
-                        <span>Cache Management</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => window.location.href = '/admin/config'}
-                        className="cursor-pointer"
-                      >
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Configuration</span>
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Sign Out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => window.location.href = ROUTES.AUTH}
-                className="hidden sm:inline-flex"
-              >
-                Sign In
-              </Button>
-            )}
-
             <CartDrawer />
-
-            {/* Mobile Menu */}
+            {/* Hamburger Menu for ALL navigation */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild className="md:hidden">
+              <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display">
+              <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display overflow-y-auto">
                 <div className="flex flex-col gap-6 mt-8">
+                  {/* Main Navigation */}
+                  <div className="flex flex-col gap-4 pb-4">
+                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Navigation</h3>
+                    
+                    <div className="flex flex-col gap-2">
+                      <button
+                        onClick={(e) => {
+                          scrollToGallery('kitchens', e);
+                        }}
+                        className="text-left py-2 hover:text-primary transition-colors font-medium"
+                      >
+                        Kitchens
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          scrollToGallery('vanities', e);
+                        }}
+                        className="text-left py-2 hover:text-primary transition-colors font-medium"
+                      >
+                        Vanities
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          scrollToGallery('closets', e);
+                        }}
+                        className="text-left py-2 hover:text-primary transition-colors font-medium"
+                      >
+                        Closets
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          scrollToGallery('design-to-reality', e);
+                        }}
+                        className="text-left py-2 hover:text-primary transition-colors font-medium"
+                      >
+                        Design to Reality
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsMobileMenuOpen(false);
+                          setTimeout(() => {
+                            const suppliers = document.getElementById('suppliers');
+                            if (suppliers) {
+                              suppliers.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }, 100);
+                        }}
+                        className="text-left py-2 hover:text-primary transition-colors font-medium"
+                      >
+                        Suppliers
+                      </button>
+                      <a href="#solutions" className="py-2 hover:text-primary transition-colors font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+                        Solutions
+                      </a>
+                      <a href="#about" className="py-2 hover:text-primary transition-colors font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+                        About
+                      </a>
+                      <a href="#contact" className="py-2 hover:text-primary transition-colors font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+                        Contact
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Documentation */}
+                  <div className="flex flex-col gap-4 pb-4 border-t pt-4">
+                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Documentation</h3>
+                    <div className="flex flex-col gap-2">
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          window.location.href = ROUTES.DOCS_GETTING_STARTED;
+                        }}
+                        className="text-left py-2 hover:text-primary transition-colors"
+                      >
+                        Getting Started
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          window.location.href = ROUTES.DOCS_AUTH;
+                        }}
+                        className="text-left py-2 hover:text-primary transition-colors"
+                      >
+                        Authentication Guide
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          window.location.href = ROUTES.DOCS_API;
+                        }}
+                        className="text-left py-2 hover:text-primary transition-colors"
+                      >
+                        API Reference
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          window.location.href = ROUTES.DOCS_TROUBLESHOOTING;
+                        }}
+                        className="text-left py-2 hover:text-primary transition-colors"
+                      >
+                        Troubleshooting
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* PWA Install */}
+                  {isInstallable && (
+                    <div className="pb-4 border-t pt-4">
+                      <Button
+                        size="default"
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => {
+                          setShowInstallDialog(true);
+                          setIsMobileMenuOpen(false);
+                        }}
+                      >
+                        <Download className="mr-2 h-4 w-4" />
+                        Install App
+                      </Button>
+                    </div>
+                  )}
                   {/* Auth Section */}
                   {isAuthenticated ? (
-                    <div className="flex flex-col gap-2 pb-4 border-b">
+                    <div className="flex flex-col gap-2 pb-4 border-t pt-4">
                       <div className="flex items-center justify-between">
                         <div className="flex flex-col">
                           <p className="text-sm font-medium">Signed in as</p>

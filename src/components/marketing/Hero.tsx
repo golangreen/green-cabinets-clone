@@ -94,7 +94,7 @@ const Hero = () => {
   const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden touch-pan-y">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden touch-pan-y pt-32 md:pt-40">
       {/* Background Images with Enhanced Crossfade */}
       <div className="absolute inset-0 bg-black select-none">
         {/* Current Image - fades out */}
