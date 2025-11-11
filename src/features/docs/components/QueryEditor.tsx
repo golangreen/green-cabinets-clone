@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, Bookmark, Play, Loader2 } from "lucide-react";
+import { Copy, Check, Bookmark, Play, Loader2, Star } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -174,6 +175,3 @@ export function QueryEditor({
     </div>
   );
 }
-
-import { useState } from "react";
-import { Star } from "lucide-react";
