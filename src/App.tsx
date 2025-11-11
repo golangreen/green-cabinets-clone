@@ -97,11 +97,7 @@ const App = () => {
                 />
                 <Route 
                   path="/designer" 
-                  element={
-                    <ProtectedRoute>
-                      <VanityDesigner />
-                    </ProtectedRoute>
-                  } 
+                  element={<VanityDesigner />} 
                 />
                 <Route 
                   path="/admin/security" 
