@@ -104,6 +104,48 @@ export type Database = {
         }
         Relationships: []
       }
+      email_delivery_log: {
+        Row: {
+          created_at: string | null
+          email_id: string
+          email_type: string
+          event_data: Json | null
+          id: string
+          recipient_email: string
+          role: Database["public"]["Enums"]["app_role"] | null
+          status: string
+          subject: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_id: string
+          email_type: string
+          event_data?: Json | null
+          id?: string
+          recipient_email: string
+          role?: Database["public"]["Enums"]["app_role"] | null
+          status: string
+          subject?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_id?: string
+          email_type?: string
+          event_data?: Json | null
+          id?: string
+          recipient_email?: string
+          role?: Database["public"]["Enums"]["app_role"] | null
+          status?: string
+          subject?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       role_change_audit: {
         Row: {
           action: string
@@ -276,6 +318,17 @@ export type Database = {
           blocked_until: string
           reason: string
           violation_count: number
+        }[]
+      }
+      get_email_delivery_stats: {
+        Args: { days_back?: number }
+        Returns: {
+          delivery_rate: number
+          total_bounced: number
+          total_complained: number
+          total_delivered: number
+          total_failed: number
+          total_sent: number
         }[]
       }
       get_expired_roles: {
