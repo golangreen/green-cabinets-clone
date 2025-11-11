@@ -97,6 +97,75 @@ const handler = async (req: Request): Promise<Response> => {
       throw new ValidationError('Missing required webhook headers');
     }
 
+    // Validate timestamp to prevent replay attacks (reject if older than 5 minutes)
+    const webhookTimestamp = parseInt(timestamp, 10);
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const timestampDiff = currentTimestamp - webhookTimestamp;
+    const MAX_TIMESTAMP_AGE = 300; // 5 minutes in seconds
+
+    if (isNaN(webhookTimestamp)) {
+      logger.error('Invalid timestamp format', { timestamp, svixId });
+      
+      await logSecurityEvent(supabase, {
+        eventType: 'validation_failed',
+        clientIP,
+        functionName: 'resend-webhook',
+        severity: 'medium',
+        details: { reason: 'invalid_timestamp_format', svixId, timestamp }
+      });
+      
+      throw new ValidationError('Invalid timestamp format');
+    }
+
+    if (timestampDiff > MAX_TIMESTAMP_AGE) {
+      logger.error('Webhook timestamp too old - possible replay attack', { 
+        svixId, 
+        clientIP,
+        timestampAge: timestampDiff,
+        maxAge: MAX_TIMESTAMP_AGE 
+      });
+      
+      await logSecurityEvent(supabase, {
+        eventType: 'suspicious_activity',
+        clientIP,
+        functionName: 'resend-webhook',
+        severity: 'high',
+        details: { 
+          reason: 'timestamp_too_old', 
+          svixId,
+          timestamp_age_seconds: timestampDiff,
+          max_age_seconds: MAX_TIMESTAMP_AGE
+        }
+      });
+      
+      throw new ValidationError('Webhook timestamp too old. Possible replay attack.');
+    }
+
+    if (timestampDiff < -60) {
+      // Timestamp is more than 1 minute in the future - clock skew or manipulation
+      logger.error('Webhook timestamp in the future', { 
+        svixId, 
+        clientIP,
+        timestampDiff 
+      });
+      
+      await logSecurityEvent(supabase, {
+        eventType: 'suspicious_activity',
+        clientIP,
+        functionName: 'resend-webhook',
+        severity: 'medium',
+        details: { 
+          reason: 'timestamp_in_future', 
+          svixId,
+          timestamp_diff_seconds: timestampDiff
+        }
+      });
+      
+      throw new ValidationError('Webhook timestamp is in the future');
+    }
+
+    logger.info('Timestamp validation passed', { svixId, timestampAge: timestampDiff });
+
     const body = await req.text();
     
     // Verify the webhook signature
