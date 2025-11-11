@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -26,6 +26,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQueryHistory, type QueryHistoryItem } from "@/hooks/useQueryHistory";
 import { useQueryBookmarks, type BookmarkItem } from "@/hooks/useQueryBookmarks";
 import { useDatabaseSchema } from "@/hooks/useDatabaseSchema";
+import { useDebounce } from "@/hooks/useDebounce";
 
 // Utilities
 import { validateQuery, type ValidationError, type TableSchema } from "@/lib/sqlValidator";
@@ -45,6 +46,17 @@ const DocsTroubleshooting = () => {
   const { history: queryHistory, addToHistory, clearHistory: clearHistoryHook } = useQueryHistory();
   const { bookmarks, addBookmark: addBookmarkHook, deleteBookmark: deleteBookmarkHook } = useQueryBookmarks();
   const { schema: schemaInfo } = useDatabaseSchema();
+
+  // Debounce the query for validation (300ms delay)
+  const debouncedQuery = useDebounce(sqlQuery, 300);
+
+  // Validate query when debounced value changes
+  useEffect(() => {
+    if (debouncedQuery && schemaInfo.length > 0) {
+      const errors = validateQuery(debouncedQuery, schemaInfo);
+      setValidationErrors(errors);
+    }
+  }, [debouncedQuery, schemaInfo]);
 
   const loadFromHistory = (item: QueryHistoryItem) => {
     setSqlQuery(item.query);
@@ -317,11 +329,7 @@ const DocsTroubleshooting = () => {
 
                 <QueryEditor
                   query={sqlQuery}
-                  onQueryChange={(value) => {
-                    setSqlQuery(value);
-                    const errors = validateQuery(value, schemaInfo);
-                    setValidationErrors(errors);
-                  }}
+                  onQueryChange={setSqlQuery}
                   onExecute={executeQuery}
                   onSaveBookmark={(name) => {
                     addBookmarkHook(name, sqlQuery);
