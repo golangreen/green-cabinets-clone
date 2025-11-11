@@ -103,7 +103,7 @@ export const ShopProducts = () => {
     <section className="py-12 sm:py-16 md:py-24 px-4 bg-white">
       <div className="container mx-auto">
         <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Our Products</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900">Our Products</h2>
           <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">
             Browse our collection of premium custom cabinetry
           </p>
