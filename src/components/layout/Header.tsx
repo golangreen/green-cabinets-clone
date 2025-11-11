@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings } from "lucide-react";
-import logoColor from "@/assets/logo-color.png";
-import logoWhite from "@/assets/logo-white.png";
+import logoTeal from "@/assets/logo-teal.svg";
+import logoBlack from "@/assets/logo-black.svg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/features/shopping-cart";
 import { ThemeToggle } from "@/features/theme";
@@ -121,9 +121,9 @@ const Header = () => {
           <div className="flex items-center gap-3">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
               <img 
-                src={isScrolled ? logoColor : logoWhite} 
+                src={isScrolled ? logoBlack : logoTeal} 
                 alt="Green Cabinets Logo" 
-                className="h-16 md:h-20 w-auto transition-opacity duration-300" 
+                className="h-16 md:h-20 w-auto transition-all duration-300" 
               />
             </a>
           </div>
