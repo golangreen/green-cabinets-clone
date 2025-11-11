@@ -1,26 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { fetchWebhookEvents, fetchSecurityEvents } from '@/services';
 
 export const useWebhookStats = (enabled: boolean = true) => {
   return useQuery({
     queryKey: ['webhook-stats'],
     queryFn: async () => {
-      const { data: webhookEvents, error: webhookError } = await supabase
-        .from('webhook_events')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(100);
-
-      if (webhookError) throw webhookError;
-
-      const { data: securityEvents, error: securityError } = await supabase
-        .from('security_events')
-        .select('*')
-        .eq('function_name', 'resend-webhook')
-        .order('created_at', { ascending: false })
-        .limit(100);
-
-      if (securityError) throw securityError;
+      const [webhookEvents, securityEvents] = await Promise.all([
+        fetchWebhookEvents(100),
+        fetchSecurityEvents(60 * 24 * 7, undefined, undefined, 'resend-webhook')
+      ]);
 
       return {
         webhookEvents: webhookEvents || [],

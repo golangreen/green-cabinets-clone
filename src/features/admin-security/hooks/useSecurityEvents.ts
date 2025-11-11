@@ -1,19 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { fetchSecurityEvents } from '@/services';
 
 export const useSecurityEvents = (enabled: boolean = true) => {
   return useQuery({
     queryKey: ['security-events'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('security_events')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => fetchSecurityEvents(60 * 24 * 7), // Last 7 days
     enabled,
   });
 };
