@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import { HistoryTimeline } from "@/components/HistoryTimeline";
+import { useDeviceType } from "@/hooks/useDeviceType";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -129,20 +130,15 @@ const CABINET_LIBRARY = CABINET_CATALOG;
 
 const VanityDesigner = () => {
   const navigate = useNavigate();
+  const { isMobile, isTablet } = useDeviceType();
   
-  // Mobile detection
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
-  
+  // Redirect mobile phones to room scanner - only tablets and desktops can use designer
   useEffect(() => {
-    const checkDevice = () => {
-      setIsMobile(window.innerWidth < 768);
-      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
-    };
-    checkDevice();
-    window.addEventListener('resize', checkDevice);
-    return () => window.removeEventListener('resize', checkDevice);
-  }, []);
+    if (isMobile) {
+      toast.info("Mobile phones can only scan rooms. Use a tablet or desktop for the designer.");
+      navigate("/room-scan");
+    }
+  }, [isMobile, navigate]);
   
   // Templates hook
   const { templates, isLoading: templatesLoading, saveTemplate, deleteTemplate, loadTemplate, duplicateTemplate } = useRoomTemplates();
