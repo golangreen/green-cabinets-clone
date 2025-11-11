@@ -20,46 +20,53 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('RESEND_API_KEY not configured');
     }
 
-    // Get roles expiring within 24 hours
-    const { data: expiringRoles, error: expiringError } = await supabase
-      .rpc('get_expiring_roles', { hours_before: 24 });
+    // Get roles expiring within 3 days (72 hours) for 3-day reminder
+    const { data: threeDayRoles, error: threeDayError } = await supabase
+      .rpc('get_expiring_roles_by_stage', { 
+        hours_before: 72,
+        reminder_stage: '3day' 
+      });
 
-    if (expiringError) {
-      logger.error('Failed to fetch expiring roles', expiringError);
-      throw expiringError;
+    if (threeDayError) {
+      logger.error('Failed to fetch 3-day expiring roles', threeDayError);
     }
 
-    logger.info('Found expiring roles', { count: expiringRoles?.length || 0 });
+    logger.info('Found 3-day expiring roles', { count: threeDayRoles?.length || 0 });
 
-    // Send reminder emails for expiring roles
-    if (expiringRoles && expiringRoles.length > 0) {
-      for (const role of expiringRoles) {
+    // Send 3-day reminder emails
+    if (threeDayRoles && threeDayRoles.length > 0) {
+      for (const role of threeDayRoles) {
         try {
-          const hoursRemaining = Math.round(role.hours_until_expiry);
+          const daysRemaining = Math.ceil(role.hours_until_expiry / 24);
           const expiryDate = new Date(role.expires_at).toLocaleString('en-US', {
-            dateStyle: 'medium',
+            dateStyle: 'full',
             timeStyle: 'short'
           });
 
           const htmlContent = `
             <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;">
-              <h1 style="color: #333; font-size: 24px; margin-bottom: 16px;">Role Expiration Reminder</h1>
+              <h1 style="color: #333; font-size: 24px; margin-bottom: 16px;">⏰ Role Expiring Soon</h1>
               <p style="color: #555; font-size: 16px; line-height: 1.5;">
                 Hello,
               </p>
               <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                Your <strong>${role.role}</strong> role will expire in approximately <strong>${hoursRemaining} hour(s)</strong>.
+                This is a reminder that your <strong>${role.role}</strong> role will expire in approximately <strong>${daysRemaining} day(s)</strong>.
               </p>
+              <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; margin: 24px 0;">
+                <p style="color: #856404; font-size: 16px; margin: 0;">
+                  <strong>Expiration Date:</strong> ${expiryDate}
+                </p>
+              </div>
               <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                <strong>Expiration Date:</strong> ${expiryDate}
-              </p>
-              <p style="color: #555; font-size: 16px; line-height: 1.5; margin-top: 24px;">
                 After this role expires, you will no longer have access to the associated permissions and features.
               </p>
               <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                If you need to extend this role, please contact an administrator before it expires.
+                <strong>Need to extend your role?</strong> Please contact an administrator before it expires.
               </p>
               <p style="color: #999; font-size: 14px; margin-top: 32px;">
+                You will receive another reminder 24 hours before expiration.
+              </p>
+              <p style="color: #999; font-size: 14px;">
                 This is an automated reminder. If you have questions, please contact support.
               </p>
             </div>
@@ -74,28 +81,114 @@ const handler = async (req: Request): Promise<Response> => {
             body: JSON.stringify({
               from: 'Green Cabinets <onboarding@resend.dev>',
               to: [role.user_email],
-              subject: `Your ${role.role} role expires soon`,
+              subject: `⏰ Your ${role.role} role expires in ${daysRemaining} days`,
               html: htmlContent,
             }),
           });
 
           if (emailResponse.ok) {
-            // Mark reminder as sent
+            // Mark 3-day reminder as sent
+            await supabase.rpc('mark_3day_reminder_sent', {
+              target_user_id: role.user_id,
+              target_role: role.role
+            });
+            
+            logger.info('Sent 3-day expiration reminder', { 
+              email: role.user_email, 
+              role: role.role,
+              days_remaining: daysRemaining
+            });
+          } else {
+            const errorText = await emailResponse.text();
+            logger.error('Failed to send 3-day reminder email', { error: errorText });
+          }
+        } catch (emailError) {
+          logger.error('Error sending 3-day reminder email', emailError);
+        }
+      }
+    }
+
+    // Get roles expiring within 24 hours for 1-day reminder
+    const { data: oneDayRoles, error: oneDayError } = await supabase
+      .rpc('get_expiring_roles_by_stage', { 
+        hours_before: 24,
+        reminder_stage: '1day' 
+      });
+
+    if (oneDayError) {
+      logger.error('Failed to fetch 1-day expiring roles', oneDayError);
+    }
+
+    logger.info('Found 1-day expiring roles', { count: oneDayRoles?.length || 0 });
+
+    // Send 1-day reminder emails (final reminder)
+    if (oneDayRoles && oneDayRoles.length > 0) {
+      for (const role of oneDayRoles) {
+        try {
+          const hoursRemaining = Math.round(role.hours_until_expiry);
+          const expiryDate = new Date(role.expires_at).toLocaleString('en-US', {
+            dateStyle: 'full',
+            timeStyle: 'short'
+          });
+
+          const htmlContent = `
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;">
+              <h1 style="color: #dc3545; font-size: 24px; margin-bottom: 16px;">🚨 Final Reminder: Role Expiring Soon</h1>
+              <p style="color: #555; font-size: 16px; line-height: 1.5;">
+                Hello,
+              </p>
+              <p style="color: #555; font-size: 16px; line-height: 1.5;">
+                <strong>Final reminder:</strong> Your <strong>${role.role}</strong> role will expire in approximately <strong>${hoursRemaining} hour(s)</strong>.
+              </p>
+              <div style="background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 16px; margin: 24px 0;">
+                <p style="color: #721c24; font-size: 16px; margin: 0;">
+                  <strong>⚠️ Expiration Date:</strong> ${expiryDate}
+                </p>
+              </div>
+              <p style="color: #555; font-size: 16px; line-height: 1.5;">
+                <strong>Action Required:</strong> If you need to keep this role, contact an administrator immediately.
+              </p>
+              <p style="color: #555; font-size: 16px; line-height: 1.5;">
+                After expiration, you will lose access to all permissions and features associated with this role.
+              </p>
+              <p style="color: #999; font-size: 14px; margin-top: 32px;">
+                This is your final automated reminder.
+              </p>
+            </div>
+          `;
+
+          const emailResponse = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${resendApiKey}`,
+            },
+            body: JSON.stringify({
+              from: 'Green Cabinets <onboarding@resend.dev>',
+              to: [role.user_email],
+              subject: `🚨 FINAL REMINDER: Your ${role.role} role expires in ${hoursRemaining} hours`,
+              html: htmlContent,
+            }),
+          });
+
+          if (emailResponse.ok) {
+            // Mark 1-day reminder as sent
             await supabase.rpc('mark_reminder_sent', {
               target_user_id: role.user_id,
               target_role: role.role
             });
             
-            logger.info('Sent expiration reminder', { 
+            logger.info('Sent 1-day expiration reminder', { 
               email: role.user_email, 
-              role: role.role 
+              role: role.role,
+              hours_remaining: hoursRemaining
             });
           } else {
             const errorText = await emailResponse.text();
-            logger.error('Failed to send reminder email', { error: errorText });
+            logger.error('Failed to send 1-day reminder email', { error: errorText });
           }
         } catch (emailError) {
-          logger.error('Error sending reminder email', emailError);
+          logger.error('Error sending 1-day reminder email', emailError);
         }
       }
     }
@@ -167,7 +260,8 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({
         success: true,
-        reminders_sent: expiringRoles?.length || 0,
+        three_day_reminders_sent: threeDayRoles?.length || 0,
+        one_day_reminders_sent: oneDayRoles?.length || 0,
         roles_removed: removalResult?.removed_count || 0,
         message: 'Role expiration check completed'
       }),

@@ -176,6 +176,7 @@ export type Database = {
           expires_at: string | null
           id: string
           is_temporary: boolean | null
+          reminder_3day_sent: boolean | null
           reminder_sent: boolean | null
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
@@ -185,6 +186,7 @@ export type Database = {
           expires_at?: string | null
           id?: string
           is_temporary?: boolean | null
+          reminder_3day_sent?: boolean | null
           reminder_sent?: boolean | null
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
@@ -194,6 +196,7 @@ export type Database = {
           expires_at?: string | null
           id?: string
           is_temporary?: boolean | null
+          reminder_3day_sent?: boolean | null
           reminder_sent?: boolean | null
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
@@ -294,6 +297,16 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_expiring_roles_by_stage: {
+        Args: { hours_before?: number; reminder_stage?: string }
+        Returns: {
+          expires_at: string
+          hours_until_expiry: number
+          role: Database["public"]["Enums"]["app_role"]
+          user_email: string
+          user_id: string
+        }[]
+      }
       get_roles_expiring_within_days: {
         Args: { days_ahead?: number }
         Returns: {
@@ -349,6 +362,13 @@ export type Database = {
           target_ip: string
         }
         Returns: Json
+      }
+      mark_3day_reminder_sent: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: undefined
       }
       mark_reminder_sent: {
         Args: {
