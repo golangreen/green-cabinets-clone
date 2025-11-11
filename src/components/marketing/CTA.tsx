@@ -37,7 +37,7 @@ const CTA = () => {
           <div className="flex flex-col items-center justify-center gap-6 pt-8 max-w-md mx-auto">
             <Button 
               size="lg" 
-              variant="hero" 
+              variant="brand" 
               className="text-lg px-8 py-6 w-full"
               onClick={() => setShowQuoteForm(true)}
             >
@@ -57,8 +57,8 @@ const CTA = () => {
               
               <Button 
                 size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 w-full border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
+                variant="brand-outline" 
+                className="text-lg px-8 py-6 w-full"
                 onClick={handleConsultation}
               >
                 Schedule Consultation
