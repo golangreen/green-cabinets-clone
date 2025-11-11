@@ -12,6 +12,8 @@ export {
   calculateShipping,
   calculateCompletePricing,
   getTaxRatePercentage,
+  getStateFromZipCode,
+  inchesWithFractionToDecimal,
   inchesToLinearFeet,
   getPricePerLinearFoot,
   TAX_RATES,
@@ -19,7 +21,8 @@ export {
   BRAND_PRICING,
   WALL_TILE_PRICING,
   FLOOR_TILE_PRICING,
-  formatPrice as formatVanityPrice
+  formatPrice as formatVanityPrice,
+  type PricingCalculation
 } from './vanityPricingService';
 
 // Cabinet catalog service exports

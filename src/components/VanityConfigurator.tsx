@@ -46,11 +46,13 @@ import { SharePreviewCard } from "./SharePreviewCard";
 import { useRef } from "react";
 import { vanityEmailSchema, formatZodError } from "@/lib/formValidation";
 import { 
-  calculateCompletePricing, 
-  getTaxRatePercentage, 
+  calculateCompletePricing,
+  getTaxRatePercentage,
+  getStateFromZipCode,
+  inchesWithFractionToDecimal,
   formatPrice,
   TAX_RATES,
-  SHIPPING_RATES 
+  SHIPPING_RATES
 } from "@/services/vanityPricingService";
 import { formatVanityForWhatsApp } from "@/services/quoteService";
 
@@ -421,7 +423,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   }, [selectedBrand]);
 
   // Calculate all pricing using the pricing service
-  const widthInches = (parseFloat(width || '0') + (parseInt(widthFraction) / 16));
+  const widthInches = inchesWithFractionToDecimal(
+    parseFloat(width || '0'), 
+    parseInt(widthFraction)
+  );
   
   const pricing = calculateCompletePricing({
     widthInches,
@@ -441,21 +446,26 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
   // Calculate dimensions in inches (with fractions) for 3D preview
   const dimensionsInInches = useMemo(() => {
-    const widthInches = (parseFloat(width || "0") + parseInt(widthFraction) / 16);
-    const heightInches = (parseFloat(height || "0") + parseInt(heightFraction) / 16);
-    const depthInches = (parseFloat(depth || "0") + parseInt(depthFraction) / 16);
+    const widthInches = inchesWithFractionToDecimal(
+      parseFloat(width || "0"), 
+      parseInt(widthFraction)
+    );
+    const heightInches = inchesWithFractionToDecimal(
+      parseFloat(height || "0"), 
+      parseInt(heightFraction)
+    );
+    const depthInches = inchesWithFractionToDecimal(
+      parseFloat(depth || "0"), 
+      parseInt(depthFraction)
+    );
     return { widthInches, heightInches, depthInches };
   }, [width, widthFraction, height, heightFraction, depth, depthFraction]);
 
-  // Determine zip code state
+  // Determine state from ZIP code using service
   useEffect(() => {
     if (zipCode.length === 5) {
-      const zip = parseInt(zipCode);
-      if (zip >= 10000 && zip <= 14999) setState("NY");
-      else if (zip >= 7000 && zip <= 8999) setState("NJ");
-      else if (zip >= 6000 && zip <= 6999) setState("CT");
-      else if (zip >= 15000 && zip <= 19999) setState("PA");
-      else setState("other");
+      const detectedState = getStateFromZipCode(zipCode);
+      setState(detectedState);
     }
   }, [zipCode]);
 

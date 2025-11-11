@@ -59,6 +59,30 @@ export interface PricingCalculation {
 }
 
 /**
+ * Determine US state from ZIP code
+ */
+export function getStateFromZipCode(zipCode: string): string {
+  if (zipCode.length !== 5) return "";
+  
+  const zip = parseInt(zipCode);
+  if (zip >= 10000 && zip <= 14999) return "NY";
+  if (zip >= 7000 && zip <= 8999) return "NJ";
+  if (zip >= 6000 && zip <= 6999) return "CT";
+  if (zip >= 15000 && zip <= 19999) return "PA";
+  return "other";
+}
+
+/**
+ * Convert inches with fractions to decimal inches
+ */
+export function inchesWithFractionToDecimal(
+  wholeInches: number,
+  sixteenths: number
+): number {
+  return wholeInches + (sixteenths / 16);
+}
+
+/**
  * Calculate vanity base price based on linear feet (width)
  */
 export function calculateVanityPrice(
