@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ExternalLink, Image } from "lucide-react";
 import { CatalogSlideshow } from "./CatalogSlideshow";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -169,7 +170,7 @@ const Suppliers = () => {
           {suppliers.map((supplier) => (
             <Card
               key={supplier.id}
-              className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105"
+              className="cursor-pointer transition-all duration-300 bg-[#2dd4bf]/10 border border-[#2dd4bf]/30 hover:bg-[#2dd4bf]/20 hover:border-[#2dd4bf] hover:shadow-2xl hover:shadow-[#2dd4bf]/50 hover:scale-105"
               onClick={() => {
                 if (supplier.website === "catalog") {
                   setShowCatalogSlideshow(true);
@@ -236,15 +237,14 @@ const Suppliers = () => {
               )}
 
               {selectedSupplier?.website !== "catalog" && (
-                <a
-                  href={selectedSupplier?.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-primary hover:underline"
+                <Button
+                  variant="hero"
+                  className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-gray-900 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105"
+                  onClick={() => window.open(selectedSupplier?.website, '_blank')}
                 >
                   Visit {selectedSupplier?.name} Website
-                  <ExternalLink className="h-4 w-4" />
-                </a>
+                  <ExternalLink className="ml-2 h-4 w-4" />
+                </Button>
               )}
             </div>
           </DialogContent>
