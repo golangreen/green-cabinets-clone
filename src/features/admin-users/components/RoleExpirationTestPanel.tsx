@@ -37,26 +37,28 @@ export const RoleExpirationTestPanel = () => {
       toast.success('Email previews generated');
     } catch (error: any) {
       logger.dbError('generate email previews', error);
-      toast({
-        title: "Preview generation failed",
-        description: "Could not generate email previews",
-        variant: "destructive",
-      });
+      toast.error('Could not generate email previews');
     } finally {
-      setIsGenerating(false);
+      setIsLoading(false);
     }
   };
 
   const handleTriggerCheck = async () => {
-    setIsTriggering(true);
+    setIsLoading(true);
+    setTriggerResults(null);
+    
     try {
-      const { error } = await supabase.functions.invoke('test-role-expiration');
+      const { data, error } = await supabase.functions.invoke('test-role-expiration', {
+        body: {
+          action: 'trigger',
+          reminder_type: reminderType
+        }
+      });
+      
       if (error) throw error;
       
-      toast({
-        title: "Check triggered",
-        description: "Role expiration check completed successfully",
-      });
+      setTriggerResults(data);
+      toast.success('Role expiration check completed successfully');
     } catch (error) {
       logger.edgeFunctionError('test-role-expiration', error);
       toast.error(error.message || 'Failed to trigger check');
@@ -208,7 +210,7 @@ export const RoleExpirationTestPanel = () => {
                 </RadioGroup>
               </div>
 
-              <Button onClick={handleTrigger} disabled={isLoading} variant="destructive" className="w-full">
+              <Button onClick={handleTriggerCheck} disabled={isLoading} variant="destructive" className="w-full">
                 <Send className="mr-2 h-4 w-4" />
                 Trigger Role Expiration Check
               </Button>

@@ -44,41 +44,61 @@ export const ExpiringRolesWidget = () => {
     }
   };
 
-  const handleExtendRoles = async () => {
-    if (selectedRoles.length === 0) {
-      toast({
-        title: "No roles selected",
-        description: "Please select at least one role to extend",
-        variant: "destructive",
-      });
+  const handleBulkExtension = async () => {
+    if (selectedRoles.size === 0 || !extensionDate) {
+      toast.error('Please select roles and a new expiration date');
       return;
     }
 
     try {
-      // Extend all selected roles by 7 days
-      const newExpiration = new Date();
-      newExpiration.setDate(newExpiration.getDate() + 7);
+      setIsExtending(true);
+      
+      // Build the role extensions array
+      const roleExtensions = Array.from(selectedRoles).map(key => {
+        const [user_id, role] = key.split(':');
+        return {
+          user_id,
+          role,
+          new_expiration: extensionDate.toISOString()
+        };
+      });
 
       const { error } = await supabase.rpc('bulk_extend_role_expiration', {
-        user_role_ids: selectedRoles,
-        new_expiration_date: newExpiration.toISOString(),
+        role_extensions: roleExtensions
       });
 
       if (error) throw error;
 
-      toast({
-        title: "Roles extended",
-        description: `Extended ${selectedRoles.length} role(s) by 7 days`,
-      });
-
-      setSelectedRoles([]);
+      toast.success(`Extended ${selectedRoles.size} role(s) successfully`);
+      setSelectedRoles(new Set());
+      setExtensionDate(undefined);
       fetchExpiringRoles();
     } catch (error) {
       logger.dbError('extend roles', error);
-      toast.error(error.message || 'Failed to extend roles');
+      toast.error('Failed to extend roles');
     } finally {
       setIsExtending(false);
     }
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedRoles.size === expiringRoles.length) {
+      setSelectedRoles(new Set());
+    } else {
+      const allKeys = expiringRoles.map(r => `${r.user_id}:${r.role}`);
+      setSelectedRoles(new Set(allKeys));
+    }
+  };
+
+  const toggleRoleSelection = (userId: string, role: string) => {
+    const key = `${userId}:${role}`;
+    const newSelected = new Set(selectedRoles);
+    if (newSelected.has(key)) {
+      newSelected.delete(key);
+    } else {
+      newSelected.add(key);
+    }
+    setSelectedRoles(newSelected);
   };
 
   const getDaysColor = (days: number) => {

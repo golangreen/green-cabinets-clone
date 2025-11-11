@@ -43,14 +43,23 @@ export const CronJobsManager = () => {
 
   const fetchLastRun = useCallback(async () => {
     try {
-      const { data, error } = await supabase.rpc('get_last_cron_run');
-      if (error) throw error;
+      // Query the most recent role_change_audit entry to get last activity time
+      const { data, error } = await supabase
+        .from('role_change_audit')
+        .select('created_at')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
       
-      if (data && data.length > 0) {
-        setLastRun(data[0].last_run);
+      if (error && error.code !== 'PGRST116') throw error;
+      
+      if (data) {
+        setLastRun(data.created_at);
       }
     } catch (error) {
       logger.dbError('fetch last cron run', error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -117,7 +126,20 @@ export const CronJobsManager = () => {
                 <span>• Auto-remove expired roles</span>
               </div>
             </div>
-            <Button onClick={handleTestRun} size="sm" variant="outline">
+            <Button 
+              onClick={async () => {
+                try {
+                  await supabase.functions.invoke('check-role-expiration');
+                  toast.success('Manual check triggered successfully');
+                  fetchLastRun();
+                } catch (error) {
+                  logger.edgeFunctionError('check-role-expiration', error);
+                  toast.error('Failed to trigger check');
+                }
+              }} 
+              size="sm" 
+              variant="outline"
+            >
               <Play className="h-4 w-4 mr-2" />
               Test Run
             </Button>
