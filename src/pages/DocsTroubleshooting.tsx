@@ -13,12 +13,13 @@ import { Label } from "@/components/ui/label";
 import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy, Play, Check, Terminal, Loader2, History, Trash2, Clock, Bookmark, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+// Components
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { DocsSidebar } from "@/components/DocsSidebar";
-import CodeMirror from '@uiw/react-codemirror';
-import { sql } from '@codemirror/lang-sql';
-import { autocompletion } from '@codemirror/autocomplete';
+import { QueryEditor } from "@/components/docs/QueryEditor";
+import { ValidationErrors } from "@/components/docs/ValidationErrors";
+import { QueryResults } from "@/components/docs/QueryResults";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Hooks
@@ -37,8 +38,6 @@ const DocsTroubleshooting = () => {
   const [sqlQuery, setSqlQuery] = useState("SELECT * FROM user_roles LIMIT 5;");
   const [queryResult, setQueryResult] = useState<any>(null);
   const [isExecuting, setIsExecuting] = useState(false);
-  const [bookmarkName, setBookmarkName] = useState("");
-  const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const { toast } = useToast();
 
@@ -60,25 +59,6 @@ const DocsTroubleshooting = () => {
     toast({
       title: "History cleared",
       description: "Query history has been cleared",
-    });
-  };
-
-  const saveBookmark = () => {
-    if (!bookmarkName.trim()) {
-      toast({
-        title: "Name required",
-        description: "Please enter a name for your bookmark",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const bookmark = addBookmarkHook(bookmarkName, sqlQuery);
-    setBookmarkName("");
-    setIsBookmarkDialogOpen(false);
-    toast({
-      title: "Bookmark saved",
-      description: `Query saved as "${bookmark.name}"`,
     });
   };
 
@@ -335,217 +315,29 @@ const DocsTroubleshooting = () => {
                   </AlertDescription>
                 </Alert>
 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-semibold text-sm">Example Queries</h4>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {exampleQueries.map((example) => (
-                      <Button
-                        key={example.name}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setSqlQuery(example.query)}
-                        className="justify-start text-xs"
-                      >
-                        {example.name}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
+                <QueryEditor
+                  query={sqlQuery}
+                  onQueryChange={(value) => {
+                    setSqlQuery(value);
+                    const errors = validateQuery(value, schemaInfo);
+                    setValidationErrors(errors);
+                  }}
+                  onExecute={executeQuery}
+                  onSaveBookmark={(name) => {
+                    addBookmarkHook(name, sqlQuery);
+                    toast({
+                      title: "Bookmark saved",
+                      description: `Query saved as "${name}"`,
+                    });
+                  }}
+                  isExecuting={isExecuting}
+                  sqlCompletions={sqlCompletions}
+                  exampleQueries={exampleQueries}
+                />
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">SQL Query</label>
-                    <div className="flex gap-2">
-                      <Dialog open={isBookmarkDialogOpen} onOpenChange={setIsBookmarkDialogOpen}>
-                        <DialogTrigger asChild>
-                          <Button size="sm" variant="ghost">
-                            <Bookmark className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Save Query as Bookmark</DialogTitle>
-                            <DialogDescription>
-                              Give your query a memorable name for quick access later
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="space-y-4 py-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="bookmark-name">Bookmark Name</Label>
-                              <Input
-                                id="bookmark-name"
-                                placeholder="e.g., Check admin users"
-                                value={bookmarkName}
-                                onChange={(e) => setBookmarkName(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    saveBookmark();
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Query Preview</Label>
-                              <pre className="text-xs bg-muted p-3 rounded overflow-x-auto max-h-[150px]">
-                                {sqlQuery}
-                              </pre>
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button variant="outline" onClick={() => setIsBookmarkDialogOpen(false)}>
-                              Cancel
-                            </Button>
-                            <Button onClick={saveBookmark}>
-                              <Star className="h-4 w-4 mr-2" />
-                              Save Bookmark
-                            </Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => copyToClipboard(sqlQuery, 'sql-query')}
-                      >
-                        {copiedCode === 'sql-query' ? (
-                          <Check className="h-4 w-4" />
-                        ) : (
-                          <Copy className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="border rounded-md overflow-hidden">
-                    <CodeMirror
-                      value={sqlQuery}
-                      height="150px"
-                      extensions={[
-                        sql(),
-                        autocompletion({
-                          override: [sqlCompletions]
-                        })
-                      ]}
-                      onChange={(value) => {
-                        setSqlQuery(value);
-                        // Validate on change
-                        const errors = validateQuery(value, schemaInfo);
-                        setValidationErrors(errors);
-                      }}
-                      theme="light"
-                      basicSetup={{
-                        lineNumbers: true,
-                        highlightActiveLineGutter: true,
-                        highlightActiveLine: true,
-                        foldGutter: true,
-                        autocompletion: true,
-                      }}
-                      className="text-sm"
-                    />
-                  </div>
-                  {validationErrors.length > 0 && (
-                    <div className="space-y-1">
-                      {validationErrors.map((error, idx) => (
-                        <Alert
-                          key={idx}
-                          variant={error.type === 'error' ? 'destructive' : 'default'}
-                          className={error.type === 'warning' ? 'border-yellow-500 bg-yellow-50' : ''}
-                        >
-                          {error.type === 'error' ? (
-                            <AlertTriangle className="h-4 w-4" />
-                          ) : (
-                            <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                          )}
-                          <AlertDescription className="text-sm">
-                            {error.message}
-                          </AlertDescription>
-                        </Alert>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <ValidationErrors errors={validationErrors} />
 
-                <Button
-                  onClick={executeQuery}
-                  disabled={isExecuting || !sqlQuery.trim()}
-                  className="w-full"
-                >
-                  {isExecuting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Executing...
-                    </>
-                  ) : (
-                    <>
-                      <Play className="mr-2 h-4 w-4" />
-                      Execute Query
-                    </>
-                  )}
-                </Button>
-
-                {queryResult && (
-                  <div className="space-y-3">
-                    {queryResult.type === "error" ? (
-                      <Alert variant="destructive">
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>Query Error</AlertTitle>
-                        <AlertDescription className="space-y-1">
-                          <p className="font-mono text-sm">{queryResult.error}</p>
-                          {queryResult.hint && (
-                            <p className="text-xs mt-2">Hint: {queryResult.hint}</p>
-                          )}
-                        </AlertDescription>
-                      </Alert>
-                    ) : (
-                      <>
-                        <Alert className="border-green-500 bg-green-50">
-                          <CheckCircle2 className="h-4 w-4 text-green-600" />
-                          <AlertDescription>
-                            Query executed successfully. Retrieved {queryResult.rowCount} {queryResult.rowCount === 1 ? 'row' : 'rows'}.
-                          </AlertDescription>
-                        </Alert>
-
-                        {queryResult.data && queryResult.data.length > 0 ? (
-                          <div className="border rounded-lg overflow-hidden">
-                            <div className="max-h-[400px] overflow-auto">
-                              <Table>
-                                <TableHeader className="bg-muted sticky top-0">
-                                  <TableRow>
-                                    {Object.keys(queryResult.data[0]).map((key) => (
-                                      <TableHead key={key} className="font-semibold">
-                                        {key}
-                                      </TableHead>
-                                    ))}
-                                  </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                  {queryResult.data.map((row: any, idx: number) => (
-                                    <TableRow key={idx}>
-                                      {Object.values(row).map((value: any, cellIdx: number) => (
-                                        <TableCell key={cellIdx} className="font-mono text-xs">
-                                          {typeof value === 'object' && value !== null
-                                            ? JSON.stringify(value)
-                                            : value?.toString() || '-'}
-                                        </TableCell>
-                                      ))}
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                            </div>
-                          </div>
-                        ) : (
-                          <Alert>
-                            <AlertDescription>
-                              Query executed successfully but returned no rows.
-                            </AlertDescription>
-                          </Alert>
-                        )}
-                      </>
-                    )}
-                  </div>
-                )}
+                <QueryResults result={queryResult} />
 
                 <Alert>
                   <Code className="h-4 w-4" />
