@@ -42,7 +42,8 @@ const Hero = () => {
   const { isMobile } = useDeviceType();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [shuffledImages] = useState(() => shuffleArray(heroImages));
+  // Use original array to ensure first image is always predictable for LCP optimization
+  const [displayImages] = useState(() => heroImages);
   const [recentIndices, setRecentIndices] = useState<number[]>([0]);
   const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
 
@@ -56,13 +57,13 @@ const Hero = () => {
 
   // Get a random index that hasn't been used recently
   const getNextRandomIndex = () => {
-    const availableIndices = shuffledImages
+    const availableIndices = displayImages
       .map((_, idx) => idx)
       .filter(idx => !recentIndices.includes(idx));
     
     if (availableIndices.length === 0) {
       // If all images have been shown recently, reset but keep current image excluded
-      const resetIndices = shuffledImages
+      const resetIndices = displayImages
         .map((_, idx) => idx)
         .filter(idx => idx !== currentImageIndex);
       return resetIndices[Math.floor(Math.random() * resetIndices.length)];
@@ -89,9 +90,9 @@ const Hero = () => {
     }, 7000); // Change image every 7 seconds
 
     return () => clearInterval(interval);
-  }, [shuffledImages.length, currentImageIndex, recentIndices]);
+  }, [displayImages.length, currentImageIndex, recentIndices]);
 
-  const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
+  const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % displayImages.length;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden touch-pan-y">
@@ -107,8 +108,8 @@ const Hero = () => {
           }}
         >
           <img 
-            src={shuffledImages[currentImageIndex].src} 
-            alt={shuffledImages[currentImageIndex].alt} 
+            src={displayImages[currentImageIndex].src} 
+            alt={displayImages[currentImageIndex].alt} 
             className="w-full h-full object-cover pointer-events-none" 
             style={{ 
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
@@ -130,8 +131,8 @@ const Hero = () => {
           }}
         >
           <img 
-            src={shuffledImages[getNextIndex()].src} 
-            alt={shuffledImages[getNextIndex()].alt} 
+            src={displayImages[getNextIndex()].src} 
+            alt={displayImages[getNextIndex()].alt} 
             className="w-full h-full object-cover pointer-events-none" 
             style={{ 
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
