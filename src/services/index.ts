@@ -118,6 +118,7 @@ export {
   getExpiringRoles,
   bulkExtendRoleExpiration,
   fetchAuditLogs,
+  fetchUserRoles,
   type AppRole,
   type UserWithRoles,
   type RoleAssignment,

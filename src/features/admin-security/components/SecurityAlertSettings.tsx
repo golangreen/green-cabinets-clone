@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { fetchAlertSettings, upsertAlertSettings } from '@/services';
 import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,13 +27,7 @@ export function SecurityAlertSettings() {
   const fetchSettings = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('alert_settings')
-        .select('setting_value')
-        .eq('setting_key', 'webhook_retry_alert')
-        .maybeSingle();
-
-      if (error) throw error;
+      const data = await fetchAlertSettings('webhook_retry_alert');
 
       if (data) {
         setSettings(data.setting_value as unknown as WebhookRetrySettings);
@@ -49,15 +43,7 @@ export function SecurityAlertSettings() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const { error } = await supabase
-        .from('alert_settings')
-        .upsert({
-          setting_key: 'webhook_retry_alert',
-          setting_value: settings as unknown as any,
-          updated_at: new Date().toISOString(),
-        });
-
-      if (error) throw error;
+      await upsertAlertSettings('webhook_retry_alert', settings as unknown as any);
 
       toast.success("Alert settings saved successfully");
     } catch (error) {

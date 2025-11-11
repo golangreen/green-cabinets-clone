@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { fetchNotificationSettings, upsertNotificationSettings } from '@/services';
 import { useAuth } from '@/contexts/AuthContext';
 
 export interface NotificationSettings {
@@ -25,13 +25,8 @@ export function useNotificationSettings() {
     queryFn: async () => {
       if (!user?.id) return null;
 
-      const { data, error } = await supabase
-        .rpc('get_or_create_notification_settings', {
-          p_user_id: user.id
-        });
-
-      if (error) throw error;
-      return data?.[0] as NotificationSettings || null;
+      const data = await fetchNotificationSettings(user.id);
+      return data as NotificationSettings || null;
     },
     enabled: !!user?.id,
   });
@@ -40,18 +35,12 @@ export function useNotificationSettings() {
     mutationFn: async (updates: Partial<NotificationSettings>) => {
       if (!user?.id) throw new Error('No user ID');
 
-      const { data, error } = await supabase
-        .from('notification_settings')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', user.id)
-        .select()
-        .single();
+      await upsertNotificationSettings(user.id, {
+        ...updates,
+        updated_at: new Date().toISOString(),
+      });
 
-      if (error) throw error;
-      return data as NotificationSettings;
+      return updates;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notification-settings', user?.id] });

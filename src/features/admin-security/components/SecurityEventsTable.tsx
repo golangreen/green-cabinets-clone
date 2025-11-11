@@ -1,5 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useSecurityEvents } from '../hooks/useSecurityEvents';
 import {
   Table,
   TableBody,
@@ -13,20 +12,7 @@ import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const SecurityEventsTable = () => {
-  const { data: events, isLoading } = useQuery({
-    queryKey: ['security-events'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('security_events')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-      return data;
-    },
-    refetchInterval: 5000,
-  });
+  const { data: events, isLoading } = useSecurityEvents();
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {

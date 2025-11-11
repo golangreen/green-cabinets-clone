@@ -342,13 +342,13 @@ export async function fetchRecentEmailLogs(limit: number = 10): Promise<any[]> {
 }
 
 /**
- * Fetch alert settings for user
+ * Fetch alert settings by key
  */
-export async function fetchAlertSettings(userId: string): Promise<any> {
+export async function fetchAlertSettings(settingKey: string): Promise<any> {
   const { data, error } = await (supabase as any)
     .from('alert_settings')
     .select('*')
-    .eq('user_id', userId)
+    .eq('setting_key', settingKey)
     .maybeSingle();
   
   if (error) throw error;
@@ -356,14 +356,15 @@ export async function fetchAlertSettings(userId: string): Promise<any> {
 }
 
 /**
- * Upsert alert settings
+ * Upsert alert settings by key
  */
-export async function upsertAlertSettings(userId: string, settings: Record<string, any>): Promise<void> {
+export async function upsertAlertSettings(settingKey: string, settingValue: Record<string, any>): Promise<void> {
   const { error } = await (supabase as any)
     .from('alert_settings')
     .upsert({ 
-      user_id: userId, 
-      settings: settings
+      setting_key: settingKey, 
+      setting_value: settingValue,
+      updated_at: new Date().toISOString()
     });
   
   if (error) throw error;

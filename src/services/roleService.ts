@@ -294,3 +294,18 @@ export async function fetchAuditLogs(limit: number = 500) {
 
   return data;
 }
+
+/**
+ * Fetch user roles for a specific user
+ */
+export async function fetchUserRoles(userId: string) {
+  const { data, error } = await supabase
+    .from('user_roles')
+    .select('role, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: true });
+
+  if (error) throw error;
+
+  return data || [];
+}

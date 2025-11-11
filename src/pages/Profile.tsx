@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { fetchUserRoles } from "@/services";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -22,18 +22,11 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUserRoles = async () => {
+    const fetchRoles = async () => {
       if (!user) return;
 
       try {
-        const { data, error } = await supabase
-          .from('user_roles')
-          .select('role, created_at')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: true });
-
-        if (error) throw error;
-
+        const data = await fetchUserRoles(user.id);
         setRoles(data || []);
       } catch (err: any) {
         console.error('Error fetching user roles:', err);
@@ -43,7 +36,7 @@ export default function Profile() {
       }
     };
 
-    fetchUserRoles();
+    fetchRoles();
   }, [user]);
 
   const getRoleBadgeVariant = (role: string) => {
