@@ -8,6 +8,13 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -17,7 +24,7 @@ import {
 } from '@/components/ui/dialog';
 import { Header, Footer } from '@/components/layout';
 import { AdminRoute } from '@/components/auth';
-import { Settings, Clock, Shield, Zap, Smartphone, Info, CheckCircle2, AlertTriangle, RefreshCw, Sparkles, Download, Upload, History, FileText } from 'lucide-react';
+import { Settings, Clock, Shield, Zap, Smartphone, Info, CheckCircle2, AlertTriangle, RefreshCw, Sparkles, Download, Upload, History, FileText, Filter, X } from 'lucide-react';
 import { CACHE_CONFIG, SECURITY_CONFIG, PERFORMANCE_CONFIG, PWA_CONFIG, APP_CONFIG, CONFIG_PRESETS, compareWithPreset, type ConfigPreset } from '@/config';
 import { toast } from 'sonner';
 import { fetchConfigAuditLogs, logConfigChange } from '@/services';
@@ -54,6 +61,13 @@ const AdminConfig = () => {
   const [pendingRollbackLog, setPendingRollbackLog] = useState<ConfigChangeAudit | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Audit log filters
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [userFilter, setUserFilter] = useState('');
+  const [changeTypeFilter, setChangeTypeFilter] = useState('all');
+  const [configKeyFilter, setConfigKeyFilter] = useState('');
+
   // Fetch audit logs on mount
   useEffect(() => {
     loadAuditLogs();
@@ -71,8 +85,49 @@ const AdminConfig = () => {
     }
   };
 
+  // Filter audit logs based on criteria
+  const filteredAuditLogs = auditLogs.filter((log) => {
+    // Date range filter
+    if (startDate && new Date(log.created_at) < new Date(startDate)) {
+      return false;
+    }
+    if (endDate && new Date(log.created_at) > new Date(endDate + 'T23:59:59')) {
+      return false;
+    }
+
+    // User filter
+    if (userFilter && !log.user_email.toLowerCase().includes(userFilter.toLowerCase())) {
+      return false;
+    }
+
+    // Change type filter
+    if (changeTypeFilter !== 'all' && log.change_type !== changeTypeFilter) {
+      return false;
+    }
+
+    // Config key filter
+    if (configKeyFilter && !log.config_key.toLowerCase().includes(configKeyFilter.toLowerCase())) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const clearFilters = () => {
+    setStartDate('');
+    setEndDate('');
+    setUserFilter('');
+    setChangeTypeFilter('all');
+    setConfigKeyFilter('');
+    toast.info('Filters cleared');
+  };
+
+  const hasActiveFilters = startDate || endDate || userFilter || changeTypeFilter !== 'all' || configKeyFilter;
+
   const exportAuditLogToCSV = () => {
-    if (auditLogs.length === 0) {
+    const logsToExport = hasActiveFilters ? filteredAuditLogs : auditLogs;
+    
+    if (logsToExport.length === 0) {
       toast.error('No audit logs to export');
       return;
     }
@@ -89,7 +144,7 @@ const AdminConfig = () => {
     ];
 
     // Convert logs to CSV rows
-    const rows = auditLogs.map(log => [
+    const rows = logsToExport.map(log => [
       new Date(log.created_at).toLocaleString(),
       log.user_email,
       log.config_key,
@@ -117,7 +172,7 @@ const AdminConfig = () => {
     URL.revokeObjectURL(url);
 
     toast.success('Audit log exported', {
-      description: `${auditLogs.length} records exported to CSV`,
+      description: `${logsToExport.length} records exported to CSV${hasActiveFilters ? ' (filtered)' : ''}`,
     });
   };
 
@@ -871,7 +926,7 @@ const AdminConfig = () => {
                         variant="outline" 
                         size="sm" 
                         onClick={exportAuditLogToCSV}
-                        disabled={auditLogs.length === 0}
+                        disabled={filteredAuditLogs.length === 0}
                       >
                         <Download className="h-4 w-4 mr-2" />
                         Export CSV
@@ -884,9 +939,95 @@ const AdminConfig = () => {
                   </div>
                   <CardDescription>
                     Complete history of all configuration changes made through this panel
+                    {hasActiveFilters && (
+                      <span className="text-primary ml-2">
+                        ({filteredAuditLogs.length} of {auditLogs.length} records shown)
+                      </span>
+                    )}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  {/* Filters Section */}
+                  {auditLogs.length > 0 && (
+                    <div className="mb-6 p-4 border rounded-lg bg-muted/30">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <Filter className="h-4 w-4 text-primary" />
+                          <h4 className="font-semibold">Filters</h4>
+                        </div>
+                        {hasActiveFilters && (
+                          <Button variant="ghost" size="sm" onClick={clearFilters}>
+                            <X className="h-4 w-4 mr-2" />
+                            Clear All
+                          </Button>
+                        )}
+                      </div>
+                      
+                      <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+                        {/* Date Range Filters */}
+                        <div className="space-y-2">
+                          <Label htmlFor="start-date">Start Date</Label>
+                          <Input
+                            id="start-date"
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="end-date">End Date</Label>
+                          <Input
+                            id="end-date"
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                          />
+                        </div>
+
+                        {/* User Filter */}
+                        <div className="space-y-2">
+                          <Label htmlFor="user-filter">User Email</Label>
+                          <Input
+                            id="user-filter"
+                            placeholder="Filter by user..."
+                            value={userFilter}
+                            onChange={(e) => setUserFilter(e.target.value)}
+                          />
+                        </div>
+
+                        {/* Change Type Filter */}
+                        <div className="space-y-2">
+                          <Label htmlFor="change-type">Change Type</Label>
+                          <Select value={changeTypeFilter} onValueChange={setChangeTypeFilter}>
+                            <SelectTrigger id="change-type">
+                              <SelectValue placeholder="All types" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Types</SelectItem>
+                              <SelectItem value="preset_applied">Preset</SelectItem>
+                              <SelectItem value="import">Import</SelectItem>
+                              <SelectItem value="rollback">Rollback</SelectItem>
+                              <SelectItem value="test">Test</SelectItem>
+                              <SelectItem value="manual">Manual</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Config Key Filter */}
+                        <div className="space-y-2">
+                          <Label htmlFor="config-key">Config Key</Label>
+                          <Input
+                            id="config-key"
+                            placeholder="Filter by key..."
+                            value={configKeyFilter}
+                            onChange={(e) => setConfigKeyFilter(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {isLoadingLogs ? (
                     <div className="flex items-center justify-center py-8">
                       <RefreshCw className="h-6 w-6 animate-spin text-primary" />
@@ -896,9 +1037,17 @@ const AdminConfig = () => {
                       <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
                       <p>No configuration changes recorded yet</p>
                     </div>
+                  ) : filteredAuditLogs.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                      <p>No logs match the current filters</p>
+                      <Button variant="link" onClick={clearFilters} className="mt-2">
+                        Clear filters
+                      </Button>
+                    </div>
                   ) : (
                     <div className="space-y-3">
-                      {auditLogs.map((log) => (
+                      {filteredAuditLogs.map((log) => (
                         <Card key={log.id} className="p-4">
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex-1">
