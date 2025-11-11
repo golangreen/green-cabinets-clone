@@ -8,8 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Mail, Calendar, Shield, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Header, Footer } from "@/components/layout";
 
 interface UserRole {
   role: string;

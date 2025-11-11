@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import LoadingState from "./LoadingState";
+import { LoadingState } from "@/components/layout";
 import { ROUTES } from "@/constants/routes";
 
 interface ProtectedRouteProps {

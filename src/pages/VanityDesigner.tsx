@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
-import { HistoryTimeline } from "@/components/HistoryTimeline";
+import { HistoryTimeline } from "@/components/marketing";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import LoadingState from "@/components/LoadingState";
+import { LoadingState } from "@/components/layout";
 import { 
   Plus,
   Trash2,

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Header, Footer } from "@/components/layout";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { VanityDesignerApp } from "@/features/vanity-designer";
 import { ArrowLeft } from "lucide-react";

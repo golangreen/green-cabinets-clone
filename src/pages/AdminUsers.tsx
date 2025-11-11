@@ -1,7 +1,5 @@
 import { useAdminCheck } from '@/hooks/useAdminCheck';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import LoadingState from '@/components/LoadingState';
+import { Header, Footer, LoadingState } from '@/components/layout';
 import { AdminUsersDashboard } from '@/features/admin-users';
 
 const AdminUsers = () => {

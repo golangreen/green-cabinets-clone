@@ -5,8 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, ThemeProvider } from "@/contexts";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { AdminRoute } from "@/components/AdminRoute";
+import { ProtectedRoute } from "@/components/auth";
+import { AdminRoute } from "@/components/auth";
 import { ROUTES } from "@/constants/routes";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -24,7 +24,7 @@ import DocsGettingStarted from "./pages/DocsGettingStarted";
 import DocsAPI from "./pages/DocsAPI";
 import DocsTroubleshooting from "./pages/DocsTroubleshooting";
 import NotFound from "./pages/NotFound";
-import SplashScreen from "./components/SplashScreen";
+import { SplashScreen } from "@/components/layout";
 
 const queryClient = new QueryClient();
 

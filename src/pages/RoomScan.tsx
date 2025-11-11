@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import { Header, Footer } from '@/components/layout';
 import { RoomScanner, type ScanSession } from '@/features/room-scanner';
 import { toast } from 'sonner';
 import { ArrowLeft, Tablet, Monitor } from 'lucide-react';

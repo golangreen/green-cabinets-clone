@@ -1,6 +1,5 @@
 import { useAdminCheck } from '@/hooks/useAdminCheck';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import { Header, Footer } from '@/components/layout';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SecurityDashboard } from '@/features/admin-security';
 
