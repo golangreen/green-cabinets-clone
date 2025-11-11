@@ -176,13 +176,13 @@ a[href^="#"], button {
   .bg-geometric-pattern-subtle {
     background-color: #ffffff;
     background-image: 
-      linear-gradient(135deg, #cbd5e1 18%, transparent 18%),
-      linear-gradient(225deg, #94a3b8 22%, transparent 22%),
-      linear-gradient(45deg, #e2e8f0 12%, transparent 12%),
-      linear-gradient(315deg, #cbd5e1 28%, transparent 28%),
-      radial-gradient(circle at 35% 45%, #e2e8f0 10%, transparent 10%),
-      radial-gradient(circle at 65% 55%, #cbd5e1 15%, transparent 15%),
-      linear-gradient(90deg, #94a3b8 3%, transparent 3%);
+      linear-gradient(135deg, #94a3b8 18%, transparent 18%),
+      linear-gradient(225deg, #64748b 22%, transparent 22%),
+      linear-gradient(45deg, #cbd5e1 12%, transparent 12%),
+      linear-gradient(315deg, #94a3b8 28%, transparent 28%),
+      radial-gradient(circle at 35% 45%, #cbd5e1 10%, transparent 10%),
+      radial-gradient(circle at 65% 55%, #94a3b8 15%, transparent 15%),
+      linear-gradient(90deg, #64748b 3%, transparent 3%);
     background-size: 70px 70px, 90px 90px, 55px 55px, 100px 100px, 130px 130px, 150px 150px, 220px 220px;
     background-position: 0 0, 45px 25px, 35px -35px, 0px 55px, 15px 15px, 70px 90px, 25px 45px;
   }
