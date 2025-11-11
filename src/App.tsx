@@ -25,6 +25,7 @@ import AdminCache from "./pages/AdminCache";
 import RoomScan from "./pages/RoomScan";
 import DocsAuth from "./pages/DocsAuth";
 import DocsGettingStarted from "./pages/DocsGettingStarted";
+import DocsConfiguration from "./pages/DocsConfiguration";
 import DocsAPI from "./pages/DocsAPI";
 import DocsTroubleshooting from "./pages/DocsTroubleshooting";
 import DocsSecurity from "./pages/DocsSecurity";
@@ -133,6 +134,7 @@ const App = () => {
                 <Route path="/room-scan" element={<RoomScan />} />
                 <Route path="/docs/auth" element={<DocsAuth />} />
                 <Route path="/docs/getting-started" element={<DocsGettingStarted />} />
+                <Route path="/docs/configuration" element={<DocsConfiguration />} />
                 <Route path="/docs/api" element={<DocsAPI />} />
                 <Route path="/docs/security" element={<DocsSecurity />} />
                 <Route path="/docs/troubleshooting" element={<DocsTroubleshooting />} />

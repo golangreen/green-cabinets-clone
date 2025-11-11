@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { Search, BookOpen, Lock, Code, AlertCircle, Shield } from "lucide-react";
+import { Search, BookOpen, Lock, Code, AlertCircle, Shield, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
 
@@ -18,6 +18,12 @@ const docSections: DocSection[] = [
     path: ROUTES.DOCS_GETTING_STARTED,
     icon: BookOpen,
     keywords: ["setup", "install", "environment", "database", "schema", "start", "begin"],
+  },
+  {
+    title: "Configuration",
+    path: "/docs/configuration",
+    icon: Settings,
+    keywords: ["config", "settings", "environment", "cache", "security", "performance", "pwa", "variable"],
   },
   {
     title: "Authentication",
