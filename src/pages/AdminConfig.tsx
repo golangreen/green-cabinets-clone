@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Header, Footer } from '@/components/layout';
 import { AdminRoute } from '@/components/auth';
-import { Settings, Clock, Shield, Zap, Smartphone, Info, CheckCircle2, AlertTriangle, RefreshCw, Sparkles } from 'lucide-react';
+import { Settings, Clock, Shield, Zap, Smartphone, Info, CheckCircle2, AlertTriangle, RefreshCw, Sparkles, Download, Upload } from 'lucide-react';
 import { CACHE_CONFIG, SECURITY_CONFIG, PERFORMANCE_CONFIG, PWA_CONFIG, APP_CONFIG, CONFIG_PRESETS, compareWithPreset, type ConfigPreset } from '@/config';
 import { toast } from 'sonner';
 
@@ -24,6 +24,7 @@ interface ConfigValue {
 const AdminConfig = () => {
   const [testValues, setTestValues] = useState<Record<string, any>>({});
   const [selectedPreset, setSelectedPreset] = useState<ConfigPreset | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Cache configuration
   const cacheConfig: ConfigValue[] = [
@@ -237,6 +238,87 @@ const AdminConfig = () => {
     return current;
   };
 
+  const exportConfig = () => {
+    const exportData = {
+      timestamp: new Date().toISOString(),
+      environment: APP_CONFIG.IS_PRODUCTION ? 'production' : 'development',
+      values: getCurrentValues(),
+      testValues: Object.keys(testValues).length > 0 ? testValues : undefined,
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `config-snapshot-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast.success('Configuration exported', {
+      description: 'Configuration snapshot saved to file',
+    });
+  };
+
+  const importConfig = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const importData = JSON.parse(content);
+
+        // Validate structure
+        if (!importData.values || typeof importData.values !== 'object') {
+          throw new Error('Invalid configuration file structure');
+        }
+
+        // Validate keys
+        const validKeys = [...cacheConfig, ...securityConfig, ...performanceConfig]
+          .map((c) => c.envVar)
+          .filter(Boolean);
+
+        const importKeys = Object.keys(importData.values);
+        const invalidKeys = importKeys.filter((key) => !validKeys.includes(key));
+
+        if (invalidKeys.length > 0) {
+          toast.warning('Some configuration keys are invalid', {
+            description: `Invalid keys: ${invalidKeys.join(', ')}`,
+          });
+        }
+
+        // Apply valid values
+        const validValues: Record<string, any> = {};
+        importKeys.forEach((key) => {
+          if (validKeys.includes(key)) {
+            validValues[key] = importData.values[key];
+          }
+        });
+
+        setTestValues(validValues);
+        setSelectedPreset(null);
+
+        toast.success('Configuration imported', {
+          description: `Loaded ${Object.keys(validValues).length} configuration values`,
+        });
+      } catch (error) {
+        toast.error('Failed to import configuration', {
+          description: error instanceof Error ? error.message : 'Invalid JSON file',
+        });
+      }
+    };
+
+    reader.readAsText(file);
+    
+    // Reset input so the same file can be imported again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const renderConfigSection = (title: string, icon: React.ReactNode, configs: ConfigValue[]) => (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
@@ -337,12 +419,35 @@ const AdminConfig = () => {
 
           <Card className="mb-6">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" />
-                <CardTitle>Configuration Presets</CardTitle>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  <CardTitle>Configuration Presets</CardTitle>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={exportConfig}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </Button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json"
+                    onChange={importConfig}
+                    className="hidden"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Import
+                  </Button>
+                </div>
               </div>
               <CardDescription>
-                Apply pre-configured settings optimized for different deployment environments
+                Apply pre-configured settings optimized for different deployment environments, or export/import custom configurations
               </CardDescription>
             </CardHeader>
             <CardContent>
