@@ -1,13 +1,111 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy, Play, Check } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { DocsSidebar } from "@/components/DocsSidebar";
 
 const DocsTroubleshooting = () => {
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [testResult, setTestResult] = useState<{ type: string; message: string } | null>(null);
+  const { toast } = useToast();
+
+  const copyToClipboard = (code: string, id: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(id);
+    setTimeout(() => setCopiedCode(null), 2000);
+    toast({
+      title: "Copied!",
+      description: "Code copied to clipboard",
+    });
+  };
+
+  const testAuthConnection = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setTestResult({
+          type: "success",
+          message: `✅ Auth working! User: ${session.user.email}`
+        });
+      } else {
+        setTestResult({
+          type: "info",
+          message: "ℹ️ No active session. Try logging in first."
+        });
+      }
+    } catch (error: any) {
+      setTestResult({
+        type: "error",
+        message: `❌ Auth error: ${error.message}`
+      });
+    }
+  };
+
+  const testDatabaseConnection = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('count')
+        .limit(1);
+      
+      if (error) throw error;
+      
+      setTestResult({
+        type: "success",
+        message: "✅ Database connection successful!"
+      });
+    } catch (error: any) {
+      setTestResult({
+        type: "error",
+        message: `❌ Database error: ${error.message}`
+      });
+    }
+  };
+
+  const testRLSPolicies = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setTestResult({
+          type: "info",
+          message: "ℹ️ Please log in to test RLS policies"
+        });
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('*');
+      
+      if (error && error.code === 'PGRST301') {
+        setTestResult({
+          type: "error",
+          message: "❌ RLS blocking access. Check your policies!"
+        });
+      } else if (error) {
+        throw error;
+      } else {
+        setTestResult({
+          type: "success",
+          message: `✅ RLS policies working! Retrieved ${data?.length || 0} rows`
+        });
+      }
+    } catch (error: any) {
+      setTestResult({
+        type: "error",
+        message: `❌ RLS test error: ${error.message}`
+      });
+    }
+  };
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -22,6 +120,61 @@ const DocsTroubleshooting = () => {
           </div>
 
           <Separator className="my-8" />
+
+          {/* Interactive Testing Section */}
+          <section className="mb-12">
+            <Card className="border-primary/20 bg-primary/5">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Play className="h-5 w-5 text-primary" />
+                  Interactive Testing Tools
+                </CardTitle>
+                <CardDescription>
+                  Test your setup with these interactive demos
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <Button
+                    onClick={testAuthConnection}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Lock className="mr-2 h-4 w-4" />
+                    Test Auth
+                  </Button>
+                  <Button
+                    onClick={testDatabaseConnection}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Database className="mr-2 h-4 w-4" />
+                    Test Database
+                  </Button>
+                  <Button
+                    onClick={testRLSPolicies}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                    Test RLS
+                  </Button>
+                </div>
+
+                {testResult && (
+                  <Alert className={`mt-4 ${
+                    testResult.type === 'success' ? 'border-green-500 bg-green-50' :
+                    testResult.type === 'error' ? 'border-destructive bg-destructive/10' :
+                    'border-blue-500 bg-blue-50'
+                  }`}>
+                    <AlertDescription className="font-mono text-sm">
+                      {testResult.message}
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </CardContent>
+            </Card>
+          </section>
 
           {/* Authentication Issues */}
           <section className="mb-12">
@@ -109,8 +262,46 @@ https://yourdomain.com/*  (if using custom domain)`}</code>
 
                 <div>
                   <h4 className="font-semibold mb-2">Solution</h4>
-                  <pre className="bg-muted p-4 rounded text-sm overflow-x-auto">
-                    <code>{`// ✅ CORRECT: Store complete session and use onAuthStateChange
+                  <Tabs defaultValue="code" className="w-full">
+                    <TabsList>
+                      <TabsTrigger value="code">Code Example</TabsTrigger>
+                      <TabsTrigger value="explanation">Explanation</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="code">
+                      <div className="relative">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="absolute right-2 top-2"
+                          onClick={() => copyToClipboard(`// ✅ CORRECT: Store complete session and use onAuthStateChange
+import { supabase } from '@/integrations/supabase/client';
+
+useEffect(() => {
+  // Get initial session
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    setSession(session);
+    setUser(session?.user ?? null);
+  });
+
+  // Listen for auth changes
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    (_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    }
+  );
+
+  return () => subscription.unsubscribe();
+}, []);`, 'session-persist')}
+                        >
+                          {copiedCode === 'session-persist' ? (
+                            <Check className="h-4 w-4" />
+                          ) : (
+                            <Copy className="h-4 w-4" />
+                          )}
+                        </Button>
+                        <pre className="bg-muted p-4 rounded text-sm overflow-x-auto">
+                          <code>{`// ✅ CORRECT: Store complete session and use onAuthStateChange
 import { supabase } from '@/integrations/supabase/client';
 
 useEffect(() => {
@@ -130,7 +321,21 @@ useEffect(() => {
 
   return () => subscription.unsubscribe();
 }, []);`}</code>
-                  </pre>
+                        </pre>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="explanation">
+                      <div className="space-y-3 text-sm bg-muted p-4 rounded">
+                        <p><strong>Key points:</strong></p>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                          <li>Call <code>getSession()</code> on mount to retrieve existing session</li>
+                          <li>Use <code>onAuthStateChange</code> listener to handle auth events</li>
+                          <li>Store complete session object, not just user</li>
+                          <li>Clean up subscription on unmount to prevent memory leaks</li>
+                        </ul>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </div>
               </CardContent>
             </Card>
@@ -159,25 +364,60 @@ useEffect(() => {
                   </p>
                 </div>
 
-                <div>
-                  <h4 className="font-semibold mb-2">Wrong Approach</h4>
-                  <pre className="bg-muted p-4 rounded text-sm overflow-x-auto">
-                    <code>{`-- ❌ This causes recursion
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="wrong">
+                    <AccordionTrigger className="text-sm font-semibold hover:no-underline">
+                      ❌ Wrong Approach (Causes Recursion)
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="relative">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="absolute right-2 top-2 z-10"
+                          onClick={() => copyToClipboard(`-- ❌ This causes recursion
+CREATE POLICY "Admins can view all profiles" 
+ON public.profiles
+FOR SELECT USING (
+  (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin'
+);`, 'rls-wrong')}
+                        >
+                          {copiedCode === 'rls-wrong' ? (
+                            <Check className="h-4 w-4" />
+                          ) : (
+                            <Copy className="h-4 w-4" />
+                          )}
+                        </Button>
+                        <pre className="bg-muted p-4 rounded text-sm overflow-x-auto">
+                          <code>{`-- ❌ This causes recursion
 CREATE POLICY "Admins can view all profiles" 
 ON public.profiles
 FOR SELECT USING (
   (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin'
 );`}</code>
-                  </pre>
-                </div>
+                        </pre>
+                      </div>
+                      <Alert className="mt-3" variant="destructive">
+                        <AlertDescription className="text-xs">
+                          The policy queries the <code>profiles</code> table, which triggers the same policy again, creating an infinite loop.
+                        </AlertDescription>
+                      </Alert>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                <div>
-                  <h4 className="font-semibold mb-2">Correct Solution</h4>
-                  <div className="space-y-3 text-sm">
-                    <p className="font-medium">Use a SECURITY DEFINER function:</p>
-                    <pre className="bg-muted p-4 rounded text-xs overflow-x-auto">
-                      <code>{`-- Step 1: Create security definer function
-CREATE OR REPLACE FUNCTION public.has_role(_user_id UUID, _role app_role)
+                  <AccordionItem value="correct">
+                    <AccordionTrigger className="text-sm font-semibold hover:no-underline">
+                      ✅ Correct Solution (Use SECURITY DEFINER)
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-3">
+                        <p className="text-sm font-medium">Step 1: Create security definer function</p>
+                        <div className="relative">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="absolute right-2 top-2 z-10"
+                            onClick={() => copyToClipboard(`CREATE OR REPLACE FUNCTION public.has_role(_user_id UUID, _role app_role)
 RETURNS BOOLEAN
 LANGUAGE SQL
 STABLE
@@ -190,16 +430,68 @@ AS $$
     WHERE user_id = _user_id
       AND role = _role
   )
-$$;
+$$;`, 'rls-function')}
+                          >
+                            {copiedCode === 'rls-function' ? (
+                              <Check className="h-4 w-4" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <pre className="bg-muted p-4 rounded text-xs overflow-x-auto">
+                            <code>{`CREATE OR REPLACE FUNCTION public.has_role(_user_id UUID, _role app_role)
+RETURNS BOOLEAN
+LANGUAGE SQL
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.user_roles
+    WHERE user_id = _user_id
+      AND role = _role
+  )
+$$;`}</code>
+                          </pre>
+                        </div>
 
--- Step 2: Update policy to use the function
-CREATE POLICY "Admins can view all profiles" 
+                        <p className="text-sm font-medium">Step 2: Use function in policy</p>
+                        <div className="relative">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="absolute right-2 top-2 z-10"
+                            onClick={() => copyToClipboard(`CREATE POLICY "Admins can view all profiles" 
+ON public.profiles
+FOR SELECT 
+USING (public.has_role(auth.uid(), 'admin'));`, 'rls-policy')}
+                          >
+                            {copiedCode === 'rls-policy' ? (
+                              <Check className="h-4 w-4" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <pre className="bg-muted p-4 rounded text-xs overflow-x-auto">
+                            <code>{`CREATE POLICY "Admins can view all profiles" 
 ON public.profiles
 FOR SELECT 
 USING (public.has_role(auth.uid(), 'admin'));`}</code>
-                    </pre>
-                  </div>
-                </div>
+                          </pre>
+                        </div>
+
+                        <Alert className="mt-3">
+                          <CheckCircle2 className="h-4 w-4" />
+                          <AlertTitle className="text-sm">Why this works</AlertTitle>
+                          <AlertDescription className="text-xs">
+                            SECURITY DEFINER executes with owner privileges, bypassing RLS and preventing recursion. The function queries a separate <code>user_roles</code> table instead of the table being protected.
+                          </AlertDescription>
+                        </Alert>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </CardContent>
             </Card>
 
