@@ -236,6 +236,10 @@ export type Database = {
         }
         Returns: Json
       }
+      bulk_extend_role_expiration: {
+        Args: { role_extensions: Json }
+        Returns: Json
+      }
       bulk_remove_user_role: {
         Args: {
           target_role: Database["public"]["Enums"]["app_role"]
@@ -285,6 +289,16 @@ export type Database = {
         Returns: {
           expires_at: string
           hours_until_expiry: number
+          role: Database["public"]["Enums"]["app_role"]
+          user_email: string
+          user_id: string
+        }[]
+      }
+      get_roles_expiring_within_days: {
+        Args: { days_ahead?: number }
+        Returns: {
+          days_until_expiry: number
+          expires_at: string
           role: Database["public"]["Enums"]["app_role"]
           user_email: string
           user_id: string
