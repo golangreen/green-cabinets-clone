@@ -160,6 +160,12 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-background border-border z-50">
                 <DropdownMenuItem 
+                  onClick={() => window.location.href = '/docs/getting-started'}
+                  className="cursor-pointer"
+                >
+                  Getting Started
+                </DropdownMenuItem>
+                <DropdownMenuItem 
                   onClick={() => window.location.href = '/docs/auth'}
                   className="cursor-pointer"
                 >
@@ -274,6 +280,16 @@ const Header = () => {
                   </a>
                   <div className="flex flex-col gap-2">
                     <h3 className="font-semibold mb-2">Documentation</h3>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start" 
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        window.location.href = '/docs/getting-started';
+                      }}
+                    >
+                      Getting Started
+                    </Button>
                     <Button 
                       variant="ghost" 
                       className="justify-start" 

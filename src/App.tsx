@@ -13,6 +13,7 @@ import VanityDesigner from "./pages/VanityDesigner";
 import AdminSecurity from "./pages/AdminSecurity";
 import RoomScan from "./pages/RoomScan";
 import DocsAuth from "./pages/DocsAuth";
+import DocsGettingStarted from "./pages/DocsGettingStarted";
 import NotFound from "./pages/NotFound";
 import SplashScreen from "./components/SplashScreen";
 
@@ -56,6 +57,7 @@ const App = () => {
             <Route path="/admin/security" element={<AdminSecurity />} />
             <Route path="/room-scan" element={<RoomScan />} />
             <Route path="/docs/auth" element={<DocsAuth />} />
+            <Route path="/docs/getting-started" element={<DocsGettingStarted />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
