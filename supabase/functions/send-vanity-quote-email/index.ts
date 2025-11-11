@@ -1,50 +1,59 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { corsHeaders } from "../_shared/cors.ts";
+import { createLogger, generateRequestId } from "../_shared/logger.ts";
+import { ValidationError, withErrorHandling } from "../_shared/errors.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
-interface SendQuoteEmailRequest {
-  recipientEmail: string;
-  recipientName?: string;
-  ccSalesTeam?: boolean;
-  pdfBase64: string;
-  vanityConfig: {
-    brand: string;
-    finish: string;
-    width: number;
-    height: number;
-    depth: number;
-    doorStyle: string;
-    totalPrice: number;
-  };
-}
+const vanityConfigSchema = z.object({
+  brand: z.string().min(1).max(100),
+  finish: z.string().min(1).max(100),
+  width: z.number().positive().max(1000),
+  height: z.number().positive().max(1000),
+  depth: z.number().positive().max(1000),
+  doorStyle: z.string().min(1).max(100),
+  totalPrice: z.number().positive().max(1000000),
+});
+
+const requestSchema = z.object({
+  recipientEmail: z.string().email(),
+  recipientName: z.string().max(200).optional(),
+  ccSalesTeam: z.boolean().optional(),
+  pdfBase64: z.string().min(1),
+  vanityConfig: vanityConfigSchema,
+});
 
 const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const requestId = generateRequestId();
+  const logger = createLogger({ 
+    functionName: 'send-vanity-quote-email',
+    requestId 
+  });
+
   try {
+    const body = await req.json();
+    
+    // Validate request body
+    const validatedData = requestSchema.parse(body);
     const {
       recipientEmail,
       recipientName = "Valued Customer",
       ccSalesTeam = false,
       pdfBase64,
       vanityConfig,
-    }: SendQuoteEmailRequest = await req.json();
+    } = validatedData;
 
-    // Validate inputs
-    if (!recipientEmail || !pdfBase64 || !vanityConfig) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        }
-      );
-    }
+    logger.info('Sending vanity quote email', { 
+      recipientEmail,
+      ccSalesTeam,
+      configBrand: vanityConfig.brand
+    });
 
     // Convert base64 to buffer
     const pdfBuffer = Uint8Array.from(atob(pdfBase64), (c) => c.charCodeAt(0));
@@ -209,7 +218,10 @@ const handler = async (req: Request): Promise<Response> => {
       ],
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    logger.info("Email sent successfully", { 
+      messageId: emailResponse.data?.id,
+      recipientEmail 
+    });
 
     return new Response(
       JSON.stringify({
@@ -225,15 +237,12 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
   } catch (error: any) {
-    console.error("Error in send-vanity-quote-email function:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      }
-    );
+    logger.error("Error sending vanity quote email", { 
+      error: error.message,
+      stack: error.stack 
+    });
+    throw error;
   }
 };
 
-serve(handler);
+serve(withErrorHandling(handler));

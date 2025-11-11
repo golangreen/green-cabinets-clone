@@ -2,6 +2,9 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { corsHeaders } from "../_shared/cors.ts";
+import { createLogger, generateRequestId } from "../_shared/logger.ts";
+import { ValidationError, withErrorHandling } from "../_shared/errors.ts";
 
 const orderItemSchema = z.object({
   variantId: z.string().min(1),
@@ -16,16 +19,6 @@ const orderItemSchema = z.object({
 
 const orderItemsSchema = z.array(orderItemSchema).min(1).max(50);
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, stripe-signature",
-  "X-Content-Type-Options": "nosniff",
-  "X-Frame-Options": "DENY",
-  "X-XSS-Protection": "1; mode=block",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
-};
-
 const SHOPIFY_ADMIN_API_VERSION = "2025-01";
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
@@ -34,22 +27,28 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY") as string);
 
-serve(async (req) => {
+const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  console.log("Webhook received");
+  const requestId = generateRequestId();
+  const logger = createLogger({ 
+    functionName: 'stripe-webhook',
+    requestId 
+  });
+
+  logger.info("Webhook received");
 
   try {
     const signature = req.headers.get("stripe-signature");
     if (!signature) {
-      throw new Error("No Stripe signature found");
+      throw new ValidationError("No Stripe signature found");
     }
 
     const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
     if (!webhookSecret) {
-      throw new Error("STRIPE_WEBHOOK_SECRET not configured");
+      throw new ValidationError("STRIPE_WEBHOOK_SECRET not configured");
     }
 
     // Get raw body for signature verification
@@ -59,54 +58,42 @@ serve(async (req) => {
     let event: Stripe.Event;
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-      console.log("Webhook signature verified:", event.type);
-    } catch (err) {
-      console.error("Webhook signature verification failed:", err);
-      return new Response(JSON.stringify({ error: "Webhook signature verification failed" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      logger.info("Webhook signature verified", { eventType: event.type });
+    } catch (err: any) {
+      logger.error("Webhook signature verification failed", { error: err.message });
+      throw new ValidationError("Webhook signature verification failed");
     }
 
     // Handle checkout.session.completed event
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
-      console.log("Processing completed checkout session:", session.id);
+      logger.info("Processing completed checkout session", { sessionId: session.id });
 
       // Extract order items from metadata
       const orderItemsJson = session.metadata?.order_items;
       if (!orderItemsJson) {
-        console.error("No order items found in session metadata");
-        return new Response(JSON.stringify({ error: "No order items in metadata" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        logger.error("No order items found in session metadata");
+        throw new ValidationError("No order items in metadata");
       }
 
       let orderItems;
       try {
         orderItems = JSON.parse(orderItemsJson);
-      } catch (parseError) {
-        console.error("Failed to parse order items:", parseError);
-        return new Response(JSON.stringify({ error: "Invalid order items format" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+      } catch (parseError: any) {
+        logger.error("Failed to parse order items", { error: parseError.message });
+        throw new ValidationError("Invalid order items format");
       }
 
       // Validate order items structure
       const validationResult = orderItemsSchema.safeParse(orderItems);
       if (!validationResult.success) {
-        console.error("Order items validation failed:", validationResult.error);
-        return new Response(JSON.stringify({ 
-          error: "Invalid order data. Please contact support." 
-        }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        logger.error("Order items validation failed", { 
+          error: validationResult.error.errors 
         });
+        throw new ValidationError("Invalid order data");
       }
 
-      console.log("Validated order items:", orderItems);
+      logger.info("Validated order items", { itemCount: orderItems.length });
 
       // Get customer details and sanitize
       const customerName = (session.metadata?.customer_name || "Customer").trim().substring(0, 100);
@@ -188,7 +175,7 @@ serve(async (req) => {
         },
       };
 
-      console.log("Creating Shopify order with data:", JSON.stringify(orderData, null, 2));
+      logger.info("Creating Shopify order", { itemCount: lineItems.length });
 
       const shopifyResponse = await fetch(
         `https://${shopifyDomain}/admin/api/${SHOPIFY_ADMIN_API_VERSION}/orders.json`,
@@ -204,12 +191,17 @@ serve(async (req) => {
 
       if (!shopifyResponse.ok) {
         const errorText = await shopifyResponse.text();
-        console.error("Shopify API error:", shopifyResponse.status, errorText);
-        throw new Error(`Shopify API error: ${shopifyResponse.status} - ${errorText}`);
+        logger.error("Shopify API error", { 
+          status: shopifyResponse.status, 
+          error: errorText 
+        });
+        throw new Error(`Shopify API error: ${shopifyResponse.status}`);
       }
 
       const shopifyOrder = await shopifyResponse.json();
-      console.log("Shopify order created successfully:", shopifyOrder.order.id);
+      logger.info("Shopify order created successfully", { 
+        shopifyOrderId: shopifyOrder.order.id 
+      });
 
       // Send order confirmation email
       try {
@@ -292,10 +284,12 @@ serve(async (req) => {
             html: emailHtml,
           });
 
-          console.log("Order confirmation email sent to:", customerEmail);
+          logger.info("Order confirmation email sent", { customerEmail });
         }
-      } catch (emailError) {
-        console.error("Error sending confirmation email:", emailError);
+      } catch (emailError: any) {
+        logger.error("Error sending confirmation email", { 
+          error: emailError.message 
+        });
         // Don't fail the webhook if email fails
       }
 
@@ -312,20 +306,19 @@ serve(async (req) => {
     }
 
     // For other event types, just acknowledge receipt
-    console.log("Received event type:", event.type);
+    logger.info("Received event type", { eventType: event.type });
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
-  } catch (error) {
-    console.error("Webhook error:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to process webhook. Please contact support." }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+  } catch (error: any) {
+    logger.error("Webhook error", { 
+      error: error.message,
+      stack: error.stack 
+    });
+    throw error;
   }
-});
+};
+
+serve(withErrorHandling(handler));
