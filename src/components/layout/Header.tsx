@@ -99,52 +99,29 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#1a1a1a] shadow-lg">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-white shadow-lg' : 'bg-[#1a1a1a] shadow-lg'
+    }`}>
       <nav className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex items-center">
             <img 
-              src={logoTeal}
+              src={isScrolled ? logoBlack : logoTeal}
               alt="Green Cabinets Logo" 
-              className="h-14 w-auto"
+              className="h-14 w-auto transition-all duration-300"
             />
           </a>
           
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-white hover:text-[#D4AF37] transition-colors text-sm font-medium">
-              Home
-            </a>
-            <button
-              onClick={(e) => scrollToGallery('kitchens', e)}
-              className="text-white hover:text-[#D4AF37] transition-colors text-sm font-medium"
-            >
-              Our Offering
-            </button>
-            <a href="#about" className="text-white hover:text-[#D4AF37] transition-colors text-sm font-medium">
-              About
-            </a>
-            <a href="#contact" className="text-white hover:text-[#D4AF37] transition-colors text-sm font-medium">
-              Contact
-            </a>
-          </div>
-
-          {/* CTA Button */}
-          <a
-            href="#contact"
-            className="hidden md:block px-6 py-2.5 bg-white text-gray-900 rounded hover:bg-gray-100 transition-colors text-sm font-medium"
-          >
-            Contact Us
-          </a>
-          
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Toggle - Now for all screens */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="md:hidden text-white hover:text-white/80"
+                className={`transition-colors ${
+                  isScrolled ? 'text-gray-900 hover:text-gray-700' : 'text-[#2dd4bf] hover:text-[#2dd4bf]/80'
+                }`}
               >
                 <Menu className="h-6 w-6" />
               </Button>
