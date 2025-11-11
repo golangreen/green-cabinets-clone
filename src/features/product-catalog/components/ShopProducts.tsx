@@ -175,6 +175,7 @@ export const ShopProducts = () => {
               </CardContent>
               <CardFooter>
                 <Button 
+                  variant="hero"
                   className="w-full touch-manipulation"
                   onClick={(e) => {
                     e.stopPropagation();
