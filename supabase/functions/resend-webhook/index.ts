@@ -171,15 +171,68 @@ const handler = async (req: Request): Promise<Response> => {
     // Check for duplicate webhook event using svix-id
     const { data: existingEvent } = await supabase
       .from('webhook_events')
-      .select('id, processed_at')
+      .select('id, processed_at, retry_count, created_at')
       .eq('svix_id', svixId)
       .single();
 
     if (existingEvent) {
-      logger.info('Duplicate webhook event detected - already processed', { 
+      // Increment retry count
+      const newRetryCount = (existingEvent.retry_count || 0) + 1;
+      
+      await supabase
+        .from('webhook_events')
+        .update({ 
+          retry_count: newRetryCount,
+          processed_at: new Date().toISOString()
+        })
+        .eq('svix_id', svixId);
+      
+      logger.info('Duplicate webhook event detected - retry attempt', { 
         svixId, 
+        retryCount: newRetryCount,
         originalProcessedAt: existingEvent.processed_at 
       });
+
+      // Check for excessive retries within time window (10 minutes)
+      const { data: recentRetries } = await supabase
+        .from('webhook_events')
+        .select('retry_count, created_at')
+        .eq('svix_id', svixId)
+        .gte('created_at', new Date(Date.now() - 10 * 60 * 1000).toISOString())
+        .single();
+
+      // Alert if more than 3 retries within 10 minutes
+      if (recentRetries && newRetryCount >= 3) {
+        logger.warn('Excessive webhook retries detected - sending alert', {
+          svixId,
+          retryCount: newRetryCount,
+          timeWindow: '10 minutes'
+        });
+
+        try {
+          const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+          await supabase.functions.invoke('send-security-alert', {
+            headers: {
+              Authorization: `Bearer ${serviceRoleKey}`
+            },
+            body: {
+              recipient_email: Deno.env.get('ADMIN_EMAIL') || 'admin@example.com',
+              alert_type: 'webhook_retry_excessive',
+              severity: 'high',
+              details: {
+                svix_id: svixId,
+                retry_count: newRetryCount,
+                event_type: 'resend_webhook',
+                first_attempt: existingEvent.created_at,
+                last_attempt: new Date().toISOString(),
+                time_window_minutes: 10
+              }
+            }
+          });
+        } catch (alertError) {
+          logger.error('Failed to send webhook retry alert', alertError);
+        }
+      }
       
       // Return success for duplicate events without reprocessing
       return new Response(
@@ -187,6 +240,7 @@ const handler = async (req: Request): Promise<Response> => {
           received: true, 
           duplicate: true,
           svix_id: svixId,
+          retry_count: newRetryCount,
           originally_processed_at: existingEvent.processed_at 
         }),
         {
@@ -202,7 +256,8 @@ const handler = async (req: Request): Promise<Response> => {
       .insert({
         svix_id: svixId,
         event_type: 'resend_webhook',
-        client_ip: clientIP
+        client_ip: clientIP,
+        retry_count: 0
       });
 
     if (insertError) {

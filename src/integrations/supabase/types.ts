@@ -252,6 +252,7 @@ export type Database = {
           event_type: string
           id: string
           processed_at: string
+          retry_count: number | null
           svix_id: string
         }
         Insert: {
@@ -260,6 +261,7 @@ export type Database = {
           event_type: string
           id?: string
           processed_at?: string
+          retry_count?: number | null
           svix_id: string
         }
         Update: {
@@ -268,6 +270,7 @@ export type Database = {
           event_type?: string
           id?: string
           processed_at?: string
+          retry_count?: number | null
           svix_id?: string
         }
         Relationships: []

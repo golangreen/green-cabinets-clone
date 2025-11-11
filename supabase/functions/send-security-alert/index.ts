@@ -91,6 +91,71 @@ const handler = async (req: Request): Promise<Response> => {
     if (alert_type === 'email_delivery_issues') {
       subject = `⚠️ Email Delivery Alert: Issues Detected`;
       htmlContent = formatEmailDeliveryAlert(details);
+    } else if (alert_type === 'webhook_retry_excessive') {
+      subject = `⚠️ Webhook Retry Alert: Excessive Attempts Detected`;
+      htmlContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #ea580c;">⚠️ Webhook Retry Alert</h2>
+          <p>Resend is retrying the same webhook event multiple times, which may indicate delivery issues or integration problems.</p>
+          
+          <div style="background: #fff7ed; border-left: 4px solid #ea580c; padding: 16px; margin: 16px 0;">
+            <h3 style="margin-top: 0; color: #9a3412;">📊 Retry Details</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr style="background: #f9fafb;">
+                <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Webhook ID:</strong></td>
+                <td style="padding: 8px; border: 1px solid #e5e7eb;">${details.svix_id}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Event Type:</strong></td>
+                <td style="padding: 8px; border: 1px solid #e5e7eb;">${details.event_type}</td>
+              </tr>
+              <tr style="background: #f9fafb;">
+                <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Retry Count:</strong></td>
+                <td style="padding: 8px; border: 1px solid #e5e7eb; color: #dc2626;"><strong>${details.retry_count}</strong></td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Time Window:</strong></td>
+                <td style="padding: 8px; border: 1px solid #e5e7eb;">${details.time_window_minutes} minutes</td>
+              </tr>
+              <tr style="background: #f9fafb;">
+                <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>First Attempt:</strong></td>
+                <td style="padding: 8px; border: 1px solid #e5e7eb;">${new Date(details.first_attempt).toLocaleString()}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Last Attempt:</strong></td>
+                <td style="padding: 8px; border: 1px solid #e5e7eb;">${new Date(details.last_attempt).toLocaleString()}</td>
+              </tr>
+            </table>
+          </div>
+
+          <div style="background: #fef2f2; border-radius: 8px; padding: 16px; margin: 16px 0;">
+            <h3 style="margin-top: 0; color: #991b1b;">🔍 Possible Causes</h3>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li>Webhook endpoint returning errors or timing out</li>
+              <li>Database connection issues preventing event processing</li>
+              <li>Edge function errors or crashes during processing</li>
+              <li>Network connectivity problems between Resend and your endpoint</li>
+            </ul>
+          </div>
+
+          <div style="background: #eff6ff; border-radius: 8px; padding: 16px; margin: 16px 0;">
+            <h3 style="margin-top: 0; color: #1e40af;">✅ Recommended Actions</h3>
+            <ol style="margin: 0; padding-left: 20px;">
+              <li>Check the Admin Security Dashboard for webhook validation failures</li>
+              <li>Review edge function logs for the resend-webhook function</li>
+              <li>Verify database connectivity and RLS policies</li>
+              <li>Check Resend dashboard for webhook delivery status</li>
+              <li>Consider increasing webhook timeout settings if processing is slow</li>
+            </ol>
+          </div>
+
+          <p style="margin-top: 24px; color: #6b7280; font-size: 14px;">
+            <em>This alert was triggered because the same webhook event was retried ${details.retry_count} times within ${details.time_window_minutes} minutes.</em>
+          </p>
+          
+          <p style="color: #6b7280; font-size: 14px;">This is an automated alert from your Webhook Monitoring system.</p>
+        </div>
+      `;
     } else {
       subject = `🚨 Security Alert: ${alert_type}`;
       htmlContent = `
