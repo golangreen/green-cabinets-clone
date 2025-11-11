@@ -245,6 +245,33 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_events: {
+        Row: {
+          client_ip: string | null
+          created_at: string
+          event_type: string
+          id: string
+          processed_at: string
+          svix_id: string
+        }
+        Insert: {
+          client_ip?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          processed_at?: string
+          svix_id: string
+        }
+        Update: {
+          client_ip?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          processed_at?: string
+          svix_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -293,6 +320,7 @@ export type Database = {
         Returns: Json
       }
       cleanup_expired_blocks: { Args: never; Returns: number }
+      cleanup_old_webhook_events: { Args: never; Returns: number }
       extend_role_expiration: {
         Args: {
           new_expiration_date: string

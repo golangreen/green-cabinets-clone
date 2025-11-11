@@ -168,6 +168,50 @@ const handler = async (req: Request): Promise<Response> => {
 
     const body = await req.text();
     
+    // Check for duplicate webhook event using svix-id
+    const { data: existingEvent } = await supabase
+      .from('webhook_events')
+      .select('id, processed_at')
+      .eq('svix_id', svixId)
+      .single();
+
+    if (existingEvent) {
+      logger.info('Duplicate webhook event detected - already processed', { 
+        svixId, 
+        originalProcessedAt: existingEvent.processed_at 
+      });
+      
+      // Return success for duplicate events without reprocessing
+      return new Response(
+        JSON.stringify({ 
+          received: true, 
+          duplicate: true,
+          svix_id: svixId,
+          originally_processed_at: existingEvent.processed_at 
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200,
+        }
+      );
+    }
+
+    // Record this webhook event to prevent future duplicates
+    const { error: insertError } = await supabase
+      .from('webhook_events')
+      .insert({
+        svix_id: svixId,
+        event_type: 'resend_webhook',
+        client_ip: clientIP
+      });
+
+    if (insertError) {
+      logger.error('Failed to record webhook event for deduplication', insertError, { svixId });
+      // Continue processing even if deduplication tracking fails
+    } else {
+      logger.info('Webhook event recorded for deduplication', { svixId });
+    }
+    
     // Verify the webhook signature
     const isValid = await verifyWebhookSignature(
       body,

@@ -11,6 +11,7 @@ import { CronJobsManager } from '@/components/admin/CronJobsManager';
 import { EmailDeliveryStats } from '@/components/admin/EmailDeliveryStats';
 import { WebhookSecurityStats } from '@/components/admin/WebhookSecurityStats';
 import { RateLimitingStats } from '@/components/admin/RateLimitingStats';
+import { WebhookDeduplicationStats } from '@/components/admin/WebhookDeduplicationStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Activity, Ban, Bell, Settings } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -95,10 +96,11 @@ const AdminSecurity = () => {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            {/* Webhook & Rate Limiting Security */}
-            <div className="grid gap-6 lg:grid-cols-2">
+            {/* Webhook Security Row */}
+            <div className="grid gap-6 lg:grid-cols-3">
               <WebhookSecurityStats />
               <RateLimitingStats />
+              <WebhookDeduplicationStats />
             </div>
 
             {/* Role Management */}
