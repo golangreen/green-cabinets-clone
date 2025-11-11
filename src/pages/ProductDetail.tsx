@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Header, Footer, FeatureErrorBoundary } from "@/components/layout";
+import { Header, Footer, FeatureErrorBoundary, OfflineBanner } from "@/components/layout";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { VanityDesignerApp } from "@/features/vanity-designer";
 import { ArrowLeft } from "lucide-react";
@@ -111,6 +111,7 @@ export default function ProductDetail() {
       fallbackRoute={ROUTES.HOME}
     >
       <div className="min-h-screen flex flex-col">
+        <OfflineBanner />
         <Header />
         <main className="flex-1 py-6 sm:py-8 md:py-12">
           <div className="container mx-auto px-4">

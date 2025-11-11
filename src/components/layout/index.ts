@@ -5,3 +5,4 @@ export { default as SplashScreen } from './SplashScreen';
 export { default as ErrorFallback } from './ErrorFallback';
 export { default as TestErrorButton } from './TestErrorButton';
 export { default as FeatureErrorBoundary } from './FeatureErrorBoundary';
+export { default as OfflineBanner } from './OfflineBanner';
