@@ -107,7 +107,7 @@ serve(async (req) => {
     }
 
     const { items, customerEmail, customerName } = await req.json();
-    console.log(`Processing checkout for IP: ${clientIp}, Email: ${customerEmail}`);
+    console.log("Processing checkout request");
     
     // Validate customer data
     const validationResult = customerDataSchema.safeParse({ customerEmail, customerName });
@@ -125,7 +125,7 @@ serve(async (req) => {
     const sanitizedEmail = sanitizeString(customerEmail);
     const sanitizedName = sanitizeString(customerName);
     
-    console.log("Creating checkout for items:", items);
+    console.log("Creating checkout session");
 
     if (!items || items.length === 0) {
       throw new Error("No items provided");
