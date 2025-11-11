@@ -116,6 +116,7 @@ const Hero = () => {
             }}
             loading="eager"
             decoding="async"
+            fetchPriority="high"
           />
         </div>
         
