@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { setUserContext, clearUserContext } from '@/lib/sentry';
 
 interface AuthContextType {
   user: User | null;
@@ -27,6 +28,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // Set Sentry user context
+      if (session?.user) {
+        setUserContext({
+          id: session.user.id,
+          email: session.user.email,
+        });
+      }
     });
 
     // Listen for auth changes
@@ -36,6 +45,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // Update Sentry user context on auth changes
+      if (session?.user) {
+        setUserContext({
+          id: session.user.id,
+          email: session.user.email,
+        });
+      } else {
+        clearUserContext();
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -95,6 +114,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+
+      // Clear Sentry user context on sign out
+      clearUserContext();
 
       toast({
         title: "Success",

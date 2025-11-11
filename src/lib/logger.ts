@@ -1,8 +1,10 @@
 /**
  * Structured logging utility
  * Provides consistent logging throughout the application
- * with environment-aware behavior
+ * with environment-aware behavior and Sentry integration
  */
+
+import { captureException, addBreadcrumb } from './sentry';
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -20,6 +22,8 @@ class Logger {
     if (this.isDevelopment) {
       console.log(`[DEBUG] ${message}`, context || '');
     }
+    // Add breadcrumb for debugging context in Sentry
+    addBreadcrumb(message, { level: 'debug', ...context });
   }
 
   /**
@@ -29,6 +33,8 @@ class Logger {
     if (this.isDevelopment) {
       console.log(`[INFO] ${message}`, context || '');
     }
+    // Add breadcrumb for context in Sentry
+    addBreadcrumb(message, { level: 'info', ...context });
   }
 
   /**
@@ -36,19 +42,21 @@ class Logger {
    */
   warn(message: string, context?: LogContext) {
     console.warn(`[WARN] ${message}`, context || '');
+    // Add breadcrumb for warnings
+    addBreadcrumb(message, { level: 'warning', ...context });
   }
 
   /**
    * Error level - shown in all environments
-   * Consider integrating with error tracking service (Sentry, etc.)
+   * Automatically captures errors to Sentry in production
    */
   error(message: string, error?: Error | unknown, context?: LogContext) {
     console.error(`[ERROR] ${message}`, error || '', context || '');
     
-    // TODO: Integrate with error tracking service
-    // if (import.meta.env.PROD) {
-    //   errorTrackingService.captureException(error, { message, ...context });
-    // }
+    // Capture error to Sentry in production
+    if (import.meta.env.PROD && error) {
+      captureException(error, { message, ...context });
+    }
   }
 
   /**
