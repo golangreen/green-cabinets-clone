@@ -101,8 +101,13 @@ class BackgroundSyncManager {
   /**
    * Process queued operations
    */
-  async processQueue(): Promise<{ success: number; failed: number }> {
+  async processQueue(cartActions?: any): Promise<{ success: number; failed: number }> {
     if (this.queue.length === 0) {
+      return { success: 0, failed: 0 };
+    }
+
+    if (!cartActions) {
+      logger.warn('Cannot process queue without cart actions', { component: 'BackgroundSync' });
       return { success: 0, failed: 0 };
     }
 
@@ -114,7 +119,7 @@ class BackgroundSyncManager {
 
     for (const operation of this.queue) {
       try {
-        await this.executeOperation(operation);
+        await this.executeOperation(operation, cartActions);
         successCount++;
         logger.info('Operation succeeded', { 
           component: 'BackgroundSync',
@@ -155,23 +160,19 @@ class BackgroundSyncManager {
   /**
    * Execute a queued operation
    */
-  private async executeOperation(operation: QueuedOperation): Promise<void> {
-    // Import dynamically to avoid circular dependencies
-    const { useCartStore } = await import('@/features/shopping-cart/stores/cartStore');
-    const store = useCartStore.getState();
-
+  private async executeOperation(operation: QueuedOperation, cartActions: any): Promise<void> {
     switch (operation.type) {
       case 'add':
-        store.addItem(operation.data);
+        await cartActions.addItem(operation.data);
         break;
       case 'update':
-        store.updateQuantity(operation.data.variantId, operation.data.quantity);
+        await cartActions.updateQuantity(operation.data.variantId, operation.data.quantity);
         break;
       case 'remove':
-        store.removeItem(operation.data.variantId);
+        await cartActions.removeItem(operation.data.variantId);
         break;
       case 'checkout':
-        await store.createCheckout();
+        await cartActions.createCheckout();
         break;
       default:
         throw new Error(`Unknown operation type: ${operation.type}`);
@@ -209,16 +210,16 @@ export const backgroundSync = new BackgroundSyncManager();
 /**
  * Setup online/offline listeners to process queue
  */
-export function setupBackgroundSync() {
+export function setupBackgroundSync(cartActions: any) {
   // Process queue when coming online
   window.addEventListener('online', async () => {
     logger.info('Connection restored, processing queue', { component: 'BackgroundSync' });
-    const result = await backgroundSync.processQueue();
+    const result = await backgroundSync.processQueue(cartActions);
     logger.info('Queue processed', { component: 'BackgroundSync', ...result });
   });
 
   // Process queue on load if online
   if (navigator.onLine) {
-    backgroundSync.processQueue();
+    backgroundSync.processQueue(cartActions);
   }
 }
