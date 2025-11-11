@@ -26,3 +26,9 @@ verify_jwt = false
 
 [functions.resend-webhook]
 verify_jwt = false
+
+[functions.test-role-expiration]
+verify_jwt = false
+
+[functions.check-email-health]
+verify_jwt = false

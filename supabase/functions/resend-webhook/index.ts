@@ -95,6 +95,19 @@ const handler = async (req: Request): Promise<Response> => {
       }
     }
 
+    logger.info('Email delivery status updated', { emailId: data.email_id, status });
+
+    // Trigger email health check on bounce or failure events
+    if (status === 'bounced' || status === 'failed') {
+      logger.info('Triggering email health check due to delivery issue', { status });
+      try {
+        await supabase.functions.invoke('check-email-health');
+      } catch (healthCheckError) {
+        logger.error('Failed to trigger email health check', healthCheckError);
+        // Don't fail the webhook if health check fails
+      }
+    }
+
     return new Response(
       JSON.stringify({ received: true, type, status }),
       {

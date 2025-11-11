@@ -1,136 +1,108 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
-import { createServiceRoleClient, createAuthenticatedClient } from "../_shared/supabase.ts";
-import { createLogger, generateRequestId } from "../_shared/logger.ts";
-import { withErrorHandling, ValidationError, AuthorizationError } from "../_shared/errors.ts";
+import { corsHeaders } from '../_shared/cors.ts';
+import { createLogger, generateRequestId } from '../_shared/logger.ts';
+import { withErrorHandling } from '../_shared/errors.ts';
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
-const alertSchema = z.object({
-  type: z.enum(['ip_blocked', 'ip_unblocked', 'critical_event']),
-  ipAddress: z.string().optional(),
-  reason: z.string().optional(),
-  blockedUntil: z.string().optional(),
-  eventDetails: z.object({
-    event_type: z.string().optional(),
-    severity: z.string().optional(),
-    function_name: z.string().optional(),
-  }).optional(),
-});
+interface SecurityAlertRequest {
+  recipient_email: string;
+  alert_type: string;
+  severity: 'low' | 'medium' | 'high';
+  details: Record<string, any>;
+}
+
+function formatEmailDeliveryAlert(details: any): string {
+  const { bounce_rate, bounced, failed, total_sent, alerts } = details;
+  
+  let html = '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">';
+  html += '<h2 style="color: #dc2626;">⚠️ Email Delivery Alert</h2>';
+  html += '<p>Critical email delivery issues have been detected in your system:</p>';
+  
+  html += '<div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 16px; margin: 16px 0;">';
+  html += '<h3 style="margin-top: 0; color: #991b1b;">Issues Detected:</h3>';
+  html += '<ul>';
+  
+  if (alerts && Array.isArray(alerts)) {
+    alerts.forEach((alert: string) => {
+      html += `<li>${alert}</li>`;
+    });
+  }
+  
+  html += '</ul>';
+  html += '</div>';
+  
+  html += '<h3>Statistics (Last 24 Hours):</h3>';
+  html += '<table style="width: 100%; border-collapse: collapse;">';
+  html += '<tr style="background: #f9fafb;">';
+  html += '<td style="padding: 12px; border: 1px solid #e5e7eb;"><strong>Total Sent:</strong></td>';
+  html += `<td style="padding: 12px; border: 1px solid #e5e7eb;">${total_sent}</td>`;
+  html += '</tr>';
+  html += '<tr>';
+  html += '<td style="padding: 12px; border: 1px solid #e5e7eb;"><strong>Bounce Rate:</strong></td>';
+  html += `<td style="padding: 12px; border: 1px solid #e5e7eb; color: ${bounce_rate > 5 ? '#dc2626' : '#059669'};">${bounce_rate.toFixed(2)}%</td>`;
+  html += '</tr>';
+  html += '<tr style="background: #f9fafb;">';
+  html += '<td style="padding: 12px; border: 1px solid #e5e7eb;"><strong>Bounced:</strong></td>';
+  html += `<td style="padding: 12px; border: 1px solid #e5e7eb;">${bounced}</td>`;
+  html += '</tr>';
+  html += '<tr>';
+  html += '<td style="padding: 12px; border: 1px solid #e5e7eb;"><strong>Failed:</strong></td>';
+  html += `<td style="padding: 12px; border: 1px solid #e5e7eb;">${failed}</td>`;
+  html += '</tr>';
+  html += '</table>';
+  
+  html += '<div style="margin-top: 24px; padding: 16px; background: #eff6ff; border-radius: 8px;">';
+  html += '<h3 style="margin-top: 0; color: #1e40af;">Recommended Actions:</h3>';
+  html += '<ul>';
+  html += '<li>Review email content for potential spam triggers</li>';
+  html += '<li>Check email authentication (SPF, DKIM, DMARC)</li>';
+  html += '<li>Verify recipient email addresses are valid</li>';
+  html += '<li>Review Resend domain configuration</li>';
+  html += '<li>Check recent email logs in Admin Security dashboard</li>';
+  html += '</ul>';
+  html += '</div>';
+  
+  html += '<p style="margin-top: 24px; color: #6b7280; font-size: 14px;">This is an automated alert from your Email Delivery Monitoring system.</p>';
+  html += '</div>';
+  
+  return html;
+}
 
 const handler = async (req: Request): Promise<Response> => {
-  const corsResponse = handleCorsPreFlight(req);
-  if (corsResponse) return corsResponse;
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
 
   const requestId = generateRequestId();
   const logger = createLogger({ functionName: 'send-security-alert', requestId });
 
   try {
-    // Verify authentication
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader) {
-      throw new AuthorizationError('Missing authorization header');
-    }
-
-    const supabase = createAuthenticatedClient(authHeader);
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      logger.warn("Unauthorized access attempt");
-      throw new AuthorizationError('Unauthorized');
-    }
-
-    // Verify admin role
-    const serviceSupabase = createServiceRoleClient();
-    const { data: isAdmin } = await serviceSupabase.rpc('has_role', {
-      _user_id: user.id,
-      _role: 'admin'
-    });
-
-    if (!isAdmin) {
-      logger.warn("Non-admin user attempted to send security alert", { userId: user.id });
-      throw new AuthorizationError('Admin access required');
-    }
-
-    logger.info("Admin user sending security alert", { userId: user.id });
-
     const rawData = await req.json();
-    const validationResult = alertSchema.safeParse(rawData);
+    const requestData = rawData as SecurityAlertRequest;
 
-    if (!validationResult.success) {
-      logger.error("Validation error", validationResult.error);
-      throw new ValidationError('Invalid request data', { errors: validationResult.error.errors });
+    const { recipient_email, alert_type, severity, details } = requestData;
+
+    logger.info('Sending security alert', { alert_type, severity });
+
+    // Format email content based on alert type
+    let htmlContent: string;
+    let subject: string;
+    
+    if (alert_type === 'email_delivery_issues') {
+      subject = `⚠️ Email Delivery Alert: Issues Detected`;
+      htmlContent = formatEmailDeliveryAlert(details);
+    } else {
+      subject = `🚨 Security Alert: ${alert_type}`;
+      htmlContent = `
+        <h2>Security Alert</h2>
+        <p><strong>Type:</strong> ${alert_type}</p>
+        <p><strong>Severity:</strong> ${severity}</p>
+        <p><strong>Details:</strong></p>
+        <pre>${JSON.stringify(details, null, 2)}</pre>
+      `;
     }
 
-    const alertData = validationResult.data;
-
-    // Generate email content based on alert type
-    let subject = '';
-    let htmlContent = '';
-
-    switch (alertData.type) {
-      case 'ip_blocked':
-        subject = '🛡️ Security Alert: IP Address Blocked';
-        htmlContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #dc2626;">IP Address Blocked</h1>
-            <p>An IP address has been blocked from accessing your application.</p>
-            <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0;">
-              <p><strong>IP Address:</strong> <code style="background-color: #e5e7eb; padding: 2px 6px; border-radius: 4px;">${alertData.ipAddress}</code></p>
-              <p><strong>Reason:</strong> ${alertData.reason}</p>
-              <p><strong>Blocked Until:</strong> ${alertData.blockedUntil ? new Date(alertData.blockedUntil).toLocaleString() : 'Permanent'}</p>
-            </div>
-            <p>This action was performed from the admin security dashboard.</p>
-            <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
-              You can manage blocked IPs from your <a href="${SUPABASE_URL.replace('https://mczagaaiyzbhjvtrojia.supabase.co', 'https://yourapp.com')}/admin/security" style="color: #2563eb;">Security Dashboard</a>.
-            </p>
-          </div>
-        `;
-        break;
-
-      case 'ip_unblocked':
-        subject = '✅ Security Alert: IP Address Unblocked';
-        htmlContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #16a34a;">IP Address Unblocked</h1>
-            <p>An IP address has been unblocked and can now access your application.</p>
-            <div style="background-color: #f0fdf4; padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #16a34a;">
-              <p><strong>IP Address:</strong> <code style="background-color: #dcfce7; padding: 2px 6px; border-radius: 4px;">${alertData.ipAddress}</code></p>
-              <p><strong>Reason:</strong> ${alertData.reason || 'Manual unblock from admin dashboard'}</p>
-            </div>
-            <p>This action was performed from the admin security dashboard.</p>
-            <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
-              Monitor security events from your <a href="${SUPABASE_URL.replace('https://mczagaaiyzbhjvtrojia.supabase.co', 'https://yourapp.com')}/admin/security" style="color: #2563eb;">Security Dashboard</a>.
-            </p>
-          </div>
-        `;
-        break;
-
-      case 'critical_event':
-        subject = '🚨 Critical Security Event Detected';
-        htmlContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #dc2626;">Critical Security Event</h1>
-            <p>A critical security event has been detected in your application.</p>
-            <div style="background-color: #fef2f2; padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc2626;">
-              <p><strong>Event Type:</strong> ${alertData.eventDetails?.event_type || 'Unknown'}</p>
-              <p><strong>Severity:</strong> <span style="color: #dc2626; font-weight: bold;">${alertData.eventDetails?.severity?.toUpperCase() || 'CRITICAL'}</span></p>
-              <p><strong>Function:</strong> ${alertData.eventDetails?.function_name || 'N/A'}</p>
-              ${alertData.ipAddress ? `<p><strong>IP Address:</strong> <code style="background-color: #fee2e2; padding: 2px 6px; border-radius: 4px;">${alertData.ipAddress}</code></p>` : ''}
-            </div>
-            <p style="color: #dc2626; font-weight: bold;">⚠️ Immediate attention required!</p>
-            <p>Please review this event in your security dashboard and take appropriate action.</p>
-            <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
-              View details in your <a href="${SUPABASE_URL.replace('https://mczagaaiyzbhjvtrojia.supabase.co', 'https://yourapp.com')}/admin/security" style="color: #2563eb;">Security Dashboard</a>.
-            </p>
-          </div>
-        `;
-        break;
-    }
-
-    // Send email via Resend
+    // Send email via Resend API
     const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -138,9 +110,9 @@ const handler = async (req: Request): Promise<Response> => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Green Cabinets Security <security@resend.dev>',
-        to: ['info@greencabinets.com'],
-        subject: subject,
+        from: 'Security Alerts <onboarding@resend.dev>',
+        to: [recipient_email],
+        subject,
         html: htmlContent,
       }),
     });
@@ -152,17 +124,29 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailResult = await emailResponse.json();
-    logger.info('Security alert email sent successfully', { emailId: emailResult.id, alertType: alertData.type });
+    logger.info('Security alert email sent successfully', { 
+      emailId: emailResult.id, 
+      alertType: alert_type 
+    });
 
-    return createCorsResponse({ success: true, emailId: emailResult.id }, 200);
+    return new Response(
+      JSON.stringify({ success: true, emailId: emailResult.id }),
+      { 
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
 
   } catch (error: any) {
     logger.error('Error in send-security-alert function', error);
-    throw error;
+    return new Response(
+      JSON.stringify({ error: error?.message || 'Unknown error' }),
+      { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
   }
 };
 
-serve(withErrorHandling(handler, (message, error) => {
-  const logger = createLogger({ functionName: 'send-security-alert' });
-  logger.error(message, error);
-}));
+Deno.serve(withErrorHandling(handler));
