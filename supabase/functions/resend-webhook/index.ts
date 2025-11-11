@@ -2,7 +2,56 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createServiceRoleClient } from '../_shared/supabase.ts';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createLogger } from '../_shared/logger.ts';
-import { withErrorHandling } from '../_shared/errors.ts';
+import { withErrorHandling, ValidationError } from '../_shared/errors.ts';
+
+// Svix webhook signature verification
+async function verifyWebhookSignature(
+  payload: string,
+  signature: string,
+  timestamp: string,
+  msgId: string,
+  secret: string
+): Promise<boolean> {
+  const encoder = new TextEncoder();
+  
+  // The signed content is: svix-id.svix-timestamp.payload
+  const signedContent = `${msgId}.${timestamp}.${payload}`;
+  
+  // Import the secret as a crypto key
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  
+  // Generate the expected signature
+  const signatureBytes = await crypto.subtle.sign(
+    'HMAC',
+    key,
+    encoder.encode(signedContent)
+  );
+  
+  // Convert to base64
+  const expectedSignature = btoa(String.fromCharCode(...new Uint8Array(signatureBytes)));
+  
+  // Svix sends signatures in format: "v1,signature1 v1,signature2"
+  // We need to check if any of them match
+  const signatures = signature.split(' ').map(s => {
+    const parts = s.split(',');
+    return parts.length === 2 ? parts[1] : null;
+  }).filter(Boolean);
+  
+  // Check if any signature matches (constant-time comparison)
+  for (const sig of signatures) {
+    if (sig === expectedSignature) {
+      return true;
+    }
+  }
+  
+  return false;
+}
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
@@ -17,17 +66,33 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('RESEND_WEBHOOK_SECRET not configured');
     }
 
-    // Verify webhook signature
+    // Get webhook signature headers
     const signature = req.headers.get('svix-signature');
     const timestamp = req.headers.get('svix-timestamp');
     const svixId = req.headers.get('svix-id');
 
     if (!signature || !timestamp || !svixId) {
-      logger.error('Missing webhook headers');
-      return new Response('Missing webhook headers', { status: 400 });
+      logger.error('Missing webhook headers', { signature: !!signature, timestamp: !!timestamp, svixId: !!svixId });
+      throw new ValidationError('Missing required webhook headers');
     }
 
     const body = await req.text();
+    
+    // Verify the webhook signature
+    const isValid = await verifyWebhookSignature(
+      body,
+      signature,
+      timestamp,
+      svixId,
+      webhookSecret
+    );
+
+    if (!isValid) {
+      logger.error('Invalid webhook signature', { svixId });
+      throw new ValidationError('Invalid webhook signature');
+    }
+
+    logger.info('Webhook signature verified successfully', { svixId });
     
     // Parse webhook payload
     const payload = JSON.parse(body);
