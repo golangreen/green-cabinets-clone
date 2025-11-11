@@ -5,13 +5,16 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Download } from "lucide-react";
+import { ChevronDown, Menu, Download, User, LogOut } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useAuth } from "@/contexts/AuthContext";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { InstallPWADialog } from "@/components/InstallPWADialog";
 import { ROUTES } from "@/constants/routes";
@@ -20,6 +23,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showInstallDialog, setShowInstallDialog] = useState(false);
   const { isInstallable, promptInstall } = usePWAInstall();
+  const { user, isAuthenticated, signOut } = useAuth();
 
   const handleInstall = async () => {
     const installed = await promptInstall();
@@ -216,6 +220,43 @@ const Header = () => {
             )}
 
             <ThemeToggle />
+
+            {/* User Menu or Auth Link */}
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <User className="h-4 w-4" />
+                    <span className="sr-only">User menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium">My Account</p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {user?.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sign Out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => window.location.href = ROUTES.AUTH}
+                className="hidden sm:inline-flex"
+              >
+                Sign In
+              </Button>
+            )}
+
             <CartDrawer />
 
             {/* Mobile Menu */}
@@ -227,6 +268,43 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display">
                 <div className="flex flex-col gap-6 mt-8">
+                  {/* Auth Section */}
+                  {isAuthenticated ? (
+                    <div className="flex flex-col gap-2 pb-4 border-b">
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-col">
+                          <p className="text-sm font-medium">Signed in as</p>
+                          <p className="text-xs text-muted-foreground truncate max-w-[200px]">
+                            {user?.email}
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          signOut();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="justify-start"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Sign Out
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="default"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        window.location.href = ROUTES.AUTH;
+                      }}
+                      className="w-full"
+                    >
+                      Sign In
+                    </Button>
+                  )}
+
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-semibold">Theme</h3>
                     <ThemeToggle />
