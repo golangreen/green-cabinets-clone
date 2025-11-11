@@ -175,6 +175,20 @@ export type Database = {
         }
         Returns: Json
       }
+      bulk_add_user_role: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_ids: string[]
+        }
+        Returns: Json
+      }
+      bulk_remove_user_role: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_ids: string[]
+        }
+        Returns: Json
+      }
       cleanup_expired_blocks: { Args: never; Returns: number }
       get_all_users_with_roles: {
         Args: never
