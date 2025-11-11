@@ -8,6 +8,8 @@ import { AuthProvider, ThemeProvider } from "@/contexts";
 import { ProtectedRoute } from "@/components/auth";
 import { AdminRoute } from "@/components/auth";
 import { ROUTES } from "@/constants/routes";
+import { FeatureErrorBoundary } from "@/components/layout";
+import { PreloadManager } from "@/features/product-catalog";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
@@ -58,6 +60,19 @@ const App = () => {
             <Toaster />
             <Sonner />
             {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+            
+            {/* Background product preloader wrapped in error boundary */}
+            <FeatureErrorBoundary
+              featureName="Product Preloader"
+              featureTag="product-preload"
+              fallbackRoute="/"
+            >
+              <PreloadManager 
+                prefetchCount={20}
+                autoRefreshInterval={30 * 60 * 1000}
+              />
+            </FeatureErrorBoundary>
+
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
