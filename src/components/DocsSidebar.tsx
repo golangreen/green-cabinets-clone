@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { Search, BookOpen, Lock, Code } from "lucide-react";
+import { Search, BookOpen, Lock, Code, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DocSection {
@@ -29,6 +29,12 @@ const docSections: DocSection[] = [
     path: "/docs/api",
     icon: Code,
     keywords: ["api", "edge", "function", "endpoint", "webhook", "checkout", "security"],
+  },
+  {
+    title: "Troubleshooting",
+    path: "/docs/troubleshooting",
+    icon: AlertCircle,
+    keywords: ["error", "issue", "problem", "fix", "help", "debug", "troubleshoot", "solution"],
   },
 ];
 

@@ -184,10 +184,10 @@ const Header = () => {
                   Developer Guide (Coming Soon)
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  disabled
-                  className="cursor-not-allowed opacity-50"
+                  onClick={() => window.location.href = '/docs/troubleshooting'}
+                  className="cursor-pointer"
                 >
-                  Troubleshooting (Coming Soon)
+                  Troubleshooting
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -319,10 +319,13 @@ const Header = () => {
                     </Button>
                     <Button 
                       variant="ghost" 
-                      className="justify-start opacity-50" 
-                      disabled
+                      className="justify-start" 
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        window.location.href = '/docs/troubleshooting';
+                      }}
                     >
-                      Troubleshooting (Coming Soon)
+                      Troubleshooting
                     </Button>
                   </div>
                   <a 
