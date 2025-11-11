@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
+import { ROUTES } from "@/constants/routes";
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ export default function PaymentSuccess() {
               You will receive an email confirmation shortly with your order details.
               We'll contact you within 24 hours to confirm your custom specifications and discuss the next steps.
             </p>
-            <Button onClick={() => navigate("/")} className="w-full">
+            <Button onClick={() => navigate(ROUTES.HOME)} className="w-full">
               Return to Home
             </Button>
           </CardContent>

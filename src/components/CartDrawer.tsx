@@ -13,6 +13,7 @@ import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2, CreditCard } 
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +50,7 @@ export const CartDrawer = () => {
 
   const handleCustomCheckout = () => {
     setIsOpen(false);
-    navigate('/checkout');
+    navigate(ROUTES.CHECKOUT);
   };
 
   return (

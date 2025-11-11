@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Search, BookOpen, Lock, Code, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ROUTES } from "@/constants/routes";
 
 interface DocSection {
   title: string;
@@ -14,25 +15,25 @@ interface DocSection {
 const docSections: DocSection[] = [
   {
     title: "Getting Started",
-    path: "/docs/getting-started",
+    path: ROUTES.DOCS_GETTING_STARTED,
     icon: BookOpen,
     keywords: ["setup", "install", "environment", "database", "schema", "start", "begin"],
   },
   {
     title: "Authentication",
-    path: "/docs/auth",
+    path: ROUTES.DOCS_AUTH,
     icon: Lock,
     keywords: ["auth", "login", "signup", "user", "role", "security", "session", "jwt"],
   },
   {
     title: "API Reference",
-    path: "/docs/api",
+    path: ROUTES.DOCS_API,
     icon: Code,
     keywords: ["api", "edge", "function", "endpoint", "webhook", "checkout", "security"],
   },
   {
     title: "Troubleshooting",
-    path: "/docs/troubleshooting",
+    path: ROUTES.DOCS_TROUBLESHOOTING,
     icon: AlertCircle,
     keywords: ["error", "issue", "problem", "fix", "help", "debug", "troubleshoot", "solution"],
   },

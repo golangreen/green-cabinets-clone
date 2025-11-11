@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { ROUTES } from "@/constants/routes";
 
 const authSchema = z.object({
   email: z.string().email("Invalid email address").max(255, "Email must be less than 255 characters"),
@@ -25,14 +26,14 @@ const Auth = () => {
     // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate("/");
+        navigate(ROUTES.HOME);
       }
     });
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        navigate("/");
+        navigate(ROUTES.HOME);
       }
     });
 

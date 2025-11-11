@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { DocsSidebar } from "@/components/DocsSidebar";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
 
 const DocsGettingStarted = () => {
   const navigate = useNavigate();
@@ -308,7 +309,7 @@ sent_at: TIMESTAMPTZ`}</code>
               <div className="mt-4">
                 <Button 
                   variant="outline" 
-                  onClick={() => navigate('/docs/auth')}
+                  onClick={() => navigate(ROUTES.DOCS_AUTH)}
                   className="w-full"
                 >
                   <BookOpen className="mr-2 h-4 w-4" />
@@ -506,7 +507,7 @@ sent_at: TIMESTAMPTZ`}</code>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
-            <Card className="cursor-pointer hover:border-primary transition-colors" onClick={() => navigate('/docs/auth')}>
+            <Card className="cursor-pointer hover:border-primary transition-colors" onClick={() => navigate(ROUTES.DOCS_AUTH)}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="h-5 w-5" />
@@ -568,10 +569,10 @@ sent_at: TIMESTAMPTZ`}</code>
                   to understand how user management and security work, or dive straight into the code!
                 </p>
                 <div className="flex gap-2">
-                  <Button onClick={() => navigate('/docs/auth')}>
+                  <Button onClick={() => navigate(ROUTES.DOCS_AUTH)}>
                     Authentication Guide
                   </Button>
-                  <Button variant="outline" onClick={() => window.location.href = '/'}>
+                  <Button variant="outline" onClick={() => window.location.href = ROUTES.HOME}>
                     Back to Home
                   </Button>
                 </div>

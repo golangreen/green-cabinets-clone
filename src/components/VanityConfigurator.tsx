@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown, Mail, MessageCircle, Facebook, Twitter, Share2, Scan } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ROUTES } from "@/constants/routes";
 import logoImage from "@/assets/logo.jpg";
 import { TextureSwatch } from "./TextureSwatch";
 import { TexturePreviewModal } from "./TexturePreviewModal";
@@ -985,7 +986,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => navigate('/scan')}
+                      onClick={() => navigate(ROUTES.ROOM_SCAN)}
                       className="h-7 text-xs gap-1"
                     >
                       <Scan className="h-3 w-3" />

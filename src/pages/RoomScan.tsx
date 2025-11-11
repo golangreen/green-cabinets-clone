@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { ArrowLeft, Tablet, Monitor } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDeviceType } from '@/hooks/useDeviceType';
+import { ROUTES } from '@/constants/routes';
 
 const RoomScan = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const RoomScan = () => {
         <div className="mb-6">
           <Button
             variant="ghost"
-            onClick={() => navigate('/')}
+            onClick={() => navigate(ROUTES.HOME)}
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />

@@ -13,6 +13,7 @@ import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/components/CartDrawer";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { InstallPWADialog } from "@/components/InstallPWADialog";
+import { ROUTES } from "@/constants/routes";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -160,19 +161,19 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-background border-border z-50">
                 <DropdownMenuItem 
-                  onClick={() => window.location.href = '/docs/getting-started'}
+                  onClick={() => window.location.href = ROUTES.DOCS_GETTING_STARTED}
                   className="cursor-pointer"
                 >
                   Getting Started
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => window.location.href = '/docs/auth'}
+                  onClick={() => window.location.href = ROUTES.DOCS_AUTH}
                   className="cursor-pointer"
                 >
                   Authentication Guide
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => window.location.href = '/docs/api'}
+                  onClick={() => window.location.href = ROUTES.DOCS_API}
                   className="cursor-pointer"
                 >
                   API Reference
@@ -184,7 +185,7 @@ const Header = () => {
                   Developer Guide (Coming Soon)
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => window.location.href = '/docs/troubleshooting'}
+                  onClick={() => window.location.href = ROUTES.DOCS_TROUBLESHOOTING}
                   className="cursor-pointer"
                 >
                   Troubleshooting
@@ -285,7 +286,7 @@ const Header = () => {
                       className="justify-start" 
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        window.location.href = '/docs/getting-started';
+                        window.location.href = ROUTES.DOCS_GETTING_STARTED;
                       }}
                     >
                       Getting Started
@@ -295,7 +296,7 @@ const Header = () => {
                       className="justify-start" 
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        window.location.href = '/docs/auth';
+                        window.location.href = ROUTES.DOCS_AUTH;
                       }}
                     >
                       Authentication Guide
@@ -305,7 +306,7 @@ const Header = () => {
                       className="justify-start" 
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        window.location.href = '/docs/api';
+                        window.location.href = ROUTES.DOCS_API;
                       }}
                     >
                       API Reference
@@ -322,7 +323,7 @@ const Header = () => {
                       className="justify-start" 
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        window.location.href = '/docs/troubleshooting';
+                        window.location.href = ROUTES.DOCS_TROUBLESHOOTING;
                       }}
                     >
                       Troubleshooting

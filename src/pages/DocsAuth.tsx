@@ -6,6 +6,7 @@ import { ShieldCheck, Lock, Code, AlertTriangle, CheckCircle2, XCircle } from "l
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { DocsSidebar } from "@/components/DocsSidebar";
+import { ROUTES } from "@/constants/routes";
 
 const DocsAuth = () => {
   return (

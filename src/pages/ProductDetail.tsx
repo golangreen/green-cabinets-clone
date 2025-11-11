@@ -6,6 +6,7 @@ import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { VanityConfigurator } from "@/components/VanityConfigurator";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/constants/routes";
 
 // Mock product for fallback
 const mockVanityProduct: ShopifyProduct = {
@@ -92,7 +93,7 @@ export default function ProductDetail() {
       <Header />
       <main className="flex-1 py-6 sm:py-8 md:py-12">
         <div className="container mx-auto px-4">
-          <Link to="/">
+          <Link to={ROUTES.HOME}>
             <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Shop

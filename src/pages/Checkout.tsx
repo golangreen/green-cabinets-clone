@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ROUTES } from "@/constants/routes";
 
 const checkoutSchema = z.object({
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
@@ -100,7 +101,7 @@ export default function Checkout() {
         <main className="flex-1 container mx-auto px-4 py-16 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
-            <Button onClick={() => navigate("/")}>
+            <Button onClick={() => navigate(ROUTES.HOME)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Continue Shopping
             </Button>
@@ -115,7 +116,7 @@ export default function Checkout() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
-        <Button variant="ghost" onClick={() => navigate("/")} className="mb-6">
+        <Button variant="ghost" onClick={() => navigate(ROUTES.HOME)} className="mb-6">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Shop
         </Button>
