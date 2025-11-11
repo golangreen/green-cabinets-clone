@@ -1,128 +1,183 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Mail, Bell, AlertTriangle } from 'lucide-react';
+import { Save, RefreshCw } from 'lucide-react';
 
-export const SecurityAlertSettings = () => {
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [criticalEventsOnly, setCriticalEventsOnly] = useState(false);
-  const [alertEmail, setAlertEmail] = useState('info@greencabinets.com');
+interface WebhookRetrySettings {
+  retry_threshold: number;
+  time_window_minutes: number;
+  enabled: boolean;
+}
 
-  const handleSaveSettings = () => {
-    // In a real implementation, this would save to the database
-    toast.success('Alert settings saved successfully');
+export function SecurityAlertSettings() {
+  const [settings, setSettings] = useState<WebhookRetrySettings>({
+    retry_threshold: 3,
+    time_window_minutes: 10,
+    enabled: true
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const fetchSettings = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('alert_settings')
+        .select('setting_value')
+        .eq('setting_key', 'webhook_retry_alert')
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data) {
+        setSettings(data.setting_value as unknown as WebhookRetrySettings);
+      }
+    } catch (error) {
+      console.error('Error fetching alert settings:', error);
+      toast.error('Failed to load settings');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleTestAlert = async () => {
-    toast.info('Sending test alert...');
-    
-    // Here you could call the edge function to send a test email
-    // For now, just show a success message
-    setTimeout(() => {
-      toast.success('Test alert sent! Check your email.');
-    }, 1500);
+  const saveSettings = async () => {
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('alert_settings')
+        .update({
+          setting_value: settings as unknown as any,
+          updated_at: new Date().toISOString()
+        })
+        .eq('setting_key', 'webhook_retry_alert');
+
+      if (error) throw error;
+
+      toast.success('Alert settings updated successfully');
+    } catch (error) {
+      console.error('Error saving alert settings:', error);
+      toast.error('Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <Bell className="h-5 w-5 text-primary" />
-          <CardTitle>Email Alert Settings</CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <div>
+          <CardTitle>Webhook Retry Alert Settings</CardTitle>
+          <CardDescription>Configure when webhook retry alerts are triggered</CardDescription>
         </div>
-        <CardDescription>
-          Configure email notifications for security events
-        </CardDescription>
+        <Button 
+          variant="outline" 
+          size="icon"
+          onClick={fetchSettings}
+          disabled={loading}
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+        </Button>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="email-notifications">Email Notifications</Label>
-              <p className="text-sm text-muted-foreground">
-                Receive email alerts for security events
-              </p>
-            </div>
-            <Switch
-              id="email-notifications"
-              checked={emailNotifications}
-              onCheckedChange={setEmailNotifications}
-            />
+      <CardContent>
+        {loading ? (
+          <div className="flex items-center justify-center py-8 text-muted-foreground">
+            Loading settings...
           </div>
-
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="critical-only">Critical Events Only</Label>
-              <p className="text-sm text-muted-foreground">
-                Only send alerts for critical security events
-              </p>
+        ) : (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="enabled">Enable Webhook Retry Alerts</Label>
+                <p className="text-sm text-muted-foreground">
+                  Send email alerts when excessive retries are detected
+                </p>
+              </div>
+              <Switch
+                id="enabled"
+                checked={settings.enabled}
+                onCheckedChange={(checked) =>
+                  setSettings({ ...settings, enabled: checked })
+                }
+              />
             </div>
-            <Switch
-              id="critical-only"
-              checked={criticalEventsOnly}
-              onCheckedChange={setCriticalEventsOnly}
-              disabled={!emailNotifications}
-            />
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="alert-email">Alert Email Address</Label>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="retry_threshold">Retry Threshold</Label>
                 <Input
-                  id="alert-email"
-                  type="email"
-                  placeholder="security@yourcompany.com"
-                  value={alertEmail}
-                  onChange={(e) => setAlertEmail(e.target.value)}
-                  className="pl-9"
-                  disabled={!emailNotifications}
+                  id="retry_threshold"
+                  type="number"
+                  min="1"
+                  max="20"
+                  value={settings.retry_threshold}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      retry_threshold: parseInt(e.target.value) || 3
+                    })
+                  }
+                  disabled={!settings.enabled}
                 />
+                <p className="text-xs text-muted-foreground">
+                  Number of retries before triggering an alert (1-20)
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="time_window">Time Window (minutes)</Label>
+                <Input
+                  id="time_window"
+                  type="number"
+                  min="1"
+                  max="120"
+                  value={settings.time_window_minutes}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      time_window_minutes: parseInt(e.target.value) || 10
+                    })
+                  }
+                  disabled={!settings.enabled}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Time window for counting retries (1-120 minutes)
+                </p>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              All security alerts will be sent to this email address
-            </p>
-          </div>
-        </div>
 
-        <div className="pt-4 border-t space-y-3">
-          <div className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-lg">
-            <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-500 flex-shrink-0 mt-0.5" />
-            <div className="text-sm">
-              <p className="font-medium text-amber-900 dark:text-amber-100">
-                Email Configuration Required
-              </p>
-              <p className="text-amber-700 dark:text-amber-300 mt-1">
-                Make sure you have configured your domain with Resend at{' '}
-                <a 
-                  href="https://resend.com/domains" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="underline hover:text-amber-900 dark:hover:text-amber-100"
-                >
-                  resend.com/domains
-                </a>
-                {' '}to receive security alerts.
+            <div className="rounded-lg bg-muted p-4 space-y-2">
+              <h4 className="text-sm font-medium">Current Configuration</h4>
+              <p className="text-sm text-muted-foreground">
+                {settings.enabled ? (
+                  <>
+                    Alerts will be triggered when the same webhook event is retried{' '}
+                    <strong className="text-foreground">{settings.retry_threshold}</strong> or more times
+                    within a <strong className="text-foreground">{settings.time_window_minutes}</strong> minute period.
+                  </>
+                ) : (
+                  <span className="text-warning">Webhook retry alerts are currently disabled.</span>
+                )}
               </p>
             </div>
-          </div>
 
-          <div className="flex gap-2">
-            <Button onClick={handleSaveSettings} className="flex-1">
-              Save Settings
-            </Button>
-            <Button variant="outline" onClick={handleTestAlert}>
-              Send Test Alert
-            </Button>
+            <div className="flex justify-end pt-4 border-t">
+              <Button onClick={saveSettings} disabled={saving}>
+                <Save className="h-4 w-4 mr-2" />
+                {saving ? 'Saving...' : 'Save Settings'}
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );
-};
+}

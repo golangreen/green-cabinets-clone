@@ -193,44 +193,62 @@ const handler = async (req: Request): Promise<Response> => {
         originalProcessedAt: existingEvent.processed_at 
       });
 
-      // Check for excessive retries within time window (10 minutes)
-      const { data: recentRetries } = await supabase
-        .from('webhook_events')
-        .select('retry_count, created_at')
-        .eq('svix_id', svixId)
-        .gte('created_at', new Date(Date.now() - 10 * 60 * 1000).toISOString())
-        .single();
+      // Check for excessive retries within time window
+      const { data: alertSettings } = await supabase
+        .from('alert_settings')
+        .select('setting_value')
+        .eq('setting_key', 'webhook_retry_alert')
+        .maybeSingle();
 
-      // Alert if more than 3 retries within 10 minutes
-      if (recentRetries && newRetryCount >= 3) {
-        logger.warn('Excessive webhook retries detected - sending alert', {
-          svixId,
-          retryCount: newRetryCount,
-          timeWindow: '10 minutes'
-        });
+      const settings = alertSettings?.setting_value || { 
+        retry_threshold: 3, 
+        time_window_minutes: 10,
+        enabled: true 
+      };
 
-        try {
-          const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-          await supabase.functions.invoke('send-security-alert', {
-            headers: {
-              Authorization: `Bearer ${serviceRoleKey}`
-            },
-            body: {
-              recipient_email: Deno.env.get('ADMIN_EMAIL') || 'admin@example.com',
-              alert_type: 'webhook_retry_excessive',
-              severity: 'high',
-              details: {
-                svix_id: svixId,
-                retry_count: newRetryCount,
-                event_type: 'resend_webhook',
-                first_attempt: existingEvent.created_at,
-                last_attempt: new Date().toISOString(),
-                time_window_minutes: 10
-              }
-            }
+      // Only check for alerts if enabled
+      if (settings.enabled && newRetryCount >= settings.retry_threshold) {
+        const timeWindowMs = settings.time_window_minutes * 60 * 1000;
+        const { data: recentRetries } = await supabase
+          .from('webhook_events')
+          .select('retry_count, created_at')
+          .eq('svix_id', svixId)
+          .gte('created_at', new Date(Date.now() - timeWindowMs).toISOString())
+          .single();
+
+        // Alert if threshold exceeded within time window
+        if (recentRetries) {
+          logger.warn('Excessive webhook retries detected - sending alert', {
+            svixId,
+            retryCount: newRetryCount,
+            timeWindow: `${settings.time_window_minutes} minutes`,
+            threshold: settings.retry_threshold
           });
-        } catch (alertError) {
-          logger.error('Failed to send webhook retry alert', alertError);
+
+          try {
+            const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+            await supabase.functions.invoke('send-security-alert', {
+              headers: {
+                Authorization: `Bearer ${serviceRoleKey}`
+              },
+              body: {
+                recipient_email: Deno.env.get('ADMIN_EMAIL') || 'admin@example.com',
+                alert_type: 'webhook_retry_excessive',
+                severity: 'high',
+                details: {
+                  svix_id: svixId,
+                  retry_count: newRetryCount,
+                  event_type: 'resend_webhook',
+                  first_attempt: existingEvent.created_at,
+                  last_attempt: new Date().toISOString(),
+                  time_window_minutes: settings.time_window_minutes,
+                  threshold: settings.retry_threshold
+                }
+              }
+            });
+          } catch (alertError) {
+            logger.error('Failed to send webhook retry alert', alertError);
+          }
         }
       }
       
