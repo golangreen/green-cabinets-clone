@@ -101,7 +101,13 @@ const handler = async (req: Request): Promise<Response> => {
     if (status === 'bounced' || status === 'failed') {
       logger.info('Triggering email health check due to delivery issue', { status });
       try {
-        await supabase.functions.invoke('check-email-health');
+        // Use service role authorization for automated health check
+        const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+        await supabase.functions.invoke('check-email-health', {
+          headers: {
+            Authorization: `Bearer ${serviceRoleKey}`
+          }
+        });
       } catch (healthCheckError) {
         logger.error('Failed to trigger email health check', healthCheckError);
         // Don't fail the webhook if health check fails

@@ -1,6 +1,7 @@
-import { createServiceRoleClient } from '../_shared/supabase.ts';
+import { createServiceRoleClient, createAuthenticatedClient } from '../_shared/supabase.ts';
 import { createLogger } from '../_shared/logger.ts';
 import { corsHeaders } from '../_shared/cors.ts';
+import { ValidationError } from '../_shared/errors.ts';
 
 const logger = createLogger({ functionName: 'check-email-health' });
 
@@ -18,7 +19,48 @@ Deno.serve(async (req) => {
   }
 
   try {
-    logger.info('Checking email delivery health metrics');
+    // Verify authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new ValidationError('Authorization required');
+    }
+
+    // Check if this is a service role key (for automated calls) or user JWT
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    const isServiceRole = authHeader === `Bearer ${serviceRoleKey}`;
+
+    if (!isServiceRole) {
+      // For user JWT, verify admin role
+      const authSupabase = await createAuthenticatedClient(authHeader);
+      const { data: { user }, error: authError } = await authSupabase.auth.getUser();
+
+      if (authError || !user) {
+        logger.error("Authentication failed", authError);
+        throw new ValidationError('Authentication failed');
+      }
+
+      // Verify admin role
+      const { data: isAdmin, error: roleError } = await authSupabase.rpc('has_role', { 
+        _user_id: user.id, 
+        _role: 'admin' 
+      });
+
+      if (roleError) {
+        logger.error("Error checking admin role", roleError);
+        throw new ValidationError('Role verification failed');
+      }
+
+      if (!isAdmin) {
+        logger.warn("Unauthorized access attempt to check-email-health", { userId: user.id });
+        throw new ValidationError('Admin access required');
+      }
+
+      logger.info('Admin access verified - checking email delivery health metrics', { userId: user.id });
+    } else {
+      logger.info('Service role access verified - checking email delivery health metrics (automated)');
+    }
+    
+    // Use service role client for database operations
     const supabase = createServiceRoleClient();
 
     // Get email stats for last 24 hours
