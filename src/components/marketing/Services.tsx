@@ -35,7 +35,7 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={service.title}
-              className="group p-8 rounded-2xl bg-card border border-border hover:shadow-[var(--shadow-elegant)] transition-all duration-500 hover:-translate-y-1"
+              className="group p-8 rounded-2xl bg-card border border-border shadow-sm hover:shadow-[var(--shadow-glow)] transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02]"
               style={{
                 animationDelay: `${index * 150}ms`,
               }}

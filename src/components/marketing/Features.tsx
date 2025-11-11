@@ -32,7 +32,7 @@ const Features = () => {
           {features.map((feature, index) => (
             <Card
               key={feature.title}
-              className={`overflow-hidden border-0 shadow-[var(--shadow-elegant)] hover:shadow-[var(--shadow-glow)] transition-all duration-500 ${
+              className={`overflow-hidden border-0 shadow-[var(--shadow-elegant)] hover:shadow-[var(--shadow-glow)] transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.01] ${
                 index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
               } flex flex-col md:flex`}
             >
