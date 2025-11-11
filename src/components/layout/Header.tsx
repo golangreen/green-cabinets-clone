@@ -98,42 +98,57 @@ const Header = () => {
     }, 400);
   };
 
-  return <header className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white border-gray-200 shadow-sm' 
-        : 'bg-[#1a1a1a] border-transparent'
-    }`}>
-      <nav className="container relative mx-auto px-4 md:px-6 py-6 md:py-8">
-        <div className="flex items-center justify-between">
-          {/* Centered Logo */}
-          <div className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ${
-            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-          }`}>
-            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex items-center">
-              <img 
-                src={logoTeal}
-                alt="Green Cabinets Logo" 
-                className="h-24 md:h-28 w-auto transition-all duration-300" 
-              />
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#1a1a1a] shadow-lg">
+      <nav className="container mx-auto px-6">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex items-center">
+            <img 
+              src={logoTeal}
+              alt="Green Cabinets Logo" 
+              className="h-14 w-auto"
+            />
+          </a>
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-white hover:text-[#D4AF37] transition-colors text-sm font-medium">
+              Home
+            </a>
+            <button
+              onClick={(e) => scrollToGallery('kitchens', e)}
+              className="text-white hover:text-[#D4AF37] transition-colors text-sm font-medium"
+            >
+              Our Offering
+            </button>
+            <a href="#about" className="text-white hover:text-[#D4AF37] transition-colors text-sm font-medium">
+              About
+            </a>
+            <a href="#contact" className="text-white hover:text-[#D4AF37] transition-colors text-sm font-medium">
+              Contact
             </a>
           </div>
+
+          {/* CTA Button */}
+          <a
+            href="#contact"
+            className="hidden md:block px-6 py-2.5 bg-white text-gray-900 rounded hover:bg-gray-100 transition-colors text-sm font-medium"
+          >
+            Contact Us
+          </a>
           
-          {/* Spacer for left side */}
-          <div className="flex-1"></div>
-          
-          {/* Right side utilities */}
-          <div className="flex items-center gap-3 ml-auto">
-            {/* Hamburger Menu for ALL navigation */}
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="text-[#2dd4bf] hover:text-[#2dd4bf]/80 hover:bg-transparent transition-colors duration-300"
-                >
-                  <Menu className="h-8 w-8" />
-                </Button>
-              </SheetTrigger>
+          {/* Mobile Menu Toggle */}
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="md:hidden text-white hover:text-white/80"
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display overflow-y-auto">
                 <div className="flex flex-col gap-6 mt-8">
                   {/* Main Navigation */}
@@ -507,6 +522,7 @@ const Header = () => {
         onOpenChange={setShowInstallDialog}
         onInstall={handleInstall}
       />
-    </header>;
+     </header>
+  );
 };
 export default Header;
