@@ -107,18 +107,24 @@ const Hero = () => {
             zIndex: 1,
           }}
         >
-          <img 
-            src={displayImages[currentImageIndex].src} 
-            alt={displayImages[currentImageIndex].alt} 
-            className="w-full h-full object-cover pointer-events-none" 
-            style={{ 
-              filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-              willChange: 'opacity'
-            }}
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
+          <picture>
+            <source 
+              srcSet={displayImages[currentImageIndex].src.replace(/\.(jpg|jpeg|png)$/, '.webp')} 
+              type="image/webp" 
+            />
+            <img 
+              src={displayImages[currentImageIndex].src} 
+              alt={displayImages[currentImageIndex].alt} 
+              className="w-full h-full object-cover pointer-events-none" 
+              style={{ 
+                filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
+                willChange: 'opacity'
+              }}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </picture>
         </div>
         
         {/* Next Image - fades in */}
@@ -130,17 +136,23 @@ const Hero = () => {
             zIndex: 2,
           }}
         >
-          <img 
-            src={displayImages[getNextIndex()].src} 
-            alt={displayImages[getNextIndex()].alt} 
-            className="w-full h-full object-cover pointer-events-none" 
-            style={{ 
-              filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-              willChange: 'opacity'
-            }}
-            loading="eager"
-            decoding="async"
-          />
+          <picture>
+            <source 
+              srcSet={displayImages[getNextIndex()].src.replace(/\.(jpg|jpeg|png)$/, '.webp')} 
+              type="image/webp" 
+            />
+            <img 
+              src={displayImages[getNextIndex()].src} 
+              alt={displayImages[getNextIndex()].alt} 
+              className="w-full h-full object-cover pointer-events-none" 
+              style={{ 
+                filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
+                willChange: 'opacity'
+              }}
+              loading="eager"
+              decoding="async"
+            />
+          </picture>
         </div>
         
         <div className="absolute inset-0 bg-black/25" style={{ zIndex: 3 }} />
