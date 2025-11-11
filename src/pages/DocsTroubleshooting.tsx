@@ -17,7 +17,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { DocsSidebar } from "@/components/DocsSidebar";
 import CodeMirror from '@uiw/react-codemirror';
-import { sql } from '@codemirror/lang-sql';
+import { sql, SQLNamespace } from '@codemirror/lang-sql';
+import { autocompletion } from '@codemirror/autocomplete';
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface QueryHistoryItem {
@@ -36,6 +37,16 @@ interface BookmarkItem {
   createdAt: number;
 }
 
+interface TableSchema {
+  tableName: string;
+  columns: string[];
+}
+
+interface ValidationError {
+  message: string;
+  type: 'error' | 'warning';
+}
+
 const DocsTroubleshooting = () => {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<{ type: string; message: string } | null>(null);
@@ -46,6 +57,8 @@ const DocsTroubleshooting = () => {
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
   const [bookmarkName, setBookmarkName] = useState("");
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
+  const [schemaInfo, setSchemaInfo] = useState<TableSchema[]>([]);
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const { toast } = useToast();
 
   // Load query history from localStorage on mount
@@ -85,6 +98,54 @@ const DocsTroubleshooting = () => {
       localStorage.setItem('sql-query-bookmarks', JSON.stringify(bookmarks));
     }
   }, [bookmarks]);
+
+  // Fetch database schema on mount
+  useEffect(() => {
+    const fetchSchema = async () => {
+      try {
+        // Fetch table names and columns from information_schema
+        const { data, error } = await supabase
+          .from('user_roles')
+          .select('*')
+          .limit(0);
+
+        if (error) {
+          console.error('Schema fetch error:', error);
+          return;
+        }
+
+        // Manual schema definition for known tables
+        const knownSchema: TableSchema[] = [
+          {
+            tableName: 'user_roles',
+            columns: ['id', 'user_id', 'role', 'created_at']
+          },
+          {
+            tableName: 'security_events',
+            columns: ['id', 'created_at', 'event_type', 'function_name', 'client_ip', 'severity', 'details']
+          },
+          {
+            tableName: 'blocked_ips',
+            columns: ['id', 'ip_address', 'reason', 'blocked_at', 'blocked_until', 'auto_blocked', 'violation_count', 'details', 'created_at']
+          },
+          {
+            tableName: 'block_history',
+            columns: ['id', 'ip_address', 'action', 'reason', 'blocked_until', 'auto_blocked', 'performed_by', 'created_at']
+          },
+          {
+            tableName: 'alert_history',
+            columns: ['id', 'alert_type', 'details', 'sent_at']
+          }
+        ];
+
+        setSchemaInfo(knownSchema);
+      } catch (err) {
+        console.error('Failed to fetch schema:', err);
+      }
+    };
+
+    fetchSchema();
+  }, []);
 
   const addToHistory = (query: string, success: boolean, rowCount?: number, error?: string) => {
     const historyItem: QueryHistoryItem = {
@@ -158,6 +219,56 @@ const DocsTroubleshooting = () => {
       title: "Bookmark deleted",
       description: "Bookmark has been removed",
     });
+  };
+
+  const validateQuery = (query: string): ValidationError[] => {
+    const errors: ValidationError[] = [];
+    const trimmedQuery = query.trim().toUpperCase();
+
+    // Check if it's a SELECT query
+    if (!trimmedQuery.startsWith('SELECT')) {
+      errors.push({
+        message: 'Only SELECT queries are allowed for safety',
+        type: 'error'
+      });
+    }
+
+    // Check for table name
+    const tableMatch = query.match(/FROM\s+(\w+)/i);
+    if (tableMatch) {
+      const tableName = tableMatch[1].toLowerCase();
+      const tableExists = schemaInfo.some(t => t.tableName.toLowerCase() === tableName);
+      
+      if (!tableExists) {
+        errors.push({
+          message: `Table "${tableName}" not found. Available tables: ${schemaInfo.map(t => t.tableName).join(', ')}`,
+          type: 'error'
+        });
+      }
+    } else if (trimmedQuery.startsWith('SELECT')) {
+      errors.push({
+        message: 'No table specified in FROM clause',
+        type: 'error'
+      });
+    }
+
+    // Check for common SQL injection patterns
+    if (query.match(/;\s*(DROP|DELETE|UPDATE|INSERT|ALTER|CREATE)/i)) {
+      errors.push({
+        message: 'Potentially dangerous SQL keywords detected',
+        type: 'error'
+      });
+    }
+
+    // Warn if no LIMIT clause
+    if (!query.match(/LIMIT\s+\d+/i)) {
+      errors.push({
+        message: 'Consider adding a LIMIT clause to avoid retrieving too many rows',
+        type: 'warning'
+      });
+    }
+
+    return errors;
   };
 
   const copyToClipboard = (code: string, id: string) => {
@@ -253,6 +364,19 @@ const DocsTroubleshooting = () => {
     setIsExecuting(true);
     setQueryResult(null);
 
+    // Validate query before execution
+    const errors = validateQuery(sqlQuery);
+    const hasErrors = errors.some(e => e.type === 'error');
+    
+    if (hasErrors) {
+      setQueryResult({
+        error: errors.find(e => e.type === 'error')?.message || 'Query validation failed',
+        type: "error"
+      });
+      setIsExecuting(false);
+      return;
+    }
+
     try {
       // Basic safety check - only allow SELECT queries
       const trimmedQuery = sqlQuery.trim().toUpperCase();
@@ -335,6 +459,56 @@ const DocsTroubleshooting = () => {
       query: "SELECT public.has_role(auth.uid(), 'admin'::app_role) as is_admin;"
     }
   ];
+
+  // Create SQL autocompletion source
+  const sqlCompletions = (context: any) => {
+    const word = context.matchBefore(/\w*/);
+    if (!word || (word.from === word.to && !context.explicit)) return null;
+
+    const options: any[] = [];
+
+    // Add table names
+    schemaInfo.forEach(table => {
+      options.push({
+        label: table.tableName,
+        type: 'table',
+        detail: 'table',
+        boost: 99
+      });
+
+      // Add columns for each table
+      table.columns.forEach(column => {
+        options.push({
+          label: `${table.tableName}.${column}`,
+          type: 'property',
+          detail: `column in ${table.tableName}`,
+          boost: 90
+        });
+        options.push({
+          label: column,
+          type: 'property',
+          detail: 'column',
+          boost: 85
+        });
+      });
+    });
+
+    // Add SQL keywords
+    const keywords = ['SELECT', 'FROM', 'WHERE', 'ORDER BY', 'LIMIT', 'GROUP BY', 'HAVING', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'ON', 'AND', 'OR', 'NOT', 'IN', 'LIKE', 'BETWEEN', 'IS NULL', 'IS NOT NULL', 'COUNT', 'SUM', 'AVG', 'MAX', 'MIN', 'DISTINCT', 'AS'];
+    keywords.forEach(keyword => {
+      options.push({
+        label: keyword,
+        type: 'keyword',
+        boost: 70
+      });
+    });
+
+    return {
+      from: word.from,
+      options: options,
+      validFor: /^\w*$/
+    };
+  };
   
   return (
     <div className="min-h-screen bg-background">
@@ -513,18 +687,49 @@ const DocsTroubleshooting = () => {
                     <CodeMirror
                       value={sqlQuery}
                       height="150px"
-                      extensions={[sql()]}
-                      onChange={(value) => setSqlQuery(value)}
+                      extensions={[
+                        sql(),
+                        autocompletion({
+                          override: [sqlCompletions]
+                        })
+                      ]}
+                      onChange={(value) => {
+                        setSqlQuery(value);
+                        // Validate on change
+                        const errors = validateQuery(value);
+                        setValidationErrors(errors);
+                      }}
                       theme="light"
                       basicSetup={{
                         lineNumbers: true,
                         highlightActiveLineGutter: true,
                         highlightActiveLine: true,
                         foldGutter: true,
+                        autocompletion: true,
                       }}
                       className="text-sm"
                     />
                   </div>
+                  {validationErrors.length > 0 && (
+                    <div className="space-y-1">
+                      {validationErrors.map((error, idx) => (
+                        <Alert
+                          key={idx}
+                          variant={error.type === 'error' ? 'destructive' : 'default'}
+                          className={error.type === 'warning' ? 'border-yellow-500 bg-yellow-50' : ''}
+                        >
+                          {error.type === 'error' ? (
+                            <AlertTriangle className="h-4 w-4" />
+                          ) : (
+                            <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                          )}
+                          <AlertDescription className="text-sm">
+                            {error.message}
+                          </AlertDescription>
+                        </Alert>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <Button
