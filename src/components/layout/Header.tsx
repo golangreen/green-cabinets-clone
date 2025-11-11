@@ -103,7 +103,7 @@ const Header = () => {
         ? 'bg-white border-gray-200 shadow-sm' 
         : 'bg-[#1a1a1a] border-transparent'
     }`}>
-      <nav className="container relative mx-auto px-4 md:px-6 py-5 md:py-6">
+      <nav className="container relative mx-auto px-4 md:px-6 py-6 md:py-8">
         <div className="flex items-center justify-between">
           {/* Centered Logo */}
           <div className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ${
