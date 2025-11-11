@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { toast } from '@/hooks/use-toast';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
+import { fetchWebhookEvents } from '@/services';
+import { logger } from '@/lib/logger';
 
 interface WebhookEvent {
   id: string;
@@ -28,17 +30,10 @@ export function WebhookDeduplicationStats() {
   const { data: webhookEvents, isLoading } = useQuery({
     queryKey: ['webhook-deduplication-stats'],
     queryFn: async () => {
-      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      
-      const { data, error } = await supabase
-        .from('webhook_events')
-        .select('*')
-        .gte('created_at', twentyFourHoursAgo)
-        .order('created_at', { ascending: false })
-        .limit(100);
-
-      if (error) throw error;
-      return data as WebhookEvent[];
+      const events = await fetchWebhookEvents(100);
+      // Filter to last 24 hours client-side
+      const twentyFourHoursAgo = Date.now() - 24 * 60 * 60 * 1000;
+      return events.filter(e => new Date(e.created_at).getTime() >= twentyFourHoursAgo) as WebhookEvent[];
     },
     refetchInterval: 30000, // Refresh every 30 seconds
   });
@@ -47,16 +42,10 @@ export function WebhookDeduplicationStats() {
   const { data: duplicateEvents } = useQuery({
     queryKey: ['webhook-duplicates'],
     queryFn: async () => {
-      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      
-      // Count how many times we returned duplicate responses (this would be in logs)
-      // For now, we'll estimate based on webhook_events table
-      const { count } = await supabase
-        .from('webhook_events')
-        .select('*', { count: 'exact', head: true })
-        .gte('created_at', twentyFourHoursAgo);
-
-      return count || 0;
+      const events = await fetchWebhookEvents(100);
+      // Filter to last 24 hours
+      const twentyFourHoursAgo = Date.now() - 24 * 60 * 60 * 1000;
+      return events.filter(e => new Date(e.created_at).getTime() >= twentyFourHoursAgo).length;
     },
     refetchInterval: 30000,
   });
@@ -78,7 +67,7 @@ export function WebhookDeduplicationStats() {
           table: 'webhook_events'
         },
         (payload) => {
-          console.log('New webhook event detected, refreshing deduplication stats...');
+          logger.info('New webhook event detected, refreshing deduplication stats', { component: 'WebhookDeduplicationStats' });
           
           const event = payload.new as WebhookEvent;
           

@@ -8,6 +8,8 @@ import { toast as sonnerToast } from 'sonner';
 import { toast } from '@/hooks/use-toast';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
+import { fetchWebhookRetryData } from '@/services';
+import { logger } from '@/lib/logger';
 
 interface RetryData {
   date: string;
@@ -25,16 +27,7 @@ export function WebhookRetryChart() {
   const fetchRetryHistory = async () => {
     setLoading(true);
     try {
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-      const { data: webhookEvents, error } = await supabase
-        .from('webhook_events')
-        .select('created_at, retry_count')
-        .gte('created_at', sevenDaysAgo.toISOString())
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
+      const webhookEvents = await fetchWebhookRetryData(7);
 
       // Group by date
       const groupedData: Record<string, { total: number; retries: number }> = {};
@@ -65,7 +58,7 @@ export function WebhookRetryChart() {
 
       setData(chartData);
     } catch (error) {
-      console.error('Error fetching retry history:', error);
+      logger.error('Error fetching retry history', { component: 'WebhookRetryChart', error });
     } finally {
       setLoading(false);
     }
@@ -73,16 +66,7 @@ export function WebhookRetryChart() {
 
   const exportToCSV = async () => {
     try {
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-      const { data: webhookEvents, error } = await supabase
-        .from('webhook_events')
-        .select('svix_id, event_type, client_ip, retry_count, created_at, processed_at')
-        .gte('created_at', sevenDaysAgo.toISOString())
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      const webhookEvents = await fetchWebhookRetryData(7);
 
       if (!webhookEvents || webhookEvents.length === 0) {
         sonnerToast.error('No data available to export');
@@ -130,7 +114,7 @@ export function WebhookRetryChart() {
       URL.revokeObjectURL(url);
       sonnerToast.success(`Exported ${webhookEvents.length} webhook events to CSV`);
     } catch (error) {
-      console.error('Error exporting CSV:', error);
+      logger.error('Error exporting CSV', { component: 'WebhookRetryChart', error });
       sonnerToast.error('Failed to export data');
     }
   };
@@ -149,7 +133,7 @@ export function WebhookRetryChart() {
           table: 'webhook_events'
         },
         (payload) => {
-          console.log('New webhook event detected, refreshing chart...');
+          logger.info('New webhook event detected, refreshing chart', { component: 'WebhookRetryChart' });
           
           const event = payload.new as { 
             svix_id: string; 

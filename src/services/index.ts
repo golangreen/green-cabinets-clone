@@ -79,6 +79,16 @@ export {
   getTimeUntilUnblock,
   groupEventsByType,
   getUniqueIPCount,
+  fetchWebhookEvents,
+  fetchWebhookRetryData,
+  fetchWebhookDeduplicationStats,
+  fetchAlertHistory,
+  fetchEmailDeliveryStats,
+  fetchRecentEmailLogs,
+  fetchAlertSettings,
+  upsertAlertSettings,
+  fetchNotificationSettings,
+  upsertNotificationSettings,
   type SecurityEvent,
   type BlockedIP
 } from './securityService';

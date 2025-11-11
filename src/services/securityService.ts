@@ -220,3 +220,174 @@ export function getUniqueIPCount(events: SecurityEvent[]): number {
   const uniqueIPs = new Set(events.map(event => event.client_ip));
   return uniqueIPs.size;
 }
+
+/**
+ * Fetch webhook events
+ */
+export async function fetchWebhookEvents(limit: number = 100): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('webhook_events')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  
+  if (error) throw error;
+  return data || [];
+}
+
+/**
+ * Fetch webhook retry data for charts
+ */
+export async function fetchWebhookRetryData(days: number = 7): Promise<any[]> {
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  
+  const { data, error } = await supabase
+    .from('webhook_events')
+    .select('*')
+    .gte('created_at', startDate.toISOString())
+    .order('created_at', { ascending: true });
+  
+  if (error) throw error;
+  return data || [];
+}
+
+/**
+ * Fetch webhook deduplication statistics
+ */
+export async function fetchWebhookDeduplicationStats(): Promise<{
+  totalEvents: number;
+  uniqueIPs: number;
+  retentionDays: number;
+}> {
+  const { data, error, count } = await supabase
+    .from('webhook_events')
+    .select('client_ip', { count: 'exact' });
+  
+  if (error) throw error;
+  
+  const uniqueIPs = new Set(data?.map(e => e.client_ip)).size;
+  
+  return {
+    totalEvents: count || 0,
+    uniqueIPs,
+    retentionDays: 30
+  };
+}
+
+/**
+ * Fetch alert history
+ */
+export async function fetchAlertHistory(limit: number = 50): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('alert_history')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  
+  if (error) throw error;
+  return data || [];
+}
+
+/**
+ * Fetch email delivery statistics
+ */
+export async function fetchEmailDeliveryStats(days: number = 7): Promise<{
+  sent: number;
+  delivered: number;
+  bounced: number;
+  complained: number;
+  delayed: number;
+  deliveryRate: number;
+}> {
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  
+  const { data, error } = await supabase
+    .from('email_delivery_log')
+    .select('status')
+    .gte('created_at', startDate.toISOString());
+  
+  if (error) throw error;
+  
+  const events = data || [];
+  const sent = events.filter(e => e.status === 'sent').length;
+  const delivered = events.filter(e => e.status === 'delivered').length;
+  const bounced = events.filter(e => e.status === 'bounced').length;
+  const complained = events.filter(e => e.status === 'complained').length;
+  const delayed = events.filter(e => e.status === 'delayed').length;
+  
+  const deliveryRate = sent > 0 ? (delivered / sent) * 100 : 0;
+  
+  return { sent, delivered, bounced, complained, delayed, deliveryRate };
+}
+
+/**
+ * Fetch recent email delivery logs
+ */
+export async function fetchRecentEmailLogs(limit: number = 10): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('email_delivery_log')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  
+  if (error) throw error;
+  return data || [];
+}
+
+/**
+ * Fetch alert settings for user
+ */
+export async function fetchAlertSettings(userId: string): Promise<any> {
+  const { data, error } = await (supabase as any)
+    .from('alert_settings')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle();
+  
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Upsert alert settings
+ */
+export async function upsertAlertSettings(userId: string, settings: Record<string, any>): Promise<void> {
+  const { error } = await (supabase as any)
+    .from('alert_settings')
+    .upsert({ 
+      user_id: userId, 
+      settings: settings
+    });
+  
+  if (error) throw error;
+}
+
+/**
+ * Fetch notification settings for user
+ */
+export async function fetchNotificationSettings(userId: string): Promise<any> {
+  const { data, error } = await (supabase as any)
+    .from('notification_settings')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle();
+  
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Upsert notification settings
+ */
+export async function upsertNotificationSettings(userId: string, settings: Record<string, any>): Promise<void> {
+  const { error } = await (supabase as any)
+    .from('notification_settings')
+    .upsert({ 
+      user_id: userId, 
+      ...settings 
+    });
+  
+  if (error) throw error;
+}
