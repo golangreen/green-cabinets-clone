@@ -31,7 +31,7 @@ const CTA = () => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-6 text-center">
         <div className="max-w-4xl mx-auto space-y-8">
-          <h2 className="font-display text-5xl md:text-6xl font-bold text-primary-foreground leading-tight">
+          <h2 className="font-display text-5xl md:text-6xl font-bold text-white leading-tight">
             All your storage needs,
             <br />
             in one place.
