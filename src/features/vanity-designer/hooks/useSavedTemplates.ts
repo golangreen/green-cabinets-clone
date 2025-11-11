@@ -1,5 +1,5 @@
 import { VanityTemplate } from "@/types/vanity";
-import { useLocalStorage } from "./useLocalStorage";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 const STORAGE_KEY = "vanity-saved-templates";
 

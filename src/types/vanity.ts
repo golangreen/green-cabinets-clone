@@ -12,13 +12,29 @@ export interface VanityConfig {
   lighting?: boolean;
 }
 
+export interface VanityTemplateConfig {
+  brand: string;
+  finish: string;
+  width: string;
+  widthFraction: string;
+  height: string;
+  heightFraction: string;
+  depth: string;
+  depthFraction: string;
+  doorStyle: string;
+  numDrawers: number;
+  handleStyle: string;
+  cabinetPosition?: string;
+}
+
 export interface VanityTemplate {
   id: string;
   name: string;
   description?: string;
-  config: VanityConfig;
+  config: VanityTemplateConfig;
   thumbnail?: string;
   price?: number;
+  tags?: string[];
   created_at?: string;
   updated_at?: string;
 }

@@ -1,10 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { VanityTemplate, vanityTemplates } from "@/lib/vanityTemplates";
+import { VanityTemplate } from "@/types/vanity";
+import { vanityTemplates } from "@/lib/vanityTemplates";
 import { Sparkles, Check, Trash2, Clock } from "lucide-react";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
-import { SavedTemplate } from "@/hooks/useSavedTemplates";
+import { SavedTemplate } from "@/features/vanity-designer";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +19,7 @@ import {
 import { useState } from "react";
 
 interface TemplateGalleryProps {
-  onSelectTemplate: (template: VanityTemplate) => void;
+  onSelectTemplate: (template: VanityTemplate | SavedTemplate) => void;
   selectedTemplateId?: string;
   savedTemplates?: SavedTemplate[];
   onDeleteTemplate?: (id: string) => void;
@@ -122,7 +123,7 @@ export const TemplateGallery = ({
             </div>
           </div>
           <div className="flex flex-wrap gap-1">
-            {template.tags.map((tag) => (
+            {(template.tags || []).map((tag) => (
               <Badge
                 key={tag}
                 variant="secondary"

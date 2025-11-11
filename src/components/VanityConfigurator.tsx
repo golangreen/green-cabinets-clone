@@ -36,8 +36,8 @@ import { useCartStore } from "@/stores/cartStore";
 import { z } from "zod";
 import { Vanity3DPreview } from "./Vanity3DPreview";
 import { TemplateGallery } from "./TemplateGallery";
-import { VanityTemplate } from "@/lib/vanityTemplates";
-import { useSavedTemplates } from "@/hooks/useSavedTemplates";
+import { VanityTemplate } from "@/types/vanity";
+import { useSavedTemplates, SavedTemplate } from "@/features/vanity-designer";
 import jsPDF from 'jspdf';
 import { CartItem } from "@/stores/cartStore";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,7 +53,7 @@ import {
   formatPrice,
   TAX_RATES,
   SHIPPING_RATES
-} from "@/services/vanityPricingService";
+} from "@/features/vanity-designer";
 import { formatVanityForWhatsApp } from "@/services/quoteService";
 
 const dimensionSchema = z.object({
@@ -323,7 +323,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     setTexturePreviewOpen(true);
   };
 
-  const handleSelectTemplate = (template: VanityTemplate) => {
+  const handleSelectTemplate = (template: VanityTemplate | SavedTemplate) => {
     setSelectedTemplateId(template.id);
     setSelectedBrand(template.config.brand);
     setSelectedFinish(template.config.finish);
