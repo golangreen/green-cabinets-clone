@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy, Play, Check, Terminal, Loader2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy, Play, Check, Terminal, Loader2, History, Trash2, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
@@ -15,6 +15,16 @@ import Footer from "@/components/Footer";
 import { DocsSidebar } from "@/components/DocsSidebar";
 import CodeMirror from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+interface QueryHistoryItem {
+  id: string;
+  query: string;
+  timestamp: number;
+  success: boolean;
+  rowCount?: number;
+  error?: string;
+}
 
 const DocsTroubleshooting = () => {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -22,7 +32,56 @@ const DocsTroubleshooting = () => {
   const [sqlQuery, setSqlQuery] = useState("SELECT * FROM user_roles LIMIT 5;");
   const [queryResult, setQueryResult] = useState<any>(null);
   const [isExecuting, setIsExecuting] = useState(false);
+  const [queryHistory, setQueryHistory] = useState<QueryHistoryItem[]>([]);
   const { toast } = useToast();
+
+  // Load query history from localStorage on mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('sql-query-history');
+    if (savedHistory) {
+      try {
+        setQueryHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        console.error('Failed to parse query history:', e);
+      }
+    }
+  }, []);
+
+  // Save query history to localStorage whenever it changes
+  useEffect(() => {
+    if (queryHistory.length > 0) {
+      localStorage.setItem('sql-query-history', JSON.stringify(queryHistory));
+    }
+  }, [queryHistory]);
+
+  const addToHistory = (query: string, success: boolean, rowCount?: number, error?: string) => {
+    const historyItem: QueryHistoryItem = {
+      id: Date.now().toString(),
+      query,
+      timestamp: Date.now(),
+      success,
+      rowCount,
+      error
+    };
+    setQueryHistory(prev => [historyItem, ...prev].slice(0, 20)); // Keep last 20 queries
+  };
+
+  const loadFromHistory = (item: QueryHistoryItem) => {
+    setSqlQuery(item.query);
+    toast({
+      title: "Query loaded",
+      description: "Query loaded from history",
+    });
+  };
+
+  const clearHistory = () => {
+    setQueryHistory([]);
+    localStorage.removeItem('sql-query-history');
+    toast({
+      title: "History cleared",
+      description: "Query history has been cleared",
+    });
+  };
 
   const copyToClipboard = (code: string, id: string) => {
     navigator.clipboard.writeText(code);
@@ -156,15 +215,18 @@ const DocsTroubleshooting = () => {
           hint: error.hint || "Check your table name and RLS policies",
           type: "error"
         });
+        addToHistory(sqlQuery, false, undefined, error.message);
       } else {
+        const rowCount = Array.isArray(data) ? data.length : 0;
         setQueryResult({
           data: data || [],
           type: "success",
-          rowCount: Array.isArray(data) ? data.length : 0
+          rowCount
         });
+        addToHistory(sqlQuery, true, rowCount);
         toast({
           title: "Query executed successfully",
-          description: `Retrieved ${data?.length || 0} rows from ${tableName}`,
+          description: `Retrieved ${rowCount} rows from ${tableName}`,
         });
       }
     } catch (err: any) {
@@ -172,6 +234,7 @@ const DocsTroubleshooting = () => {
         error: err.message || "Failed to execute query",
         type: "error"
       });
+      addToHistory(sqlQuery, false, undefined, err.message);
     } finally {
       setIsExecuting(false);
     }
@@ -436,6 +499,80 @@ const DocsTroubleshooting = () => {
               </CardContent>
             </Card>
           </section>
+
+          {/* Query History */}
+          {queryHistory.length > 0 && (
+            <section className="mb-12">
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <History className="h-5 w-5 text-primary" />
+                      <CardTitle>Query History</CardTitle>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={clearHistory}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Clear History
+                    </Button>
+                  </div>
+                  <CardDescription>
+                    Click on any query to reuse it (last 20 queries saved)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ScrollArea className="h-[400px] pr-4">
+                    <div className="space-y-3">
+                      {queryHistory.map((item) => (
+                        <div
+                          key={item.id}
+                          className="border rounded-lg p-3 hover:bg-accent cursor-pointer transition-colors"
+                          onClick={() => loadFromHistory(item)}
+                        >
+                          <div className="flex items-start justify-between gap-3 mb-2">
+                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                              <Badge
+                                variant={item.success ? "default" : "destructive"}
+                                className="shrink-0"
+                              >
+                                {item.success ? (
+                                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                                ) : (
+                                  <AlertTriangle className="h-3 w-3 mr-1" />
+                                )}
+                                {item.success ? 'Success' : 'Error'}
+                              </Badge>
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Clock className="h-3 w-3" />
+                                {new Date(item.timestamp).toLocaleString()}
+                              </div>
+                            </div>
+                            {item.success && item.rowCount !== undefined && (
+                              <Badge variant="outline" className="shrink-0">
+                                {item.rowCount} {item.rowCount === 1 ? 'row' : 'rows'}
+                              </Badge>
+                            )}
+                          </div>
+                          <pre className="text-xs bg-muted p-2 rounded overflow-x-auto font-mono">
+                            {item.query}
+                          </pre>
+                          {item.error && (
+                            <p className="text-xs text-destructive mt-2 truncate">
+                              Error: {item.error}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+            </section>
+          )}
 
           {/* Authentication Issues */}
           <section className="mb-12">
