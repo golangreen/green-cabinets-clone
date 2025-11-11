@@ -341,7 +341,7 @@ const Gallery = () => {
         {/* Filter Buttons */}
         <div className="flex justify-center gap-4 mb-12 flex-wrap">
           <Button
-            variant={activeCategory === "kitchens" ? "default" : "outline"}
+            variant={activeCategory === "kitchens" ? "brand" : "brand-outline"}
             onClick={() => {
               setActiveCategory("kitchens");
               setShowAllImages(false);
@@ -350,7 +350,7 @@ const Gallery = () => {
             Kitchens ({kitchens.length})
           </Button>
           <Button
-            variant={activeCategory === "vanities" ? "default" : "outline"}
+            variant={activeCategory === "vanities" ? "brand" : "brand-outline"}
             onClick={() => {
               setActiveCategory("vanities");
               setShowAllImages(false);
@@ -359,7 +359,7 @@ const Gallery = () => {
             Vanities ({vanities.length})
           </Button>
           <Button
-            variant={activeCategory === "closets" ? "default" : "outline"}
+            variant={activeCategory === "closets" ? "brand" : "brand-outline"}
             onClick={() => {
               setActiveCategory("closets");
               setShowAllImages(false);
@@ -368,7 +368,7 @@ const Gallery = () => {
             Closets ({closets.length})
           </Button>
           <Button
-            variant={activeCategory === "design-to-reality" ? "default" : "outline"}
+            variant={activeCategory === "design-to-reality" ? "brand" : "brand-outline"}
             onClick={() => {
               setActiveCategory("design-to-reality");
               setShowAllImages(false);
@@ -377,7 +377,7 @@ const Gallery = () => {
             Design to Reality ({designToReality.length})
           </Button>
           <Button
-            variant={activeCategory === "all" ? "default" : "outline"}
+            variant={activeCategory === "all" ? "brand" : "brand-outline"}
             onClick={() => {
               setActiveCategory("all");
               setShowAllImages(false);
