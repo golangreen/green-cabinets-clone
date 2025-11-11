@@ -11,13 +11,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
 import { TextureSwatch } from "@/components/TextureSwatch";
 import { TexturePreviewModal } from "@/components/TexturePreviewModal";
+import { EmailQuoteDialog } from "./EmailQuoteDialog";
 import { useVanityConfig, useSavedTemplates } from "@/features/vanity-designer";
 import { calculateCompletePricing, formatPrice, generateVanityQuotePDF, generateShareableURL, copyToClipboard } from "@/features/vanity-designer/services";
 import { toast } from "sonner";
-import { Save, Download, Share2, Maximize2, Scan, X } from "lucide-react";
+import { Save, Download, Share2, Maximize2, Scan, X, Mail } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
 import { getEggerColorNames } from "@/lib/eggerColors";
 import { getTafisaColorNames } from "@/lib/tafisaColors";
+import { supabase } from "@/integrations/supabase/client";
 
 const EGGER_FINISHES = getEggerColorNames();
 const TAFISA_FINISHES = getTafisaColorNames();
@@ -45,6 +47,7 @@ export const VanityDesignerApp = () => {
   const [selectedTexture, setSelectedTexture] = useState<string | null>(null);
   const [textureModalOpen, setTextureModalOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -191,6 +194,72 @@ export const VanityDesignerApp = () => {
     } catch (error) {
       console.error("Error generating share link:", error);
       toast.error("Failed to generate share link");
+    }
+  };
+
+  const handleEmailQuote = async (email: string, name: string, ccSales: boolean) => {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish) {
+      toast.error("Please configure your vanity first");
+      return;
+    }
+
+    toast.loading("Generating and sending quote...");
+
+    try {
+      // Generate PDF as blob
+      const pdfDoc = await generateVanityQuotePDF(
+        {
+          brand: vanityConfig.selectedBrand,
+          finish: vanityConfig.selectedFinish,
+          width: vanityConfig.dimensionsInInches.width,
+          height: vanityConfig.dimensionsInInches.height,
+          depth: vanityConfig.dimensionsInInches.depth,
+          doorStyle: vanityConfig.doorStyle,
+          numDrawers: vanityConfig.numDrawers,
+          handleStyle: vanityConfig.handleStyle,
+          includeRoom: vanityConfig.includeRoom,
+          roomLength: vanityConfig.roomLength,
+          roomWidth: vanityConfig.roomWidth,
+          floorType: vanityConfig.floorType,
+          state: vanityConfig.state || 'NY',
+        },
+        pricing,
+        previewRef.current
+      );
+
+      // Get PDF as base64 (jsPDF output method returns base64 when using 'datauristring')
+      const pdfBase64 = pdfDoc.output('datauristring').split(',')[1];
+
+      // Call edge function to send email
+      const { error } = await supabase.functions.invoke('send-vanity-quote-email', {
+        body: {
+          recipientEmail: email,
+          recipientName: name,
+          ccSalesTeam: ccSales,
+          pdfBase64,
+          vanityConfig: {
+            brand: vanityConfig.selectedBrand,
+            finish: vanityConfig.selectedFinish,
+            width: vanityConfig.dimensionsInInches.width,
+            height: vanityConfig.dimensionsInInches.height,
+            depth: vanityConfig.dimensionsInInches.depth,
+            doorStyle: vanityConfig.doorStyle,
+            totalPrice: totalPrice,
+          },
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast.dismiss();
+      toast.success("Quote sent successfully! Check your email.");
+    } catch (error) {
+      console.error("Error sending quote:", error);
+      toast.dismiss();
+      toast.error("Failed to send quote. Please try again.");
+      throw error;
     }
   };
 
@@ -484,6 +553,14 @@ export const VanityDesignerApp = () => {
               <Button 
                 variant="outline" 
                 className="gap-2"
+                onClick={() => setEmailDialogOpen(true)}
+              >
+                <Mail className="h-4 w-4" />
+                Email Quote
+              </Button>
+              <Button 
+                variant="outline" 
+                className="gap-2"
                 onClick={handleShare}
               >
                 <Share2 className="h-4 w-4" />
@@ -545,6 +622,13 @@ export const VanityDesignerApp = () => {
           }}
         />
       )}
+
+      {/* Email Quote Dialog */}
+      <EmailQuoteDialog
+        open={emailDialogOpen}
+        onOpenChange={setEmailDialogOpen}
+        onSendEmail={handleEmailQuote}
+      />
     </div>
   );
 };

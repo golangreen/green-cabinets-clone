@@ -31,7 +31,7 @@ export const generateVanityQuotePDF = async (
   config: VanityConfigForPDF,
   pricing: PricingForPDF,
   previewElement: HTMLElement | null
-): Promise<void> => {
+): Promise<jsPDF> => {
   const pdf = new jsPDF('p', 'mm', 'a4');
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
@@ -173,4 +173,7 @@ export const generateVanityQuotePDF = async (
   // Save PDF
   const filename = `vanity-quote-${Date.now()}.pdf`;
   pdf.save(filename);
+  
+  // Return the PDF document for email attachment
+  return pdf;
 };
