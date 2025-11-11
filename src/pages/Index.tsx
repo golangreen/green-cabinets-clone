@@ -1,4 +1,4 @@
-import { Header, Footer, FeatureErrorBoundary, OfflineBanner } from "@/components/layout";
+import { Header, Footer, FeatureErrorBoundary, OfflineBanner, SyncStatusIndicator } from "@/components/layout";
 import { Hero, Services, Features, About, Gallery, Suppliers, CTA } from "@/components/marketing";
 import { ShopProducts } from "@/features/product-catalog";
 import { Contact } from "@/features/quote-request";
@@ -8,6 +8,7 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <OfflineBanner />
+      <SyncStatusIndicator />
       <Header />
       <Hero />
       <Services />

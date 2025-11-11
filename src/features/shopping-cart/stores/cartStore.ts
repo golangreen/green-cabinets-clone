@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { createStorefrontCheckout, ShopifyProduct } from '@/lib/shopify';
+import { ShopifyProduct } from '@/lib/shopify/types';
+import { createStorefrontCheckout } from '@/lib/shopify/client';
+import { logger } from '@/lib/logger';
+import { backgroundSync } from '@/lib/backgroundSync';
 
 export interface CartItem {
   product: ShopifyProduct;
@@ -49,6 +52,13 @@ export const useCartStore = create<CartStore>()(
         const { items } = get();
         const existingItem = items.find(i => i.variantId === item.variantId);
         
+        // Check if offline
+        if (!navigator.onLine) {
+          logger.warn('Offline - queueing add item operation', { component: 'CartStore', variantId: item.variantId });
+          backgroundSync.enqueue('add', item);
+          return;
+        }
+        
         if (existingItem) {
           set({
             items: items.map(i =>
@@ -60,6 +70,8 @@ export const useCartStore = create<CartStore>()(
         } else {
           set({ items: [...items, item] });
         }
+        
+        logger.info('Item added to cart', { component: 'CartStore', variantId: item.variantId });
       },
 
       updateQuantity: (variantId, quantity) => {
@@ -68,17 +80,35 @@ export const useCartStore = create<CartStore>()(
           return;
         }
         
+        // Check if offline
+        if (!navigator.onLine) {
+          logger.warn('Offline - queueing update quantity operation', { component: 'CartStore', variantId, quantity });
+          backgroundSync.enqueue('update', { variantId, quantity });
+          return;
+        }
+        
         set({
           items: get().items.map(item =>
             item.variantId === variantId ? { ...item, quantity } : item
           )
         });
+        
+        logger.info('Quantity updated', { component: 'CartStore', variantId, quantity });
       },
 
       removeItem: (variantId) => {
+        // Check if offline
+        if (!navigator.onLine) {
+          logger.warn('Offline - queueing remove item operation', { component: 'CartStore', variantId });
+          backgroundSync.enqueue('remove', { variantId });
+          return;
+        }
+        
         set({
           items: get().items.filter(item => item.variantId !== variantId)
         });
+        
+        logger.info('Item removed from cart', { component: 'CartStore', variantId });
       },
 
       clearCart: () => {
@@ -91,15 +121,30 @@ export const useCartStore = create<CartStore>()(
 
       createCheckout: async () => {
         const { items, setLoading, setCheckoutUrl } = get();
-        if (items.length === 0) return null;
+        if (items.length === 0) {
+          logger.warn('Cannot create checkout - cart is empty', { component: 'CartStore' });
+          return null;
+        }
+
+        // Check if offline
+        if (!navigator.onLine) {
+          logger.warn('Offline - queueing checkout operation', { component: 'CartStore' });
+          backgroundSync.enqueue('checkout', {});
+          throw new Error('You are offline. Checkout will be created when connection is restored.');
+        }
 
         setLoading(true);
         try {
+          logger.info('Creating checkout', { component: 'CartStore', itemCount: items.length });
           const checkoutUrl = await createStorefrontCheckout(items);
           setCheckoutUrl(checkoutUrl);
+          logger.info('Checkout created successfully', { component: 'CartStore' });
           return checkoutUrl;
         } catch (error) {
-          console.error('Failed to create checkout:', error);
+          logger.error('Failed to create checkout', { component: 'CartStore', error });
+          
+          // Queue for retry
+          backgroundSync.enqueue('checkout', {});
           throw error;
         } finally {
           setLoading(false);

@@ -5,9 +5,13 @@ import App from "./App.tsx";
 import "./index.css";
 import { initSentry } from "./lib/sentry";
 import { ErrorFallback } from "./components/layout";
+import { setupBackgroundSync } from "./lib/backgroundSync";
 
 // Initialize Sentry for production error tracking
 initSentry();
+
+// Setup background sync for offline cart operations
+setupBackgroundSync();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
