@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive } from "lucide-react";
+import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/features/shopping-cart";
@@ -280,6 +280,13 @@ const Header = () => {
                         <HardDrive className="mr-2 h-4 w-4" />
                         <span>Cache Management</span>
                       </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => window.location.href = '/admin/config'}
+                        className="cursor-pointer"
+                      >
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Configuration</span>
+                      </DropdownMenuItem>
                     </>
                   )}
                   <DropdownMenuSeparator />
@@ -383,6 +390,18 @@ const Header = () => {
                           >
                             <HardDrive className="mr-2 h-4 w-4" />
                             Cache Management
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              window.location.href = '/admin/config';
+                            }}
+                            className="justify-start"
+                          >
+                            <Settings className="mr-2 h-4 w-4" />
+                            Configuration
                           </Button>
                         </>
                       )}
