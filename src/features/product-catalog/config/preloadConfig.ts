@@ -1,42 +1,24 @@
 /**
  * Product Preload Configuration
- * Configurable settings for background product caching
+ * Re-exports centralized cache configuration for backward compatibility
+ * @deprecated Use @/config directly instead
  */
 
+import { 
+  CACHE_CONFIG, 
+  validatePrefetchCount, 
+  validateRefreshInterval 
+} from '@/config';
+
+/**
+ * @deprecated Use CACHE_CONFIG from @/config instead
+ */
 export const PRELOAD_CONFIG = {
-  /**
-   * Number of products to prefetch on app load
-   * Can be overridden via VITE_PRELOAD_COUNT environment variable
-   */
-  DEFAULT_PREFETCH_COUNT: Number(import.meta.env.VITE_PRELOAD_COUNT) || 20,
-
-  /**
-   * Auto-refresh interval in milliseconds (default 30 minutes)
-   * Can be overridden via VITE_PRELOAD_INTERVAL environment variable
-   */
-  DEFAULT_AUTO_REFRESH_INTERVAL: Number(import.meta.env.VITE_PRELOAD_INTERVAL) || 30 * 60 * 1000,
-
-  /**
-   * Maximum products that can be prefetched (safety limit)
-   */
-  MAX_PREFETCH_COUNT: 50,
-
-  /**
-   * Minimum refresh interval (5 minutes)
-   */
-  MIN_REFRESH_INTERVAL: 5 * 60 * 1000,
+  DEFAULT_PREFETCH_COUNT: CACHE_CONFIG.PRELOAD_COUNT,
+  DEFAULT_AUTO_REFRESH_INTERVAL: CACHE_CONFIG.PRELOAD_REFRESH_INTERVAL,
+  MAX_PREFETCH_COUNT: CACHE_CONFIG.MAX_PRELOAD_COUNT,
+  MIN_REFRESH_INTERVAL: CACHE_CONFIG.MIN_REFRESH_INTERVAL,
 } as const;
 
-/**
- * Validate and clamp prefetch count
- */
-export function validatePrefetchCount(count: number): number {
-  return Math.min(Math.max(1, count), PRELOAD_CONFIG.MAX_PREFETCH_COUNT);
-}
-
-/**
- * Validate and clamp refresh interval
- */
-export function validateRefreshInterval(interval: number): number {
-  return Math.max(interval, PRELOAD_CONFIG.MIN_REFRESH_INTERVAL);
-}
+// Re-export validation functions
+export { validatePrefetchCount, validateRefreshInterval };

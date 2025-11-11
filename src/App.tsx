@@ -68,10 +68,10 @@ const App = () => {
               featureTag="product-preload"
               fallbackRoute="/"
             >
-              <PreloadManager 
-                prefetchCount={20}
-                autoRefreshInterval={30 * 60 * 1000}
-              />
+            <PreloadManager
+              prefetchCount={CACHE_CONFIG.PRELOAD_COUNT}
+              autoRefreshInterval={CACHE_CONFIG.PRELOAD_REFRESH_INTERVAL}
+            />
             </FeatureErrorBoundary>
 
             <BrowserRouter>

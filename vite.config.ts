@@ -4,6 +4,15 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
 
+// Note: Config values imported at build time from src/config/pwa.ts
+const PWA_CACHE_CONFIG = {
+  SHOPIFY_API_MAX_AGE_SECONDS: 60 * 60 * 24, // 24 hours
+  SHOPIFY_IMAGES_MAX_AGE_SECONDS: 60 * 60 * 24 * 30, // 30 days
+  SHOPIFY_API_MAX_ENTRIES: 50,
+  SHOPIFY_IMAGES_MAX_ENTRIES: 100,
+  NETWORK_TIMEOUT_SECONDS: 10,
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -28,13 +37,13 @@ export default defineConfig(({ mode }) => ({
             options: {
               cacheName: 'shopify-api-cache',
               expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24, // 24 hours
+                maxEntries: PWA_CACHE_CONFIG.SHOPIFY_API_MAX_ENTRIES,
+                maxAgeSeconds: PWA_CACHE_CONFIG.SHOPIFY_API_MAX_AGE_SECONDS,
               },
               cacheableResponse: {
                 statuses: [0, 200],
               },
-              networkTimeoutSeconds: 10,
+              networkTimeoutSeconds: PWA_CACHE_CONFIG.NETWORK_TIMEOUT_SECONDS,
             },
           },
           {
@@ -43,8 +52,8 @@ export default defineConfig(({ mode }) => ({
             options: {
               cacheName: 'shopify-images-cache',
               expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                maxEntries: PWA_CACHE_CONFIG.SHOPIFY_IMAGES_MAX_ENTRIES,
+                maxAgeSeconds: PWA_CACHE_CONFIG.SHOPIFY_IMAGES_MAX_AGE_SECONDS,
               },
               cacheableResponse: {
                 statuses: [0, 200],

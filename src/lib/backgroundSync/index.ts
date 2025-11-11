@@ -5,6 +5,7 @@
 
 import { logger } from '@/lib/logger';
 import { CACHE_KEYS } from '@/constants/cacheKeys';
+import { SECURITY_CONFIG } from '@/config';
 
 interface QueuedOperation {
   id: string;
@@ -28,7 +29,7 @@ type CartActionsProvider = () => {
 
 class BackgroundSyncManager {
   private queue: QueuedOperation[] = [];
-  private maxRetries = 3;
+  private maxRetries = SECURITY_CONFIG.MAX_RETRIES;
   private actionsProvider: CartActionsProvider | null = null;
 
   constructor() {

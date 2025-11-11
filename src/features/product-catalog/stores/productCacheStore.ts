@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { ShopifyProduct } from '@/lib/shopify';
 import { CACHE_KEYS } from '@/constants/cacheKeys';
+import { CACHE_CONFIG } from '@/config';
 
 interface ProductCacheStore {
   products: Record<string, ShopifyProduct>;
@@ -17,7 +18,7 @@ interface ProductCacheStore {
   setLoading: (loading: boolean) => void;
 }
 
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes default
+const CACHE_DURATION = CACHE_CONFIG.PRODUCT_CACHE_DURATION;
 
 export const useProductCacheStore = create<ProductCacheStore>()(
   persist(
