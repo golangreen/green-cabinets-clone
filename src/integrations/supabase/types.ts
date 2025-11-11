@@ -160,6 +160,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_user_role: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: Json
+      }
       auto_block_ip: {
         Args: {
           block_duration_hours?: number
@@ -169,6 +176,15 @@ export type Database = {
         Returns: Json
       }
       cleanup_expired_blocks: { Args: never; Returns: number }
+      get_all_users_with_roles: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          roles: Database["public"]["Enums"]["app_role"][]
+          user_id: string
+        }[]
+      }
       get_blocked_ip_info: {
         Args: { check_ip: string }
         Returns: {
@@ -211,6 +227,13 @@ export type Database = {
           block_reason: string
           performed_by_user?: string
           target_ip: string
+        }
+        Returns: Json
+      }
+      remove_user_role: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
         }
         Returns: Json
       }

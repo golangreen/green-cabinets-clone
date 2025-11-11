@@ -22,6 +22,7 @@ export const ROUTES = {
   
   // Admin
   ADMIN_SECURITY: '/admin-security',
+  ADMIN_USERS: '/admin/users',
   
   // Commerce
   CHECKOUT: '/checkout',
@@ -47,6 +48,7 @@ export function isProtectedRoute(path: string): boolean {
 export function isAdminRoute(path: string): boolean {
   const adminPaths = [
     ROUTES.ADMIN_SECURITY,
+    ROUTES.ADMIN_USERS,
   ];
   return adminPaths.some(route => path.startsWith(route));
 }

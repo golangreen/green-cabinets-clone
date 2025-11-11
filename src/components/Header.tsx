@@ -9,12 +9,13 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Download, User, LogOut } from "lucide-react";
+import { ChevronDown, Menu, Download, User, LogOut, Shield, Users } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { InstallPWADialog } from "@/components/InstallPWADialog";
 import { ROUTES } from "@/constants/routes";
@@ -24,6 +25,7 @@ const Header = () => {
   const [showInstallDialog, setShowInstallDialog] = useState(false);
   const { isInstallable, promptInstall } = usePWAInstall();
   const { user, isAuthenticated, signOut } = useAuth();
+  const { isAdmin } = useAdminCheck();
 
   const handleInstall = async () => {
     const installed = await promptInstall();
@@ -247,6 +249,25 @@ const Header = () => {
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem 
+                        onClick={() => window.location.href = ROUTES.ADMIN_SECURITY}
+                        className="cursor-pointer"
+                      >
+                        <Shield className="mr-2 h-4 w-4" />
+                        <span>Security Dashboard</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => window.location.href = ROUTES.ADMIN_USERS}
+                        className="cursor-pointer"
+                      >
+                        <Users className="mr-2 h-4 w-4" />
+                        <span>User Management</span>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -299,6 +320,34 @@ const Header = () => {
                         <User className="mr-2 h-4 w-4" />
                         Profile
                       </Button>
+                      {isAdmin && (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              window.location.href = ROUTES.ADMIN_SECURITY;
+                            }}
+                            className="justify-start"
+                          >
+                            <Shield className="mr-2 h-4 w-4" />
+                            Security Dashboard
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              window.location.href = ROUTES.ADMIN_USERS;
+                            }}
+                            className="justify-start"
+                          >
+                            <Users className="mr-2 h-4 w-4" />
+                            User Management
+                          </Button>
+                        </>
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
