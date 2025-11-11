@@ -1,6 +1,16 @@
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+
 const About = () => {
+  const { ref, isVisible } = useScrollReveal({ threshold: 0.2 });
+
   return (
-    <section id="about" className="py-24 bg-muted/30">
+    <section 
+      ref={ref as React.RefObject<HTMLElement>}
+      id="about" 
+      className={`py-24 bg-muted/30 transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h2 className="font-display text-5xl font-bold text-foreground mb-6">

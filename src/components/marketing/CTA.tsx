@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { QuoteForm } from "@/features/quote-request";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const CTA = () => {
   const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
   const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const { ref, isVisible } = useScrollReveal({ threshold: 0.2 });
 
   const handleConsultation = () => {
     if (contactMethod === "email") {
@@ -16,7 +18,12 @@ const CTA = () => {
   };
 
   return (
-    <section className="py-32 relative overflow-hidden">
+    <section 
+      ref={ref as React.RefObject<HTMLElement>}
+      className={`py-32 relative overflow-hidden transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       {/* Gradient Background */}
       <div className="absolute inset-0 bg-[image:var(--gradient-hero)]" />
       <div className="absolute inset-0 bg-[image:var(--gradient-soft)] opacity-40" />

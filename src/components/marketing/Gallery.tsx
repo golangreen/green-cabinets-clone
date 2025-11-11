@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import bathroomMarble from "@/assets/gallery/bathroom-marble.jpg";
 import kitchenModernWhite from "@/assets/gallery/kitchen-modern-white.jpg";
 import kitchenFireplace from "@/assets/gallery/kitchen-fireplace.jpg";
@@ -129,6 +130,7 @@ interface GalleryImage {
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState<Category>("all");
   const [showAllImages, setShowAllImages] = useState(false);
+  const { ref, isVisible } = useScrollReveal({ threshold: 0.1 });
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -329,7 +331,13 @@ const Gallery = () => {
   const designToReality = galleryImages.filter(img => img.category === "design-to-reality");
 
   return (
-    <section id="gallery" className="py-24 bg-muted/30">
+    <section 
+      ref={ref as React.RefObject<HTMLElement>}
+      id="gallery" 
+      className={`py-24 bg-muted/30 transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="container mx-auto px-6">
         <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Our Work</h2>

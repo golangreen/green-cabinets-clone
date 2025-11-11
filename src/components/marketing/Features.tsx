@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import customImage from "@/assets/feature-custom.jpg";
 import sustainableImage from "@/assets/feature-sustainable.jpg";
 import installationImage from "@/assets/feature-installation.jpg";
@@ -25,8 +26,16 @@ const features = [
 ];
 
 const Features = () => {
+  const { ref, isVisible } = useScrollReveal({ threshold: 0.15 });
+
   return (
-    <section id="solutions" className="py-24 bg-background">
+    <section 
+      ref={ref as React.RefObject<HTMLElement>}
+      id="solutions" 
+      className={`py-24 bg-background transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto space-y-16">
           {features.map((feature, index) => (

@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Card, CardContent } from "@/components/ui/card";
 import { ExternalLink, Image } from "lucide-react";
 import { CatalogSlideshow } from "./CatalogSlideshow";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import blumLogo from "@/assets/logos/blum-logo.png";
 import tafisaLogo from "@/assets/logos/tafisa-logo.png";
 import richelieuLogo from "@/assets/logos/richelieu-logo.png";
@@ -144,9 +145,16 @@ const allGalleryImages = Object.values(galleryImages) as string[];
 const Suppliers = () => {
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const [showCatalogSlideshow, setShowCatalogSlideshow] = useState(false);
+  const { ref, isVisible } = useScrollReveal({ threshold: 0.2 });
 
   return (
-    <section id="suppliers" className="py-20 bg-muted/30">
+    <section 
+      ref={ref as React.RefObject<HTMLElement>}
+      id="suppliers" 
+      className={`py-20 bg-muted/30 transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">

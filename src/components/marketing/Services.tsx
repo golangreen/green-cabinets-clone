@@ -1,4 +1,5 @@
 import { Hammer, Leaf, Ruler } from "lucide-react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const services = [
   {
@@ -19,8 +20,16 @@ const services = [
 ];
 
 const Services = () => {
+  const { ref, isVisible } = useScrollReveal({ threshold: 0.2 });
+
   return (
-    <section id="services" className="py-24 bg-gradient-to-b from-background to-secondary/20">
+    <section 
+      ref={ref as React.RefObject<HTMLElement>}
+      id="services" 
+      className={`py-24 bg-gradient-to-b from-background to-secondary/20 transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <h2 className="font-display text-5xl md:text-6xl font-bold text-foreground">
