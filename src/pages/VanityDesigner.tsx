@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/features/vanity-designer";
+import { roomScanner } from "@/features/room-scanner/utils/roomScanner";
 import { CABINET_CATALOG, calculateCabinetPrice, formatCabinetPrice, MATERIAL_FINISHES, HARDWARE_OPTIONS, DOOR_STYLES, type CabinetSpec } from "@/features/cabinet-catalog";
 import {
   ContextMenu,
@@ -315,15 +316,11 @@ const VanityDesigner = () => {
           return;
         }
 
-        // Check localStorage for saved scans
-        const savedScansStr = localStorage.getItem('room_scans');
-        if (savedScansStr) {
-          const scans = JSON.parse(savedScansStr);
-          if (scans.length > 0) {
-            // Use the most recent scan
-            const latestScan = scans[scans.length - 1];
-            applyScannedMeasurementsToWalls(latestScan);
-          }
+        // Check for saved scans using roomScanner utility
+        const scans = roomScanner.getSavedScans();
+        if (scans.length > 0) {
+          const latestScan = scans[scans.length - 1];
+          applyScannedMeasurementsToWalls(latestScan);
         }
       } catch (error) {
         console.error('Error loading scanned measurements:', error);

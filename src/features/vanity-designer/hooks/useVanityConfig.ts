@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { VanityConfig, VanityDimensions } from "@/types/vanity";
 import { inchesWithFractionToDecimal } from "../services/vanityPricingService";
 import { decodeShareableURL } from "../services/shareService";
+import { roomScanner } from "@/features/room-scanner/utils/roomScanner";
 
 export interface UseVanityConfigReturn {
   // Brand & Finish
@@ -308,14 +309,11 @@ export const useVanityConfig = (): UseVanityConfigReturn => {
         return;
       }
 
-      // Check localStorage for saved scans
-      const savedScansStr = localStorage.getItem('room_scans');
-      if (savedScansStr) {
-        const scans = JSON.parse(savedScansStr);
-        if (scans.length > 0) {
-          const latestScan = scans[scans.length - 1];
-          applyScannedMeasurements(latestScan);
-        }
+      // Check for saved scans using roomScanner utility
+      const scans = roomScanner.getSavedScans();
+      if (scans.length > 0) {
+        const latestScan = scans[scans.length - 1];
+        applyScannedMeasurements(latestScan);
       }
     } catch (error) {
       console.error('Error loading scanned measurements:', error);

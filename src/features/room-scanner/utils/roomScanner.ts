@@ -260,18 +260,20 @@ class RoomScanner {
     try {
       const scans = this.getSavedScans();
       scans.push(scan);
-      localStorage.setItem('room_scans', JSON.stringify(scans));
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('room_scans', JSON.stringify(scans));
+      }
     } catch (error) {
-      console.error('Error saving scan:', error);
+      // Silent fail - components using useSavedScans hook will handle this
     }
   }
 
   getSavedScans(): ScanSession[] {
     try {
-      const scans = localStorage.getItem('room_scans');
+      if (typeof window === 'undefined') return [];
+      const scans = window.localStorage.getItem('room_scans');
       return scans ? JSON.parse(scans) : [];
     } catch (error) {
-      console.error('Error loading scans:', error);
       return [];
     }
   }
@@ -280,9 +282,11 @@ class RoomScanner {
     try {
       const scans = this.getSavedScans();
       const filtered = scans.filter(s => s.id !== scanId);
-      localStorage.setItem('room_scans', JSON.stringify(filtered));
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('room_scans', JSON.stringify(filtered));
+      }
     } catch (error) {
-      console.error('Error deleting scan:', error);
+      // Silent fail - components using useSavedScans hook will handle this
     }
   }
 }
