@@ -1,9 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Activity, TrendingUp, Users, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
+import { useEffect } from 'react';
 
 interface RateLimitEvent {
   id: string;
@@ -17,6 +18,8 @@ interface RateLimitEvent {
 }
 
 export function RateLimitingStats() {
+  const queryClient = useQueryClient();
+
   // Get rate limit events from the last 24 hours
   const { data: rateLimitEvents, isLoading } = useQuery({
     queryKey: ['rate-limit-events'],
@@ -74,6 +77,30 @@ export function RateLimitingStats() {
 
   const totalEvents = rateLimitEvents?.length || 0;
   const uniqueIPs = stats?.uniqueIPs.size || 0;
+
+  // Subscribe to realtime changes
+  useEffect(() => {
+    const channel = supabase
+      .channel('rate-limit-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'security_events',
+          filter: 'event_type=eq.rate_limit_exceeded'
+        },
+        () => {
+          console.log('New rate limit event detected, refreshing stats...');
+          queryClient.invalidateQueries({ queryKey: ['rate-limit-events'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   return (
     <Card>

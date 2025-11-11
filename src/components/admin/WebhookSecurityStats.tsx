@@ -85,6 +85,30 @@ export function WebhookSecurityStats() {
     ? ((totalEvents - (stats?.validationFailures || 0) - (stats?.suspiciousActivity || 0)) / totalEvents * 100).toFixed(1)
     : 100;
 
+  // Subscribe to realtime changes
+  useEffect(() => {
+    const channel = supabase
+      .channel('security-events-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'security_events',
+          filter: 'function_name=eq.resend-webhook'
+        },
+        () => {
+          console.log('New security event detected, refreshing webhook security stats...');
+          queryClient.invalidateQueries({ queryKey: ['webhook-security-events'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
   return (
     <Card>
       <CardHeader>
