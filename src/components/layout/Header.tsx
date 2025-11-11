@@ -131,7 +131,7 @@ const Header = () => {
                   size="icon"
                   className="text-[#2dd4bf] hover:text-[#2dd4bf]/80 hover:bg-transparent transition-colors duration-300"
                 >
-                  <Menu className="h-6 w-6" />
+                  <Menu className="h-8 w-8" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display overflow-y-auto">
