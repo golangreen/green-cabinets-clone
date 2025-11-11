@@ -51,3 +51,59 @@ export {
   getCatalogData
 } from '@/features/cabinet-catalog';
 
+// Cart service exports
+export {
+  calculateCartSubtotal,
+  calculateCartTax,
+  calculateShipping as calculateCartShipping,
+  calculateCartTotal,
+  getCartItemCount,
+  formatCartPrice,
+  validateQuantity,
+  isCartEmpty,
+  findCartItem,
+  mergeCartItems
+} from './cartService';
+
+// Security service exports
+export {
+  fetchSecurityEvents,
+  fetchBlockedIPs,
+  blockIP,
+  unblockIP,
+  getSecuritySummary,
+  getSuspiciousIPs,
+  isIPBlocked,
+  getSeverityColor,
+  formatIPAddress,
+  getTimeUntilUnblock,
+  groupEventsByType,
+  getUniqueIPCount,
+  type SecurityEvent,
+  type BlockedIP
+} from './securityService';
+
+// Role service exports
+export {
+  fetchUsersWithRoles,
+  hasRole,
+  assignRole,
+  removeRole,
+  bulkAssignRole,
+  bulkRemoveRole,
+  extendRoleExpiration,
+  getExpiringRoles,
+  bulkExtendRoleExpiration,
+  getRoleDisplayName,
+  getRoleBadgeColor,
+  isTemporaryRole,
+  getDaysUntilExpiry,
+  formatRoleExpiration,
+  validateRoleAssignment,
+  getHighestRole,
+  type AppRole,
+  type UserWithRoles,
+  type RoleAssignment,
+  type RoleExtension
+} from './roleService';
+
