@@ -8,6 +8,7 @@ export * from './security';
 export * from './performance';
 export * from './pwa';
 export * from './validation';
+export * from './presets';
 
 /**
  * Application-wide configuration

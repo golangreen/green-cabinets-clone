@@ -9,8 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Header, Footer } from '@/components/layout';
 import { AdminRoute } from '@/components/auth';
-import { Settings, Clock, Shield, Zap, Smartphone, Info, CheckCircle2, AlertTriangle, RefreshCw } from 'lucide-react';
-import { CACHE_CONFIG, SECURITY_CONFIG, PERFORMANCE_CONFIG, PWA_CONFIG, APP_CONFIG } from '@/config';
+import { Settings, Clock, Shield, Zap, Smartphone, Info, CheckCircle2, AlertTriangle, RefreshCw, Sparkles } from 'lucide-react';
+import { CACHE_CONFIG, SECURITY_CONFIG, PERFORMANCE_CONFIG, PWA_CONFIG, APP_CONFIG, CONFIG_PRESETS, compareWithPreset, type ConfigPreset } from '@/config';
 import { toast } from 'sonner';
 
 interface ConfigValue {
@@ -23,6 +23,7 @@ interface ConfigValue {
 
 const AdminConfig = () => {
   const [testValues, setTestValues] = useState<Record<string, any>>({});
+  const [selectedPreset, setSelectedPreset] = useState<ConfigPreset | null>(null);
 
   // Cache configuration
   const cacheConfig: ConfigValue[] = [
@@ -215,6 +216,27 @@ const AdminConfig = () => {
     toast.info(`Reset test value for ${key}`);
   };
 
+  const applyPreset = (preset: ConfigPreset) => {
+    // Apply all preset values to test values
+    const newTestValues = { ...preset.values };
+    setTestValues(newTestValues);
+    setSelectedPreset(preset);
+    
+    toast.success(`Applied ${preset.name} preset`, {
+      description: `${Object.keys(preset.values).length} configuration values loaded`,
+    });
+  };
+
+  const getCurrentValues = () => {
+    const current: Record<string, any> = {};
+    [...cacheConfig, ...securityConfig, ...performanceConfig].forEach((config) => {
+      if (config.envVar) {
+        current[config.envVar] = config.value;
+      }
+    });
+    return current;
+  };
+
   const renderConfigSection = (title: string, icon: React.ReactNode, configs: ConfigValue[]) => (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
@@ -312,6 +334,82 @@ const AdminConfig = () => {
               update environment variables in your .env file.
             </AlertDescription>
           </Alert>
+
+          <Card className="mb-6">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <CardTitle>Configuration Presets</CardTitle>
+              </div>
+              <CardDescription>
+                Apply pre-configured settings optimized for different deployment environments
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 gap-4">
+                {CONFIG_PRESETS.map((preset) => {
+                  const comparison = compareWithPreset(getCurrentValues(), preset);
+                  const isActive = selectedPreset?.environment === preset.environment;
+                  const matchPercentage = Math.round((comparison.matches / comparison.total) * 100);
+
+                  return (
+                    <Card key={preset.environment} className={isActive ? 'border-primary' : ''}>
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-base">{preset.name}</CardTitle>
+                          <Badge variant={isActive ? 'default' : 'outline'}>
+                            {matchPercentage}% Match
+                          </Badge>
+                        </div>
+                        <CardDescription className="text-sm">
+                          {preset.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div className="text-sm text-muted-foreground">
+                          <p className="font-medium mb-2">Optimizations:</p>
+                          <ul className="space-y-1 text-xs">
+                            <li>• Cache: {preset.values.VITE_PRELOAD_COUNT} products</li>
+                            <li>• Security: {preset.values.VITE_MAX_RETRIES} retries</li>
+                            <li>• Timeout: {preset.values.VITE_NETWORK_TIMEOUT}ms</li>
+                            <li>• Debounce: {preset.values.VITE_SEARCH_DEBOUNCE}ms</li>
+                          </ul>
+                        </div>
+                        <Button
+                          className="w-full"
+                          variant={isActive ? 'default' : 'outline'}
+                          onClick={() => applyPreset(preset)}
+                        >
+                          {isActive ? (
+                            <>
+                              <CheckCircle2 className="h-4 w-4 mr-2" />
+                              Applied
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="h-4 w-4 mr-2" />
+                              Apply Preset
+                            </>
+                          )}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+
+              {selectedPreset && (
+                <Alert className="mt-4">
+                  <Info className="h-4 w-4" />
+                  <AlertTitle>Preset Applied</AlertTitle>
+                  <AlertDescription>
+                    The {selectedPreset.name} preset has been loaded into test values. 
+                    Scroll down to review the changes. To persist these settings, update your .env file with the new values.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
 
           <Tabs defaultValue="cache" className="space-y-6">
             <TabsList className="grid w-full grid-cols-5">
