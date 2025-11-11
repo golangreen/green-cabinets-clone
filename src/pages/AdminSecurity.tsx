@@ -9,6 +9,8 @@ import { ExpiringRolesWidget } from '@/components/admin/ExpiringRolesWidget';
 import { RoleExpirationTestPanel } from '@/components/admin/RoleExpirationTestPanel';
 import { CronJobsManager } from '@/components/admin/CronJobsManager';
 import { EmailDeliveryStats } from '@/components/admin/EmailDeliveryStats';
+import { WebhookSecurityStats } from '@/components/admin/WebhookSecurityStats';
+import { RateLimitingStats } from '@/components/admin/RateLimitingStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Activity, Ban, Bell, Settings } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -93,13 +95,25 @@ const AdminSecurity = () => {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
+            {/* Webhook & Rate Limiting Security */}
+            <div className="grid gap-6 lg:grid-cols-2">
+              <WebhookSecurityStats />
+              <RateLimitingStats />
+            </div>
+
+            {/* Role Management */}
             <div className="grid gap-6 md:grid-cols-2">
               <ExpiringRolesWidget />
               <RoleExpirationTestPanel />
             </div>
+
+            {/* Email Delivery */}
             <EmailDeliveryStats />
+
+            {/* Security Charts */}
             <SecurityCharts />
             
+            {/* Recent Activity */}
             <div className="grid gap-6 md:grid-cols-2">
               <Card>
                 <CardHeader>
