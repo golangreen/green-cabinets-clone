@@ -8,6 +8,7 @@ import { SecurityAlertSettings } from '@/components/admin/SecurityAlertSettings'
 import { ExpiringRolesWidget } from '@/components/admin/ExpiringRolesWidget';
 import { RoleExpirationTestPanel } from '@/components/admin/RoleExpirationTestPanel';
 import { CronJobsManager } from '@/components/admin/CronJobsManager';
+import { EmailDeliveryStats } from '@/components/admin/EmailDeliveryStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Activity, Ban, Bell, Settings } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -96,6 +97,7 @@ const AdminSecurity = () => {
               <ExpiringRolesWidget />
               <RoleExpirationTestPanel />
             </div>
+            <EmailDeliveryStats />
             <SecurityCharts />
             
             <div className="grid gap-6 md:grid-cols-2">

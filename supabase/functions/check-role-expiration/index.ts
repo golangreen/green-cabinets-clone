@@ -87,6 +87,21 @@ const handler = async (req: Request): Promise<Response> => {
           });
 
           if (emailResponse.ok) {
+            const emailData = await emailResponse.json();
+            const emailId = emailData.id;
+
+            // Log email delivery
+            await supabase.from('email_delivery_log').insert({
+              email_id: emailId,
+              recipient_email: role.user_email,
+              email_type: '3day',
+              subject: `⏰ Your ${role.role} role expires in ${daysRemaining} days`,
+              status: 'sent',
+              user_id: role.user_id,
+              role: role.role,
+              event_data: { days_remaining: daysRemaining }
+            });
+
             // Mark 3-day reminder as sent
             await supabase.rpc('mark_3day_reminder_sent', {
               target_user_id: role.user_id,
@@ -96,7 +111,8 @@ const handler = async (req: Request): Promise<Response> => {
             logger.info('Sent 3-day expiration reminder', { 
               email: role.user_email, 
               role: role.role,
-              days_remaining: daysRemaining
+              days_remaining: daysRemaining,
+              emailId
             });
           } else {
             const errorText = await emailResponse.text();
@@ -172,6 +188,21 @@ const handler = async (req: Request): Promise<Response> => {
           });
 
           if (emailResponse.ok) {
+            const emailData = await emailResponse.json();
+            const emailId = emailData.id;
+
+            // Log email delivery
+            await supabase.from('email_delivery_log').insert({
+              email_id: emailId,
+              recipient_email: role.user_email,
+              email_type: '1day',
+              subject: `🚨 FINAL REMINDER: Your ${role.role} role expires in ${hoursRemaining} hours`,
+              status: 'sent',
+              user_id: role.user_id,
+              role: role.role,
+              event_data: { hours_remaining: hoursRemaining }
+            });
+
             // Mark 1-day reminder as sent
             await supabase.rpc('mark_reminder_sent', {
               target_user_id: role.user_id,
@@ -181,7 +212,8 @@ const handler = async (req: Request): Promise<Response> => {
             logger.info('Sent 1-day expiration reminder', { 
               email: role.user_email, 
               role: role.role,
-              hours_remaining: hoursRemaining
+              hours_remaining: hoursRemaining,
+              emailId
             });
           } else {
             const errorText = await emailResponse.text();
@@ -233,7 +265,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
           `;
 
-          await fetch('https://api.resend.com/emails', {
+          const emailResponse = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -247,10 +279,28 @@ const handler = async (req: Request): Promise<Response> => {
             }),
           });
 
-          logger.info('Sent expiration notification', { 
-            email: role.user_email, 
-            role: role.role 
-          });
+          if (emailResponse.ok) {
+            const emailData = await emailResponse.json();
+            const emailId = emailData.id;
+
+            // Log email delivery
+            await supabase.from('email_delivery_log').insert({
+              email_id: emailId,
+              recipient_email: role.user_email,
+              email_type: 'expired',
+              subject: `Your ${role.role} role has expired`,
+              status: 'sent',
+              user_id: role.user_id,
+              role: role.role,
+              event_data: { expired_at: role.expires_at }
+            });
+
+            logger.info('Sent expiration notification', { 
+              email: role.user_email, 
+              role: role.role,
+              emailId
+            });
+          }
         } catch (emailError) {
           logger.error('Error sending expiration email', emailError);
         }
