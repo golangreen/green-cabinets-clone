@@ -25,7 +25,7 @@ export {
   type PricingCalculation
 } from './vanityPricingService';
 
-// Cabinet catalog service exports
+// Cabinet catalog service exports (re-exported from feature module)
 export {
   searchCabinets,
   getCabinetByCode,
@@ -47,7 +47,7 @@ export {
   getRecommendedCabinets,
   calculateProjectTotal,
   validateCabinetConfig,
-  formatPrice as formatCabinetPrice,
+  formatCabinetPrice,
   getCatalogData
-} from './cabinetCatalogService';
+} from '@/features/cabinet-catalog';
 

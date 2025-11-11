@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { ShoppingCart, Search, X } from "lucide-react";
 import { useCartStore } from "@/features/shopping-cart";
-import { useProductCacheStore } from "@/stores/productCacheStore";
+import { useProductCacheStore } from "@/features/product-catalog/stores/productCacheStore";
 import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";

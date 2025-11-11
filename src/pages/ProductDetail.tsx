@@ -7,7 +7,7 @@ import { VanityDesignerApp } from "@/features/vanity-designer";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
-import { useProductCacheStore } from "@/stores/productCacheStore";
+import { useProductCacheStore } from "@/features/product-catalog";
 
 // Mock product for fallback
 const mockVanityProduct: ShopifyProduct = {

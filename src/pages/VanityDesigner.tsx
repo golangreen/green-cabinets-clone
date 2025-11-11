@@ -45,7 +45,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
-import { CABINET_CATALOG, calculateCabinetPrice, formatPrice, MATERIAL_FINISHES, HARDWARE_OPTIONS, DOOR_STYLES, type CabinetSpec } from "@/lib/cabinetCatalog";
+import { CABINET_CATALOG, calculateCabinetPrice, formatCabinetPrice, MATERIAL_FINISHES, HARDWARE_OPTIONS, DOOR_STYLES, type CabinetSpec } from "@/features/cabinet-catalog";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -65,7 +65,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { CabinetWizard } from "@/components/CabinetWizard";
+import { CabinetWizard } from "@/features/cabinet-catalog";
 import { useRoomTemplates } from "@/features/room-scanner";
 
 interface Cabinet {
@@ -623,7 +623,7 @@ const VanityDesigner = () => {
     };
     setCabinets([...cabinets, newCabinet]);
     setSelectedCabinetId(newCabinet.id);
-    toast.success(`${template.description} added - ${formatPrice(price)}`);
+    toast.success(`${template.description} added - ${formatCabinetPrice(price)}`);
   }, [cabinets, snapToGrid]);
 
   // Handle wizard completion
@@ -684,7 +684,7 @@ const VanityDesigner = () => {
     
     setCabinets([...cabinets, newCabinet]);
     setSelectedCabinetId(newCabinet.id);
-    toast.success(`${template.description} added - ${formatPrice(price)}`);
+    toast.success(`${template.description} added - ${formatCabinetPrice(price)}`);
   }, [cabinets]);
 
   // Apply global design settings to all cabinets
@@ -2918,7 +2918,7 @@ const VanityDesigner = () => {
                             {cabinet.price && (
                               <div className="pt-2 border-t text-xs">
                                 <span className="font-medium">Estimated Price: </span>
-                                <span className="text-primary font-semibold">{formatPrice(cabinet.price)}</span>
+                                <span className="text-primary font-semibold">{formatCabinetPrice(cabinet.price)}</span>
                               </div>
                             )}
                             

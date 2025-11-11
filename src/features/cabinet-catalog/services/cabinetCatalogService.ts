@@ -13,7 +13,7 @@ import {
   MaterialFinish,
   calculateCabinetPrice as libCalculateCabinetPrice,
   formatPrice as libFormatPrice
-} from '@/lib/cabinetCatalog';
+} from '../data/cabinetCatalog';
 
 export interface CabinetSearchFilters {
   type?: string;
