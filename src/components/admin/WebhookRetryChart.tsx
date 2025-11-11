@@ -133,9 +133,26 @@ export function WebhookRetryChart() {
   useEffect(() => {
     fetchRetryHistory();
     
-    // Auto-refresh every 5 minutes
-    const interval = setInterval(fetchRetryHistory, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('webhook-events-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'webhook_events'
+        },
+        () => {
+          console.log('New webhook event detected, refreshing chart...');
+          fetchRetryHistory();
+        }
+      )
+      .subscribe();
+    
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return (

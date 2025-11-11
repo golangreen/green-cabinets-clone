@@ -1,9 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Copy, CheckCircle2, Clock } from 'lucide-react';
 import { format } from 'date-fns';
+import { useEffect } from 'react';
 
 interface WebhookEvent {
   id: string;
@@ -15,6 +16,8 @@ interface WebhookEvent {
 }
 
 export function WebhookDeduplicationStats() {
+  const queryClient = useQueryClient();
+
   // Get webhook events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
     queryKey: ['webhook-deduplication-stats'],
@@ -55,8 +58,31 @@ export function WebhookDeduplicationStats() {
   const totalProcessed = webhookEvents?.length || 0;
   const uniqueIPs = new Set(webhookEvents?.map(e => e.client_ip)).size;
   
-  // Calculate time distribution
   const recentEvents = webhookEvents?.slice(0, 10) || [];
+
+  // Subscribe to realtime changes
+  useEffect(() => {
+    const channel = supabase
+      .channel('webhook-dedup-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'webhook_events'
+        },
+        () => {
+          console.log('New webhook event detected, refreshing deduplication stats...');
+          queryClient.invalidateQueries({ queryKey: ['webhook-deduplication-stats'] });
+          queryClient.invalidateQueries({ queryKey: ['webhook-duplicates'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   return (
     <Card>

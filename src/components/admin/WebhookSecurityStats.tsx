@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Webhook, AlertTriangle, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { format } from 'date-fns';
+import { useEffect } from 'react';
 
 interface WebhookEvent {
   id: string;
@@ -21,6 +22,8 @@ interface WebhookEvent {
 }
 
 export function WebhookSecurityStats() {
+  const queryClient = useQueryClient();
+
   // Get webhook-related security events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
     queryKey: ['webhook-security-events'],
