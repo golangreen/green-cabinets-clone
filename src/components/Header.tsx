@@ -11,6 +11,7 @@ import { ChevronDown, Menu, Download } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/components/CartDrawer";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { InstallPWADialog } from "@/components/InstallPWADialog";
 import { ROUTES } from "@/constants/routes";
@@ -214,6 +215,7 @@ const Header = () => {
               </Button>
             )}
 
+            <ThemeToggle />
             <CartDrawer />
 
             {/* Mobile Menu */}
@@ -225,6 +227,10 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display">
                 <div className="flex flex-col gap-6 mt-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold">Theme</h3>
+                    <ThemeToggle />
+                  </div>
                   <div className="flex flex-col gap-2">
                     <h3 className="font-semibold mb-2">Catalog</h3>
                     <Button 
