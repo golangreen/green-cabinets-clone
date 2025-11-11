@@ -153,6 +153,38 @@ const Header = () => {
             <a href="#solutions" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
               Solutions
             </a>
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger className="text-black hover:text-black/70 transition-colors flex items-center gap-1 outline-none text-xl font-semibold">
+                Documentation
+                <ChevronDown className="h-5 w-5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-background border-border z-50">
+                <DropdownMenuItem 
+                  onClick={() => window.location.href = '/docs/auth'}
+                  className="cursor-pointer"
+                >
+                  Authentication Guide
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  disabled
+                  className="cursor-not-allowed opacity-50"
+                >
+                  API Reference (Coming Soon)
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  disabled
+                  className="cursor-not-allowed opacity-50"
+                >
+                  Developer Guide (Coming Soon)
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  disabled
+                  className="cursor-not-allowed opacity-50"
+                >
+                  Troubleshooting (Coming Soon)
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <a href="#about" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
               About
             </a>
@@ -240,6 +272,40 @@ const Header = () => {
                   >
                     Solutions
                   </a>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-semibold mb-2">Documentation</h3>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start" 
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        window.location.href = '/docs/auth';
+                      }}
+                    >
+                      Authentication Guide
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start opacity-50" 
+                      disabled
+                    >
+                      API Reference (Coming Soon)
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start opacity-50" 
+                      disabled
+                    >
+                      Developer Guide (Coming Soon)
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start opacity-50" 
+                      disabled
+                    >
+                      Troubleshooting (Coming Soon)
+                    </Button>
+                  </div>
                   <a 
                     href="#about" 
                     className="text-black hover:text-black/70 transition-colors px-2 text-xl font-semibold"
