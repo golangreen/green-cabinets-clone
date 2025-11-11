@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import logoTeal from "@/assets/logo-teal.svg";
 import { Button } from "@/components/ui/button";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import { HistoryTimeline } from "@/components/marketing";
@@ -2033,13 +2034,9 @@ const VanityDesigner = () => {
             className="h-10 md:h-12 px-3 flex-shrink-0 hover:opacity-90 transition-opacity flex items-center bg-black"
           >
             <img 
-              src="/logo.png" 
+              src={logoTeal} 
               alt="Green Cabinets" 
-              className="h-8 md:h-10 w-auto object-cover"
-              style={{ 
-                filter: 'drop-shadow(0 0 0 #000)',
-                clipPath: 'inset(5% 5% 5% 5%)'
-              }}
+              className="h-8 md:h-10 w-auto object-contain"
             />
           </button>
           
