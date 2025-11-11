@@ -51,5 +51,3 @@ export {
   getCatalogData
 } from './cabinetCatalogService';
 
-// Quote service exports
-export * from './quoteService';

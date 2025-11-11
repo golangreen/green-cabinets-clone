@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ShoppingCart, Search, X } from "lucide-react";
-import { useCartStore } from "@/stores/cartStore";
+import { useCartStore } from "@/features/shopping-cart";
 import { useProductCacheStore } from "@/stores/productCacheStore";
 import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "sonner";

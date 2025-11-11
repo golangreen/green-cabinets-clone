@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
-import { useCartStore } from "@/stores/cartStore";
+import { useCartStore } from "@/features/shopping-cart";
 import { ROUTES } from "@/constants/routes";
 
 export default function PaymentSuccess() {

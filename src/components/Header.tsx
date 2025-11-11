@@ -12,7 +12,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
-import { CartDrawer } from "@/components/CartDrawer";
+import { CartDrawer } from "@/features/shopping-cart";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";

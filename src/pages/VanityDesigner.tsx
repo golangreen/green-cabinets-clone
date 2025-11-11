@@ -66,7 +66,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { CabinetWizard } from "@/components/CabinetWizard";
-import { useRoomTemplates } from "@/hooks/useRoomTemplates";
+import { useRoomTemplates } from "@/features/room-scanner";
 
 interface Cabinet {
   id: number;

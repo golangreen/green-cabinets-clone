@@ -6,7 +6,7 @@ import About from "@/components/About";
 import Gallery from "@/components/Gallery";
 import Suppliers from "@/components/Suppliers";
 import { ShopProducts } from "@/components/ShopProducts";
-import Contact from "@/components/Contact";
+import { Contact } from "@/features/quote-request";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";

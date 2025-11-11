@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useCartStore } from "@/stores/cartStore";
+import { useCartStore } from "@/features/shopping-cart";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
