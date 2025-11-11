@@ -8,7 +8,7 @@ import tafisaLogo from "@/assets/logos/tafisa-logo.png";
 import richelieuLogo from "@/assets/logos/richelieu-logo.png";
 import shinnokiLogo from "@/assets/logos/shinnoki-logo.png";
 import wilsonartLogo from "@/assets/logos/wilsonart-logo.png";
-import greenCabinetsLogo from "@/assets/logos/green-cabinets-logo.jpg";
+import greenCabinetsLogo from "@/assets/logo-teal.svg";
 import eggerLogo from "@/assets/logos/egger-logo.png";
 
 interface Supplier {
