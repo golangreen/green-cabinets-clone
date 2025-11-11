@@ -5,7 +5,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Webhook, AlertTriangle, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { format } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { LiveStatusIndicator } from './LiveStatusIndicator';
 
 interface WebhookEvent {
   id: string;
@@ -23,6 +24,7 @@ interface WebhookEvent {
 
 export function WebhookSecurityStats() {
   const queryClient = useQueryClient();
+  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
 
   // Get webhook-related security events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
@@ -102,9 +104,12 @@ export function WebhookSecurityStats() {
           queryClient.invalidateQueries({ queryKey: ['webhook-security-events'] });
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        setIsRealtimeConnected(status === 'SUBSCRIBED');
+      });
 
     return () => {
+      setIsRealtimeConnected(false);
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
@@ -117,9 +122,12 @@ export function WebhookSecurityStats() {
             <Webhook className="h-5 w-5 text-primary" />
             <CardTitle>Webhook Security Monitor</CardTitle>
           </div>
-          <Badge variant={Number(successRate) > 95 ? "default" : "destructive"}>
-            {successRate}% Success Rate
-          </Badge>
+          <div className="flex items-center gap-2">
+            <LiveStatusIndicator isConnected={isRealtimeConnected} />
+            <Badge variant={Number(successRate) > 95 ? "default" : "destructive"}>
+              {successRate}% Success Rate
+            </Badge>
+          </div>
         </div>
         <CardDescription>
           Real-time webhook validation statistics (Last 24 hours)

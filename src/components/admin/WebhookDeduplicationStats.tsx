@@ -2,9 +2,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Copy, CheckCircle2, Clock } from 'lucide-react';
+import { Shield, CheckCircle2, Clock } from 'lucide-react';
 import { format } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { LiveStatusIndicator } from './LiveStatusIndicator';
 
 interface WebhookEvent {
   id: string;
@@ -17,6 +18,7 @@ interface WebhookEvent {
 
 export function WebhookDeduplicationStats() {
   const queryClient = useQueryClient();
+  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
 
   // Get webhook events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
@@ -77,9 +79,12 @@ export function WebhookDeduplicationStats() {
           queryClient.invalidateQueries({ queryKey: ['webhook-duplicates'] });
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        setIsRealtimeConnected(status === 'SUBSCRIBED');
+      });
 
     return () => {
+      setIsRealtimeConnected(false);
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
@@ -89,16 +94,21 @@ export function WebhookDeduplicationStats() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Copy className="h-5 w-5 text-primary" />
-            <CardTitle>Webhook Deduplication</CardTitle>
+            <Shield className="h-5 w-5 text-primary" />
+            <div>
+              <CardTitle>Webhook Deduplication</CardTitle>
+              <CardDescription>
+                Preventing duplicate webhook processing (Last 24 hours)
+              </CardDescription>
+            </div>
           </div>
-          <Badge variant="default">
-            {totalProcessed} Tracked
-          </Badge>
+          <div className="flex items-center gap-2">
+            <LiveStatusIndicator isConnected={isRealtimeConnected} />
+            <Badge variant="default">
+              {totalProcessed} Tracked
+            </Badge>
+          </div>
         </div>
-        <CardDescription>
-          Preventing duplicate webhook processing (Last 24 hours)
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Key Metrics */}
@@ -112,7 +122,7 @@ export function WebhookDeduplicationStats() {
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Copy className="h-4 w-4" />
+              <Shield className="h-4 w-4" />
               <span>Unique IPs</span>
             </div>
             <p className="text-2xl font-bold">{uniqueIPs}</p>
@@ -188,7 +198,7 @@ export function WebhookDeduplicationStats() {
 
         {!isLoading && totalProcessed === 0 && (
           <div className="text-center py-8">
-            <Copy className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
+            <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">
               No webhook events tracked yet
             </p>

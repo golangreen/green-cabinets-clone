@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { RefreshCw, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { LiveStatusIndicator } from './LiveStatusIndicator';
 
 interface RetryData {
   date: string;
@@ -16,6 +17,7 @@ interface RetryData {
 export function WebhookRetryChart() {
   const [data, setData] = useState<RetryData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
 
   const fetchRetryHistory = async () => {
     setLoading(true);
@@ -148,9 +150,12 @@ export function WebhookRetryChart() {
           fetchRetryHistory();
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        setIsRealtimeConnected(status === 'SUBSCRIBED');
+      });
     
     return () => {
+      setIsRealtimeConnected(false);
       supabase.removeChannel(channel);
     };
   }, []);
@@ -162,7 +167,8 @@ export function WebhookRetryChart() {
           <CardTitle>Webhook Retry History</CardTitle>
           <CardDescription>Retry patterns over the last 7 days</CardDescription>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <LiveStatusIndicator isConnected={isRealtimeConnected} />
           <Button 
             variant="outline" 
             size="icon"

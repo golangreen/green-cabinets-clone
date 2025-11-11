@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Activity, TrendingUp, Users, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { LiveStatusIndicator } from './LiveStatusIndicator';
 
 interface RateLimitEvent {
   id: string;
@@ -19,6 +20,7 @@ interface RateLimitEvent {
 
 export function RateLimitingStats() {
   const queryClient = useQueryClient();
+  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
 
   // Get rate limit events from the last 24 hours
   const { data: rateLimitEvents, isLoading } = useQuery({
@@ -95,9 +97,12 @@ export function RateLimitingStats() {
           queryClient.invalidateQueries({ queryKey: ['rate-limit-events'] });
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        setIsRealtimeConnected(status === 'SUBSCRIBED');
+      });
 
     return () => {
+      setIsRealtimeConnected(false);
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
@@ -108,15 +113,20 @@ export function RateLimitingStats() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Activity className="h-5 w-5 text-primary" />
-            <CardTitle>Rate Limiting Monitor</CardTitle>
+            <div>
+              <CardTitle>Rate Limiting Monitor</CardTitle>
+              <CardDescription>
+                Rate limit violations across all endpoints (Last 24 hours)
+              </CardDescription>
+            </div>
           </div>
-          <Badge variant={totalEvents > 50 ? "destructive" : totalEvents > 10 ? "secondary" : "default"}>
-            {totalEvents} Events
-          </Badge>
+          <div className="flex items-center gap-2">
+            <LiveStatusIndicator isConnected={isRealtimeConnected} />
+            <Badge variant={totalEvents > 50 ? "destructive" : totalEvents > 10 ? "secondary" : "default"}>
+              {totalEvents} Events
+            </Badge>
+          </div>
         </div>
-        <CardDescription>
-          Rate limit violations across all endpoints (Last 24 hours)
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Key Metrics */}
