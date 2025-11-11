@@ -176,15 +176,15 @@ a[href^="#"], button {
   .bg-geometric-pattern-subtle {
     background-color: #ffffff;
     background-image: 
-      linear-gradient(23deg, transparent 48%, #e5e7eb 48%, #e5e7eb 50%, transparent 50%),
-      linear-gradient(67deg, transparent 47%, #d1d5db 47%, #d1d5db 49%, transparent 49%),
-      linear-gradient(145deg, transparent 49%, #f3f4f6 49%, #f3f4f6 51%, transparent 51%),
-      linear-gradient(-34deg, transparent 48.5%, #cbd5e1 48.5%, #cbd5e1 51.5%, transparent 51.5%),
-      linear-gradient(112deg, transparent 49.5%, #e5e7eb 49.5%, #e5e7eb 50.5%, transparent 50.5%),
-      linear-gradient(-78deg, transparent 48%, #d1d5db 48%, #d1d5db 52%, transparent 52%),
-      linear-gradient(156deg, transparent 49%, #f3f4f6 49%, #f3f4f6 50%, transparent 50%),
-      linear-gradient(45deg, transparent 49.2%, #cbd5e1 49.2%, #cbd5e1 50.8%, transparent 50.8%),
-      linear-gradient(-123deg, transparent 48.5%, #e5e7eb 48.5%, #e5e7eb 51%, transparent 51%);
+      linear-gradient(23deg, transparent 47%, #94a3b8 47%, #94a3b8 53%, transparent 53%),
+      linear-gradient(67deg, transparent 46%, #64748b 46%, #64748b 54%, transparent 54%),
+      linear-gradient(145deg, transparent 48%, #cbd5e1 48%, #cbd5e1 52%, transparent 52%),
+      linear-gradient(-34deg, transparent 47%, #94a3b8 47%, #94a3b8 53%, transparent 53%),
+      linear-gradient(112deg, transparent 48.5%, #64748b 48.5%, #64748b 51.5%, transparent 51.5%),
+      linear-gradient(-78deg, transparent 46%, #94a3b8 46%, #94a3b8 54%, transparent 54%),
+      linear-gradient(156deg, transparent 48%, #cbd5e1 48%, #cbd5e1 52%, transparent 52%),
+      linear-gradient(45deg, transparent 47.5%, #64748b 47.5%, #64748b 52.5%, transparent 52.5%),
+      linear-gradient(-123deg, transparent 47%, #94a3b8 47%, #94a3b8 53%, transparent 53%);
     background-size: 180px 280px, 220px 350px, 160px 240px, 200px 310px, 190px 290px, 210px 330px, 170px 260px, 195px 300px, 185px 270px;
     background-position: 0 0, 60px 40px, 120px 80px, 180px 120px, 240px 160px, 30px 200px, 90px 240px, 150px 280px, 210px 320px;
   }
