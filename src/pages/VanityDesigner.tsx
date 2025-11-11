@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LoadingState } from "@/components/layout";
+import { LoadingState, FeatureErrorBoundary } from "@/components/layout";
 import { 
   Plus,
   Trash2,
@@ -4248,4 +4248,19 @@ const VanityDesigner = () => {
   );
 };
 
-export default VanityDesigner;
+// Wrap with feature error boundary
+const VanityDesignerWithErrorBoundary = () => (
+  <FeatureErrorBoundary
+    featureName="Vanity Designer"
+    featureTag="vanity-designer"
+    fallbackRoute={ROUTES.HOME}
+    onReset={() => {
+      // Clear any designer state if needed
+      sessionStorage.removeItem('current_scan');
+    }}
+  >
+    <VanityDesigner />
+  </FeatureErrorBoundary>
+);
+
+export default VanityDesignerWithErrorBoundary;
