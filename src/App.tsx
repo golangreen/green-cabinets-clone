@@ -26,6 +26,7 @@ import DocsAuth from "./pages/DocsAuth";
 import DocsGettingStarted from "./pages/DocsGettingStarted";
 import DocsAPI from "./pages/DocsAPI";
 import DocsTroubleshooting from "./pages/DocsTroubleshooting";
+import DocsSecurity from "./pages/DocsSecurity";
 import NotFound from "./pages/NotFound";
 import { SplashScreen } from "@/components/layout";
 
@@ -132,6 +133,7 @@ const App = () => {
                 <Route path="/docs/auth" element={<DocsAuth />} />
                 <Route path="/docs/getting-started" element={<DocsGettingStarted />} />
                 <Route path="/docs/api" element={<DocsAPI />} />
+                <Route path="/docs/security" element={<DocsSecurity />} />
                 <Route path="/docs/troubleshooting" element={<DocsTroubleshooting />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

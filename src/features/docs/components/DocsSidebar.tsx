@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { Search, BookOpen, Lock, Code, AlertCircle } from "lucide-react";
+import { Search, BookOpen, Lock, Code, AlertCircle, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
 
@@ -30,6 +30,12 @@ const docSections: DocSection[] = [
     path: ROUTES.DOCS_API,
     icon: Code,
     keywords: ["api", "edge", "function", "endpoint", "webhook", "checkout", "security"],
+  },
+  {
+    title: "Security",
+    path: "/docs/security",
+    icon: Shield,
+    keywords: ["security", "rls", "policy", "auth", "role", "permission", "ip", "block", "webhook", "encryption"],
   },
   {
     title: "Troubleshooting",
