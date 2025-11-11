@@ -12,6 +12,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import VanityDesigner from "./pages/VanityDesigner";
 import AdminSecurity from "./pages/AdminSecurity";
 import RoomScan from "./pages/RoomScan";
+import DocsAuth from "./pages/DocsAuth";
 import NotFound from "./pages/NotFound";
 import SplashScreen from "./components/SplashScreen";
 
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/designer" element={<VanityDesigner />} />
             <Route path="/admin/security" element={<AdminSecurity />} />
             <Route path="/room-scan" element={<RoomScan />} />
+            <Route path="/docs/auth" element={<DocsAuth />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
