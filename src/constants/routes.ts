@@ -2,33 +2,55 @@
  * Centralized route definitions
  * Import and use these constants instead of hardcoded strings
  */
+import { ADMIN_SECURITY_ROUTES } from '@/features/admin-security/constants/routes';
+import { ADMIN_USERS_ROUTES } from '@/features/admin-users/constants/routes';
+import { ADMIN_AUDIT_ROUTES } from '@/features/admin-audit/constants/routes';
+import { VANITY_DESIGNER_ROUTES } from '@/features/vanity-designer/constants/routes';
+import { ROOM_SCANNER_ROUTES } from '@/features/room-scanner/constants/routes';
+import { PRODUCT_CATALOG_ROUTES } from '@/features/product-catalog/constants/routes';
 
-export const ROUTES = {
-  // Main pages
+/**
+ * Core application routes
+ */
+export const CORE_ROUTES = {
   HOME: '/',
   AUTH: '/auth',
   NOT_FOUND: '/404',
   PROFILE: '/profile',
-  
-  // Designer tools
-  VANITY_DESIGNER: '/designer',
-  ROOM_SCAN: '/room-scan',
+} as const;
+
+/**
+ * Documentation routes
+ */
+export const DOCS_ROUTES = {
+  GETTING_STARTED: '/docs/getting-started',
+  AUTH: '/docs/auth',
+  API: '/docs/api',
+  TROUBLESHOOTING: '/docs/troubleshooting',
+} as const;
+
+/**
+ * All routes (backward compatibility)
+ */
+export const ROUTES = {
+  // Core routes
+  ...CORE_ROUTES,
   
   // Documentation
-  DOCS_GETTING_STARTED: '/docs/getting-started',
-  DOCS_AUTH: '/docs/auth',
-  DOCS_API: '/docs/api',
-  DOCS_TROUBLESHOOTING: '/docs/troubleshooting',
+  DOCS_GETTING_STARTED: DOCS_ROUTES.GETTING_STARTED,
+  DOCS_AUTH: DOCS_ROUTES.AUTH,
+  DOCS_API: DOCS_ROUTES.API,
+  DOCS_TROUBLESHOOTING: DOCS_ROUTES.TROUBLESHOOTING,
   
-  // Admin
-  ADMIN_SECURITY: '/admin-security',
-  ADMIN_USERS: '/admin/users',
-  ADMIN_AUDIT_LOG: '/admin/audit-log',
-  
-  // Commerce
-  CHECKOUT: '/checkout',
-  PAYMENT_SUCCESS: '/payment-success',
-  PRODUCT_DETAIL: (productId: string) => `/product/${productId}`,
+  // Feature routes
+  VANITY_DESIGNER: VANITY_DESIGNER_ROUTES.DESIGNER,
+  ROOM_SCAN: ROOM_SCANNER_ROUTES.SCAN,
+  ADMIN_SECURITY: ADMIN_SECURITY_ROUTES.DASHBOARD,
+  ADMIN_USERS: ADMIN_USERS_ROUTES.DASHBOARD,
+  ADMIN_AUDIT_LOG: ADMIN_AUDIT_ROUTES.DASHBOARD,
+  CHECKOUT: PRODUCT_CATALOG_ROUTES.CHECKOUT,
+  PAYMENT_SUCCESS: PRODUCT_CATALOG_ROUTES.PAYMENT_SUCCESS,
+  PRODUCT_DETAIL: PRODUCT_CATALOG_ROUTES.PRODUCT_DETAIL,
 } as const;
 
 /**
@@ -60,9 +82,19 @@ export function isAdminRoute(path: string): boolean {
  */
 export function getDocsRoutes() {
   return [
-    { path: ROUTES.DOCS_GETTING_STARTED, label: 'Getting Started' },
-    { path: ROUTES.DOCS_AUTH, label: 'Authentication' },
-    { path: ROUTES.DOCS_API, label: 'API Reference' },
-    { path: ROUTES.DOCS_TROUBLESHOOTING, label: 'Troubleshooting' },
+    { path: DOCS_ROUTES.GETTING_STARTED, label: 'Getting Started' },
+    { path: DOCS_ROUTES.AUTH, label: 'Authentication' },
+    { path: DOCS_ROUTES.API, label: 'API Reference' },
+    { path: DOCS_ROUTES.TROUBLESHOOTING, label: 'Troubleshooting' },
   ];
 }
+
+// Re-export feature-specific routes for direct access
+export { 
+  ADMIN_SECURITY_ROUTES,
+  ADMIN_USERS_ROUTES,
+  ADMIN_AUDIT_ROUTES,
+  VANITY_DESIGNER_ROUTES,
+  ROOM_SCANNER_ROUTES,
+  PRODUCT_CATALOG_ROUTES,
+};
