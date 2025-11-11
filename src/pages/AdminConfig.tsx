@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,9 +9,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Header, Footer } from '@/components/layout';
 import { AdminRoute } from '@/components/auth';
-import { Settings, Clock, Shield, Zap, Smartphone, Info, CheckCircle2, AlertTriangle, RefreshCw, Sparkles, Download, Upload } from 'lucide-react';
+import { Settings, Clock, Shield, Zap, Smartphone, Info, CheckCircle2, AlertTriangle, RefreshCw, Sparkles, Download, Upload, History, FileText } from 'lucide-react';
 import { CACHE_CONFIG, SECURITY_CONFIG, PERFORMANCE_CONFIG, PWA_CONFIG, APP_CONFIG, CONFIG_PRESETS, compareWithPreset, type ConfigPreset } from '@/config';
 import { toast } from 'sonner';
+import { fetchConfigAuditLogs, logConfigChange } from '@/services';
+import { ConfigChangeAudit } from '@/types/config';
+import { formatDistanceToNow } from 'date-fns';
 
 interface ConfigValue {
   key: string;
@@ -24,7 +27,26 @@ interface ConfigValue {
 const AdminConfig = () => {
   const [testValues, setTestValues] = useState<Record<string, any>>({});
   const [selectedPreset, setSelectedPreset] = useState<ConfigPreset | null>(null);
+  const [auditLogs, setAuditLogs] = useState<ConfigChangeAudit[]>([]);
+  const [isLoadingLogs, setIsLoadingLogs] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch audit logs on mount
+  useEffect(() => {
+    loadAuditLogs();
+  }, []);
+
+  const loadAuditLogs = async () => {
+    setIsLoadingLogs(true);
+    try {
+      const logs = await fetchConfigAuditLogs(50);
+      setAuditLogs(logs);
+    } catch (error) {
+      toast.error('Failed to load audit logs');
+    } finally {
+      setIsLoadingLogs(false);
+    }
+  };
 
   // Cache configuration
   const cacheConfig: ConfigValue[] = [
@@ -198,11 +220,33 @@ const AdminConfig = () => {
     setTestValues({ ...testValues, [key]: value });
   };
 
-  const simulateConfig = (key: string) => {
+  const simulateConfig = async (key: string) => {
     const testValue = testValues[key];
     if (!testValue) {
       toast.error('Please enter a test value');
       return;
+    }
+
+    // Get current value
+    const config = [...cacheConfig, ...securityConfig, ...performanceConfig].find(
+      (c) => c.key === key
+    );
+    const oldValue = config?.value?.toString() || null;
+
+    // Log the change
+    try {
+      await logConfigChange({
+        configKey: key,
+        oldValue,
+        newValue: testValue.toString(),
+        changeType: 'test',
+      });
+      
+      // Reload audit logs
+      loadAuditLogs();
+    } catch (error) {
+      // Don't block the test simulation if logging fails
+      console.error('Failed to log config change:', error);
     }
 
     toast.success(`Test simulation for ${key}`, {
@@ -217,11 +261,31 @@ const AdminConfig = () => {
     toast.info(`Reset test value for ${key}`);
   };
 
-  const applyPreset = (preset: ConfigPreset) => {
+  const applyPreset = async (preset: ConfigPreset) => {
     // Apply all preset values to test values
     const newTestValues = { ...preset.values };
     setTestValues(newTestValues);
     setSelectedPreset(preset);
+    
+    // Log all preset changes
+    try {
+      const currentValues = getCurrentValues();
+      const logPromises = Object.entries(preset.values).map(([key, value]) => 
+        logConfigChange({
+          configKey: key,
+          oldValue: currentValues[key]?.toString() || null,
+          newValue: value.toString(),
+          changeType: 'preset_applied',
+          presetName: preset.name,
+        })
+      );
+      await Promise.all(logPromises);
+      
+      // Reload audit logs
+      loadAuditLogs();
+    } catch (error) {
+      console.error('Failed to log preset changes:', error);
+    }
     
     toast.success(`Applied ${preset.name} preset`, {
       description: `${Object.keys(preset.values).length} configuration values loaded`,
@@ -261,12 +325,12 @@ const AdminConfig = () => {
     });
   };
 
-  const importConfig = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const importConfig = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const content = e.target?.result as string;
         const importData = JSON.parse(content);
@@ -300,6 +364,25 @@ const AdminConfig = () => {
 
         setTestValues(validValues);
         setSelectedPreset(null);
+
+        // Log all imported changes
+        try {
+          const currentValues = getCurrentValues();
+          const logPromises = Object.entries(validValues).map(([key, value]) => 
+            logConfigChange({
+              configKey: key,
+              oldValue: currentValues[key]?.toString() || null,
+              newValue: value.toString(),
+              changeType: 'import',
+            })
+          );
+          await Promise.all(logPromises);
+          
+          // Reload audit logs
+          loadAuditLogs();
+        } catch (error) {
+          console.error('Failed to log import changes:', error);
+        }
 
         toast.success('Configuration imported', {
           description: `Loaded ${Object.keys(validValues).length} configuration values`,
@@ -517,7 +600,7 @@ const AdminConfig = () => {
           </Card>
 
           <Tabs defaultValue="cache" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="cache">
                 <Clock className="h-4 w-4 mr-2" />
                 Cache
@@ -537,6 +620,10 @@ const AdminConfig = () => {
               <TabsTrigger value="app">
                 <Settings className="h-4 w-4 mr-2" />
                 App
+              </TabsTrigger>
+              <TabsTrigger value="audit">
+                <History className="h-4 w-4 mr-2" />
+                Audit Log
               </TabsTrigger>
             </TabsList>
 
@@ -578,6 +665,80 @@ const AdminConfig = () => {
                 <Settings className="h-5 w-5 text-primary" />,
                 appConfig
               )}
+            </TabsContent>
+
+            <TabsContent value="audit" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <History className="h-5 w-5 text-primary" />
+                      <CardTitle>Configuration Audit Log</CardTitle>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={loadAuditLogs} disabled={isLoadingLogs}>
+                      <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingLogs ? 'animate-spin' : ''}`} />
+                      Refresh
+                    </Button>
+                  </div>
+                  <CardDescription>
+                    Complete history of all configuration changes made through this panel
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingLogs ? (
+                    <div className="flex items-center justify-center py-8">
+                      <RefreshCw className="h-6 w-6 animate-spin text-primary" />
+                    </div>
+                  ) : auditLogs.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                      <p>No configuration changes recorded yet</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {auditLogs.map((log) => (
+                        <Card key={log.id} className="p-4">
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Badge variant={
+                                  log.change_type === 'preset_applied' ? 'default' :
+                                  log.change_type === 'import' ? 'secondary' :
+                                  'outline'
+                                }>
+                                  {log.change_type === 'preset_applied' ? 'Preset' :
+                                   log.change_type === 'import' ? 'Import' :
+                                   log.change_type === 'test' ? 'Test' : 'Manual'}
+                                </Badge>
+                                {log.preset_name && (
+                                  <Badge variant="outline">{log.preset_name}</Badge>
+                                )}
+                              </div>
+                              <p className="font-mono text-sm font-semibold">{log.config_key}</p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                by {log.user_email}
+                              </p>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              {formatDistanceToNow(new Date(log.created_at), { addSuffix: true })}
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-2 gap-3 mt-3 text-sm">
+                            <div className="p-2 bg-muted rounded">
+                              <p className="text-xs text-muted-foreground mb-1">Old Value</p>
+                              <p className="font-mono">{log.old_value || 'N/A'}</p>
+                            </div>
+                            <div className="p-2 bg-muted rounded">
+                              <p className="text-xs text-muted-foreground mb-1">New Value</p>
+                              <p className="font-mono">{log.new_value}</p>
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
 

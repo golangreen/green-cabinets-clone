@@ -143,3 +143,11 @@ export {
   type PerformanceTestResult
 } from './cacheService';
 
+// Config service exports
+export {
+  logConfigChange,
+  fetchConfigAuditLogs,
+  fetchConfigAuditLogsByUser,
+  fetchConfigAuditLogsByDateRange
+} from './configService';
+

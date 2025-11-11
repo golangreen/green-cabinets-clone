@@ -134,6 +134,42 @@ export type Database = {
         }
         Relationships: []
       }
+      config_change_audit: {
+        Row: {
+          change_type: string
+          config_key: string
+          created_at: string
+          id: string
+          new_value: string
+          old_value: string | null
+          preset_name: string | null
+          user_email: string
+          user_id: string
+        }
+        Insert: {
+          change_type: string
+          config_key: string
+          created_at?: string
+          id?: string
+          new_value: string
+          old_value?: string | null
+          preset_name?: string | null
+          user_email: string
+          user_id: string
+        }
+        Update: {
+          change_type?: string
+          config_key?: string
+          created_at?: string
+          id?: string
+          new_value?: string
+          old_value?: string | null
+          preset_name?: string | null
+          user_email?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       email_delivery_log: {
         Row: {
           created_at: string | null
