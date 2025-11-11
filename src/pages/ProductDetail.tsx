@@ -113,7 +113,7 @@ export default function ProductDetail() {
       <div className="min-h-screen flex flex-col">
         <OfflineBanner />
         <Header />
-        <main className="flex-1 py-6 sm:py-8 md:py-12 bg-[#f0f0f0]">
+        <main className="flex-1 py-6 sm:py-8 md:py-12 bg-[#d5d5d5]">
           <div className="container mx-auto px-4">
             <Link to={ROUTES.HOME}>
               <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
