@@ -172,10 +172,10 @@ const Header = () => {
                   Authentication Guide
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  disabled
-                  className="cursor-not-allowed opacity-50"
+                  onClick={() => window.location.href = '/docs/api'}
+                  className="cursor-pointer"
                 >
-                  API Reference (Coming Soon)
+                  API Reference
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   disabled
@@ -302,10 +302,13 @@ const Header = () => {
                     </Button>
                     <Button 
                       variant="ghost" 
-                      className="justify-start opacity-50" 
-                      disabled
+                      className="justify-start" 
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        window.location.href = '/docs/api';
+                      }}
                     >
-                      API Reference (Coming Soon)
+                      API Reference
                     </Button>
                     <Button 
                       variant="ghost" 

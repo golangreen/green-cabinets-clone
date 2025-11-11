@@ -14,6 +14,7 @@ import AdminSecurity from "./pages/AdminSecurity";
 import RoomScan from "./pages/RoomScan";
 import DocsAuth from "./pages/DocsAuth";
 import DocsGettingStarted from "./pages/DocsGettingStarted";
+import DocsAPI from "./pages/DocsAPI";
 import NotFound from "./pages/NotFound";
 import SplashScreen from "./components/SplashScreen";
 
@@ -58,6 +59,7 @@ const App = () => {
             <Route path="/room-scan" element={<RoomScan />} />
             <Route path="/docs/auth" element={<DocsAuth />} />
             <Route path="/docs/getting-started" element={<DocsGettingStarted />} />
+            <Route path="/docs/api" element={<DocsAPI />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
