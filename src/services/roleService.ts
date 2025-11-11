@@ -257,3 +257,25 @@ export function getHighestRole(roles: AppRole[]): AppRole | null {
   if (roles.includes('user')) return 'user';
   return null;
 }
+
+/**
+ * Get current user's email from session
+ */
+export async function getCurrentUserEmail(): Promise<string> {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.user?.email || 'System Administrator';
+}
+
+/**
+ * Send role change notification email
+ */
+export async function sendRoleNotification(params: {
+  userEmail: string;
+  action: 'assigned' | 'removed';
+  role: AppRole;
+  performedBy: string;
+}): Promise<void> {
+  await supabase.functions.invoke('send-role-notification', {
+    body: params
+  });
+}

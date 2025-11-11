@@ -1,9 +1,19 @@
 import { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
 import { toast } from 'sonner';
 import type { User, AssignRoleParams, BulkAssignParams, ExtendRoleParams } from '@/types';
+import { 
+  fetchUsersWithRoles,
+  assignRole,
+  removeRole,
+  bulkAssignRole,
+  bulkRemoveRole,
+  extendRoleExpiration,
+  getCurrentUserEmail,
+  sendRoleNotification,
+  type AppRole
+} from '@/services';
 
 interface RoleDetail {
   role: 'admin' | 'moderator' | 'user';
@@ -29,37 +39,25 @@ export const useUserManagement = () => {
   // Fetch all users with roles
   const { data: users, isLoading, refetch } = useQuery({
     queryKey: ['admin-users'],
-    queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_all_users_with_roles');
-      if (error) throw error;
-      return data as unknown as UserWithRoles[];
-    },
+    queryFn: fetchUsersWithRoles,
   });
 
   // Add role mutation
   const addRoleMutation = useMutation({
     mutationFn: async ({ userId, role, expiresAt }: AssignRoleParams) => {
-      const { error } = await supabase.rpc('add_user_role', {
-        target_user_id: userId,
-        target_role: role,
-        expiration_date: expiresAt || null,
-      });
-      if (error) throw error;
+      await assignRole({ userId, role: role as AppRole, expiresAt });
 
       // Send notification email
       const targetUser = users?.find(u => u.user_id === userId);
       if (targetUser?.email) {
-        const { data: { session } } = await supabase.auth.getSession();
-        const performerEmail = session?.user?.email || 'System Administrator';
+        const performerEmail = await getCurrentUserEmail();
 
         try {
-          await supabase.functions.invoke('send-role-notification', {
-            body: {
-              userEmail: targetUser.email,
-              action: 'assigned',
-              role,
-              performedBy: performerEmail
-            }
+          await sendRoleNotification({
+            userEmail: targetUser.email,
+            action: 'assigned',
+            role: role as AppRole,
+            performedBy: performerEmail
           });
         } catch (emailError) {
           console.error('Failed to send notification email:', emailError);
@@ -78,26 +76,19 @@ export const useUserManagement = () => {
   // Remove role mutation
   const removeRoleMutation = useMutation({
     mutationFn: async ({ userId, role }: { userId: string; role: 'admin' | 'moderator' | 'user' }) => {
-      const { error } = await supabase.rpc('remove_user_role', {
-        target_user_id: userId,
-        target_role: role,
-      });
-      if (error) throw error;
+      await removeRole(userId, role as AppRole);
 
       // Send notification email
       const targetUser = users?.find(u => u.user_id === userId);
       if (targetUser?.email) {
-        const { data: { session } } = await supabase.auth.getSession();
-        const performerEmail = session?.user?.email || 'System Administrator';
+        const performerEmail = await getCurrentUserEmail();
 
         try {
-          await supabase.functions.invoke('send-role-notification', {
-            body: {
-              userEmail: targetUser.email,
-              action: 'removed',
-              role,
-              performedBy: performerEmail
-            }
+          await sendRoleNotification({
+            userEmail: targetUser.email,
+            action: 'removed',
+            role: role as AppRole,
+            performedBy: performerEmail
           });
         } catch (emailError) {
           console.error('Failed to send notification email:', emailError);
@@ -116,32 +107,25 @@ export const useUserManagement = () => {
   // Bulk add role mutation
   const bulkAddRoleMutation = useMutation({
     mutationFn: async ({ userIds, role }: BulkAssignParams) => {
-      const { error, data } = await supabase.rpc('bulk_add_user_role', {
-        target_user_ids: userIds,
-        target_role: role,
-      });
-      if (error) throw error;
+      const result = await bulkAssignRole(userIds, role as AppRole);
 
       // Send notification emails
-      const { data: { session } } = await supabase.auth.getSession();
-      const performerEmail = session?.user?.email || 'System Administrator';
+      const performerEmail = await getCurrentUserEmail();
 
       const emailPromises = userIds.map(userId => {
         const targetUser = users?.find(u => u.user_id === userId);
         if (!targetUser?.email) return Promise.resolve();
 
-        return supabase.functions.invoke('send-role-notification', {
-          body: {
-            userEmail: targetUser.email,
-            action: 'assigned',
-            role,
-            performedBy: performerEmail
-          }
+        return sendRoleNotification({
+          userEmail: targetUser.email,
+          action: 'assigned',
+          role: role as AppRole,
+          performedBy: performerEmail
         }).catch(err => console.error('Failed to send notification:', err));
       });
 
       await Promise.allSettled(emailPromises);
-      return data;
+      return result;
     },
     onSuccess: (data) => {
       const message = (data as any)?.message || 'Roles assigned successfully';
@@ -157,32 +141,25 @@ export const useUserManagement = () => {
   // Bulk remove role mutation
   const bulkRemoveRoleMutation = useMutation({
     mutationFn: async ({ userIds, role }: BulkAssignParams) => {
-      const { error, data } = await supabase.rpc('bulk_remove_user_role', {
-        target_user_ids: userIds,
-        target_role: role,
-      });
-      if (error) throw error;
+      const result = await bulkRemoveRole(userIds, role as AppRole);
 
       // Send notification emails
-      const { data: { session } } = await supabase.auth.getSession();
-      const performerEmail = session?.user?.email || 'System Administrator';
+      const performerEmail = await getCurrentUserEmail();
 
       const emailPromises = userIds.map(userId => {
         const targetUser = users?.find(u => u.user_id === userId);
         if (!targetUser?.email) return Promise.resolve();
 
-        return supabase.functions.invoke('send-role-notification', {
-          body: {
-            userEmail: targetUser.email,
-            action: 'removed',
-            role,
-            performedBy: performerEmail
-          }
+        return sendRoleNotification({
+          userEmail: targetUser.email,
+          action: 'removed',
+          role: role as AppRole,
+          performedBy: performerEmail
         }).catch(err => console.error('Failed to send notification:', err));
       });
 
       await Promise.allSettled(emailPromises);
-      return data;
+      return result;
     },
     onSuccess: (data) => {
       const message = (data as any)?.message || 'Roles removed successfully';
@@ -198,12 +175,11 @@ export const useUserManagement = () => {
   // Extend role mutation
   const extendRoleMutation = useMutation({
     mutationFn: async ({ userId, role, newExpiresAt }: ExtendRoleParams) => {
-      const { error } = await supabase.rpc('extend_role_expiration', {
-        target_user_id: userId,
-        target_role: role,
-        new_expiration_date: newExpiresAt,
+      await extendRoleExpiration({ 
+        userId, 
+        role: role as AppRole, 
+        newExpiresAt 
       });
-      if (error) throw error;
     },
     onSuccess: (_, variables) => {
       toast.success(`${variables.role} role expiration extended successfully`);

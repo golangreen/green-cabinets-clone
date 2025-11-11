@@ -111,6 +111,8 @@ export {
   formatRoleExpiration,
   validateRoleAssignment,
   getHighestRole,
+  getCurrentUserEmail,
+  sendRoleNotification,
   type AppRole,
   type UserWithRoles,
   type RoleAssignment,
