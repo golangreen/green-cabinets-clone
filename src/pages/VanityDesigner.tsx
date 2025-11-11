@@ -1614,7 +1614,7 @@ const VanityDesigner = () => {
                 onClick={() => setDrawingTool("select")}
                 variant={drawingTool === "select" ? "default" : "ghost"}
                 size="sm" 
-                className={drawingTool === "select" ? "h-12 w-12 flex flex-col gap-1 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
+                className={drawingTool === "select" ? "h-12 w-12 flex flex-col gap-1 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <Move className="h-5 w-5" />
               </Button>
@@ -1625,7 +1625,7 @@ const VanityDesigner = () => {
                 onClick={() => setDrawingTool("wall")}
                 variant={drawingTool === "wall" ? "default" : "ghost"}
                 size="sm" 
-                className={drawingTool === "wall" ? "h-12 w-12 flex flex-col gap-1 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
+                className={drawingTool === "wall" ? "h-12 w-12 flex flex-col gap-1 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <Minus className="h-5 w-5" />
               </Button>
@@ -1636,7 +1636,7 @@ const VanityDesigner = () => {
                 onClick={() => setDrawingTool("door")}
                 variant={drawingTool === "door" ? "default" : "ghost"}
                 size="sm" 
-                className={drawingTool === "door" ? "h-12 w-12 flex flex-col gap-1 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
+                className={drawingTool === "door" ? "h-12 w-12 flex flex-col gap-1 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <DoorOpen className="h-5 w-5" />
               </Button>
@@ -1647,7 +1647,7 @@ const VanityDesigner = () => {
                 onClick={() => setDrawingTool("window")}
                 variant={drawingTool === "window" ? "default" : "ghost"}
                 size="sm" 
-                className={drawingTool === "window" ? "h-12 w-12 flex flex-col gap-1 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
+                className={drawingTool === "window" ? "h-12 w-12 flex flex-col gap-1 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <RectangleHorizontal className="h-5 w-5" />
               </Button>
@@ -1760,7 +1760,7 @@ const VanityDesigner = () => {
                 onClick={() => setShowWizard(true)} 
                 variant="default" 
                 size="sm" 
-                className="h-12 px-4 flex items-center gap-2 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300"
+                className="h-12 px-4 flex items-center gap-2 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300"
               >
                 <Sparkles className="h-4 w-4" />
                 <span className="text-xs font-medium">Quick Add Wizard</span>
@@ -1944,7 +1944,7 @@ const VanityDesigner = () => {
                 onClick={applyGlobalDesignToAll}
                 variant="default"
                 size="sm" 
-                className="h-12 px-6 flex items-center gap-2 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300"
+                className="h-12 px-6 flex items-center gap-2 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300"
                 disabled={cabinets.length === 0}
               >
                 <Paintbrush className="h-5 w-5" />
@@ -1984,7 +1984,7 @@ const VanityDesigner = () => {
                 onClick={() => setShowGrid(!showGrid)} 
                 variant={showGrid ? "default" : "ghost"}
                 size="sm" 
-                className={showGrid ? "h-12 w-12 flex flex-col gap-1 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
+                className={showGrid ? "h-12 w-12 flex flex-col gap-1 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <Grid3x3 className="h-5 w-5" />
               </Button>
@@ -1995,7 +1995,7 @@ const VanityDesigner = () => {
                 onClick={() => setShowDimensions(!showDimensions)} 
                 variant={showDimensions ? "default" : "ghost"}
                 size="sm" 
-                className={showDimensions ? "h-12 w-12 flex flex-col gap-1 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
+                className={showDimensions ? "h-12 w-12 flex flex-col gap-1 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-12 w-12 flex flex-col gap-1"}
               >
                 <FileText className="h-5 w-5" />
               </Button>
@@ -2044,7 +2044,7 @@ const VanityDesigner = () => {
             variant={activeTab === "room-layout" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("room-layout")}
-            className={activeTab === "room-layout" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
+            className={activeTab === "room-layout" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             ROOM
           </Button>
@@ -2053,7 +2053,7 @@ const VanityDesigner = () => {
             variant={activeTab === "items" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("items")}
-            className={activeTab === "items" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
+            className={activeTab === "items" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             ITEMS
           </Button>
@@ -2062,7 +2062,7 @@ const VanityDesigner = () => {
             variant={activeTab === "design" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("design")}
-            className={activeTab === "design" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
+            className={activeTab === "design" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             DESIGN
           </Button>
@@ -2071,7 +2071,7 @@ const VanityDesigner = () => {
             variant={activeTab === "templates" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("templates")}
-            className={activeTab === "templates" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
+            className={activeTab === "templates" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             TEMPLATES
           </Button>
@@ -2080,7 +2080,7 @@ const VanityDesigner = () => {
             variant={activeTab === "view" ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab("view")}
-            className={activeTab === "view" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
+            className={activeTab === "view" ? "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0 bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white shadow-xl hover:shadow-[#2dd4bf]/50 transition-all duration-300" : "h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"}
           >
             VIEW
           </Button>
@@ -3912,7 +3912,7 @@ const VanityDesigner = () => {
                               transform: `translateX(-50%) rotate(-${rotatingCabinet === cabinet.id ? currentRotation : rotation}deg)` 
                             }}
                           >
-                            <div className="bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white p-1 rounded-full shadow-md">
+                            <div className="bg-[#2dd4bf]/40 hover:bg-[#2dd4bf]/50 border-2 border-[#2dd4bf]/60 backdrop-blur-sm text-white p-1 rounded-full shadow-md">
                               <RotateCw className="h-3 w-3" />
                             </div>
                           </div>
