@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -14,6 +13,8 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { DocsSidebar } from "@/components/DocsSidebar";
+import CodeMirror from '@uiw/react-codemirror';
+import { sql } from '@codemirror/lang-sql';
 
 const DocsTroubleshooting = () => {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -320,12 +321,22 @@ const DocsTroubleshooting = () => {
                       )}
                     </Button>
                   </div>
-                  <Textarea
-                    value={sqlQuery}
-                    onChange={(e) => setSqlQuery(e.target.value)}
-                    placeholder="SELECT * FROM user_roles LIMIT 5;"
-                    className="font-mono text-sm min-h-[100px]"
-                  />
+                  <div className="border rounded-md overflow-hidden">
+                    <CodeMirror
+                      value={sqlQuery}
+                      height="150px"
+                      extensions={[sql()]}
+                      onChange={(value) => setSqlQuery(value)}
+                      theme="light"
+                      basicSetup={{
+                        lineNumbers: true,
+                        highlightActiveLineGutter: true,
+                        highlightActiveLine: true,
+                        foldGutter: true,
+                      }}
+                      className="text-sm"
+                    />
+                  </div>
                 </div>
 
                 <Button
