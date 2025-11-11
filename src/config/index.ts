@@ -7,6 +7,7 @@ export * from './cache';
 export * from './security';
 export * from './performance';
 export * from './pwa';
+export * from './validation';
 
 /**
  * Application-wide configuration

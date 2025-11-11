@@ -8,7 +8,7 @@ import { AuthProvider, ThemeProvider } from "@/contexts";
 import { ProtectedRoute } from "@/components/auth";
 import { AdminRoute } from "@/components/auth";
 import { ROUTES } from "@/constants/routes";
-import { FeatureErrorBoundary } from "@/components/layout";
+import { FeatureErrorBoundary, ConfigValidationAlert } from "@/components/layout";
 import { PreloadManager } from "@/features/product-catalog";
 import { CACHE_CONFIG } from "@/config";
 import Index from "./pages/Index";
@@ -63,6 +63,9 @@ const App = () => {
             <Toaster />
             <Sonner />
             {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+            
+            {/* Configuration validation alert */}
+            <ConfigValidationAlert />
             
             {/* Background product preloader wrapped in error boundary */}
             <FeatureErrorBoundary
