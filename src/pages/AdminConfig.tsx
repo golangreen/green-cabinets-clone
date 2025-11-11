@@ -7,6 +7,14 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Header, Footer } from '@/components/layout';
 import { AdminRoute } from '@/components/auth';
 import { Settings, Clock, Shield, Zap, Smartphone, Info, CheckCircle2, AlertTriangle, RefreshCw, Sparkles, Download, Upload, History, FileText } from 'lucide-react';
@@ -15,6 +23,7 @@ import { toast } from 'sonner';
 import { fetchConfigAuditLogs, logConfigChange } from '@/services';
 import { ConfigChangeAudit } from '@/types/config';
 import { formatDistanceToNow } from 'date-fns';
+import { ConfigDiffViewer } from '@/features/admin-config';
 
 interface ConfigValue {
   key: string;
@@ -24,11 +33,24 @@ interface ConfigValue {
   description: string;
 }
 
+interface ConfigDiff {
+  key: string;
+  currentValue: any;
+  newValue: any;
+  status: 'unchanged' | 'modified' | 'added';
+  description?: string;
+}
+
 const AdminConfig = () => {
   const [testValues, setTestValues] = useState<Record<string, any>>({});
   const [selectedPreset, setSelectedPreset] = useState<ConfigPreset | null>(null);
   const [auditLogs, setAuditLogs] = useState<ConfigChangeAudit[]>([]);
   const [isLoadingLogs, setIsLoadingLogs] = useState(false);
+  const [showDiffDialog, setShowDiffDialog] = useState(false);
+  const [pendingDiff, setPendingDiff] = useState<ConfigDiff[]>([]);
+  const [pendingAction, setPendingAction] = useState<'preset' | 'import' | null>(null);
+  const [pendingPreset, setPendingPreset] = useState<ConfigPreset | null>(null);
+  const [pendingImportData, setPendingImportData] = useState<Record<string, any> | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch audit logs on mount
@@ -311,22 +333,72 @@ const AdminConfig = () => {
     toast.info(`Reset test value for ${key}`);
   };
 
-  const applyPreset = async (preset: ConfigPreset) => {
-    // Apply all preset values to test values
-    const newTestValues = { ...preset.values };
+  const generateDiff = (newValues: Record<string, any>): ConfigDiff[] => {
+    const currentValues = getCurrentValues();
+    const allConfigs = [...cacheConfig, ...securityConfig, ...performanceConfig];
+    
+    const diffs: ConfigDiff[] = [];
+    
+    // Check all keys in new values
+    Object.entries(newValues).forEach(([key, newValue]) => {
+      const config = allConfigs.find((c) => c.envVar === key);
+      const currentValue = currentValues[key];
+      
+      if (currentValue === undefined) {
+        diffs.push({
+          key,
+          currentValue: null,
+          newValue,
+          status: 'added',
+          description: config?.description,
+        });
+      } else if (String(currentValue) !== String(newValue)) {
+        diffs.push({
+          key,
+          currentValue,
+          newValue,
+          status: 'modified',
+          description: config?.description,
+        });
+      } else {
+        diffs.push({
+          key,
+          currentValue,
+          newValue,
+          status: 'unchanged',
+          description: config?.description,
+        });
+      }
+    });
+    
+    return diffs;
+  };
+
+  const showPresetDiff = (preset: ConfigPreset) => {
+    const diffs = generateDiff(preset.values);
+    setPendingDiff(diffs);
+    setPendingAction('preset');
+    setPendingPreset(preset);
+    setShowDiffDialog(true);
+  };
+
+  const confirmApplyPreset = async () => {
+    if (!pendingPreset) return;
+    
+    const newTestValues = { ...pendingPreset.values };
     setTestValues(newTestValues);
-    setSelectedPreset(preset);
+    setSelectedPreset(pendingPreset);
     
     // Log all preset changes
     try {
       const currentValues = getCurrentValues();
-      const logPromises = Object.entries(preset.values).map(([key, value]) => 
+      const logPromises = Object.entries(pendingPreset.values).map(([key, value]) => 
         logConfigChange({
           configKey: key,
           oldValue: currentValues[key]?.toString() || null,
           newValue: value.toString(),
           changeType: 'preset_applied',
-          presetName: preset.name,
+          presetName: pendingPreset.name,
         })
       );
       await Promise.all(logPromises);
@@ -337,9 +409,14 @@ const AdminConfig = () => {
       console.error('Failed to log preset changes:', error);
     }
     
-    toast.success(`Applied ${preset.name} preset`, {
-      description: `${Object.keys(preset.values).length} configuration values loaded`,
+    toast.success(`Applied ${pendingPreset.name} preset`, {
+      description: `${Object.keys(pendingPreset.values).length} configuration values loaded`,
     });
+    
+    setShowDiffDialog(false);
+    setPendingPreset(null);
+    setPendingDiff([]);
+    setPendingAction(null);
   };
 
   const getCurrentValues = () => {
@@ -412,31 +489,12 @@ const AdminConfig = () => {
           }
         });
 
-        setTestValues(validValues);
-        setSelectedPreset(null);
-
-        // Log all imported changes
-        try {
-          const currentValues = getCurrentValues();
-          const logPromises = Object.entries(validValues).map(([key, value]) => 
-            logConfigChange({
-              configKey: key,
-              oldValue: currentValues[key]?.toString() || null,
-              newValue: value.toString(),
-              changeType: 'import',
-            })
-          );
-          await Promise.all(logPromises);
-          
-          // Reload audit logs
-          loadAuditLogs();
-        } catch (error) {
-          console.error('Failed to log import changes:', error);
-        }
-
-        toast.success('Configuration imported', {
-          description: `Loaded ${Object.keys(validValues).length} configuration values`,
-        });
+        // Show diff before applying
+        const diffs = generateDiff(validValues);
+        setPendingDiff(diffs);
+        setPendingAction('import');
+        setPendingImportData(validValues);
+        setShowDiffDialog(true);
       } catch (error) {
         toast.error('Failed to import configuration', {
           description: error instanceof Error ? error.message : 'Invalid JSON file',
@@ -450,6 +508,41 @@ const AdminConfig = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const confirmImportConfig = async () => {
+    if (!pendingImportData) return;
+
+    setTestValues(pendingImportData);
+    setSelectedPreset(null);
+
+    // Log all imported changes
+    try {
+      const currentValues = getCurrentValues();
+      const logPromises = Object.entries(pendingImportData).map(([key, value]) => 
+        logConfigChange({
+          configKey: key,
+          oldValue: currentValues[key]?.toString() || null,
+          newValue: value.toString(),
+          changeType: 'import',
+        })
+      );
+      await Promise.all(logPromises);
+      
+      // Reload audit logs
+      loadAuditLogs();
+    } catch (error) {
+      console.error('Failed to log import changes:', error);
+    }
+
+    toast.success('Configuration imported', {
+      description: `Loaded ${Object.keys(pendingImportData).length} configuration values`,
+    });
+
+    setShowDiffDialog(false);
+    setPendingImportData(null);
+    setPendingDiff([]);
+    setPendingAction(null);
   };
 
   const renderConfigSection = (title: string, icon: React.ReactNode, configs: ConfigValue[]) => (
@@ -616,7 +709,7 @@ const AdminConfig = () => {
                         <Button
                           className="w-full"
                           variant={isActive ? 'default' : 'outline'}
-                          onClick={() => applyPreset(preset)}
+                          onClick={() => showPresetDiff(preset)}
                         >
                           {isActive ? (
                             <>
@@ -850,6 +943,39 @@ const AdminConfig = () => {
           </Card>
         </main>
         <Footer />
+
+        {/* Configuration Diff Dialog */}
+        <Dialog open={showDiffDialog} onOpenChange={setShowDiffDialog}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogHeader>
+              <DialogTitle>Review Configuration Changes</DialogTitle>
+              <DialogDescription>
+                {pendingAction === 'preset' && pendingPreset && (
+                  <>Review the changes that will be applied from the <strong>{pendingPreset.name}</strong> preset</>
+                )}
+                {pendingAction === 'import' && (
+                  <>Review the changes from the imported configuration file</>
+                )}
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="flex-1 overflow-y-auto py-4">
+              <ConfigDiffViewer diffs={pendingDiff} />
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowDiffDialog(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={pendingAction === 'preset' ? confirmApplyPreset : confirmImportConfig}
+              >
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Apply Changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminRoute>
   );
