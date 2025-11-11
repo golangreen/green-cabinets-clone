@@ -138,6 +138,105 @@ export const ShopProducts = () => {
           )}
         </div>
         
+        {/* Custom Product Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-12">
+          {/* Custom Kitchen */}
+          <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform">
+            <div className="aspect-square overflow-hidden bg-secondary/20">
+              <img
+                src="/src/assets/gallery/modern-white-kitchen-island-bar-stools.jpg"
+                alt="Custom Kitchen Cabinets"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg sm:text-xl">Custom Kitchen Cabinets</CardTitle>
+              <CardDescription className="line-clamp-2 text-sm">
+                Premium custom kitchen cabinets available in Tafisa ($250/ft), Egger ($300/ft), and Shinnoki ($350/ft) finishes. Choose your brand, style, and color from our extensive selection. Provide your exact measurements for a perfectly fitted kitchen.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pb-3">
+              <p className="text-xl sm:text-2xl font-bold">
+                USD 250.00
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button 
+                variant="hero"
+                className="w-full touch-manipulation"
+                onClick={() => navigate('/designer')}
+              >
+                <ShoppingCart className="mr-2 h-4 w-4" />
+                Design Now
+              </Button>
+            </CardFooter>
+          </Card>
+
+          {/* Custom Bathroom Vanity */}
+          <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform">
+            <div className="aspect-square overflow-hidden bg-secondary/20">
+              <img
+                src="/src/assets/gallery/contemporary-bathroom-wood-vanity-double-sink.jpg"
+                alt="Custom Bathroom Vanity"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg sm:text-xl">Custom Bathroom Vanity</CardTitle>
+              <CardDescription className="line-clamp-2 text-sm">
+                Premium custom bathroom vanities available in Tafisa ($250/ft), Egger ($300/ft), and Shinnoki ($350/ft) finishes. Choose your brand, style, and color from our extensive selection. Provide your exact measurements for a perfectly fitted vanity.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pb-3">
+              <p className="text-xl sm:text-2xl font-bold">
+                USD 250.00
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button 
+                variant="hero"
+                className="w-full touch-manipulation"
+                onClick={() => navigate('/vanity-designer')}
+              >
+                <ShoppingCart className="mr-2 h-4 w-4" />
+                Design Now
+              </Button>
+            </CardFooter>
+          </Card>
+
+          {/* Custom Closet */}
+          <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform">
+            <div className="aspect-square overflow-hidden bg-secondary/20">
+              <img
+                src="/src/assets/gallery/gray-wood-bedroom-closet.jpg"
+                alt="Custom Closet"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg sm:text-xl">Custom Closet</CardTitle>
+              <CardDescription className="line-clamp-2 text-sm">
+                Premium custom closet systems available in Tafisa ($250/ft), Egger ($300/ft), and Shinnoki ($350/ft) finishes. Choose your brand, style, and color from our extensive selection. Provide your exact measurements for a perfectly fitted closet.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pb-3">
+              <p className="text-xl sm:text-2xl font-bold">
+                USD 250.00
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button 
+                variant="hero"
+                className="w-full touch-manipulation"
+                onClick={() => navigate('/designer')}
+              >
+                <ShoppingCart className="mr-2 h-4 w-4" />
+                Design Now
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+
         {filteredProducts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">
