@@ -8,6 +8,7 @@ export const ROUTES = {
   HOME: '/',
   AUTH: '/auth',
   NOT_FOUND: '/404',
+  PROFILE: '/profile',
   
   // Designer tools
   VANITY_DESIGNER: '/designer',
@@ -33,6 +34,7 @@ export const ROUTES = {
  */
 export function isProtectedRoute(path: string): boolean {
   const protectedPaths = [
+    ROUTES.PROFILE,
     ROUTES.VANITY_DESIGNER,
     ROUTES.ADMIN_SECURITY,
   ];

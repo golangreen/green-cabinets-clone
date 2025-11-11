@@ -240,6 +240,14 @@ const Header = () => {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={() => window.location.href = ROUTES.PROFILE}
+                    className="cursor-pointer"
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer">
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sign Out</span>
@@ -279,6 +287,18 @@ const Header = () => {
                           </p>
                         </div>
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          window.location.href = ROUTES.PROFILE;
+                        }}
+                        className="justify-start"
+                      >
+                        <User className="mr-2 h-4 w-4" />
+                        Profile
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"
