@@ -1,29 +1,15 @@
 import { create } from 'zustand';
-
-interface Product {
-  id: string;
-  title: string;
-  handle: string;
-  description: string;
-  images: { url: string; altText?: string }[];
-  priceRange: {
-    minVariantPrice: {
-      amount: string;
-      currencyCode: string;
-    };
-  };
-  variants: any[];
-}
+import { ShopifyProduct } from '@/lib/shopify';
 
 interface ProductCacheStore {
-  products: Map<string, Product>;
-  productsList: Product[];
+  products: Map<string, ShopifyProduct>;
+  productsList: ShopifyProduct[];
   lastFetch: number | null;
   isLoading: boolean;
   
   // Actions
-  setProducts: (products: Product[]) => void;
-  getProduct: (id: string) => Product | undefined;
+  setProducts: (products: ShopifyProduct[]) => void;
+  getProduct: (id: string) => ShopifyProduct | undefined;
   clearCache: () => void;
   isCacheValid: (maxAge?: number) => boolean;
 }
@@ -36,10 +22,10 @@ export const useProductCacheStore = create<ProductCacheStore>((set, get) => ({
   lastFetch: null,
   isLoading: false,
 
-  setProducts: (products: Product[]) => {
-    const productsMap = new Map<string, Product>();
+  setProducts: (products: ShopifyProduct[]) => {
+    const productsMap = new Map<string, ShopifyProduct>();
     products.forEach(product => {
-      productsMap.set(product.id, product);
+      productsMap.set(product.node.id, product);
     });
     
     set({

@@ -4,14 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart, Package } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
+import { useProductCacheStore } from "@/stores/productCacheStore";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 export const ShopProducts = () => {
-  const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const addItem = useCartStore(state => state.addItem);
   const navigate = useNavigate();
+  const { productsList, isCacheValid, setProducts } = useProductCacheStore();
 
   useEffect(() => {
     // Only run in browser, not during SSR/build
@@ -21,7 +22,15 @@ export const ShopProducts = () => {
     }
 
     const loadProducts = async () => {
+      // Check if cache is valid
+      if (isCacheValid()) {
+        console.log('Using cached products');
+        setLoading(false);
+        return;
+      }
+
       try {
+        console.log('Fetching fresh products from Shopify');
         const productsData = await fetchProducts();
         setProducts(productsData);
       } catch (error) {
@@ -33,7 +42,7 @@ export const ShopProducts = () => {
       }
     };
     loadProducts();
-  }, []);
+  }, [isCacheValid, setProducts]);
 
   const handleAddToCart = (product: ShopifyProduct) => {
     const variant = product.node.variants.edges[0]?.node;
@@ -69,7 +78,7 @@ export const ShopProducts = () => {
   }
 
   // Hide shop section if no products (including Shopify errors)
-  if (products.length === 0) {
+  if (productsList.length === 0) {
     return null;
   }
 
@@ -84,7 +93,7 @@ export const ShopProducts = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {products.map((product) => (
+          {productsList.map((product) => (
             <Card 
               key={product.node.id} 
               className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform"
