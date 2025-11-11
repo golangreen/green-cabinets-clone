@@ -14,6 +14,7 @@ import { CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useRecaptcha } from "@/hooks/useRecaptcha";
 import { validators } from "@/lib/formValidation";
+import { prepareQuoteForSubmission, createQuoteMailtoLink, type QuoteData } from "@/services/quoteService";
 
 interface QuoteFormProps {
   isOpen: boolean;
@@ -71,15 +72,6 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
     if (step > 1) setStep(step - 1);
   };
 
-  // Sanitize input to prevent email header injection
-  const sanitizeInput = (input: string): string => {
-    return input
-      .replace(/[\r\n]/g, ' ')  // Remove carriage returns and newlines
-      .replace(/[\u0000-\u001F\u007F-\u009F]/g, '')  // Remove control characters
-      .replace(/%0[AD]/gi, '')  // Remove URL-encoded newlines
-      .trim();
-  };
-
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     
@@ -94,49 +86,22 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
         }
       }
       
-      // Sanitize all user inputs
-      const sanitizedData = {
-        projectType: sanitizeInput(data.projectType),
-        roomSize: sanitizeInput(data.roomSize),
-        style: sanitizeInput(data.style),
-        budget: sanitizeInput(data.budget),
-        timeline: sanitizeInput(data.timeline),
-        name: sanitizeInput(data.name),
-        email: sanitizeInput(data.email),
-        phone: sanitizeInput(data.phone),
-        address: sanitizeInput(data.address),
-        message: data.message ? sanitizeInput(data.message) : "None",
-        recaptchaToken: recaptchaToken || undefined
-      };
+      // Prepare quote data with sanitization and formatting
+      const quoteData: QuoteData = prepareQuoteForSubmission({
+        projectType: data.projectType,
+        roomSize: data.roomSize,
+        style: data.style,
+        budget: data.budget,
+        timeline: data.timeline,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        message: data.message,
+      });
       
-      // Format the quote request
-      const quoteDetails = `
-🏠 New Quote Request - Green Cabinets
-
-📋 PROJECT DETAILS:
-• Type: ${sanitizedData.projectType.toUpperCase()}
-• Room Size: ${sanitizedData.roomSize}
-• Style: ${sanitizedData.style}
-• Budget: ${sanitizedData.budget}
-• Timeline: ${sanitizedData.timeline}
-
-👤 CONTACT INFORMATION:
-• Name: ${sanitizedData.name}
-• Email: ${sanitizedData.email}
-• Phone: ${sanitizedData.phone}
-• Address: ${sanitizedData.address}
-
-💬 Additional Notes:
-${sanitizedData.message}
-
----
-Submitted from: Green Cabinets Website
-`.trim();
-
-      // Create mailto link with sanitized data
-      const subject = encodeURIComponent(`Quote Request: ${sanitizedData.projectType} - ${sanitizedData.name}`);
-      const body = encodeURIComponent(quoteDetails);
-      const mailtoLink = `mailto:greencabinets@gmail.com?subject=${subject}&body=${body}`;
+      // Create mailto link with sanitized and formatted data
+      const mailtoLink = createQuoteMailtoLink(quoteData, 'greencabinets@gmail.com');
       
       // Open email client
       window.location.href = mailtoLink;
