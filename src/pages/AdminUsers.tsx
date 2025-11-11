@@ -9,6 +9,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -25,9 +40,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, UserPlus, UserMinus, Shield, CheckSquare, Square } from "lucide-react";
+import { Search, UserPlus, UserMinus, Shield, CalendarIcon, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface User {
   user_id: string;
@@ -36,10 +52,19 @@ interface User {
   roles: string[];
 }
 
+interface RoleAssignDialog {
+  open: boolean;
+  userId: string;
+  role: "admin" | "moderator" | "user";
+}
+
 const AdminUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const [bulkRole, setBulkRole] = useState<"admin" | "moderator" | "user">("moderator");
+  const [roleDialog, setRoleDialog] = useState<RoleAssignDialog>({ open: false, userId: "", role: "user" });
+  const [expirationDate, setExpirationDate] = useState<Date | undefined>(undefined);
+  const [isTemporary, setIsTemporary] = useState(false);
   const debouncedSearch = useDebounce(searchTerm, 300);
 
   const { data: users, isLoading, refetch } = useQuery({
@@ -50,6 +75,56 @@ const AdminUsers = () => {
       return data as User[];
     },
   });
+
+  const openRoleDialog = (userId: string, role: "admin" | "moderator" | "user") => {
+    setRoleDialog({ open: true, userId, role });
+    setExpirationDate(undefined);
+    setIsTemporary(false);
+  };
+
+  const closeRoleDialog = () => {
+    setRoleDialog({ open: false, userId: "", role: "user" });
+    setExpirationDate(undefined);
+    setIsTemporary(false);
+  };
+
+  const confirmAddRole = async () => {
+    try {
+      const targetUser = users?.find(u => u.user_id === roleDialog.userId);
+      
+      const { error } = await supabase.rpc("add_user_role", {
+        target_user_id: roleDialog.userId,
+        target_role: roleDialog.role,
+        expiration_date: isTemporary && expirationDate ? expirationDate.toISOString() : null,
+      });
+      if (error) throw error;
+
+      // Send notification email
+      if (targetUser?.email) {
+        const { data: { session } } = await supabase.auth.getSession();
+        const performerEmail = session?.user?.email || 'System Administrator';
+
+        try {
+          await supabase.functions.invoke('send-role-notification', {
+            body: {
+              userEmail: targetUser.email,
+              action: 'assigned',
+              role: roleDialog.role,
+              performedBy: performerEmail
+            }
+          });
+        } catch (emailError) {
+          console.error('Failed to send notification email:', emailError);
+        }
+      }
+
+      toast.success(`${roleDialog.role} role assigned successfully`);
+      closeRoleDialog();
+      refetch();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to assign role");
+    }
+  };
 
   const addRole = async (userId: string, role: "admin" | "moderator" | "user") => {
     try {
@@ -362,11 +437,11 @@ const AdminUsers = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex gap-2 justify-end">
-                            {!user.roles.includes("admin") && (
+                             {!user.roles.includes("admin") && (
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => addRole(user.user_id, "admin")}
+                                onClick={() => openRoleDialog(user.user_id, "admin")}
                               >
                                 <UserPlus className="h-4 w-4 mr-1" />
                                 Add Admin
@@ -386,7 +461,7 @@ const AdminUsers = () => {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => addRole(user.user_id, "moderator")}
+                                onClick={() => openRoleDialog(user.user_id, "moderator")}
                               >
                                 <UserPlus className="h-4 w-4 mr-1" />
                                 Add Moderator
@@ -414,6 +489,79 @@ const AdminUsers = () => {
         </Card>
       </main>
       <Footer />
+
+      {/* Role Assignment Dialog */}
+      <Dialog open={roleDialog.open} onOpenChange={(open) => !open && closeRoleDialog()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Assign {roleDialog.role} Role</DialogTitle>
+            <DialogDescription>
+              Configure role assignment for the selected user
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="temporary"
+                checked={isTemporary}
+                onCheckedChange={(checked) => setIsTemporary(checked as boolean)}
+              />
+              <Label htmlFor="temporary" className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                Temporary Role (with expiration)
+              </Label>
+            </div>
+
+            {isTemporary && (
+              <div className="space-y-2">
+                <Label>Expiration Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !expirationDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {expirationDate ? format(expirationDate, "PPP") : "Select expiration date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={expirationDate}
+                      onSelect={setExpirationDate}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {expirationDate && (
+                  <p className="text-sm text-muted-foreground">
+                    Role will expire on {format(expirationDate, "PPP")} and be automatically removed
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={closeRoleDialog}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={confirmAddRole}
+              disabled={isTemporary && !expirationDate}
+            >
+              <UserPlus className="h-4 w-4 mr-2" />
+              Assign Role
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

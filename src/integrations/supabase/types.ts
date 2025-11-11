@@ -173,19 +173,28 @@ export type Database = {
       user_roles: {
         Row: {
           created_at: string
+          expires_at: string | null
           id: string
+          is_temporary: boolean | null
+          reminder_sent: boolean | null
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
           created_at?: string
+          expires_at?: string | null
           id?: string
+          is_temporary?: boolean | null
+          reminder_sent?: boolean | null
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
           created_at?: string
+          expires_at?: string | null
           id?: string
+          is_temporary?: boolean | null
+          reminder_sent?: boolean | null
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
@@ -196,13 +205,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      add_user_role: {
-        Args: {
-          target_role: Database["public"]["Enums"]["app_role"]
-          target_user_id: string
-        }
-        Returns: Json
-      }
+      add_user_role:
+        | {
+            Args: {
+              target_role: Database["public"]["Enums"]["app_role"]
+              target_user_id: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              expiration_date?: string
+              target_role: Database["public"]["Enums"]["app_role"]
+              target_user_id: string
+            }
+            Returns: Json
+          }
       auto_block_ip: {
         Args: {
           block_duration_hours?: number
@@ -242,6 +260,25 @@ export type Database = {
           blocked_until: string
           reason: string
           violation_count: number
+        }[]
+      }
+      get_expired_roles: {
+        Args: never
+        Returns: {
+          expires_at: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_email: string
+          user_id: string
+        }[]
+      }
+      get_expiring_roles: {
+        Args: { hours_before?: number }
+        Returns: {
+          expires_at: string
+          hours_until_expiry: number
+          role: Database["public"]["Enums"]["app_role"]
+          user_email: string
+          user_id: string
         }[]
       }
       get_security_summary: {
@@ -290,6 +327,14 @@ export type Database = {
         }
         Returns: Json
       }
+      mark_reminder_sent: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: undefined
+      }
+      remove_expired_roles: { Args: never; Returns: Json }
       remove_user_role: {
         Args: {
           target_role: Database["public"]["Enums"]["app_role"]
