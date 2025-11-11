@@ -279,3 +279,18 @@ export async function sendRoleNotification(params: {
     body: params
   });
 }
+
+/**
+ * Fetch audit log entries
+ */
+export async function fetchAuditLogs(limit: number = 500) {
+  const { data, error } = await supabase
+    .from('role_change_audit')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error) throw error;
+
+  return data;
+}

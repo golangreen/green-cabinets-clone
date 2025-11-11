@@ -1,5 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { useAlertHistory } from '../hooks/useAlertHistory';
 import {
   Table,
   TableBody,
@@ -13,19 +12,7 @@ import { Bell } from "lucide-react";
 import { format } from "date-fns";
 
 export const AlertHistoryTable = () => {
-  const { data: alerts, isLoading } = useQuery({
-    queryKey: ["alert-history"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("alert_history")
-        .select("*")
-        .order("sent_at", { ascending: false })
-        .limit(20);
-
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { data: alerts, isLoading } = useAlertHistory();
 
   if (isLoading) {
     return <div className="text-center py-8 text-muted-foreground">Loading alert history...</div>;

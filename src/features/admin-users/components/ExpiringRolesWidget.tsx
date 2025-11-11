@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { getExpiringRoles, bulkExtendRoleExpiration } from '@/services';
 import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,14 +33,12 @@ export const ExpiringRolesWidget = () => {
   const fetchExpiringRoles = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await supabase.rpc('get_roles_expiring_within_days', {
-        days_ahead: 7
-      });
-
-      if (error) throw error;
+      const data = await getExpiringRoles(7);
       setExpiringRoles(data || []);
     } catch (error) {
       logger.dbError('fetch expiring roles', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,16 +56,12 @@ export const ExpiringRolesWidget = () => {
         const [user_id, role] = key.split(':');
         return {
           user_id,
-          role,
+          role: role as any,
           new_expiration: extensionDate.toISOString()
         };
       });
 
-      const { error } = await supabase.rpc('bulk_extend_role_expiration', {
-        role_extensions: roleExtensions
-      });
-
-      if (error) throw error;
+      await bulkExtendRoleExpiration(roleExtensions);
 
       toast.success(`Extended ${selectedRoles.size} role(s) successfully`);
       setSelectedRoles(new Set());

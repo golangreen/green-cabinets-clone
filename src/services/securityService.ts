@@ -396,3 +396,31 @@ export async function upsertNotificationSettings(userId: string, settings: Recor
   
   if (error) throw error;
 }
+
+/**
+ * Get count of recent security events
+ */
+export async function getRecentEventCount(minutesAgo: number = 60) {
+  const { count, error } = await supabase
+    .from('security_events')
+    .select('*', { count: 'exact', head: true })
+    .gte('created_at', new Date(Date.now() - minutesAgo * 60000).toISOString());
+
+  if (error) throw error;
+
+  return count || 0;
+}
+
+/**
+ * Get count of active blocked IPs
+ */
+export async function getActiveBlocksCount() {
+  const { count, error } = await supabase
+    .from('blocked_ips')
+    .select('*', { count: 'exact', head: true })
+    .gt('blocked_until', new Date().toISOString());
+
+  if (error) throw error;
+
+  return count || 0;
+}

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { getSecuritySummary, getSuspiciousIPs, getRecentEventCount, getActiveBlocksCount } from '@/services';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -10,56 +10,25 @@ const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'];
 export const SecurityCharts = () => {
   const { data: summary, isLoading: summaryLoading } = useQuery({
     queryKey: ['security-summary'],
-    queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_security_summary', {
-        time_window_minutes: 1440
-      });
-
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => getSecuritySummary(1440),
     refetchInterval: 30000,
   });
 
   const { data: suspiciousIps, isLoading: ipsLoading } = useQuery({
     queryKey: ['suspicious-ips'],
-    queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_suspicious_ips', {
-        time_window_minutes: 1440,
-        threshold: 3
-      });
-
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => getSuspiciousIPs(1440, 3),
     refetchInterval: 30000,
   });
 
   const { data: recentEvents } = useQuery({
     queryKey: ['recent-event-count'],
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from('security_events')
-        .select('*', { count: 'exact', head: true })
-        .gte('created_at', new Date(Date.now() - 3600000).toISOString());
-
-      if (error) throw error;
-      return count || 0;
-    },
+    queryFn: () => getRecentEventCount(60),
     refetchInterval: 10000,
   });
 
   const { data: activeBlocks } = useQuery({
     queryKey: ['active-blocks-count'],
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from('blocked_ips')
-        .select('*', { count: 'exact', head: true })
-        .gt('blocked_until', new Date().toISOString());
-
-      if (error) throw error;
-      return count || 0;
-    },
+    queryFn: getActiveBlocksCount,
     refetchInterval: 10000,
   });
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { fetchAuditLogs } from '@/services';
 import { useDebounce } from '@/hooks/useDebounce';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -15,16 +15,7 @@ export const useAuditLog = () => {
   // Fetch audit logs
   const { data: auditLogs, isLoading, refetch } = useQuery({
     queryKey: ['audit-logs'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('role_change_audit')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(500);
-
-      if (error) throw error;
-      return data as RoleChangeAudit[];
-    },
+    queryFn: () => fetchAuditLogs(500) as Promise<RoleChangeAudit[]>,
   });
 
   // Filter logs
