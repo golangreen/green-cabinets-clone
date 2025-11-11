@@ -1,13 +1,11 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
+import { createServiceRoleClient } from "../_shared/supabase.ts";
+import { createLogger, generateRequestId } from "../_shared/logger.ts";
+import { withErrorHandling, AppError } from "../_shared/errors.ts";
 
-const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const resend = new Resend(resendApiKey);
 
 const ALERT_EMAIL = "info@greencabinets.com"; // Configure your alert email
@@ -34,8 +32,12 @@ const handler = async (req: Request): Promise<Response> => {
   const corsResponse = handleCorsPreFlight(req);
   if (corsResponse) return corsResponse;
 
+  const requestId = generateRequestId();
+  const logger = createLogger({ functionName: 'security-monitor', requestId });
+  const supabase = createServiceRoleClient();
+
   try {
-    console.log("Running security monitor check...");
+    logger.info("Running security monitor check");
 
     // Check if we've already sent an alert in the last hour to avoid spam
     const { data: recentAlerts } = await supabase
@@ -48,7 +50,7 @@ const handler = async (req: Request): Promise<Response> => {
     if (recentAlerts && recentAlerts.length > 0) {
       const minutesSinceLastAlert = (Date.now() - new Date(recentAlerts[0].sent_at).getTime()) / 60000;
       if (minutesSinceLastAlert < 60) {
-        console.log(`Skipping alert - last alert sent ${Math.round(minutesSinceLastAlert)} minutes ago`);
+        logger.info("Skipping alert - cooldown active", { minutesSinceLastAlert: Math.round(minutesSinceLastAlert) });
         return createCorsResponse({
           message: "Alert cooldown active",
           minutesSinceLastAlert
@@ -61,8 +63,8 @@ const handler = async (req: Request): Promise<Response> => {
       .rpc("get_security_summary", { time_window_minutes: TIME_WINDOW_MINUTES });
 
     if (summaryError) {
-      console.error("Error fetching security summary:", summaryError);
-      throw summaryError;
+      logger.error("Error fetching security summary", summaryError);
+      throw new AppError("Failed to fetch security summary", 500);
     }
 
     // Get suspicious IPs
@@ -73,12 +75,11 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
     if (ipError) {
-      console.error("Error fetching suspicious IPs:", ipError);
-      throw ipError;
+      logger.error("Error fetching suspicious IPs", ipError);
+      throw new AppError("Failed to fetch suspicious IPs", 500);
     }
 
-    console.log("Security Summary:", summary);
-    console.log("Suspicious IPs:", suspiciousIPs);
+    logger.info("Security summary retrieved", { eventCount: summary?.length || 0, suspiciousIPCount: suspiciousIPs?.length || 0 });
 
     // Check suspicious IPs for auto-blocking
     const suspiciousIPsData = suspiciousIPs as SuspiciousIP[] || [];
@@ -89,7 +90,10 @@ const handler = async (req: Request): Promise<Response> => {
     
     for (const suspiciousIP of suspiciousIPsData) {
       if (suspiciousIP.violation_count >= AUTOBLOCK_THRESHOLD) {
-        console.log(`Auto-blocking IP: ${suspiciousIP.client_ip} with ${suspiciousIP.violation_count} violations`);
+        logger.info("Auto-blocking IP", { 
+          ip: suspiciousIP.client_ip, 
+          violations: suspiciousIP.violation_count 
+        });
         
         const { data: blockResult, error: blockError } = await supabase.rpc("auto_block_ip", {
           target_ip: suspiciousIP.client_ip,
@@ -98,9 +102,9 @@ const handler = async (req: Request): Promise<Response> => {
         });
         
         if (blockError) {
-          console.error("Error auto-blocking IP:", blockError);
+          logger.error("Error auto-blocking IP", blockError, { ip: suspiciousIP.client_ip });
         } else {
-          console.log("Auto-block result:", blockResult);
+          logger.info("IP auto-blocked successfully", { ip: suspiciousIP.client_ip, result: blockResult });
         }
       }
     }
@@ -119,7 +123,11 @@ const handler = async (req: Request): Promise<Response> => {
       suspiciousIPsData.length > 0;
 
     if (shouldAlert) {
-      console.log("Security alert triggered - sending notification email");
+      logger.info("Security alert triggered - sending notification email", {
+        criticalCount: criticalEvents.length,
+        highCount: highEvents.length,
+        suspiciousIPCount: suspiciousIPsData.length
+      });
 
       // Build alert email
       const alertHtml = `
@@ -255,7 +263,7 @@ const handler = async (req: Request): Promise<Response> => {
           },
         });
 
-      console.log("Security alert email sent successfully");
+      logger.info("Security alert email sent successfully");
 
       return createCorsResponse({
         alert_sent: true,
@@ -264,7 +272,7 @@ const handler = async (req: Request): Promise<Response> => {
       }, 200);
     }
 
-    console.log("No security issues detected - no alert needed");
+    logger.info("No security issues detected - no alert needed");
     return createCorsResponse({
       alert_sent: false,
       message: "No suspicious activity detected",
@@ -272,9 +280,12 @@ const handler = async (req: Request): Promise<Response> => {
     }, 200);
 
   } catch (error: any) {
-    console.error("Error in security-monitor function:", error);
+    logger.error("Error in security-monitor function", error);
     return createCorsErrorResponse(error.message, 500);
   }
 };
 
-serve(handler);
+serve(withErrorHandling(handler, (message, error) => {
+  const logger = createLogger({ functionName: 'security-monitor' });
+  logger.error(message, error);
+}));

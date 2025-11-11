@@ -1,17 +1,12 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
+import { createServiceRoleClient, createAuthenticatedClient } from "../_shared/supabase.ts";
+import { createLogger, generateRequestId } from "../_shared/logger.ts";
+import { withErrorHandling, ValidationError, AuthorizationError } from "../_shared/errors.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
 
 const alertSchema = z.object({
   type: z.enum(['ip_blocked', 'ip_unblocked', 'critical_event']),
@@ -26,52 +21,47 @@ const alertSchema = z.object({
 });
 
 const handler = async (req: Request): Promise<Response> => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsResponse = handleCorsPreFlight(req);
+  if (corsResponse) return corsResponse;
+
+  const requestId = generateRequestId();
+  const logger = createLogger({ functionName: 'send-security-alert', requestId });
 
   try {
     // Verify authentication
     const authHeader = req.headers.get('authorization');
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      throw new AuthorizationError('Missing authorization header');
     }
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const supabase = createAuthenticatedClient(authHeader);
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      logger.warn("Unauthorized access attempt");
+      throw new AuthorizationError('Unauthorized');
     }
 
     // Verify admin role
-    const { data: isAdmin } = await supabase.rpc('has_role', {
+    const serviceSupabase = createServiceRoleClient();
+    const { data: isAdmin } = await serviceSupabase.rpc('has_role', {
       _user_id: user.id,
       _role: 'admin'
     });
 
     if (!isAdmin) {
-      return new Response(
-        JSON.stringify({ error: 'Admin access required' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      logger.warn("Non-admin user attempted to send security alert", { userId: user.id });
+      throw new AuthorizationError('Admin access required');
     }
+
+    logger.info("Admin user sending security alert", { userId: user.id });
 
     const rawData = await req.json();
     const validationResult = alertSchema.safeParse(rawData);
 
     if (!validationResult.success) {
-      console.error("Validation error:", validationResult.error);
-      return new Response(
-        JSON.stringify({ error: 'Invalid request data', details: validationResult.error.errors }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      logger.error("Validation error", validationResult.error);
+      throw new ValidationError('Invalid request data', { errors: validationResult.error.errors });
     }
 
     const alertData = validationResult.data;
@@ -157,31 +147,22 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (!emailResponse.ok) {
       const errorText = await emailResponse.text();
-      console.error('Resend API error:', errorText);
+      logger.error('Resend API error', new Error(errorText));
       throw new Error(`Failed to send email: ${errorText}`);
     }
 
     const emailResult = await emailResponse.json();
-    console.log('Security alert email sent successfully:', emailResult);
+    logger.info('Security alert email sent successfully', { emailId: emailResult.id, alertType: alertData.type });
 
-    return new Response(
-      JSON.stringify({ success: true, emailId: emailResult.id }),
-      { 
-        status: 200, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
+    return createCorsResponse({ success: true, emailId: emailResult.id }, 200);
 
   } catch (error: any) {
-    console.error('Error in send-security-alert function:', error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
+    logger.error('Error in send-security-alert function', error);
+    throw error;
   }
 };
 
-serve(handler);
+serve(withErrorHandling(handler, (message, error) => {
+  const logger = createLogger({ functionName: 'send-security-alert' });
+  logger.error(message, error);
+}));
