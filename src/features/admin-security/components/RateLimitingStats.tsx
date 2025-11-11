@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { toast } from '@/hooks/use-toast';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
+import { fetchSecurityEvents } from '@/services';
 
 interface RateLimitEvent {
   id: string;
@@ -30,19 +31,7 @@ export function RateLimitingStats() {
   // Get rate limit events from the last 24 hours
   const { data: rateLimitEvents, isLoading } = useQuery({
     queryKey: ['rate-limit-events'],
-    queryFn: async () => {
-      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      
-      const { data, error } = await supabase
-        .from('security_events')
-        .select('*')
-        .eq('event_type', 'rate_limit_exceeded')
-        .gte('created_at', twentyFourHoursAgo)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      return data as RateLimitEvent[];
-    },
+    queryFn: () => fetchSecurityEvents(24 * 60, 'rate_limit_exceeded'),
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 

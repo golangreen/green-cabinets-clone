@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { toast } from '@/hooks/use-toast';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
+import { fetchSecurityEvents } from '@/services';
 
 interface WebhookEvent {
   id: string;
@@ -32,20 +33,7 @@ export function WebhookSecurityStats() {
   // Get webhook-related security events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
     queryKey: ['webhook-security-events'],
-    queryFn: async () => {
-      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      
-      const { data, error } = await supabase
-        .from('security_events')
-        .select('*')
-        .eq('function_name', 'resend-webhook')
-        .gte('created_at', twentyFourHoursAgo)
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-      return data as WebhookEvent[];
-    },
+    queryFn: () => fetchSecurityEvents(24 * 60, undefined, undefined, 'resend-webhook'),
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 

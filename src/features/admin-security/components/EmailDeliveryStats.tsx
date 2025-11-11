@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,6 +10,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
+import { fetchEmailDeliveryStats, fetchRecentEmailLogs } from '@/services';
 
 interface EmailLog {
   id: string;
@@ -28,28 +27,13 @@ interface EmailLog {
 export const EmailDeliveryStats = () => {
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['email-delivery-stats'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .rpc('get_email_delivery_stats', { days_back: 7 });
-
-      if (error) throw error;
-      return data?.[0] || null;
-    },
+    queryFn: () => fetchEmailDeliveryStats(7),
     refetchInterval: 30000 // Refresh every 30 seconds
   });
 
   const { data: recentEmails, isLoading: emailsLoading } = useQuery({
     queryKey: ['recent-email-logs'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('email_delivery_log')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-      return data as EmailLog[];
-    },
+    queryFn: () => fetchRecentEmailLogs(50),
     refetchInterval: 30000
   });
 
@@ -128,7 +112,7 @@ export const EmailDeliveryStats = () => {
                       <Mail className="h-4 w-4 text-blue-500" />
                       <span className="text-xs text-muted-foreground">Total Sent</span>
                     </div>
-                    <p className="text-2xl font-bold">{stats.total_sent || 0}</p>
+                    <p className="text-2xl font-bold">{stats.sent || 0}</p>
                   </div>
 
                   <div className="p-4 border rounded-lg bg-card">
@@ -136,7 +120,7 @@ export const EmailDeliveryStats = () => {
                       <CheckCircle2 className="h-4 w-4 text-green-500" />
                       <span className="text-xs text-muted-foreground">Delivered</span>
                     </div>
-                    <p className="text-2xl font-bold">{stats.total_delivered || 0}</p>
+                    <p className="text-2xl font-bold">{stats.delivered || 0}</p>
                   </div>
 
                   <div className="p-4 border rounded-lg bg-card">
@@ -144,7 +128,7 @@ export const EmailDeliveryStats = () => {
                       <TrendingUp className="h-4 w-4 text-primary" />
                       <span className="text-xs text-muted-foreground">Delivery Rate</span>
                     </div>
-                    <p className="text-2xl font-bold">{stats.delivery_rate || 0}%</p>
+                    <p className="text-2xl font-bold">{stats.deliveryRate.toFixed(1) || 0}%</p>
                   </div>
 
                   <div className="p-4 border rounded-lg bg-card">
@@ -152,15 +136,15 @@ export const EmailDeliveryStats = () => {
                       <XCircle className="h-4 w-4 text-red-500" />
                       <span className="text-xs text-muted-foreground">Bounced</span>
                     </div>
-                    <p className="text-2xl font-bold">{stats.total_bounced || 0}</p>
+                    <p className="text-2xl font-bold">{stats.bounced || 0}</p>
                   </div>
 
                   <div className="p-4 border rounded-lg bg-card">
                     <div className="flex items-center gap-2 mb-2">
                       <XCircle className="h-4 w-4 text-red-500" />
-                      <span className="text-xs text-muted-foreground">Failed</span>
+                      <span className="text-xs text-muted-foreground">Delayed</span>
                     </div>
-                    <p className="text-2xl font-bold">{stats.total_failed || 0}</p>
+                    <p className="text-2xl font-bold">{stats.delayed || 0}</p>
                   </div>
 
                   <div className="p-4 border rounded-lg bg-card">
@@ -168,7 +152,7 @@ export const EmailDeliveryStats = () => {
                       <AlertTriangle className="h-4 w-4 text-orange-500" />
                       <span className="text-xs text-muted-foreground">Complaints</span>
                     </div>
-                    <p className="text-2xl font-bold">{stats.total_complained || 0}</p>
+                    <p className="text-2xl font-bold">{stats.complained || 0}</p>
                   </div>
                 </div>
 

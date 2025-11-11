@@ -30,7 +30,8 @@ export interface BlockedIP {
 export async function fetchSecurityEvents(
   timeWindowMinutes: number = 60,
   eventType?: string,
-  severity?: string
+  severity?: string,
+  functionName?: string
 ): Promise<SecurityEvent[]> {
   let query = supabase
     .from('security_events')
@@ -45,6 +46,10 @@ export async function fetchSecurityEvents(
   
   if (severity) {
     query = query.eq('severity', severity);
+  }
+
+  if (functionName) {
+    query = query.eq('function_name', functionName);
   }
 
   const { data, error } = await query;
