@@ -105,21 +105,16 @@ const Header = () => {
     }`}>
       <nav className="container relative mx-auto px-4 md:px-6 py-4 md:py-5">
         <div className="flex items-center justify-between">
-          {/* Centered Logo with Text */}
+          {/* Centered Logo */}
           <div className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ${
             hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
           }`}>
-            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex flex-col items-center gap-1">
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex items-center">
               <img 
                 src={logoTeal}
                 alt="Green Cabinets Logo" 
-                className="h-14 md:h-16 w-auto transition-all duration-300" 
+                className="h-16 md:h-20 w-auto transition-all duration-300" 
               />
-              <span className={`font-display text-xs md:text-sm font-bold tracking-[0.2em] transition-colors duration-300 ${
-                isScrolled ? 'text-[#D4AF37]' : 'text-white'
-              }`}>
-                GREEN CABINETS
-              </span>
             </a>
           </div>
           
