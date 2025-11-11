@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive } from "lucide-react";
+import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, ExternalLink } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/features/shopping-cart";
@@ -208,6 +208,17 @@ const Header = () => {
           </div>
           
           <div className="flex items-center gap-4 font-display">
+            {/* View Published Site Button */}
+            <Button
+              size="default"
+              variant="default"
+              className="hidden sm:inline-flex text-sm px-4 bg-primary hover:bg-primary/90 text-primary-foreground"
+              onClick={() => window.open('https://90bce6da-512b-48f1-874c-7d0142de1705.lovableproject.com', '_blank')}
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              View Site
+            </Button>
+
             {/* Install PWA Button */}
             {isInstallable && (
               <Button
@@ -411,6 +422,19 @@ const Header = () => {
                       Sign In
                     </Button>
                   )}
+
+                  {/* View Published Site Button - Mobile */}
+                  <Button
+                    variant="default"
+                    onClick={() => {
+                      window.open('https://90bce6da-512b-48f1-874c-7d0142de1705.lovableproject.com', '_blank');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full"
+                  >
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    View Published Site
+                  </Button>
 
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-semibold">Theme</h3>
