@@ -45,11 +45,19 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
+interface RoleDetail {
+  role: 'admin' | 'moderator' | 'user';
+  is_temporary: boolean;
+  expires_at: string | null;
+  reminder_sent: boolean;
+}
+
 interface User {
   user_id: string;
   email: string;
   created_at: string;
   roles: string[];
+  role_details: RoleDetail[];
 }
 
 interface RoleAssignDialog {
@@ -58,11 +66,24 @@ interface RoleAssignDialog {
   role: "admin" | "moderator" | "user";
 }
 
+interface RoleExtendDialog {
+  open: boolean;
+  userId: string;
+  role: "admin" | "moderator" | "user";
+  currentExpiration: string;
+}
+
 const AdminUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const [bulkRole, setBulkRole] = useState<"admin" | "moderator" | "user">("moderator");
   const [roleDialog, setRoleDialog] = useState<RoleAssignDialog>({ open: false, userId: "", role: "user" });
+  const [extendDialog, setExtendDialog] = useState<RoleExtendDialog>({ 
+    open: false, 
+    userId: "", 
+    role: "user", 
+    currentExpiration: "" 
+  });
   const [expirationDate, setExpirationDate] = useState<Date | undefined>(undefined);
   const [isTemporary, setIsTemporary] = useState(false);
   const debouncedSearch = useDebounce(searchTerm, 300);
@@ -72,7 +93,7 @@ const AdminUsers = () => {
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_all_users_with_roles");
       if (error) throw error;
-      return data as User[];
+      return data as unknown as User[];
     },
   });
 
@@ -86,6 +107,48 @@ const AdminUsers = () => {
     setRoleDialog({ open: false, userId: "", role: "user" });
     setExpirationDate(undefined);
     setIsTemporary(false);
+  };
+
+  const openExtendDialog = (userId: string, role: "admin" | "moderator" | "user", currentExpiration: string) => {
+    setExtendDialog({ open: true, userId, role, currentExpiration });
+    setExpirationDate(new Date(currentExpiration));
+  };
+
+  const closeExtendDialog = () => {
+    setExtendDialog({ open: false, userId: "", role: "user", currentExpiration: "" });
+    setExpirationDate(undefined);
+  };
+
+  const confirmExtendRole = async () => {
+    if (!expirationDate) return;
+
+    try {
+      const { error } = await supabase.rpc("extend_role_expiration", {
+        target_user_id: extendDialog.userId,
+        target_role: extendDialog.role,
+        new_expiration_date: expirationDate.toISOString(),
+      });
+      
+      if (error) throw error;
+
+      toast.success(`${extendDialog.role} role expiration extended successfully`);
+      closeExtendDialog();
+      refetch();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to extend role");
+    }
+  };
+
+  const getRoleDetail = (user: User, role: string): RoleDetail | undefined => {
+    return user.role_details?.find(rd => rd.role === role);
+  };
+
+  const isRoleExpiringSoon = (expiresAt: string | null): boolean => {
+    if (!expiresAt) return false;
+    const expiryDate = new Date(expiresAt);
+    const now = new Date();
+    const hoursUntilExpiry = (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return hoursUntilExpiry > 0 && hoursUntilExpiry <= 72; // Within 3 days
   };
 
   const confirmAddRole = async () => {
@@ -424,20 +487,38 @@ const AdminUsers = () => {
                             {user.roles.length === 0 ? (
                               <Badge variant="outline">user</Badge>
                             ) : (
-                              user.roles.map((role) => (
-                                <Badge
-                                  key={role}
-                                  variant={role === "admin" ? "default" : "secondary"}
-                                >
-                                  {role}
-                                </Badge>
-                              ))
+                              user.roles.map((role) => {
+                                const roleDetail = getRoleDetail(user, role);
+                                const isExpiring = roleDetail?.expires_at && isRoleExpiringSoon(roleDetail.expires_at);
+                                
+                                return (
+                                  <div key={role} className="flex flex-col gap-1">
+                                    <Badge
+                                      variant={role === "admin" ? "default" : "secondary"}
+                                      className={cn(isExpiring && "border-orange-500")}
+                                    >
+                                      {role}
+                                      {roleDetail?.is_temporary && (
+                                        <Clock className="h-3 w-3 ml-1 inline" />
+                                      )}
+                                    </Badge>
+                                    {roleDetail?.expires_at && (
+                                      <span className={cn(
+                                        "text-xs",
+                                        isExpiring ? "text-orange-600 dark:text-orange-400" : "text-muted-foreground"
+                                      )}>
+                                        Expires: {format(new Date(roleDetail.expires_at), "MMM d, yyyy")}
+                                      </span>
+                                    )}
+                                  </div>
+                                );
+                              })
                             )}
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          <div className="flex gap-2 justify-end">
-                             {!user.roles.includes("admin") && (
+                          <div className="flex gap-2 justify-end flex-wrap">
+                            {!user.roles.includes("admin") ? (
                               <Button
                                 size="sm"
                                 variant="outline"
@@ -446,18 +527,33 @@ const AdminUsers = () => {
                                 <UserPlus className="h-4 w-4 mr-1" />
                                 Add Admin
                               </Button>
+                            ) : (
+                              <>
+                                {getRoleDetail(user, "admin")?.expires_at && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => openExtendDialog(
+                                      user.user_id, 
+                                      "admin", 
+                                      getRoleDetail(user, "admin")!.expires_at!
+                                    )}
+                                  >
+                                    <Clock className="h-4 w-4 mr-1" />
+                                    Extend
+                                  </Button>
+                                )}
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => removeRole(user.user_id, "admin")}
+                                >
+                                  <UserMinus className="h-4 w-4 mr-1" />
+                                  Remove
+                                </Button>
+                              </>
                             )}
-                            {user.roles.includes("admin") && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => removeRole(user.user_id, "admin")}
-                              >
-                                <UserMinus className="h-4 w-4 mr-1" />
-                                Remove Admin
-                              </Button>
-                            )}
-                            {!user.roles.includes("moderator") && (
+                            {!user.roles.includes("moderator") ? (
                               <Button
                                 size="sm"
                                 variant="outline"
@@ -466,16 +562,31 @@ const AdminUsers = () => {
                                 <UserPlus className="h-4 w-4 mr-1" />
                                 Add Moderator
                               </Button>
-                            )}
-                            {user.roles.includes("moderator") && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => removeRole(user.user_id, "moderator")}
-                              >
-                                <UserMinus className="h-4 w-4 mr-1" />
-                                Remove Moderator
-                              </Button>
+                            ) : (
+                              <>
+                                {getRoleDetail(user, "moderator")?.expires_at && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => openExtendDialog(
+                                      user.user_id, 
+                                      "moderator", 
+                                      getRoleDetail(user, "moderator")!.expires_at!
+                                    )}
+                                  >
+                                    <Clock className="h-4 w-4 mr-1" />
+                                    Extend
+                                  </Button>
+                                )}
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => removeRole(user.user_id, "moderator")}
+                                >
+                                  <UserMinus className="h-4 w-4 mr-1" />
+                                  Remove
+                                </Button>
+                              </>
                             )}
                           </div>
                         </TableCell>
@@ -536,6 +647,7 @@ const AdminUsers = () => {
                       onSelect={setExpirationDate}
                       disabled={(date) => date < new Date()}
                       initialFocus
+                      className="pointer-events-auto"
                     />
                   </PopoverContent>
                 </Popover>
@@ -558,6 +670,78 @@ const AdminUsers = () => {
             >
               <UserPlus className="h-4 w-4 mr-2" />
               Assign Role
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Role Extension Dialog */}
+      <Dialog open={extendDialog.open} onOpenChange={(open) => !open && closeExtendDialog()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Extend {extendDialog.role} Role</DialogTitle>
+            <DialogDescription>
+              Select a new expiration date for this temporary role
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Current Expiration</Label>
+              <p className="text-sm text-muted-foreground">
+                {extendDialog.currentExpiration && format(new Date(extendDialog.currentExpiration), "PPP")}
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>New Expiration Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !expirationDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {expirationDate ? format(expirationDate, "PPP") : "Select new expiration date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={expirationDate}
+                    onSelect={setExpirationDate}
+                    disabled={(date) => 
+                      date < new Date() || 
+                      (extendDialog.currentExpiration && date <= new Date(extendDialog.currentExpiration))
+                    }
+                    initialFocus
+                    className="pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
+              {expirationDate && extendDialog.currentExpiration && (
+                <p className="text-sm text-muted-foreground">
+                  Extension: {Math.ceil((expirationDate.getTime() - new Date(extendDialog.currentExpiration).getTime()) / (1000 * 60 * 60 * 24))} days
+                </p>
+              )}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={closeExtendDialog}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={confirmExtendRole}
+              disabled={!expirationDate || 
+                (extendDialog.currentExpiration && expirationDate <= new Date(extendDialog.currentExpiration))
+              }
+            >
+              <Clock className="h-4 w-4 mr-2" />
+              Extend Role
             </Button>
           </DialogFooter>
         </DialogContent>

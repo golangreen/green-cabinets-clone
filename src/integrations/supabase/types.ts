@@ -244,11 +244,20 @@ export type Database = {
         Returns: Json
       }
       cleanup_expired_blocks: { Args: never; Returns: number }
+      extend_role_expiration: {
+        Args: {
+          new_expiration_date: string
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: Json
+      }
       get_all_users_with_roles: {
         Args: never
         Returns: {
           created_at: string
           email: string
+          role_details: Json[]
           roles: Database["public"]["Enums"]["app_role"][]
           user_id: string
         }[]
