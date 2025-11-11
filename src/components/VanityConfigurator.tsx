@@ -1037,7 +1037,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                                 <SelectItem value="waterfall">Waterfall</SelectItem>
                               </SelectContent>
                             </Select>
-                            <Select value={faucetFinish} onValueChange={(value: any) => setFaucetFinish(value)}>
+                            <Select value={vanityConfig.faucetFinish} onValueChange={(value: any) => vanityConfig.setFaucetFinish(value)}>
                               <SelectTrigger className="bg-background h-8 text-xs">
                                 <SelectValue />
                               </SelectTrigger>
@@ -1055,7 +1055,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                       {/* Countertop Controls */}
                       <div className="pt-2 border-t border-border space-y-2">
                         <Label className="text-xs font-medium">Countertop</Label>
-                        <Select value={countertopMaterial} onValueChange={(value: any) => setCountertopMaterial(value)}>
+                        <Select value={vanityConfig.countertopMaterial} onValueChange={(value: any) => vanityConfig.setCountertopMaterial(value)}>
                           <SelectTrigger className="bg-background h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
@@ -1065,7 +1065,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                             <SelectItem value="granite">Granite</SelectItem>
                           </SelectContent>
                         </Select>
-                        <Select value={countertopColor} onValueChange={setCountertopColor}>
+                        <Select value={vanityConfig.countertopColor} onValueChange={vanityConfig.setCountertopColor}>
                           <SelectTrigger className="bg-background h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
@@ -1078,7 +1078,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                             <SelectItem value="brown">Brown</SelectItem>
                           </SelectContent>
                         </Select>
-                        <Select value={countertopEdge} onValueChange={(value: any) => setCountertopEdge(value)}>
+                        <Select value={vanityConfig.countertopEdge} onValueChange={(value: any) => vanityConfig.setCountertopEdge(value)}>
                           <SelectTrigger className="bg-background h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
@@ -1094,7 +1094,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                       {/* Sink Controls */}
                       <div className="pt-2 border-t border-border space-y-2">
                         <Label className="text-xs font-medium">Sink</Label>
-                        <Select value={sinkStyle} onValueChange={(value: any) => setSinkStyle(value)}>
+                        <Select value={vanityConfig.sinkStyle} onValueChange={(value: any) => vanityConfig.setSinkStyle(value)}>
                           <SelectTrigger className="bg-background h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
@@ -1104,7 +1104,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                             <SelectItem value="integrated">Integrated</SelectItem>
                           </SelectContent>
                         </Select>
-                        <Select value={sinkShape} onValueChange={(value: any) => setSinkShape(value)}>
+                        <Select value={vanityConfig.sinkShape} onValueChange={(value: any) => vanityConfig.setSinkShape(value)}>
                           <SelectTrigger className="bg-background h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
@@ -1122,13 +1122,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                           <Label className="text-xs font-medium">Backsplash</Label>
                           <Checkbox 
                             id="includeBacksplashFullscreen" 
-                            checked={includeBacksplash}
-                            onCheckedChange={(checked) => setIncludeBacksplash(checked as boolean)}
+                            checked={vanityConfig.includeBacksplash}
+                            onCheckedChange={(checked) => vanityConfig.setIncludeBacksplash(checked as boolean)}
                           />
                         </div>
-                        {includeBacksplash && (
+                        {vanityConfig.includeBacksplash && (
                           <>
-                            <Select value={backsplashMaterial} onValueChange={(value: any) => setBacksplashMaterial(value)}>
+                            <Select value={vanityConfig.backsplashMaterial} onValueChange={(value: any) => vanityConfig.setBacksplashMaterial(value)}>
                               <SelectTrigger className="bg-background h-8 text-xs">
                                 <SelectValue />
                               </SelectTrigger>
@@ -1139,7 +1139,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                                 <SelectItem value="stone">Stone</SelectItem>
                               </SelectContent>
                             </Select>
-                            <Select value={backsplashHeight} onValueChange={(value: any) => setBacksplashHeight(value)}>
+                            <Select value={vanityConfig.backsplashHeight} onValueChange={(value: any) => vanityConfig.setBacksplashHeight(value)}>
                               <SelectTrigger className="bg-background h-8 text-xs">
                                 <SelectValue />
                               </SelectTrigger>
@@ -1158,13 +1158,13 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                           <Label className="text-xs font-medium">Vanity Lighting</Label>
                           <Checkbox 
                             id="includeVanityLightingFullscreen" 
-                            checked={includeVanityLighting}
-                            onCheckedChange={(checked) => setIncludeVanityLighting(checked as boolean)}
+                            checked={vanityConfig.includeVanityLighting}
+                            onCheckedChange={(checked) => vanityConfig.setIncludeVanityLighting(checked as boolean)}
                           />
                         </div>
-                        {includeVanityLighting && (
+                        {vanityConfig.includeVanityLighting && (
                           <>
-                            <Select value={vanityLightingStyle} onValueChange={(value: any) => setVanityLightingStyle(value)}>
+                            <Select value={vanityConfig.vanityLightingStyle} onValueChange={(value: any) => vanityConfig.setVanityLightingStyle(value)}>
                               <SelectTrigger className="bg-background h-8 text-xs">
                                 <SelectValue />
                               </SelectTrigger>
@@ -1177,11 +1177,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                             <div className="space-y-1">
                               <div className="flex justify-between text-xs">
                                 <span>Brightness</span>
-                                <span>{vanityLightBrightness}%</span>
+                                <span>{vanityConfig.vanityLightBrightness}%</span>
                               </div>
                               <Slider
-                                value={[vanityLightBrightness]}
-                                onValueChange={(value) => setVanityLightBrightness(value[0])}
+                                value={[vanityConfig.vanityLightBrightness]}
+                                onValueChange={(value) => vanityConfig.setVanityLightBrightness(value[0])}
                                 min={30}
                                 max={100}
                                 step={5}
@@ -1191,11 +1191,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                             <div className="space-y-1">
                               <div className="flex justify-between text-xs">
                                 <span>Temp</span>
-                                <span>{vanityLightTemp}K</span>
+                                <span>{vanityConfig.vanityLightTemp}K</span>
                               </div>
                               <Slider
-                                value={[vanityLightTemp]}
-                                onValueChange={(value) => setVanityLightTemp(value[0])}
+                                value={[vanityConfig.vanityLightTemp]}
+                                onValueChange={(value) => vanityConfig.setVanityLightTemp(value[0])}
                                 min={2700}
                                 max={6500}
                                 step={100}
