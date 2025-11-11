@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, ThemeProvider } from "@/contexts";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AdminRoute } from "@/components/AdminRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import ProductDetail from "./pages/ProductDetail";
@@ -70,9 +71,9 @@ const App = () => {
                 <Route 
                   path="/admin/security" 
                   element={
-                    <ProtectedRoute>
+                    <AdminRoute>
                       <AdminSecurity />
-                    </ProtectedRoute>
+                    </AdminRoute>
                   } 
                 />
                 <Route path="/room-scan" element={<RoomScan />} />
