@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { toast } from '@/hooks/use-toast';
+import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 
 interface WebhookEvent {
   id: string;
@@ -26,6 +27,7 @@ interface WebhookEvent {
 export function WebhookSecurityStats() {
   const queryClient = useQueryClient();
   const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
+  const { shouldShowNotification } = useNotificationSettings();
 
   // Get webhook-related security events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
@@ -104,14 +106,17 @@ export function WebhookSecurityStats() {
           console.log('New security event detected, refreshing webhook security stats...');
           
           const event = payload.new as WebhookEvent;
-          const eventTypeDisplay = event.event_type.replace(/_/g, ' ').toUpperCase();
-          const severityColor = event.severity === 'high' || event.severity === 'critical' ? 'destructive' : 'default';
           
-          toast({
-            title: `🚨 Webhook Security Event`,
-            description: `${eventTypeDisplay} - Severity: ${event.severity}${event.details?.reason ? ` (${event.details.reason.replace(/_/g, ' ')})` : ''}`,
-            variant: severityColor as 'default' | 'destructive',
-          });
+          if (shouldShowNotification('webhook_security', event.severity as any)) {
+            const eventTypeDisplay = event.event_type.replace(/_/g, ' ').toUpperCase();
+            const severityColor = event.severity === 'high' || event.severity === 'critical' ? 'destructive' : 'default';
+            
+            toast({
+              title: `🚨 Webhook Security Event`,
+              description: `${eventTypeDisplay} - Severity: ${event.severity}${event.details?.reason ? ` (${event.details.reason.replace(/_/g, ' ')})` : ''}`,
+              variant: severityColor as 'default' | 'destructive',
+            });
+          }
           
           queryClient.invalidateQueries({ queryKey: ['webhook-security-events'] });
         }

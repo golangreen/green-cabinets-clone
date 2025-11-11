@@ -13,6 +13,7 @@ import { WebhookSecurityStats } from '@/components/admin/WebhookSecurityStats';
 import { RateLimitingStats } from '@/components/admin/RateLimitingStats';
 import { WebhookDeduplicationStats } from '@/components/admin/WebhookDeduplicationStats';
 import { WebhookRetryChart } from '@/components/admin/WebhookRetryChart';
+import { NotificationSettingsPanel } from '@/components/admin/NotificationSettingsPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Activity, Ban, Bell, Settings } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -200,10 +201,11 @@ const AdminSecurity = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="settings" className="space-y-6">
-            <CronJobsManager />
-            <SecurityAlertSettings />
-          </TabsContent>
+              <TabsContent value="settings" className="space-y-6">
+                <NotificationSettingsPanel />
+                <CronJobsManager />
+                <SecurityAlertSettings />
+              </TabsContent>
         </Tabs>
       </main>
       <Footer />

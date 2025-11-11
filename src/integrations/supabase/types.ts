@@ -176,6 +176,48 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_settings: {
+        Row: {
+          created_at: string
+          id: string
+          rate_limit_enabled: boolean
+          retry_threshold: number
+          severity_threshold: string
+          sound_enabled: boolean
+          updated_at: string
+          user_id: string
+          webhook_duplicate_enabled: boolean
+          webhook_retry_enabled: boolean
+          webhook_security_enabled: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rate_limit_enabled?: boolean
+          retry_threshold?: number
+          severity_threshold?: string
+          sound_enabled?: boolean
+          updated_at?: string
+          user_id: string
+          webhook_duplicate_enabled?: boolean
+          webhook_retry_enabled?: boolean
+          webhook_security_enabled?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rate_limit_enabled?: boolean
+          retry_threshold?: number
+          severity_threshold?: string
+          sound_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+          webhook_duplicate_enabled?: boolean
+          webhook_retry_enabled?: boolean
+          webhook_security_enabled?: boolean
+        }
+        Relationships: []
+      }
       role_change_audit: {
         Row: {
           action: string
@@ -420,6 +462,28 @@ export type Database = {
           user_email: string
           user_id: string
         }[]
+      }
+      get_or_create_notification_settings: {
+        Args: { p_user_id: string }
+        Returns: {
+          created_at: string
+          id: string
+          rate_limit_enabled: boolean
+          retry_threshold: number
+          severity_threshold: string
+          sound_enabled: boolean
+          updated_at: string
+          user_id: string
+          webhook_duplicate_enabled: boolean
+          webhook_retry_enabled: boolean
+          webhook_security_enabled: boolean
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "notification_settings"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       get_roles_expiring_within_days: {
         Args: { days_ahead?: number }

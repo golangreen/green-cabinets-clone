@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { toast } from '@/hooks/use-toast';
+import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 
 interface RateLimitEvent {
   id: string;
@@ -24,6 +25,7 @@ interface RateLimitEvent {
 export function RateLimitingStats() {
   const queryClient = useQueryClient();
   const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
+  const { shouldShowNotification } = useNotificationSettings();
 
   // Get rate limit events from the last 24 hours
   const { data: rateLimitEvents, isLoading } = useQuery({
@@ -99,13 +101,16 @@ export function RateLimitingStats() {
           console.log('New rate limit event detected, refreshing stats...');
           
           const event = payload.new as RateLimitEvent;
-          const functionName = event.function_name || 'Unknown Function';
           
-          toast({
-            title: '⚠️ Rate Limit Exceeded',
-            description: `${functionName} - IP: ${event.client_ip} (Severity: ${event.severity})`,
-            variant: 'destructive',
-          });
+          if (shouldShowNotification('rate_limit', event.severity as any)) {
+            const functionName = event.function_name || 'Unknown Function';
+            
+            toast({
+              title: '⚠️ Rate Limit Exceeded',
+              description: `${functionName} - IP: ${event.client_ip} (Severity: ${event.severity})`,
+              variant: 'destructive',
+            });
+          }
           
           queryClient.invalidateQueries({ queryKey: ['rate-limit-events'] });
         }

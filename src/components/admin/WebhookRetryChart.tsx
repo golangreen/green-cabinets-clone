@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { toast as sonnerToast } from 'sonner';
 import { toast } from '@/hooks/use-toast';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
+import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 
 interface RetryData {
   date: string;
@@ -19,6 +20,7 @@ export function WebhookRetryChart() {
   const [data, setData] = useState<RetryData[]>([]);
   const [loading, setLoading] = useState(true);
   const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
+  const { shouldShowNotification } = useNotificationSettings();
 
   const fetchRetryHistory = async () => {
     setLoading(true);
@@ -157,7 +159,7 @@ export function WebhookRetryChart() {
           };
           
           // Show toast for high retry counts
-          if (event.retry_count >= 3) {
+          if (shouldShowNotification('webhook_retry', 'high', event.retry_count)) {
             toast({
               title: '🔴 Excessive Webhook Retries',
               description: `${event.event_type} has failed ${event.retry_count} times from ${event.client_ip}`,

@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { toast } from '@/hooks/use-toast';
+import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 
 interface WebhookEvent {
   id: string;
@@ -21,6 +22,7 @@ interface WebhookEvent {
 export function WebhookDeduplicationStats() {
   const queryClient = useQueryClient();
   const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
+  const { shouldShowNotification } = useNotificationSettings();
 
   // Get webhook events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
@@ -81,7 +83,7 @@ export function WebhookDeduplicationStats() {
           const event = payload.new as WebhookEvent;
           
           // Only show toast for retry events (potential duplicates)
-          if (event.retry_count > 0) {
+          if (event.retry_count > 0 && shouldShowNotification('webhook_duplicate', undefined, event.retry_count)) {
             toast({
               title: '🔄 Webhook Retry Detected',
               description: `${event.event_type} - Retry #${event.retry_count} from ${event.client_ip}`,
