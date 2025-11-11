@@ -42,8 +42,7 @@ const Hero = () => {
   const { isMobile } = useDeviceType();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  // Use original array to ensure first image is always predictable for LCP optimization
-  const [displayImages] = useState(() => heroImages);
+  const [shuffledImages] = useState(() => shuffleArray(heroImages));
   const [recentIndices, setRecentIndices] = useState<number[]>([0]);
   const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
 
@@ -57,13 +56,13 @@ const Hero = () => {
 
   // Get a random index that hasn't been used recently
   const getNextRandomIndex = () => {
-    const availableIndices = displayImages
+    const availableIndices = shuffledImages
       .map((_, idx) => idx)
       .filter(idx => !recentIndices.includes(idx));
     
     if (availableIndices.length === 0) {
       // If all images have been shown recently, reset but keep current image excluded
-      const resetIndices = displayImages
+      const resetIndices = shuffledImages
         .map((_, idx) => idx)
         .filter(idx => idx !== currentImageIndex);
       return resetIndices[Math.floor(Math.random() * resetIndices.length)];
@@ -90,9 +89,9 @@ const Hero = () => {
     }, 7000); // Change image every 7 seconds
 
     return () => clearInterval(interval);
-  }, [displayImages.length, currentImageIndex, recentIndices]);
+  }, [shuffledImages.length, currentImageIndex, recentIndices]);
 
-  const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % displayImages.length;
+  const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden touch-pan-y">
@@ -107,24 +106,17 @@ const Hero = () => {
             zIndex: 1,
           }}
         >
-          <picture>
-            <source 
-              srcSet={displayImages[currentImageIndex].src.replace(/\.(jpg|jpeg|png)$/, '.webp')} 
-              type="image/webp" 
-            />
-            <img 
-              src={displayImages[currentImageIndex].src} 
-              alt={displayImages[currentImageIndex].alt} 
-              className="w-full h-full object-cover pointer-events-none" 
-              style={{ 
-                filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-                willChange: 'opacity'
-              }}
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-            />
-          </picture>
+          <img 
+            src={shuffledImages[currentImageIndex].src} 
+            alt={shuffledImages[currentImageIndex].alt} 
+            className="w-full h-full object-cover pointer-events-none" 
+            style={{ 
+              filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
+              willChange: 'opacity'
+            }}
+            loading="eager"
+            decoding="async"
+          />
         </div>
         
         {/* Next Image - fades in */}
@@ -136,23 +128,17 @@ const Hero = () => {
             zIndex: 2,
           }}
         >
-          <picture>
-            <source 
-              srcSet={displayImages[getNextIndex()].src.replace(/\.(jpg|jpeg|png)$/, '.webp')} 
-              type="image/webp" 
-            />
-            <img 
-              src={displayImages[getNextIndex()].src} 
-              alt={displayImages[getNextIndex()].alt} 
-              className="w-full h-full object-cover pointer-events-none" 
-              style={{ 
-                filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-                willChange: 'opacity'
-              }}
-              loading="eager"
-              decoding="async"
-            />
-          </picture>
+          <img 
+            src={shuffledImages[getNextIndex()].src} 
+            alt={shuffledImages[getNextIndex()].alt} 
+            className="w-full h-full object-cover pointer-events-none" 
+            style={{ 
+              filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
+              willChange: 'opacity'
+            }}
+            loading="eager"
+            decoding="async"
+          />
         </div>
         
         <div className="absolute inset-0 bg-black/25" style={{ zIndex: 3 }} />
