@@ -96,14 +96,33 @@ const Hero = () => {
   return (
     <>
       {/* Hero Text Section - Above Images */}
-      <section className="relative bg-gray-50 pt-32 md:pt-40 pb-20 md:pb-32">
+      <section className="relative bg-gray-50 pt-32 md:pt-40 pb-12 md:pb-16">
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-gray-900 mb-6 leading-tight drop-shadow-2xl animate-fade-in">
-            Designs for lifestyle
+            Transform Your Space
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-light drop-shadow-lg animate-fade-in" style={{ animationDelay: '200ms' }}>
-            Custom cabinetry crafted for comfort and style
+          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-light drop-shadow-lg animate-fade-in mb-8" style={{ animationDelay: '200ms' }}>
+            Premium custom cabinetry for kitchens, bathrooms, and closets
           </p>
+          <Button
+            onClick={handleLaunchClick}
+            size="lg"
+            variant="hero"
+            className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-gray-900 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-lg px-8 py-6 animate-fade-in"
+            style={{ animationDelay: '400ms' }}
+          >
+            {isMobile ? (
+              <>
+                <Camera className="mr-2 h-5 w-5" />
+                Scan Your Room
+              </>
+            ) : (
+              <>
+                <Sparkles className="mr-2 h-5 w-5" />
+                Launch Designer
+              </>
+            )}
+          </Button>
         </div>
       </section>
 

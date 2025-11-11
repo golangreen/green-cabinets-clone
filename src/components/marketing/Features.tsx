@@ -35,7 +35,7 @@ const Features = () => {
       className="py-32 bg-gray-50"
     >
       <div className="container mx-auto px-6">
-        <h2 className="text-5xl md:text-6xl font-serif text-center mb-20 text-gray-900">Interior design with vision</h2>
+        <h2 className="text-5xl md:text-6xl font-serif text-center mb-20 text-gray-900">Why Choose Green Cabinets</h2>
         <div className="max-w-6xl mx-auto space-y-16">
           {features.map((feature, index) => (
             <Card
