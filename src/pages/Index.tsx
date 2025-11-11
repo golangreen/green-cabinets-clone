@@ -11,13 +11,13 @@ const Index = () => {
       <SyncStatusIndicator />
       <Header />
       <Hero />
-      <div className="bg-geometric-pattern-subtle">
+      <div className="bg-[#fafafa]">
         <Services />
         <Features />
         <About />
       </div>
       <Gallery />
-      <div className="bg-geometric-pattern-subtle">
+      <div className="bg-[#fafafa]">
         <FeatureErrorBoundary
           featureName="Product Catalog"
           featureTag="shop-products"
