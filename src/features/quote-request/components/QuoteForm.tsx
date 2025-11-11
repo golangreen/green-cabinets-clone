@@ -358,7 +358,7 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
             {/* Navigation Buttons */}
             <div className="flex justify-between pt-4 border-t">
               {step > 1 ? (
-                <Button type="button" variant="outline" onClick={prevStep}>
+                <Button type="button" variant="brand-outline" onClick={prevStep}>
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Previous
                 </Button>
@@ -369,6 +369,7 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
               {step < totalSteps ? (
                 <Button
                   type="button"
+                  variant="hero"
                   onClick={nextStep}
                   disabled={
                     (step === 1 && !projectType) ||
@@ -380,7 +381,7 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               ) : (
-                <Button type="submit" disabled={isSubmitting}>
+                <Button type="submit" variant="hero" disabled={isSubmitting}>
                   {isSubmitting ? (
                     "Submitting..."
                   ) : (
