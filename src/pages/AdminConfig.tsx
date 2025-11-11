@@ -48,6 +48,56 @@ const AdminConfig = () => {
     }
   };
 
+  const exportAuditLogToCSV = () => {
+    if (auditLogs.length === 0) {
+      toast.error('No audit logs to export');
+      return;
+    }
+
+    // CSV headers
+    const headers = [
+      'Timestamp',
+      'User Email',
+      'Configuration Key',
+      'Change Type',
+      'Preset Name',
+      'Old Value',
+      'New Value'
+    ];
+
+    // Convert logs to CSV rows
+    const rows = auditLogs.map(log => [
+      new Date(log.created_at).toLocaleString(),
+      log.user_email,
+      log.config_key,
+      log.change_type,
+      log.preset_name || 'N/A',
+      log.old_value || 'N/A',
+      log.new_value
+    ]);
+
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `config-audit-log-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast.success('Audit log exported', {
+      description: `${auditLogs.length} records exported to CSV`,
+    });
+  };
+
   // Cache configuration
   const cacheConfig: ConfigValue[] = [
     {
@@ -675,10 +725,21 @@ const AdminConfig = () => {
                       <History className="h-5 w-5 text-primary" />
                       <CardTitle>Configuration Audit Log</CardTitle>
                     </div>
-                    <Button variant="outline" size="sm" onClick={loadAuditLogs} disabled={isLoadingLogs}>
-                      <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingLogs ? 'animate-spin' : ''}`} />
-                      Refresh
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={exportAuditLogToCSV}
+                        disabled={auditLogs.length === 0}
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Export CSV
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={loadAuditLogs} disabled={isLoadingLogs}>
+                        <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingLogs ? 'animate-spin' : ''}`} />
+                        Refresh
+                      </Button>
+                    </div>
                   </div>
                   <CardDescription>
                     Complete history of all configuration changes made through this panel
