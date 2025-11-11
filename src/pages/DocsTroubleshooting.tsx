@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy, Play, Check, Terminal, Loader2, History, Trash2, Clock } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy, Play, Check, Terminal, Loader2, History, Trash2, Clock, Bookmark, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
@@ -26,6 +29,13 @@ interface QueryHistoryItem {
   error?: string;
 }
 
+interface BookmarkItem {
+  id: string;
+  name: string;
+  query: string;
+  createdAt: number;
+}
+
 const DocsTroubleshooting = () => {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<{ type: string; message: string } | null>(null);
@@ -33,6 +43,9 @@ const DocsTroubleshooting = () => {
   const [queryResult, setQueryResult] = useState<any>(null);
   const [isExecuting, setIsExecuting] = useState(false);
   const [queryHistory, setQueryHistory] = useState<QueryHistoryItem[]>([]);
+  const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
+  const [bookmarkName, setBookmarkName] = useState("");
+  const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
   const { toast } = useToast();
 
   // Load query history from localStorage on mount
@@ -53,6 +66,25 @@ const DocsTroubleshooting = () => {
       localStorage.setItem('sql-query-history', JSON.stringify(queryHistory));
     }
   }, [queryHistory]);
+
+  // Load bookmarks from localStorage on mount
+  useEffect(() => {
+    const savedBookmarks = localStorage.getItem('sql-query-bookmarks');
+    if (savedBookmarks) {
+      try {
+        setBookmarks(JSON.parse(savedBookmarks));
+      } catch (e) {
+        console.error('Failed to parse bookmarks:', e);
+      }
+    }
+  }, []);
+
+  // Save bookmarks to localStorage whenever they change
+  useEffect(() => {
+    if (bookmarks.length > 0) {
+      localStorage.setItem('sql-query-bookmarks', JSON.stringify(bookmarks));
+    }
+  }, [bookmarks]);
 
   const addToHistory = (query: string, success: boolean, rowCount?: number, error?: string) => {
     const historyItem: QueryHistoryItem = {
@@ -80,6 +112,51 @@ const DocsTroubleshooting = () => {
     toast({
       title: "History cleared",
       description: "Query history has been cleared",
+    });
+  };
+
+  const saveBookmark = () => {
+    if (!bookmarkName.trim()) {
+      toast({
+        title: "Name required",
+        description: "Please enter a name for your bookmark",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const bookmark: BookmarkItem = {
+      id: Date.now().toString(),
+      name: bookmarkName.trim(),
+      query: sqlQuery,
+      createdAt: Date.now(),
+    };
+
+    setBookmarks(prev => [bookmark, ...prev]);
+    setBookmarkName("");
+    setIsBookmarkDialogOpen(false);
+    toast({
+      title: "Bookmark saved",
+      description: `Query saved as "${bookmark.name}"`,
+    });
+  };
+
+  const loadBookmark = (bookmark: BookmarkItem) => {
+    setSqlQuery(bookmark.query);
+    toast({
+      title: "Bookmark loaded",
+      description: `Loaded query: ${bookmark.name}`,
+    });
+  };
+
+  const deleteBookmark = (id: string) => {
+    setBookmarks(prev => prev.filter(b => b.id !== id));
+    if (bookmarks.length === 1) {
+      localStorage.removeItem('sql-query-bookmarks');
+    }
+    toast({
+      title: "Bookmark deleted",
+      description: "Bookmark has been removed",
     });
   };
 
@@ -372,17 +449,65 @@ const DocsTroubleshooting = () => {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="text-sm font-medium">SQL Query</label>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => copyToClipboard(sqlQuery, 'sql-query')}
-                    >
-                      {copiedCode === 'sql-query' ? (
-                        <Check className="h-4 w-4" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
+                    <div className="flex gap-2">
+                      <Dialog open={isBookmarkDialogOpen} onOpenChange={setIsBookmarkDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="ghost">
+                            <Bookmark className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Save Query as Bookmark</DialogTitle>
+                            <DialogDescription>
+                              Give your query a memorable name for quick access later
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4 py-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="bookmark-name">Bookmark Name</Label>
+                              <Input
+                                id="bookmark-name"
+                                placeholder="e.g., Check admin users"
+                                value={bookmarkName}
+                                onChange={(e) => setBookmarkName(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    saveBookmark();
+                                  }
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Query Preview</Label>
+                              <pre className="text-xs bg-muted p-3 rounded overflow-x-auto max-h-[150px]">
+                                {sqlQuery}
+                              </pre>
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => setIsBookmarkDialogOpen(false)}>
+                              Cancel
+                            </Button>
+                            <Button onClick={saveBookmark}>
+                              <Star className="h-4 w-4 mr-2" />
+                              Save Bookmark
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => copyToClipboard(sqlQuery, 'sql-query')}
+                      >
+                        {copiedCode === 'sql-query' ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
                   <div className="border rounded-md overflow-hidden">
                     <CodeMirror
@@ -499,6 +624,68 @@ const DocsTroubleshooting = () => {
               </CardContent>
             </Card>
           </section>
+
+          {/* Bookmarks */}
+          {bookmarks.length > 0 && (
+            <section className="mb-12">
+              <Card className="border-primary/20">
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Star className="h-5 w-5 text-primary" />
+                    <CardTitle>Saved Bookmarks</CardTitle>
+                  </div>
+                  <CardDescription>
+                    Quick access to your favorite queries
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-3">
+                    {bookmarks.map((bookmark) => (
+                      <div
+                        key={bookmark.id}
+                        className="border rounded-lg p-3 hover:bg-accent transition-colors group"
+                      >
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <Bookmark className="h-4 w-4 text-primary shrink-0" />
+                            <h4 className="font-semibold text-sm">{bookmark.name}</h4>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => loadBookmark(bookmark)}
+                              className="h-8 px-3"
+                            >
+                              <Play className="h-3 w-3 mr-1" />
+                              Load
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteBookmark(bookmark.id);
+                              }}
+                              className="h-8 px-3 text-destructive hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                        <pre className="text-xs bg-muted p-2 rounded overflow-x-auto font-mono">
+                          {bookmark.query}
+                        </pre>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Created: {new Date(bookmark.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+          )}
 
           {/* Query History */}
           {queryHistory.length > 0 && (
