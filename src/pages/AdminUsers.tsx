@@ -53,11 +53,33 @@ const AdminUsers = () => {
 
   const addRole = async (userId: string, role: "admin" | "moderator" | "user") => {
     try {
+      const targetUser = users?.find(u => u.user_id === userId);
+      
       const { error } = await supabase.rpc("add_user_role", {
         target_user_id: userId,
         target_role: role,
       });
       if (error) throw error;
+
+      // Send notification email
+      if (targetUser?.email) {
+        const { data: { session } } = await supabase.auth.getSession();
+        const performerEmail = session?.user?.email || 'System Administrator';
+
+        try {
+          await supabase.functions.invoke('send-role-notification', {
+            body: {
+              userEmail: targetUser.email,
+              action: 'assigned',
+              role,
+              performedBy: performerEmail
+            }
+          });
+        } catch (emailError) {
+          console.error('Failed to send notification email:', emailError);
+        }
+      }
+
       toast.success(`${role} role assigned successfully`);
       refetch();
     } catch (error: any) {
@@ -67,11 +89,33 @@ const AdminUsers = () => {
 
   const removeRole = async (userId: string, role: "admin" | "moderator" | "user") => {
     try {
+      const targetUser = users?.find(u => u.user_id === userId);
+      
       const { error } = await supabase.rpc("remove_user_role", {
         target_user_id: userId,
         target_role: role,
       });
       if (error) throw error;
+
+      // Send notification email
+      if (targetUser?.email) {
+        const { data: { session } } = await supabase.auth.getSession();
+        const performerEmail = session?.user?.email || 'System Administrator';
+
+        try {
+          await supabase.functions.invoke('send-role-notification', {
+            body: {
+              userEmail: targetUser.email,
+              action: 'removed',
+              role,
+              performedBy: performerEmail
+            }
+          });
+        } catch (emailError) {
+          console.error('Failed to send notification email:', emailError);
+        }
+      }
+
       toast.success(`${role} role removed successfully`);
       refetch();
     } catch (error: any) {
@@ -91,6 +135,27 @@ const AdminUsers = () => {
         target_role: bulkRole,
       });
       if (error) throw error;
+
+      // Send notification emails
+      const { data: { session } } = await supabase.auth.getSession();
+      const performerEmail = session?.user?.email || 'System Administrator';
+
+      const emailPromises = Array.from(selectedUsers).map(userId => {
+        const targetUser = users?.find(u => u.user_id === userId);
+        if (!targetUser?.email) return Promise.resolve();
+
+        return supabase.functions.invoke('send-role-notification', {
+          body: {
+            userEmail: targetUser.email,
+            action: 'assigned',
+            role: bulkRole,
+            performedBy: performerEmail
+          }
+        }).catch(err => console.error('Failed to send notification:', err));
+      });
+
+      await Promise.allSettled(emailPromises);
+
       const message = (data as any)?.message || "Roles assigned successfully";
       toast.success(message);
       setSelectedUsers(new Set());
@@ -112,6 +177,27 @@ const AdminUsers = () => {
         target_role: bulkRole,
       });
       if (error) throw error;
+
+      // Send notification emails
+      const { data: { session } } = await supabase.auth.getSession();
+      const performerEmail = session?.user?.email || 'System Administrator';
+
+      const emailPromises = Array.from(selectedUsers).map(userId => {
+        const targetUser = users?.find(u => u.user_id === userId);
+        if (!targetUser?.email) return Promise.resolve();
+
+        return supabase.functions.invoke('send-role-notification', {
+          body: {
+            userEmail: targetUser.email,
+            action: 'removed',
+            role: bulkRole,
+            performedBy: performerEmail
+          }
+        }).catch(err => console.error('Failed to send notification:', err));
+      });
+
+      await Promise.allSettled(emailPromises);
+
       const message = (data as any)?.message || "Roles removed successfully";
       toast.success(message);
       setSelectedUsers(new Set());

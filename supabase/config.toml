@@ -6,6 +6,9 @@ verify_jwt = true
 [functions.send-quote-request]
 verify_jwt = false
 
+[functions.send-role-notification]
+verify_jwt = true
+
 [functions.create-checkout]
 verify_jwt = false
 
