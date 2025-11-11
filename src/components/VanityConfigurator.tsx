@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecaptcha } from "@/hooks/useRecaptcha";
 import { ShopifyProduct } from "@/lib/shopify";
@@ -37,23 +37,23 @@ import { z } from "zod";
 import { Vanity3DPreview } from "./Vanity3DPreview";
 import { TemplateGallery } from "./TemplateGallery";
 import { VanityTemplate } from "@/types/vanity";
-import { useSavedTemplates, SavedTemplate } from "@/features/vanity-designer";
+import { 
+  useSavedTemplates, 
+  SavedTemplate, 
+  useVanityConfig,
+  calculateCompletePricing,
+  getTaxRatePercentage,
+  getStateFromZipCode,
+  formatPrice,
+  TAX_RATES,
+  SHIPPING_RATES
+} from "@/features/vanity-designer";
 import jsPDF from 'jspdf';
 import { CartItem } from "@/stores/cartStore";
 import { supabase } from "@/integrations/supabase/client";
 import html2canvas from 'html2canvas';
 import { SharePreviewCard } from "./SharePreviewCard";
-import { useRef } from "react";
 import { vanityEmailSchema, formatZodError } from "@/lib/formValidation";
-import { 
-  calculateCompletePricing,
-  getTaxRatePercentage,
-  getStateFromZipCode,
-  inchesWithFractionToDecimal,
-  formatPrice,
-  TAX_RATES,
-  SHIPPING_RATES
-} from "@/features/vanity-designer";
 import { formatVanityForWhatsApp } from "@/services/quoteService";
 
 const dimensionSchema = z.object({
@@ -146,23 +146,14 @@ const getFractionDisplay = (sixteenths: string): string => {
 
 export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const navigate = useNavigate();
-  const [selectedBrand, setSelectedBrand] = useState<string>("Tafisa");
-  const [selectedFinish, setSelectedFinish] = useState<string>("");
-  const [width, setWidth] = useState<string>("");
-  const [widthFraction, setWidthFraction] = useState<string>("0");
-  const [height, setHeight] = useState<string>("");
-  const [heightFraction, setHeightFraction] = useState<string>("0");
-  const [depth, setDepth] = useState<string>("");
-  const [depthFraction, setDepthFraction] = useState<string>("0");
-  const [zipCode, setZipCode] = useState<string>("");
-  const [state, setState] = useState<string>("");
+  
+  // Use the centralized vanity config hook
+  const vanityConfig = useVanityConfig();
+  
+  // UI state (not part of vanity configuration)
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; alt: string } | null>(null);
-  const [doorStyle, setDoorStyle] = useState<string>("double");
-  const [numDrawers, setNumDrawers] = useState<number>(2);
-  const [handleStyle, setHandleStyle] = useState<string>("bar");
-  const [cabinetPosition, setCabinetPosition] = useState<string>("left");
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const [templateDescription, setTemplateDescription] = useState("");
@@ -179,141 +170,12 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [previewFinish, setPreviewFinish] = useState("");
   const [fullscreenPreview, setFullscreenPreview] = useState(false);
   
-  // Wall configuration
-  const [includeWalls, setIncludeWalls] = useState(false);
-  const [wallWidth, setWallWidth] = useState<string>("");
-  const [wallHeight, setWallHeight] = useState<string>("");
-  const [hasWindow, setHasWindow] = useState(false);
-  const [hasDoor, setHasDoor] = useState(false);
-  const [hasMedicineCabinet, setHasMedicineCabinet] = useState(false);
-  const [medicineCabinetDoorType, setMedicineCabinetDoorType] = useState<string>("mirror");
-  
-  // Room & Floor configuration
-  const [includeRoom, setIncludeRoom] = useState(false);
-  const [roomLength, setRoomLength] = useState<string>("");
-  const [roomWidth, setRoomWidth] = useState<string>("");
-  const [floorType, setFloorType] = useState<string>("tile");
-  const [tileColor, setTileColor] = useState<string>("white-marble");
-  const [woodFloorFinish, setWoodFloorFinish] = useState<string>("natural-oak");
-  
-  // Lighting configuration
-  const [lightingType, setLightingType] = useState<string>("recessed");
-  const [brightness, setBrightness] = useState<number>(80);
-  const [colorTemperature, setColorTemperature] = useState<number>(4000);
-  
-  // Bathroom fixtures state
-  const [includeToilet, setIncludeToilet] = useState(false);
-  const [toiletStyle, setToiletStyle] = useState<'modern' | 'traditional' | 'wall-mounted'>('modern');
-  const [toiletPosition, setToiletPosition] = useState<'left' | 'right'>('left');
-  const [includeShower, setIncludeShower] = useState(false);
-  const [showerStyle, setShowerStyle] = useState<'walk-in' | 'enclosed' | 'corner'>('walk-in');
-  const [includeBathtub, setIncludeBathtub] = useState(false);
-  const [bathtubStyle, setBathtubStyle] = useState<'freestanding' | 'alcove' | 'corner'>('freestanding');
-  const [bathtubPosition, setBathtubPosition] = useState<'left' | 'right' | 'back'>('back');
-  
-  // Wall finish state
-  const [wallFinishType, setWallFinishType] = useState<'paint' | 'tile'>('paint');
-  const [wallPaintColor, setWallPaintColor] = useState<string>('white');
-  const [wallTileColor, setWallTileColor] = useState<string>('white-subway');
-  
-  // Mirror and medicine cabinet state
-  const [includeMirror, setIncludeMirror] = useState(true);
-  const [mirrorType, setMirrorType] = useState<'mirror' | 'medicine-cabinet'>('mirror');
-  const [mirrorSize, setMirrorSize] = useState<'small' | 'medium' | 'large'>('medium');
-  const [mirrorShape, setMirrorShape] = useState<'rectangular' | 'round' | 'oval' | 'arched'>('rectangular');
-  const [mirrorFrame, setMirrorFrame] = useState<'none' | 'black' | 'chrome' | 'gold' | 'wood'>('chrome');
-  
-  // Bathroom accessories state
-  const [includeTowelBar, setIncludeTowelBar] = useState(false);
-  const [towelBarPosition, setTowelBarPosition] = useState<'left' | 'right' | 'center'>('center');
-  const [includeToiletPaperHolder, setIncludeToiletPaperHolder] = useState(false);
-  const [includeRobeHooks, setIncludeRobeHooks] = useState(false);
-  const [robeHookCount, setRobeHookCount] = useState(2);
-  const [includeShelving, setIncludeShelving] = useState(false);
-  const [shelvingType, setShelvingType] = useState<'floating' | 'corner' | 'ladder'>('floating');
-  
-  // Faucet and fixtures state
-  const [includeFaucet, setIncludeFaucet] = useState(true);
-  const [faucetStyle, setFaucetStyle] = useState<'modern' | 'traditional' | 'waterfall'>('modern');
-  const [faucetFinish, setFaucetFinish] = useState<'chrome' | 'brushed-nickel' | 'matte-black' | 'gold'>('chrome');
-  
-  // Countertop state
-  const [countertopMaterial, setCountertopMaterial] = useState<'marble' | 'quartz' | 'granite'>('quartz');
-  const [countertopEdge, setCountertopEdge] = useState<'straight' | 'beveled' | 'bullnose' | 'waterfall'>('straight');
-  const [countertopColor, setCountertopColor] = useState<string>('white');
-  
-  // Sink state
-  const [sinkStyle, setSinkStyle] = useState<'undermount' | 'vessel' | 'integrated'>('undermount');
-  const [sinkShape, setSinkShape] = useState<'oval' | 'rectangular' | 'square'>('oval');
-  
-  // Backsplash state
-  const [includeBacksplash, setIncludeBacksplash] = useState(false);
-  const [backsplashMaterial, setBacksplashMaterial] = useState<'subway-tile' | 'marble-slab' | 'glass-tile' | 'stone'>('subway-tile');
-  const [backsplashHeight, setBacksplashHeight] = useState<'4-inch' | 'full-height'>('4-inch');
-  
-  // Vanity lighting state
-  const [includeVanityLighting, setIncludeVanityLighting] = useState(true);
-  const [vanityLightingStyle, setVanityLightingStyle] = useState<'sconce' | 'led-strip' | 'pendant'>('sconce');
-  const [vanityLightBrightness, setVanityLightBrightness] = useState<number>(85);
-  const [vanityLightTemp, setVanityLightTemp] = useState<number>(3000);
-  
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
   const { executeRecaptcha, isConfigured: isRecaptchaConfigured } = useRecaptcha();
 
-  // Load scanned measurements on mount
-  useEffect(() => {
-    const loadScannedMeasurements = () => {
-      try {
-        // Check sessionStorage first (from recent scan)
-        const currentScanStr = sessionStorage.getItem('current_scan');
-        if (currentScanStr) {
-          const scan = JSON.parse(currentScanStr);
-          applyScannedMeasurements(scan);
-          return;
-        }
-
-        // Check localStorage for saved scans
-        const savedScansStr = localStorage.getItem('room_scans');
-        if (savedScansStr) {
-          const scans = JSON.parse(savedScansStr);
-          if (scans.length > 0) {
-            // Use the most recent scan
-            const latestScan = scans[scans.length - 1];
-            applyScannedMeasurements(latestScan);
-          }
-        }
-      } catch (error) {
-        console.error('Error loading scanned measurements:', error);
-      }
-    };
-
-    const applyScannedMeasurements = (scan: any) => {
-      // Convert meters to inches (1 meter = 39.3701 inches)
-      const widthInches = Math.round(scan.measurements.width * 39.3701);
-      const heightInches = Math.round(scan.measurements.height * 39.3701);
-      const depthInches = Math.round(scan.measurements.depth * 39.3701);
-
-      // Set whole inches
-      setWidth(Math.floor(widthInches).toString());
-      setHeight(Math.floor(heightInches).toString());
-      setDepth(Math.floor(depthInches).toString());
-
-      // Set fractions (0/16 for now - rounded to whole inches)
-      setWidthFraction("0");
-      setHeightFraction("0");
-      setDepthFraction("0");
-
-      toast.success(`Measurements loaded from ${scan.roomName}`, {
-        description: `${widthInches}" W × ${depthInches}" D × ${heightInches}" H`,
-      });
-    };
-
-    loadScannedMeasurements();
-  }, []);
-
   const handleTextureClick = (finish: string) => {
-    setSelectedFinish(finish);
+    vanityConfig.setSelectedFinish(finish);
     setPreviewFinish(finish);
   };
 
@@ -325,20 +187,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
   const handleSelectTemplate = (template: VanityTemplate | SavedTemplate) => {
     setSelectedTemplateId(template.id);
-    setSelectedBrand(template.config.brand);
-    setSelectedFinish(template.config.finish);
-    setWidth(template.config.width);
-    setWidthFraction(template.config.widthFraction);
-    setHeight(template.config.height);
-    setHeightFraction(template.config.heightFraction);
-    setDepth(template.config.depth);
-    setDepthFraction(template.config.depthFraction);
-    setDoorStyle(template.config.doorStyle);
-    setNumDrawers(template.config.numDrawers);
-    setHandleStyle(template.config.handleStyle);
-    if (template.config.cabinetPosition) {
-      setCabinetPosition(template.config.cabinetPosition);
-    }
+    vanityConfig.applyTemplateConfig(template.config);
     
     toast.success(`Applied ${template.name} template`, {
       description: "Customize the configuration to your needs",
@@ -346,7 +195,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleSaveTemplate = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish || !vanityConfig.width || !vanityConfig.height || !vanityConfig.depth) {
       toast.error("Please complete the configuration first", {
         description: "All dimensions and selections are required",
       });
@@ -366,20 +215,20 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       name: templateName.trim(),
       description: templateDescription.trim() || "Custom saved configuration",
       config: {
-        brand: selectedBrand,
-        finish: selectedFinish,
-        width,
-        widthFraction,
-        height,
-        heightFraction,
-        depth,
-        depthFraction,
-        doorStyle,
-        numDrawers,
-        handleStyle,
-        cabinetPosition,
+        brand: vanityConfig.selectedBrand,
+        finish: vanityConfig.selectedFinish,
+        width: vanityConfig.width,
+        widthFraction: vanityConfig.widthFraction,
+        height: vanityConfig.height,
+        heightFraction: vanityConfig.heightFraction,
+        depth: vanityConfig.depth,
+        depthFraction: vanityConfig.depthFraction,
+        doorStyle: vanityConfig.doorStyle,
+        numDrawers: vanityConfig.numDrawers,
+        handleStyle: vanityConfig.handleStyle,
+        cabinetPosition: vanityConfig.cabinetPosition,
       },
-      tags: ["custom", selectedBrand.toLowerCase()],
+      tags: ["custom", vanityConfig.selectedBrand.toLowerCase()],
     };
 
     saveTemplate(newTemplate);
@@ -411,63 +260,41 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const brands = Object.keys(BRAND_INFO);
   
   // Get finishes based on selected brand
-  const availableFinishes = selectedBrand === 'Tafisa' ? TAFISA_FINISHES : 
-                            selectedBrand === 'Egger' ? EGGER_FINISHES :
-                            selectedBrand === 'Shinnoki' ? SHINNOKI_FINISHES : [];
+  const availableFinishes = vanityConfig.selectedBrand === 'Tafisa' ? TAFISA_FINISHES : 
+                            vanityConfig.selectedBrand === 'Egger' ? EGGER_FINISHES :
+                            vanityConfig.selectedBrand === 'Shinnoki' ? SHINNOKI_FINISHES : [];
   
   // Update finish when brand changes
   useEffect(() => {
-    if (selectedBrand) {
-      setSelectedFinish(availableFinishes[0] || '');
+    if (vanityConfig.selectedBrand) {
+      vanityConfig.setSelectedFinish(availableFinishes[0] || '');
     }
-  }, [selectedBrand]);
+  }, [vanityConfig.selectedBrand]);
 
   // Calculate all pricing using the pricing service
-  const widthInches = inchesWithFractionToDecimal(
-    parseFloat(width || '0'), 
-    parseInt(widthFraction)
-  );
-  
   const pricing = calculateCompletePricing({
-    widthInches,
-    selectedBrand: selectedBrand || '',
-    state: state || '',
-    includeWalls,
+    widthInches: vanityConfig.dimensionsInInches.width,
+    selectedBrand: vanityConfig.selectedBrand || '',
+    state: vanityConfig.state || '',
+    includeWalls: vanityConfig.includeWalls,
     wallHeight: 96, // Standard 8ft height for vanity walls
-    wallWidth: parseFloat(wallWidth || '0'),
+    wallWidth: parseFloat(vanityConfig.wallWidth || '0'),
     wallTileStyle: 'white-subway', // Default tile style
-    includeFloor: includeRoom,
-    roomLength: parseFloat(roomLength || '0'),
-    roomWidth: parseFloat(roomWidth || '0'),
-    floorTileStyle: floorType === "tile" ? 'porcelain-white' : 'wood-look',
+    includeFloor: vanityConfig.includeRoom,
+    roomLength: parseFloat(vanityConfig.roomLength || '0'),
+    roomWidth: parseFloat(vanityConfig.roomWidth || '0'),
+    floorTileStyle: vanityConfig.floorType === "tile" ? 'porcelain-white' : 'wood-look',
   });
 
   const { basePrice, wallPrice, floorPrice, subtotal, tax, shipping, totalPrice } = pricing;
 
-  // Calculate dimensions in inches (with fractions) for 3D preview
-  const dimensionsInInches = useMemo(() => {
-    const widthInches = inchesWithFractionToDecimal(
-      parseFloat(width || "0"), 
-      parseInt(widthFraction)
-    );
-    const heightInches = inchesWithFractionToDecimal(
-      parseFloat(height || "0"), 
-      parseInt(heightFraction)
-    );
-    const depthInches = inchesWithFractionToDecimal(
-      parseFloat(depth || "0"), 
-      parseInt(depthFraction)
-    );
-    return { widthInches, heightInches, depthInches };
-  }, [width, widthFraction, height, heightFraction, depth, depthFraction]);
-
   // Determine state from ZIP code using service
   useEffect(() => {
-    if (zipCode.length === 5) {
-      const detectedState = getStateFromZipCode(zipCode);
-      setState(detectedState);
+    if (vanityConfig.zipCode.length === 5) {
+      const detectedState = getStateFromZipCode(vanityConfig.zipCode);
+      vanityConfig.setState(detectedState);
     }
-  }, [zipCode]);
+  }, [vanityConfig.zipCode]);
 
   const generateShareImage = async (): Promise<Blob | null> => {
     if (!shareCardRef.current) return null;
