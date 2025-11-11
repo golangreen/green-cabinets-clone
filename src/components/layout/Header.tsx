@@ -92,21 +92,26 @@ const Header = () => {
     }, 400);
   };
 
-  return <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden transition-colors duration-300 ${
-      isScrolled ? 'bg-background/95' : 'bg-background'
-    }`} style={{
-      position: 'relative'
-    }}>
-      <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }}>
+  return <header className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
+      isScrolled 
+        ? 'bg-background/95 backdrop-blur-sm border-border shadow-sm' 
+        : 'bg-[#1a1a1a] border-transparent'
+    }`}>
+      <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4">
         <div className="flex items-center justify-between">
-          {/* Centered Logo */}
+          {/* Centered Logo with Text */}
           <div className="absolute left-1/2 transform -translate-x-1/2">
-            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex flex-col items-center gap-1">
               <img 
-                src={isScrolled ? logoBlack : logoTeal} 
+                src={logoTeal}
                 alt="Green Cabinets Logo" 
-                className="h-16 md:h-20 w-auto transition-all duration-300" 
+                className="h-12 md:h-14 w-auto transition-all duration-300" 
               />
+              <span className={`font-display text-xs md:text-sm font-bold tracking-widest transition-colors duration-300 ${
+                isScrolled ? 'text-[#D4AF37]' : 'text-white'
+              }`}>
+                GREEN CABINETS
+              </span>
             </a>
           </div>
           
@@ -120,7 +125,13 @@ const Header = () => {
             {/* Hamburger Menu for ALL navigation */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className={`transition-colors duration-300 ${
+                    isScrolled ? 'text-foreground hover:text-primary' : 'text-[#2dd4bf] hover:text-white'
+                  }`}
+                >
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
