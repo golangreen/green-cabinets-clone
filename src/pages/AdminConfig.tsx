@@ -48,9 +48,10 @@ const AdminConfig = () => {
   const [isLoadingLogs, setIsLoadingLogs] = useState(false);
   const [showDiffDialog, setShowDiffDialog] = useState(false);
   const [pendingDiff, setPendingDiff] = useState<ConfigDiff[]>([]);
-  const [pendingAction, setPendingAction] = useState<'preset' | 'import' | null>(null);
+  const [pendingAction, setPendingAction] = useState<'preset' | 'import' | 'rollback' | null>(null);
   const [pendingPreset, setPendingPreset] = useState<ConfigPreset | null>(null);
   const [pendingImportData, setPendingImportData] = useState<Record<string, any> | null>(null);
+  const [pendingRollbackLog, setPendingRollbackLog] = useState<ConfigChangeAudit | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch audit logs on mount
@@ -545,6 +546,53 @@ const AdminConfig = () => {
     setPendingAction(null);
   };
 
+  const showRollbackDiff = (log: ConfigChangeAudit) => {
+    const currentValues = getCurrentValues();
+    const currentValue = currentValues[log.config_key];
+    
+    const diffs: ConfigDiff[] = [{
+      key: log.config_key,
+      currentValue: currentValue,
+      newValue: log.old_value,
+      status: String(currentValue) !== String(log.old_value) ? 'modified' : 'unchanged',
+    }];
+
+    setPendingDiff(diffs);
+    setPendingAction('rollback');
+    setPendingRollbackLog(log);
+    setShowDiffDialog(true);
+  };
+
+  const confirmRollback = async () => {
+    if (!pendingRollbackLog) return;
+
+    const rollbackValue = { [pendingRollbackLog.config_key]: pendingRollbackLog.old_value };
+    setTestValues({ ...testValues, ...rollbackValue });
+
+    try {
+      const currentValues = getCurrentValues();
+      await logConfigChange({
+        configKey: pendingRollbackLog.config_key,
+        oldValue: currentValues[pendingRollbackLog.config_key]?.toString() || null,
+        newValue: pendingRollbackLog.old_value,
+        changeType: 'rollback',
+      });
+      
+      loadAuditLogs();
+    } catch (error) {
+      console.error('Failed to log rollback:', error);
+    }
+
+    toast.success('Configuration rolled back', {
+      description: `Reverted ${pendingRollbackLog.config_key} to previous value`,
+    });
+
+    setShowDiffDialog(false);
+    setPendingRollbackLog(null);
+    setPendingDiff([]);
+    setPendingAction(null);
+  };
+
   const renderConfigSection = (title: string, icon: React.ReactNode, configs: ConfigValue[]) => (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
@@ -858,10 +906,12 @@ const AdminConfig = () => {
                                 <Badge variant={
                                   log.change_type === 'preset_applied' ? 'default' :
                                   log.change_type === 'import' ? 'secondary' :
+                                  log.change_type === 'rollback' ? 'outline' :
                                   'outline'
                                 }>
                                   {log.change_type === 'preset_applied' ? 'Preset' :
                                    log.change_type === 'import' ? 'Import' :
+                                   log.change_type === 'rollback' ? 'Rollback' :
                                    log.change_type === 'test' ? 'Test' : 'Manual'}
                                 </Badge>
                                 {log.preset_name && (
@@ -887,6 +937,17 @@ const AdminConfig = () => {
                               <p className="font-mono">{log.new_value}</p>
                             </div>
                           </div>
+                          {log.old_value && log.change_type !== 'rollback' && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => showRollbackDiff(log)}
+                              className="mt-3 w-full"
+                            >
+                              <RefreshCw className="h-3 w-3 mr-2" />
+                              Rollback to this state
+                            </Button>
+                          )}
                         </Card>
                       ))}
                     </div>
@@ -956,6 +1017,9 @@ const AdminConfig = () => {
                 {pendingAction === 'import' && (
                   <>Review the changes from the imported configuration file</>
                 )}
+                {pendingAction === 'rollback' && pendingRollbackLog && (
+                  <>Rolling back <strong>{pendingRollbackLog.config_key}</strong> to its previous value from {new Date(pendingRollbackLog.created_at).toLocaleString()}</>
+                )}
               </DialogDescription>
             </DialogHeader>
             
@@ -968,10 +1032,14 @@ const AdminConfig = () => {
                 Cancel
               </Button>
               <Button 
-                onClick={pendingAction === 'preset' ? confirmApplyPreset : confirmImportConfig}
+                onClick={
+                  pendingAction === 'preset' ? confirmApplyPreset :
+                  pendingAction === 'import' ? confirmImportConfig :
+                  confirmRollback
+                }
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
-                Apply Changes
+                {pendingAction === 'rollback' ? 'Rollback' : 'Apply Changes'}
               </Button>
             </DialogFooter>
           </DialogContent>

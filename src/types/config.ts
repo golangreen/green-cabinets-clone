@@ -10,7 +10,7 @@ export interface ConfigChangeAudit {
   config_key: string;
   old_value: string | null;
   new_value: string;
-  change_type: 'test' | 'preset_applied' | 'import' | 'manual';
+  change_type: 'test' | 'preset_applied' | 'import' | 'manual' | 'rollback';
   preset_name: string | null;
   created_at: string;
 }
@@ -19,6 +19,6 @@ export interface LogConfigChangeParams {
   configKey: string;
   oldValue: string | null;
   newValue: string;
-  changeType: 'test' | 'preset_applied' | 'import' | 'manual';
+  changeType: 'test' | 'preset_applied' | 'import' | 'manual' | 'rollback';
   presetName?: string;
 }
