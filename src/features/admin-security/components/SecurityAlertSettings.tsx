@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Save, RefreshCw } from 'lucide-react';
+import { SECURITY_CONFIG } from '@/config';
 
 interface WebhookRetrySettings {
   retry_threshold: number;
@@ -17,8 +18,8 @@ interface WebhookRetrySettings {
 
 export function SecurityAlertSettings() {
   const [settings, setSettings] = useState<WebhookRetrySettings>({
-    retry_threshold: 3,
-    time_window_minutes: 10,
+    retry_threshold: SECURITY_CONFIG.DEFAULT_RETRY_THRESHOLD,
+    time_window_minutes: SECURITY_CONFIG.DEFAULT_RETRY_TIME_WINDOW_MINUTES,
     enabled: true
   });
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,11 @@ export function SecurityAlertSettings() {
       }
     } catch (error) {
       logger.dbError('fetch alert settings', error);
-      setSettings({ retry_threshold: 3, time_window_minutes: 10, enabled: true });
+      setSettings({ 
+        retry_threshold: SECURITY_CONFIG.DEFAULT_RETRY_THRESHOLD, 
+        time_window_minutes: SECURITY_CONFIG.DEFAULT_RETRY_TIME_WINDOW_MINUTES, 
+        enabled: true 
+      });
     } finally {
       setLoading(false);
     }
@@ -109,7 +114,7 @@ export function SecurityAlertSettings() {
                   onChange={(e) =>
                     setSettings({
                       ...settings,
-                      retry_threshold: parseInt(e.target.value) || 3
+                      retry_threshold: parseInt(e.target.value) || SECURITY_CONFIG.DEFAULT_RETRY_THRESHOLD
                     })
                   }
                   disabled={!settings.enabled}
@@ -130,7 +135,7 @@ export function SecurityAlertSettings() {
                   onChange={(e) =>
                     setSettings({
                       ...settings,
-                      time_window_minutes: parseInt(e.target.value) || 10
+                      time_window_minutes: parseInt(e.target.value) || SECURITY_CONFIG.DEFAULT_RETRY_TIME_WINDOW_MINUTES
                     })
                   }
                   disabled={!settings.enabled}

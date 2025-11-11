@@ -10,6 +10,7 @@ import { AdminRoute } from "@/components/auth";
 import { ROUTES } from "@/constants/routes";
 import { FeatureErrorBoundary } from "@/components/layout";
 import { PreloadManager } from "@/features/product-catalog";
+import { CACHE_CONFIG } from "@/config";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";

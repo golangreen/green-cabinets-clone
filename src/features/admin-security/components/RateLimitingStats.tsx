@@ -9,6 +9,7 @@ import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { toast } from '@/hooks/use-toast';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 import { fetchSecurityEvents } from '@/services';
+import { SECURITY_CONFIG } from '@/config';
 
 interface RateLimitEvent {
   id: string;
@@ -31,7 +32,7 @@ export function RateLimitingStats() {
   // Get rate limit events from the last 24 hours
   const { data: rateLimitEvents, isLoading } = useQuery({
     queryKey: ['rate-limit-events'],
-    queryFn: () => fetchSecurityEvents(24 * 60, 'rate_limit_exceeded'),
+    queryFn: () => fetchSecurityEvents(SECURITY_CONFIG.SECURITY_EVENTS_TIME_WINDOW_MINUTES, 'rate_limit_exceeded'),
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 

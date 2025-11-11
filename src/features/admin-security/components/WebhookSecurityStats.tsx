@@ -10,6 +10,7 @@ import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { toast } from '@/hooks/use-toast';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 import { fetchSecurityEvents } from '@/services';
+import { SECURITY_CONFIG } from '@/config';
 
 interface WebhookEvent {
   id: string;
@@ -33,7 +34,7 @@ export function WebhookSecurityStats() {
   // Get webhook-related security events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
     queryKey: ['webhook-security-events'],
-    queryFn: () => fetchSecurityEvents(24 * 60, undefined, undefined, 'resend-webhook'),
+    queryFn: () => fetchSecurityEvents(SECURITY_CONFIG.SECURITY_EVENTS_TIME_WINDOW_MINUTES, undefined, undefined, 'resend-webhook'),
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 

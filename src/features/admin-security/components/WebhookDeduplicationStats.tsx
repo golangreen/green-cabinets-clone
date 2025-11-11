@@ -10,6 +10,7 @@ import { toast } from '@/hooks/use-toast';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 import { fetchWebhookEvents } from '@/services';
 import { logger } from '@/lib/logger';
+import { SECURITY_CONFIG, hoursToMs } from '@/config';
 
 interface WebhookEvent {
   id: string;
@@ -32,8 +33,9 @@ export function WebhookDeduplicationStats() {
     queryFn: async () => {
       const events = await fetchWebhookEvents(100);
       // Filter to last 24 hours client-side
-      const twentyFourHoursAgo = Date.now() - 24 * 60 * 60 * 1000;
-      return events.filter(e => new Date(e.created_at).getTime() >= twentyFourHoursAgo) as WebhookEvent[];
+      const timeWindowMs = hoursToMs(24);
+      const cutoffTime = Date.now() - timeWindowMs;
+      return events.filter(e => new Date(e.created_at).getTime() >= cutoffTime) as WebhookEvent[];
     },
     refetchInterval: 30000, // Refresh every 30 seconds
   });
@@ -44,8 +46,9 @@ export function WebhookDeduplicationStats() {
     queryFn: async () => {
       const events = await fetchWebhookEvents(100);
       // Filter to last 24 hours
-      const twentyFourHoursAgo = Date.now() - 24 * 60 * 60 * 1000;
-      return events.filter(e => new Date(e.created_at).getTime() >= twentyFourHoursAgo).length;
+      const timeWindowMs = hoursToMs(24);
+      const cutoffTime = Date.now() - timeWindowMs;
+      return events.filter(e => new Date(e.created_at).getTime() >= cutoffTime).length;
     },
     refetchInterval: 30000,
   });
