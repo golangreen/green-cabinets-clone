@@ -330,7 +330,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleDownloadShareImage = async () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish || !vanityConfig.width || !vanityConfig.height || !vanityConfig.depth) {
       toast.error("Please complete the configuration first");
       return;
     }
@@ -363,17 +363,17 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const getShareText = () => {
-    const widthFrac = getFractionDisplay(widthFraction);
-    const heightFrac = getFractionDisplay(heightFraction);
-    const depthFrac = getFractionDisplay(depthFraction);
+    const widthFrac = getFractionDisplay(vanityConfig.widthFraction);
+    const heightFrac = getFractionDisplay(vanityConfig.heightFraction);
+    const depthFrac = getFractionDisplay(vanityConfig.depthFraction);
 
-    return `Check out my custom vanity design! ${selectedBrand} ${selectedFinish} - ` +
-      `${width}${widthFrac ? ' ' + widthFrac : ''}" × ${height}${heightFrac ? ' ' + heightFrac : ''}" × ${depth}${depthFrac ? ' ' + depthFrac : ''}" ` +
+    return `Check out my custom vanity design! ${vanityConfig.selectedBrand} ${vanityConfig.selectedFinish} - ` +
+      `${vanityConfig.width}${widthFrac ? ' ' + widthFrac : ''}" × ${vanityConfig.height}${heightFrac ? ' ' + heightFrac : ''}" × ${vanityConfig.depth}${depthFrac ? ' ' + depthFrac : ''}" ` +
       `- $${totalPrice.toFixed(2)} - Green Cabinets NY`;
   };
 
   const handleFacebookShare = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish || !vanityConfig.width || !vanityConfig.height || !vanityConfig.depth) {
       toast.error("Please complete the configuration first");
       return;
     }
@@ -387,7 +387,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleTwitterShare = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish || !vanityConfig.width || !vanityConfig.height || !vanityConfig.depth) {
       toast.error("Please complete the configuration first");
       return;
     }
@@ -401,7 +401,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handlePinterestShare = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish || !vanityConfig.width || !vanityConfig.height || !vanityConfig.depth) {
       toast.error("Please complete the configuration first");
       return;
     }
@@ -416,38 +416,38 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleWhatsAppShare = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish || !vanityConfig.width || !vanityConfig.height || !vanityConfig.depth) {
       toast.error("Please complete the configuration first", {
         description: "All dimensions and selections are required",
       });
       return;
     }
 
-    const widthFrac = getFractionDisplay(widthFraction);
-    const heightFrac = getFractionDisplay(heightFraction);
-    const depthFrac = getFractionDisplay(depthFraction);
+    const widthFrac = getFractionDisplay(vanityConfig.widthFraction);
+    const heightFrac = getFractionDisplay(vanityConfig.heightFraction);
+    const depthFrac = getFractionDisplay(vanityConfig.depthFraction);
 
     const message = `🛁 *Custom Vanity Configuration*\n\n` +
-      `📏 *Dimensions:* ${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D\n\n` +
+      `📏 *Dimensions:* ${vanityConfig.width}${widthFrac ? ' ' + widthFrac : ''}" W × ${vanityConfig.height}${heightFrac ? ' ' + heightFrac : ''}" H × ${vanityConfig.depth}${depthFrac ? ' ' + depthFrac : ''}" D\n\n` +
       `🎨 *Materials:*\n` +
-      `• Brand: ${selectedBrand}\n` +
-      `• Finish: ${selectedFinish}\n\n` +
+      `• Brand: ${vanityConfig.selectedBrand}\n` +
+      `• Finish: ${vanityConfig.selectedFinish}\n\n` +
       `🚪 *Cabinet:* ${
-        doorStyle === "single" ? "Single Door" : 
-        doorStyle === "double" ? "Double Doors" : 
-        doorStyle === "drawers" ? "All Drawers" : 
-        doorStyle === "mixed" ? "Drawers + Doors" :
-        doorStyle === "door-drawer-split" ? `Door + Drawer (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+        vanityConfig.doorStyle === "single" ? "Single Door" : 
+        vanityConfig.doorStyle === "double" ? "Double Doors" : 
+        vanityConfig.doorStyle === "drawers" ? "All Drawers" : 
+        vanityConfig.doorStyle === "mixed" ? "Drawers + Doors" :
+        vanityConfig.doorStyle === "door-drawer-split" ? `Door + Drawer (${vanityConfig.cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
         "Custom Configuration"
       }\n\n` +
-      `🪨 *Countertop:* ${countertopMaterial} - ${countertopColor} (${countertopEdge} edge)\n` +
-      `🚰 *Sink:* ${sinkStyle} - ${sinkShape}\n\n` +
+      `🪨 *Countertop:* ${vanityConfig.countertopMaterial} - ${vanityConfig.countertopColor} (${vanityConfig.countertopEdge} edge)\n` +
+      `🚰 *Sink:* ${vanityConfig.sinkStyle} - ${vanityConfig.sinkShape}\n\n` +
       `💰 *Price Estimate:*\n` +
       `• Vanity: $${basePrice.toFixed(2)}\n` +
       `• Tax: $${tax.toFixed(2)}\n` +
-      `• Shipping (${state}): $${shipping.toFixed(2)}\n` +
+      `• Shipping (${vanityConfig.state}): $${shipping.toFixed(2)}\n` +
       `• *Total: $${totalPrice.toFixed(2)}*\n\n` +
-      `📍 Location: ${zipCode}\n\n` +
+      `📍 Location: ${vanityConfig.zipCode}\n\n` +
       `For more details, visit: https://greencabinetsny.com`;
 
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
@@ -477,7 +477,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
     const validatedData = validationResult.data;
 
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish || !vanityConfig.width || !vanityConfig.height || !vanityConfig.depth) {
       toast.error("Please complete the configuration first");
       return;
     }
@@ -495,9 +495,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         }
       }
 
-      const widthFrac = getFractionDisplay(widthFraction);
-      const heightFrac = getFractionDisplay(heightFraction);
-      const depthFrac = getFractionDisplay(depthFraction);
+      const widthFrac = getFractionDisplay(vanityConfig.widthFraction);
+      const heightFrac = getFractionDisplay(vanityConfig.heightFraction);
+      const depthFrac = getFractionDisplay(vanityConfig.depthFraction);
 
       const { data, error } = await supabase.functions.invoke('email-vanity-config', {
         body: {
@@ -505,21 +505,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           recipientName: validatedData.recipientName,
           recaptchaToken: recaptchaToken || undefined,
           config: {
-            brand: selectedBrand,
-            finish: selectedFinish,
-            dimensions: `${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D`,
-            doorStyle: doorStyle === "single" ? "Single Door" : 
-                       doorStyle === "double" ? "Double Doors" : 
-                       doorStyle === "drawers" ? "All Drawers" : 
-                       doorStyle === "mixed" ? "Drawers + Doors" :
-                       doorStyle === "door-drawer-split" ? `Door + Drawer (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+            brand: vanityConfig.selectedBrand,
+            finish: vanityConfig.selectedFinish,
+            dimensions: `${vanityConfig.width}${widthFrac ? ' ' + widthFrac : ''}" W × ${vanityConfig.height}${heightFrac ? ' ' + heightFrac : ''}" H × ${vanityConfig.depth}${depthFrac ? ' ' + depthFrac : ''}" D`,
+            doorStyle: vanityConfig.doorStyle === "single" ? "Single Door" : 
+                       vanityConfig.doorStyle === "double" ? "Double Doors" : 
+                       vanityConfig.doorStyle === "drawers" ? "All Drawers" : 
+                       vanityConfig.doorStyle === "mixed" ? "Drawers + Doors" :
+                       vanityConfig.doorStyle === "door-drawer-split" ? `Door + Drawer (${vanityConfig.cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
                        "Custom Configuration",
-            countertop: `${countertopMaterial} - ${countertopColor} (${countertopEdge} edge)`,
-            sink: `${sinkStyle} - ${sinkShape}`,
+            countertop: `${vanityConfig.countertopMaterial} - ${vanityConfig.countertopColor} (${vanityConfig.countertopEdge} edge)`,
+            sink: `${vanityConfig.sinkStyle} - ${vanityConfig.sinkShape}`,
             pricing: {
               vanity: formatPrice(basePrice),
               tax: formatPrice(tax),
-              shipping: `${formatPrice(shipping)} (${state})`,
+              shipping: `${formatPrice(shipping)} (${vanityConfig.state})`,
               total: formatPrice(totalPrice),
             },
           },
@@ -546,7 +546,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleExportPDF = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish || !vanityConfig.width || !vanityConfig.height || !vanityConfig.depth || !vanityConfig.zipCode) {
       toast.error("Please complete all required fields", {
         description: "All dimensions and selections are required for export",
       });
@@ -555,9 +555,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
     try {
       const doc = new jsPDF();
-      const widthFrac = getFractionDisplay(widthFraction);
-      const heightFrac = getFractionDisplay(heightFraction);
-      const depthFrac = getFractionDisplay(depthFraction);
+      const widthFrac = getFractionDisplay(vanityConfig.widthFraction);
+      const heightFrac = getFractionDisplay(vanityConfig.heightFraction);
+      const depthFrac = getFractionDisplay(vanityConfig.depthFraction);
       
       doc.setFontSize(20);
       doc.text('Custom Vanity Configuration', 20, 20);
@@ -565,17 +565,17 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       doc.setFontSize(12);
       let yPos = 40;
       
-      doc.text(`Dimensions: ${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D`, 20, yPos);
+      doc.text(`Dimensions: ${vanityConfig.width}${widthFrac ? ' ' + widthFrac : ''}" W × ${vanityConfig.height}${heightFrac ? ' ' + heightFrac : ''}" H × ${vanityConfig.depth}${depthFrac ? ' ' + depthFrac : ''}" D`, 20, yPos);
       yPos += 10;
-      doc.text(`Brand: ${selectedBrand}`, 20, yPos);
+      doc.text(`Brand: ${vanityConfig.selectedBrand}`, 20, yPos);
       yPos += 10;
-      doc.text(`Finish: ${selectedFinish}`, 20, yPos);
+      doc.text(`Finish: ${vanityConfig.selectedFinish}`, 20, yPos);
       yPos += 10;
-      doc.text(`Cabinet: ${doorStyle}`, 20, yPos);
+      doc.text(`Cabinet: ${vanityConfig.doorStyle}`, 20, yPos);
       yPos += 10;
-      doc.text(`Countertop: ${countertopMaterial} - ${countertopColor}`, 20, yPos);
+      doc.text(`Countertop: ${vanityConfig.countertopMaterial} - ${vanityConfig.countertopColor}`, 20, yPos);
       yPos += 10;
-      doc.text(`Sink: ${sinkStyle} - ${sinkShape}`, 20, yPos);
+      doc.text(`Sink: ${vanityConfig.sinkStyle} - ${vanityConfig.sinkShape}`, 20, yPos);
       yPos += 15;
       
       doc.setFontSize(14);
@@ -586,7 +586,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       yPos += 10;
       doc.text(`Tax: $${tax.toFixed(2)}`, 20, yPos);
       yPos += 10;
-      doc.text(`Shipping to ${state}: $${shipping.toFixed(2)}`, 20, yPos);
+      doc.text(`Shipping to ${vanityConfig.state}: $${shipping.toFixed(2)}`, 20, yPos);
       yPos += 10;
       doc.setFontSize(14);
       doc.text(`Total: $${totalPrice.toFixed(2)}`, 20, yPos);
@@ -600,21 +600,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleAddToCart = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish || !vanityConfig.width || !vanityConfig.height || !vanityConfig.depth || !vanityConfig.zipCode) {
       toast.error("Please complete all fields", {
         description: "Brand, finish, measurements, and zip code are required",
       });
       return;
     }
 
-    if (includeWalls && (!wallWidth || !wallHeight)) {
+    if (vanityConfig.includeWalls && (!vanityConfig.wallWidth || !vanityConfig.wallHeight)) {
       toast.error("Please complete wall dimensions", {
         description: "Wall width and height are required when walls are included",
       });
       return;
     }
 
-    if (includeRoom && (!roomLength || !roomWidth)) {
+    if (vanityConfig.includeRoom && (!vanityConfig.roomLength || !vanityConfig.roomWidth)) {
       toast.error("Please complete room dimensions", {
         description: "Room length and width are required when room layout is included",
       });
@@ -623,10 +623,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
     // Validate dimensions and zip code
     const validationResult = dimensionSchema.safeParse({
-      width: parseFloat(width),
-      height: parseFloat(height),
-      depth: parseFloat(depth),
-      zipCode
+      width: parseFloat(vanityConfig.width),
+      height: parseFloat(vanityConfig.height),
+      depth: parseFloat(vanityConfig.depth),
+      zipCode: vanityConfig.zipCode
     });
 
     if (!validationResult.success) {
@@ -635,63 +635,63 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       return;
     }
 
-    const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
-    const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
-    const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
+    const widthInches = parseFloat(vanityConfig.width) + (parseInt(vanityConfig.widthFraction) / 16);
+    const heightInches = parseFloat(vanityConfig.height) + (parseInt(vanityConfig.heightFraction) / 16);
+    const depthInches = parseFloat(vanityConfig.depth) + (parseInt(vanityConfig.depthFraction) / 16);
 
-    const widthFrac = getFractionDisplay(widthFraction);
-    const heightFrac = getFractionDisplay(heightFraction);
-    const depthFrac = getFractionDisplay(depthFraction);
+    const widthFrac = getFractionDisplay(vanityConfig.widthFraction);
+    const heightFrac = getFractionDisplay(vanityConfig.heightFraction);
+    const depthFrac = getFractionDisplay(vanityConfig.depthFraction);
 
     const cartItem: CartItem = {
       product: product,
       variantId: product.node.variants.edges[0]?.node.id || '',
-      variantTitle: `${selectedBrand} - ${selectedFinish}`,
+      variantTitle: `${vanityConfig.selectedBrand} - ${vanityConfig.selectedFinish}`,
       price: {
         amount: product.node.priceRange.minVariantPrice.amount,
         currencyCode: product.node.priceRange.minVariantPrice.currencyCode,
       },
       quantity: 1,
       selectedOptions: [
-        { name: "Brand", value: selectedBrand },
-        { name: "Finish", value: selectedFinish },
+        { name: "Brand", value: vanityConfig.selectedBrand },
+        { name: "Finish", value: vanityConfig.selectedFinish },
       ],
       customAttributes: [
         { 
           key: "Dimensions", 
-          value: `${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D` 
+          value: `${vanityConfig.width}${widthFrac ? ' ' + widthFrac : ''}" W × ${vanityConfig.height}${heightFrac ? ' ' + heightFrac : ''}" H × ${vanityConfig.depth}${depthFrac ? ' ' + depthFrac : ''}" D` 
         },
-        { key: "ZIP Code", value: zipCode },
-        { key: "State", value: state || "Unknown" },
+        { key: "ZIP Code", value: vanityConfig.zipCode },
+        { key: "State", value: vanityConfig.state || "Unknown" },
         { 
           key: "Door Style", 
-          value: doorStyle === "single" ? "Single Door" : 
-                 doorStyle === "double" ? "Double Doors" : 
-                 doorStyle === "drawers" ? "All Drawers" : 
-                 doorStyle === "mixed" ? "Drawers + Doors" :
-                 doorStyle === "door-drawer-split" ? `Door + Drawer Side-by-Side (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
-                 doorStyle === "door-shelf-split" ? `Door + Open Shelf (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
-                 doorStyle === "open-shelves" ? "Open Shelves Only" :
+          value: vanityConfig.doorStyle === "single" ? "Single Door" : 
+                 vanityConfig.doorStyle === "double" ? "Double Doors" : 
+                 vanityConfig.doorStyle === "drawers" ? "All Drawers" : 
+                 vanityConfig.doorStyle === "mixed" ? "Drawers + Doors" :
+                 vanityConfig.doorStyle === "door-drawer-split" ? `Door + Drawer Side-by-Side (${vanityConfig.cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+                 vanityConfig.doorStyle === "door-shelf-split" ? `Door + Open Shelf (${vanityConfig.cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+                 vanityConfig.doorStyle === "open-shelves" ? "Open Shelves Only" :
                  "Custom Configuration"
         },
-        { key: "Number of Drawers", value: numDrawers.toString() },
-        { key: "Handle Style", value: handleStyle === "bar" ? "Bar Handles" : handleStyle === "knob" ? "Knobs" : "Push-to-Open" },
-        ...(includeWalls ? [
+        { key: "Number of Drawers", value: vanityConfig.numDrawers.toString() },
+        { key: "Handle Style", value: vanityConfig.handleStyle === "bar" ? "Bar Handles" : vanityConfig.handleStyle === "knob" ? "Knobs" : "Push-to-Open" },
+        ...(vanityConfig.includeWalls ? [
           { key: "Includes Walls", value: "Yes" },
-          { key: "Wall Dimensions", value: `${wallWidth}" W × ${wallHeight}" H` },
+          { key: "Wall Dimensions", value: `${vanityConfig.wallWidth}" W × ${vanityConfig.wallHeight}" H` },
           { key: "Wall Features", value: [
-            hasWindow && "Window",
-            hasDoor && "Door", 
-            hasMedicineCabinet && `Medicine Cabinet (${medicineCabinetDoorType === "mirror" ? "Mirror Door" : "Glass Door"})`
+            vanityConfig.hasWindow && "Window",
+            vanityConfig.hasDoor && "Door", 
+            vanityConfig.hasMedicineCabinet && `Medicine Cabinet (${vanityConfig.medicineCabinetDoorType === "mirror" ? "Mirror Door" : "Glass Door"})`
           ].filter(Boolean).join(", ") || "None" },
           { key: "Wall Price", value: `$${wallPrice.toFixed(2)}` },
         ] : []),
-        ...(includeRoom ? [
+        ...(vanityConfig.includeRoom ? [
           { key: "Includes Room Layout", value: "Yes" },
-          { key: "Room Dimensions", value: `${roomLength}' × ${roomWidth}'` },
-          { key: "Floor Type", value: floorType === "tile" ? "Tile" : "Wood" },
-          { key: "Floor Finish", value: floorType === "tile" ? tileColor.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) : woodFloorFinish.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) },
-          { key: "Floor Square Feet", value: `${(parseFloat(roomLength) * parseFloat(roomWidth)).toFixed(2)} sq ft` },
+          { key: "Room Dimensions", value: `${vanityConfig.roomLength}' × ${vanityConfig.roomWidth}'` },
+          { key: "Floor Type", value: vanityConfig.floorType === "tile" ? "Tile" : "Wood" },
+          { key: "Floor Finish", value: vanityConfig.floorType === "tile" ? vanityConfig.tileColor.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) : vanityConfig.woodFloorFinish.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) },
+          { key: "Floor Square Feet", value: `${(parseFloat(vanityConfig.roomLength) * parseFloat(vanityConfig.roomWidth)).toFixed(2)} sq ft` },
           { key: "Floor Price", value: formatPrice(floorPrice) },
         ] : []),
         { key: "Vanity Price", value: formatPrice(basePrice) },
@@ -741,7 +741,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               <div className="p-4 space-y-4">
                 <div className="space-y-2">
                   <h3 className="font-semibold text-sm">Brand & Finish</h3>
-                  <Select value={selectedBrand} onValueChange={setSelectedBrand}>
+                  <Select value={vanityConfig.selectedBrand} onValueChange={vanityConfig.setSelectedBrand}>
                     <SelectTrigger className="bg-background">
                       <SelectValue placeholder="Select brand" />
                     </SelectTrigger>
@@ -754,7 +754,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     </SelectContent>
                   </Select>
                   
-                  <Select value={selectedFinish} onValueChange={setSelectedFinish}>
+                  <Select value={vanityConfig.selectedFinish} onValueChange={vanityConfig.setSelectedFinish}>
                     <SelectTrigger className="bg-background">
                       <SelectValue placeholder="Select finish" />
                     </SelectTrigger>
@@ -768,14 +768,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   </Select>
 
                   {/* Texture Swatches */}
-                  {selectedBrand && availableFinishes.length > 0 && (
+                  {vanityConfig.selectedBrand && availableFinishes.length > 0 && (
                     <div className="flex flex-wrap gap-2 p-2 bg-secondary/10 rounded-lg max-h-40 overflow-y-auto">
                       {availableFinishes.slice(0, 12).map((finish) => (
                         <TextureSwatch
                           key={finish}
                           finishName={finish}
-                          brand={selectedBrand}
-                          selected={selectedFinish === finish}
+                          brand={vanityConfig.selectedBrand}
+                          selected={vanityConfig.selectedFinish === finish}
                           onClick={() => handleTextureClick(finish)}
                           size="sm"
                         />
@@ -802,8 +802,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                       <Label className="text-xs">Width</Label>
                       <Input
                         type="number"
-                        value={width}
-                        onChange={(e) => setWidth(e.target.value)}
+                        value={vanityConfig.width}
+                        onChange={(e) => vanityConfig.setWidth(e.target.value)}
                         className="h-8 text-xs"
                       />
                     </div>
@@ -811,8 +811,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                       <Label className="text-xs">Height</Label>
                       <Input
                         type="number"
-                        value={height}
-                        onChange={(e) => setHeight(e.target.value)}
+                        value={vanityConfig.height}
+                        onChange={(e) => vanityConfig.setHeight(e.target.value)}
                         className="h-8 text-xs"
                       />
                     </div>
@@ -820,8 +820,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                       <Label className="text-xs">Depth</Label>
                       <Input
                         type="number"
-                        value={depth}
-                        onChange={(e) => setDepth(e.target.value)}
+                        value={vanityConfig.depth}
+                        onChange={(e) => vanityConfig.setDepth(e.target.value)}
                         className="h-8 text-xs"
                       />
                     </div>
@@ -830,7 +830,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
                 <div className="space-y-2">
                   <h3 className="font-semibold text-sm">Configuration</h3>
-                  <Select value={doorStyle} onValueChange={setDoorStyle}>
+                  <Select value={vanityConfig.doorStyle} onValueChange={vanityConfig.setDoorStyle}>
                     <SelectTrigger className="bg-background h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
@@ -845,8 +845,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     </SelectContent>
                   </Select>
 
-                  {(doorStyle === 'drawers' || doorStyle === 'mixed' || doorStyle === 'door-drawer-split') && (
-                    <Select value={numDrawers.toString()} onValueChange={(val) => setNumDrawers(parseInt(val))}>
+                  {(vanityConfig.doorStyle === 'drawers' || vanityConfig.doorStyle === 'mixed' || vanityConfig.doorStyle === 'door-drawer-split') && (
+                    <Select value={vanityConfig.numDrawers.toString()} onValueChange={(val) => vanityConfig.setNumDrawers(parseInt(val))}>
                       <SelectTrigger className="bg-background h-8 text-xs">
                         <SelectValue />
                       </SelectTrigger>
@@ -860,8 +860,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     </Select>
                   )}
 
-                  {doorStyle !== 'open-shelves' && (
-                    <Select value={handleStyle} onValueChange={setHandleStyle}>
+                  {vanityConfig.doorStyle !== 'open-shelves' && (
+                    <Select value={vanityConfig.handleStyle} onValueChange={vanityConfig.setHandleStyle}>
                       <SelectTrigger className="bg-background h-8 text-xs">
                         <SelectValue />
                       </SelectTrigger>
@@ -880,33 +880,33 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     <div className="flex items-center gap-1">
                       <Checkbox
                         id="fs-includeRoom"
-                        checked={includeRoom}
-                        onCheckedChange={(checked) => setIncludeRoom(checked as boolean)}
+                        checked={vanityConfig.includeRoom}
+                        onCheckedChange={(checked) => vanityConfig.setIncludeRoom(checked as boolean)}
                       />
                       <Label htmlFor="fs-includeRoom" className="text-xs font-normal cursor-pointer">
                         Include
                       </Label>
                     </div>
                   </h3>
-                  {includeRoom && (
+                  {vanityConfig.includeRoom && (
                     <>
                       <div className="grid grid-cols-2 gap-2">
                         <Input
                           type="number"
                           placeholder="Length (ft)"
-                          value={roomLength}
-                          onChange={(e) => setRoomLength(e.target.value)}
+                          value={vanityConfig.roomLength}
+                          onChange={(e) => vanityConfig.setRoomLength(e.target.value)}
                           className="h-8 text-xs"
                         />
                         <Input
                           type="number"
                           placeholder="Width (ft)"
-                          value={roomWidth}
-                          onChange={(e) => setRoomWidth(e.target.value)}
+                          value={vanityConfig.roomWidth}
+                          onChange={(e) => vanityConfig.setRoomWidth(e.target.value)}
                           className="h-8 text-xs"
                         />
                       </div>
-                      <Select value={floorType} onValueChange={setFloorType}>
+                      <Select value={vanityConfig.floorType} onValueChange={vanityConfig.setFloorType}>
                         <SelectTrigger className="bg-background h-8 text-xs">
                           <SelectValue />
                         </SelectTrigger>
@@ -915,8 +915,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                           <SelectItem value="wood">Wood ($12/sqft)</SelectItem>
                         </SelectContent>
                       </Select>
-                      {floorType === "tile" ? (
-                        <Select value={tileColor} onValueChange={setTileColor}>
+                      {vanityConfig.floorType === "tile" ? (
+                        <Select value={vanityConfig.tileColor} onValueChange={vanityConfig.setTileColor}>
                           <SelectTrigger className="bg-background h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
@@ -929,7 +929,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                           </SelectContent>
                         </Select>
                       ) : (
-                        <Select value={woodFloorFinish} onValueChange={setWoodFloorFinish}>
+                        <Select value={vanityConfig.woodFloorFinish} onValueChange={vanityConfig.setWoodFloorFinish}>
                           <SelectTrigger className="bg-background h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
@@ -945,7 +945,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                       {/* Lighting Controls in Fullscreen */}
                       <div className="pt-2 border-t border-border space-y-2">
                         <Label className="text-xs font-medium">Lighting</Label>
-                        <Select value={lightingType} onValueChange={setLightingType}>
+                        <Select value={vanityConfig.lightingType} onValueChange={vanityConfig.setLightingType}>
                           <SelectTrigger className="bg-background h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
@@ -957,11 +957,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                         </Select>
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <Label className="text-xs">Brightness: {brightness}%</Label>
+                            <Label className="text-xs">Brightness: {vanityConfig.brightness}%</Label>
                           </div>
                           <Slider
-                            value={[brightness]}
-                            onValueChange={(value) => setBrightness(value[0])}
+                            value={[vanityConfig.brightness]}
+                            onValueChange={(value) => vanityConfig.setBrightness(value[0])}
                             min={20}
                             max={100}
                             step={5}
@@ -973,7 +973,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                       {/* Wall Finishes Controls */}
                       <div className="pt-2 border-t border-border space-y-2">
                         <Label className="text-xs font-medium">Wall Finishes</Label>
-                        <Select value={wallFinishType} onValueChange={(value: any) => setWallFinishType(value)}>
+                        <Select value={vanityConfig.wallFinishType} onValueChange={(value: any) => vanityConfig.setWallFinishType(value)}>
                           <SelectTrigger className="bg-background h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
@@ -982,8 +982,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                             <SelectItem value="tile">Tile</SelectItem>
                           </SelectContent>
                         </Select>
-                        {wallFinishType === 'paint' ? (
-                          <Select value={wallPaintColor} onValueChange={setWallPaintColor}>
+                        {vanityConfig.wallFinishType === 'paint' ? (
+                          <Select value={vanityConfig.wallPaintColor} onValueChange={vanityConfig.setWallPaintColor}>
                             <SelectTrigger className="bg-background h-8 text-xs">
                               <SelectValue />
                             </SelectTrigger>
@@ -997,7 +997,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                             </SelectContent>
                           </Select>
                         ) : (
-                          <Select value={wallTileColor} onValueChange={setWallTileColor}>
+                          <Select value={vanityConfig.wallTileColor} onValueChange={vanityConfig.setWallTileColor}>
                             <SelectTrigger className="bg-background h-8 text-xs">
                               <SelectValue />
                             </SelectTrigger>
@@ -1018,16 +1018,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                         <div className="flex items-center space-x-2">
                           <Checkbox 
                             id="includeFaucetFullscreen" 
-                            checked={includeFaucet}
-                            onCheckedChange={(checked) => setIncludeFaucet(checked as boolean)}
+                            checked={vanityConfig.includeFaucet}
+                            onCheckedChange={(checked) => vanityConfig.setIncludeFaucet(checked as boolean)}
                           />
                           <Label htmlFor="includeFaucetFullscreen" className="text-xs font-medium cursor-pointer">
                             Include Faucet
                           </Label>
                         </div>
-                        {includeFaucet && (
+                        {vanityConfig.includeFaucet && (
                           <>
-                            <Select value={faucetStyle} onValueChange={(value: any) => setFaucetStyle(value)}>
+                            <Select value={vanityConfig.faucetStyle} onValueChange={(value: any) => vanityConfig.setFaucetStyle(value)}>
                               <SelectTrigger className="bg-background h-8 text-xs">
                                 <SelectValue />
                               </SelectTrigger>
