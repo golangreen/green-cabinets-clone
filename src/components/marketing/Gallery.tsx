@@ -448,7 +448,7 @@ const Gallery = () => {
         {filteredImages.length > 3 && (
           <div className="flex justify-center mt-12">
             <Button
-              variant="outline"
+              variant="brand-outline"
               size="lg"
               onClick={() => setShowAllImages(!showAllImages)}
               className="min-w-[200px]"
