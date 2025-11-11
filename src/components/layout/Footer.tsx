@@ -1,20 +1,20 @@
-import logo from "@/assets/logo.jpg";
+import logoTeal from "@/assets/logo-teal.svg";
 import { Instagram } from "lucide-react";
 
 const Footer = () => {
   return (
     <footer className="bg-card border-t border-border py-12">
       <div className="container mx-auto px-6">
+        <div className="flex flex-col items-center mb-8">
+          <img src={logoTeal} alt="Green Cabinets Logo" className="h-16 w-auto mb-4" />
+          <p className="text-sm text-muted-foreground text-center max-w-md">
+            Premium custom cabinetry for modern living.
+          </p>
+        </div>
+        
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <img src={logo} alt="Green Cabinets Logo" className="h-10 w-auto" style={{ mixBlendMode: 'lighten' }} />
-              <span className="font-display text-xl font-bold text-foreground">Green Cabinets</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Premium custom cabinetry for modern living.
-            </p>
-            <div className="flex gap-4">
+            <div className="flex justify-center gap-4">
               <a 
                 href="https://instagram.com/green_cabinets_" 
                 target="_blank"
