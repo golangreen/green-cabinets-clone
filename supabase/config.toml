@@ -22,7 +22,7 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.security-monitor]
-verify_jwt = false
+verify_jwt = true
 
 [functions.resend-webhook]
 verify_jwt = false

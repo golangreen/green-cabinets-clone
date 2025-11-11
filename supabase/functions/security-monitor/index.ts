@@ -1,9 +1,9 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
-import { createServiceRoleClient } from "../_shared/supabase.ts";
+import { createServiceRoleClient, createAuthenticatedClient } from "../_shared/supabase.ts";
 import { createLogger, generateRequestId } from "../_shared/logger.ts";
-import { withErrorHandling, AppError } from "../_shared/errors.ts";
+import { withErrorHandling, AppError, ValidationError } from "../_shared/errors.ts";
 
 const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
 const resend = new Resend(resendApiKey);
@@ -34,9 +34,44 @@ const handler = async (req: Request): Promise<Response> => {
 
   const requestId = generateRequestId();
   const logger = createLogger({ functionName: 'security-monitor', requestId });
-  const supabase = createServiceRoleClient();
 
   try {
+    // Verify authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new ValidationError('Authorization required');
+    }
+
+    // Create authenticated client to verify user
+    const authSupabase = await createAuthenticatedClient(authHeader);
+    const { data: { user }, error: authError } = await authSupabase.auth.getUser();
+
+    if (authError || !user) {
+      logger.error("Authentication failed", authError);
+      throw new ValidationError('Authentication failed');
+    }
+
+    // Verify admin role
+    const { data: isAdmin, error: roleError } = await authSupabase.rpc('has_role', { 
+      _user_id: user.id, 
+      _role: 'admin' 
+    });
+
+    if (roleError) {
+      logger.error("Error checking admin role", roleError);
+      throw new ValidationError('Role verification failed');
+    }
+
+    if (!isAdmin) {
+      logger.warn("Unauthorized access attempt to security-monitor", { userId: user.id });
+      throw new ValidationError('Admin access required');
+    }
+
+    logger.info("Admin access verified", { userId: user.id });
+
+    // Use service role client for database operations
+    const supabase = createServiceRoleClient();
+    
     logger.info("Running security monitor check");
 
     // Check if we've already sent an alert in the last hour to avoid spam
