@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Rocket, Database, Key, BookOpen, CheckCircle2, Terminal, GitBranch, Shield } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { DocsSidebar } from "@/components/DocsSidebar";
 import { useNavigate } from "react-router-dom";
 
 const DocsGettingStarted = () => {
@@ -14,8 +15,9 @@ const DocsGettingStarted = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
-      <main className="container mx-auto px-4 py-24 max-w-5xl">
+      <div className="flex">
+        <DocsSidebar />
+        <main className="flex-1 px-8 py-16 max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">Getting Started</h1>
           <p className="text-muted-foreground text-lg">
@@ -577,8 +579,8 @@ sent_at: TIMESTAMPTZ`}</code>
             </div>
           </CardContent>
         </Card>
-      </main>
-
+        </main>
+      </div>
       <Footer />
     </div>
   );
