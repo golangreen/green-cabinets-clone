@@ -25,6 +25,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showInstallDialog, setShowInstallDialog] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const { isInstallable, promptInstall } = usePWAInstall();
   const { user, isAuthenticated, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
@@ -36,6 +37,11 @@ const Header = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Trigger animation after component mounts
+    setHasLoaded(true);
   }, []);
 
   const handleInstall = async () => {
@@ -100,7 +106,9 @@ const Header = () => {
       <nav className="container relative mx-auto px-4 md:px-6 py-4 md:py-5">
         <div className="flex items-center justify-between">
           {/* Centered Logo with Text */}
-          <div className="absolute left-1/2 transform -translate-x-1/2">
+          <div className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ${
+            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+          }`}>
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex flex-col items-center gap-1">
               <img 
                 src={logoTeal}
