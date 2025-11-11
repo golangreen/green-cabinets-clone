@@ -1,6 +1,6 @@
-import { NotificationSettingsPanel } from '@/components/admin/NotificationSettingsPanel';
-import { CronJobsManager } from '@/components/admin/CronJobsManager';
-import { SecurityAlertSettings } from '@/components/admin/SecurityAlertSettings';
+import { NotificationSettingsPanel } from './NotificationSettingsPanel';
+import { CronJobsManager } from './CronJobsManager';
+import { SecurityAlertSettings } from './SecurityAlertSettings';
 
 export const SettingsTab = () => {
   return (

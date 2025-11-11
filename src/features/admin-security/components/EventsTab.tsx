@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { SecurityEventsTable } from '@/components/admin/SecurityEventsTable';
+import { SecurityEventsTable } from './SecurityEventsTable';
 
 export const EventsTab = () => {
   return (

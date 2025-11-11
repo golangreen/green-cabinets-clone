@@ -1,14 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { SecurityCharts } from '@/components/admin/SecurityCharts';
-import { SecurityEventsTable } from '@/components/admin/SecurityEventsTable';
-import { BlockedIPsTable } from '@/components/admin/BlockedIPsTable';
-import { ExpiringRolesWidget } from '@/components/admin/ExpiringRolesWidget';
-import { RoleExpirationTestPanel } from '@/components/admin/RoleExpirationTestPanel';
-import { EmailDeliveryStats } from '@/components/admin/EmailDeliveryStats';
-import { WebhookSecurityStats } from '@/components/admin/WebhookSecurityStats';
-import { RateLimitingStats } from '@/components/admin/RateLimitingStats';
-import { WebhookDeduplicationStats } from '@/components/admin/WebhookDeduplicationStats';
-import { WebhookRetryChart } from '@/components/admin/WebhookRetryChart';
+import { SecurityCharts } from './SecurityCharts';
+import { SecurityEventsTable } from './SecurityEventsTable';
+import { BlockedIPsTable } from './BlockedIPsTable';
+import { ExpiringRolesWidget } from '@/features/admin-users/components/ExpiringRolesWidget';
+import { RoleExpirationTestPanel } from '@/features/admin-users/components/RoleExpirationTestPanel';
+import { EmailDeliveryStats } from './EmailDeliveryStats';
+import { WebhookSecurityStats } from './WebhookSecurityStats';
+import { RateLimitingStats } from './RateLimitingStats';
+import { WebhookDeduplicationStats } from './WebhookDeduplicationStats';
+import { WebhookRetryChart } from './WebhookRetryChart';
 
 export const OverviewTab = () => {
   return (

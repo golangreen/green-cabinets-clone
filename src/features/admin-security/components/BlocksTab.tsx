@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BlockedIPsTable } from '@/components/admin/BlockedIPsTable';
+import { BlockedIPsTable } from './BlockedIPsTable';
 
 export const BlocksTab = () => {
   return (
