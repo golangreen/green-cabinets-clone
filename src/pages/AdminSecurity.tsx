@@ -12,6 +12,7 @@ import { EmailDeliveryStats } from '@/components/admin/EmailDeliveryStats';
 import { WebhookSecurityStats } from '@/components/admin/WebhookSecurityStats';
 import { RateLimitingStats } from '@/components/admin/RateLimitingStats';
 import { WebhookDeduplicationStats } from '@/components/admin/WebhookDeduplicationStats';
+import { WebhookRetryChart } from '@/components/admin/WebhookRetryChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Activity, Ban, Bell, Settings } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -102,6 +103,9 @@ const AdminSecurity = () => {
               <RateLimitingStats />
               <WebhookDeduplicationStats />
             </div>
+
+            {/* Webhook Retry History Chart */}
+            <WebhookRetryChart />
 
             {/* Role Management */}
             <div className="grid gap-6 md:grid-cols-2">
