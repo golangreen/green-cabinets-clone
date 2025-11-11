@@ -130,6 +130,20 @@ const CABINET_LIBRARY = CABINET_CATALOG;
 const VanityDesigner = () => {
   const navigate = useNavigate();
   
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  
+  useEffect(() => {
+    const checkDevice = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+  
   // Templates hook
   const { templates, isLoading: templatesLoading, saveTemplate, deleteTemplate, loadTemplate, duplicateTemplate } = useRoomTemplates();
   
@@ -140,6 +154,10 @@ const VanityDesigner = () => {
   
   // Cabinet wizard
   const [showWizard, setShowWizard] = useState(false);
+  
+  // Mobile-specific state
+  const [showMobileTools, setShowMobileTools] = useState(false);
+  const [showMobileLibrary, setShowMobileLibrary] = useState(false);
   
   // View mode: 'floorplan' or 'render'
   const [viewMode, setViewMode] = useState<"floorplan" | "render">("floorplan");

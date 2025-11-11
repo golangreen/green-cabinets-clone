@@ -22,7 +22,11 @@ const config: CapacitorConfig = {
   ios: {
     contentInset: 'automatic',
     icon: 'public/logo.png',
-    buildNumber: '1'
+    buildNumber: '1',
+    preferredContentMode: 'mobile',
+    limitsNavigationsToAppBoundDomains: true,
+    scrollEnabled: true,
+    allowsBackForwardNavigationGestures: true
   },
   android: {
     allowMixedContent: true,
