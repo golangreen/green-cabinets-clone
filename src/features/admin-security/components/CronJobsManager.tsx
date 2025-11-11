@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,53 +30,29 @@ export const CronJobsManager = () => {
     fetchLastRun();
   }, []);
 
-  const fetchCronJobs = async () => {
+  const fetchCronJobs = useCallback(async () => {
     try {
       setIsLoading(true);
       // Cron jobs are managed at the database level
       // We just display the known configuration
       setCronJobs([]);
     } catch (error) {
-      console.error('Error fetching cron jobs:', error);
-    } finally {
-      setIsLoading(false);
+      logger.dbError('fetch cron jobs', error);
     }
-  };
+  }, []);
 
-  const fetchLastRun = async () => {
+  const fetchLastRun = useCallback(async () => {
     try {
-      // Check the most recent entry in alert_history or security_events
-      const { data } = await supabase
-        .from('alert_history')
-        .select('sent_at')
-        .order('sent_at', { ascending: false })
-        .limit(1);
-
+      const { data, error } = await supabase.rpc('get_last_cron_run');
+      if (error) throw error;
+      
       if (data && data.length > 0) {
-        setLastRun(data[0].sent_at);
+        setLastRun(data[0].last_run);
       }
     } catch (error) {
-      console.error('Error fetching last run:', error);
+      logger.dbError('fetch last cron run', error);
     }
-  };
-
-  const handleTestRun = async () => {
-    try {
-      toast.loading('Triggering role expiration check...');
-      
-      const { data, error } = await supabase.functions.invoke('check-role-expiration', {
-        body: { manual_trigger: true }
-      });
-
-      if (error) throw error;
-
-      toast.success('Role expiration check completed');
-      fetchLastRun();
-    } catch (error: any) {
-      console.error('Error triggering check:', error);
-      toast.error(error.message || 'Failed to trigger check');
-    }
-  };
+  }, []);
 
   const formatSchedule = (schedule: string) => {
     const scheduleMap: Record<string, string> = {

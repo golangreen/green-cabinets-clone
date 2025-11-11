@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "@/lib/logger";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, ChevronUp, ChevronDown } from "lucide-react";
@@ -134,7 +135,7 @@ const Chatbot = () => {
         }
       }
     } catch (error) {
-      console.error("Chat error:", error);
+      logger.edgeFunctionError('chat', error, { message: userMessage });
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",

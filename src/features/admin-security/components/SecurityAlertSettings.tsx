@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,7 +24,7 @@ export function SecurityAlertSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -38,30 +39,30 @@ export function SecurityAlertSettings() {
         setSettings(data.setting_value as unknown as WebhookRetrySettings);
       }
     } catch (error) {
-      console.error('Error fetching alert settings:', error);
-      toast.error('Failed to load settings');
+      logger.dbError('fetch alert settings', error);
+      setSettings({ retry_threshold: 3, time_window_minutes: 10, enabled: true });
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const saveSettings = async () => {
+  const handleSave = async () => {
     setSaving(true);
     try {
       const { error } = await supabase
         .from('alert_settings')
-        .update({
+        .upsert({
+          setting_key: 'webhook_retry_alert',
           setting_value: settings as unknown as any,
-          updated_at: new Date().toISOString()
-        })
-        .eq('setting_key', 'webhook_retry_alert');
+          updated_at: new Date().toISOString(),
+        });
 
       if (error) throw error;
 
-      toast.success('Alert settings updated successfully');
+      toast.success("Alert settings saved successfully");
     } catch (error) {
-      console.error('Error saving alert settings:', error);
-      toast.error('Failed to save settings');
+      logger.dbError('save alert settings', error);
+      toast.error("Failed to save alert settings");
     } finally {
       setSaving(false);
     }
@@ -170,10 +171,10 @@ export function SecurityAlertSettings() {
             </div>
 
             <div className="flex justify-end pt-4 border-t">
-              <Button onClick={saveSettings} disabled={saving}>
-                <Save className="h-4 w-4 mr-2" />
-                {saving ? 'Saving...' : 'Save Settings'}
-              </Button>
+            <Button onClick={handleSave} disabled={saving}>
+              <Save className="h-4 w-4 mr-2" />
+              {saving ? 'Saving...' : 'Save Settings'}
+            </Button>
             </div>
           </div>
         )}

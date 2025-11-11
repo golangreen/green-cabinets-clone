@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +21,7 @@ export const CronJobStatus = () => {
 
       toast.success('Role expiration check completed successfully');
     } catch (error: any) {
-      console.error('Error running manual check:', error);
+      logger.edgeFunctionError('check-role-expiration', error);
       toast.error(error.message || 'Failed to run check');
     } finally {
       setIsRefreshing(false);

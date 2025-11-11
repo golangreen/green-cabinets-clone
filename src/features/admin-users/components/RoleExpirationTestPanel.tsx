@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,31 +36,29 @@ export const RoleExpirationTestPanel = () => {
       setPreviewResults(data);
       toast.success('Email previews generated');
     } catch (error: any) {
-      console.error('Error generating previews:', error);
-      toast.error(error.message || 'Failed to generate previews');
+      logger.dbError('generate email previews', error);
+      toast({
+        title: "Preview generation failed",
+        description: "Could not generate email previews",
+        variant: "destructive",
+      });
     } finally {
-      setIsLoading(false);
+      setIsGenerating(false);
     }
   };
 
-  const handleTrigger = async () => {
+  const handleTriggerCheck = async () => {
+    setIsTriggering(true);
     try {
-      setIsLoading(true);
-      setTriggerResults(null);
-
-      const { data, error } = await supabase.functions.invoke('test-role-expiration', {
-        body: {
-          action: 'trigger',
-          reminder_type: reminderType
-        }
-      });
-
+      const { error } = await supabase.functions.invoke('test-role-expiration');
       if (error) throw error;
-
-      setTriggerResults(data);
-      toast.success('Role expiration check triggered successfully');
-    } catch (error: any) {
-      console.error('Error triggering check:', error);
+      
+      toast({
+        title: "Check triggered",
+        description: "Role expiration check completed successfully",
+      });
+    } catch (error) {
+      logger.edgeFunctionError('test-role-expiration', error);
       toast.error(error.message || 'Failed to trigger check');
     } finally {
       setIsLoading(false);

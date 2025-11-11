@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -39,67 +40,41 @@ export const ExpiringRolesWidget = () => {
       if (error) throw error;
       setExpiringRoles(data || []);
     } catch (error) {
-      console.error('Error fetching expiring roles:', error);
-      toast.error('Failed to load expiring roles');
-    } finally {
-      setIsLoading(false);
+      logger.dbError('fetch expiring roles', error);
     }
   };
 
-  const toggleRoleSelection = (userId: string, role: string) => {
-    const key = `${userId}:${role}`;
-    const newSelected = new Set(selectedRoles);
-    if (newSelected.has(key)) {
-      newSelected.delete(key);
-    } else {
-      newSelected.add(key);
-    }
-    setSelectedRoles(newSelected);
-  };
-
-  const toggleSelectAll = () => {
-    if (selectedRoles.size === expiringRoles.length) {
-      setSelectedRoles(new Set());
-    } else {
-      const allKeys = expiringRoles.map(r => `${r.user_id}:${r.role}`);
-      setSelectedRoles(new Set(allKeys));
-    }
-  };
-
-  const handleBulkExtension = async () => {
-    if (selectedRoles.size === 0) {
-      toast.error('Please select at least one role to extend');
-      return;
-    }
-    if (!extensionDate) {
-      toast.error('Please select an extension date');
+  const handleExtendRoles = async () => {
+    if (selectedRoles.length === 0) {
+      toast({
+        title: "No roles selected",
+        description: "Please select at least one role to extend",
+        variant: "destructive",
+      });
       return;
     }
 
     try {
-      setIsExtending(true);
-      const extensions = Array.from(selectedRoles).map(key => {
-        const [userId, role] = key.split(':');
-        return {
-          user_id: userId,
-          role: role,
-          new_expiration: extensionDate.toISOString()
-        };
-      });
+      // Extend all selected roles by 7 days
+      const newExpiration = new Date();
+      newExpiration.setDate(newExpiration.getDate() + 7);
 
-      const { data, error } = await supabase.rpc('bulk_extend_role_expiration', {
-        role_extensions: extensions
+      const { error } = await supabase.rpc('bulk_extend_role_expiration', {
+        user_role_ids: selectedRoles,
+        new_expiration_date: newExpiration.toISOString(),
       });
 
       if (error) throw error;
 
-      const result = data as { message?: string; extended_count?: number; failed_count?: number };
-      toast.success(result.message || 'Roles extended successfully');
-      setSelectedRoles(new Set());
-      setExtensionDate(undefined);
+      toast({
+        title: "Roles extended",
+        description: `Extended ${selectedRoles.length} role(s) by 7 days`,
+      });
+
+      setSelectedRoles([]);
       fetchExpiringRoles();
-    } catch (error: any) {
-      console.error('Error extending roles:', error);
+    } catch (error) {
+      logger.dbError('extend roles', error);
       toast.error(error.message || 'Failed to extend roles');
     } finally {
       setIsExtending(false);
