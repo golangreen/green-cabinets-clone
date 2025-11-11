@@ -100,7 +100,7 @@ export const ShopProducts = () => {
   }
 
   return (
-    <section className="py-12 sm:py-16 md:py-24 px-4">
+    <section className="py-12 sm:py-16 md:py-24 px-4 bg-white">
       <div className="container mx-auto">
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Our Products</h2>
