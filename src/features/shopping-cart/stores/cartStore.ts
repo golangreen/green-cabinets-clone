@@ -4,6 +4,7 @@ import { ShopifyProduct } from '@/lib/shopify/types';
 import { createStorefrontCheckout } from '@/lib/shopify/client';
 import { logger } from '@/lib/logger';
 import { backgroundSync } from '@/lib/backgroundSync';
+import { CACHE_KEYS } from '@/constants/cacheKeys';
 
 export interface CartItem {
   product: ShopifyProduct;
@@ -152,8 +153,9 @@ export const useCartStore = create<CartStore>()(
       }
     }),
     {
-      name: 'shopify-cart',
+      name: CACHE_KEYS.CART,
       storage: createJSONStorage(() => localStorage),
+      version: 1,
     }
   )
 );

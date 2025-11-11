@@ -11,8 +11,8 @@ import { useCartStore } from "./features/shopping-cart/stores/cartStore";
 // Initialize Sentry for production error tracking
 initSentry();
 
-// Setup background sync for offline cart operations
-setupBackgroundSync(useCartStore.getState());
+// Setup background sync for offline cart operations with cart actions provider
+setupBackgroundSync(() => useCartStore.getState());
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

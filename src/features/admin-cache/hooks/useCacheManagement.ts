@@ -1,188 +1,106 @@
-import { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import { backgroundSync } from '@/lib/backgroundSync';
-
-interface CacheEntry {
-  key: string;
-  size: number;
-  timestamp?: number;
-  type: 'product' | 'cart' | 'sync-queue' | 'other';
-}
-
-interface StorageStats {
-  total: number;
-  used: number;
-  available: number;
-  percentage: number;
-  entries: CacheEntry[];
-}
+import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
+import { useAdminCheck } from '@/hooks/useAdminCheck';
+import * as cacheService from '@/services/cacheService';
 
 export function useCacheManagement() {
-  const [stats, setStats] = useState<StorageStats | null>(null);
+  const [stats, setStats] = useState<cacheService.StorageStats | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { isAdmin } = useAdminCheck();
 
-  const calculateSize = (value: string): number => {
-    return new Blob([value]).size;
-  };
-
-  const categorizeKey = (key: string): CacheEntry['type'] => {
-    if (key.includes('product')) return 'product';
-    if (key.includes('cart')) return 'cart';
-    if (key.includes('queue')) return 'sync-queue';
-    return 'other';
-  };
-
-  const loadStats = () => {
+  const loadStats = useCallback(() => {
     try {
       setIsLoading(true);
-      const entries: CacheEntry[] = [];
-      let totalUsed = 0;
-
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (!key) continue;
-
-        const value = localStorage.getItem(key) || '';
-        const size = calculateSize(value);
-        totalUsed += size;
-
-        // Try to extract timestamp if it's JSON
-        let timestamp: number | undefined;
-        try {
-          const parsed = JSON.parse(value);
-          if (parsed.timestamp) timestamp = parsed.timestamp;
-          if (parsed.lastFetched) timestamp = parsed.lastFetched;
-        } catch {
-          // Not JSON, skip timestamp
-        }
-
-        entries.push({
-          key,
-          size,
-          timestamp,
-          type: categorizeKey(key),
-        });
-      }
-
-      // Estimate total storage (5MB for localStorage)
-      const totalStorage = 5 * 1024 * 1024; // 5MB in bytes
-      const available = totalStorage - totalUsed;
-      const percentage = (totalUsed / totalStorage) * 100;
-
-      setStats({
-        total: totalStorage,
-        used: totalUsed,
-        available,
-        percentage,
-        entries: entries.sort((a, b) => b.size - a.size),
-      });
-
-      logger.info('Cache stats loaded', { component: 'CacheManagement', totalUsed, entriesCount: entries.length });
+      const stats = cacheService.getStorageStats();
+      setStats(stats);
     } catch (error) {
-      logger.error('Failed to load cache stats', { component: 'CacheManagement', error });
+      toast.error('Failed to load cache statistics');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const clearCache = (key: string) => {
-    try {
-      localStorage.removeItem(key);
-      logger.info('Cache cleared', { component: 'CacheManagement', key });
-      loadStats(); // Refresh stats
-    } catch (error) {
-      logger.error('Failed to clear cache', { component: 'CacheManagement', key, error });
-      throw error;
+  const clearCache = useCallback((key: string) => {
+    if (!isAdmin) {
+      toast.error('Unauthorized: Admin access required');
+      return;
     }
-  };
-
-  const clearAllCaches = () => {
-    try {
-      localStorage.clear();
-      logger.info('All caches cleared', { component: 'CacheManagement' });
-      loadStats(); // Refresh stats
-    } catch (error) {
-      logger.error('Failed to clear all caches', { component: 'CacheManagement', error });
-      throw error;
-    }
-  };
-
-  const clearByType = (type: CacheEntry['type']) => {
-    try {
-      const keysToRemove: string[] = [];
-      
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (!key) continue;
-        
-        if (categorizeKey(key) === type) {
-          keysToRemove.push(key);
-        }
-      }
-
-      keysToRemove.forEach(key => localStorage.removeItem(key));
-      logger.info('Cache type cleared', { component: 'CacheManagement', type, count: keysToRemove.length });
-      loadStats(); // Refresh stats
-    } catch (error) {
-      logger.error('Failed to clear cache by type', { component: 'CacheManagement', type, error });
-      throw error;
-    }
-  };
-
-  const testPerformance = async (): Promise<{
-    write: number;
-    read: number;
-    delete: number;
-  }> => {
-    const testKey = 'performance-test';
-    const testData = JSON.stringify({ test: 'data', timestamp: Date.now() });
 
     try {
-      // Test write
-      const writeStart = performance.now();
-      localStorage.setItem(testKey, testData);
-      const writeTime = performance.now() - writeStart;
-
-      // Test read
-      const readStart = performance.now();
-      localStorage.getItem(testKey);
-      const readTime = performance.now() - readStart;
-
-      // Test delete
-      const deleteStart = performance.now();
-      localStorage.removeItem(testKey);
-      const deleteTime = performance.now() - deleteStart;
-
-      logger.info('Performance test completed', {
-        component: 'CacheManagement',
-        writeTime,
-        readTime,
-        deleteTime,
-      });
-
-      return {
-        write: writeTime,
-        read: readTime,
-        delete: deleteTime,
-      };
+      cacheService.clearCache(key);
+      loadStats();
+      toast.success('Cache entry cleared');
     } catch (error) {
-      logger.error('Performance test failed', { component: 'CacheManagement', error });
-      throw error;
+      toast.error('Failed to clear cache entry');
     }
-  };
+  }, [isAdmin, loadStats]);
 
-  const getSyncQueueStatus = () => {
-    return backgroundSync.getQueueStatus();
-  };
+  const clearAllCaches = useCallback(() => {
+    if (!isAdmin) {
+      toast.error('Unauthorized: Admin access required');
+      return;
+    }
 
-  const clearSyncQueue = () => {
-    backgroundSync.clearQueue();
-    loadStats();
-  };
+    try {
+      cacheService.clearAllCaches();
+      loadStats();
+      toast.success('All caches cleared');
+    } catch (error) {
+      toast.error('Failed to clear all caches');
+    }
+  }, [isAdmin, loadStats]);
+
+  const clearByType = useCallback((type: cacheService.CacheEntry['type']) => {
+    if (!isAdmin) {
+      toast.error('Unauthorized: Admin access required');
+      return;
+    }
+
+    try {
+      cacheService.clearByType(type);
+      loadStats();
+      toast.success(`${type} caches cleared`);
+    } catch (error) {
+      toast.error(`Failed to clear ${type} caches`);
+    }
+  }, [isAdmin, loadStats]);
+
+  const testPerformance = useCallback(async () => {
+    if (!isAdmin) {
+      toast.error('Unauthorized: Admin access required');
+      return null;
+    }
+
+    try {
+      return await cacheService.testPerformance();
+    } catch (error) {
+      toast.error('Performance test failed');
+      return null;
+    }
+  }, [isAdmin]);
+
+  const getSyncQueueStatus = useCallback(() => {
+    return cacheService.getSyncQueueStatus();
+  }, []);
+
+  const clearSyncQueue = useCallback(() => {
+    if (!isAdmin) {
+      toast.error('Unauthorized: Admin access required');
+      return;
+    }
+
+    try {
+      cacheService.clearSyncQueue();
+      loadStats();
+      toast.success('Sync queue cleared');
+    } catch (error) {
+      toast.error('Failed to clear sync queue');
+    }
+  }, [isAdmin, loadStats]);
 
   useEffect(() => {
     loadStats();
-  }, []);
+  }, [loadStats]);
 
   return {
     stats,

@@ -107,3 +107,21 @@ export {
   type RoleExtension
 } from './roleService';
 
+// Cache service exports
+export {
+  getStorageStats,
+  getCachedEntries,
+  clearCache,
+  clearAllCaches,
+  clearByType,
+  testPerformance,
+  getSyncQueueStatus,
+  clearSyncQueue,
+  getSizeBreakdown,
+  exportCacheData,
+  getCacheValue,
+  type CacheEntry,
+  type StorageStats,
+  type PerformanceTestResult
+} from './cacheService';
+

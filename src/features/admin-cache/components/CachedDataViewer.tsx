@@ -6,13 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Eye } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-interface CacheEntry {
-  key: string;
-  size: number;
-  timestamp?: number;
-  type: 'product' | 'cart' | 'sync-queue' | 'other';
-}
+import { CacheEntry } from "@/services/cacheService";
 
 interface CachedDataViewerProps {
   entries: CacheEntry[];
@@ -43,6 +37,8 @@ export function CachedDataViewer({ entries, onClearCache }: CachedDataViewerProp
         return 'secondary';
       case 'sync-queue':
         return 'destructive';
+      case 'settings':
+        return 'outline';
       default:
         return 'outline';
     }

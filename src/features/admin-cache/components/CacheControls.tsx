@@ -13,10 +13,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { CacheEntry } from "@/services/cacheService";
 
 interface CacheControlsProps {
   onClearAll: () => void;
-  onClearByType: (type: 'product' | 'cart' | 'sync-queue' | 'other') => void;
+  onClearByType: (type: CacheEntry['type']) => void;
   onRefresh: () => void;
   onClearSyncQueue: () => void;
   syncQueueCount: number;
@@ -37,7 +38,7 @@ export function CacheControls({
     toast.success('All caches cleared successfully');
   };
 
-  const handleClearByType = (type: 'product' | 'cart' | 'sync-queue' | 'other', label: string) => {
+  const handleClearByType = (type: CacheEntry['type'], label: string) => {
     onClearByType(type);
     toast.success(`${label} cache cleared successfully`);
   };
