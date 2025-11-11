@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Header, Footer } from "@/components/layout";
+import { Header, Footer, FeatureErrorBoundary } from "@/components/layout";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { VanityDesignerApp } from "@/features/vanity-designer";
 import { ArrowLeft } from "lucide-react";
@@ -105,20 +105,26 @@ export default function ProductDetail() {
   // Product will always be available (either from Shopify or mock)
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1 py-6 sm:py-8 md:py-12">
-        <div className="container mx-auto px-4">
-          <Link to={ROUTES.HOME}>
-            <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Shop
-            </Button>
-          </Link>
-          <VanityDesignerApp />
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <FeatureErrorBoundary
+      featureName="Product Detail"
+      featureTag="product-detail"
+      fallbackRoute={ROUTES.HOME}
+    >
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 py-6 sm:py-8 md:py-12">
+          <div className="container mx-auto px-4">
+            <Link to={ROUTES.HOME}>
+              <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Shop
+              </Button>
+            </Link>
+            <VanityDesignerApp />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    </FeatureErrorBoundary>
   );
 }
