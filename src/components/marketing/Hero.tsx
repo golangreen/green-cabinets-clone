@@ -105,109 +105,115 @@ const Hero = () => {
   const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden touch-pan-y pt-32 md:pt-40">
-      {/* Background Images with Enhanced Crossfade and Parallax */}
-      <div className="absolute inset-0 bg-black select-none">
-        {/* Current Image - fades out */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: isTransitioning ? 0 : 1,
-            transition: 'opacity 2500ms ease-in-out',
-            zIndex: 1,
-            transform: `translateY(${scrollY * 0.5}px)`,
-          }}
-        >
-          <img 
-            src={shuffledImages[currentImageIndex].src} 
-            alt={shuffledImages[currentImageIndex].alt} 
-            className="w-full h-full object-cover pointer-events-none" 
-            style={{ 
-              filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-              willChange: 'opacity, transform',
-              transform: 'scale(1.15)',
-            }}
-            loading="eager"
-            decoding="async"
-          />
+    <>
+      {/* Hero Text Section - Above Images */}
+      <section className="relative bg-white pt-32 md:pt-40 pb-12 md:pb-16">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+            Design Your Dream
+          </h1>
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-700 mb-8 max-w-2xl mx-auto">
+            {isMobile 
+              ? "Scan your room with your camera to get started. Design on a larger device later."
+              : "Create custom cabinets with our intuitive 3D design tool. See your vision come to life in real-time."
+            }
+          </p>
+          <Button 
+            size="lg" 
+            onClick={handleLaunchClick}
+            variant="brand"
+            className="text-lg px-8 py-6 h-auto"
+          >
+            {isMobile ? (
+              <>
+                <Camera className="mr-2 h-5 w-5" />
+                Scan Room
+              </>
+            ) : (
+              <>
+                <Sparkles className="mr-2 h-5 w-5" />
+                Launch Designer
+              </>
+            )}
+          </Button>
         </div>
-        
-        {/* Next Image - fades in */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: isTransitioning ? 1 : 0,
-            transition: 'opacity 2500ms ease-in-out',
-            zIndex: 2,
-            transform: `translateY(${scrollY * 0.5}px)`,
-          }}
-        >
-          <img 
-            src={shuffledImages[getNextIndex()].src} 
-            alt={shuffledImages[getNextIndex()].alt} 
-            className="w-full h-full object-cover pointer-events-none" 
-            style={{ 
-              filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-              willChange: 'opacity, transform',
-              transform: 'scale(1.15)',
-            }}
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-        
-        <div className="absolute inset-0 bg-black/25" style={{ zIndex: 3 }} />
-      </div>
-      
-      {/* Logo Overlay - Full Size Glass Effect */}
-      <div className="absolute inset-0" style={{ zIndex: 10 }}>
-        <img 
-          src={logo} 
-          alt="Company Logo" 
-          className="pointer-events-none"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center',
-            filter: 'grayscale(100%) brightness(2.5) contrast(0.2)',
-            opacity: 0.18,
-            mixBlendMode: 'overlay'
-          }}
-          loading="eager"
-        />
-      </div>
+      </section>
 
-      {/* Hero Content */}
-      <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
-          Design Your Dream
-        </h1>
-        <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-8 drop-shadow-lg max-w-2xl mx-auto">
-          {isMobile 
-            ? "Scan your room with your camera to get started. Design on a larger device later."
-            : "Create custom cabinets with our intuitive 3D design tool. See your vision come to life in real-time."
-          }
-        </p>
-        <Button 
-          size="lg" 
-          onClick={handleLaunchClick}
-          className="text-lg px-8 py-6 h-auto bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-2xl hover:shadow-green-400/50 transition-all duration-300 hover:scale-105"
-        >
-          {isMobile ? (
-            <>
-              <Camera className="mr-2 h-5 w-5" />
-              Scan Room
-            </>
-          ) : (
-            <>
-              <Sparkles className="mr-2 h-5 w-5" />
-              Launch Designer
-            </>
-          )}
-        </Button>
-      </div>
-    </section>
+      {/* Hero Images Section - Full Screen */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden touch-pan-y">
+        {/* Background Images with Enhanced Crossfade and Parallax */}
+        <div className="absolute inset-0 bg-black select-none">
+          {/* Current Image - fades out */}
+          <div
+            className="absolute inset-0"
+            style={{
+              opacity: isTransitioning ? 0 : 1,
+              transition: 'opacity 2500ms ease-in-out',
+              zIndex: 1,
+              transform: `translateY(${scrollY * 0.5}px)`,
+            }}
+          >
+            <img 
+              src={shuffledImages[currentImageIndex].src} 
+              alt={shuffledImages[currentImageIndex].alt} 
+              className="w-full h-full object-cover pointer-events-none" 
+              style={{ 
+                filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
+                willChange: 'opacity, transform',
+                transform: 'scale(1.15)',
+              }}
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+          
+          {/* Next Image - fades in */}
+          <div
+            className="absolute inset-0"
+            style={{
+              opacity: isTransitioning ? 1 : 0,
+              transition: 'opacity 2500ms ease-in-out',
+              zIndex: 2,
+              transform: `translateY(${scrollY * 0.5}px)`,
+            }}
+          >
+            <img 
+              src={shuffledImages[getNextIndex()].src} 
+              alt={shuffledImages[getNextIndex()].alt} 
+              className="w-full h-full object-cover pointer-events-none" 
+              style={{ 
+                filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
+                willChange: 'opacity, transform',
+                transform: 'scale(1.15)',
+              }}
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+          
+          <div className="absolute inset-0 bg-black/25" style={{ zIndex: 3 }} />
+        </div>
+        
+        {/* Logo Overlay - Full Size Glass Effect */}
+        <div className="absolute inset-0" style={{ zIndex: 10 }}>
+          <img 
+            src={logo} 
+            alt="Company Logo" 
+            className="pointer-events-none"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+              filter: 'grayscale(100%) brightness(2.5) contrast(0.2)',
+              opacity: 0.18,
+              mixBlendMode: 'overlay'
+            }}
+            loading="eager"
+          />
+        </div>
+      </section>
+    </>
   );
 };
 export default Hero;
