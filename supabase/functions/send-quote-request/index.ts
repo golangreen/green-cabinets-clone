@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const RECAPTCHA_SECRET_KEY = Deno.env.get("RECAPTCHA_SECRET_KEY");
@@ -48,16 +49,6 @@ const checkRateLimit = (ip: string): boolean => {
   return true;
 };
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "X-Content-Type-Options": "nosniff",
-  "X-Frame-Options": "DENY",
-  "X-XSS-Protection": "1; mode=block",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
-};
-
 interface QuoteRequest {
   customerName: string;
   customerEmail: string;
@@ -76,9 +67,8 @@ interface QuoteRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsResponse = handleCorsPreFlight(req);
+  if (corsResponse) return corsResponse;
 
   try {
     // Get client IP for rate limiting
@@ -93,15 +83,9 @@ const handler = async (req: Request): Promise<Response> => {
       const { data: blockInfo } = await supabase.rpc('get_blocked_ip_info', { check_ip: clientIp });
       
       console.warn(`Blocked IP attempted access: ${clientIp}`);
-      return new Response(
-        JSON.stringify({ 
-          error: 'Access denied. Your IP address has been temporarily blocked due to security concerns.',
-          blockedUntil: blockInfo?.blocked_until
-        }),
-        {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+      return createCorsErrorResponse(
+        `Access denied. Your IP address has been temporarily blocked due to security concerns. Blocked until: ${blockInfo?.blocked_until}`,
+        403
       );
     }
     
@@ -117,16 +101,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
       
       console.warn(`Rate limit exceeded for IP: ${clientIp}`);
-      return new Response(
-        JSON.stringify({ 
-          error: "Too many requests. Please try again later.",
-          retryAfter: 3600
-        }),
-        {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      return createCorsErrorResponse("Too many requests. Please try again later.", 429);
     }
 
     const rawData = await req.json();
@@ -158,10 +133,7 @@ const handler = async (req: Request): Promise<Response> => {
           });
           
           console.warn(`reCAPTCHA verification failed for IP: ${clientIp}, Score: ${recaptchaResult.score || 'N/A'}`);
-          return new Response(
-            JSON.stringify({ error: "Request verification failed" }),
-            { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-          );
+          return createCorsErrorResponse("Request verification failed", 403);
         }
         
         console.log(`reCAPTCHA verified for IP: ${clientIp}, Score: ${recaptchaResult.score}`);
@@ -184,15 +156,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
       
       console.error("Validation error:", validationResult.error, `IP: ${clientIp}`);
-      return new Response(
-        JSON.stringify({ 
-          error: "Invalid request. Please check your input." 
-        }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      return createCorsErrorResponse("Invalid request. Please check your input.", 400);
     }
 
     const quoteData: QuoteRequest = validationResult.data;
@@ -289,25 +253,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Quote request emails sent successfully");
 
-    return new Response(
-      JSON.stringify({ success: true, ownerEmail, customerEmail }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
-      }
-    );
+    return createCorsResponse({ success: true, ownerEmail, customerEmail }, 200);
   } catch (error: any) {
     console.error("Error in send-quote-request function:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to process quote request. Please try again or contact us directly." }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      }
-    );
+    return createCorsErrorResponse("Failed to process quote request. Please try again or contact us directly.", 500);
   }
 };
 

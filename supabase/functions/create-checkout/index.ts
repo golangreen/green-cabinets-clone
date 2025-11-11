@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
 
 const customerDataSchema = z.object({
   customerEmail: z.string().trim().email().max(255),
@@ -39,20 +40,9 @@ const checkRateLimit = (ip: string): boolean => {
   return true;
 };
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "X-Content-Type-Options": "nosniff",
-  "X-Frame-Options": "DENY",
-  "X-XSS-Protection": "1; mode=block",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
-};
-
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsResponse = handleCorsPreFlight(req);
+  if (corsResponse) return corsResponse;
 
   try {
     // Get client IP for rate limiting
@@ -68,16 +58,9 @@ serve(async (req) => {
       const reason = blockInfo && blockInfo.length > 0 ? blockInfo[0].reason : "Security violation";
       
       console.warn(`Blocked IP attempted access: ${clientIp}`);
-      return new Response(
-        JSON.stringify({ 
-          error: "Access denied. Your IP has been temporarily blocked.",
-          reason: reason,
-          blocked_until: blockedUntil,
-        }),
-        {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+      return createCorsErrorResponse(
+        `Access denied. Your IP has been temporarily blocked. Reason: ${reason}. Blocked until: ${blockedUntil}`,
+        403
       );
     }
     
@@ -94,15 +77,9 @@ serve(async (req) => {
         severity: "medium",
       });
       
-      return new Response(
-        JSON.stringify({ 
-          error: "Too many checkout attempts. Please try again later.",
-          retryAfter: 3600
-        }),
-        {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+      return createCorsErrorResponse(
+        "Too many checkout attempts. Please try again later.",
+        429
       );
     }
 
@@ -113,13 +90,7 @@ serve(async (req) => {
     const validationResult = customerDataSchema.safeParse({ customerEmail, customerName });
     if (!validationResult.success) {
       console.error("Validation error:", validationResult.error, `IP: ${clientIp}`);
-      return new Response(
-        JSON.stringify({ error: "Invalid request" }), 
-        {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        }
-      );
+      return createCorsErrorResponse("Invalid request", 400);
     }
 
     const sanitizedEmail = sanitizeString(customerEmail);
@@ -203,21 +174,9 @@ serve(async (req) => {
 
     console.log("Checkout session created:", session.id);
 
-    return new Response(
-      JSON.stringify({ url: session.url, sessionId: session.id }), 
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      }
-    );
+    return createCorsResponse({ url: session.url, sessionId: session.id }, 200);
   } catch (error) {
     console.error("Error creating checkout:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to create checkout session. Please try again." }), 
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      }
-    );
+    return createCorsErrorResponse("Failed to create checkout session. Please try again.", 500);
   }
 });

@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const RECAPTCHA_SECRET_KEY = Deno.env.get("RECAPTCHA_SECRET_KEY");
@@ -65,11 +66,6 @@ const escapeHtml = (unsafe: string): string => {
     .replace(/'/g, "&#039;");
 };
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
 interface EmailConfigRequest {
   recipientEmail: string;
   recipientName?: string;
@@ -91,9 +87,8 @@ interface EmailConfigRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsResponse = handleCorsPreFlight(req);
+  if (corsResponse) return corsResponse;
 
   try {
     // Get client IP for rate limiting and logging
@@ -109,16 +104,9 @@ const handler = async (req: Request): Promise<Response> => {
       const reason = blockInfo && blockInfo.length > 0 ? blockInfo[0].reason : "Security violation";
       
       console.warn(`Blocked IP attempted access: ${clientIp}`);
-      return new Response(
-        JSON.stringify({ 
-          error: "Access denied. Your IP has been temporarily blocked.",
-          reason: reason,
-          blocked_until: blockedUntil,
-        }),
-        {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+      return createCorsErrorResponse(
+        `Access denied. Your IP has been temporarily blocked. Reason: ${reason}. Blocked until: ${blockedUntil}`,
+        403
       );
     }
     
@@ -135,16 +123,7 @@ const handler = async (req: Request): Promise<Response> => {
         severity: "high",
       });
       
-      return new Response(
-        JSON.stringify({ 
-          error: "Too many requests. Please try again later.",
-          retryAfter: 3600
-        }),
-        {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      return createCorsErrorResponse("Too many requests. Please try again later.", 429);
     }
 
     const rawData = await req.json();
@@ -176,10 +155,7 @@ const handler = async (req: Request): Promise<Response> => {
           });
           
           console.warn(`reCAPTCHA verification failed for IP: ${clientIp}, Score: ${recaptchaResult.score || 'N/A'}`);
-          return new Response(
-            JSON.stringify({ error: "Request verification failed" }),
-            { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-          );
+          return createCorsErrorResponse("Request verification failed", 403);
         }
         
         console.log(`reCAPTCHA verified for IP: ${clientIp}, Score: ${recaptchaResult.score}`);
@@ -203,15 +179,7 @@ const handler = async (req: Request): Promise<Response> => {
         severity: "medium",
       });
       
-      return new Response(
-        JSON.stringify({ 
-          error: "Invalid request. Please check your input." 
-        }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      return createCorsErrorResponse("Invalid request. Please check your input.", 400);
     }
 
     const { recipientEmail, recipientName, config }: EmailConfigRequest = validationResult.data;
@@ -351,29 +319,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Email sent successfully:", emailResponse);
 
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: "Configuration emailed successfully",
-        emailId: emailResponse.data?.id 
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      }
-    );
+    return createCorsResponse({
+      success: true,
+      message: "Configuration emailed successfully",
+      emailId: emailResponse.data?.id
+    }, 200);
   } catch (error: any) {
     console.error("Error in email-vanity-config function:", error);
-    return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message || "Failed to send email" 
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      }
-    );
+    return createCorsErrorResponse(error.message || "Failed to send email", 500);
   }
 };
 

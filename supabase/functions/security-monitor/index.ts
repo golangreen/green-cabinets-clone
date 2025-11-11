@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -13,11 +14,6 @@ const ALERT_EMAIL = "info@greencabinets.com"; // Configure your alert email
 const TIME_WINDOW_MINUTES = 60;
 const RATE_LIMIT_THRESHOLD = 10; // Alert if same IP exceeds rate limit 10+ times
 const SUSPICIOUS_IP_THRESHOLD = 5; // Alert if IP has 5+ violations
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
 
 interface SecuritySummary {
   event_type: string;
@@ -35,9 +31,8 @@ interface SuspiciousIP {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsResponse = handleCorsPreFlight(req);
+  if (corsResponse) return corsResponse;
 
   try {
     console.log("Running security monitor check...");
@@ -54,10 +49,10 @@ const handler = async (req: Request): Promise<Response> => {
       const minutesSinceLastAlert = (Date.now() - new Date(recentAlerts[0].sent_at).getTime()) / 60000;
       if (minutesSinceLastAlert < 60) {
         console.log(`Skipping alert - last alert sent ${Math.round(minutesSinceLastAlert)} minutes ago`);
-        return new Response(
-          JSON.stringify({ message: "Alert cooldown active", minutesSinceLastAlert }),
-          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return createCorsResponse({
+          message: "Alert cooldown active",
+          minutesSinceLastAlert
+        }, 200);
       }
     }
 
@@ -262,41 +257,23 @@ const handler = async (req: Request): Promise<Response> => {
 
       console.log("Security alert email sent successfully");
 
-      return new Response(
-        JSON.stringify({ 
-          alert_sent: true,
-          summary: summaryData,
-          suspicious_ips: suspiciousIPsData,
-        }),
-        {
-          status: 200,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      return createCorsResponse({
+        alert_sent: true,
+        summary: summaryData,
+        suspicious_ips: suspiciousIPsData,
+      }, 200);
     }
 
     console.log("No security issues detected - no alert needed");
-    return new Response(
-      JSON.stringify({ 
-        alert_sent: false,
-        message: "No suspicious activity detected",
-        summary: summaryData,
-      }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+    return createCorsResponse({
+      alert_sent: false,
+      message: "No suspicious activity detected",
+      summary: summaryData,
+    }, 200);
 
   } catch (error: any) {
     console.error("Error in security-monitor function:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+    return createCorsErrorResponse(error.message, 500);
   }
 };
 

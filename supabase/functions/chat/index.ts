@@ -1,30 +1,17 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.76.1";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "X-Content-Type-Options": "nosniff",
-  "X-Frame-Options": "DENY",
-  "X-XSS-Protection": "1; mode=block",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
-};
+import { handleCorsPreFlight, createCorsErrorResponse, corsHeaders } from "../_shared/cors.ts";
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const corsResponse = handleCorsPreFlight(req);
+  if (corsResponse) return corsResponse;
 
   try {
     // Verify authentication
     const authHeader = req.headers.get('authorization');
     if (!authHeader) {
       console.error("Authentication required: No authorization header");
-      return new Response(
-        JSON.stringify({ error: "Authentication required" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return createCorsErrorResponse("Authentication required", 401);
     }
 
     const supabase = createClient(
@@ -37,10 +24,7 @@ serve(async (req) => {
     
     if (authError || !user) {
       console.error("Invalid authentication:", authError);
-      return new Response(
-        JSON.stringify({ error: "Invalid authentication" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return createCorsErrorResponse("Invalid authentication", 401);
     }
 
     const { messages } = await req.json();
@@ -48,26 +32,17 @@ serve(async (req) => {
     // Input validation to prevent abuse and injection attacks
     if (!Array.isArray(messages)) {
       console.error("Invalid request: messages is not an array", { userId: user.id });
-      return new Response(
-        JSON.stringify({ error: "Invalid request format" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return createCorsErrorResponse("Invalid request format", 400);
     }
 
     if (messages.length === 0) {
       console.error("Invalid request: empty messages array", { userId: user.id });
-      return new Response(
-        JSON.stringify({ error: "Invalid request" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return createCorsErrorResponse("Invalid request", 400);
     }
 
     if (messages.length > 50) {
       console.error("Invalid request: too many messages", { userId: user.id, count: messages.length });
-      return new Response(
-        JSON.stringify({ error: "Request exceeds limits" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return createCorsErrorResponse("Request exceeds limits", 400);
     }
 
     // Validate each message
@@ -76,26 +51,17 @@ serve(async (req) => {
       
       if (!msg.content || typeof msg.content !== 'string') {
         console.error(`Invalid message format at index ${i}`, { userId: user.id });
-        return new Response(
-          JSON.stringify({ error: "Invalid request" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return createCorsErrorResponse("Invalid request", 400);
       }
       
       if (msg.content.length > 2000) {
         console.error(`Message too long at index ${i}`, { userId: user.id, length: msg.content.length });
-        return new Response(
-          JSON.stringify({ error: "Request exceeds limits" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return createCorsErrorResponse("Request exceeds limits", 400);
       }
 
       if (!msg.role || (msg.role !== 'user' && msg.role !== 'assistant' && msg.role !== 'system')) {
         console.error(`Invalid message role at index ${i}`, { userId: user.id, role: msg.role });
-        return new Response(
-          JSON.stringify({ error: "Invalid request" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return createCorsErrorResponse("Invalid request", 400);
       }
     }
 
@@ -144,24 +110,15 @@ Keep responses conversational, helpful, and focused on helping them visualize th
     if (!response.ok) {
       if (response.status === 429) {
         console.error("Rate limit exceeded", { userId: user.id });
-        return new Response(
-          JSON.stringify({ error: "Service temporarily unavailable" }),
-          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return createCorsErrorResponse("Service temporarily unavailable", 429);
       }
       if (response.status === 402) {
         console.error("Payment required", { userId: user.id });
-        return new Response(
-          JSON.stringify({ error: "Service temporarily unavailable" }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return createCorsErrorResponse("Service temporarily unavailable", 402);
       }
       const errorText = await response.text();
       console.error("AI gateway error:", { userId: user.id, status: response.status, error: errorText });
-      return new Response(
-        JSON.stringify({ error: "Service error" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return createCorsErrorResponse("Service error", 500);
     }
 
     return new Response(response.body, {
@@ -169,9 +126,6 @@ Keep responses conversational, helpful, and focused on helping them visualize th
     });
   } catch (error) {
     console.error("Chat error:", error);
-    return new Response(
-      JSON.stringify({ error: "Service error. Please try again." }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return createCorsErrorResponse("Service error. Please try again.", 500);
   }
 });
