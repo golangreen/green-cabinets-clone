@@ -108,7 +108,10 @@ const Header = () => {
           <div className="w-12"></div>
           
           {/* Centered Logo */}
-          <a href="/" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer flex items-center absolute left-1/2 transform -translate-x-1/2">
+          <a 
+            href="/" 
+            className="cursor-pointer flex items-center absolute left-1/2 transform -translate-x-1/2"
+          >
             <img 
               src={isScrolled ? logoBlack : logoTeal}
               alt="Green Cabinets Logo" 
