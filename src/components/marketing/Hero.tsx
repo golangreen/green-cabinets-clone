@@ -98,18 +98,18 @@ const Hero = () => {
       {/* Hero Text Section - Above Images */}
       <section className="relative bg-gray-50 pt-36 md:pt-44 pb-12 md:pb-16">
         <div className="container mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-gray-900 mb-6 leading-tight drop-shadow-2xl animate-fade-in">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-gray-900 mb-6 leading-tight drop-shadow-2xl opacity-0 animate-fade-in" style={{ animationFillMode: 'forwards' }}>
             Transform Your Space
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-light drop-shadow-lg animate-fade-in mb-8" style={{ animationDelay: '200ms' }}>
+          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-light drop-shadow-lg mb-8 opacity-0 animate-fade-in" style={{ animationDelay: '300ms', animationFillMode: 'forwards' }}>
             Premium custom cabinetry for kitchens, bathrooms, and closets
           </p>
           <Button
             onClick={handleLaunchClick}
             size="lg"
             variant="hero"
-            className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-gray-900 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-lg px-8 py-6 animate-fade-in"
-            style={{ animationDelay: '400ms' }}
+            className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-gray-900 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-lg px-8 py-6 opacity-0 animate-fade-in"
+            style={{ animationDelay: '600ms', animationFillMode: 'forwards' }}
           >
             {isMobile ? (
               <>
