@@ -109,10 +109,10 @@ const Hero = () => {
       {/* Hero Text Section - Above Images */}
       <section className="relative bg-white pt-32 md:pt-40 pb-12 md:pb-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 drop-shadow-2xl">
             Design Your Dream
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-700 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-700 mb-8 max-w-2xl mx-auto drop-shadow-lg">
             {isMobile 
               ? "Scan your room with your camera to get started. Design on a larger device later."
               : "Create custom cabinets with our intuitive 3D design tool. See your vision come to life in real-time."
@@ -122,7 +122,7 @@ const Hero = () => {
             size="lg" 
             onClick={handleLaunchClick}
             variant="hero"
-            className="text-lg px-8 py-6 h-auto"
+            className="text-lg px-8 py-6 h-auto shadow-2xl"
           >
             {isMobile ? (
               <>
