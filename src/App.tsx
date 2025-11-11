@@ -18,6 +18,7 @@ import VanityDesigner from "./pages/VanityDesigner";
 import AdminSecurity from "./pages/AdminSecurity";
 import AdminUsers from "./pages/AdminUsers";
 import AdminAuditLog from "./pages/AdminAuditLog";
+import AdminCache from "./pages/AdminCache";
 import RoomScan from "./pages/RoomScan";
 import DocsAuth from "./pages/DocsAuth";
 import DocsGettingStarted from "./pages/DocsGettingStarted";
@@ -101,6 +102,14 @@ const App = () => {
                   element={
                     <AdminRoute>
                       <AdminAuditLog />
+                    </AdminRoute>
+                  } 
+                />
+                <Route 
+                  path={ROUTES.ADMIN_CACHE}
+                  element={
+                    <AdminRoute>
+                      <AdminCache />
                     </AdminRoute>
                   } 
                 />
