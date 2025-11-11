@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
-import { VanityConfigurator } from "@/components/VanityConfigurator";
+import { VanityDesignerApp } from "@/features/vanity-designer";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
@@ -116,7 +116,7 @@ export default function ProductDetail() {
               Back to Shop
             </Button>
           </Link>
-          <VanityConfigurator product={product} />
+          <VanityDesignerApp />
         </div>
       </main>
       <Footer />

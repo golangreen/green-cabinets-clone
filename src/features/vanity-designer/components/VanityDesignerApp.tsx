@@ -16,7 +16,17 @@ import { calculateCompletePricing, formatPrice } from "@/features/vanity-designe
 import { toast } from "sonner";
 import { Save, Download, Share2, Maximize2, Scan, X } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
-import { EGGER_FINISHES, TAFISA_FINISHES, SHINNOKI_FINISHES } from "@/lib/eggerColors";
+import { getEggerColorNames } from "@/lib/eggerColors";
+import { getTafisaColorNames } from "@/lib/tafisaColors";
+
+const EGGER_FINISHES = getEggerColorNames();
+const TAFISA_FINISHES = getTafisaColorNames();
+const SHINNOKI_FINISHES = [
+  'Bondi Oak', 'Milk Oak', 'Pebble Triba', 'Ivory Oak', 'Ivory Infinite Oak',
+  'Natural Oak', 'Frozen Walnut', 'Manhattan Oak', 'Desert Oak', 'Sahara Oak',
+  'Terra Sapele', 'Cinnamon Triba', 'Smoked Walnut', 'Pure Walnut',
+  'Shadow Eucalyptus', 'Burley Oak', 'Stardust Walnut', 'Raven Oak'
+];
 
 const BRANDS = ["Tafisa", "Egger", "Shinnoki"];
 
@@ -46,12 +56,12 @@ export const VanityDesignerApp = () => {
 
   // Calculate pricing
   const pricing = calculateCompletePricing({
-    widthInches: vanityConfig.dimensionsInInches.widthInches,
+    widthInches: vanityConfig.dimensionsInInches.width,
     selectedBrand: vanityConfig.selectedBrand || '',
     state: vanityConfig.state || '',
     includeWalls: vanityConfig.includeWalls,
     wallHeight: 96,
-    wallWidth: vanityConfig.dimensionsInInches.widthInches,
+    wallWidth: vanityConfig.dimensionsInInches.width,
     wallTileStyle: vanityConfig.wallTileColor,
     includeFloor: vanityConfig.includeRoom,
     roomLength: parseFloat(vanityConfig.roomLength) || 0,
@@ -59,7 +69,7 @@ export const VanityDesignerApp = () => {
     floorTileStyle: vanityConfig.floorType === "tile" ? vanityConfig.tileColor : vanityConfig.woodFloorFinish,
   });
 
-  const { basePrice, wallPrice, floorPrice, subtotal, tax, shipping, total: totalPrice } = pricing;
+  const { basePrice, wallPrice, floorPrice, subtotal, tax, shipping, totalPrice } = pricing;
 
   const handleTextureClick = (finishName: string) => {
     setSelectedTexture(finishName);
@@ -116,9 +126,9 @@ export const VanityDesignerApp = () => {
 
           <div className="h-full pt-16">
             <Vanity3DPreview
-              width={vanityConfig.dimensionsInInches.widthInches}
-              height={vanityConfig.dimensionsInInches.heightInches}
-              depth={vanityConfig.dimensionsInInches.depthInches}
+              width={vanityConfig.dimensionsInInches.width}
+              height={vanityConfig.dimensionsInInches.height}
+              depth={vanityConfig.dimensionsInInches.depth}
               brand={vanityConfig.selectedBrand}
               finish={vanityConfig.selectedFinish}
               doorStyle={vanityConfig.doorStyle}
@@ -401,9 +411,9 @@ export const VanityDesignerApp = () => {
             </div>
             <div className="aspect-video bg-secondary/20 rounded-lg overflow-hidden">
               <Vanity3DPreview
-                width={vanityConfig.dimensionsInInches.widthInches}
-                height={vanityConfig.dimensionsInInches.heightInches}
-                depth={vanityConfig.dimensionsInInches.depthInches}
+                width={vanityConfig.dimensionsInInches.width}
+                height={vanityConfig.dimensionsInInches.height}
+                depth={vanityConfig.dimensionsInInches.depth}
                 brand={vanityConfig.selectedBrand}
                 finish={vanityConfig.selectedFinish}
                 doorStyle={vanityConfig.doorStyle}
