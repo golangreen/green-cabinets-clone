@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { Vanity3DPreview } from "@/components/Vanity3DPreview";
 import { TextureSwatch } from "@/components/TextureSwatch";
 import { TexturePreviewModal } from "@/components/TexturePreviewModal";
 import { useVanityConfig, useSavedTemplates } from "@/features/vanity-designer";
-import { calculateCompletePricing, formatPrice } from "@/features/vanity-designer/services";
+import { calculateCompletePricing, formatPrice, generateVanityQuotePDF } from "@/features/vanity-designer/services";
 import { toast } from "sonner";
 import { Save, Download, Share2, Maximize2, Scan, X } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
@@ -44,6 +44,9 @@ export const VanityDesignerApp = () => {
   const [fullscreenPreview, setFullscreenPreview] = useState(false);
   const [selectedTexture, setSelectedTexture] = useState<string | null>(null);
   const [textureModalOpen, setTextureModalOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  
+  const previewRef = useRef<HTMLDivElement>(null);
 
   // Get available finishes based on selected brand
   const availableFinishes = vanityConfig.selectedBrand 
@@ -104,6 +107,47 @@ export const VanityDesignerApp = () => {
 
     saveTemplate(template);
     toast.success("Template saved!");
+  };
+
+  const handleExportPDF = async () => {
+    if (!vanityConfig.selectedBrand || !vanityConfig.selectedFinish) {
+      toast.error("Please configure your vanity first");
+      return;
+    }
+
+    setIsExporting(true);
+    toast.loading("Generating PDF quote...");
+
+    try {
+      await generateVanityQuotePDF(
+        {
+          brand: vanityConfig.selectedBrand,
+          finish: vanityConfig.selectedFinish,
+          width: vanityConfig.dimensionsInInches.width,
+          height: vanityConfig.dimensionsInInches.height,
+          depth: vanityConfig.dimensionsInInches.depth,
+          doorStyle: vanityConfig.doorStyle,
+          numDrawers: vanityConfig.numDrawers,
+          handleStyle: vanityConfig.handleStyle,
+          includeRoom: vanityConfig.includeRoom,
+          roomLength: vanityConfig.roomLength,
+          roomWidth: vanityConfig.roomWidth,
+          floorType: vanityConfig.floorType,
+          state: vanityConfig.state || 'NY',
+        },
+        pricing,
+        previewRef.current
+      );
+
+      toast.dismiss();
+      toast.success("PDF quote downloaded!");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.dismiss();
+      toast.error("Failed to generate PDF");
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -384,9 +428,14 @@ export const VanityDesignerApp = () => {
                 <Save className="h-4 w-4" />
                 Save
               </Button>
-              <Button variant="outline" className="gap-2">
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={handleExportPDF}
+                disabled={isExporting}
+              >
                 <Download className="h-4 w-4" />
-                Export
+                {isExporting ? "Generating..." : "Export PDF"}
               </Button>
               <Button variant="outline" className="gap-2">
                 <Share2 className="h-4 w-4" />
@@ -409,7 +458,7 @@ export const VanityDesignerApp = () => {
                 Fullscreen
               </Button>
             </div>
-            <div className="aspect-video bg-secondary/20 rounded-lg overflow-hidden">
+            <div ref={previewRef} className="aspect-video bg-secondary/20 rounded-lg overflow-hidden">
               <Vanity3DPreview
                 width={vanityConfig.dimensionsInInches.width}
                 height={vanityConfig.dimensionsInInches.height}
