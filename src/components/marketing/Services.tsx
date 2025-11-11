@@ -26,7 +26,7 @@ const Services = () => {
     <section 
       ref={ref as React.RefObject<HTMLElement>}
       id="services" 
-      className={`py-24 bg-gradient-to-b from-background to-secondary/20 transition-all duration-1000 ${
+      className={`py-24 bg-white transition-all duration-1000 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       }`}
     >

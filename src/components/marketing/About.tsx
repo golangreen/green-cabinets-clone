@@ -7,7 +7,7 @@ const About = () => {
     <section 
       ref={ref as React.RefObject<HTMLElement>}
       id="about" 
-      className={`py-24 bg-muted/30 transition-all duration-1000 ${
+      className={`py-24 bg-white transition-all duration-1000 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       }`}
     >
