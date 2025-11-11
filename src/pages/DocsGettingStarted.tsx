@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Rocket, Database, Key, BookOpen, CheckCircle2, Terminal, GitBranch, Shield } from "lucide-react";
 import { Header, Footer } from "@/components/layout";
-import { DocsSidebar } from "@/components/DocsSidebar";
+import { DocsSidebar } from "@/features/docs";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 

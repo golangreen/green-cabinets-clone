@@ -13,11 +13,11 @@ import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText } fr
 import logo from "@/assets/logo.jpg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/features/shopping-cart";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { ThemeToggle } from "@/features/theme";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
-import { InstallPWADialog } from "@/components/InstallPWADialog";
+import { InstallPWADialog } from "@/features/pwa";
 import { ROUTES } from "@/constants/routes";
 
 const Header = () => {

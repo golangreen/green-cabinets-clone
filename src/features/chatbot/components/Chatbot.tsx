@@ -11,7 +11,7 @@ import { ROUTES } from "@/constants/routes";
 
 type Message = { role: "user" | "assistant"; content: string };
 
-const Chatbot = () => {
+export const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -278,5 +278,3 @@ const Chatbot = () => {
     </>
   );
 };
-
-export default Chatbot;

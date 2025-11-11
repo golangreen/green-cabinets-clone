@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 // Components
 import { Header, Footer } from "@/components/layout";
-import { DocsSidebar } from "@/components/DocsSidebar";
+import { DocsSidebar } from "@/features/docs";
 import { QueryEditor } from "@/components/docs/QueryEditor";
 import { ValidationErrors } from "@/components/docs/ValidationErrors";
 import { QueryResults } from "@/components/docs/QueryResults";

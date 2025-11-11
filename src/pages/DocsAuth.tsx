@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Lock, Code, AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
 import { Header, Footer } from "@/components/layout";
-import { DocsSidebar } from "@/components/DocsSidebar";
+import { DocsSidebar } from "@/features/docs";
 import { ROUTES } from "@/constants/routes";
 
 const DocsAuth = () => {
