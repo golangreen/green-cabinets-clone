@@ -3,6 +3,8 @@ import { createServiceRoleClient } from '../_shared/supabase.ts';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createLogger } from '../_shared/logger.ts';
 import { withErrorHandling, ValidationError } from '../_shared/errors.ts';
+import { checkRateLimit, logSecurityEvent } from '../_shared/security.ts';
+import { getClientIP } from '../_shared/supabase.ts';
 
 // Svix webhook signature verification
 async function verifyWebhookSignature(
@@ -59,8 +61,27 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   const logger = createLogger({ functionName: 'resend-webhook' });
+  const supabase = createServiceRoleClient();
+  const clientIP = getClientIP(req);
 
   try {
+    // Rate limiting: 30 requests per minute per IP
+    const isRateLimited = checkRateLimit(clientIP, 30, 60000);
+    
+    if (isRateLimited) {
+      logger.warn('Rate limit exceeded for webhook', { clientIP });
+      
+      await logSecurityEvent(supabase, {
+        eventType: 'rate_limit_exceeded',
+        clientIP,
+        functionName: 'resend-webhook',
+        severity: 'medium',
+        details: { limit: 30, window: '60s' }
+      });
+      
+      throw new ValidationError('Rate limit exceeded. Please try again later.');
+    }
+
     const webhookSecret = Deno.env.get('RESEND_WEBHOOK_SECRET');
     if (!webhookSecret) {
       throw new Error('RESEND_WEBHOOK_SECRET not configured');
@@ -88,7 +109,16 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     if (!isValid) {
-      logger.error('Invalid webhook signature', { svixId });
+      logger.error('Invalid webhook signature', { svixId, clientIP });
+      
+      await logSecurityEvent(supabase, {
+        eventType: 'validation_failed',
+        clientIP,
+        functionName: 'resend-webhook',
+        severity: 'high',
+        details: { reason: 'invalid_signature', svixId }
+      });
+      
       throw new ValidationError('Invalid webhook signature');
     }
 
@@ -99,8 +129,6 @@ const handler = async (req: Request): Promise<Response> => {
     const { type, data } = payload;
 
     logger.info('Received webhook event', { type, emailId: data?.email_id });
-
-    const supabase = createServiceRoleClient();
 
     // Map Resend event types to our status
     const statusMap: Record<string, string> = {
