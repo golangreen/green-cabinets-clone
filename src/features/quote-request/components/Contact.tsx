@@ -79,7 +79,7 @@ const Contact = () => {
         <div className="flex flex-col items-center justify-center gap-4 mt-12 max-w-md mx-auto">
           <Button 
             size="lg"
-            variant="brand"
+            variant="hero"
             className="w-full"
             onClick={() => setShowQuoteForm(true)}
           >
@@ -100,7 +100,7 @@ const Contact = () => {
           
           <Button 
             size="lg"
-            variant="brand-outline"
+            variant="hero"
             className="w-full"
             onClick={handleContact}
           >

@@ -4221,7 +4221,7 @@ const VanityDesigner = () => {
             <Button variant="outline" onClick={() => setShowSaveDialog(false)}>
               Cancel
             </Button>
-            <Button variant="brand" onClick={handleSaveTemplate} disabled={!templateName.trim()}>
+            <Button variant="hero" onClick={handleSaveTemplate} disabled={!templateName.trim()}>
               <Save className="h-4 w-4 mr-2" />
               Save Template
             </Button>

@@ -35,12 +35,12 @@ const CTA = () => {
           </p>
           
           <div className="flex flex-col items-center justify-center gap-6 pt-8 max-w-md mx-auto">
-            <Button 
-              size="lg" 
-              variant="brand" 
-              className="text-lg px-8 py-6 w-full"
-              onClick={() => setShowQuoteForm(true)}
-            >
+          <Button 
+            size="lg" 
+            variant="hero" 
+            className="text-lg px-8 py-6 w-full"
+            onClick={() => setShowQuoteForm(true)}
+          >
               Get Your Free Quote
             </Button>
             
@@ -57,7 +57,7 @@ const CTA = () => {
               
               <Button 
                 size="lg" 
-                variant="brand-outline" 
+                variant="hero" 
                 className="text-lg px-8 py-6 w-full"
                 onClick={handleConsultation}
               >
