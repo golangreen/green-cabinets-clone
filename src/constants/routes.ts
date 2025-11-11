@@ -23,6 +23,7 @@ export const ROUTES = {
   // Admin
   ADMIN_SECURITY: '/admin-security',
   ADMIN_USERS: '/admin/users',
+  ADMIN_AUDIT_LOG: '/admin/audit-log',
   
   // Commerce
   CHECKOUT: '/checkout',
@@ -49,6 +50,7 @@ export function isAdminRoute(path: string): boolean {
   const adminPaths = [
     ROUTES.ADMIN_SECURITY,
     ROUTES.ADMIN_USERS,
+    ROUTES.ADMIN_AUDIT_LOG,
   ];
   return adminPaths.some(route => path.startsWith(route));
 }

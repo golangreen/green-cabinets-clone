@@ -104,6 +104,42 @@ export type Database = {
         }
         Relationships: []
       }
+      role_change_audit: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          performed_by_email: string
+          performed_by_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          target_user_email: string
+          target_user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          performed_by_email: string
+          performed_by_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          target_user_email: string
+          target_user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          performed_by_email?: string
+          performed_by_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          target_user_email?: string
+          target_user_id?: string
+        }
+        Relationships: []
+      }
       security_events: {
         Row: {
           client_ip: string
@@ -235,6 +271,16 @@ export type Database = {
         Returns: boolean
       }
       is_ip_blocked: { Args: { check_ip: string }; Returns: boolean }
+      log_role_change: {
+        Args: {
+          p_action: string
+          p_details?: Json
+          p_role: Database["public"]["Enums"]["app_role"]
+          p_target_user_email: string
+          p_target_user_id: string
+        }
+        Returns: undefined
+      }
       manual_block_ip: {
         Args: {
           block_duration_hours?: number

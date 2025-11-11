@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Download, User, LogOut, Shield, Users } from "lucide-react";
+import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -266,6 +266,13 @@ const Header = () => {
                         <Users className="mr-2 h-4 w-4" />
                         <span>User Management</span>
                       </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => window.location.href = ROUTES.ADMIN_AUDIT_LOG}
+                        className="cursor-pointer"
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        <span>Audit Log</span>
+                      </DropdownMenuItem>
                     </>
                   )}
                   <DropdownMenuSeparator />
@@ -345,6 +352,18 @@ const Header = () => {
                           >
                             <Users className="mr-2 h-4 w-4" />
                             User Management
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              window.location.href = ROUTES.ADMIN_AUDIT_LOG;
+                            }}
+                            className="justify-start"
+                          >
+                            <FileText className="mr-2 h-4 w-4" />
+                            Audit Log
                           </Button>
                         </>
                       )}
