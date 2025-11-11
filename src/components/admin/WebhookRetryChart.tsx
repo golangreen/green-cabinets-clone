@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { RefreshCw, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
+import { toast as sonnerToast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 
 interface RetryData {
@@ -82,7 +83,7 @@ export function WebhookRetryChart() {
       if (error) throw error;
 
       if (!webhookEvents || webhookEvents.length === 0) {
-        toast.error('No data available to export');
+        sonnerToast.error('No data available to export');
         return;
       }
 
@@ -125,10 +126,10 @@ export function WebhookRetryChart() {
       document.body.removeChild(link);
       
       URL.revokeObjectURL(url);
-      toast.success(`Exported ${webhookEvents.length} webhook events to CSV`);
+      sonnerToast.success(`Exported ${webhookEvents.length} webhook events to CSV`);
     } catch (error) {
       console.error('Error exporting CSV:', error);
-      toast.error('Failed to export data');
+      sonnerToast.error('Failed to export data');
     }
   };
 
@@ -145,8 +146,25 @@ export function WebhookRetryChart() {
           schema: 'public',
           table: 'webhook_events'
         },
-        () => {
+        (payload) => {
           console.log('New webhook event detected, refreshing chart...');
+          
+          const event = payload.new as { 
+            svix_id: string; 
+            event_type: string; 
+            retry_count: number;
+            client_ip: string;
+          };
+          
+          // Show toast for high retry counts
+          if (event.retry_count >= 3) {
+            toast({
+              title: '🔴 Excessive Webhook Retries',
+              description: `${event.event_type} has failed ${event.retry_count} times from ${event.client_ip}`,
+              variant: 'destructive',
+            });
+          }
+          
           fetchRetryHistory();
         }
       )

@@ -6,12 +6,14 @@ import { Shield, CheckCircle2, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
+import { toast } from '@/hooks/use-toast';
 
 interface WebhookEvent {
   id: string;
   svix_id: string;
   event_type: string;
   client_ip: string;
+  retry_count: number;
   processed_at: string;
   created_at: string;
 }
@@ -73,8 +75,20 @@ export function WebhookDeduplicationStats() {
           schema: 'public',
           table: 'webhook_events'
         },
-        () => {
+        (payload) => {
           console.log('New webhook event detected, refreshing deduplication stats...');
+          
+          const event = payload.new as WebhookEvent;
+          
+          // Only show toast for retry events (potential duplicates)
+          if (event.retry_count > 0) {
+            toast({
+              title: '🔄 Webhook Retry Detected',
+              description: `${event.event_type} - Retry #${event.retry_count} from ${event.client_ip}`,
+              variant: event.retry_count > 2 ? 'destructive' : 'default',
+            });
+          }
+          
           queryClient.invalidateQueries({ queryKey: ['webhook-deduplication-stats'] });
           queryClient.invalidateQueries({ queryKey: ['webhook-duplicates'] });
         }

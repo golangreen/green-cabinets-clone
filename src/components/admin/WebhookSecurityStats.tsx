@@ -7,6 +7,7 @@ import { Webhook, AlertTriangle, CheckCircle, XCircle, Clock } from 'lucide-reac
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
+import { toast } from '@/hooks/use-toast';
 
 interface WebhookEvent {
   id: string;
@@ -99,8 +100,19 @@ export function WebhookSecurityStats() {
           table: 'security_events',
           filter: 'function_name=eq.resend-webhook'
         },
-        () => {
+        (payload) => {
           console.log('New security event detected, refreshing webhook security stats...');
+          
+          const event = payload.new as WebhookEvent;
+          const eventTypeDisplay = event.event_type.replace(/_/g, ' ').toUpperCase();
+          const severityColor = event.severity === 'high' || event.severity === 'critical' ? 'destructive' : 'default';
+          
+          toast({
+            title: `🚨 Webhook Security Event`,
+            description: `${eventTypeDisplay} - Severity: ${event.severity}${event.details?.reason ? ` (${event.details.reason.replace(/_/g, ' ')})` : ''}`,
+            variant: severityColor as 'default' | 'destructive',
+          });
+          
           queryClient.invalidateQueries({ queryKey: ['webhook-security-events'] });
         }
       )

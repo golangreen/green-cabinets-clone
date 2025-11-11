@@ -6,11 +6,14 @@ import { Activity, TrendingUp, Users, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
+import { toast } from '@/hooks/use-toast';
 
 interface RateLimitEvent {
   id: string;
+  event_type: string;
   client_ip: string;
   function_name: string;
+  severity: string;
   created_at: string;
   details: {
     limit?: number;
@@ -92,8 +95,18 @@ export function RateLimitingStats() {
           table: 'security_events',
           filter: 'event_type=eq.rate_limit_exceeded'
         },
-        () => {
+        (payload) => {
           console.log('New rate limit event detected, refreshing stats...');
+          
+          const event = payload.new as RateLimitEvent;
+          const functionName = event.function_name || 'Unknown Function';
+          
+          toast({
+            title: '⚠️ Rate Limit Exceeded',
+            description: `${functionName} - IP: ${event.client_ip} (Severity: ${event.severity})`,
+            variant: 'destructive',
+          });
+          
           queryClient.invalidateQueries({ queryKey: ['rate-limit-events'] });
         }
       )
