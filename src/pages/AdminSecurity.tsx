@@ -6,6 +6,7 @@ import { SecurityEventsTable } from '@/components/admin/SecurityEventsTable';
 import { BlockedIPsTable } from '@/components/admin/BlockedIPsTable';
 import { SecurityAlertSettings } from '@/components/admin/SecurityAlertSettings';
 import { ExpiringRolesWidget } from '@/components/admin/ExpiringRolesWidget';
+import { RoleExpirationTestPanel } from '@/components/admin/RoleExpirationTestPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Activity, Ban, Bell, Settings } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -90,7 +91,10 @@ const AdminSecurity = () => {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            <ExpiringRolesWidget />
+            <div className="grid gap-6 md:grid-cols-2">
+              <ExpiringRolesWidget />
+              <RoleExpirationTestPanel />
+            </div>
             <SecurityCharts />
             
             <div className="grid gap-6 md:grid-cols-2">
