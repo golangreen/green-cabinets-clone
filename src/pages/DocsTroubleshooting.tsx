@@ -4,9 +4,11 @@ import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy, Play, Check } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy, Play, Check, Terminal, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
@@ -16,6 +18,9 @@ import { DocsSidebar } from "@/components/DocsSidebar";
 const DocsTroubleshooting = () => {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<{ type: string; message: string } | null>(null);
+  const [sqlQuery, setSqlQuery] = useState("SELECT * FROM user_roles LIMIT 5;");
+  const [queryResult, setQueryResult] = useState<any>(null);
+  const [isExecuting, setIsExecuting] = useState(false);
   const { toast } = useToast();
 
   const copyToClipboard = (code: string, id: string) => {
@@ -106,6 +111,90 @@ const DocsTroubleshooting = () => {
       });
     }
   };
+
+  const executeQuery = async () => {
+    setIsExecuting(true);
+    setQueryResult(null);
+
+    try {
+      // Basic safety check - only allow SELECT queries
+      const trimmedQuery = sqlQuery.trim().toUpperCase();
+      if (!trimmedQuery.startsWith("SELECT")) {
+        setQueryResult({
+          error: "Only SELECT queries are allowed for safety. Use the backend dashboard for data modifications.",
+          type: "error"
+        });
+        setIsExecuting(false);
+        return;
+      }
+
+      // Parse table name from query (basic parsing)
+      const tableMatch = sqlQuery.match(/FROM\s+(\w+)/i);
+      if (!tableMatch) {
+        setQueryResult({
+          error: "Could not parse table name from query. Use format: SELECT * FROM table_name",
+          type: "error"
+        });
+        setIsExecuting(false);
+        return;
+      }
+
+      const tableName = tableMatch[1];
+      const limitMatch = sqlQuery.match(/LIMIT\s+(\d+)/i);
+      const limit = limitMatch ? parseInt(limitMatch[1]) : 10;
+
+      // Execute query using Supabase client (with type casting for dynamic table)
+      const { data, error } = await (supabase as any)
+        .from(tableName)
+        .select('*')
+        .limit(limit);
+
+      if (error) {
+        setQueryResult({
+          error: error.message,
+          hint: error.hint || "Check your table name and RLS policies",
+          type: "error"
+        });
+      } else {
+        setQueryResult({
+          data: data || [],
+          type: "success",
+          rowCount: Array.isArray(data) ? data.length : 0
+        });
+        toast({
+          title: "Query executed successfully",
+          description: `Retrieved ${data?.length || 0} rows from ${tableName}`,
+        });
+      }
+    } catch (err: any) {
+      setQueryResult({
+        error: err.message || "Failed to execute query",
+        type: "error"
+      });
+    } finally {
+      setIsExecuting(false);
+    }
+  };
+
+  const exampleQueries = [
+    {
+      name: "View User Roles",
+      query: "SELECT * FROM user_roles LIMIT 5;"
+    },
+    {
+      name: "Check Security Events",
+      query: "SELECT event_type, COUNT(*) as count FROM security_events GROUP BY event_type;"
+    },
+    {
+      name: "View Blocked IPs",
+      query: "SELECT ip_address, reason, blocked_until FROM blocked_ips WHERE blocked_until > now();"
+    },
+    {
+      name: "Test has_role Function",
+      query: "SELECT public.has_role(auth.uid(), 'admin'::app_role) as is_admin;"
+    }
+  ];
+  
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -172,6 +261,167 @@ const DocsTroubleshooting = () => {
                     </AlertDescription>
                   </Alert>
                 )}
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* SQL Query Editor */}
+          <section className="mb-12">
+            <Card className="border-primary/20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Terminal className="h-5 w-5 text-primary" />
+                  Live SQL Query Editor
+                </CardTitle>
+                <CardDescription>
+                  Test database queries directly in your browser (SELECT only)
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Alert>
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Read-Only Mode</AlertTitle>
+                  <AlertDescription>
+                    Only SELECT queries are allowed for safety. Use the backend dashboard for INSERT, UPDATE, or DELETE operations.
+                  </AlertDescription>
+                </Alert>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold text-sm">Example Queries</h4>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {exampleQueries.map((example) => (
+                      <Button
+                        key={example.name}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSqlQuery(example.query)}
+                        className="justify-start text-xs"
+                      >
+                        {example.name}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">SQL Query</label>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => copyToClipboard(sqlQuery, 'sql-query')}
+                    >
+                      {copiedCode === 'sql-query' ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={sqlQuery}
+                    onChange={(e) => setSqlQuery(e.target.value)}
+                    placeholder="SELECT * FROM user_roles LIMIT 5;"
+                    className="font-mono text-sm min-h-[100px]"
+                  />
+                </div>
+
+                <Button
+                  onClick={executeQuery}
+                  disabled={isExecuting || !sqlQuery.trim()}
+                  className="w-full"
+                >
+                  {isExecuting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Executing...
+                    </>
+                  ) : (
+                    <>
+                      <Play className="mr-2 h-4 w-4" />
+                      Execute Query
+                    </>
+                  )}
+                </Button>
+
+                {queryResult && (
+                  <div className="space-y-3">
+                    {queryResult.type === "error" ? (
+                      <Alert variant="destructive">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle>Query Error</AlertTitle>
+                        <AlertDescription className="space-y-1">
+                          <p className="font-mono text-sm">{queryResult.error}</p>
+                          {queryResult.hint && (
+                            <p className="text-xs mt-2">Hint: {queryResult.hint}</p>
+                          )}
+                        </AlertDescription>
+                      </Alert>
+                    ) : (
+                      <>
+                        <Alert className="border-green-500 bg-green-50">
+                          <CheckCircle2 className="h-4 w-4 text-green-600" />
+                          <AlertDescription>
+                            Query executed successfully. Retrieved {queryResult.rowCount} {queryResult.rowCount === 1 ? 'row' : 'rows'}.
+                          </AlertDescription>
+                        </Alert>
+
+                        {queryResult.data && queryResult.data.length > 0 ? (
+                          <div className="border rounded-lg overflow-hidden">
+                            <div className="max-h-[400px] overflow-auto">
+                              <Table>
+                                <TableHeader className="bg-muted sticky top-0">
+                                  <TableRow>
+                                    {Object.keys(queryResult.data[0]).map((key) => (
+                                      <TableHead key={key} className="font-semibold">
+                                        {key}
+                                      </TableHead>
+                                    ))}
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {queryResult.data.map((row: any, idx: number) => (
+                                    <TableRow key={idx}>
+                                      {Object.values(row).map((value: any, cellIdx: number) => (
+                                        <TableCell key={cellIdx} className="font-mono text-xs">
+                                          {typeof value === 'object' && value !== null
+                                            ? JSON.stringify(value)
+                                            : value?.toString() || '-'}
+                                        </TableCell>
+                                      ))}
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </div>
+                        ) : (
+                          <Alert>
+                            <AlertDescription>
+                              Query executed successfully but returned no rows.
+                            </AlertDescription>
+                          </Alert>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+
+                <Alert>
+                  <Code className="h-4 w-4" />
+                  <AlertTitle>Available Tables</AlertTitle>
+                  <AlertDescription className="space-y-1">
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <Badge variant="secondary">user_roles</Badge>
+                      <Badge variant="secondary">security_events</Badge>
+                      <Badge variant="secondary">blocked_ips</Badge>
+                      <Badge variant="secondary">block_history</Badge>
+                      <Badge variant="secondary">alert_history</Badge>
+                    </div>
+                  </AlertDescription>
+                </Alert>
               </CardContent>
             </Card>
           </section>
