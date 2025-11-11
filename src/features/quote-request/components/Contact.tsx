@@ -20,7 +20,7 @@ const Contact = () => {
     <section id="contact" className="py-24 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">Get in Touch</h2>
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 text-gray-900">Get in Touch</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Ready to transform your space? Contact us today for a free consultation.
           </p>
