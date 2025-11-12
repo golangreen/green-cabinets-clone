@@ -1,20 +1,10 @@
-import { logger } from '@/lib/logger';
 import { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from '@/hooks/useDebounce';
 import { toast } from 'sonner';
-import type { User, AssignRoleParams, BulkAssignParams, ExtendRoleParams } from '@/types';
-import { 
-  fetchUsersWithRoles,
-  assignRole,
-  removeRole,
-  bulkAssignRole,
-  bulkRemoveRole,
-  extendRoleExpiration,
-  getCurrentUserEmail,
-  sendRoleNotification,
-  type AppRole
-} from '@/services';
+import { fetchUsersWithRoles } from '@/services/roleService';
+import { useUserSelection } from './useUserSelection';
+import { useRoleOperations } from './useRoleOperations';
 
 interface RoleDetail {
   role: 'admin' | 'moderator' | 'user';
@@ -33,8 +23,6 @@ interface UserWithRoles {
 
 export const useUserManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
-  const [bulkRole, setBulkRole] = useState<'admin' | 'moderator' | 'user'>('moderator');
   const debouncedSearch = useDebounce(searchTerm, 300);
 
   // Fetch all users with roles
@@ -43,188 +31,26 @@ export const useUserManagement = () => {
     queryFn: fetchUsersWithRoles,
   });
 
-  // Add role mutation
-  const addRoleMutation = useMutation({
-    mutationFn: async ({ userId, role, expiresAt }: AssignRoleParams) => {
-      await assignRole({ userId, role: role as AppRole, expiresAt });
+  // User selection state
+  const {
+    selectedUsers,
+    bulkRole,
+    setBulkRole,
+    toggleUserSelection,
+    toggleSelectAll,
+    clearSelection,
+  } = useUserSelection();
 
-      // Send notification email
-      const targetUser = users?.find(u => u.user_id === userId);
-      if (targetUser?.email) {
-        const performerEmail = await getCurrentUserEmail();
-
-        try {
-          await sendRoleNotification({
-            userEmail: targetUser.email,
-            action: 'assigned',
-            role: role as AppRole,
-            performedBy: performerEmail
-          });
-        } catch (emailError) {
-          logger.error('Failed to send role assignment notification', emailError, { 
-            userId: targetUser.user_id,
-            role,
-            component: 'useUserManagement'
-          });
-        }
-      }
-    },
-    onSuccess: (_, variables) => {
-      toast.success(`${variables.role} role assigned successfully`);
-      refetch();
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to assign role');
-    }
-  });
-
-  // Remove role mutation
-  const removeRoleMutation = useMutation({
-    mutationFn: async ({ userId, role }: { userId: string; role: 'admin' | 'moderator' | 'user' }) => {
-      await removeRole(userId, role as AppRole);
-
-      // Send notification email
-      const targetUser = users?.find(u => u.user_id === userId);
-      if (targetUser?.email) {
-        const performerEmail = await getCurrentUserEmail();
-
-        try {
-          await sendRoleNotification({
-            userEmail: targetUser.email,
-            action: 'removed',
-            role: role as AppRole,
-            performedBy: performerEmail
-          });
-        } catch (emailError) {
-          logger.error('Failed to send role removal notification', emailError, { 
-            userId: targetUser.user_id,
-            role,
-            component: 'useUserManagement'
-          });
-        }
-      }
-    },
-    onSuccess: (_, variables) => {
-      toast.success(`${variables.role} role removed successfully`);
-      refetch();
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to remove role');
-    }
-  });
-
-  // Bulk add role mutation
-  const bulkAddRoleMutation = useMutation({
-    mutationFn: async ({ userIds, role }: BulkAssignParams) => {
-      const result = await bulkAssignRole(userIds, role as AppRole);
-
-      // Send notification emails
-      const performerEmail = await getCurrentUserEmail();
-
-      const emailPromises = userIds.map(userId => {
-        const targetUser = users?.find(u => u.user_id === userId);
-        if (!targetUser?.email) return Promise.resolve();
-
-        return sendRoleNotification({
-          userEmail: targetUser.email,
-          action: 'assigned',
-          role: role as AppRole,
-          performedBy: performerEmail
-        }).catch(err => logger.error('Failed to send bulk assignment notification', err, { 
-          userIds: selectedUsers,
-          role,
-          component: 'useUserManagement'
-        }));
-      });
-
-      await Promise.allSettled(emailPromises);
-      return result;
-    },
-    onSuccess: (data) => {
-      const message = (data as any)?.message || 'Roles assigned successfully';
-      toast.success(message);
-      setSelectedUsers(new Set());
-      refetch();
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to assign roles');
-    }
-  });
-
-  // Bulk remove role mutation
-  const bulkRemoveRoleMutation = useMutation({
-    mutationFn: async ({ userIds, role }: BulkAssignParams) => {
-      const result = await bulkRemoveRole(userIds, role as AppRole);
-
-      // Send notification emails
-      const performerEmail = await getCurrentUserEmail();
-
-      const emailPromises = userIds.map(userId => {
-        const targetUser = users?.find(u => u.user_id === userId);
-        if (!targetUser?.email) return Promise.resolve();
-
-        return sendRoleNotification({
-          userEmail: targetUser.email,
-          action: 'removed',
-          role: role as AppRole,
-          performedBy: performerEmail
-        }).catch(err => logger.error('Failed to send bulk removal notification', err, { 
-          userIds: selectedUsers,
-          role,
-          component: 'useUserManagement'
-        }));
-      });
-
-      await Promise.allSettled(emailPromises);
-      return result;
-    },
-    onSuccess: (data) => {
-      const message = (data as any)?.message || 'Roles removed successfully';
-      toast.success(message);
-      setSelectedUsers(new Set());
-      refetch();
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to remove roles');
-    }
-  });
-
-  // Extend role mutation
-  const extendRoleMutation = useMutation({
-    mutationFn: async ({ userId, role, newExpiresAt }: ExtendRoleParams) => {
-      await extendRoleExpiration({ 
-        userId, 
-        role: role as AppRole, 
-        newExpiresAt 
-      });
-    },
-    onSuccess: (_, variables) => {
-      toast.success(`${variables.role} role expiration extended successfully`);
-      refetch();
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to extend role');
-    }
-  });
+  // Role operations with notifications
+  const {
+    addRole,
+    removeRole,
+    bulkAddRole: bulkAddRoleMutation,
+    bulkRemoveRole: bulkRemoveRoleMutation,
+    extendRole,
+  } = useRoleOperations(users);
 
   // Helper functions
-  const toggleUserSelection = (userId: string) => {
-    const newSelection = new Set(selectedUsers);
-    if (newSelection.has(userId)) {
-      newSelection.delete(userId);
-    } else {
-      newSelection.add(userId);
-    }
-    setSelectedUsers(newSelection);
-  };
-
-  const toggleSelectAll = (filteredUsers: UserWithRoles[]) => {
-    if (selectedUsers.size === filteredUsers.length) {
-      setSelectedUsers(new Set());
-    } else {
-      setSelectedUsers(new Set(filteredUsers.map(u => u.user_id)));
-    }
-  };
 
   const getRoleDetail = (user: UserWithRoles, role: string): RoleDetail | undefined => {
     return user.role_details?.find(rd => rd.role === role);
@@ -247,7 +73,6 @@ export const useUserManagement = () => {
     searchTerm,
     setSearchTerm,
     selectedUsers,
-    setSelectedUsers,
     bulkRole,
     setBulkRole,
     debouncedSearch,
@@ -258,33 +83,36 @@ export const useUserManagement = () => {
     isLoading,
     
     // Mutations
-    addRole: addRoleMutation.mutate,
-    removeRole: removeRoleMutation.mutate,
+    addRole,
+    removeRole,
     bulkAddRole: () => {
       if (selectedUsers.size === 0) {
         toast.error('Please select at least one user');
         return;
       }
-      bulkAddRoleMutation.mutate({
+      bulkAddRoleMutation({
         userIds: Array.from(selectedUsers),
-        role: bulkRole
+        role: bulkRole,
       });
+      clearSelection();
     },
     bulkRemoveRole: () => {
       if (selectedUsers.size === 0) {
         toast.error('Please select at least one user');
         return;
       }
-      bulkRemoveRoleMutation.mutate({
+      bulkRemoveRoleMutation({
         userIds: Array.from(selectedUsers),
-        role: bulkRole
+        role: bulkRole,
       });
+      clearSelection();
     },
-    extendRole: extendRoleMutation.mutate,
+    extendRole,
     
     // Helpers
     toggleUserSelection,
     toggleSelectAll,
+    clearSelection,
     getRoleDetail,
     isRoleExpiringSoon,
     refetch,
