@@ -1,16 +1,13 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Webhook, AlertTriangle, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
-import { toast } from '@/hooks/use-toast';
-import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 import { fetchSecurityEvents } from '@/services';
 import { SECURITY_CONFIG } from '@/config';
+import { useRealtimeSecurityEvents } from '../hooks/useRealtimeSecurityEvents';
 
 interface WebhookEvent {
   id: string;
@@ -27,15 +24,20 @@ interface WebhookEvent {
 }
 
 export function WebhookSecurityStats() {
-  const queryClient = useQueryClient();
-  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
-  const { shouldShowNotification } = useNotificationSettings();
-
   // Get webhook-related security events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
     queryKey: ['webhook-security-events'],
     queryFn: () => fetchSecurityEvents(SECURITY_CONFIG.SECURITY_EVENTS_TIME_WINDOW_MINUTES, undefined, undefined, 'resend-webhook'),
     refetchInterval: 30000, // Refresh every 30 seconds
+  });
+
+  // Setup realtime subscription
+  const { isConnected: isRealtimeConnected } = useRealtimeSecurityEvents({
+    channelName: 'webhook-security-realtime',
+    queryKey: ['webhook-security-events'],
+    functionNameFilter: 'resend-webhook',
+    notificationType: 'webhook_security',
+    showToast: true,
   });
 
   // Calculate statistics
@@ -78,47 +80,6 @@ export function WebhookSecurityStats() {
   const successRate = totalEvents > 0 
     ? ((totalEvents - (stats?.validationFailures || 0) - (stats?.suspiciousActivity || 0)) / totalEvents * 100).toFixed(1)
     : 100;
-
-  // Subscribe to realtime changes
-  useEffect(() => {
-    const channel = supabase
-      .channel('security-events-realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'security_events',
-          filter: 'function_name=eq.resend-webhook'
-        },
-        (payload) => {
-          console.log('New security event detected, refreshing webhook security stats...');
-          
-          const event = payload.new as WebhookEvent;
-          
-          if (shouldShowNotification('webhook_security', event.severity as any)) {
-            const eventTypeDisplay = event.event_type.replace(/_/g, ' ').toUpperCase();
-            const severityColor = event.severity === 'high' || event.severity === 'critical' ? 'destructive' : 'default';
-            
-            toast({
-              title: `🚨 Webhook Security Event`,
-              description: `${eventTypeDisplay} - Severity: ${event.severity}${event.details?.reason ? ` (${event.details.reason.replace(/_/g, ' ')})` : ''}`,
-              variant: severityColor as 'default' | 'destructive',
-            });
-          }
-          
-          queryClient.invalidateQueries({ queryKey: ['webhook-security-events'] });
-        }
-      )
-      .subscribe((status) => {
-        setIsRealtimeConnected(status === 'SUBSCRIBED');
-      });
-
-    return () => {
-      setIsRealtimeConnected(false);
-      supabase.removeChannel(channel);
-    };
-  }, [queryClient]);
 
   return (
     <Card>

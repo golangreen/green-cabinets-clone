@@ -1,16 +1,13 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Shield, CheckCircle2, Clock } from 'lucide-react';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
-import { toast } from '@/hooks/use-toast';
-import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 import { fetchWebhookEvents } from '@/services';
-import { logger } from '@/lib/logger';
-import { SECURITY_CONFIG, hoursToMs } from '@/config';
+import { hoursToMs } from '@/config';
+import { useRealtimeWebhookEvents } from '../hooks/useRealtimeWebhookEvents';
+import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 
 interface WebhookEvent {
   id: string;
@@ -23,8 +20,6 @@ interface WebhookEvent {
 }
 
 export function WebhookDeduplicationStats() {
-  const queryClient = useQueryClient();
-  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
   const { shouldShowNotification } = useNotificationSettings();
 
   // Get webhook events from the last 24 hours
@@ -58,44 +53,16 @@ export function WebhookDeduplicationStats() {
   
   const recentEvents = webhookEvents?.slice(0, 10) || [];
 
-  // Subscribe to realtime changes
-  useEffect(() => {
-    const channel = supabase
-      .channel('webhook-dedup-realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'webhook_events'
-        },
-        (payload) => {
-          logger.info('New webhook event detected, refreshing deduplication stats', { component: 'WebhookDeduplicationStats' });
-          
-          const event = payload.new as WebhookEvent;
-          
-          // Only show toast for retry events (potential duplicates)
-          if (event.retry_count > 0 && shouldShowNotification('webhook_duplicate', undefined, event.retry_count)) {
-            toast({
-              title: '🔄 Webhook Retry Detected',
-              description: `${event.event_type} - Retry #${event.retry_count} from ${event.client_ip}`,
-              variant: event.retry_count > 2 ? 'destructive' : 'default',
-            });
-          }
-          
-          queryClient.invalidateQueries({ queryKey: ['webhook-deduplication-stats'] });
-          queryClient.invalidateQueries({ queryKey: ['webhook-duplicates'] });
-        }
-      )
-      .subscribe((status) => {
-        setIsRealtimeConnected(status === 'SUBSCRIBED');
-      });
-
-    return () => {
-      setIsRealtimeConnected(false);
-      supabase.removeChannel(channel);
-    };
-  }, [queryClient]);
+  // Setup realtime subscription
+  const { isConnected: isRealtimeConnected } = useRealtimeWebhookEvents({
+    channelName: 'webhook-dedup-realtime',
+    queryKey: ['webhook-deduplication-stats', 'webhook-duplicates'],
+    showToast: true,
+    toastCondition: (event) => event.retry_count > 0 && shouldShowNotification('webhook_duplicate', undefined, event.retry_count),
+    toastTitle: '🔄 Webhook Retry Detected',
+    toastDescription: (event) => `${event.event_type} - Retry #${event.retry_count} from ${event.client_ip}`,
+    toastVariant: (event) => event.retry_count > 2 ? 'destructive' : 'default',
+  });
 
   return (
     <Card>

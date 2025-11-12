@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { RefreshCw, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast as sonnerToast } from 'sonner';
-import { toast } from '@/hooks/use-toast';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
-import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 import { fetchWebhookRetryData } from '@/services';
 import { logger } from '@/lib/logger';
+import { useRealtimeWebhookEvents } from '../hooks/useRealtimeWebhookEvents';
+import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 
 interface RetryData {
   date: string;
@@ -21,7 +20,6 @@ interface RetryData {
 export function WebhookRetryChart() {
   const [data, setData] = useState<RetryData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
   const { shouldShowNotification } = useNotificationSettings();
 
   const fetchRetryHistory = async () => {
@@ -119,49 +117,23 @@ export function WebhookRetryChart() {
     }
   };
 
+  // Setup realtime subscription
+  const { isConnected: isRealtimeConnected } = useRealtimeWebhookEvents({
+    channelName: 'webhook-events-changes',
+    queryKey: ['webhook-retry-chart'],
+    onEvent: (event) => {
+      logger.info('New webhook event detected, refreshing chart', { component: 'WebhookRetryChart' });
+      fetchRetryHistory();
+    },
+    showToast: true,
+    toastCondition: (event) => shouldShowNotification('webhook_retry', 'high', event.retry_count),
+    toastTitle: '🔴 Excessive Webhook Retries',
+    toastDescription: (event) => `${event.event_type} has failed ${event.retry_count} times from ${event.client_ip}`,
+    toastVariant: () => 'destructive',
+  });
+
   useEffect(() => {
     fetchRetryHistory();
-    
-    // Subscribe to realtime changes
-    const channel = supabase
-      .channel('webhook-events-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'webhook_events'
-        },
-        (payload) => {
-          logger.info('New webhook event detected, refreshing chart', { component: 'WebhookRetryChart' });
-          
-          const event = payload.new as { 
-            svix_id: string; 
-            event_type: string; 
-            retry_count: number;
-            client_ip: string;
-          };
-          
-          // Show toast for high retry counts
-          if (shouldShowNotification('webhook_retry', 'high', event.retry_count)) {
-            toast({
-              title: '🔴 Excessive Webhook Retries',
-              description: `${event.event_type} has failed ${event.retry_count} times from ${event.client_ip}`,
-              variant: 'destructive',
-            });
-          }
-          
-          fetchRetryHistory();
-        }
-      )
-      .subscribe((status) => {
-        setIsRealtimeConnected(status === 'SUBSCRIBED');
-      });
-    
-    return () => {
-      setIsRealtimeConnected(false);
-      supabase.removeChannel(channel);
-    };
   }, []);
 
   return (

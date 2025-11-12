@@ -1,15 +1,12 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Activity, TrendingUp, Users, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
-import { toast } from '@/hooks/use-toast';
-import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 import { fetchSecurityEvents } from '@/services';
 import { SECURITY_CONFIG } from '@/config';
+import { useRealtimeSecurityEvents } from '../hooks/useRealtimeSecurityEvents';
 
 interface RateLimitEvent {
   id: string;
@@ -25,15 +22,20 @@ interface RateLimitEvent {
 }
 
 export function RateLimitingStats() {
-  const queryClient = useQueryClient();
-  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
-  const { shouldShowNotification } = useNotificationSettings();
-
   // Get rate limit events from the last 24 hours
   const { data: rateLimitEvents, isLoading } = useQuery({
     queryKey: ['rate-limit-events'],
     queryFn: () => fetchSecurityEvents(SECURITY_CONFIG.SECURITY_EVENTS_TIME_WINDOW_MINUTES, 'rate_limit_exceeded'),
     refetchInterval: 30000, // Refresh every 30 seconds
+  });
+
+  // Setup realtime subscription
+  const { isConnected: isRealtimeConnected } = useRealtimeSecurityEvents({
+    channelName: 'rate-limit-realtime',
+    queryKey: ['rate-limit-events'],
+    eventTypeFilter: 'rate_limit_exceeded',
+    notificationType: 'rate_limit',
+    showToast: true,
   });
 
   // Calculate statistics
@@ -74,46 +76,6 @@ export function RateLimitingStats() {
 
   const totalEvents = rateLimitEvents?.length || 0;
   const uniqueIPs = stats?.uniqueIPs.size || 0;
-
-  // Subscribe to realtime changes
-  useEffect(() => {
-    const channel = supabase
-      .channel('rate-limit-realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'security_events',
-          filter: 'event_type=eq.rate_limit_exceeded'
-        },
-        (payload) => {
-          console.log('New rate limit event detected, refreshing stats...');
-          
-          const event = payload.new as RateLimitEvent;
-          
-          if (shouldShowNotification('rate_limit', event.severity as any)) {
-            const functionName = event.function_name || 'Unknown Function';
-            
-            toast({
-              title: '⚠️ Rate Limit Exceeded',
-              description: `${functionName} - IP: ${event.client_ip} (Severity: ${event.severity})`,
-              variant: 'destructive',
-            });
-          }
-          
-          queryClient.invalidateQueries({ queryKey: ['rate-limit-events'] });
-        }
-      )
-      .subscribe((status) => {
-        setIsRealtimeConnected(status === 'SUBSCRIBED');
-      });
-
-    return () => {
-      setIsRealtimeConnected(false);
-      supabase.removeChannel(channel);
-    };
-  }, [queryClient]);
 
   return (
     <Card>
