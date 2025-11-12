@@ -57,30 +57,30 @@ const App = () => {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-            
-            {/* Configuration validation alert */}
-            <ConfigValidationAlert />
-            
-            {/* Background product preloader wrapped in error boundary */}
-            <FeatureErrorBoundary
-              featureName="Product Preloader"
-              featureTag="product-preload"
-              fallbackRoute="/"
-            >
-            <PreloadManager
-              prefetchCount={CACHE_CONFIG.PRELOAD_COUNT}
-              autoRefreshInterval={CACHE_CONFIG.PRELOAD_REFRESH_INTERVAL}
-            />
-            </FeatureErrorBoundary>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+              
+              {/* Configuration validation alert */}
+              <ConfigValidationAlert />
+              
+              {/* Background product preloader wrapped in error boundary */}
+              <FeatureErrorBoundary
+                featureName="Product Preloader"
+                featureTag="product-preload"
+                fallbackRoute="/"
+              >
+              <PreloadManager
+                prefetchCount={CACHE_CONFIG.PRELOAD_COUNT}
+                autoRefreshInterval={CACHE_CONFIG.PRELOAD_REFRESH_INTERVAL}
+              />
+              </FeatureErrorBoundary>
 
-            <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
@@ -149,11 +149,11 @@ const App = () => {
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+            </TooltipProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 
