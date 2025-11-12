@@ -151,3 +151,11 @@ export {
   fetchConfigAuditLogsByDateRange
 } from './configService';
 
+// Chat service exports
+export {
+  streamChatResponse,
+  type ChatMessage,
+  type ChatStreamOptions
+} from './chatService';
+
+

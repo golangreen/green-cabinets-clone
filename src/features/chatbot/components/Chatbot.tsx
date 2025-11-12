@@ -1,161 +1,26 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { logger } from "@/lib/logger";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, ChevronUp, ChevronDown } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { Session } from "@supabase/supabase-js";
+import { useAuth } from "@/contexts/AuthContext";
+import { useChatStream } from "../hooks/useChatStream";
 import { ROUTES } from "@/constants/routes";
-
-type Message = { role: "user" | "assistant"; content: string };
 
 export const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
+  const { session } = useAuth();
+  const { messages, isLoading, sendMessage, messagesEndRef } = useChatStream();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Check authentication status
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const streamChat = async (userMessage: Message) => {
-    if (!session) {
-      toast({
-        title: "Authentication Required",
-        description: "Please login to use the chatbot",
-        variant: "destructive",
-      });
-      navigate(ROUTES.AUTH);
-      return;
-    }
-
-    const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
-    
-    try {
-      const response = await fetch(CHAT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({ messages: [...messages, userMessage] }),
-      });
-
-      if (!response.ok) {
-        if (response.status === 429) {
-          toast({
-            title: "Rate limit exceeded",
-            description: "Please try again in a moment.",
-            variant: "destructive",
-          });
-          return;
-        }
-        if (response.status === 402) {
-          toast({
-            title: "Service unavailable",
-            description: "AI service is temporarily unavailable.",
-            variant: "destructive",
-          });
-          return;
-        }
-        throw new Error("Failed to get response");
-      }
-
-      if (!response.body) throw new Error("No response body");
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let assistantContent = "";
-      let textBuffer = "";
-
-      // Add initial assistant message
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        textBuffer += decoder.decode(value, { stream: true });
-
-        let newlineIndex: number;
-        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
-          let line = textBuffer.slice(0, newlineIndex);
-          textBuffer = textBuffer.slice(newlineIndex + 1);
-
-          if (line.endsWith("\r")) line = line.slice(0, -1);
-          if (line.startsWith(":") || line.trim() === "") continue;
-          if (!line.startsWith("data: ")) continue;
-
-          const jsonStr = line.slice(6).trim();
-          if (jsonStr === "[DONE]") break;
-
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content;
-            if (content) {
-              assistantContent += content;
-              setMessages((prev) => {
-                const newMessages = [...prev];
-                const lastMessage = newMessages[newMessages.length - 1];
-                if (lastMessage?.role === "assistant") {
-                  lastMessage.content = assistantContent;
-                }
-                return newMessages;
-              });
-            }
-          } catch {
-            // Incomplete JSON, will be completed in next chunk
-            textBuffer = line + "\n" + textBuffer;
-            break;
-          }
-        }
-      }
-    } catch (error) {
-      logger.edgeFunctionError('chat', error, { message: userMessage });
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = { role: "user", content: input.trim() };
-    setMessages((prev) => [...prev, userMessage]);
+    const userMessage = { role: "user" as const, content: input.trim() };
     setInput("");
-    setIsLoading(true);
-
-    await streamChat(userMessage);
+    await sendMessage(userMessage);
   };
 
   const scrollToTop = () => {
