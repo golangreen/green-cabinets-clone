@@ -16,6 +16,7 @@ export interface SecurityEvent {
 }
 
 export interface BlockedIP {
+  id: string;
   ip_address: string;
   reason: string;
   blocked_until: string;
@@ -424,4 +425,64 @@ export async function getActiveBlocksCount() {
   if (error) throw error;
 
   return count || 0;
+}
+
+/**
+ * Send security alert via edge function
+ */
+export async function sendSecurityAlert(params: {
+  type: string;
+  ipAddress?: string;
+  reason?: string;
+  blockedUntil?: string;
+}): Promise<void> {
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session) {
+    throw new Error('Authentication required to send security alerts');
+  }
+
+  const { error } = await supabase.functions.invoke('send-security-alert', {
+    body: params,
+    headers: {
+      Authorization: `Bearer ${session.access_token}`
+    }
+  });
+
+  if (error) throw error;
+}
+
+/**
+ * Fetch cron jobs (display only - managed at DB level)
+ */
+export async function fetchCronJobs(): Promise<{
+  jobname: string;
+  schedule: string;
+  active: boolean;
+  description: string;
+  actions: string[];
+}[]> {
+  // Cron jobs are managed at the database level with pg_cron
+  // This returns the known configuration for display purposes
+  return [
+    {
+      jobname: 'check-role-expiration-hourly',
+      schedule: '0 * * * *', // Every hour
+      active: true,
+      description: 'Checks for expiring roles and sends notifications',
+      actions: [
+        '3-day advance warning',
+        '24-hour final reminder',
+        'Auto-remove expired roles'
+      ]
+    }
+  ];
+}
+
+/**
+ * Manually trigger role expiration check
+ */
+export async function triggerRoleExpirationCheck(): Promise<void> {
+  const { error } = await supabase.functions.invoke('check-role-expiration');
+  if (error) throw error;
 }

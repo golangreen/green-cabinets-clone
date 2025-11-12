@@ -1,32 +1,12 @@
-import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { toast } from 'sonner';
 import { Clock, CheckCircle2, RefreshCw } from 'lucide-react';
+import { useCronJobManagement } from '../hooks/useCronJobManagement';
 
 export const CronJobStatus = () => {
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const handleManualRun = async () => {
-    try {
-      setIsRefreshing(true);
-      
-      const { error } = await supabase.functions.invoke('check-role-expiration');
-
-      if (error) throw error;
-
-      toast.success('Role expiration check completed successfully');
-    } catch (error: any) {
-      logger.edgeFunctionError('check-role-expiration', error);
-      toast.error(error.message || 'Failed to run check');
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
+  const { triggerCheck, isTriggering } = useCronJobManagement();
 
   return (
     <Card>
@@ -42,12 +22,12 @@ export const CronJobStatus = () => {
             </CardDescription>
           </div>
           <Button
-            onClick={handleManualRun}
-            disabled={isRefreshing}
+            onClick={() => triggerCheck()}
+            disabled={isTriggering}
             size="sm"
             variant="outline"
           >
-            <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`mr-2 h-4 w-4 ${isTriggering ? 'animate-spin' : ''}`} />
             Run Now
           </Button>
         </div>

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { logger } from '@/lib/logger';
+import { fetchBlockedIPs } from '@/services/securityService';
+import { useIPBlockManagement } from '../hooks/useIPBlockManagement';
 import {
   Table,
   TableBody,
@@ -30,7 +31,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 export const BlockedIPsTable = () => {
-  const queryClient = useQueryClient();
+  const { blockIP, unblockIP, isBlocking, isUnblocking } = useIPBlockManagement();
   const [blockIpDialog, setBlockIpDialog] = useState(false);
   const [newBlockData, setNewBlockData] = useState({
     ip: '',
@@ -40,102 +41,26 @@ export const BlockedIPsTable = () => {
 
   const { data: blockedIps, isLoading } = useQuery({
     queryKey: ['blocked-ips'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('blocked_ips')
-        .select('*')
-        .order('blocked_at', { ascending: false });
-
-      if (error) throw error;
-      return data;
-    },
+    queryFn: fetchBlockedIPs,
     refetchInterval: 10000,
   });
 
-  const unblockMutation = useMutation({
-    mutationFn: async (ipAddress: string) => {
-      const { data, error } = await supabase.rpc('unblock_ip', {
-        target_ip: ipAddress,
-        unblock_reason: 'Manual unblock from admin dashboard',
-        performed_by_user: 'admin'
-      });
+  const handleBlockIP = () => {
+    blockIP({
+      ipAddress: newBlockData.ip,
+      reason: newBlockData.reason,
+      durationHours: newBlockData.hours
+    });
+    setBlockIpDialog(false);
+    setNewBlockData({ ip: '', reason: '', hours: 24 });
+  };
 
-      if (error) throw error;
-
-      // Send email notification
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          await supabase.functions.invoke('send-security-alert', {
-            body: {
-              type: 'ip_unblocked',
-              ipAddress: ipAddress,
-              reason: 'Manual unblock from admin dashboard'
-            },
-            headers: {
-              Authorization: `Bearer ${session.access_token}`
-            }
-          });
-        }
-      } catch (emailError) {
-        console.error('Failed to send email notification:', emailError);
-      }
-
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocked-ips'] });
-      toast.success('IP unblocked successfully');
-    },
-    onError: (error: any) => {
-      toast.error(`Failed to unblock IP: ${error.message}`);
-    },
-  });
-
-  const blockMutation = useMutation({
-    mutationFn: async (blockData: { ip: string; reason: string; hours: number }) => {
-      const { data: result, error } = await supabase.rpc('manual_block_ip', {
-        target_ip: blockData.ip,
-        block_reason: blockData.reason,
-        block_duration_hours: blockData.hours,
-        performed_by_user: 'admin'
-      });
-
-      if (error) throw error;
-
-      // Send email notification
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          const blockedUntil = new Date(Date.now() + blockData.hours * 60 * 60 * 1000).toISOString();
-          await supabase.functions.invoke('send-security-alert', {
-            body: {
-              type: 'ip_blocked',
-              ipAddress: blockData.ip,
-              reason: blockData.reason,
-              blockedUntil: blockedUntil
-            },
-            headers: {
-              Authorization: `Bearer ${session.access_token}`
-            }
-          });
-        }
-      } catch (emailError) {
-        console.error('Failed to send email notification:', emailError);
-      }
-
-      return result;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocked-ips'] });
-      toast.success('IP blocked successfully');
-      setBlockIpDialog(false);
-      setNewBlockData({ ip: '', reason: '', hours: 24 });
-    },
-    onError: (error: any) => {
-      toast.error(`Failed to block IP: ${error.message}`);
-    },
-  });
+  const handleUnblockIP = (ipAddress: string) => {
+    unblockIP({
+      ipAddress,
+      reason: 'Manual unblock from admin dashboard'
+    });
+  };
 
   if (isLoading) {
     return (
@@ -225,8 +150,8 @@ export const BlockedIPsTable = () => {
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => blockMutation.mutate(newBlockData)}
-                disabled={!newBlockData.ip || !newBlockData.reason}
+                onClick={handleBlockIP}
+                disabled={!newBlockData.ip || !newBlockData.reason || isBlocking}
               >
                 <Shield className="mr-2 h-4 w-4" />
                 Block IP
@@ -273,8 +198,8 @@ export const BlockedIPsTable = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => unblockMutation.mutate(block.ip_address)}
-                      disabled={unblockMutation.isPending}
+                      onClick={() => handleUnblockIP(block.ip_address)}
+                      disabled={isUnblocking}
                     >
                       <Unlock className="mr-2 h-4 w-4" />
                       Unblock
