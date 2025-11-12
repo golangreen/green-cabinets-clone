@@ -10,6 +10,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { logger } from '@/lib/logger';
+import { trackOperation } from '@/lib/performance';
 export const ShopProducts = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,8 +44,20 @@ export const ShopProducts = () => {
         } 
         
         logger.info('Fetching fresh products from Shopify', { component: 'ShopProducts' });
-        const products = await fetchProducts();
-        setProducts(products);
+        
+        // Track product catalog loading performance
+        await trackOperation(
+          'product-catalog-fetch',
+          async () => {
+            const products = await fetchProducts();
+            setProducts(products);
+          },
+          {
+            component: 'ShopProducts',
+            cacheHit: false,
+            productCount: productsList.length
+          }
+        );
       } catch (error) {
         logger.apiError('/shop', error, { 
           component: 'ShopProducts',

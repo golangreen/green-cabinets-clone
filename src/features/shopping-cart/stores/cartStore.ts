@@ -5,6 +5,7 @@ import { createStorefrontCheckout } from '@/lib/shopify/client';
 import { logger } from '@/lib/logger';
 import { backgroundSync } from '@/lib/backgroundSync';
 import { CACHE_KEYS } from '@/constants/cacheKeys';
+import { trackOperation } from '@/lib/performance';
 
 export interface CartItem {
   product: ShopifyProduct;
@@ -60,17 +61,30 @@ export const useCartStore = create<CartStore>()(
           return;
         }
         
-        if (existingItem) {
-          set({
-            items: items.map(i =>
-              i.variantId === item.variantId
-                ? { ...i, quantity: i.quantity + item.quantity }
-                : i
-            )
-          });
-        } else {
-          set({ items: [...items, item] });
-        }
+        // Track cart add performance
+        trackOperation(
+          'cart-add-item',
+          async () => {
+            if (existingItem) {
+              set({
+                items: items.map(i =>
+                  i.variantId === item.variantId
+                    ? { ...i, quantity: i.quantity + item.quantity }
+                    : i
+                )
+              });
+            } else {
+              set({ items: [...items, item] });
+            }
+          },
+          {
+            component: 'CartStore',
+            variantId: item.variantId,
+            isExisting: !!existingItem
+          }
+        ).catch(error => {
+          logger.error('Failed to track cart add operation', { error });
+        });
         
         logger.info('Item added to cart', { component: 'CartStore', variantId: item.variantId });
       },
@@ -137,7 +151,22 @@ export const useCartStore = create<CartStore>()(
         setLoading(true);
         try {
           logger.info('Creating checkout', { component: 'CartStore', itemCount: items.length });
-          const checkoutUrl = await createStorefrontCheckout(items);
+          
+          // Track checkout creation performance
+          const checkoutUrl = await trackOperation(
+            'checkout-create',
+            async () => {
+              return await createStorefrontCheckout(items);
+            },
+            {
+              component: 'CartStore',
+              itemCount: items.length,
+              totalValue: items.reduce((sum, item) => 
+                sum + (parseFloat(item.price.amount) * item.quantity), 0
+              )
+            }
+          );
+          
           setCheckoutUrl(checkoutUrl);
           logger.info('Checkout created successfully', { component: 'CartStore' });
           return checkoutUrl;

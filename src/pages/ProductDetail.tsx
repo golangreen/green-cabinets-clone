@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { useProductCacheStore } from "@/features/product-catalog";
+import { trackOperation } from "@/lib/performance";
 
 // Mock product for fallback
 const mockVanityProduct: ShopifyProduct = {
@@ -71,14 +72,26 @@ export default function ProductDetail() {
 
         // Fetch fresh data if cache is invalid
         console.log('Fetching fresh product data from Shopify');
-        const products = await fetchProducts(50);
-        setProducts(products);
         
-        const foundProduct = products.find(
-          (p: ShopifyProduct) => p.node.handle === handle
+        // Track product detail loading performance
+        await trackOperation(
+          'product-detail-fetch',
+          async () => {
+            const products = await fetchProducts(50);
+            setProducts(products);
+            
+            const foundProduct = products.find(
+              (p: ShopifyProduct) => p.node.handle === handle
+            );
+            // Use mock product as fallback if not found
+            setProduct(foundProduct || mockVanityProduct);
+          },
+          {
+            component: 'ProductDetail',
+            handle,
+            cacheHit: false
+          }
         );
-        // Use mock product as fallback if not found
-        setProduct(foundProduct || mockVanityProduct);
       } catch (error) {
         console.error("Error loading product:", error);
         // Use mock product on error
