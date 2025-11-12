@@ -7,8 +7,6 @@ import { useEffect, useRef } from 'react';
 import { markPerformance, measurePerformance } from '@/lib/performance';
 import { logger } from '@/lib/logger';
 
-const performanceLogger = logger.createLogger('use-performance-monitor');
-
 interface UsePerformanceMonitorOptions {
   /**
    * Name of the component/operation being monitored
@@ -68,7 +66,7 @@ export function usePerformanceMonitor({
         const unmountTime = performance.now();
         const totalMountedTime = unmountTime - mountTimeRef.current;
         
-        performanceLogger.info('Component unmounted', {
+        logger.info('Component unmounted', {
           name,
           totalMountedTime,
           renderCount: renderCountRef.current,
@@ -88,7 +86,7 @@ export function usePerformanceMonitor({
         const timeSinceLastRender = renderTime - lastRenderTimeRef.current;
         
         if (timeSinceLastRender > 16) { // More than one frame (60fps = ~16ms)
-          performanceLogger.warn('Slow render detected', {
+          logger.warn('Slow render detected', {
             name,
             timeSinceLastRender,
             renderCount: renderCountRef.current,

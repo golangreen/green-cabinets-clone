@@ -7,8 +7,6 @@ import { supabase } from '@/integrations/supabase/client';
 import type { PerformanceMetric, PerformanceReport } from '@/types/performance';
 import { logger } from '@/lib/logger';
 
-const performanceLogger = logger.createLogger('performance-service');
-
 class PerformanceService {
   /**
    * Record a performance metric
@@ -26,7 +24,7 @@ class PerformanceService {
 
       if (error) throw error;
     } catch (error) {
-      performanceLogger.error('Failed to record metric', { error, metric });
+      logger.error('Failed to record metric', { error, metric });
       throw error;
     }
   }
@@ -59,9 +57,9 @@ class PerformanceService {
       const { data, error } = await query;
       if (error) throw error;
 
-      return data || [];
+      return (data || []) as PerformanceMetric[];
     } catch (error) {
-      performanceLogger.error('Failed to get metrics', { error, params });
+      logger.error('Failed to get metrics', { error, params });
       throw error;
     }
   }
@@ -105,7 +103,7 @@ class PerformanceService {
 
       return report;
     } catch (error) {
-      performanceLogger.error('Failed to get summary', { error, params });
+      logger.error('Failed to get summary', { error, params });
       throw error;
     }
   }
@@ -128,9 +126,9 @@ class PerformanceService {
         .limit(params.limit || 10);
 
       if (error) throw error;
-      return data || [];
+      return (data || []) as PerformanceMetric[];
     } catch (error) {
-      performanceLogger.error('Failed to get slowest operations', { error, params });
+      logger.error('Failed to get slowest operations', { error, params });
       throw error;
     }
   }
@@ -150,10 +148,10 @@ class PerformanceService {
 
       if (error) throw error;
 
-      performanceLogger.info('Cleaned up old metrics', { count, daysToKeep });
+      logger.info('Cleaned up old metrics', { count, daysToKeep });
       return count || 0;
     } catch (error) {
-      performanceLogger.error('Failed to cleanup old metrics', { error, daysToKeep });
+      logger.error('Failed to cleanup old metrics', { error, daysToKeep });
       throw error;
     }
   }

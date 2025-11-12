@@ -3,12 +3,10 @@
  * Tracks Web Vitals and custom performance marks
  */
 
-import { onCLS, onFID, onLCP, onTTFB, onINP, type Metric } from 'web-vitals';
+import { onCLS, onLCP, onTTFB, onINP, type Metric } from 'web-vitals';
 import { performanceService } from '@/services/performanceService';
 import { logger } from '@/lib/logger';
 import type { WebVitalsMetric, CustomMark } from '@/types/performance';
-
-const performanceLogger = logger.createLogger('performance');
 
 // Performance budgets (in milliseconds, except CLS which is unitless)
 export const PERFORMANCE_BUDGETS = {
@@ -49,7 +47,7 @@ function handleMetric(metric: Metric) {
     id: metric.id,
   };
 
-  performanceLogger.info('Web Vitals metric collected', {
+  logger.info('Web Vitals metric collected', {
     metric: webVitalsMetric,
     url: window.location.href,
   });
@@ -68,7 +66,7 @@ function handleMetric(metric: Metric) {
       id: metric.id,
     },
   }).catch(error => {
-    performanceLogger.error('Failed to record metric', { error, metric: metric.name });
+    logger.error('Failed to record metric', { error, metric: metric.name });
   });
 }
 
@@ -80,14 +78,13 @@ export function initPerformanceMonitoring() {
 
   try {
     onCLS(handleMetric);
-    onFID(handleMetric);
     onLCP(handleMetric);
     onTTFB(handleMetric);
     onINP(handleMetric);
 
-    performanceLogger.info('Performance monitoring initialized');
+    logger.info('Performance monitoring initialized');
   } catch (error) {
-    performanceLogger.error('Failed to initialize performance monitoring', { error });
+    logger.error('Failed to initialize performance monitoring', { error });
   }
 }
 
@@ -104,7 +101,7 @@ export function markPerformance(name: string, metadata?: Record<string, any>): C
     metadata,
   };
 
-  performanceLogger.debug('Performance mark created', { mark });
+  logger.debug('Performance mark created', { mark });
   return mark;
 }
 
@@ -126,7 +123,7 @@ export function measurePerformance(
     const measure = performance.measure(name, startMark, endMark);
     const duration = measure.duration;
 
-    performanceLogger.info('Performance measured', {
+    logger.info('Performance measured', {
       name,
       duration,
       metadata,
@@ -140,12 +137,12 @@ export function measurePerformance(
       timestamp: new Date().toISOString(),
       metadata,
     }).catch(error => {
-      performanceLogger.error('Failed to record custom metric', { error, name });
+      logger.error('Failed to record custom metric', { error, name });
     });
 
     return duration;
   } catch (error) {
-    performanceLogger.error('Failed to measure performance', { error, name });
+    logger.error('Failed to measure performance', { error, name });
     return 0;
   }
 }

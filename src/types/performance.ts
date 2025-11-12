@@ -20,7 +20,8 @@ export interface PerformanceMetric {
   connection_type?: string;
   device_memory?: number;
   timestamp: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, any> | null;
+  created_at?: string;
 }
 
 export interface WebVitalsMetric {

@@ -254,6 +254,48 @@ export type Database = {
         }
         Relationships: []
       }
+      performance_metrics: {
+        Row: {
+          connection_type: string | null
+          created_at: string
+          device_memory: number | null
+          id: string
+          metadata: Json | null
+          metric_name: string
+          metric_value: number
+          timestamp: string
+          url: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          connection_type?: string | null
+          created_at?: string
+          device_memory?: number | null
+          id?: string
+          metadata?: Json | null
+          metric_name: string
+          metric_value: number
+          timestamp?: string
+          url: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          connection_type?: string | null
+          created_at?: string
+          device_memory?: number | null
+          id?: string
+          metadata?: Json | null
+          metric_name?: string
+          metric_value?: number
+          timestamp?: string
+          url?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       role_change_audit: {
         Row: {
           action: string
@@ -431,6 +473,7 @@ export type Database = {
         Returns: Json
       }
       cleanup_expired_blocks: { Args: never; Returns: number }
+      cleanup_old_performance_metrics: { Args: never; Returns: number }
       cleanup_old_webhook_events: { Args: never; Returns: number }
       extend_role_expiration: {
         Args: {
