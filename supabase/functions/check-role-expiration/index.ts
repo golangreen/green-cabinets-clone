@@ -3,6 +3,7 @@ import { createServiceRoleClient } from '../_shared/supabase.ts';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createLogger } from '../_shared/logger.ts';
 import { withErrorHandling } from '../_shared/errors.ts';
+import { createRoleExpirationEmail } from '../_shared/emailTemplates.ts';
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
@@ -43,34 +44,12 @@ const handler = async (req: Request): Promise<Response> => {
             timeStyle: 'short'
           });
 
-          const htmlContent = `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;">
-              <h1 style="color: #333; font-size: 24px; margin-bottom: 16px;">⏰ Role Expiring Soon</h1>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                Hello,
-              </p>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                This is a reminder that your <strong>${role.role}</strong> role will expire in approximately <strong>${daysRemaining} day(s)</strong>.
-              </p>
-              <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; margin: 24px 0;">
-                <p style="color: #856404; font-size: 16px; margin: 0;">
-                  <strong>Expiration Date:</strong> ${expiryDate}
-                </p>
-              </div>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                After this role expires, you will no longer have access to the associated permissions and features.
-              </p>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                <strong>Need to extend your role?</strong> Please contact an administrator before it expires.
-              </p>
-              <p style="color: #999; font-size: 14px; margin-top: 32px;">
-                You will receive another reminder 24 hours before expiration.
-              </p>
-              <p style="color: #999; font-size: 14px;">
-                This is an automated reminder. If you have questions, please contact support.
-              </p>
-            </div>
-          `;
+          const htmlContent = createRoleExpirationEmail({
+            role: role.role,
+            timeRemaining: `${daysRemaining} day(s)`,
+            expiryDate,
+            severity: '3day',
+          });
 
           const emailResponse = await fetch('https://api.resend.com/emails', {
             method: 'POST',
@@ -147,31 +126,12 @@ const handler = async (req: Request): Promise<Response> => {
             timeStyle: 'short'
           });
 
-          const htmlContent = `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;">
-              <h1 style="color: #dc3545; font-size: 24px; margin-bottom: 16px;">🚨 Final Reminder: Role Expiring Soon</h1>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                Hello,
-              </p>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                <strong>Final reminder:</strong> Your <strong>${role.role}</strong> role will expire in approximately <strong>${hoursRemaining} hour(s)</strong>.
-              </p>
-              <div style="background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 16px; margin: 24px 0;">
-                <p style="color: #721c24; font-size: 16px; margin: 0;">
-                  <strong>⚠️ Expiration Date:</strong> ${expiryDate}
-                </p>
-              </div>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                <strong>Action Required:</strong> If you need to keep this role, contact an administrator immediately.
-              </p>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                After expiration, you will lose access to all permissions and features associated with this role.
-              </p>
-              <p style="color: #999; font-size: 14px; margin-top: 32px;">
-                This is your final automated reminder.
-              </p>
-            </div>
-          `;
+          const htmlContent = createRoleExpirationEmail({
+            role: role.role,
+            timeRemaining: `${hoursRemaining} hour(s)`,
+            expiryDate,
+            severity: '1day',
+          });
 
           const emailResponse = await fetch('https://api.resend.com/emails', {
             method: 'POST',
@@ -244,26 +204,17 @@ const handler = async (req: Request): Promise<Response> => {
     if (expiredRoles && expiredRoles.length > 0) {
       for (const role of expiredRoles) {
         try {
-          const htmlContent = `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;">
-              <h1 style="color: #333; font-size: 24px; margin-bottom: 16px;">Role Expired</h1>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                Hello,
-              </p>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                Your <strong>${role.role}</strong> role has expired and has been automatically removed.
-              </p>
-              <p style="color: #555; font-size: 16px; line-height: 1.5; margin-top: 24px;">
-                You no longer have access to the features and permissions associated with this role.
-              </p>
-              <p style="color: #555; font-size: 16px; line-height: 1.5;">
-                If you need to restore this role, please contact an administrator.
-              </p>
-              <p style="color: #999; font-size: 14px; margin-top: 32px;">
-                This is an automated notification.
-              </p>
-            </div>
-          `;
+          const expiryDate = new Date(role.expires_at).toLocaleString('en-US', {
+            dateStyle: 'full',
+            timeStyle: 'short'
+          });
+
+          const htmlContent = createRoleExpirationEmail({
+            role: role.role,
+            timeRemaining: '0 hours',
+            expiryDate,
+            severity: 'expired',
+          });
 
           const emailResponse = await fetch('https://api.resend.com/emails', {
             method: 'POST',

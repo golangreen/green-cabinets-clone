@@ -3,7 +3,8 @@ import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createLogger, generateRequestId } from '../_shared/logger.ts';
 import { ValidationError, withErrorHandling } from '../_shared/errors.ts';
-import { createAuthenticatedClient, createServiceRoleClient } from '../_shared/supabase.ts';
+import { createAuthenticatedClient } from '../_shared/supabase.ts';
+import { createRoleNotificationEmail } from '../_shared/emailTemplates.ts';
 
 const notificationSchema = z.object({
   userEmail: z.string().email(),
@@ -81,56 +82,19 @@ const handler = async (req: Request): Promise<Response> => {
 
     logger.info('Sending role notification', { userEmail, action, role });
 
-    // Build email content
+    // Build email content using template service
     const permissions = getRolePermissions(role);
-    const permissionsList = permissions.map(p => `<li>${p}</li>`).join('');
 
     const subject = action === 'assigned' 
       ? `You've been granted ${role} access`
       : `Your ${role} role has been removed`;
 
-    const htmlContent = action === 'assigned' ? `
-      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;">
-        <h1 style="color: #333; font-size: 24px; margin-bottom: 16px;">Role Assignment Notification</h1>
-        <p style="color: #555; font-size: 16px; line-height: 1.5;">
-          Hello,
-        </p>
-        <p style="color: #555; font-size: 16px; line-height: 1.5;">
-          You have been assigned the <strong>${role}</strong> role by ${performedBy}.
-        </p>
-        <p style="color: #555; font-size: 16px; line-height: 1.5; margin-top: 24px;">
-          <strong>Your new permissions include:</strong>
-        </p>
-        <ul style="color: #555; font-size: 16px; line-height: 1.8; margin-top: 12px;">
-          ${permissionsList}
-        </ul>
-        <p style="color: #555; font-size: 16px; line-height: 1.5; margin-top: 24px;">
-          You can now access these features by logging into your account.
-        </p>
-        <p style="color: #999; font-size: 14px; margin-top: 32px;">
-          If you have questions about your new role, please contact an administrator.
-        </p>
-      </div>
-    ` : `
-      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;">
-        <h1 style="color: #333; font-size: 24px; margin-bottom: 16px;">Role Removal Notification</h1>
-        <p style="color: #555; font-size: 16px; line-height: 1.5;">
-          Hello,
-        </p>
-        <p style="color: #555; font-size: 16px; line-height: 1.5;">
-          Your <strong>${role}</strong> role has been removed by ${performedBy}.
-        </p>
-        <p style="color: #555; font-size: 16px; line-height: 1.5; margin-top: 24px;">
-          You no longer have access to the following features:
-        </p>
-        <ul style="color: #555; font-size: 16px; line-height: 1.8; margin-top: 12px;">
-          ${permissionsList}
-        </ul>
-        <p style="color: #999; font-size: 14px; margin-top: 32px;">
-          If you believe this was done in error, please contact an administrator.
-        </p>
-      </div>
-    `;
+    const htmlContent = createRoleNotificationEmail({
+      action,
+      role,
+      performedBy,
+      permissions,
+    });
 
     // Send email using Resend
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
