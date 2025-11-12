@@ -506,7 +506,7 @@ const Gallery = () => {
                 {displayedImages.length > 1 && (
                   <button
                     onClick={handlePrevImage}
-                    className="absolute left-4 z-50 p-3 rounded-full bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105"
+                    className="absolute left-4 z-50 p-3 rounded-full bg-brand-teal/20 hover:bg-brand-teal/40 border border-brand-teal/60 hover:border-brand-teal shadow-2xl hover:shadow-brand-teal/50 transition-all duration-300 hover:scale-105"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="w-6 h-6 text-white" />
@@ -532,7 +532,7 @@ const Gallery = () => {
                 {displayedImages.length > 1 && (
                   <button
                     onClick={handleNextImage}
-                    className="absolute right-4 z-50 p-3 rounded-full bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105"
+                    className="absolute right-4 z-50 p-3 rounded-full bg-brand-teal/20 hover:bg-brand-teal/40 border border-brand-teal/60 hover:border-brand-teal shadow-2xl hover:shadow-brand-teal/50 transition-all duration-300 hover:scale-105"
                     aria-label="Next image"
                   >
                     <ChevronRight className="w-6 h-6 text-white" />

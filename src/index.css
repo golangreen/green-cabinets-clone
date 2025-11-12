@@ -45,6 +45,11 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
     
+    /* Brand Colors - Green Cabinets */
+    --brand-teal: 174 94% 51%;      /* #2dd4bf - Primary brand color */
+    --brand-gold: 43 64% 52%;       /* #D4AF37 - Secondary accent */
+    --brand-gray: 0 0% 84%;         /* #d5d5d5 - Neutral background */
+    
     /* Custom design tokens */
     --gradient-hero: linear-gradient(135deg, hsl(0 0% 5%), hsl(150 50% 15%));
     --gradient-soft: linear-gradient(180deg, hsl(0 0% 5%), hsl(0 0% 10%));

@@ -108,7 +108,7 @@ const Hero = () => {
             onClick={handleLaunchClick}
             size="lg"
             variant="hero"
-            className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-gray-900 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-lg px-8 py-6 opacity-0 animate-fade-in"
+            className="bg-brand-teal/20 hover:bg-brand-teal/40 text-gray-900 border border-brand-teal/60 hover:border-brand-teal shadow-2xl hover:shadow-brand-teal/50 transition-all duration-300 hover:scale-105 text-lg px-8 py-6 opacity-0 animate-fade-in"
             style={{ animationDelay: '600ms', animationFillMode: 'forwards' }}
           >
             {isMobile ? (

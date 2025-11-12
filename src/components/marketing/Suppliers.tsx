@@ -170,7 +170,7 @@ const Suppliers = () => {
           {suppliers.map((supplier) => (
             <Card
               key={supplier.id}
-              className="cursor-pointer transition-all duration-300 bg-[#2dd4bf]/10 border border-[#2dd4bf]/30 hover:bg-[#2dd4bf]/20 hover:border-[#2dd4bf] hover:shadow-2xl hover:shadow-[#2dd4bf]/50 hover:scale-105"
+              className="cursor-pointer transition-all duration-300 bg-brand-teal/10 border border-brand-teal/30 hover:bg-brand-teal/20 hover:border-brand-teal hover:shadow-2xl hover:shadow-brand-teal/50 hover:scale-105"
               onClick={() => {
                 if (supplier.website === "catalog") {
                   setShowCatalogSlideshow(true);
@@ -239,7 +239,7 @@ const Suppliers = () => {
               {selectedSupplier?.website !== "catalog" && (
                 <Button
                   variant="hero"
-                  className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-gray-900 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105"
+                  className="bg-brand-teal/20 hover:bg-brand-teal/40 text-gray-900 border border-brand-teal/60 hover:border-brand-teal shadow-2xl hover:shadow-brand-teal/50 transition-all duration-300 hover:scale-105"
                   onClick={() => window.open(selectedSupplier?.website, '_blank')}
                 >
                   Visit {selectedSupplier?.name} Website

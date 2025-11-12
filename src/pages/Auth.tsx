@@ -61,7 +61,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#2dd4bf]/10 to-[#2dd4bf]/20 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-teal/10 to-brand-teal/20 p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>{isLogin ? "Login" : "Sign Up"}</CardTitle>

@@ -52,7 +52,7 @@ const Features = () => {
                 />
               </div>
               <div className="md:w-1/2 p-12 flex flex-col justify-center space-y-6 bg-white">
-                <div className="inline-block px-4 py-2 bg-[#2dd4bf]/10 text-[#2dd4bf] rounded-full text-sm font-semibold w-fit">
+                <div className="inline-block px-4 py-2 bg-brand-teal/10 text-brand-teal rounded-full text-sm font-semibold w-fit">
                   {feature.stats}
                 </div>
                 <h3 className="font-display text-4xl font-bold text-gray-900">

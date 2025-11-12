@@ -47,8 +47,8 @@ const Services = () => {
                 animationDelay: `${index * 150}ms`,
               }}
             >
-              <div className="w-16 h-16 rounded-xl bg-[#2dd4bf]/10 flex items-center justify-center mb-6 group-hover:bg-[#2dd4bf]/20 transition-colors">
-                <service.icon className="w-8 h-8 text-[#2dd4bf]" />
+              <div className="w-16 h-16 rounded-xl bg-brand-teal/10 flex items-center justify-center mb-6 group-hover:bg-brand-teal/20 transition-colors">
+                <service.icon className="w-8 h-8 text-brand-teal" />
               </div>
               <h3 className="font-display text-2xl font-bold text-gray-900 mb-3">
                 {service.title}

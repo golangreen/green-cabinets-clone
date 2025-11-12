@@ -371,7 +371,7 @@ export const VanityDesignerApp = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => navigate(ROUTES.ROOM_SCAN)}
-                    className="gap-2 hover:bg-[#2dd4bf]/20 hover:text-[#2dd4bf] hover:border-[#2dd4bf]/60 transition-all duration-300"
+                    className="gap-2 hover:bg-brand-teal/20 hover:text-brand-teal hover:border-brand-teal/60 transition-all duration-300"
                   >
                     <Scan className="h-4 w-4" />
                     3D Scan
@@ -537,14 +537,14 @@ export const VanityDesignerApp = () => {
             <div className="flex flex-wrap gap-2">
               <Button 
                 onClick={handleSaveTemplate} 
-                className="gap-2 bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 border border-[#2dd4bf]/60 hover:border-[#2dd4bf] text-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105"
+                className="gap-2 bg-brand-teal/20 hover:bg-brand-teal/40 border border-brand-teal/60 hover:border-brand-teal text-brand-teal shadow-2xl hover:shadow-brand-teal/50 transition-all duration-300 hover:scale-105"
               >
                 <Save className="h-4 w-4" />
                 Save
               </Button>
               <Button 
                 variant="outline" 
-                className="gap-2 hover:bg-[#2dd4bf]/20 hover:text-[#2dd4bf] hover:border-[#2dd4bf]/60 transition-all duration-300"
+                className="gap-2 hover:bg-brand-teal/20 hover:text-brand-teal hover:border-brand-teal/60 transition-all duration-300"
                 onClick={handleExportPDF}
                 disabled={isExporting}
               >
@@ -553,7 +553,7 @@ export const VanityDesignerApp = () => {
               </Button>
               <Button 
                 variant="outline" 
-                className="gap-2 hover:bg-[#2dd4bf]/20 hover:text-[#2dd4bf] hover:border-[#2dd4bf]/60 transition-all duration-300"
+                className="gap-2 hover:bg-brand-teal/20 hover:text-brand-teal hover:border-brand-teal/60 transition-all duration-300"
                 onClick={() => setEmailDialogOpen(true)}
               >
                 <Mail className="h-4 w-4" />
@@ -561,7 +561,7 @@ export const VanityDesignerApp = () => {
               </Button>
               <Button 
                 variant="outline" 
-                className="gap-2 hover:bg-[#2dd4bf]/20 hover:text-[#2dd4bf] hover:border-[#2dd4bf]/60 transition-all duration-300"
+                className="gap-2 hover:bg-brand-teal/20 hover:text-brand-teal hover:border-brand-teal/60 transition-all duration-300"
                 onClick={handleShare}
               >
                 <Share2 className="h-4 w-4" />
@@ -578,7 +578,7 @@ export const VanityDesignerApp = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setFullscreenPreview(true)}
-                className="gap-2 hover:bg-[#2dd4bf]/20 hover:text-[#2dd4bf] hover:border-[#2dd4bf]/60 transition-all duration-300"
+                className="gap-2 hover:bg-brand-teal/20 hover:text-brand-teal hover:border-brand-teal/60 transition-all duration-300"
               >
                 <Maximize2 className="h-4 w-4" />
                 Fullscreen

@@ -28,37 +28,37 @@ const Contact = () => {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {/* Email */}
-          <div className="group p-8 rounded-2xl bg-[#2dd4bf]/10 border border-[#2dd4bf]/30 hover:bg-[#2dd4bf]/20 hover:border-[#2dd4bf] hover:shadow-2xl hover:shadow-[#2dd4bf]/50 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 rounded-xl bg-[#2dd4bf]/20 flex items-center justify-center mb-6 group-hover:bg-[#2dd4bf]/30 transition-colors">
-              <Mail className="w-8 h-8 text-[#2dd4bf]" />
+          <div className="group p-8 rounded-2xl bg-brand-teal/10 border border-brand-teal/30 hover:bg-brand-teal/20 hover:border-brand-teal hover:shadow-2xl hover:shadow-brand-teal/50 hover:scale-105 transition-all duration-300">
+            <div className="w-16 h-16 rounded-xl bg-brand-teal/20 flex items-center justify-center mb-6 group-hover:bg-brand-teal/30 transition-colors">
+              <Mail className="w-8 h-8 text-brand-teal" />
             </div>
             <h3 className="font-display text-xl font-bold text-gray-900 mb-3">Email Us</h3>
             <a 
               href="mailto:greencabinets@gmail.com"
-              className="text-gray-600 hover:text-[#2dd4bf] transition-colors"
+              className="text-gray-600 hover:text-brand-teal transition-colors"
             >
               greencabinets@gmail.com
             </a>
           </div>
 
           {/* Phone */}
-          <div className="group p-8 rounded-2xl bg-[#2dd4bf]/10 border border-[#2dd4bf]/30 hover:bg-[#2dd4bf]/20 hover:border-[#2dd4bf] hover:shadow-2xl hover:shadow-[#2dd4bf]/50 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 rounded-xl bg-[#2dd4bf]/20 flex items-center justify-center mb-6 group-hover:bg-[#2dd4bf]/30 transition-colors">
-              <Phone className="w-8 h-8 text-[#2dd4bf]" />
+          <div className="group p-8 rounded-2xl bg-brand-teal/10 border border-brand-teal/30 hover:bg-brand-teal/20 hover:border-brand-teal hover:shadow-2xl hover:shadow-brand-teal/50 hover:scale-105 transition-all duration-300">
+            <div className="w-16 h-16 rounded-xl bg-brand-teal/20 flex items-center justify-center mb-6 group-hover:bg-brand-teal/30 transition-colors">
+              <Phone className="w-8 h-8 text-brand-teal" />
             </div>
             <h3 className="font-display text-xl font-bold text-gray-900 mb-3">Call Us</h3>
             <a 
               href="tel:+17188045488"
-              className="text-gray-600 hover:text-[#2dd4bf] transition-colors"
+              className="text-gray-600 hover:text-brand-teal transition-colors"
             >
               (718) 804-5488
             </a>
           </div>
 
           {/* Address */}
-          <div className="group p-8 rounded-2xl bg-[#2dd4bf]/10 border border-[#2dd4bf]/30 hover:bg-[#2dd4bf]/20 hover:border-[#2dd4bf] hover:shadow-2xl hover:shadow-[#2dd4bf]/50 hover:scale-105 transition-all duration-300">
-            <div className="w-16 h-16 rounded-xl bg-[#2dd4bf]/20 flex items-center justify-center mb-6 group-hover:bg-[#2dd4bf]/30 transition-colors">
-              <MapPin className="w-8 h-8 text-[#2dd4bf]" />
+          <div className="group p-8 rounded-2xl bg-brand-teal/10 border border-brand-teal/30 hover:bg-brand-teal/20 hover:border-brand-teal hover:shadow-2xl hover:shadow-brand-teal/50 hover:scale-105 transition-all duration-300">
+            <div className="w-16 h-16 rounded-xl bg-brand-teal/20 flex items-center justify-center mb-6 group-hover:bg-brand-teal/30 transition-colors">
+              <MapPin className="w-8 h-8 text-brand-teal" />
             </div>
             <h3 className="font-display text-xl font-bold text-gray-900 mb-3">Visit Us</h3>
             <address className="text-gray-600 not-italic">
