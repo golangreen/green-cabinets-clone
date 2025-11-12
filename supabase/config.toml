@@ -3,6 +3,9 @@ project_id = "mczagaaiyzbhjvtrojia"
 [functions.chat]
 verify_jwt = true
 
+[functions.check-performance]
+verify_jwt = false
+
 [functions.send-quote-request]
 verify_jwt = false
 
