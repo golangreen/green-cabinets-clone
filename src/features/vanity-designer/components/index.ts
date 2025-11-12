@@ -3,6 +3,11 @@
  */
 
 export { VanityDesignerApp } from './VanityDesignerApp';
+export { VanityControls } from './VanityControls';
+export { VanityPreviewSection } from './VanityPreviewSection';
+export { VanityPricingCard } from './VanityPricingCard';
+export { VanityActions } from './VanityActions';
+export { FullscreenPreview } from './FullscreenPreview';
 export { MobileDesignerToolbar } from './MobileDesignerToolbar';
 export { MobileVanityControls } from './MobileVanityControls';
 export { EmailQuoteDialog } from './EmailQuoteDialog';
