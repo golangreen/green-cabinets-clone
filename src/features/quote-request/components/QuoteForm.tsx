@@ -12,8 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useRecaptcha } from "@/hooks/useRecaptcha";
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { validators } from "@/lib/formValidation";
+import { logger } from '@/lib/logger';
 import { prepareQuoteForSubmission, createQuoteMailtoLink, type QuoteData } from "../services/quoteService";
 
 interface QuoteFormProps {
@@ -82,7 +83,9 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
         recaptchaToken = await executeRecaptcha('quote_request');
         // Don't block submission if reCAPTCHA fails - just continue without token
         if (!recaptchaToken) {
-          console.warn('reCAPTCHA verification skipped');
+          logger.warn('reCAPTCHA verification skipped in development', { 
+            component: 'QuoteForm'
+          });
         }
       }
       
@@ -120,7 +123,10 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
       }, 1000);
       
     } catch (error) {
-      console.error("Quote submission error:", error);
+      logger.error("Quote submission failed", error, { 
+        component: 'QuoteForm',
+        formData: data
+      });
       toast({
         title: "Error",
         description: "Something went wrong. Please try calling us directly.",

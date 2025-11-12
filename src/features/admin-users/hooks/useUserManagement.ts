@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -60,7 +61,11 @@ export const useUserManagement = () => {
             performedBy: performerEmail
           });
         } catch (emailError) {
-          console.error('Failed to send notification email:', emailError);
+          logger.error('Failed to send role assignment notification', emailError, { 
+            userId: targetUser.user_id,
+            role,
+            component: 'useUserManagement'
+          });
         }
       }
     },
@@ -91,7 +96,11 @@ export const useUserManagement = () => {
             performedBy: performerEmail
           });
         } catch (emailError) {
-          console.error('Failed to send notification email:', emailError);
+          logger.error('Failed to send role removal notification', emailError, { 
+            userId: targetUser.user_id,
+            role,
+            component: 'useUserManagement'
+          });
         }
       }
     },
@@ -121,7 +130,11 @@ export const useUserManagement = () => {
           action: 'assigned',
           role: role as AppRole,
           performedBy: performerEmail
-        }).catch(err => console.error('Failed to send notification:', err));
+        }).catch(err => logger.error('Failed to send bulk assignment notification', err, { 
+          userIds: selectedUsers,
+          role,
+          component: 'useUserManagement'
+        }));
       });
 
       await Promise.allSettled(emailPromises);
@@ -155,7 +168,11 @@ export const useUserManagement = () => {
           action: 'removed',
           role: role as AppRole,
           performedBy: performerEmail
-        }).catch(err => console.error('Failed to send notification:', err));
+        }).catch(err => logger.error('Failed to send bulk removal notification', err, { 
+          userIds: selectedUsers,
+          role,
+          component: 'useUserManagement'
+        }));
       });
 
       await Promise.allSettled(emailPromises);

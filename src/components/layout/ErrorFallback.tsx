@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle, Home, RefreshCw, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +24,7 @@ export default function ErrorFallback({
   useEffect(() => {
     // Log error details to console in development
     if (import.meta.env.DEV) {
-      console.error('Error Boundary caught an error:', {
+      logger.error('Error Boundary caught an error', error, {
         error,
         componentStack,
         eventId,

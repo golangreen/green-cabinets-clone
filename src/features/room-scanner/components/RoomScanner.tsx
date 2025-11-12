@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { 
+import { logger } from '@/lib/logger';
+import {
   Scan, 
   Camera, 
   Ruler, 
@@ -109,7 +110,10 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
       setRoomName('');
       setSelectedScan(scan);
     } catch (error) {
-      console.error('Scan error:', error);
+      logger.error('Room scan failed', error, { 
+        component: 'RoomScanner',
+        roomName
+      });
       toast.error('Failed to complete scan');
     } finally {
       setIsScanning(false);

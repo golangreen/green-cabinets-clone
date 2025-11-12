@@ -9,6 +9,7 @@ import { useProductCacheStore } from "@/features/product-catalog/stores/productC
 import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { logger } from '@/lib/logger';
 export const ShopProducts = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,18 +30,26 @@ export const ShopProducts = () => {
       return;
     }
     const loadProducts = async () => {
-      // Check if cache is valid
-      if (isCacheValid()) {
-        console.log('Using cached products');
-        setLoading(false);
-        return;
-      }
       try {
-        console.log('Fetching fresh products from Shopify');
-        const productsData = await fetchProducts();
-        setProducts(productsData);
+        // Check if cache is valid
+        const cachedProducts = productsList;
+        if (isCacheValid()) {
+          logger.debug('Using cached products', { 
+            count: cachedProducts.length,
+            component: 'ShopProducts'
+          });
+          setLoading(false);
+          return;
+        } 
+        
+        logger.info('Fetching fresh products from Shopify', { component: 'ShopProducts' });
+        const products = await fetchProducts();
+        setProducts(products);
       } catch (error) {
-        console.error('Error loading products:', error);
+        logger.apiError('/shop', error, { 
+          component: 'ShopProducts',
+          action: 'fetchProducts'
+        });
         // Silently fail - don't show error toast, just show no products
         setProducts([]);
       } finally {
@@ -48,7 +57,7 @@ export const ShopProducts = () => {
       }
     };
     loadProducts();
-  }, [isCacheValid, setProducts]);
+  }, [isCacheValid, setProducts, productsList]);
   const handleAddToCart = (product: ShopifyProduct) => {
     const variant = product.node.variants.edges[0]?.node;
     if (!variant) {

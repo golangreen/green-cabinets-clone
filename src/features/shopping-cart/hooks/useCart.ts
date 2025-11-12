@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useCartStore, CartItem } from '../stores/cartStore';
 import { toast } from 'sonner';
+import { logger } from '@/lib/logger';
 
 /**
  * Custom hook for cart operations
@@ -105,7 +106,10 @@ export function useCart() {
       
       return checkoutUrl;
     } catch (error) {
-      console.error('Checkout failed:', error);
+      logger.error('Checkout creation failed', error, { 
+        itemCount: store.items.length,
+        component: 'useCart'
+      });
       if (checkoutWindow) checkoutWindow.close();
       toast.error('Failed to create checkout. Please try again.', {
         position: 'top-center',
