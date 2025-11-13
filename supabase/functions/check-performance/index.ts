@@ -1,6 +1,6 @@
-import { createServiceRoleClient } from '../_shared/supabase.ts';
+import { createServiceRoleClient, createAuthenticatedClient } from '../_shared/supabase.ts';
 import { createLogger, generateRequestId } from '../_shared/logger.ts';
-import { withErrorHandling } from '../_shared/errors.ts';
+import { withErrorHandling, ValidationError } from '../_shared/errors.ts';
 
 // Performance budgets (in milliseconds for timing metrics)
 const PERFORMANCE_BUDGETS = {
@@ -36,7 +36,46 @@ const handler = async (req: Request): Promise<Response> => {
   logger.info('Starting performance check');
 
   try {
-    const supabase = createServiceRoleClient();
+    // Check for service role or admin authentication
+    const authHeader = req.headers.get('Authorization');
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    
+    // Allow service role for cron jobs
+    const isServiceRole = authHeader?.includes(serviceRoleKey || 'invalid');
+    
+    let supabase;
+    
+    if (isServiceRole) {
+      // Service role call (from cron)
+      supabase = createServiceRoleClient();
+      logger.info('Service role authentication verified');
+    } else {
+      // User call - must be admin
+      if (!authHeader) {
+        throw new ValidationError('Authorization required');
+      }
+      
+      supabase = await createAuthenticatedClient(authHeader);
+      
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        logger.warn('Authentication failed', { authError });
+        throw new ValidationError('Invalid authentication');
+      }
+      
+      // Verify admin role
+      const { data: isAdmin, error: roleError } = await supabase.rpc('has_role', {
+        _user_id: user.id,
+        _role: 'admin'
+      });
+      
+      if (roleError || !isAdmin) {
+        logger.warn('Admin authorization failed', { userId: user.id, roleError });
+        throw new ValidationError('Admin access required');
+      }
+      
+      logger.info('Admin authentication verified', { userId: user.id });
+    }
 
     // Query performance metrics from the last hour
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
