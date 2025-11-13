@@ -14,6 +14,7 @@ import { trackOperation } from '@/lib/performance';
 export const ShopProducts = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loadedProductImages, setLoadedProductImages] = useState<Set<string>>(new Set());
   const addItem = useCartStore(state => state.addItem);
   const navigate = useNavigate();
   const {
@@ -146,10 +147,45 @@ export const ShopProducts = () => {
               {searchTerm ? 'No products found matching your search.' : 'No products available.'}
             </p>
           </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {filteredProducts.map(product => <Card key={product.node.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform" onClick={() => navigate(`/product/${product.node.handle}`)}>
-              {product.node.images.edges[0] && <div className="aspect-square overflow-hidden bg-secondary/20">
-                  <img src={product.node.images.edges[0].node.url} alt={product.node.images.edges[0].node.altText || product.node.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-                </div>}
+            {filteredProducts.map(product => {
+              const productId = product.node.id;
+              const hasImage = product.node.images.edges[0];
+              const isImageLoaded = loadedProductImages.has(productId);
+              
+              return (
+                <Card 
+                  key={productId} 
+                  className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform" 
+                  onClick={() => navigate(`/product/${product.node.handle}`)}
+                >
+                  {hasImage && (
+                    <div className="aspect-square overflow-hidden bg-secondary/20 relative">
+                      {/* Loading skeleton with brand colors - visible until image loads */}
+                      {!isImageLoaded && (
+                        <>
+                          <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-[#2dd4bf]/10 to-gray-200 animate-pulse z-10" />
+                          <div 
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2dd4bf]/20 to-transparent z-20"
+                            style={{
+                              backgroundSize: '200% 100%',
+                              animation: 'shimmer 2s infinite linear'
+                            }}
+                          />
+                        </>
+                      )}
+                      
+                      <img 
+                        src={product.node.images.edges[0].node.url} 
+                        alt={product.node.images.edges[0].node.altText || product.node.title} 
+                        className={`w-full h-full object-cover hover:scale-105 transition-all duration-300 ${
+                          isImageLoaded ? 'opacity-100' : 'opacity-0'
+                        }`}
+                        onLoad={() => {
+                          setLoadedProductImages(prev => new Set(prev).add(productId));
+                        }}
+                      />
+                    </div>
+                  )}
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg sm:text-xl">{product.node.title}</CardTitle>
                 <CardDescription className="line-clamp-2 text-sm">
@@ -171,7 +207,9 @@ export const ShopProducts = () => {
                   Add to Cart
                 </Button>
               </CardFooter>
-            </Card>)}
+            </Card>
+              );
+            })}
           </div>}
       </div>
     </section>;
