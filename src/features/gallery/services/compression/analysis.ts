@@ -1,12 +1,20 @@
 /**
- * Compression Service
- * Handles automatic compression detection and estimation
+ * Compression Analysis Module
+ * Handles size detection, estimation, and recommendations
  */
 
-import { compressImage } from './imageProcessingService';
-import type { CompressionQuality } from '../types';
-import type { OversizedFile } from '../components/CompressionDialog';
-import { MAX_FILE_SIZE, COMPRESSION_QUALITY_MAP } from '../config/constants';
+import type { CompressionQuality } from '../../types';
+import { MAX_FILE_SIZE, COMPRESSION_QUALITY_MAP } from '../../config/constants';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+export interface OversizedFile {
+  file: File;
+  currentSize: number;
+  estimatedSizes: Record<CompressionQuality, number>;
+}
 
 // ============================================================================
 // Detection Functions
@@ -59,13 +67,6 @@ export function estimateCompressedSize(
   originalSize: number,
   quality: CompressionQuality
 ): number {
-  const compressionRatio = COMPRESSION_QUALITY_MAP[quality];
-  
-  // Estimate based on quality:
-  // - JPEG compression typically achieves 60-90% size reduction
-  // - Higher quality = less compression = larger file
-  // These are rough estimates and actual results may vary
-  
   if (quality === 'none') {
     return originalSize;
   }
@@ -103,119 +104,6 @@ export async function analyzeOversizedFiles(files: File[]): Promise<OversizedFil
 }
 
 // ============================================================================
-// Compression Operations
-// ============================================================================
-
-/**
- * Compress a single file with progress tracking
- */
-export async function compressFileWithProgress(
-  file: File,
-  quality: CompressionQuality,
-  onProgress?: (progress: number) => void
-): Promise<File> {
-  onProgress?.(0);
-  
-  try {
-    const compressedFile = await compressImage(file, quality);
-    onProgress?.(100);
-    return compressedFile;
-  } catch (error) {
-    onProgress?.(0);
-    throw error;
-  }
-}
-
-/**
- * Compress multiple files in sequence
- */
-export async function compressFiles(
-  files: File[],
-  quality: CompressionQuality,
-  onProgress?: (current: number, total: number) => void
-): Promise<File[]> {
-  const compressedFiles: File[] = [];
-  
-  for (let i = 0; i < files.length; i++) {
-    onProgress?.(i + 1, files.length);
-    
-    try {
-      const compressed = await compressImage(files[i], quality);
-      compressedFiles.push(compressed);
-    } catch (error) {
-      console.error(`Failed to compress ${files[i].name}:`, error);
-      // On error, keep original file
-      compressedFiles.push(files[i]);
-    }
-  }
-  
-  return compressedFiles;
-}
-
-/**
- * Compress files and provide detailed results
- */
-export async function compressFilesWithResults(
-  files: File[],
-  quality: CompressionQuality,
-  onProgress?: (current: number, total: number) => void
-): Promise<{
-  compressed: File[];
-  results: Array<{
-    original: File;
-    compressed: File;
-    originalSize: number;
-    compressedSize: number;
-    reduction: number;
-  }>;
-}> {
-  const compressed: File[] = [];
-  const results: Array<{
-    original: File;
-    compressed: File;
-    originalSize: number;
-    compressedSize: number;
-    reduction: number;
-  }> = [];
-  
-  for (let i = 0; i < files.length; i++) {
-    onProgress?.(i + 1, files.length);
-    
-    const originalFile = files[i];
-    
-    try {
-      const compressedFile = await compressImage(originalFile, quality);
-      
-      const originalSize = originalFile.size;
-      const compressedSize = compressedFile.size;
-      const reduction = ((originalSize - compressedSize) / originalSize) * 100;
-      
-      compressed.push(compressedFile);
-      results.push({
-        original: originalFile,
-        compressed: compressedFile,
-        originalSize,
-        compressedSize,
-        reduction,
-      });
-    } catch (error) {
-      console.error(`Failed to compress ${originalFile.name}:`, error);
-      // On error, use original
-      compressed.push(originalFile);
-      results.push({
-        original: originalFile,
-        compressed: originalFile,
-        originalSize: originalFile.size,
-        compressedSize: originalFile.size,
-        reduction: 0,
-      });
-    }
-  }
-  
-  return { compressed, results };
-}
-
-// ============================================================================
 // Utility Functions
 // ============================================================================
 
@@ -227,6 +115,13 @@ export function willCompressionHelp(
   quality: CompressionQuality
 ): boolean {
   const estimatedSize = estimateCompressedSize(fileSize, quality);
+  return estimatedSize <= MAX_FILE_SIZE;
+}
+
+/**
+ * Check if estimated size will meet the size limit
+ */
+export function willMeetLimit(estimatedSize: number): boolean {
   return estimatedSize <= MAX_FILE_SIZE;
 }
 
@@ -262,4 +157,46 @@ export function getCompressionRecommendation(fileSize: number): string {
   }
   
   return `File is ${sizeMB}MB. Using ${quality} quality compression should reduce it to approximately ${estimatedMB}MB.`;
+}
+
+/**
+ * Get description for a compression quality level
+ */
+export function getCompressionDescription(quality: CompressionQuality): string {
+  switch (quality) {
+    case 'high':
+      return 'Minimal quality loss, larger file size';
+    case 'medium':
+      return 'Balanced quality and size (Recommended)';
+    case 'low':
+      return 'Maximum compression, noticeable quality loss';
+    case 'none':
+      return 'No compression applied';
+  }
+}
+
+// ============================================================================
+// Formatting Utilities
+// ============================================================================
+
+/**
+ * Format file size in MB
+ */
+export function formatFileSize(bytes: number): string {
+  return (bytes / (1024 * 1024)).toFixed(2);
+}
+
+/**
+ * Format file size with unit (KB/MB/GB)
+ */
+export function formatFileSizeWithUnit(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  } else if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(2)} KB`;
+  } else if (bytes < 1024 * 1024 * 1024) {
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  } else {
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+  }
 }

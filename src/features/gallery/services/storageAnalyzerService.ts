@@ -5,13 +5,18 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { MAX_FILE_SIZE, COMPRESSION_QUALITY_MAP } from '../config/constants';
-import { estimateCompressedSize, suggestCompressionQuality } from './compressionService';
+import { 
+  estimateCompressedSize, 
+  suggestCompressionQuality,
+  type StorageImage as StorageImageBase,
+} from './compression';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-export interface StorageImage {
+// Storage image interface for analyzer
+export interface StorageImageAnalyzer {
   id: string;
   path: string;
   size: number;
@@ -26,7 +31,7 @@ export interface StorageImage {
 }
 
 export interface CompressionRecommendation {
-  image: StorageImage;
+  image: StorageImageAnalyzer;
   currentSize: number;
   suggestedQuality: 'high' | 'medium' | 'low';
   estimatedSize: number;
@@ -39,11 +44,11 @@ export interface CompressionRecommendation {
 export interface StorageAnalysis {
   totalImages: number;
   totalSize: number;
-  oversizedImages: StorageImage[];
+  oversizedImages: StorageImageAnalyzer[];
   recommendations: CompressionRecommendation[];
   potentialTotalSavings: number;
   avgImageSize: number;
-  largestImages: StorageImage[];
+  largestImages: StorageImageAnalyzer[];
 }
 
 // ============================================================================
@@ -53,7 +58,7 @@ export interface StorageAnalysis {
 /**
  * Fetch all images from gallery storage bucket
  */
-export async function fetchGalleryImages(): Promise<StorageImage[]> {
+export async function fetchGalleryImages(): Promise<StorageImageAnalyzer[]> {
   try {
     // List all files in the gallery bucket
     const { data: files, error } = await supabase.storage
@@ -72,8 +77,8 @@ export async function fetchGalleryImages(): Promise<StorageImage[]> {
       return [];
     }
 
-    // Map to StorageImage format
-    const images: StorageImage[] = files
+    // Map to StorageImageAnalyzer format
+    const images: StorageImageAnalyzer[] = files
       .filter(file => file.name !== '.emptyFolderPlaceholder')
       .map(file => ({
         id: file.id || file.name,
@@ -111,14 +116,14 @@ export function getImagePublicUrl(bucket: string, path: string): string {
 /**
  * Identify oversized images
  */
-export function identifyOversizedImages(images: StorageImage[]): StorageImage[] {
+export function identifyOversizedImages(images: StorageImageAnalyzer[]): StorageImageAnalyzer[] {
   return images.filter(img => img.size > MAX_FILE_SIZE);
 }
 
 /**
  * Generate compression recommendation for a single image
  */
-export function generateRecommendation(image: StorageImage): CompressionRecommendation | null {
+export function generateRecommendation(image: StorageImageAnalyzer): CompressionRecommendation | null {
   // Only recommend compression for images that could benefit
   const minRecommendationSize = MAX_FILE_SIZE * 0.5; // 5MB threshold
   
@@ -227,7 +232,7 @@ export async function analyzeGalleryStorage(): Promise<StorageAnalysis> {
 /**
  * Get storage statistics by category
  */
-export function getStorageStats(images: StorageImage[]): {
+export function getStorageStats(images: StorageImageAnalyzer[]): {
   small: number;
   medium: number;
   large: number;
