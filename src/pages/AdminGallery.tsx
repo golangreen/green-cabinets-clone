@@ -7,13 +7,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Upload, X, Image as ImageIcon, CheckCircle2, AlertCircle, Loader2, Edit, Images } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, CheckCircle2, AlertCircle, Loader2, Edit, Images, AlertTriangle } from 'lucide-react';
 import { useGalleryUpload, type CompressionQuality } from '@/hooks/useGalleryUpload';
 import { ImageEditor } from '@/components/admin/ImageEditor';
 import { BatchImageEditor } from '@/components/admin/BatchImageEditor';
 import { BulkMetadataEditor } from '@/components/admin/BulkMetadataEditor';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { GalleryCategory } from '@/types/gallery';
+import { analyzeImageQuality, getQualityBadgeVariant, getQualityStatusText, type ImageQualityResult } from '@/utils/imageQuality';
+import { toast } from 'sonner';
 
 interface ImagePreview {
   file: File;
@@ -24,6 +27,7 @@ interface ImagePreview {
   description?: string;
   width: number;
   height: number;
+  quality?: ImageQualityResult;
 }
 
 export default function AdminGallery() {
@@ -56,6 +60,16 @@ export default function AdminGallery() {
         const { width, height } = await extractImageMetadata(file);
         const preview = URL.createObjectURL(file);
         
+        // Analyze image quality
+        const quality = await analyzeImageQuality(file);
+        
+        // Show warnings if quality issues detected
+        if (quality.warnings.length > 0) {
+          toast.warning(`Quality issues detected in ${file.name}`, {
+            description: quality.warnings.join('. ')
+          });
+        }
+        
         setImages(prev => [...prev, {
           file,
           preview,
@@ -63,10 +77,12 @@ export default function AdminGallery() {
           displayName: file.name.replace(/\.[^/.]+$/, ''),
           altText: file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
           width,
-          height
+          height,
+          quality
         }]);
       } catch (error) {
         console.error('Error processing file:', error);
+        toast.error(`Failed to process ${file.name}`);
       }
     }
   };
@@ -319,6 +335,14 @@ export default function AdminGallery() {
                             alt={image.displayName}
                             className="w-full h-full object-cover rounded"
                           />
+                          {image.quality && (
+                            <Badge 
+                              variant={getQualityBadgeVariant(image.quality)}
+                              className="absolute bottom-1 left-1 text-xs"
+                            >
+                              {getQualityStatusText(image.quality)}
+                            </Badge>
+                          )}
                           <Button
                             size="icon"
                             variant="secondary"
@@ -375,9 +399,23 @@ export default function AdminGallery() {
                             />
                           </div>
 
-                          <div className="text-sm text-muted-foreground md:col-span-2">
-                            <ImageIcon className="inline w-4 h-4 mr-1" />
-                            {image.width} × {image.height} px • {(image.file.size / 1024 / 1024).toFixed(2)} MB
+                          <div className="space-y-1 md:col-span-2">
+                            <div className="text-sm text-muted-foreground flex items-center">
+                              <ImageIcon className="inline w-4 h-4 mr-1" />
+                              {image.width} × {image.height} px • {(image.file.size / 1024 / 1024).toFixed(2)} MB
+                            </div>
+                            {image.quality && image.quality.warnings.length > 0 && (
+                              <div className="flex items-start gap-2 p-2 rounded-md bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+                                <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                                <div className="flex-1 space-y-1">
+                                  {image.quality.warnings.map((warning, i) => (
+                                    <p key={i} className="text-xs text-amber-800 dark:text-amber-200">
+                                      {warning}
+                                    </p>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
