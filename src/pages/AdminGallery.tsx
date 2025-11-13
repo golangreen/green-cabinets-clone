@@ -6,9 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload, X, Image as ImageIcon, CheckCircle2, AlertCircle, Loader2, Edit } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Upload, X, Image as ImageIcon, CheckCircle2, AlertCircle, Loader2, Edit, Images } from 'lucide-react';
 import { useGalleryUpload } from '@/hooks/useGalleryUpload';
 import { ImageEditor } from '@/components/admin/ImageEditor';
+import { BatchImageEditor } from '@/components/admin/BatchImageEditor';
 import { cn } from '@/lib/utils';
 import type { GalleryCategory } from '@/types/gallery';
 
@@ -26,6 +28,8 @@ export default function AdminGallery() {
   const [images, setImages] = useState<ImagePreview[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [selectedIndices, setSelectedIndices] = useState<Set<number>>(new Set());
+  const [batchEditing, setBatchEditing] = useState(false);
   const { uploading, progress, extractImageMetadata, uploadImages } = useGalleryUpload();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -114,6 +118,59 @@ export default function AdminGallery() {
     }
   };
 
+  const handleBatchEditSave = async (editedFiles: File[]) => {
+    const selectedArray = Array.from(selectedIndices).sort((a, b) => a - b);
+    
+    try {
+      const updatedImages = await Promise.all(
+        editedFiles.map(async (file) => {
+          const { width, height } = await extractImageMetadata(file);
+          const preview = URL.createObjectURL(file);
+          return { file, preview, width, height };
+        })
+      );
+
+      setImages(prev => prev.map((img, i) => {
+        const selectedIdx = selectedArray.indexOf(i);
+        if (selectedIdx !== -1 && updatedImages[selectedIdx]) {
+          URL.revokeObjectURL(img.preview);
+          return {
+            ...img,
+            file: updatedImages[selectedIdx].file,
+            preview: updatedImages[selectedIdx].preview,
+            width: updatedImages[selectedIdx].width,
+            height: updatedImages[selectedIdx].height
+          };
+        }
+        return img;
+      }));
+
+      setSelectedIndices(new Set());
+    } catch (error) {
+      console.error('Error updating batch edited images:', error);
+    }
+  };
+
+  const toggleSelection = (index: number) => {
+    setSelectedIndices(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
+  const selectAll = () => {
+    setSelectedIndices(new Set(images.map((_, i) => i)));
+  };
+
+  const clearSelection = () => {
+    setSelectedIndices(new Set());
+  };
+
   const handleUpload = async () => {
     if (images.length === 0) return;
 
@@ -178,13 +235,46 @@ export default function AdminGallery() {
             {images.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Images to Upload ({images.length})</CardTitle>
-                  <CardDescription>Review and edit metadata before uploading</CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>Images to Upload ({images.length})</CardTitle>
+                      <CardDescription>Review and edit metadata before uploading</CardDescription>
+                    </div>
+                    {images.length > 1 && (
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={selectedIndices.size === images.length ? clearSelection : selectAll}
+                        >
+                          {selectedIndices.size === images.length ? 'Deselect All' : 'Select All'}
+                        </Button>
+                        {selectedIndices.size > 1 && (
+                          <Button
+                            variant="default"
+                            size="sm"
+                            onClick={() => setBatchEditing(true)}
+                          >
+                            <Images className="w-4 h-4 mr-2" />
+                            Batch Edit ({selectedIndices.size})
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {images.map((image, index) => (
                     <div key={index} className="border rounded-lg p-4">
                       <div className="flex gap-4">
+                        {images.length > 1 && (
+                          <div className="flex items-start pt-2">
+                            <Checkbox
+                              checked={selectedIndices.has(index)}
+                              onCheckedChange={() => toggleSelection(index)}
+                            />
+                          </div>
+                        )}
                         <div className="relative w-32 h-32 flex-shrink-0">
                           <img
                             src={image.preview}
@@ -323,6 +413,15 @@ export default function AdminGallery() {
             imageUrl={images[editingIndex]?.preview || ''}
             originalFileName={images[editingIndex]?.file.name || ''}
             onSave={(editedFile) => handleEditSave(editingIndex, editedFile)}
+          />
+        )}
+
+        {batchEditing && (
+          <BatchImageEditor
+            open={batchEditing}
+            onOpenChange={setBatchEditing}
+            images={Array.from(selectedIndices).map(i => images[i])}
+            onSave={handleBatchEditSave}
           />
         )}
       </div>
