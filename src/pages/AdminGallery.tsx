@@ -17,13 +17,11 @@ import {
   useImageManagement,
   useImageSelection,
   useImageUpload,
+  useModalManager,
 } from '@/features/gallery/hooks';
 
 export default function AdminGallery() {
   const [compressionQuality, setCompressionQuality] = useState<CompressionQuality>('medium');
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [batchEditing, setBatchEditing] = useState(false);
-  const [metadataEditing, setMetadataEditing] = useState(false);
 
   // Custom hooks for state management
   const {
@@ -45,26 +43,37 @@ export default function AdminGallery() {
 
   const { uploading, uploadAllImages } = useImageUpload();
 
+  const {
+    modalState,
+    openEditModal,
+    openBatchEditModal,
+    openMetadataModal,
+    closeModal,
+    isEditModalOpen,
+    isBatchEditModalOpen,
+    isMetadataModalOpen,
+  } = useModalManager();
+
   const handleRemoveImage = (index: number) => {
     removeImage(index);
     adjustSelectionAfterRemoval(index);
   };
 
   const handleEditSave = (updates: Partial<any>) => {
-    if (editingIndex !== null) {
-      updateImage(editingIndex, updates);
-      setEditingIndex(null);
+    if (modalState.data?.imageIndex !== undefined) {
+      updateImage(modalState.data.imageIndex, updates);
+      closeModal();
     }
   };
 
   const handleBatchEditSave = (updates: { category?: GalleryCategory; compressionQuality?: CompressionQuality }) => {
     updateMultipleImages(selectedIndices, updates);
-    setBatchEditing(false);
+    closeModal();
   };
 
   const handleMetadataSave = (updates: { altText?: string; description?: string; displayName?: string }) => {
     updateMultipleImages(selectedIndices, updates);
-    setMetadataEditing(false);
+    closeModal();
   };
 
   const handleUpload = async () => {
@@ -97,10 +106,10 @@ export default function AdminGallery() {
                   onToggleSelect={toggleSelection}
                   onSelectAll={() => selectAll(images.length)}
                   onClearSelection={clearSelection}
-                  onEdit={setEditingIndex}
+                  onEdit={openEditModal}
                   onRemove={handleRemoveImage}
-                  onBatchEdit={() => setBatchEditing(true)}
-                  onMetadataEdit={() => setMetadataEditing(true)}
+                  onBatchEdit={() => openBatchEditModal(selectedIndices.size)}
+                  onMetadataEdit={() => openMetadataModal(Array.from(selectedIndices))}
                 />
 
                 <UploadControls
@@ -117,7 +126,32 @@ export default function AdminGallery() {
 
         <Footer />
 
-        {/* TODO: Integrate modal components with new type system */}
+        {/* Modals - Managed by useModalManager hook */}
+        {/* TODO: Integrate modal components with new type system
+        {isEditModalOpen && modalState.data?.imageIndex !== undefined && (
+          <ImageEditor
+            image={images[modalState.data.imageIndex]}
+            onSave={handleEditSave}
+            onClose={closeModal}
+          />
+        )}
+
+        {isBatchEditModalOpen && (
+          <BatchImageEditor
+            selectedCount={modalState.data?.selectedCount || 0}
+            onSave={handleBatchEditSave}
+            onClose={closeModal}
+          />
+        )}
+
+        {isMetadataModalOpen && modalState.data?.selectedIndices && (
+          <BulkMetadataEditor
+            images={modalState.data.selectedIndices.map((i: number) => images[i])}
+            onSave={handleMetadataSave}
+            onClose={closeModal}
+          />
+        )}
+        */}
       </div>
     </AdminRoute>
   );
