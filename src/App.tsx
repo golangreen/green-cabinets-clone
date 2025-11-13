@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,33 +8,34 @@ import { AuthProvider, ThemeProvider } from "@/contexts";
 import { ProtectedRoute } from "@/components/auth";
 import { AdminRoute } from "@/components/auth";
 import { ROUTES } from "@/constants/routes";
-import { FeatureErrorBoundary, ConfigValidationAlert } from "@/components/layout";
+import { FeatureErrorBoundary, ConfigValidationAlert, SplashScreen } from "@/components/layout";
 import { PreloadManager } from "@/features/product-catalog";
 import { CACHE_CONFIG } from "@/config";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import Profile from "./pages/Profile";
-import ProductDetail from "./pages/ProductDetail";
-import Checkout from "./pages/Checkout";
-import PaymentSuccess from "./pages/PaymentSuccess";
-import VanityDesigner from "./pages/VanityDesigner";
-import AdminSecurity from "./pages/AdminSecurity";
-import AdminUsers from "./pages/AdminUsers";
-import AdminAuditLog from "./pages/AdminAuditLog";
-import AdminCache from "./pages/AdminCache";
-import AdminConfig from "./pages/AdminConfig";
-import AdminPerformance from "./pages/AdminPerformance";
-import AdminEmailSettings from "./pages/AdminEmailSettings";
-import TempGalleryTest from "./pages/TempGalleryTest";
-import RoomScan from "./pages/RoomScan";
-import DocsAuth from "./pages/DocsAuth";
-import DocsGettingStarted from "./pages/DocsGettingStarted";
-import DocsConfiguration from "./pages/DocsConfiguration";
-import DocsAPI from "./pages/DocsAPI";
-import DocsTroubleshooting from "./pages/DocsTroubleshooting";
-import DocsSecurity from "./pages/DocsSecurity";
-import NotFound from "./pages/NotFound";
-import { SplashScreen } from "@/components/layout";
+
+// Lazy load all pages for code-splitting
+const Index = lazy(() => import("./pages/Index"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Profile = lazy(() => import("./pages/Profile"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const VanityDesigner = lazy(() => import("./pages/VanityDesigner"));
+const AdminSecurity = lazy(() => import("./pages/AdminSecurity"));
+const AdminUsers = lazy(() => import("./pages/AdminUsers"));
+const AdminAuditLog = lazy(() => import("./pages/AdminAuditLog"));
+const AdminCache = lazy(() => import("./pages/AdminCache"));
+const AdminConfig = lazy(() => import("./pages/AdminConfig"));
+const AdminPerformance = lazy(() => import("./pages/AdminPerformance"));
+const AdminEmailSettings = lazy(() => import("./pages/AdminEmailSettings"));
+const TempGalleryTest = lazy(() => import("./pages/TempGalleryTest"));
+const RoomScan = lazy(() => import("./pages/RoomScan"));
+const DocsAuth = lazy(() => import("./pages/DocsAuth"));
+const DocsGettingStarted = lazy(() => import("./pages/DocsGettingStarted"));
+const DocsConfiguration = lazy(() => import("./pages/DocsConfiguration"));
+const DocsAPI = lazy(() => import("./pages/DocsAPI"));
+const DocsTroubleshooting = lazy(() => import("./pages/DocsTroubleshooting"));
+const DocsSecurity = lazy(() => import("./pages/DocsSecurity"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -84,98 +85,102 @@ const App = () => {
               />
               </FeatureErrorBoundary>
 
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/product/:handle" element={<ProductDetail />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/payment-success" element={<PaymentSuccess />} />
-                <Route 
-                  path="/profile" 
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/designer" 
-                  element={<VanityDesigner />} 
-                />
-                <Route 
-                  path="/admin/security" 
-                  element={
-                    <AdminRoute>
-                      <AdminSecurity />
-                    </AdminRoute>
-                  } 
-                />
-                <Route 
-                  path={ROUTES.ADMIN_USERS}
-                  element={
-                    <AdminRoute>
-                      <AdminUsers />
-                    </AdminRoute>
-                  } 
-                />
-                <Route 
-                  path={ROUTES.ADMIN_AUDIT_LOG}
-                  element={
-                    <AdminRoute>
-                      <AdminAuditLog />
-                    </AdminRoute>
-                  } 
-                />
-                <Route 
-                  path={ROUTES.ADMIN_CACHE}
-                  element={
-                    <AdminRoute>
-                      <AdminCache />
-                    </AdminRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin/config"
-                  element={
-                    <AdminRoute>
-                      <AdminConfig />
-                    </AdminRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin/performance"
-                  element={
-                    <AdminRoute>
-                      <AdminPerformance />
-                    </AdminRoute>
-                  } 
-                />
-                <Route 
-                  path={ROUTES.ADMIN_EMAIL_SETTINGS}
-                  element={
-                    <AdminRoute>
-                      <AdminEmailSettings />
-                    </AdminRoute>
-                  } 
-                />
-                <Route 
-                  path="/temp-gallery"
-                  element={
-                    <AdminRoute>
-                      <TempGalleryTest />
-                    </AdminRoute>
-                  } 
-                />
-                <Route path="/room-scan" element={<RoomScan />} />
-                <Route path="/docs/auth" element={<DocsAuth />} />
-                <Route path="/docs/getting-started" element={<DocsGettingStarted />} />
-                <Route path="/docs/configuration" element={<DocsConfiguration />} />
-                <Route path="/docs/api" element={<DocsAPI />} />
-                <Route path="/docs/security" element={<DocsSecurity />} />
-                <Route path="/docs/troubleshooting" element={<DocsTroubleshooting />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              </div>}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/product/:handle" element={<ProductDetail />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/payment-success" element={<PaymentSuccess />} />
+                  <Route 
+                    path="/profile" 
+                    element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/designer" 
+                    element={<VanityDesigner />} 
+                  />
+                  <Route 
+                    path="/admin/security" 
+                    element={
+                      <AdminRoute>
+                        <AdminSecurity />
+                      </AdminRoute>
+                    } 
+                  />
+                  <Route 
+                    path={ROUTES.ADMIN_USERS}
+                    element={
+                      <AdminRoute>
+                        <AdminUsers />
+                      </AdminRoute>
+                    } 
+                  />
+                  <Route 
+                    path={ROUTES.ADMIN_AUDIT_LOG}
+                    element={
+                      <AdminRoute>
+                        <AdminAuditLog />
+                      </AdminRoute>
+                    } 
+                  />
+                  <Route 
+                    path={ROUTES.ADMIN_CACHE}
+                    element={
+                      <AdminRoute>
+                        <AdminCache />
+                      </AdminRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/admin/config"
+                    element={
+                      <AdminRoute>
+                        <AdminConfig />
+                      </AdminRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/admin/performance"
+                    element={
+                      <AdminRoute>
+                        <AdminPerformance />
+                      </AdminRoute>
+                    } 
+                  />
+                  <Route 
+                    path={ROUTES.ADMIN_EMAIL_SETTINGS}
+                    element={
+                      <AdminRoute>
+                        <AdminEmailSettings />
+                      </AdminRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/temp-gallery"
+                    element={
+                      <AdminRoute>
+                        <TempGalleryTest />
+                      </AdminRoute>
+                    } 
+                  />
+                  <Route path="/room-scan" element={<RoomScan />} />
+                  <Route path="/docs/auth" element={<DocsAuth />} />
+                  <Route path="/docs/getting-started" element={<DocsGettingStarted />} />
+                  <Route path="/docs/configuration" element={<DocsConfiguration />} />
+                  <Route path="/docs/api" element={<DocsAPI />} />
+                  <Route path="/docs/security" element={<DocsSecurity />} />
+                  <Route path="/docs/troubleshooting" element={<DocsTroubleshooting />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
             </TooltipProvider>
           </AuthProvider>
         </ThemeProvider>
