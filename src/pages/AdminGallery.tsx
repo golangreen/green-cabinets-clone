@@ -12,6 +12,7 @@ import {
   GalleryUploadZone,
   ImagePreviewList,
   UploadControls,
+  GalleryErrorBoundary,
 } from '@/features/gallery/components';
 import {
   useImageManagement,
@@ -82,77 +83,79 @@ export default function AdminGallery() {
 
   return (
     <AdminRoute>
-      <div className="min-h-screen bg-background">
-        <Header />
-        
-        <main className="container mx-auto px-4 py-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-2">Gallery Management</h1>
-            <p className="text-muted-foreground">Upload and manage gallery images with automatic metadata extraction</p>
-          </div>
+      <GalleryErrorBoundary>
+        <div className="min-h-screen bg-background">
+          <Header />
+          
+          <main className="container mx-auto px-4 py-8">
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold text-foreground mb-2">Gallery Management</h1>
+              <p className="text-muted-foreground">Upload and manage gallery images with automatic metadata extraction</p>
+            </div>
 
-          <div className="grid gap-6">
-            <GalleryUploadZone
-              onFilesSelected={processFiles}
-              disabled={uploading}
+            <div className="grid gap-6">
+              <GalleryUploadZone
+                onFilesSelected={processFiles}
+                disabled={uploading}
+              />
+
+              {images.length > 0 && (
+                <>
+                  <ImagePreviewList
+                    images={images}
+                    selectedIndices={selectedIndices}
+                    uploadProgress={{}}
+                    onToggleSelect={toggleSelection}
+                    onSelectAll={() => selectAll(images.length)}
+                    onClearSelection={clearSelection}
+                    onEdit={openEditModal}
+                    onRemove={handleRemoveImage}
+                    onBatchEdit={() => openBatchEditModal(selectedIndices.size)}
+                    onMetadataEdit={() => openMetadataModal(Array.from(selectedIndices))}
+                  />
+
+                  <UploadControls
+                    imageCount={images.length}
+                    compressionQuality={compressionQuality}
+                    uploading={uploading}
+                    onCompressionChange={setCompressionQuality}
+                    onUpload={handleUpload}
+                  />
+                </>
+              )}
+            </div>
+          </main>
+
+          <Footer />
+
+          {/* Modals - Managed by useModalManager hook */}
+          {/* TODO: Integrate modal components with new type system
+          {isEditModalOpen && modalState.data?.imageIndex !== undefined && (
+            <ImageEditor
+              image={images[modalState.data.imageIndex]}
+              onSave={handleEditSave}
+              onClose={closeModal}
             />
+          )}
 
-            {images.length > 0 && (
-              <>
-                <ImagePreviewList
-                  images={images}
-                  selectedIndices={selectedIndices}
-                  uploadProgress={{}}
-                  onToggleSelect={toggleSelection}
-                  onSelectAll={() => selectAll(images.length)}
-                  onClearSelection={clearSelection}
-                  onEdit={openEditModal}
-                  onRemove={handleRemoveImage}
-                  onBatchEdit={() => openBatchEditModal(selectedIndices.size)}
-                  onMetadataEdit={() => openMetadataModal(Array.from(selectedIndices))}
-                />
+          {isBatchEditModalOpen && (
+            <BatchImageEditor
+              selectedCount={modalState.data?.selectedCount || 0}
+              onSave={handleBatchEditSave}
+              onClose={closeModal}
+            />
+          )}
 
-                <UploadControls
-                  imageCount={images.length}
-                  compressionQuality={compressionQuality}
-                  uploading={uploading}
-                  onCompressionChange={setCompressionQuality}
-                  onUpload={handleUpload}
-                />
-              </>
-            )}
-          </div>
-        </main>
-
-        <Footer />
-
-        {/* Modals - Managed by useModalManager hook */}
-        {/* TODO: Integrate modal components with new type system
-        {isEditModalOpen && modalState.data?.imageIndex !== undefined && (
-          <ImageEditor
-            image={images[modalState.data.imageIndex]}
-            onSave={handleEditSave}
-            onClose={closeModal}
-          />
-        )}
-
-        {isBatchEditModalOpen && (
-          <BatchImageEditor
-            selectedCount={modalState.data?.selectedCount || 0}
-            onSave={handleBatchEditSave}
-            onClose={closeModal}
-          />
-        )}
-
-        {isMetadataModalOpen && modalState.data?.selectedIndices && (
-          <BulkMetadataEditor
-            images={modalState.data.selectedIndices.map((i: number) => images[i])}
-            onSave={handleMetadataSave}
-            onClose={closeModal}
-          />
-        )}
-        */}
-      </div>
+          {isMetadataModalOpen && modalState.data?.selectedIndices && (
+            <BulkMetadataEditor
+              images={modalState.data.selectedIndices.map((i: number) => images[i])}
+              onSave={handleMetadataSave}
+              onClose={closeModal}
+            />
+          )}
+          */}
+        </div>
+      </GalleryErrorBoundary>
     </AdminRoute>
   );
 }

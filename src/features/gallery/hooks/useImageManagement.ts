@@ -4,9 +4,12 @@
  */
 
 import { useState, useCallback } from 'react';
-import { toast } from 'sonner';
 import type { ImagePreview } from '../types';
-import { extractImageDimensions, analyzeImageQuality } from '../services/imageProcessingService';
+import {
+  extractImageDimensions,
+  analyzeImageQuality,
+} from '../services/imageProcessingService';
+import { errorService, ErrorType, safeAsync } from '../services/errorService';
 
 export function useImageManagement() {
   const [images, setImages] = useState<ImagePreview[]>([]);
@@ -17,21 +20,42 @@ export function useImageManagement() {
     );
 
     for (const file of imageFiles) {
-      try {
-        const { width, height } = await extractImageDimensions(file);
-        const preview = URL.createObjectURL(file);
-        
-        // Analyze image quality
-        const quality = await analyzeImageQuality(file);
-        
-        // Show warnings if quality issues detected
-        if (quality.issues.some(issue => issue !== 'none')) {
-          toast.warning(`Quality issues detected in ${file.name}`, {
-            description: `Image has ${quality.issues.filter(i => i !== 'none').join(', ')}`
-          });
-        }
-        
-        setImages(prev => [...prev, {
+      // Extract dimensions with error handling
+      const dimensionsResult = await safeAsync(
+        () => extractImageDimensions(file),
+        ErrorType.PROCESSING_FAILED,
+        file.name
+      );
+
+      if (!dimensionsResult.success) {
+        continue; // Skip this file
+      }
+
+      const { width, height } = dimensionsResult.data;
+      const preview = URL.createObjectURL(file);
+
+      // Analyze quality with graceful degradation
+      const qualityResult = await safeAsync(
+        () => analyzeImageQuality(file),
+        ErrorType.QUALITY_CHECK_FAILED,
+        file.name,
+        undefined // No fallback - quality is optional
+      );
+
+      const quality = qualityResult.success ? qualityResult.data : undefined;
+
+      // Show warnings if quality issues detected
+      if (quality?.issues.some(issue => issue !== 'none')) {
+        errorService.handleWarning(
+          ErrorType.QUALITY_CHECK_FAILED,
+          { issues: quality.issues },
+          file.name
+        );
+      }
+
+      setImages(prev => [
+        ...prev,
+        {
           file,
           preview,
           category: 'kitchens',
@@ -41,12 +65,9 @@ export function useImageManagement() {
           width,
           height,
           compressionQuality: 'medium',
-          quality
-        }]);
-      } catch (error) {
-        console.error('Error processing file:', error);
-        toast.error(`Failed to process ${file.name}`);
-      }
+          quality,
+        },
+      ]);
     }
   }, []);
 
