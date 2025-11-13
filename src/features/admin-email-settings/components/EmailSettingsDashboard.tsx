@@ -46,7 +46,10 @@ export const EmailSettingsDashboard = () => {
         domainsError={data?.domainsError}
       />
 
-      <EmailTestPanel />
+      <EmailTestPanel 
+        hasVerifiedDomain={data?.domains?.some(d => d.status === 'verified') ?? false}
+        accountEmail="greencabinets@gmail.com"
+      />
 
       <EmailDeliveryStats />
     </div>
