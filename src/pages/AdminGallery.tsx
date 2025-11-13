@@ -6,8 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload, X, Image as ImageIcon, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, CheckCircle2, AlertCircle, Loader2, Edit } from 'lucide-react';
 import { useGalleryUpload } from '@/hooks/useGalleryUpload';
+import { ImageEditor } from '@/components/admin/ImageEditor';
 import { cn } from '@/lib/utils';
 import type { GalleryCategory } from '@/types/gallery';
 
@@ -24,6 +25,7 @@ interface ImagePreview {
 export default function AdminGallery() {
   const [images, setImages] = useState<ImagePreview[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const { uploading, progress, extractImageMetadata, uploadImages } = useGalleryUpload();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -87,6 +89,29 @@ export default function AdminGallery() {
     setImages(prev => prev.map((img, i) => 
       i === index ? { ...img, ...updates } : img
     ));
+  };
+
+  const handleEditSave = async (index: number, editedFile: File) => {
+    try {
+      const { width, height } = await extractImageMetadata(editedFile);
+      const preview = URL.createObjectURL(editedFile);
+      
+      setImages(prev => prev.map((img, i) => {
+        if (i === index) {
+          URL.revokeObjectURL(img.preview);
+          return {
+            ...img,
+            file: editedFile,
+            preview,
+            width,
+            height
+          };
+        }
+        return img;
+      }));
+    } catch (error) {
+      console.error('Error updating edited image:', error);
+    }
   };
 
   const handleUpload = async () => {
@@ -166,6 +191,14 @@ export default function AdminGallery() {
                             alt={image.displayName}
                             className="w-full h-full object-cover rounded"
                           />
+                          <Button
+                            size="icon"
+                            variant="secondary"
+                            className="absolute -top-2 -left-2 h-6 w-6"
+                            onClick={() => setEditingIndex(index)}
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
                           <Button
                             size="icon"
                             variant="destructive"
@@ -282,6 +315,16 @@ export default function AdminGallery() {
         </main>
 
         <Footer />
+
+        {editingIndex !== null && (
+          <ImageEditor
+            open={editingIndex !== null}
+            onOpenChange={(open) => !open && setEditingIndex(null)}
+            imageUrl={images[editingIndex]?.preview || ''}
+            originalFileName={images[editingIndex]?.file.name || ''}
+            onSave={(editedFile) => handleEditSave(editingIndex, editedFile)}
+          />
+        )}
       </div>
     </AdminRoute>
   );
