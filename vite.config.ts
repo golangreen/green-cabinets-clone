@@ -27,9 +27,20 @@ export default defineConfig(({ mode }) => ({
       output: {
         // Suppress asset size warnings
         manualChunks: undefined,
+        // Suppress detailed asset reporting
+        assetFileNames: 'assets/[name]-[hash][extname]',
+      }
+    },
+    // Minimize build output
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: mode === 'production',
       }
     }
   },
+  // Reduce logging verbosity
+  logLevel: mode === 'production' ? 'warn' : 'info',
   plugins: [
     react(), 
     mode === "development" && componentTagger(),
