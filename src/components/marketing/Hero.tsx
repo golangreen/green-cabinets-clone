@@ -25,6 +25,7 @@ const Hero = () => {
   const [shuffledImages] = useState(() => shuffleArray(HERO_IMAGES));
   const [recentIndices, setRecentIndices] = useState<number[]>([0]);
   const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   const handleLaunchClick = () => {
     if (isMobile) {
@@ -110,16 +111,35 @@ const Hero = () => {
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 select-none">
+          {/* Loading skeleton with brand colors - visible until image loads */}
+          {!loadedImages.has(currentImageIndex) && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-[#2dd4bf]/10 to-gray-200 animate-pulse z-10" />
+              <div 
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2dd4bf]/20 to-transparent z-20"
+                style={{
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer 2s infinite linear'
+                }}
+              />
+            </>
+          )}
+          
           <img 
             src={shuffledImages[currentImageIndex].path} 
             alt={shuffledImages[currentImageIndex].alt} 
-            className="w-full h-full object-cover pointer-events-none" 
+            className={`w-full h-full object-cover pointer-events-none transition-opacity duration-700 ${
+              loadedImages.has(currentImageIndex) ? 'opacity-100' : 'opacity-0'
+            }`}
             style={{ 
               filter: 'brightness(1.1) contrast(1.05)',
             }}
             loading="eager"
             decoding="async"
             fetchPriority="high"
+            onLoad={() => {
+              setLoadedImages(prev => new Set(prev).add(currentImageIndex));
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/20" />
         </div>
