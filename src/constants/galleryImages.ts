@@ -1,5 +1,13 @@
 import type { GalleryImage, HeroImage } from '@/types/gallery';
 
+// Dynamic image loading using Vite's glob import
+const images = import.meta.glob<string>('/src/assets/gallery/*', { eager: true, import: 'default' });
+
+const getImageUrl = (filename: string): string => {
+  const path = `/src/assets/gallery/${filename}`;
+  return images[path] || '';
+};
+
 // Static imports for hero carousel images
 import modernKitchenIslandBarStools from '@/assets/gallery/modern-kitchen-island-bar-stools.jpeg';
 import luxuryKitchenMarbleDining from '@/assets/gallery/luxury-kitchen-marble-dining.jpeg';
