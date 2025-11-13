@@ -24,6 +24,7 @@ import AdminAuditLog from "./pages/AdminAuditLog";
 import AdminCache from "./pages/AdminCache";
 import AdminConfig from "./pages/AdminConfig";
 import AdminPerformance from "./pages/AdminPerformance";
+import AdminEmailSettings from "./pages/AdminEmailSettings";
 import RoomScan from "./pages/RoomScan";
 import DocsAuth from "./pages/DocsAuth";
 import DocsGettingStarted from "./pages/DocsGettingStarted";
@@ -145,6 +146,14 @@ const App = () => {
                   element={
                     <AdminRoute>
                       <AdminPerformance />
+                    </AdminRoute>
+                  } 
+                />
+                <Route 
+                  path={ROUTES.ADMIN_EMAIL_SETTINGS}
+                  element={
+                    <AdminRoute>
+                      <AdminEmailSettings />
                     </AdminRoute>
                   } 
                 />

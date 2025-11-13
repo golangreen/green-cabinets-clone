@@ -6,6 +6,7 @@ import { ADMIN_SECURITY_ROUTES } from '@/features/admin-security/constants/route
 import { ADMIN_USERS_ROUTES } from '@/features/admin-users/constants/routes';
 import { ADMIN_AUDIT_ROUTES } from '@/features/admin-audit/constants/routes';
 import { ADMIN_CACHE_ROUTES } from '@/features/admin-cache/constants/routes';
+import { ADMIN_EMAIL_SETTINGS_ROUTES } from '@/features/admin-email-settings/constants/routes';
 import { VANITY_DESIGNER_ROUTES } from '@/features/vanity-designer/constants/routes';
 import { ROOM_SCANNER_ROUTES } from '@/features/room-scanner/constants/routes';
 import { PRODUCT_CATALOG_ROUTES } from '@/features/product-catalog/constants/routes';
@@ -51,6 +52,7 @@ export const ROUTES = {
   ADMIN_AUDIT_LOG: ADMIN_AUDIT_ROUTES.DASHBOARD,
   ADMIN_CACHE: ADMIN_CACHE_ROUTES.CACHE,
   ADMIN_CONFIG: '/admin/config',
+  ADMIN_EMAIL_SETTINGS: ADMIN_EMAIL_SETTINGS_ROUTES.DASHBOARD,
   CHECKOUT: PRODUCT_CATALOG_ROUTES.CHECKOUT,
   PAYMENT_SUCCESS: PRODUCT_CATALOG_ROUTES.PAYMENT_SUCCESS,
   PRODUCT_DETAIL: PRODUCT_CATALOG_ROUTES.PRODUCT_DETAIL,
@@ -78,6 +80,7 @@ export function isAdminRoute(path: string): boolean {
     ROUTES.ADMIN_AUDIT_LOG,
     ROUTES.ADMIN_CACHE,
     ROUTES.ADMIN_CONFIG,
+    ROUTES.ADMIN_EMAIL_SETTINGS,
   ];
   return adminPaths.some(route => path.startsWith(route));
 }
@@ -100,6 +103,7 @@ export {
   ADMIN_USERS_ROUTES,
   ADMIN_AUDIT_ROUTES,
   ADMIN_CACHE_ROUTES,
+  ADMIN_EMAIL_SETTINGS_ROUTES,
   VANITY_DESIGNER_ROUTES,
   ROOM_SCANNER_ROUTES,
   PRODUCT_CATALOG_ROUTES,
