@@ -10,6 +10,7 @@ const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState<GalleryCategory>("all");
   const [showAllImages, setShowAllImages] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const { ref, isVisible } = useScrollReveal({ threshold: 0.1 });
 
   useEffect(() => {
@@ -48,6 +49,11 @@ const Gallery = () => {
       window.removeEventListener("categoryChange" as any, handleCategoryChange as any);
     };
   }, []);
+
+  // Reset loaded images when category or display changes
+  useEffect(() => {
+    setLoadedImages(new Set());
+  }, [activeCategory, showAllImages]);
 
   const filteredImages = getImagesByCategory(activeCategory);
   const displayedImages = showAllImages ? filteredImages : filteredImages.slice(0, 12);
@@ -149,38 +155,43 @@ const Gallery = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedImages.map((image, index) => (
-            <div 
-              key={index}
-              className="group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 bg-card cursor-pointer"
-              style={{ animationDelay: `${index * 100}ms` }}
-              onClick={() => setSelectedImageIndex(index)}
-            >
-              <div className="relative">
-                <div className="aspect-[4/3] overflow-hidden bg-muted relative">
-                  {/* Loading skeleton with brand colors */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-[#2dd4bf]/10 to-gray-200 animate-pulse" />
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2dd4bf]/20 to-transparent animate-[shimmer_2s_infinite]"
-                    style={{
-                      backgroundSize: '200% 100%',
-                      animation: 'shimmer 2s infinite linear'
-                    }}
-                  />
-                  
-                  <img 
-                    src={image.path}
-                    alt={image.alt}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 relative z-10"
-                    loading={index < 6 ? "eager" : "lazy"}
-                    onLoad={(e) => {
-                      // Hide skeleton when image loads
-                      const skeleton = e.currentTarget.previousElementSibling;
-                      const shimmer = skeleton?.previousElementSibling;
-                      if (skeleton) (skeleton as HTMLElement).style.display = 'none';
-                      if (shimmer) (shimmer as HTMLElement).style.display = 'none';
-                    }}
-                  />
+          {displayedImages.map((image, index) => {
+            const isLoaded = loadedImages.has(index);
+            
+            return (
+              <div 
+                key={index}
+                className="group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 bg-card cursor-pointer"
+                style={{ animationDelay: `${index * 100}ms` }}
+                onClick={() => setSelectedImageIndex(index)}
+              >
+                <div className="relative">
+                  <div className="aspect-[4/3] overflow-hidden bg-muted relative">
+                    {/* Loading skeleton with brand colors - visible until image loads */}
+                    {!isLoaded && (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-[#2dd4bf]/10 to-gray-200 animate-pulse z-10" />
+                        <div 
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2dd4bf]/20 to-transparent z-20"
+                          style={{
+                            backgroundSize: '200% 100%',
+                            animation: 'shimmer 2s infinite linear'
+                          }}
+                        />
+                      </>
+                    )}
+                    
+                    <img 
+                      src={image.path}
+                      alt={image.alt}
+                      className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${
+                        isLoaded ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      loading={index < 6 ? "eager" : "lazy"}
+                      onLoad={() => {
+                        setLoadedImages(prev => new Set(prev).add(index));
+                      }}
+                    />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-primary-foreground transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
@@ -212,7 +223,8 @@ const Gallery = () => {
                 </div>
               )}
             </div>
-          ))}
+          );
+          })}
         </div>
 
         {/* Show All / Show Less Button */}
