@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings, Activity, Mail } from "lucide-react";
+import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings, Activity, Mail, Image } from "lucide-react";
 import logoTeal from "@/assets/logo-teal.svg";
 import logoBlack from "@/assets/logo-black.svg";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
@@ -330,6 +330,18 @@ const Header = () => {
                           >
                             <HardDrive className="mr-2 h-4 w-4" />
                             Cache Management
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              window.location.href = '/admin/gallery';
+                            }}
+                            className="justify-start"
+                          >
+                            <Image className="mr-2 h-4 w-4" />
+                            Gallery CDN
                           </Button>
                           <Button
                             variant="outline"

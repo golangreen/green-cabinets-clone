@@ -25,6 +25,7 @@ import AdminCache from "./pages/AdminCache";
 import AdminConfig from "./pages/AdminConfig";
 import AdminPerformance from "./pages/AdminPerformance";
 import AdminEmailSettings from "./pages/AdminEmailSettings";
+import AdminGallery from "./pages/AdminGallery";
 import RoomScan from "./pages/RoomScan";
 import DocsAuth from "./pages/DocsAuth";
 import DocsGettingStarted from "./pages/DocsGettingStarted";
@@ -154,6 +155,14 @@ const App = () => {
                   element={
                     <AdminRoute>
                       <AdminEmailSettings />
+                    </AdminRoute>
+                  } 
+                />
+                <Route 
+                  path="/admin/gallery"
+                  element={
+                    <AdminRoute>
+                      <AdminGallery />
                     </AdminRoute>
                   } 
                 />
