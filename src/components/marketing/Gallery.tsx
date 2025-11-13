@@ -157,12 +157,29 @@ const Gallery = () => {
               onClick={() => setSelectedImageIndex(index)}
             >
               <div className="relative">
-                <div className="aspect-[4/3] overflow-hidden bg-muted">
+                <div className="aspect-[4/3] overflow-hidden bg-muted relative">
+                  {/* Loading skeleton with brand colors */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-[#2dd4bf]/10 to-gray-200 animate-pulse" />
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2dd4bf]/20 to-transparent animate-[shimmer_2s_infinite]"
+                    style={{
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 2s infinite linear'
+                    }}
+                  />
+                  
                   <img 
                     src={image.path}
                     alt={image.alt}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 relative z-10"
                     loading={index < 6 ? "eager" : "lazy"}
+                    onLoad={(e) => {
+                      // Hide skeleton when image loads
+                      const skeleton = e.currentTarget.previousElementSibling;
+                      const shimmer = skeleton?.previousElementSibling;
+                      if (skeleton) (skeleton as HTMLElement).style.display = 'none';
+                      if (shimmer) (shimmer as HTMLElement).style.display = 'none';
+                    }}
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
