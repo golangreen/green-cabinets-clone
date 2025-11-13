@@ -1,13 +1,12 @@
 /**
  * Admin Gallery Page
- * Main page for managing gallery images - refactored with modular components
+ * Main page for managing gallery images - now using custom hooks
  */
 
 import { useState } from 'react';
 import { AdminRoute } from '@/components/auth';
 import { Header, Footer } from '@/components/layout';
-import { useGalleryUpload, type CompressionQuality } from '@/hooks/useGalleryUpload';
-import { toast } from 'sonner';
+import type { CompressionQuality } from '@/hooks/useGalleryUpload';
 import type { GalleryCategory } from '@/types/gallery';
 import {
   GalleryUploadZone,
@@ -15,111 +14,43 @@ import {
   UploadControls,
 } from '@/features/gallery/components';
 import {
-  extractImageDimensions,
-  analyzeImageQuality,
-} from '@/features/gallery/services/imageProcessingService';
-import type { ImagePreview } from '@/features/gallery/types';
+  useImageManagement,
+  useImageSelection,
+  useImageUpload,
+} from '@/features/gallery/hooks';
 
 export default function AdminGallery() {
-  const [images, setImages] = useState<ImagePreview[]>([]);
+  const [compressionQuality, setCompressionQuality] = useState<CompressionQuality>('medium');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [selectedIndices, setSelectedIndices] = useState<Set<number>>(new Set());
   const [batchEditing, setBatchEditing] = useState(false);
   const [metadataEditing, setMetadataEditing] = useState(false);
-  const [compressionQuality, setCompressionQuality] = useState<CompressionQuality>('medium');
-  const { uploading, progress, uploadImages } = useGalleryUpload();
 
-  const processFiles = async (files: FileList) => {
-    const imageFiles = Array.from(files).filter(file => 
-      file.type.startsWith('image/')
-    );
+  // Custom hooks for state management
+  const {
+    images,
+    processFiles,
+    removeImage,
+    updateImage,
+    updateMultipleImages,
+    clearImages,
+  } = useImageManagement();
 
-    for (const file of imageFiles) {
-      try {
-        const { width, height } = await extractImageDimensions(file);
-        const preview = URL.createObjectURL(file);
-        
-        // Analyze image quality
-        const quality = await analyzeImageQuality(file);
-        
-        // Show warnings if quality issues detected
-        if (quality.issues.some(issue => issue !== 'none')) {
-          toast.warning(`Quality issues detected in ${file.name}`, {
-            description: `Image has ${quality.issues.filter(i => i !== 'none').join(', ')}`
-          });
-        }
-        
-        setImages(prev => [...prev, {
-          file,
-          preview,
-          category: 'kitchens',
-          displayName: file.name.replace(/\.[^/.]+$/, ''),
-          altText: file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
-          description: '',
-          width,
-          height,
-          compressionQuality: 'medium',
-          quality
-        }]);
-      } catch (error) {
-        console.error('Error processing file:', error);
-        toast.error(`Failed to process ${file.name}`);
-      }
-    }
+  const {
+    selectedIndices,
+    toggleSelection,
+    selectAll,
+    clearSelection,
+    adjustSelectionAfterRemoval,
+  } = useImageSelection();
+
+  const { uploading, uploadAllImages } = useImageUpload();
+
+  const handleRemoveImage = (index: number) => {
+    removeImage(index);
+    adjustSelectionAfterRemoval(index);
   };
 
-  const removeImage = (index: number) => {
-    setImages(prev => {
-      const newImages = [...prev];
-      URL.revokeObjectURL(newImages[index].preview);
-      newImages.splice(index, 1);
-      return newImages;
-    });
-    
-    // Update selection
-    setSelectedIndices(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(index);
-      // Adjust indices after removed item
-      const adjustedSet = new Set<number>();
-      newSet.forEach(idx => {
-        if (idx > index) {
-          adjustedSet.add(idx - 1);
-        } else {
-          adjustedSet.add(idx);
-        }
-      });
-      return adjustedSet;
-    });
-  };
-
-  const updateImage = (index: number, updates: Partial<ImagePreview>) => {
-    setImages(prev => prev.map((img, i) => 
-      i === index ? { ...img, ...updates } : img
-    ));
-  };
-
-  const toggleSelection = (index: number) => {
-    setSelectedIndices(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
-      } else {
-        newSet.add(index);
-      }
-      return newSet;
-    });
-  };
-
-  const selectAll = () => {
-    setSelectedIndices(new Set(images.map((_, i) => i)));
-  };
-
-  const clearSelection = () => {
-    setSelectedIndices(new Set());
-  };
-
-  const handleEditSave = (updates: Partial<ImagePreview>) => {
+  const handleEditSave = (updates: Partial<any>) => {
     if (editingIndex !== null) {
       updateImage(editingIndex, updates);
       setEditingIndex(null);
@@ -127,34 +58,17 @@ export default function AdminGallery() {
   };
 
   const handleBatchEditSave = (updates: { category?: GalleryCategory; compressionQuality?: CompressionQuality }) => {
-    setImages(prev => prev.map((img, i) => 
-      selectedIndices.has(i) ? { ...img, ...updates } : img
-    ));
+    updateMultipleImages(selectedIndices, updates);
     setBatchEditing(false);
   };
 
   const handleMetadataSave = (updates: { altText?: string; description?: string; displayName?: string }) => {
-    setImages(prev => prev.map((img, i) => 
-      selectedIndices.has(i) ? { ...img, ...updates } : img
-    ));
+    updateMultipleImages(selectedIndices, updates);
     setMetadataEditing(false);
   };
 
   const handleUpload = async () => {
-    if (images.length === 0) return;
-
-    const imagesWithCompression = images.map(img => ({
-      ...img,
-      compressionQuality
-    }));
-
-    await uploadImages(imagesWithCompression);
-    
-    // Clear successfully uploaded images
-    setImages(prev => {
-      prev.forEach(img => URL.revokeObjectURL(img.preview));
-      return [];
-    });
+    await uploadAllImages(images, compressionQuality, clearImages);
   };
 
   return (
@@ -169,69 +83,41 @@ export default function AdminGallery() {
           </div>
 
           <div className="grid gap-6">
-            {/* Upload Area */}
             <GalleryUploadZone
               onFilesSelected={processFiles}
               disabled={uploading}
             />
 
-            {/* Image Preview List */}
             {images.length > 0 && (
-              <ImagePreviewList
-                images={images}
-                selectedIndices={selectedIndices}
-                uploadProgress={{}}
-                onToggleSelect={toggleSelection}
-                onSelectAll={selectAll}
-                onClearSelection={clearSelection}
-                onEdit={setEditingIndex}
-                onRemove={removeImage}
-                onBatchEdit={() => setBatchEditing(true)}
-                onMetadataEdit={() => setMetadataEditing(true)}
-              />
-            )}
+              <>
+                <ImagePreviewList
+                  images={images}
+                  selectedIndices={selectedIndices}
+                  uploadProgress={{}}
+                  onToggleSelect={toggleSelection}
+                  onSelectAll={() => selectAll(images.length)}
+                  onClearSelection={clearSelection}
+                  onEdit={setEditingIndex}
+                  onRemove={handleRemoveImage}
+                  onBatchEdit={() => setBatchEditing(true)}
+                  onMetadataEdit={() => setMetadataEditing(true)}
+                />
 
-            {/* Upload Controls */}
-            {images.length > 0 && (
-              <UploadControls
-                imageCount={images.length}
-                compressionQuality={compressionQuality}
-                uploading={uploading}
-                onCompressionChange={setCompressionQuality}
-                onUpload={handleUpload}
-              />
+                <UploadControls
+                  imageCount={images.length}
+                  compressionQuality={compressionQuality}
+                  uploading={uploading}
+                  onCompressionChange={setCompressionQuality}
+                  onUpload={handleUpload}
+                />
+              </>
             )}
           </div>
         </main>
 
         <Footer />
 
-        {/* Modals - TODO: Update modal components to match new types */}
-        {/* 
-        {editingIndex !== null && (
-          <ImageEditor
-            image={images[editingIndex]}
-            onSave={handleEditSave}
-            onClose={() => setEditingIndex(null)}
-          />
-        )}
-
-        {batchEditing && (
-          <BatchImageEditor
-            selectedCount={selectedIndices.size}
-            onSave={handleBatchEditSave}
-            onClose={() => setBatchEditing(false)}
-          />
-        )}
-
-        {metadataEditing && (
-          <BulkMetadataEditor
-            images={Array.from(selectedIndices).map(i => images[i])}
-            onSave={handleMetadataSave}
-            onClose={() => setMetadataEditing(false)}
-          />
-        )}
-        */}
+        {/* TODO: Integrate modal components with new type system */}
       </div>
     </AdminRoute>
   );
