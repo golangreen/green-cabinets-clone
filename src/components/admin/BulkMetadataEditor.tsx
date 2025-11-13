@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Save, X, Copy } from 'lucide-react';
+import { Save, X, Copy, Sparkles, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ImageMetadata {
   displayName: string;
@@ -40,6 +41,113 @@ export const BulkMetadataEditor = ({ open, onOpenChange, images, onSave }: BulkM
     altText: '',
     description: ''
   });
+  const [generating, setGenerating] = useState<number | null>(null);
+  const [generatingAll, setGeneratingAll] = useState(false);
+
+  const convertImageToBase64 = (imageUrl: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Failed to get canvas context'));
+          return;
+        }
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      };
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = imageUrl;
+    });
+  };
+
+  const generateAIMetadata = async (index: number) => {
+    try {
+      setGenerating(index);
+      const imageData = await convertImageToBase64(images[index].preview);
+      
+      const { data, error } = await supabase.functions.invoke('generate-image-metadata', {
+        body: { imageData }
+      });
+
+      if (error) {
+        console.error('Error generating metadata:', error);
+        if (error.message?.includes('429')) {
+          toast.error('Rate limit exceeded. Please try again in a moment.');
+        } else if (error.message?.includes('402')) {
+          toast.error('AI credits depleted. Please add credits to continue.');
+        } else {
+          toast.error('Failed to generate metadata. Please try again.');
+        }
+        return;
+      }
+
+      if (data?.altText) {
+        setMetadata(prev => prev.map((meta, i) => 
+          i === index ? {
+            displayName: data.displayName || meta.displayName,
+            altText: data.altText,
+            description: data.description || ''
+          } : meta
+        ));
+        toast.success('AI metadata generated successfully!');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Failed to generate metadata');
+    } finally {
+      setGenerating(null);
+    }
+  };
+
+  const generateAllAIMetadata = async () => {
+    try {
+      setGeneratingAll(true);
+      let successCount = 0;
+      let failCount = 0;
+
+      for (let i = 0; i < images.length; i++) {
+        try {
+          setGenerating(i);
+          const imageData = await convertImageToBase64(images[i].preview);
+          
+          const { data, error } = await supabase.functions.invoke('generate-image-metadata', {
+            body: { imageData }
+          });
+
+          if (error) throw error;
+
+          if (data?.altText) {
+            setMetadata(prev => prev.map((meta, idx) => 
+              idx === i ? {
+                displayName: data.displayName || meta.displayName,
+                altText: data.altText,
+                description: data.description || ''
+              } : meta
+            ));
+            successCount++;
+          }
+        } catch (error) {
+          console.error(`Failed to generate metadata for image ${i}:`, error);
+          failCount++;
+        }
+      }
+
+      if (successCount > 0) {
+        toast.success(`Generated metadata for ${successCount} image(s)`);
+      }
+      if (failCount > 0) {
+        toast.error(`Failed to generate metadata for ${failCount} image(s)`);
+      }
+    } finally {
+      setGenerating(null);
+      setGeneratingAll(false);
+    }
+  };
 
   const handleApplyToAll = (field: keyof ImageMetadata) => {
     if (!bulkValues[field]) {
@@ -157,6 +265,40 @@ export const BulkMetadataEditor = ({ open, onOpenChange, images, onSave }: BulkM
             </div>
           </div>
 
+          {/* AI Generation Section */}
+          <div className="rounded-lg border p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-purple-600" />
+                  AI-Powered Metadata Generation
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Automatically generate SEO-optimized alt text and descriptions using AI image analysis
+                </p>
+              </div>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={generateAllAIMetadata}
+                disabled={generatingAll || images.length === 0}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              >
+                {generatingAll ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Generate All with AI
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+
           <Separator />
 
           {/* Individual Images Section */}
@@ -166,13 +308,43 @@ export const BulkMetadataEditor = ({ open, onOpenChange, images, onSave }: BulkM
               <div className="space-y-6">
                 {images.map((image, index) => (
                   <div key={index} className="space-y-4 pb-6 border-b last:border-b-0">
-                    <div className="flex items-center gap-4">
-                      <img 
-                        src={image.preview} 
-                        alt={metadata[index].displayName} 
-                        className="w-24 h-24 object-cover rounded"
-                      />
+                    <div className="flex items-start gap-4">
+                      <div className="relative">
+                        <img 
+                          src={image.preview} 
+                          alt={metadata[index].displayName} 
+                          className="w-24 h-24 object-cover rounded"
+                        />
+                        {generating === index && (
+                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded">
+                            <Loader2 className="w-6 h-6 text-white animate-spin" />
+                          </div>
+                        )}
+                      </div>
                       <div className="flex-1 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">Image {index + 1}</span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => generateAIMetadata(index)}
+                            disabled={generating !== null}
+                            className="h-8"
+                          >
+                            {generating === index ? (
+                              <>
+                                <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                                Generating...
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-3 h-3 mr-1" />
+                                Generate with AI
+                              </>
+                            )}
+                          </Button>
+                        </div>
+
                         <div className="space-y-1">
                           <Label htmlFor={`display-name-${index}`} className="text-xs">
                             Display Name

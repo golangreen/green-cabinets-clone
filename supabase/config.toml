@@ -38,3 +38,6 @@ verify_jwt = true
 
 [functions.check-email-health]
 verify_jwt = true
+
+[functions.generate-image-metadata]
+verify_jwt = true
