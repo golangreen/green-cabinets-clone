@@ -6,7 +6,7 @@ import { Webhook, AlertTriangle, CheckCircle, XCircle, Clock } from 'lucide-reac
 import { format } from 'date-fns';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { fetchSecurityEvents } from '@/services';
-import { SECURITY_CONFIG } from '@/config';
+import { SECURITY_CONFIG, QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 import { useRealtimeSecurityEvents } from '../hooks/useRealtimeSecurityEvents';
 
 interface WebhookEvent {
@@ -26,15 +26,16 @@ interface WebhookEvent {
 export function WebhookSecurityStats() {
   // Get webhook-related security events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
-    queryKey: ['webhook-security-events'],
+    queryKey: QUERY_KEYS.WEBHOOK_SECURITY_EVENTS,
     queryFn: () => fetchSecurityEvents(SECURITY_CONFIG.SECURITY_EVENTS_TIME_WINDOW_MINUTES, undefined, undefined, 'resend-webhook'),
     refetchInterval: 30000, // Refresh every 30 seconds
+    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 
   // Setup realtime subscription
   const { isConnected: isRealtimeConnected } = useRealtimeSecurityEvents({
     channelName: 'webhook-security-realtime',
-    queryKey: ['webhook-security-events'],
+    queryKey: QUERY_KEYS.WEBHOOK_SECURITY_EVENTS,
     functionNameFilter: 'resend-webhook',
     notificationType: 'webhook_security',
     showToast: true,

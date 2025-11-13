@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { logger } from '@/lib/logger';
 import { blockIP, unblockIP, sendSecurityAlert } from '@/services/securityService';
+import { QUERY_KEYS } from '@/config';
 
 export function useIPBlockManagement() {
   const queryClient = useQueryClient();
@@ -40,7 +41,7 @@ export function useIPBlockManagement() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocked-ips'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.BLOCKED_IPS });
       toast.success('IP blocked successfully');
     },
     onError: (error: any) => {
@@ -75,7 +76,7 @@ export function useIPBlockManagement() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocked-ips'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.BLOCKED_IPS });
       toast.success('IP unblocked successfully');
     },
     onError: (error: any) => {

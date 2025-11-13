@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { logger } from '@/lib/logger';
 import { fetchBlockedIPs } from '@/services/securityService';
 import { useIPBlockManagement } from '../hooks/useIPBlockManagement';
+import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 import {
   Table,
   TableBody,
@@ -40,9 +41,10 @@ export const BlockedIPsTable = () => {
   });
 
   const { data: blockedIps, isLoading } = useQuery({
-    queryKey: ['blocked-ips'],
+    queryKey: QUERY_KEYS.BLOCKED_IPS,
     queryFn: fetchBlockedIPs,
     refetchInterval: 10000,
+    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 
   const handleBlockIP = () => {
