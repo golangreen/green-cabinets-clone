@@ -1,5 +1,6 @@
 import { ResendConfiguration } from './ResendConfiguration';
 import { DomainVerificationStatus } from './DomainVerificationStatus';
+import { EmailTestPanel } from './EmailTestPanel';
 import { EmailDeliveryStats } from '@/features/admin-security/components/EmailDeliveryStats';
 import { useResendHealth } from '../hooks/useResendHealth';
 import { LoadingState } from '@/components/layout';
@@ -44,6 +45,8 @@ export const EmailSettingsDashboard = () => {
         domains={data?.domains ?? []} 
         domainsError={data?.domainsError}
       />
+
+      <EmailTestPanel />
 
       <EmailDeliveryStats />
     </div>
