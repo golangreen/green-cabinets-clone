@@ -274,6 +274,44 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
 
             <TabsContent value="filters" className="space-y-4">
               <div className="space-y-2">
+                <Label>Quick Presets</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    onClick={() => setFilters({ brightness: 110, contrast: 90, saturation: 80, grayscale: 0, sepia: 60 })}
+                    variant="outline"
+                    size="sm"
+                    disabled={processing}
+                  >
+                    Vintage
+                  </Button>
+                  <Button
+                    onClick={() => setFilters({ brightness: 105, contrast: 110, saturation: 120, grayscale: 0, sepia: 0 })}
+                    variant="outline"
+                    size="sm"
+                    disabled={processing}
+                  >
+                    Cool
+                  </Button>
+                  <Button
+                    onClick={() => setFilters({ brightness: 110, contrast: 105, saturation: 110, grayscale: 0, sepia: 20 })}
+                    variant="outline"
+                    size="sm"
+                    disabled={processing}
+                  >
+                    Warm
+                  </Button>
+                  <Button
+                    onClick={() => setFilters({ brightness: 100, contrast: 120, saturation: 0, grayscale: 100, sepia: 0 })}
+                    variant="outline"
+                    size="sm"
+                    disabled={processing}
+                  >
+                    B&W
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
                 <Label>Brightness: {filters.brightness}%</Label>
                 <Slider
                   value={[filters.brightness]}
