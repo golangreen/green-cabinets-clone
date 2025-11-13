@@ -47,7 +47,8 @@ export const useGalleryImages = (category?: GalleryCategory) => {
   return useQuery({
     queryKey: ['gallery-images', category],
     queryFn: async () => {
-      let query = supabase
+      const supabaseAny = supabase as any;
+      let query = supabaseAny
         .from('gallery_image_metadata')
         .select('*')
         .order('created_at', { ascending: false });
@@ -59,10 +60,11 @@ export const useGalleryImages = (category?: GalleryCategory) => {
       const { data, error } = await query;
 
       if (error) throw error;
+      if (!data) return [];
       
       return (data as GalleryImageRecord[]).map(mapRecordToImage);
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -70,7 +72,8 @@ export const useHeroImages = () => {
   return useQuery({
     queryKey: ['hero-images'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const supabaseAny = supabase as any;
+      const { data, error } = await supabaseAny
         .from('gallery_image_metadata')
         .select('*')
         .in('category', ['kitchens', 'vanities'])
@@ -78,10 +81,11 @@ export const useHeroImages = () => {
         .limit(20);
 
       if (error) throw error;
+      if (!data) return [];
       
       return (data as GalleryImageRecord[]).map(mapRecordToImage);
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 10,
   });
 };
 
