@@ -10,3 +10,4 @@ export { ValidationErrorDisplay, ValidationSummary, ValidationBadge } from './Va
 export { CompressionDialog } from './CompressionDialog';
 export type { OversizedFile } from './CompressionDialog';
 export { StorageAnalyzer } from './StorageAnalyzer';
+export { BulkCompressionDialog } from './BulkCompressionDialog';
