@@ -7,7 +7,7 @@ import React, { Component, ReactNode } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { errorService, ErrorType } from '../services/errorService';
+import { errorService, ErrorType } from '../services/error';
 
 interface Props {
   children: ReactNode;
