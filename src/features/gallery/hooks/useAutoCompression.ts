@@ -1,17 +1,17 @@
 /**
  * useAutoCompression Hook
- * Manages automatic compression workflow for oversized files
+ * Manages automatic compression workflow state
  */
 
 import { useState, useCallback } from 'react';
 import type { CompressionQuality } from '../types';
-import type { OversizedFile } from '../components/CompressionDialog';
 import {
   detectOversizedFiles,
   separateFilesBySize,
   analyzeOversizedFiles,
   compressFilesWithResults,
-} from '../services/compressionService';
+  type OversizedFile,
+} from '../services/compression';
 
 export function useAutoCompression() {
   const [oversizedFiles, setOversizedFiles] = useState<OversizedFile[]>([]);

@@ -3,17 +3,25 @@
  * Handles all image manipulation, analysis, and conversion operations
  */
 
+import {
+  BLUR_THRESHOLDS,
+  RESOLUTION_THRESHOLDS,
+  COMPRESSION_QUALITY_MAP,
+} from '../config/constants';
 import type {
   ImageDimensions,
   ImageQualityResult,
   ImageQualityIssue,
   CompressionQuality,
 } from '../types';
-import {
-  BLUR_THRESHOLDS,
-  RESOLUTION_THRESHOLDS,
-  COMPRESSION_QUALITY_MAP,
-} from '../config/constants';
+
+// Re-export types
+export type {
+  ImageDimensions,
+  ImageQualityResult,
+  ImageQualityIssue,
+  CompressionQuality,
+};
 
 // ============================================================================
 // Image Dimension Extraction

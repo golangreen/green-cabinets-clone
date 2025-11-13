@@ -22,10 +22,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { CompressionQuality } from '../types';
 import type { CompressionRecommendation } from '../services/storageAnalyzerService';
-import type { BulkCompressionProgress, BulkCompressionResult } from '../services/bulkCompressionService';
+import {
+  type BulkCompressionProgress,
+  type BulkCompressionResult,
+  calculateTotalSavings,
+  estimateCompressedSize,
+  formatFileSizeWithUnit,
+} from '../services/compression';
 import { formatFileSize } from '../services/storageAnalyzerService';
-import { calculateTotalSavings } from '../services/bulkCompressionService';
-import { estimateCompressedSize } from '../services/compressionService';
 
 // ============================================================================
 // Types
@@ -52,7 +56,7 @@ export function BulkCompressionDialog({
   const [isCompressing, setIsCompressing] = useState(false);
 
   const totalSavings = calculateTotalSavings(
-    recommendations.map(r => r.image),
+    recommendations.map(r => ({ ...r.image, bucket_id: r.image.bucket })),
     selectedQuality,
     estimateCompressedSize
   );

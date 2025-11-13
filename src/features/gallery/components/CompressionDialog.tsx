@@ -21,16 +21,16 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { CompressionQuality } from '../types';
 import { MAX_FILE_SIZE } from '../config/constants';
+import {
+  formatFileSize,
+  getCompressionDescription,
+  willMeetLimit,
+  type OversizedFile,
+} from '../services/compression';
 
 // ============================================================================
 // Types
 // ============================================================================
-
-export interface OversizedFile {
-  file: File;
-  currentSize: number;
-  estimatedSizes: Record<CompressionQuality, number>;
-}
 
 export interface CompressionDialogProps {
   open: boolean;
@@ -38,31 +38,6 @@ export interface CompressionDialogProps {
   oversizedFiles: OversizedFile[];
   onCompress: (quality: CompressionQuality) => Promise<void>;
   onSkip: () => void;
-}
-
-// ============================================================================
-// Helper Functions
-// ============================================================================
-
-function formatFileSize(bytes: number): string {
-  return (bytes / (1024 * 1024)).toFixed(2);
-}
-
-function getCompressionDescription(quality: CompressionQuality): string {
-  switch (quality) {
-    case 'high':
-      return 'Minimal quality loss, larger file size';
-    case 'medium':
-      return 'Balanced quality and size (Recommended)';
-    case 'low':
-      return 'Maximum compression, noticeable quality loss';
-    case 'none':
-      return 'No compression applied';
-  }
-}
-
-function willMeetLimit(estimatedSize: number): boolean {
-  return estimatedSize <= MAX_FILE_SIZE;
 }
 
 // ============================================================================

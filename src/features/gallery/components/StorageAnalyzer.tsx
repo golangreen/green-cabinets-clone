@@ -46,11 +46,10 @@ import {
 import {
   bulkCompressImages,
   calculateTotalSavings,
-  validateBulkCompression,
   type BulkCompressionProgress,
   type BulkCompressionResult,
-} from '../services/bulkCompressionService';
-import { estimateCompressedSize } from '../services/compressionService';
+  estimateCompressedSize,
+} from '../services/compression';
 import type { CompressionQuality } from '../types';
 import { BulkCompressionDialog } from './BulkCompressionDialog';
 
@@ -242,11 +241,10 @@ export function StorageAnalyzer() {
     const selectedRecs = Array.from(selectedIndices)
       .map(i => analysis.recommendations[i]);
 
-    const validation = validateBulkCompression(selectedRecs.map(r => r.image));
-    if (!validation.valid) {
+    if (selectedRecs.length === 0 || selectedRecs.length > 100) {
       toast({
-        title: "Validation Failed",
-        description: validation.errors.join(', '),
+        title: "Invalid Selection",
+        description: "Select between 1-100 images",
         variant: "destructive",
       });
       return;
@@ -256,7 +254,7 @@ export function StorageAnalyzer() {
     
     try {
       const results = await bulkCompressImages(
-        selectedRecs.map(r => r.image),
+        selectedRecs.map(r => ({ ...r.image, bucket_id: r.image.bucket })),
         quality,
         (progress) => setCompressionProgress(progress)
       );
@@ -558,7 +556,7 @@ export function StorageAnalyzer() {
                     {compressionProgress.status === 'complete' && 'Complete!'}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {compressionProgress.currentFile} ({compressionProgress.current}/{compressionProgress.total})
+                    {compressionProgress.currentFile} ({compressionProgress.currentIndex}/{compressionProgress.totalFiles})
                   </p>
                 </div>
                 <Loader2 className="h-5 w-5 animate-spin text-primary" />
