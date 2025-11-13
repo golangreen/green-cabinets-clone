@@ -1,7 +1,7 @@
 import { createServiceRoleClient } from '../_shared/supabase.ts';
 import { createLogger } from '../_shared/logger.ts';
 import { ValidationError, withErrorHandling } from '../_shared/errors.ts';
-import { Resend } from 'npm:resend@2.0.0';
+import { Resend } from 'https://esm.sh/resend@4.0.0';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
