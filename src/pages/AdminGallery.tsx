@@ -4,8 +4,10 @@
  */
 
 import { useState } from 'react';
+import { Database } from 'lucide-react';
 import { AdminRoute } from '@/components/auth';
 import { Header, Footer } from '@/components/layout';
+import { Button } from '@/components/ui/button';
 import type { CompressionQuality } from '@/hooks/useGalleryUpload';
 import type { GalleryCategory } from '@/types/gallery';
 import {
@@ -190,9 +192,19 @@ export default function AdminGallery() {
           <Header />
           
           <main className="container mx-auto px-4 py-8">
-            <div className="mb-8">
-              <h1 className="text-4xl font-bold text-foreground mb-2">Gallery Management</h1>
-              <p className="text-muted-foreground">Upload and manage gallery images with automatic metadata extraction</p>
+            <div className="mb-8 flex items-start justify-between gap-4">
+              <div>
+                <h1 className="text-4xl font-bold text-foreground mb-2">Gallery Management</h1>
+                <p className="text-muted-foreground">Upload and manage gallery images with automatic metadata extraction</p>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => window.location.href = '/admin/storage-analyzer'}
+                className="gap-2"
+              >
+                <Database className="h-4 w-4" />
+                Storage Analyzer
+              </Button>
             </div>
 
             <div className="grid gap-6">
