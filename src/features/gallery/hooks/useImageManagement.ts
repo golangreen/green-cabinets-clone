@@ -11,7 +11,7 @@ import {
 } from '../services/imageProcessingService';
 import { errorService, ErrorType, safeAsync } from '../services/errorService';
 import { validateImageFile } from '../services/validationService';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 
 export function useImageManagement() {
   const [images, setImages] = useState<ImagePreview[]>([]);
@@ -46,7 +46,11 @@ export function useImageManagement() {
       // Show validation warnings if any
       if (validationResult.warnings.length > 0) {
         validationResult.warnings.forEach(warning => {
-          toast.warning(`${file.name}: ${warning.message}`);
+          toast({
+            title: file.name,
+            description: warning.message,
+            variant: "default",
+          });
         });
       }
 
@@ -104,12 +108,16 @@ export function useImageManagement() {
 
     // Show summary if there were any issues
     if (invalidCount > 0) {
-      toast.error(
-        `${invalidCount} of ${imageFiles.length} file(s) failed validation`,
-        { description: 'Check the errors above for details' }
-      );
+      toast({
+        title: "Validation Failed",
+        description: `${invalidCount} of ${imageFiles.length} file(s) failed validation. Check the errors above for details.`,
+        variant: "destructive",
+      });
     } else if (validCount > 0) {
-      toast.success(`Successfully validated ${validCount} image(s)`);
+      toast({
+        title: "Success",
+        description: `Successfully validated ${validCount} image(s)`,
+      });
     }
   }, []);
 
