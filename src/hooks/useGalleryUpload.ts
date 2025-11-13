@@ -3,6 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import type { GalleryCategory } from '@/types/gallery';
 
+export type CompressionQuality = 'low' | 'medium' | 'high' | 'none';
+
 interface ImageMetadata {
   file: File;
   preview: string;
@@ -11,6 +13,7 @@ interface ImageMetadata {
   category: GalleryCategory;
   displayName: string;
   altText: string;
+  compressionQuality?: CompressionQuality;
 }
 
 interface UploadProgress {
@@ -43,15 +46,75 @@ export const useGalleryUpload = () => {
     });
   };
 
+  const compressImage = async (file: File, quality: CompressionQuality): Promise<File> => {
+    if (quality === 'none') return file;
+
+    const qualityMap = {
+      low: 0.6,
+      medium: 0.8,
+      high: 0.9,
+      none: 1
+    };
+
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          URL.revokeObjectURL(url);
+          reject(new Error('Failed to get canvas context'));
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const compressedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            } else {
+              reject(new Error('Failed to compress image'));
+            }
+          },
+          'image/jpeg',
+          qualityMap[quality]
+        );
+      };
+      
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Failed to load image for compression'));
+      };
+      
+      img.src = url;
+    });
+  };
+
   const uploadImage = async (metadata: ImageMetadata): Promise<boolean> => {
     const fileName = `${Date.now()}-${metadata.file.name}`;
     const storagePath = `${metadata.category}/${fileName}`;
 
     try {
+      // Compress image if quality is specified
+      const fileToUpload = metadata.compressionQuality && metadata.compressionQuality !== 'none'
+        ? await compressImage(metadata.file, metadata.compressionQuality)
+        : metadata.file;
+
       // Upload to storage
       const { error: uploadError } = await supabase.storage
         .from('gallery-images')
-        .upload(storagePath, metadata.file, {
+        .upload(storagePath, fileToUpload, {
           cacheControl: '3600',
           upsert: false
         });
@@ -138,6 +201,7 @@ export const useGalleryUpload = () => {
     uploading,
     progress,
     extractImageMetadata,
-    uploadImages
+    uploadImages,
+    compressImage
   };
 };
