@@ -9,6 +9,7 @@ import { fetchWebhookRetryData } from '@/services';
 import { logger } from '@/lib/logger';
 import { useRealtimeWebhookEvents } from '../hooks/useRealtimeWebhookEvents';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
+import { QUERY_KEYS } from '@/config';
 
 interface RetryData {
   date: string;
@@ -120,7 +121,7 @@ export function WebhookRetryChart() {
   // Setup realtime subscription
   const { isConnected: isRealtimeConnected } = useRealtimeWebhookEvents({
     channelName: 'webhook-events-changes',
-    queryKey: ['webhook-retry-chart'],
+    queryKey: QUERY_KEYS.WEBHOOK_RETRY_CHART,
     onEvent: (event) => {
       logger.info('New webhook event detected, refreshing chart', { component: 'WebhookRetryChart' });
       fetchRetryHistory();

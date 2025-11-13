@@ -12,7 +12,7 @@ import { WebhookEvent } from '@/types/security';
 
 interface UseRealtimeWebhookEventsOptions {
   channelName: string;
-  queryKey: string[];
+  queryKey: readonly string[];
   onEvent?: (event: WebhookEvent) => void;
   showToast?: boolean;
   toastCondition?: (event: WebhookEvent) => boolean;

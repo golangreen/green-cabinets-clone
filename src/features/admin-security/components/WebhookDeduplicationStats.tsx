@@ -5,7 +5,7 @@ import { Shield, CheckCircle2, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { fetchWebhookEvents } from '@/services';
-import { hoursToMs } from '@/config';
+import { hoursToMs, QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 import { useRealtimeWebhookEvents } from '../hooks/useRealtimeWebhookEvents';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 
@@ -24,7 +24,7 @@ export function WebhookDeduplicationStats() {
 
   // Get webhook events from the last 24 hours
   const { data: webhookEvents, isLoading } = useQuery({
-    queryKey: ['webhook-deduplication-stats'],
+    queryKey: QUERY_KEYS.WEBHOOK_DEDUPLICATION_STATS,
     queryFn: async () => {
       const events = await fetchWebhookEvents(100);
       // Filter to last 24 hours client-side
@@ -33,11 +33,12 @@ export function WebhookDeduplicationStats() {
       return events.filter(e => new Date(e.created_at).getTime() >= cutoffTime) as WebhookEvent[];
     },
     refetchInterval: 30000, // Refresh every 30 seconds
+    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 
   // Get duplicate detection count from security events
   const { data: duplicateEvents } = useQuery({
-    queryKey: ['webhook-duplicates'],
+    queryKey: QUERY_KEYS.WEBHOOK_DUPLICATES,
     queryFn: async () => {
       const events = await fetchWebhookEvents(100);
       // Filter to last 24 hours
@@ -46,6 +47,7 @@ export function WebhookDeduplicationStats() {
       return events.filter(e => new Date(e.created_at).getTime() >= cutoffTime).length;
     },
     refetchInterval: 30000,
+    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 
   const totalProcessed = webhookEvents?.length || 0;
@@ -56,7 +58,7 @@ export function WebhookDeduplicationStats() {
   // Setup realtime subscription
   const { isConnected: isRealtimeConnected } = useRealtimeWebhookEvents({
     channelName: 'webhook-dedup-realtime',
-    queryKey: ['webhook-deduplication-stats', 'webhook-duplicates'],
+    queryKey: [...QUERY_KEYS.WEBHOOK_DEDUPLICATION_STATS, ...QUERY_KEYS.WEBHOOK_DUPLICATES],
     showToast: true,
     toastCondition: (event) => event.retry_count > 0 && shouldShowNotification('webhook_duplicate', undefined, event.retry_count),
     toastTitle: '🔄 Webhook Retry Detected',
