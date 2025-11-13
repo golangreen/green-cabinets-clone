@@ -8,16 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ValidationSummary, ValidationBadge } from '../components/ValidationErrorDisplay';
-import { useValidation } from '../hooks/useValidation';
+import { validateImageFiles, type ValidationResult } from '../services/validationService';
 
 export function ValidationExample() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const {
-    validationResults,
-    isValidating,
-    validateFiles,
-    clearAllValidations,
-  } = useValidation();
+  const [validationResults, setValidationResults] = useState<Map<string, ValidationResult>>(new Map());
+  const [isValidating, setIsValidating] = useState(false);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -27,7 +23,13 @@ export function ValidationExample() {
     setSelectedFiles(fileArray);
 
     // Validate all files
-    await validateFiles(fileArray);
+    setIsValidating(true);
+    try {
+      const results = await validateImageFiles(fileArray);
+      setValidationResults(results);
+    } finally {
+      setIsValidating(false);
+    }
   };
 
   const handleRetryFile = (fileName: string) => {
@@ -38,7 +40,7 @@ export function ValidationExample() {
 
   const handleClear = () => {
     setSelectedFiles([]);
-    clearAllValidations();
+    setValidationResults(new Map());
   };
 
   return (
