@@ -3,22 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import bathroomMarble from "@/assets/gallery/bathroom-marble.jpg";
 import kitchenModernWhite from "@/assets/gallery/kitchen-modern-white.jpg";
 import kitchenFireplace from "@/assets/gallery/kitchen-fireplace.jpg";
 import kitchenPendantLights from "@/assets/gallery/kitchen-pendant-lights.jpg";
 import kitchenIslandView from "@/assets/gallery/kitchen-island-view.jpg";
 import kitchenTraditional from "@/assets/gallery/kitchen-traditional.jpg";
-import bedroomCloset from "@/assets/gallery/bedroom-closet.jpg";
-import blackCabinet from "@/assets/gallery/black-cabinet.jpg";
 import laundryRoom from "@/assets/gallery/laundry-room.jpg";
 import radiatorCover from "@/assets/gallery/radiator-cover.jpg";
-import grayKitchenCorner from "@/assets/gallery/gray-kitchen-corner.jpg";
 import twoToneKitchenIsland from "@/assets/gallery/two-tone-kitchen-island.jpg";
 import twoToneKitchenWide from "@/assets/gallery/two-tone-kitchen-wide.jpg";
-import classicWhiteKitchen from "@/assets/gallery/classic-white-kitchen.jpg";
 import marbleCountertopKitchen from "@/assets/gallery/marble-countertop-kitchen.jpg";
-import brightKitchenIsland from "@/assets/gallery/bright-kitchen-island.jpg";
 import openConceptMarbleKitchen from "@/assets/gallery/open-concept-marble-kitchen.jpg";
 import marbleWoodKitchenIsland from "@/assets/gallery/marble-wood-kitchen-island.jpg";
 import contemporaryWoodCabinets from "@/assets/gallery/contemporary-wood-cabinets.jpg";
@@ -31,12 +25,10 @@ import greenOpenConceptKitchen from "@/assets/gallery/green-open-concept-kitchen
 import naturalWoodKitchenMarble from "@/assets/gallery/natural-wood-kitchen-marble.jpeg";
 import modernBathroomMarbleVanity from "@/assets/gallery/modern-bathroom-marble-vanity.jpeg";
 import modernPowderRoomMarble from "@/assets/gallery/modern-powder-room-marble.jpeg";
-import modernKitchenIslandConstruction from "@/assets/gallery/modern-kitchen-island-construction.jpg";
 import whiteKitchenIslandCabinets from "@/assets/gallery/white-kitchen-island-cabinets.jpg";
 import kitchenConstructionCabinets from "@/assets/gallery/kitchen-construction-cabinets.jpeg";
 import whiteKitchenCabinetsProgress from "@/assets/gallery/white-kitchen-cabinets-progress.jpeg";
 import kitchenIslandCabinetInstall from "@/assets/gallery/kitchen-island-cabinet-install.jpeg";
-import grayKitchenIslandConstruction from "@/assets/gallery/gray-kitchen-island-construction.jpeg";
 import naturalWoodGalleyKitchen from "@/assets/gallery/natural-wood-galley-kitchen.jpeg";
 import naturalWoodOpenConceptKitchen from "@/assets/gallery/natural-wood-open-concept-kitchen.jpeg";
 import woodKitchenOutdoorAccess from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
@@ -68,12 +60,8 @@ import whiteKitchenDualIslandsPendants from "@/assets/gallery/white-kitchen-dual
 import whiteKitchenGrayIslandBarSeating from "@/assets/gallery/white-kitchen-gray-island-bar-seating.jpg";
 import whiteKitchenIslandDiningNook from "@/assets/gallery/white-kitchen-island-dining-nook.jpg";
 import whiteKitchenIslandOpenShelving from "@/assets/gallery/white-kitchen-island-open-shelving.jpg";
-import customRadiatorCoverMeshPanels from "@/assets/gallery/custom-radiator-cover-mesh-panels.jpg";
 import grayWoodBedroomCloset from "@/assets/gallery/gray-wood-bedroom-closet.jpg";
-import grayWoodWardrobeConstruction from "@/assets/gallery/gray-wood-wardrobe-construction.jpg";
-import customClosetAngledCeiling from "@/assets/gallery/custom-closet-angled-ceiling.jpg";
 import lightGrayTallStorageCabinet from "@/assets/gallery/light-gray-tall-storage-cabinet.jpg";
-import darkWoodCornerWardrobe from "@/assets/gallery/dark-wood-corner-wardrobe.jpg";
 import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
 import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
 import modernBathroomTubWoodVanity from "@/assets/gallery/modern-bathroom-tub-wood-vanity.webp";
@@ -187,7 +175,6 @@ const Gallery = () => {
       // ]
     },
     { src: kitchenPendantLights, alt: "White kitchen with glass pendant lights", category: "kitchens" },
-    { src: classicWhiteKitchen, alt: "Classic white kitchen with gray island", category: "kitchens" },
     { src: laundryRoom, alt: "White laundry room cabinetry", category: "kitchens" },
     { src: whiteKitchenGlassPendants, alt: "White traditional kitchen with glass pendant lights and open shelving", category: "kitchens" },
     { src: whiteKitchenIslandCabinets, alt: "White kitchen island with custom cabinet installation", category: "kitchens" },
@@ -219,7 +206,6 @@ const Gallery = () => {
     { src: brightWhiteKitchenIslandWindows, alt: "Bright white kitchen with island and floor-to-ceiling windows", category: "kitchens" },
 
     // === GRAY KITCHENS ===
-    { src: grayKitchenIslandConstruction, alt: "Gray kitchen island under construction", category: "kitchens" },
     { src: contemporaryWhiteGrayKitchen, alt: "Contemporary white and gray kitchen with wood island and waterfall edge", category: "kitchens" },
     { src: modernGrayWhiteLShapedKitchen, alt: "Modern gray and white L-shaped kitchen with stainless steel appliances", category: "kitchens" },
     { src: modernWhiteKitchenBlackIslandCopperPendants, alt: "Modern white kitchen with black island and copper pendant lights", category: "kitchens" },
@@ -227,7 +213,6 @@ const Gallery = () => {
     { src: openConceptLivingBlackKitchenIslandCopperPendants, alt: "Open concept living area with black kitchen island and copper pendant lights", category: "kitchens" },
 
     // === DARK WOOD & CHERRY KITCHENS ===
-    { src: blackCabinet, alt: "Modern black freestanding cabinet", category: "kitchens" },
     { src: modernKitchenDarkIsland, alt: "Modern kitchen with dark island and pendant lighting", category: "kitchens" },
 
     // === NATURAL WOOD KITCHENS ===
@@ -262,19 +247,16 @@ const Gallery = () => {
     { src: kitchenIslandView, alt: "Kitchen island with bar seating", category: "kitchens" },
     { src: kitchenTraditional, alt: "Traditional style kitchen installation", category: "kitchens" },
     { src: marbleCountertopKitchen, alt: "Kitchen with marble countertops and wood trim", category: "kitchens" },
-    { src: brightKitchenIsland, alt: "Bright open kitchen with large island", category: "kitchens" },
     { src: openConceptMarbleKitchen, alt: "Open concept kitchen with marble and wood accents", category: "kitchens" },
     { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration", category: "kitchens" },
     { src: modernKitchenIslandBarStools, alt: "Modern kitchen island with wood bar stools and marble waterfall edge", category: "kitchens" },
     { src: blumDrawerHardwareCloseup, alt: "Close-up of premium Blum drawer hardware installation", category: "kitchens" },
 
     // === KITCHEN CONSTRUCTION & INSTALLATION ===
-    { src: modernKitchenIslandConstruction, alt: "Modern kitchen island construction and installation process", category: "kitchens" },
     { src: kitchenConstructionCabinets, alt: "Kitchen construction with cabinet assembly", category: "kitchens" },
     { src: kitchenIslandCabinetInstall, alt: "Kitchen island cabinet installation process", category: "kitchens" },
 
     // ==================== VANITIES (BATHROOMS) ====================
-    { src: bathroomMarble, alt: "Elegant marble bathroom with modern fixtures", category: "vanities" },
     { src: modernBathroomMarbleVanity, alt: "Modern bathroom with floating marble vanity and walk-in shower", category: "vanities" },
     { src: modernPowderRoomMarble, alt: "Modern powder room with marble countertop and storage", category: "vanities" },
     { src: modernBathroomWoodMarble, alt: "Modern bathroom with floating wood cabinets and marble vanity", category: "vanities" },
@@ -290,18 +272,13 @@ const Gallery = () => {
     { src: contemporaryBathroomWoodVanityTubShower, alt: "Contemporary bathroom with wood floating vanity, marble tile, built-in tub, and walk-in shower", category: "vanities" },
 
     // ==================== CLOSETS & STORAGE ====================
-    { src: bedroomCloset, alt: "Custom gray bedroom built-in closet", category: "closets" },
     { src: grayWoodBedroomCloset, alt: "Gray wood bedroom closet with integrated drawer storage", category: "closets" },
-    { src: grayWoodWardrobeConstruction, alt: "Gray wood wardrobe construction with open shelving design", category: "closets" },
     { src: lightGrayTallStorageCabinet, alt: "Light gray tall storage cabinet with minimalist design", category: "closets" },
-    { src: darkWoodCornerWardrobe, alt: "Dark wood corner wardrobe with floor-to-ceiling design", category: "closets" },
-    { src: customClosetAngledCeiling, alt: "Custom closet installation with angled ceiling accommodation", category: "closets" },
     { src: contemporaryWoodCabinets, alt: "Contemporary wood cabinet installation", category: "closets" },
     { src: naturalWoodHallwayCabinets, alt: "Natural wood hallway with built-in storage cabinets and ceiling panels", category: "closets" },
     
     // === OTHER STORAGE & SPECIALTY ===
     { src: radiatorCover, alt: "Custom radiator cover with mesh panels", category: "closets" },
-    { src: customRadiatorCoverMeshPanels, alt: "Custom radiator cover with decorative mesh panels and wood finish", category: "closets" },
     { src: modernWorkspaceWoodDeskBrick, alt: "Modern workspace with natural wood desk and exposed brick wall", category: "closets" },
     { src: modernStudioWoodCabinetry, alt: "Modern studio apartment with custom wood cabinetry and dining area", category: "closets" },
 
