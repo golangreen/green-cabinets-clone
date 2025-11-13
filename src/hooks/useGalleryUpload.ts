@@ -13,6 +13,7 @@ interface ImageMetadata {
   category: GalleryCategory;
   displayName: string;
   altText: string;
+  description?: string;
   compressionQuality?: CompressionQuality;
 }
 
@@ -131,6 +132,7 @@ export const useGalleryUpload = () => {
           display_name: metadata.displayName,
           category: metadata.category,
           alt_text: metadata.altText,
+          description: metadata.description || null,
           width: metadata.width,
           height: metadata.height,
           file_size: metadata.file.size,

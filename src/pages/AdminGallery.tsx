@@ -11,6 +11,7 @@ import { Upload, X, Image as ImageIcon, CheckCircle2, AlertCircle, Loader2, Edit
 import { useGalleryUpload, type CompressionQuality } from '@/hooks/useGalleryUpload';
 import { ImageEditor } from '@/components/admin/ImageEditor';
 import { BatchImageEditor } from '@/components/admin/BatchImageEditor';
+import { BulkMetadataEditor } from '@/components/admin/BulkMetadataEditor';
 import { cn } from '@/lib/utils';
 import type { GalleryCategory } from '@/types/gallery';
 
@@ -20,6 +21,7 @@ interface ImagePreview {
   category: GalleryCategory;
   displayName: string;
   altText: string;
+  description?: string;
   width: number;
   height: number;
 }
@@ -30,6 +32,7 @@ export default function AdminGallery() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [selectedIndices, setSelectedIndices] = useState<Set<number>>(new Set());
   const [batchEditing, setBatchEditing] = useState(false);
+  const [metadataEditing, setMetadataEditing] = useState(false);
   const [compressionQuality, setCompressionQuality] = useState<CompressionQuality>('medium');
   const { uploading, progress, extractImageMetadata, uploadImages } = useGalleryUpload();
 
@@ -172,6 +175,15 @@ export default function AdminGallery() {
     setSelectedIndices(new Set());
   };
 
+  const handleMetadataSave = (metadata: Array<{ displayName: string; altText: string; description: string }>) => {
+    setImages(prev => prev.map((img, i) => ({
+      ...img,
+      displayName: metadata[i].displayName,
+      altText: metadata[i].altText,
+      description: metadata[i].description
+    })));
+  };
+
   const handleUpload = async () => {
     if (images.length === 0) return;
 
@@ -256,13 +268,33 @@ export default function AdminGallery() {
                           {selectedIndices.size === images.length ? 'Deselect All' : 'Select All'}
                         </Button>
                         {selectedIndices.size > 1 && (
+                          <>
+                            <Button
+                              variant="default"
+                              size="sm"
+                              onClick={() => setBatchEditing(true)}
+                            >
+                              <Images className="w-4 h-4 mr-2" />
+                              Batch Edit ({selectedIndices.size})
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => setMetadataEditing(true)}
+                            >
+                              <Edit className="w-4 h-4 mr-2" />
+                              Edit Metadata ({selectedIndices.size})
+                            </Button>
+                          </>
+                        )}
+                        {images.length > 0 && selectedIndices.size === 0 && (
                           <Button
-                            variant="default"
+                            variant="secondary"
                             size="sm"
-                            onClick={() => setBatchEditing(true)}
+                            onClick={() => setMetadataEditing(true)}
                           >
-                            <Images className="w-4 h-4 mr-2" />
-                            Batch Edit ({selectedIndices.size})
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit All Metadata
                           </Button>
                         )}
                       </div>
@@ -457,6 +489,18 @@ export default function AdminGallery() {
             onOpenChange={setBatchEditing}
             images={Array.from(selectedIndices).map(i => images[i])}
             onSave={handleBatchEditSave}
+          />
+        )}
+
+        {metadataEditing && (
+          <BulkMetadataEditor
+            open={metadataEditing}
+            onOpenChange={setMetadataEditing}
+            images={selectedIndices.size > 0 
+              ? Array.from(selectedIndices).map(i => images[i])
+              : images
+            }
+            onSave={handleMetadataSave}
           />
         )}
       </div>
