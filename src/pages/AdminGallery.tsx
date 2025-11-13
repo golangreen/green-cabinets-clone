@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Upload, X, Image as ImageIcon, CheckCircle2, AlertCircle, Loader2, Edit, Images } from 'lucide-react';
-import { useGalleryUpload } from '@/hooks/useGalleryUpload';
+import { useGalleryUpload, type CompressionQuality } from '@/hooks/useGalleryUpload';
 import { ImageEditor } from '@/components/admin/ImageEditor';
 import { BatchImageEditor } from '@/components/admin/BatchImageEditor';
 import { cn } from '@/lib/utils';
@@ -30,6 +30,7 @@ export default function AdminGallery() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [selectedIndices, setSelectedIndices] = useState<Set<number>>(new Set());
   const [batchEditing, setBatchEditing] = useState(false);
+  const [compressionQuality, setCompressionQuality] = useState<CompressionQuality>('medium');
   const { uploading, progress, extractImageMetadata, uploadImages } = useGalleryUpload();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -174,7 +175,12 @@ export default function AdminGallery() {
   const handleUpload = async () => {
     if (images.length === 0) return;
 
-    await uploadImages(images);
+    const imagesWithCompression = images.map(img => ({
+      ...img,
+      compressionQuality
+    }));
+
+    await uploadImages(imagesWithCompression);
     
     // Clear successfully uploaded images
     setImages(prev => {
@@ -370,18 +376,46 @@ export default function AdminGallery() {
                     </div>
                   ))}
 
-                  <div className="flex justify-end gap-2 pt-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        images.forEach(img => URL.revokeObjectURL(img.preview));
-                        setImages([]);
-                      }}
-                      disabled={uploading}
-                    >
-                      Clear All
-                    </Button>
-                    <Button
+                  <div className="border-t pt-4 space-y-4">
+                    <div className="flex items-center gap-4">
+                      <Label htmlFor="compression-quality" className="text-sm font-medium">
+                        Compression Quality:
+                      </Label>
+                      <Select
+                        value={compressionQuality}
+                        onValueChange={(value) => setCompressionQuality(value as CompressionQuality)}
+                        disabled={uploading}
+                      >
+                        <SelectTrigger id="compression-quality" className="w-48">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None (Original)</SelectItem>
+                          <SelectItem value="high">High Quality (90%)</SelectItem>
+                          <SelectItem value="medium">Medium Quality (80%)</SelectItem>
+                          <SelectItem value="low">Low Quality (60%)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <span className="text-sm text-muted-foreground">
+                        {compressionQuality === 'none' && 'No compression applied'}
+                        {compressionQuality === 'high' && 'Minimal compression, best quality'}
+                        {compressionQuality === 'medium' && 'Balanced quality and file size'}
+                        {compressionQuality === 'low' && 'Maximum compression, smaller files'}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          images.forEach(img => URL.revokeObjectURL(img.preview));
+                          setImages([]);
+                        }}
+                        disabled={uploading}
+                      >
+                        Clear All
+                      </Button>
+                      <Button
                       onClick={handleUpload}
                       disabled={uploading || images.length === 0}
                     >
@@ -397,6 +431,7 @@ export default function AdminGallery() {
                         </>
                       )}
                     </Button>
+                  </div>
                   </div>
                 </CardContent>
               </Card>
