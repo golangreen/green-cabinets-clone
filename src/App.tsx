@@ -28,6 +28,7 @@ const AdminCache = lazy(() => import("./pages/AdminCache"));
 const AdminConfig = lazy(() => import("./pages/AdminConfig"));
 const AdminPerformance = lazy(() => import("./pages/AdminPerformance"));
 const AdminEmailSettings = lazy(() => import("./pages/AdminEmailSettings"));
+const AdminGallery = lazy(() => import("./pages/AdminGallery"));
 const TempGalleryTest = lazy(() => import("./pages/TempGalleryTest"));
 const RoomScan = lazy(() => import("./pages/RoomScan"));
 const DocsAuth = lazy(() => import("./pages/DocsAuth"));
@@ -160,6 +161,14 @@ const App = () => {
                     element={
                       <AdminRoute>
                         <AdminEmailSettings />
+                      </AdminRoute>
+                    } 
+                  />
+                  <Route 
+                    path={ROUTES.ADMIN_GALLERY}
+                    element={
+                      <AdminRoute>
+                        <AdminGallery />
                       </AdminRoute>
                     } 
                   />
