@@ -6,3 +6,4 @@
 export * from './imageProcessingService';
 export * from './imageService';
 export * from './errorService';
+export * from './validationService';
