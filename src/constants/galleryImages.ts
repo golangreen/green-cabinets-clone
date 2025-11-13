@@ -1,54 +1,81 @@
 import type { GalleryImage, HeroImage } from '@/types/gallery';
 
-/**
- * Centralized gallery image registry using Vite's import.meta.glob
- * Images are dynamically imported to reduce main bundle size while ensuring they're included in the build
- */
+// Static imports for hero carousel images
+import modernKitchenIslandBarStools from '@/assets/gallery/modern-kitchen-island-bar-stools.jpeg';
+import luxuryKitchenMarbleDining from '@/assets/gallery/luxury-kitchen-marble-dining.jpeg';
+import modernBathroomWoodMarble from '@/assets/gallery/modern-bathroom-wood-marble.jpeg';
+import luxuryMarbleBathroomShower from '@/assets/gallery/luxury-marble-bathroom-shower.jpeg';
+import modernBathroomFloatingWoodVanity from '@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg';
+import naturalWoodOpenConceptKitchen from '@/assets/gallery/natural-wood-open-concept-kitchen.jpeg';
+import woodKitchenOutdoorAccess from '@/assets/gallery/wood-kitchen-outdoor-access.jpeg';
 
-// Dynamically import all gallery images
-const galleryModules = import.meta.glob<{ default: string }>('/src/assets/gallery/*.*', { eager: true });
-
-// Helper to get image URL from path
-const getImageUrl = (filename: string): string => {
-  const path = `/src/assets/gallery/${filename}`;
-  return galleryModules[path]?.default || path;
-};
+// Static imports for gallery images
+import kitchenModernWhite from '@/assets/gallery/kitchen-modern-white.jpg';
+import kitchenFireplace from '@/assets/gallery/kitchen-fireplace.jpg';
+import kitchenPendantLights from '@/assets/gallery/kitchen-pendant-lights.jpg';
+import kitchenIslandView from '@/assets/gallery/kitchen-island-view.jpg';
+import kitchenTraditional from '@/assets/gallery/kitchen-traditional.jpg';
+import laundryRoom from '@/assets/gallery/laundry-room.jpg';
+import brightModernWhiteKitchenOpen from '@/assets/gallery/bright-modern-white-kitchen-open.jpeg';
+import modernWhiteKitchenPendants from '@/assets/gallery/modern-white-kitchen-pendants.jpeg';
+import traditionalWhiteKitchenGrayIsland from '@/assets/gallery/traditional-white-kitchen-gray-island.jpg';
+import minimalistWhiteKitchenIsland from '@/assets/gallery/minimalist-white-kitchen-island.jpg';
+import modernWhiteKitchenOpenLiving from '@/assets/gallery/modern-white-kitchen-open-living.webp';
+import contemporaryWhiteKitchenBlueWall from '@/assets/gallery/contemporary-white-kitchen-blue-wall.jpg';
+import modernBathroomMarbleVanity from '@/assets/gallery/modern-bathroom-marble-vanity.jpeg';
+import marbleBathroomOutdoorAccess from '@/assets/gallery/marble-bathroom-outdoor-access.jpeg';
+import modernPowderRoomMarble from '@/assets/gallery/modern-powder-room-marble.jpeg';
+import whiteBathroomStorageDrawers from '@/assets/gallery/white-bathroom-storage-drawers.jpg';
+import modernBathroomTubWoodVanity from '@/assets/gallery/modern-bathroom-tub-wood-vanity.webp';
+import contemporaryBathroomWoodVanityDoubleSink from '@/assets/gallery/contemporary-bathroom-wood-vanity-double-sink.webp';
+import grayWoodBedroomCloset from '@/assets/gallery/gray-wood-bedroom-closet.jpg';
+import lightGrayTallStorageCabinet from '@/assets/gallery/light-gray-tall-storage-cabinet.jpg';
+import designRenderKitchen1View1 from '@/assets/gallery/design-render-kitchen-1-view1.jpeg';
+import designRenderKitchen1View2 from '@/assets/gallery/design-render-kitchen-1-view2.jpeg';
+import designRenderKitchen1View3 from '@/assets/gallery/design-render-kitchen-1-view3.jpeg';
+import designRenderKitchen2View1 from '@/assets/gallery/design-render-kitchen-2-view1.jpg';
+import designRenderKitchen2View2 from '@/assets/gallery/design-render-kitchen-2-view2.jpg';
+import designRealityKitchen1CompletedView1 from '@/assets/gallery/design-reality-kitchen-1-completed-view1.webp';
+import designRealityKitchen1CompletedView2 from '@/assets/gallery/design-reality-kitchen-1-completed-view2.webp';
+import designRealityKitchen2CompletedView1 from '@/assets/gallery/design-reality-kitchen-2-completed-view1.webp';
+import designRealityKitchen2CompletedView2 from '@/assets/gallery/design-reality-kitchen-2-completed-view2.webp';
+import designRealityKitchen2CompletedView3 from '@/assets/gallery/design-reality-kitchen-2-completed-view3.webp';
 
 // ==================== HERO CAROUSEL IMAGES ====================
 export const HERO_IMAGES: HeroImage[] = [
   {
     id: 'modern-kitchen-island-bar-stools',
-    path: getImageUrl('modern-kitchen-island-bar-stools.jpeg'),
+    path: modernKitchenIslandBarStools,
     alt: 'Modern kitchen island with wood bar stools and marble waterfall edge'
   },
   {
     id: 'luxury-kitchen-marble-dining',
-    path: getImageUrl('luxury-kitchen-marble-dining.jpeg'),
+    path: luxuryKitchenMarbleDining,
     alt: 'Luxury kitchen with marble island and wood dining table integration'
   },
   {
     id: 'modern-bathroom-wood-marble',
-    path: getImageUrl('modern-bathroom-wood-marble.jpeg'),
+    path: modernBathroomWoodMarble,
     alt: 'Modern bathroom with floating wood cabinets and marble vanity'
   },
   {
     id: 'luxury-marble-bathroom-shower',
-    path: getImageUrl('luxury-marble-bathroom-shower.jpeg'),
+    path: luxuryMarbleBathroomShower,
     alt: 'Luxury marble bathroom with wood vanity and walk-in glass shower'
   },
   {
     id: 'modern-bathroom-floating-wood-vanity',
-    path: getImageUrl('modern-bathroom-floating-wood-vanity.jpeg'),
+    path: modernBathroomFloatingWoodVanity,
     alt: 'Modern bathroom with floating wood vanity and marble walk-in shower'
   },
   {
     id: 'natural-wood-open-concept-kitchen',
-    path: getImageUrl('natural-wood-open-concept-kitchen.jpeg'),
+    path: naturalWoodOpenConceptKitchen,
     alt: 'Natural wood open concept kitchen with dining area'
   },
   {
     id: 'wood-kitchen-outdoor-access',
-    path: getImageUrl('wood-kitchen-outdoor-access.jpeg'),
+    path: woodKitchenOutdoorAccess,
     alt: 'Wood kitchen with marble countertops and outdoor patio access'
   }
 ];
