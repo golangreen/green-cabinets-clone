@@ -10,6 +10,8 @@ import {
   analyzeImageQuality,
 } from '../services/imageProcessingService';
 import { errorService, ErrorType, safeAsync } from '../services/errorService';
+import { validateImageFile } from '../services/validationService';
+import { toast } from 'sonner';
 
 export function useImageManagement() {
   const [images, setImages] = useState<ImagePreview[]>([]);
@@ -19,8 +21,36 @@ export function useImageManagement() {
       file.type.startsWith('image/')
     );
 
+    let validCount = 0;
+    let invalidCount = 0;
+
     for (const file of imageFiles) {
-      // Extract dimensions with error handling
+      // Step 1: Validate file before processing
+      const validationResult = await validateImageFile(file);
+
+      if (!validationResult.isValid) {
+        invalidCount++;
+        
+        // Show all validation errors
+        validationResult.errors.forEach(error => {
+          errorService.handleError(
+            ErrorType.VALIDATION_ERROR,
+            error,
+            file.name
+          );
+        });
+        
+        continue; // Skip invalid file
+      }
+
+      // Show validation warnings if any
+      if (validationResult.warnings.length > 0) {
+        validationResult.warnings.forEach(warning => {
+          toast.warning(`${file.name}: ${warning.message}`);
+        });
+      }
+
+      // Step 2: Extract dimensions with error handling
       const dimensionsResult = await safeAsync(
         () => extractImageDimensions(file),
         ErrorType.PROCESSING_FAILED,
@@ -28,13 +58,14 @@ export function useImageManagement() {
       );
 
       if (!dimensionsResult.success) {
+        invalidCount++;
         continue; // Skip this file
       }
 
       const { width, height } = dimensionsResult.data;
       const preview = URL.createObjectURL(file);
 
-      // Analyze quality with graceful degradation
+      // Step 3: Analyze quality with graceful degradation
       const qualityResult = await safeAsync(
         () => analyzeImageQuality(file),
         ErrorType.QUALITY_CHECK_FAILED,
@@ -53,6 +84,7 @@ export function useImageManagement() {
         );
       }
 
+      validCount++;
       setImages(prev => [
         ...prev,
         {
@@ -68,6 +100,16 @@ export function useImageManagement() {
           quality,
         },
       ]);
+    }
+
+    // Show summary if there were any issues
+    if (invalidCount > 0) {
+      toast.error(
+        `${invalidCount} of ${imageFiles.length} file(s) failed validation`,
+        { description: 'Check the errors above for details' }
+      );
+    } else if (validCount > 0) {
+      toast.success(`Successfully validated ${validCount} image(s)`);
     }
   }, []);
 

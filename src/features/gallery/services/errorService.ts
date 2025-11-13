@@ -21,6 +21,7 @@ export enum ErrorType {
   FILE_TOO_LARGE = 'FILE_TOO_LARGE',
   INVALID_FILE_TYPE = 'INVALID_FILE_TYPE',
   COMPRESSION_FAILED = 'COMPRESSION_FAILED',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export interface GalleryError {
@@ -47,6 +48,7 @@ const ERROR_MESSAGES: Record<ErrorType, string> = {
   [ErrorType.FILE_TOO_LARGE]: 'File size exceeds maximum allowed size',
   [ErrorType.INVALID_FILE_TYPE]: 'Invalid file type. Please upload an image file',
   [ErrorType.COMPRESSION_FAILED]: 'Failed to compress image',
+  [ErrorType.UNKNOWN]: 'An unexpected error occurred',
 };
 
 const ERROR_RECOVERY_HINTS: Record<ErrorType, string> = {
@@ -61,6 +63,7 @@ const ERROR_RECOVERY_HINTS: Record<ErrorType, string> = {
   [ErrorType.FILE_TOO_LARGE]: 'Consider compressing the image before uploading',
   [ErrorType.INVALID_FILE_TYPE]: 'Supported formats: JPEG, PNG, WebP, GIF',
   [ErrorType.COMPRESSION_FAILED]: 'Try a different compression level',
+  [ErrorType.UNKNOWN]: 'Please try again or contact support',
 };
 
 // ============================================================================
