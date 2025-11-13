@@ -52,6 +52,8 @@ export default defineConfig(({ mode }) => ({
       },
       includeAssets: ['logo.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
       workbox: {
+        // Increase max file size for large app bundle (3.85MB+)
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.myshopify\.com\/api\/.*/i,
