@@ -3,6 +3,7 @@ import { Hero, Services, Features, About, Gallery, Suppliers, CTA } from "@/comp
 import { ShopProducts } from "@/features/product-catalog";
 import { Contact } from "@/features/quote-request";
 import { Chatbot } from "@/features/chatbot";
+import { TypesStatusChecker } from "@/components/TypesStatusChecker";
 
 const Index = () => {
   return (
@@ -11,6 +12,7 @@ const Index = () => {
       <SyncStatusIndicator />
       <Header />
       <Hero />
+      <TypesStatusChecker />
       <div className="bg-brand-gray">
         <Services />
         <Features />
