@@ -32,8 +32,31 @@ serve(async (req) => {
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
 
     if (!resendApiKey) {
-      throw new Error('RESEND_API_KEY not configured');
+      console.error('RESEND_API_KEY environment variable not set');
+      return new Response(
+        JSON.stringify({ 
+          success: true,
+          domains: [],
+          domainsError: 'RESEND_API_KEY not configured. Please add your Resend API key in project secrets.',
+          stats: {
+            total_sent: 0,
+            total_delivered: 0,
+            total_bounced: 0,
+            total_failed: 0,
+            total_complained: 0,
+            delivery_rate: 0
+          },
+          api_key_configured: false,
+          webhook_configured: !!Deno.env.get('RESEND_WEBHOOK_SECRET')
+        }),
+        { 
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
     }
+
+    console.log('Resend API key configured, length:', resendApiKey.length);
 
     // Verify admin authentication
     const authHeader = req.headers.get('Authorization');
@@ -94,8 +117,14 @@ serve(async (req) => {
       domainsError = error.message;
     }
 
-    // Get email delivery stats from last 7 days
-    const { data: stats } = await supabase.rpc('get_email_delivery_stats', { days_back: 7 });
+    // Get email delivery stats from last 7 days (if available)
+    let stats = null;
+    try {
+      const { data } = await supabase.rpc('get_email_delivery_stats', { days_back: 7 });
+      stats = data;
+    } catch (error) {
+      console.log('Email delivery stats not available:', error);
+    }
 
     return new Response(
       JSON.stringify({
