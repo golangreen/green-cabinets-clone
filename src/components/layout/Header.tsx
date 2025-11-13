@@ -12,7 +12,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings, Activity, Mail, Image } from "lucide-react";
 import logoTeal from "@/assets/logo-teal.svg";
 import logoBlack from "@/assets/logo-black.svg";
-import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/features/shopping-cart";
 import { ThemeToggle } from "@/features/theme";
 import { useAuth } from "@/contexts/AuthContext";
