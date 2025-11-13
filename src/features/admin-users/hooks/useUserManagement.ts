@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { fetchUsersWithRoles } from '@/services/roleService';
 import { useUserSelection } from './useUserSelection';
 import { useRoleOperations } from './useRoleOperations';
+import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 
 interface RoleDetail {
   role: 'admin' | 'moderator' | 'user';
@@ -27,8 +28,9 @@ export const useUserManagement = () => {
 
   // Fetch all users with roles
   const { data: users, isLoading, refetch } = useQuery({
-    queryKey: ['admin-users'],
+    queryKey: QUERY_KEYS.ADMIN_USERS,
     queryFn: fetchUsersWithRoles,
+    staleTime: FEATURE_STALE_TIMES.ADMIN,
   });
 
   // User selection state

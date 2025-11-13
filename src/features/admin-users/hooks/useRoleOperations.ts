@@ -18,6 +18,7 @@ import {
   sendRoleNotification,
   type AppRole,
 } from '@/services/roleService';
+import { QUERY_KEYS } from '@/config';
 
 export function useRoleOperations(users?: UserWithRoles[]) {
   const queryClient = useQueryClient();
@@ -50,7 +51,7 @@ export function useRoleOperations(users?: UserWithRoles[]) {
     },
     onSuccess: (_, variables) => {
       toast.success(`${variables.role} role assigned successfully`);
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_USERS });
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to assign role');
@@ -85,7 +86,7 @@ export function useRoleOperations(users?: UserWithRoles[]) {
     },
     onSuccess: (_, variables) => {
       toast.success(`${variables.role} role removed successfully`);
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_USERS });
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to remove role');
@@ -124,7 +125,7 @@ export function useRoleOperations(users?: UserWithRoles[]) {
     onSuccess: (data) => {
       const message = (data as any)?.message || 'Roles assigned successfully';
       toast.success(message);
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_USERS });
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to assign roles');
@@ -163,7 +164,7 @@ export function useRoleOperations(users?: UserWithRoles[]) {
     onSuccess: (data) => {
       const message = (data as any)?.message || 'Roles removed successfully';
       toast.success(message);
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_USERS });
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to remove roles');
@@ -181,7 +182,7 @@ export function useRoleOperations(users?: UserWithRoles[]) {
     },
     onSuccess: (_, variables) => {
       toast.success(`${variables.role} role expiration extended successfully`);
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_USERS });
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to extend role');

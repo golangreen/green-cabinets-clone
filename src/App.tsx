@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, ThemeProvider } from "@/contexts";
 import { ProtectedRoute } from "@/components/auth";
@@ -11,6 +11,7 @@ import { ROUTES } from "@/constants/routes";
 import { FeatureErrorBoundary, ConfigValidationAlert, SplashScreen } from "@/components/layout";
 import { PreloadManager } from "@/features/product-catalog";
 import { CACHE_CONFIG } from "@/config";
+import { createQueryClient } from "@/config/reactQuery";
 
 // Lazy load all pages for code-splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -37,7 +38,7 @@ const DocsTroubleshooting = lazy(() => import("./pages/DocsTroubleshooting"));
 const DocsSecurity = lazy(() => import("./pages/DocsSecurity"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-const queryClient = new QueryClient();
+const queryClient = createQueryClient();
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 
 export interface ResendDomainRecord {
   record: string;
@@ -36,7 +37,7 @@ export interface ResendHealthData {
 
 export const useResendHealth = () => {
   return useQuery({
-    queryKey: ['resend-health'],
+    queryKey: QUERY_KEYS.RESEND_HEALTH,
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke('check-resend-health');
       
@@ -45,5 +46,6 @@ export const useResendHealth = () => {
       
       return data as ResendHealthData;
     },
+    staleTime: FEATURE_STALE_TIMES.EMAIL_SETTINGS,
   });
 };
