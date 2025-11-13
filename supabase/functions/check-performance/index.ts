@@ -1,8 +1,6 @@
 import { createServiceRoleClient } from '../_shared/supabase.ts';
-import { createLogger } from '../_shared/logger.ts';
+import { createLogger, generateRequestId } from '../_shared/logger.ts';
 import { withErrorHandling } from '../_shared/errors.ts';
-
-const logger = createLogger('check-performance');
 
 // Performance budgets (in milliseconds for timing metrics)
 const PERFORMANCE_BUDGETS = {
@@ -33,8 +31,9 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const requestId = logger.generateRequestId();
-  logger.info('Starting performance check', { requestId });
+  const requestId = generateRequestId();
+  const logger = createLogger({ functionName: 'check-performance', requestId });
+  logger.info('Starting performance check');
 
   try {
     const supabase = createServiceRoleClient();
@@ -48,12 +47,12 @@ const handler = async (req: Request): Promise<Response> => {
       .gte('timestamp', oneHourAgo);
 
     if (error) {
-      logger.error('Failed to fetch performance metrics', { error, requestId });
+      logger.error('Failed to fetch performance metrics', error);
       throw error;
     }
 
     if (!metrics || metrics.length === 0) {
-      logger.info('No performance metrics found in the last hour', { requestId });
+      logger.info('No performance metrics found in the last hour');
       return new Response(
         JSON.stringify({ 
           message: 'No metrics to check',
@@ -97,7 +96,6 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     logger.info('Performance check completed', { 
-      requestId, 
       totalMetrics: metrics.length,
       violations: violations.length 
     });
@@ -105,7 +103,6 @@ const handler = async (req: Request): Promise<Response> => {
     // Send alerts if violations found
     if (violations.length > 0) {
       logger.warn('Performance budget violations detected', { 
-        requestId, 
         violations 
       });
 
@@ -123,12 +120,9 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
       if (alertResponse.error) {
-        logger.error('Failed to send performance alert', { 
-          error: alertResponse.error, 
-          requestId 
-        });
+        logger.error('Failed to send performance alert', alertResponse.error);
       } else {
-        logger.info('Performance alert sent successfully', { requestId });
+        logger.info('Performance alert sent successfully');
       }
     }
 
@@ -146,7 +140,8 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
   } catch (error) {
-    logger.error('Performance check failed', { error, requestId });
+    const logger = createLogger({ functionName: 'check-performance' });
+    logger.error('Performance check failed', error);
     throw error;
   }
 };

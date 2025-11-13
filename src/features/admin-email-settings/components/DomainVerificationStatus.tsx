@@ -5,6 +5,7 @@ import type { ResendDomain } from '../hooks/useResendHealth';
 
 interface DomainVerificationStatusProps {
   domains: ResendDomain[];
+  domainsError?: string | null;
 }
 
 const getStatusColor = (status: string) => {
@@ -37,7 +38,7 @@ const getStatusIcon = (status: string) => {
   }
 };
 
-export const DomainVerificationStatus = ({ domains }: DomainVerificationStatusProps) => {
+export const DomainVerificationStatus = ({ domains, domainsError }: DomainVerificationStatusProps) => {
   return (
     <Card>
       <CardHeader>
@@ -50,7 +51,20 @@ export const DomainVerificationStatus = ({ domains }: DomainVerificationStatusPr
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {domains.length === 0 ? (
+        {domainsError ? (
+          <div className="rounded-md bg-destructive/10 border border-destructive/20 p-4">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-destructive mb-1">Unable to fetch domains from Resend</p>
+                <p className="text-sm text-muted-foreground">{domainsError}</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Please verify your RESEND_API_KEY secret is configured correctly.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : domains.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
             <p>No domains configured. Add a domain in Resend to start sending emails.</p>
           </div>

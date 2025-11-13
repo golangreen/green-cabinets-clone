@@ -21,6 +21,7 @@ export interface ResendDomain {
 export interface ResendHealthData {
   success: boolean;
   domains: ResendDomain[];
+  domainsError?: string | null;
   stats: {
     total_sent: number;
     total_delivered: number;

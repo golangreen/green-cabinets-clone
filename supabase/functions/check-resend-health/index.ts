@@ -70,20 +70,29 @@ serve(async (req) => {
     }
 
     // Fetch domains from Resend API
-    const domainsResponse = await fetch('https://api.resend.com/domains', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    let domains: ResendDomain[] = [];
+    let domainsError: string | null = null;
 
-    if (!domainsResponse.ok) {
-      throw new Error(`Resend API error: ${domainsResponse.statusText}`);
+    try {
+      const domainsResponse = await fetch('https://api.resend.com/domains', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+        },
+      });
+
+      if (!domainsResponse.ok) {
+        const errorText = await domainsResponse.text();
+        console.error('Resend API error response:', errorText);
+        domainsError = `Resend API returned ${domainsResponse.status}: ${errorText || domainsResponse.statusText}`;
+      } else {
+        const domainsData = await domainsResponse.json();
+        domains = domainsData.data || [];
+      }
+    } catch (error: any) {
+      console.error('Error fetching domains from Resend:', error);
+      domainsError = error.message;
     }
-
-    const domainsData = await domainsResponse.json();
-    const domains: ResendDomain[] = domainsData.data || [];
 
     // Get email delivery stats from last 7 days
     const { data: stats } = await supabase.rpc('get_email_delivery_stats', { days_back: 7 });
@@ -92,6 +101,7 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         domains,
+        domainsError,
         stats: stats?.[0] || {
           total_sent: 0,
           total_delivered: 0,

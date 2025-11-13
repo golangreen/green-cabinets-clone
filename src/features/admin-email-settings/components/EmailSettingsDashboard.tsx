@@ -40,7 +40,10 @@ export const EmailSettingsDashboard = () => {
         webhookConfigured={data?.webhook_configured ?? false}
       />
 
-      <DomainVerificationStatus domains={data?.domains ?? []} />
+      <DomainVerificationStatus 
+        domains={data?.domains ?? []} 
+        domainsError={data?.domainsError}
+      />
 
       <EmailDeliveryStats />
     </div>
