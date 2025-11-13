@@ -58,10 +58,24 @@ const handler = async (req: Request): Promise<Response> => {
 
     logger.info('Sending test email', { to_email });
 
+    // Fetch sender email configuration
+    const { data: emailSettings } = await supabase
+      .from('email_settings')
+      .select('sender_email, sender_name')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    const senderName = emailSettings?.sender_name || 'Green Cabinets';
+    const senderEmail = emailSettings?.sender_email || 'onboarding@resend.dev';
+    const fromAddress = `${senderName} <${senderEmail}>`;
+
+    logger.info('Using sender configuration', { fromAddress });
+
     const resend = new Resend(resendApiKey);
     
     const { data, error } = await resend.emails.send({
-      from: 'Green Cabinets <onboarding@resend.dev>',
+      from: fromAddress,
       to: [to_email],
       subject: 'Test Email - Resend Configuration',
       html: `

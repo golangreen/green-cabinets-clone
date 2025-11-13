@@ -1,5 +1,6 @@
 import { ResendConfiguration } from './ResendConfiguration';
 import { DomainVerificationStatus } from './DomainVerificationStatus';
+import { SenderEmailConfig } from './SenderEmailConfig';
 import { EmailTestPanel } from './EmailTestPanel';
 import { EmailDeliveryStats } from '@/features/admin-security/components/EmailDeliveryStats';
 import { useResendHealth } from '../hooks/useResendHealth';
@@ -44,6 +45,10 @@ export const EmailSettingsDashboard = () => {
       <DomainVerificationStatus 
         domains={data?.domains ?? []} 
         domainsError={data?.domainsError}
+      />
+
+      <SenderEmailConfig 
+        hasVerifiedDomain={data?.domains?.some(d => d.status === 'verified') ?? false}
       />
 
       <EmailTestPanel 
