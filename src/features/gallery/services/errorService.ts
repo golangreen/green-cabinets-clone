@@ -18,6 +18,9 @@ export enum ErrorType {
   STORAGE_ERROR = 'STORAGE_ERROR',
   VALIDATION_ERROR = 'VALIDATION_ERROR',
   UNKNOWN_ERROR = 'UNKNOWN_ERROR',
+  FILE_TOO_LARGE = 'FILE_TOO_LARGE',
+  INVALID_FILE_TYPE = 'INVALID_FILE_TYPE',
+  COMPRESSION_FAILED = 'COMPRESSION_FAILED',
 }
 
 export interface GalleryError {
@@ -41,6 +44,9 @@ const ERROR_MESSAGES: Record<ErrorType, string> = {
   [ErrorType.STORAGE_ERROR]: 'Storage operation failed',
   [ErrorType.VALIDATION_ERROR]: 'Invalid image data',
   [ErrorType.UNKNOWN_ERROR]: 'An unexpected error occurred',
+  [ErrorType.FILE_TOO_LARGE]: 'File size exceeds maximum allowed size',
+  [ErrorType.INVALID_FILE_TYPE]: 'Invalid file type. Please upload an image file',
+  [ErrorType.COMPRESSION_FAILED]: 'Failed to compress image',
 };
 
 const ERROR_RECOVERY_HINTS: Record<ErrorType, string> = {
@@ -52,6 +58,9 @@ const ERROR_RECOVERY_HINTS: Record<ErrorType, string> = {
   [ErrorType.STORAGE_ERROR]: 'Please try again or contact support',
   [ErrorType.VALIDATION_ERROR]: 'Please check the image format',
   [ErrorType.UNKNOWN_ERROR]: 'Please try again or contact support',
+  [ErrorType.FILE_TOO_LARGE]: 'Consider compressing the image before uploading',
+  [ErrorType.INVALID_FILE_TYPE]: 'Supported formats: JPEG, PNG, WebP, GIF',
+  [ErrorType.COMPRESSION_FAILED]: 'Try a different compression level',
 };
 
 // ============================================================================
