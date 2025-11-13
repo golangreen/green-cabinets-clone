@@ -62,7 +62,10 @@ export {
   validateQuantity,
   isCartEmpty,
   findCartItem,
-  mergeCartItems
+  mergeCartItems,
+  addOrUpdateCartItem,
+  updateCartItemQuantity,
+  removeCartItem,
 } from './cartService';
 
 // Security service exports
