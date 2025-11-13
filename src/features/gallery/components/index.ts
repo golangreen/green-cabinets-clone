@@ -9,3 +9,4 @@ export { ErrorFallback } from './ErrorFallback';
 export { ValidationErrorDisplay, ValidationSummary, ValidationBadge } from './ValidationErrorDisplay';
 export { CompressionDialog } from './CompressionDialog';
 export type { OversizedFile } from './CompressionDialog';
+export { StorageAnalyzer } from './StorageAnalyzer';

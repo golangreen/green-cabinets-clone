@@ -7,3 +7,4 @@ export * from './imageProcessingService';
 export * from './errorService';
 export * from './validationService';
 export * from './compressionService';
+export * from './storageAnalyzerService';
