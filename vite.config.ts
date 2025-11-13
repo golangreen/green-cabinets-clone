@@ -19,6 +19,17 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  build: {
+    // Reduce build output verbosity to prevent truncation in Lovable
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 2000,
+    rollupOptions: {
+      output: {
+        // Suppress asset size warnings
+        manualChunks: undefined,
+      }
+    }
+  },
   plugins: [
     react(), 
     mode === "development" && componentTagger(),
