@@ -9,7 +9,7 @@ import {
   extractImageDimensions,
   analyzeImageQuality,
 } from '../services/imageProcessingService';
-import { errorService, ErrorType, safeAsync } from '../services/errorService';
+import { errorService, ErrorType, safeAsync } from '../services/error';
 import { validateImageFile } from '../services/validationService';
 import { toast } from '@/hooks/use-toast';
 

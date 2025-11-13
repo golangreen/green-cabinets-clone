@@ -4,7 +4,7 @@
  */
 
 export * from './imageProcessingService';
-export * from './errorService';
+export * from './error';
 export * from './validationService';
 export * from './compressionService';
 export * from './storageAnalyzerService';
