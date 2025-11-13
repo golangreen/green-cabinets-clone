@@ -13,6 +13,9 @@ import {
   RefreshCw,
   Download,
   Info,
+  Zap,
+  CheckSquare,
+  Square,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,6 +24,18 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { toast } from '@/hooks/use-toast';
 import {
   analyzeGalleryStorage,
   formatFileSize,
@@ -28,6 +43,16 @@ import {
   type StorageAnalysis,
   type CompressionRecommendation,
 } from '../services/storageAnalyzerService';
+import {
+  bulkCompressImages,
+  calculateTotalSavings,
+  validateBulkCompression,
+  type BulkCompressionProgress,
+  type BulkCompressionResult,
+} from '../services/bulkCompressionService';
+import { estimateCompressedSize } from '../services/compressionService';
+import type { CompressionQuality } from '../types';
+import { BulkCompressionDialog } from './BulkCompressionDialog';
 
 // ============================================================================
 // Helper Components
@@ -97,7 +122,15 @@ function StorageOverview({ analysis }: { analysis: StorageAnalysis }) {
   );
 }
 
-function RecommendationItem({ recommendation }: { recommendation: CompressionRecommendation }) {
+function RecommendationItem({ 
+  recommendation, 
+  isSelected, 
+  onSelect 
+}: { 
+  recommendation: CompressionRecommendation;
+  isSelected: boolean;
+  onSelect: (selected: boolean) => void;
+}) {
   const priorityColors = {
     high: 'destructive',
     medium: 'secondary',
@@ -106,6 +139,11 @@ function RecommendationItem({ recommendation }: { recommendation: CompressionRec
 
   return (
     <div className="flex items-start gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+      <Checkbox
+        checked={isSelected}
+        onCheckedChange={onSelect}
+        className="mt-1"
+      />
       <div className="flex-1 space-y-2">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
@@ -155,10 +193,16 @@ export function StorageAnalyzer() {
   const [analysis, setAnalysis] = useState<StorageAnalysis | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedIndices, setSelectedIndices] = useState<Set<number>>(new Set());
+  const [showBulkDialog, setShowBulkDialog] = useState(false);
+  const [compressionProgress, setCompressionProgress] = useState<BulkCompressionProgress | null>(null);
+  const [compressionResults, setCompressionResults] = useState<BulkCompressionResult[] | null>(null);
 
   const runAnalysis = async () => {
     setIsLoading(true);
     setError(null);
+    setSelectedIndices(new Set());
+    setCompressionResults(null);
 
     try {
       const result = await analyzeGalleryStorage();
@@ -168,6 +212,78 @@ export function StorageAnalyzer() {
       setError('Failed to analyze storage. Please try again.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (!analysis) return;
+    if (selectedIndices.size === analysis.recommendations.length) {
+      setSelectedIndices(new Set());
+    } else {
+      setSelectedIndices(new Set(analysis.recommendations.map((_, i) => i)));
+    }
+  };
+
+  const handleSelectRecommendation = (index: number, selected: boolean) => {
+    setSelectedIndices(prev => {
+      const newSet = new Set(prev);
+      if (selected) {
+        newSet.add(index);
+      } else {
+        newSet.delete(index);
+      }
+      return newSet;
+    });
+  };
+
+  const handleBulkCompress = async (quality: CompressionQuality) => {
+    if (!analysis) return;
+
+    const selectedRecs = Array.from(selectedIndices)
+      .map(i => analysis.recommendations[i]);
+
+    const validation = validateBulkCompression(selectedRecs.map(r => r.image));
+    if (!validation.valid) {
+      toast({
+        title: "Validation Failed",
+        description: validation.errors.join(', '),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setShowBulkDialog(false);
+    
+    try {
+      const results = await bulkCompressImages(
+        selectedRecs.map(r => r.image),
+        quality,
+        (progress) => setCompressionProgress(progress)
+      );
+
+      setCompressionResults(results);
+      
+      const successCount = results.filter(r => r.success).length;
+      const totalSavings = results.reduce((sum, r) => sum + r.savings, 0);
+
+      toast({
+        title: "Compression Complete",
+        description: `Successfully compressed ${successCount} of ${results.length} images. Saved ${formatFileSize(totalSavings)}.`,
+      });
+
+      // Refresh analysis
+      setTimeout(() => {
+        setCompressionProgress(null);
+        runAnalysis();
+      }, 2000);
+    } catch (err) {
+      console.error('Bulk compression failed:', err);
+      toast({
+        title: "Compression Failed",
+        description: "Failed to compress images. Please try again.",
+        variant: "destructive",
+      });
+      setCompressionProgress(null);
     }
   };
 
@@ -281,16 +397,59 @@ export function StorageAnalyzer() {
           ) : (
             <Card>
               <CardHeader>
-                <CardTitle>Compression Recommendations</CardTitle>
-                <CardDescription>
-                  Images that could benefit from compression to save storage space
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Compression Recommendations</CardTitle>
+                    <CardDescription>
+                      Images that could benefit from compression to save storage space
+                    </CardDescription>
+                  </div>
+                  
+                  {/* Bulk actions toolbar */}
+                  {analysis.recommendations.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSelectAll}
+                        className="gap-2"
+                      >
+                        {selectedIndices.size === analysis.recommendations.length ? (
+                          <>
+                            <CheckSquare className="h-4 w-4" />
+                            Deselect All
+                          </>
+                        ) : (
+                          <>
+                            <Square className="h-4 w-4" />
+                            Select All
+                          </>
+                        )}
+                      </Button>
+                      
+                      {selectedIndices.size > 0 && (
+                        <Button
+                          onClick={() => setShowBulkDialog(true)}
+                          className="gap-2"
+                        >
+                          <Zap className="h-4 w-4" />
+                          Compress {selectedIndices.size} Selected
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[600px] pr-4">
                   <div className="space-y-3">
                     {analysis.recommendations.map((rec, index) => (
-                      <RecommendationItem key={index} recommendation={rec} />
+                      <RecommendationItem 
+                        key={index} 
+                        recommendation={rec}
+                        isSelected={selectedIndices.has(index)}
+                        onSelect={(selected) => handleSelectRecommendation(index, selected)}
+                      />
                     ))}
                   </div>
                 </ScrollArea>
@@ -376,7 +535,7 @@ export function StorageAnalyzer() {
       </Tabs>
 
       {/* Export Button */}
-      {analysis.recommendations.length > 0 && (
+      {analysis.recommendations.length > 0 && !compressionProgress && (
         <div className="flex justify-end">
           <Button variant="outline" className="gap-2">
             <Download className="h-4 w-4" />
@@ -384,6 +543,79 @@ export function StorageAnalyzer() {
           </Button>
         </div>
       )}
+
+      {/* Compression Progress */}
+      {compressionProgress && (
+        <Card>
+          <CardContent className="py-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">
+                    {compressionProgress.status === 'downloading' && 'Downloading images...'}
+                    {compressionProgress.status === 'compressing' && 'Compressing images...'}
+                    {compressionProgress.status === 'uploading' && 'Uploading compressed images...'}
+                    {compressionProgress.status === 'complete' && 'Complete!'}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {compressionProgress.currentFile} ({compressionProgress.current}/{compressionProgress.total})
+                  </p>
+                </div>
+                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              </div>
+              <Progress value={compressionProgress.percentage} className="h-2" />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Compression Results */}
+      {compressionResults && !compressionProgress && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-600" />
+              Compression Complete
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {compressionResults.map((result, index) => (
+                <div
+                  key={index}
+                  className={`flex items-center justify-between p-3 border rounded-lg ${
+                    result.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+                  }`}
+                >
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{result.image.name}</p>
+                    {result.success ? (
+                      <p className="text-xs text-muted-foreground">
+                        Saved {formatFileSize(result.savings)} ({((result.savings / result.originalSize) * 100).toFixed(1)}%)
+                      </p>
+                    ) : (
+                      <p className="text-xs text-destructive">{result.error}</p>
+                    )}
+                  </div>
+                  {result.success ? (
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  ) : (
+                    <AlertCircle className="h-5 w-5 text-destructive" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Bulk Compression Dialog */}
+      <BulkCompressionDialog
+        open={showBulkDialog}
+        onOpenChange={setShowBulkDialog}
+        recommendations={Array.from(selectedIndices).map(i => analysis.recommendations[i])}
+        onCompress={handleBulkCompress}
+      />
     </div>
   );
 }
