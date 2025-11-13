@@ -85,67 +85,67 @@ export const GALLERY_IMAGES: GalleryImage[] = [
   // === WHITE KITCHENS ===
   {
     id: 'kitchen-modern-white',
-    path: getImageUrl('kitchen-modern-white.jpg'),
+    path: kitchenModernWhite,
     alt: 'Modern white kitchen with stainless steel appliances',
     category: 'kitchens'
   },
   {
     id: 'kitchen-fireplace',
-    path: getImageUrl('kitchen-fireplace.jpg'),
+    path: kitchenFireplace,
     alt: 'Contemporary kitchen with fireplace feature',
     category: 'kitchens'
   },
   {
     id: 'kitchen-pendant-lights',
-    path: getImageUrl('kitchen-pendant-lights.jpg'),
+    path: kitchenPendantLights,
     alt: 'White kitchen with glass pendant lights',
     category: 'kitchens'
   },
   {
     id: 'kitchen-island-view',
-    path: getImageUrl('kitchen-island-view.jpg'),
+    path: kitchenIslandView,
     alt: 'Kitchen island with bar seating',
     category: 'kitchens'
   },
   {
     id: 'kitchen-traditional',
-    path: getImageUrl('kitchen-traditional.jpg'),
+    path: kitchenTraditional,
     alt: 'Traditional style kitchen installation',
     category: 'kitchens'
   },
   {
     id: 'laundry-room',
-    path: getImageUrl('laundry-room.jpg'),
+    path: laundryRoom,
     alt: 'White laundry room cabinetry',
     category: 'kitchens'
   },
   {
     id: 'bright-modern-white-kitchen-open',
-    path: getImageUrl('bright-modern-white-kitchen-open.jpeg'),
+    path: brightModernWhiteKitchenOpen,
     alt: 'Bright modern white kitchen with open concept dining and living area',
     category: 'kitchens'
   },
   {
     id: 'modern-white-kitchen-pendants',
-    path: getImageUrl('modern-white-kitchen-pendants.jpeg'),
+    path: modernWhiteKitchenPendants,
     alt: 'Modern white kitchen with island and globe pendant lights',
     category: 'kitchens'
   },
   {
     id: 'traditional-white-kitchen-gray-island',
-    path: getImageUrl('traditional-white-kitchen-gray-island.jpg'),
+    path: traditionalWhiteKitchenGrayIsland,
     alt: 'Traditional white kitchen with gray island and subway tile backsplash',
     category: 'kitchens'
   },
   {
     id: 'minimalist-white-kitchen-island',
-    path: getImageUrl('minimalist-white-kitchen-island.jpg'),
+    path: minimalistWhiteKitchenIsland,
     alt: 'Minimalist white kitchen with modern island and contemporary lighting',
     category: 'kitchens'
   },
   {
     id: 'contemporary-white-kitchen-blue-wall',
-    path: getImageUrl('contemporary-white-kitchen-blue-wall.jpg'),
+    path: contemporaryWhiteKitchenBlueWall,
     alt: 'Contemporary white kitchen with blue accent wall and modern design',
     category: 'kitchens'
   },
