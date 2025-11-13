@@ -9,25 +9,11 @@ import type {
   ImageQualityIssue,
   CompressionQuality,
 } from '../types';
-
-// ============================================================================
-// Constants
-// ============================================================================
-
-const BLUR_THRESHOLD_EXCELLENT = 150;
-const BLUR_THRESHOLD_GOOD = 100;
-const BLUR_THRESHOLD_ACCEPTABLE = 50;
-
-const MIN_RESOLUTION_EXCELLENT = 1920;
-const MIN_RESOLUTION_GOOD = 1280;
-const MIN_RESOLUTION_ACCEPTABLE = 800;
-
-const COMPRESSION_QUALITY_MAP: Record<CompressionQuality, number> = {
-  none: 1.0,
-  high: 0.9,
-  medium: 0.7,
-  low: 0.5,
-};
+import {
+  BLUR_THRESHOLDS,
+  RESOLUTION_THRESHOLDS,
+  COMPRESSION_QUALITY_MAP,
+} from '../config/constants';
 
 // ============================================================================
 // Image Dimension Extraction
@@ -73,20 +59,20 @@ export async function analyzeImageQuality(file: File): Promise<ImageQualityResul
   
   // Check resolution
   let isLowResolution = false;
-  if (minDimension < MIN_RESOLUTION_ACCEPTABLE) {
+  if (minDimension < RESOLUTION_THRESHOLDS.ACCEPTABLE) {
     issues.push('very-low-resolution');
     isLowResolution = true;
-  } else if (minDimension < MIN_RESOLUTION_GOOD) {
+  } else if (minDimension < RESOLUTION_THRESHOLDS.GOOD) {
     issues.push('low-resolution');
     isLowResolution = true;
   }
   
   // Check blur
   let isBlurry = false;
-  if (blurScore < BLUR_THRESHOLD_ACCEPTABLE) {
+  if (blurScore < BLUR_THRESHOLDS.ACCEPTABLE) {
     issues.push('very-blurry');
     isBlurry = true;
-  } else if (blurScore < BLUR_THRESHOLD_GOOD) {
+  } else if (blurScore < BLUR_THRESHOLDS.GOOD) {
     issues.push('blurry');
     isBlurry = true;
   }
@@ -97,11 +83,11 @@ export async function analyzeImageQuality(file: File): Promise<ImageQualityResul
   
   // Determine overall quality
   let overallQuality: ImageQualityResult['overallQuality'];
-  if (blurScore >= BLUR_THRESHOLD_EXCELLENT && minDimension >= MIN_RESOLUTION_EXCELLENT) {
+  if (blurScore >= BLUR_THRESHOLDS.EXCELLENT && minDimension >= RESOLUTION_THRESHOLDS.EXCELLENT) {
     overallQuality = 'excellent';
-  } else if (blurScore >= BLUR_THRESHOLD_GOOD && minDimension >= MIN_RESOLUTION_GOOD) {
+  } else if (blurScore >= BLUR_THRESHOLDS.GOOD && minDimension >= RESOLUTION_THRESHOLDS.GOOD) {
     overallQuality = 'good';
-  } else if (blurScore >= BLUR_THRESHOLD_ACCEPTABLE && minDimension >= MIN_RESOLUTION_ACCEPTABLE) {
+  } else if (blurScore >= BLUR_THRESHOLDS.ACCEPTABLE && minDimension >= RESOLUTION_THRESHOLDS.ACCEPTABLE) {
     overallQuality = 'acceptable';
   } else {
     overallQuality = 'poor';

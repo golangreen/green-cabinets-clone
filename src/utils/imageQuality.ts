@@ -1,3 +1,9 @@
+import { 
+  BLUR_THRESHOLDS, 
+  RESOLUTION_THRESHOLDS,
+  BLUR_DETECTION_SAMPLE_SIZE 
+} from '@/features/gallery/config/constants';
+
 export interface ImageQualityResult {
   isLowResolution: boolean;
   isBlurry: boolean;
@@ -6,10 +12,6 @@ export interface ImageQualityResult {
   sharpnessScore: number;
   warnings: string[];
 }
-
-const MIN_WIDTH = 800;
-const MIN_HEIGHT = 600;
-const BLUR_THRESHOLD = 100; // Lower values indicate more blur
 
 /**
  * Calculate image sharpness using Laplacian variance
@@ -62,8 +64,8 @@ export const analyzeImageQuality = async (file: File): Promise<ImageQualityResul
         const canvas = document.createElement('canvas');
         
         // Sample a portion of the image for blur detection (for performance)
-        const sampleWidth = Math.min(width, 512);
-        const sampleHeight = Math.min(height, 512);
+        const sampleWidth = Math.min(width, BLUR_DETECTION_SAMPLE_SIZE);
+        const sampleHeight = Math.min(height, BLUR_DETECTION_SAMPLE_SIZE);
         
         canvas.width = sampleWidth;
         canvas.height = sampleHeight;
@@ -83,20 +85,20 @@ export const analyzeImageQuality = async (file: File): Promise<ImageQualityResul
         const sharpnessScore = calculateSharpness(imageData);
         
         // Check quality criteria
-        const isLowResolution = width < MIN_WIDTH || height < MIN_HEIGHT;
-        const isBlurry = sharpnessScore < BLUR_THRESHOLD;
+        const isLowResolution = width < RESOLUTION_THRESHOLDS.MINIMUM_WIDTH || height < RESOLUTION_THRESHOLDS.MINIMUM_HEIGHT;
+        const isBlurry = sharpnessScore < BLUR_THRESHOLDS.GOOD;
         
         const warnings: string[] = [];
         
         if (isLowResolution) {
           warnings.push(
-            `Low resolution: ${width}x${height}px (recommended minimum: ${MIN_WIDTH}x${MIN_HEIGHT}px)`
+            `Low resolution: ${width}x${height}px (recommended minimum: ${RESOLUTION_THRESHOLDS.MINIMUM_WIDTH}x${RESOLUTION_THRESHOLDS.MINIMUM_HEIGHT}px)`
           );
         }
         
         if (isBlurry) {
           warnings.push(
-            `Image appears blurry (sharpness score: ${sharpnessScore.toFixed(0)}, threshold: ${BLUR_THRESHOLD})`
+            `Image appears blurry (sharpness score: ${sharpnessScore.toFixed(0)}, threshold: ${BLUR_THRESHOLDS.GOOD})`
           );
         }
 
