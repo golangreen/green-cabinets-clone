@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchNotificationSettings, upsertNotificationSettings } from '@/services';
 import { useAuth } from '@/contexts/AuthContext';
+import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 
 export interface NotificationSettings {
   id: string;
@@ -21,7 +22,7 @@ export function useNotificationSettings() {
   const queryClient = useQueryClient();
 
   const { data: settings, isLoading } = useQuery({
-    queryKey: ['notification-settings', user?.id],
+    queryKey: QUERY_KEYS.NOTIFICATION_SETTINGS(user?.id),
     queryFn: async () => {
       if (!user?.id) return null;
 
@@ -29,6 +30,7 @@ export function useNotificationSettings() {
       return data as NotificationSettings || null;
     },
     enabled: !!user?.id,
+    staleTime: FEATURE_STALE_TIMES.USER_SETTINGS,
   });
 
   const updateSettings = useMutation({
@@ -43,7 +45,7 @@ export function useNotificationSettings() {
       return updates;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notification-settings', user?.id] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.NOTIFICATION_SETTINGS(user?.id) });
     },
   });
 

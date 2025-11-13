@@ -1,20 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { emailConfigService } from '@/services/emailConfigService';
 import { toast } from '@/hooks/use-toast';
+import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 
 export const useEmailSettings = () => {
   const queryClient = useQueryClient();
 
   const { data: settings, isLoading, error } = useQuery({
-    queryKey: ['email-settings'],
+    queryKey: QUERY_KEYS.EMAIL_SETTINGS,
     queryFn: () => emailConfigService.fetchEmailSettings(),
+    staleTime: FEATURE_STALE_TIMES.EMAIL_SETTINGS,
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ senderEmail, senderName }: { senderEmail: string; senderName: string }) =>
       emailConfigService.updateEmailSettings(senderEmail, senderName),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['email-settings'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.EMAIL_SETTINGS });
       toast({
         title: 'Success',
         description: 'Email sender configuration updated successfully',
