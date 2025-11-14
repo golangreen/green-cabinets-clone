@@ -161,4 +161,7 @@ export {
   type ChatStreamOptions
 } from './chatService';
 
+// Performance service exports
+export { performanceService } from './performanceService';
+
 
