@@ -1,0 +1,373 @@
+name: Accessibility Testing
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+      - 'src/**/*.css'
+      - 'src/index.css'
+      - 'tailwind.config.ts'
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: accessibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  axe-tests:
+    name: Axe-core WCAG Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run axe-core accessibility tests
+        run: npx playwright test e2e/accessibility-axe.spec.ts --project=chromium
+        continue-on-error: true
+
+      - name: Upload axe test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axe-test-results
+          path: |
+            test-results/
+            accessibility-reports/axe/
+          retention-days: 30
+
+  pa11y-tests:
+    name: Pa11y Accessibility Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start development server
+        run: npm run dev &
+        env:
+          CI: true
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:5173 --timeout 60000
+
+      - name: Run pa11y tests
+        run: npm run test:pa11y
+        continue-on-error: true
+
+      - name: Upload pa11y results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pa11y-test-results
+          path: accessibility-reports/pa11y/
+          retention-days: 30
+
+  lighthouse-a11y:
+    name: Lighthouse Accessibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Serve build
+        run: npx serve -s dist -l 8080 &
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:8080 --timeout 60000
+
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli
+          lhci autorun --config=.lighthouserc.json || true
+
+      - name: Upload Lighthouse results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-results
+          path: .lighthouseci/
+          retention-days: 30
+
+  report:
+    name: Generate Accessibility Report
+    if: always()
+    needs: [axe-tests, pa11y-tests, lighthouse-a11y]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Analyze accessibility results
+        id: analyze
+        run: |
+          # Initialize counters
+          TOTAL_VIOLATIONS=0
+          CRITICAL_ISSUES=0
+          SERIOUS_ISSUES=0
+          MODERATE_ISSUES=0
+          MINOR_ISSUES=0
+          
+          # Analyze axe results
+          if [ -d "all-artifacts/axe-test-results/accessibility-reports/axe" ]; then
+            for file in all-artifacts/axe-test-results/accessibility-reports/axe/*.json; do
+              if [ -f "$file" ]; then
+                violations=$(jq '.violations | length' "$file" 2>/dev/null || echo 0)
+                TOTAL_VIOLATIONS=$((TOTAL_VIOLATIONS + violations))
+                
+                critical=$(jq '[.violations[] | select(.impact=="critical")] | length' "$file" 2>/dev/null || echo 0)
+                serious=$(jq '[.violations[] | select(.impact=="serious")] | length' "$file" 2>/dev/null || echo 0)
+                moderate=$(jq '[.violations[] | select(.impact=="moderate")] | length' "$file" 2>/dev/null || echo 0)
+                minor=$(jq '[.violations[] | select(.impact=="minor")] | length' "$file" 2>/dev/null || echo 0)
+                
+                CRITICAL_ISSUES=$((CRITICAL_ISSUES + critical))
+                SERIOUS_ISSUES=$((SERIOUS_ISSUES + serious))
+                MODERATE_ISSUES=$((MODERATE_ISSUES + moderate))
+                MINOR_ISSUES=$((MINOR_ISSUES + minor))
+              fi
+            done
+          fi
+          
+          echo "total_violations=$TOTAL_VIOLATIONS" >> $GITHUB_OUTPUT
+          echo "critical=$CRITICAL_ISSUES" >> $GITHUB_OUTPUT
+          echo "serious=$SERIOUS_ISSUES" >> $GITHUB_OUTPUT
+          echo "moderate=$MODERATE_ISSUES" >> $GITHUB_OUTPUT
+          echo "minor=$MINOR_ISSUES" >> $GITHUB_OUTPUT
+
+      - name: Generate detailed report
+        run: |
+          mkdir -p report
+          
+          cat > report/summary.md << 'EOF'
+          # Accessibility Test Results
+          
+          ## Summary
+          
+          EOF
+          
+          echo "- **Total Violations:** ${{ steps.analyze.outputs.total_violations }}" >> report/summary.md
+          echo "- **Critical:** ${{ steps.analyze.outputs.critical }}" >> report/summary.md
+          echo "- **Serious:** ${{ steps.analyze.outputs.serious }}" >> report/summary.md
+          echo "- **Moderate:** ${{ steps.analyze.outputs.moderate }}" >> report/summary.md
+          echo "- **Minor:** ${{ steps.analyze.outputs.minor }}" >> report/summary.md
+          echo "" >> report/summary.md
+          
+          # Add detailed violations from axe
+          if [ -d "all-artifacts/axe-test-results/accessibility-reports/axe" ]; then
+            echo "## Detailed Violations" >> report/summary.md
+            echo "" >> report/summary.md
+            
+            for file in all-artifacts/axe-test-results/accessibility-reports/axe/*.json; do
+              if [ -f "$file" ]; then
+                page=$(basename "$file" .json)
+                echo "### $page" >> report/summary.md
+                echo "" >> report/summary.md
+                
+                # Extract violations
+                jq -r '.violations[] | "#### [\(.impact | ascii_upcase)] \(.id)\n\n**Description:** \(.description)\n\n**Help:** \(.help)\n\n**WCAG:** \(.tags | join(", "))\n\n**Nodes affected:** \(.nodes | length)\n\n---\n"' "$file" >> report/summary.md 2>/dev/null || echo "No violations" >> report/summary.md
+              fi
+            done
+          fi
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            const totalViolations = parseInt('${{ steps.analyze.outputs.total_violations }}');
+            const critical = parseInt('${{ steps.analyze.outputs.critical }}');
+            const serious = parseInt('${{ steps.analyze.outputs.serious }}');
+            const moderate = parseInt('${{ steps.analyze.outputs.moderate }}');
+            const minor = parseInt('${{ steps.analyze.outputs.minor }}');
+            
+            const testUrl = `https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`;
+            
+            // Determine status
+            let status = '✅';
+            let statusText = 'Passed';
+            if (critical > 0) {
+              status = '🔴';
+              statusText = 'Failed - Critical Issues';
+            } else if (serious > 0) {
+              status = '🟠';
+              statusText = 'Warning - Serious Issues';
+            } else if (moderate > 0 || minor > 0) {
+              status = '🟡';
+              statusText = 'Passed with Warnings';
+            }
+            
+            let comment = `## ${status} Accessibility Test Results - ${statusText}\n\n`;
+            comment += `[View Full Report](${testUrl})\n\n`;
+            
+            // Summary table
+            comment += `### 📊 Summary\n\n`;
+            comment += `| Severity | Count |\n`;
+            comment += `|----------|-------|\n`;
+            comment += `| 🔴 Critical | ${critical} |\n`;
+            comment += `| 🟠 Serious | ${serious} |\n`;
+            comment += `| 🟡 Moderate | ${moderate} |\n`;
+            comment += `| ⚪ Minor | ${minor} |\n`;
+            comment += `| **Total** | **${totalViolations}** |\n\n`;
+            
+            // Read detailed violations
+            let detailedReport = '';
+            try {
+              if (fs.existsSync('report/summary.md')) {
+                const fullReport = fs.readFileSync('report/summary.md', 'utf8');
+                const detailsMatch = fullReport.match(/## Detailed Violations[\s\S]*/);
+                if (detailsMatch) {
+                  detailedReport = detailsMatch[0];
+                  // Truncate if too long for PR comment
+                  if (detailedReport.length > 10000) {
+                    detailedReport = detailedReport.substring(0, 10000) + '\n\n... (truncated, see artifacts for full report)';
+                  }
+                }
+              }
+            } catch (error) {
+              console.log('Could not read detailed report:', error);
+            }
+            
+            if (totalViolations === 0) {
+              comment += `### 🎉 No Accessibility Issues Found!\n\n`;
+              comment += `All pages passed WCAG 2.1 Level AA compliance checks.\n\n`;
+            } else {
+              comment += `### 🔍 Issues Found\n\n`;
+              
+              if (critical > 0) {
+                comment += `⚠️ **${critical} critical issue(s)** must be fixed before merging.\n\n`;
+              }
+              
+              if (serious > 0) {
+                comment += `⚠️ **${serious} serious issue(s)** should be addressed.\n\n`;
+              }
+              
+              // Add top violations preview
+              if (detailedReport) {
+                comment += `<details>\n<summary>📋 Detailed Violations (Click to expand)</summary>\n\n`;
+                comment += detailedReport;
+                comment += `\n</details>\n\n`;
+              }
+            }
+            
+            // Testing tools info
+            comment += `### 🛠️ Testing Tools\n\n`;
+            comment += `- **Axe-core**: WCAG 2.1 Level A & AA automated testing\n`;
+            comment += `- **Pa11y**: Additional accessibility checks\n`;
+            comment += `- **Lighthouse**: Performance and accessibility audit\n\n`;
+            
+            // Guidance
+            if (totalViolations > 0) {
+              comment += `### 📚 How to Fix\n\n`;
+              comment += `1. Download artifacts from [workflow run](${testUrl})\n`;
+              comment += `2. Review detailed JSON reports in \`accessibility-reports/\`\n`;
+              comment += `3. Use browser DevTools to inspect affected elements\n`;
+              comment += `4. Test fixes with screen readers (NVDA, JAWS, VoiceOver)\n`;
+              comment += `5. Run tests locally: \`npm run test:a11y\`\n\n`;
+              
+              comment += `### Common Fixes\n\n`;
+              comment += `- Add \`alt\` text to images\n`;
+              comment += `- Ensure proper heading hierarchy (h1 → h2 → h3)\n`;
+              comment += `- Add ARIA labels to interactive elements\n`;
+              comment += `- Ensure sufficient color contrast (4.5:1 for text)\n`;
+              comment += `- Make all functionality keyboard accessible\n`;
+              comment += `- Add focus indicators to interactive elements\n\n`;
+            }
+            
+            comment += `---\n`;
+            comment += `*WCAG 2.1 Level AA Compliance | [Accessibility Guide](https://github.com/${{ github.repository }}/blob/main/ACCESSIBILITY.md)*`;
+            
+            // Post or update comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('Accessibility Test Results')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
+            
+            // Fail workflow if critical issues found
+            if (critical > 0) {
+              core.setFailed(`Found ${critical} critical accessibility issue(s)`);
+            }

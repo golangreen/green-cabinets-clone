@@ -1,0 +1,47 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 30000,
+    "wait": 2000,
+    "chromeLaunchConfig": {
+      "args": [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage"
+      ]
+    },
+    "runners": [
+      "axe"
+    ],
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "hideElements": "",
+    "reporter": "json",
+    "threshold": 0
+  },
+  "urls": [
+    {
+      "url": "http://localhost:5173/",
+      "screenCapture": "accessibility-reports/pa11y/screenshots/home.png",
+      "actions": [
+        "wait for element body to be visible"
+      ]
+    },
+    {
+      "url": "http://localhost:5173/admin/gallery",
+      "screenCapture": "accessibility-reports/pa11y/screenshots/gallery.png",
+      "actions": [
+        "wait for element body to be visible"
+      ]
+    },
+    {
+      "url": "http://localhost:5173/vanity-designer",
+      "screenCapture": "accessibility-reports/pa11y/screenshots/vanity-designer.png",
+      "actions": [
+        "wait for element body to be visible"
+      ]
+    }
+  ]
+}
