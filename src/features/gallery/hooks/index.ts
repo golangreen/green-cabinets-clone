@@ -8,5 +8,12 @@ export { useGalleryState } from './useGalleryState';
 export { useGalleryActions } from './useGalleryActions';
 export { useGalleryManager } from './useGalleryManager';
 
+// Re-export query hooks
+export {
+  useGalleryImages,
+  useHeroImages,
+  useGalleryImagesByCategory,
+} from './useGalleryQueries';
+
 // Re-export context
 export { GalleryProvider, useGalleryContext } from '../context';
