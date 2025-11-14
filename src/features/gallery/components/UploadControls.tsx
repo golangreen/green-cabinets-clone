@@ -25,7 +25,7 @@ export function UploadControls({
   onUpload,
 }: UploadControlsProps) {
   return (
-    <Card>
+    <Card data-testid="upload-controls">
       <CardHeader>
         <CardTitle>Upload Settings</CardTitle>
       </CardHeader>

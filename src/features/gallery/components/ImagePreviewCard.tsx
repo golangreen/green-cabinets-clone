@@ -37,7 +37,7 @@ export function ImagePreviewCard({
   const uploadError = uploadProgress?.status === 'error';
 
   return (
-    <Card className="overflow-hidden">
+    <Card data-testid="image-preview" className="overflow-hidden">
       <div className="relative">
         <img
           src={image.preview}
@@ -76,7 +76,7 @@ export function ImagePreviewCard({
 
         {/* Upload Status Overlay */}
         {isUploading && (
-          <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+          <div data-testid="loading" className="absolute inset-0 bg-background/80 flex items-center justify-center">
             <div className="text-center">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
               <p className="text-sm font-medium">Uploading...</p>
@@ -86,7 +86,7 @@ export function ImagePreviewCard({
         )}
 
         {uploadSuccess && (
-          <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+          <div data-testid="upload-success" className="absolute inset-0 bg-background/80 flex items-center justify-center">
             <div className="text-center text-success">
               <CheckCircle2 className="w-8 h-8 mx-auto mb-2" />
               <p className="text-sm font-medium">Uploaded!</p>

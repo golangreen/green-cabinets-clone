@@ -72,7 +72,7 @@ export function BulkCompressionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent data-testid="bulk-compression-dialog" className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <div className="flex items-start gap-3">
             <Zap className="h-6 w-6 text-primary mt-1" />

@@ -22,7 +22,7 @@ const QUALITY_OPTIONS: Array<{ value: CompressionQuality; label: string; descrip
 
 export function CompressionSettings({ value, onChange, disabled }: CompressionSettingsProps) {
   return (
-    <div className="space-y-2">
+    <div data-testid="quality-slider" className="space-y-2">
       <Label htmlFor="compression">Compression Quality</Label>
       <Select
         value={value}
