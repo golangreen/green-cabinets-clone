@@ -1,0 +1,30 @@
+# Vitest Coverage Configuration
+# This file documents the coverage settings configured in vitest.config.ts
+
+# Coverage Provider: v8
+# - Fast, built-in Node.js coverage
+# - No additional instrumentation needed
+# - Native V8 engine integration
+
+# Report Formats Generated:
+# 1. text         - Terminal summary
+# 2. json         - Machine-readable data
+# 3. html         - Interactive browser report
+# 4. lcov         - Standard format for CI/CD
+# 5. text-summary - Brief terminal summary
+
+# Coverage Thresholds:
+# - Lines:      70%
+# - Functions:  70%
+# - Branches:   65%
+# - Statements: 70%
+
+# View HTML Report:
+# Open ./coverage/index.html in your browser
+
+# Commands:
+# npm run test:coverage  - Run tests with coverage
+# npm run test           - Run tests without coverage
+# npm run test:ui        - Run tests in UI mode
+
+# Reports Directory: ./coverage/
