@@ -36,8 +36,21 @@ npm run test:e2e:headed
 
 ## Test Structure
 
+All tests use the `__tests__` folder pattern for consistency and easy discovery.
+
+### Unit Tests
+Located in `src/features/[feature]/hooks/__tests__/` or `src/features/[feature]/services/__tests__/`.
+
+Example:
+```
+src/features/gallery/hooks/
+  useImageUpload.ts
+  __tests__/
+    useImageUpload.test.ts
+```
+
 ### Component Tests
-Located in `src/**/__tests__/` directories alongside the components they test.
+Located in `src/features/[feature]/components/__tests__/` alongside the components they test.
 
 Example:
 ```
@@ -48,10 +61,29 @@ src/features/admin-security/components/
 ```
 
 ### Integration Tests
+Located in `src/features/[feature]/__tests__/` for testing complete feature workflows.
+
+Example:
+```
+src/features/gallery/
+  __tests__/
+    GalleryIntegration.test.tsx
+```
+
+### Service Tests
 Located in `src/services/__tests__/` for testing service layer logic.
+
+Example:
+```
+src/services/
+  __tests__/
+    securityService.test.ts
+```
 
 ### E2E Tests
 Located in `e2e/` directory for end-to-end user journey tests.
+
+**For detailed test organization guidelines, see [STRUCTURE.md](./STRUCTURE.md)**
 
 ## Writing Tests
 
