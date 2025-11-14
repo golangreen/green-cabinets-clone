@@ -39,7 +39,7 @@ export function ImagePreviewList({
   const hasMultipleSelection = selectedIndices.size > 1;
 
   return (
-    <Card>
+    <Card data-testid="image-preview-list">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -48,7 +48,7 @@ export function ImagePreviewList({
           </div>
           
           {images.length > 1 && (
-            <div className="flex gap-2">
+            <div data-testid="selection-controls" className="flex gap-2">
               <Button
                 variant="outline"
                 size="sm"

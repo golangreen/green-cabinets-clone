@@ -99,7 +99,7 @@ export function CompressionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent data-testid="compression-dialog" className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-start gap-3">
             <FileWarning className="h-6 w-6 text-warning mt-1" />

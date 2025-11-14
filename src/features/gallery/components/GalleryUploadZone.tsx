@@ -53,6 +53,7 @@ export function GalleryUploadZone({ onFilesSelected, disabled }: GalleryUploadZo
       </CardHeader>
       <CardContent>
         <div
+          data-testid="drop-zone"
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
