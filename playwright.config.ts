@@ -14,6 +14,18 @@ export default defineConfig({
   timeout: 30000, // 30 seconds per test
   expect: {
     timeout: 5000, // 5 seconds for assertions
+    toHaveScreenshot: {
+      // Maximum number of pixels that can differ
+      maxDiffPixels: 100,
+      // Maximum ratio of different pixels (0-1)
+      maxDiffPixelRatio: 0.01, // 1%
+      // Comparison threshold (0-1), lower = more strict
+      threshold: 0.2,
+      // Disable animations for consistent screenshots
+      animations: 'disabled',
+      // Image comparison scale
+      scale: 'css',
+    },
   },
   use: {
     baseURL: 'http://localhost:5173',

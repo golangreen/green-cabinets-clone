@@ -38,6 +38,27 @@ Tests multi-image selection and batch editing:
 - Selection persistence
 - Visual indicators
 
+### Visual Regression (`gallery-visual-regression.spec.ts`)
+Tests UI consistency using screenshot comparison:
+- Initial page appearance
+- Component states (normal, hover, selected)
+- Image grid layouts
+- Modal appearances
+- Responsive layouts (mobile, tablet, desktop)
+- Dark mode appearance
+- Cross-browser consistency
+- Loading and error states
+
+### Advanced Visual Comparison (`gallery-visual-comparison.spec.ts`)
+Advanced visual regression tests with helper utilities:
+- Baseline state creation
+- Color scheme comparison (light/dark)
+- Responsive breakpoint testing
+- Component isolation tests
+- Animation consistency
+- Selection indicator states
+- Cross-browser button rendering
+
 ## Running Tests
 
 ### Run All E2E Tests
@@ -67,6 +88,17 @@ npx playwright test --project=firefox
 npx playwright test --project=webkit
 ```
 
+### Run Visual Regression Tests
+```bash
+npx playwright test e2e/gallery-visual-regression.spec.ts
+npx playwright test e2e/gallery-visual-comparison.spec.ts
+```
+
+### Update Visual Baselines
+```bash
+npx playwright test --update-snapshots
+```
+
 ### Debug Tests
 ```bash
 npx playwright test --debug
@@ -89,6 +121,7 @@ npx playwright show-report
 ### Screenshots
 - Taken automatically on failure
 - Located in `test-results/` directory
+- Visual regression baselines in `e2e/**/*-snapshots/`
 
 ### Videos
 - Recorded on first retry in CI
@@ -97,6 +130,13 @@ npx playwright show-report
 ### Traces
 - Captured on first retry
 - View with `npx playwright show-trace trace.zip`
+
+### Visual Regression
+- Screenshot comparisons for UI consistency
+- Baseline screenshots per browser
+- Diff images on failure showing visual changes
+- Configurable tolerance thresholds
+- See `VISUAL-REGRESSION.md` for details
 
 ## Writing New Tests
 
