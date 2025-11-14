@@ -1,0 +1,271 @@
+name: Visual Regression Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+      - 'src/**/*.css'
+      - 'src/index.css'
+      - 'tailwind.config.ts'
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: visual-regression-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  visual-test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run visual regression tests
+        run: npx playwright test e2e/gallery-visual-regression.spec.ts e2e/gallery-visual-comparison.spec.ts --project=${{ matrix.browser }}
+        continue-on-error: true
+        env:
+          CI: true
+
+      - name: Upload visual test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-results-${{ matrix.browser }}
+          path: test-results/
+          retention-days: 30
+
+      - name: Upload screenshot diffs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diffs-${{ matrix.browser }}
+          path: |
+            test-results/**/*-diff.png
+            test-results/**/*-actual.png
+            test-results/**/*-expected.png
+          retention-days: 30
+
+      - name: Upload baseline snapshots (if updated)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-snapshots-${{ matrix.browser }}
+          path: e2e/**/*-snapshots/
+          retention-days: 90
+
+  visual-report:
+    if: always()
+    needs: [visual-test]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all visual artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: visual-artifacts
+          pattern: visual-*
+
+      - name: Analyze visual differences
+        id: analyze
+        run: |
+          shopt -s globstar nullglob
+          
+          DIFF_COUNT=0
+          BROWSERS=""
+          AFFECTED_TESTS=""
+          
+          for diff in visual-artifacts/**/*-diff.png; do
+            DIFF_COUNT=$((DIFF_COUNT + 1))
+            
+            # Extract browser and test info
+            browser=$(echo "$diff" | grep -oP 'visual-diffs-\K[^/]+')
+            testname=$(basename "$diff" | sed 's/-diff.png//')
+            
+            if [[ ! "$BROWSERS" =~ "$browser" ]]; then
+              BROWSERS="$BROWSERS $browser"
+            fi
+            
+            AFFECTED_TESTS="$AFFECTED_TESTS
+          - **$testname** ($browser)"
+          done
+          
+          echo "diff_count=$DIFF_COUNT" >> $GITHUB_OUTPUT
+          echo "browsers=$BROWSERS" >> $GITHUB_OUTPUT
+          
+          # Save affected tests to file for multiline output
+          echo "$AFFECTED_TESTS" > affected_tests.txt
+
+      - name: Generate visual diff gallery
+        if: steps.analyze.outputs.diff_count > 0
+        run: |
+          mkdir -p visual-gallery
+          
+          cat > visual-gallery/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Visual Regression Differences</title>
+            <style>
+              body { font-family: system-ui; margin: 20px; background: #f5f5f5; }
+              .container { max-width: 1400px; margin: 0 auto; }
+              .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+              .diff-item { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+              .diff-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+              .images { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+              .image-wrapper { text-align: center; }
+              .image-wrapper img { max-width: 100%; border: 1px solid #ddd; border-radius: 4px; }
+              .label { font-size: 12px; color: #666; margin-top: 5px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>🖼️ Visual Regression Test Results</h1>
+                <p>Review visual differences detected in this PR</p>
+              </div>
+          EOF
+          
+          shopt -s globstar nullglob
+          for diff in visual-artifacts/**/*-diff.png; do
+            testname=$(basename "$diff" | sed 's/-diff.png//')
+            browser=$(echo "$diff" | grep -oP 'visual-diffs-\K[^/]+')
+            
+            expected="${diff/-diff.png/-expected.png}"
+            actual="${diff/-diff.png/-actual.png}"
+            
+            cat >> visual-gallery/index.html << EOF
+              <div class="diff-item">
+                <div class="diff-title">$testname ($browser)</div>
+                <div class="images">
+                  <div class="image-wrapper">
+                    <img src="../$expected" alt="Expected">
+                    <div class="label">Expected</div>
+                  </div>
+                  <div class="image-wrapper">
+                    <img src="../$actual" alt="Actual">
+                    <div class="label">Actual</div>
+                  </div>
+                  <div class="image-wrapper">
+                    <img src="../$diff" alt="Diff">
+                    <div class="label">Difference</div>
+                  </div>
+                </div>
+              </div>
+          EOF
+          done
+          
+          cat >> visual-gallery/index.html << 'EOF'
+            </div>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload visual gallery
+        if: steps.analyze.outputs.diff_count > 0
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff-gallery
+          path: visual-gallery/
+          retention-days: 30
+
+      - name: Comment PR with visual results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const diffCount = '${{ steps.analyze.outputs.diff_count }}';
+            const browsers = '${{ steps.analyze.outputs.browsers }}';
+            const testUrl = `https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`;
+            const status = diffCount === '0' ? '✅' : '⚠️';
+            
+            let comment = `## ${status} Visual Regression Test Results\n\n`;
+            
+            if (diffCount === '0') {
+              comment += `🎉 **No visual differences detected!**\n\n`;
+              comment += `All visual regression tests passed across all browsers.\n`;
+            } else {
+              comment += `### ⚠️ Visual Differences Detected\n\n`;
+              comment += `**Found ${diffCount} visual difference(s)** across browsers:${browsers}\n\n`;
+              
+              // Read affected tests
+              let affectedTests = '';
+              try {
+                affectedTests = fs.readFileSync('affected_tests.txt', 'utf8');
+              } catch (error) {
+                affectedTests = 'Unable to load test details';
+              }
+              
+              comment += `### Affected Tests\n${affectedTests}\n\n`;
+              comment += `### 📸 Review Changes\n\n`;
+              comment += `1. [View workflow run](${testUrl})\n`;
+              comment += `2. Download \`visual-diff-gallery\` artifact for side-by-side comparisons\n`;
+              comment += `3. Download \`visual-diffs-{browser}\` artifacts for raw images\n\n`;
+              comment += `### 🔧 If changes are intentional:\n`;
+              comment += '```bash\n';
+              comment += 'npm run test:e2e e2e/gallery-visual-regression.spec.ts -- --update-snapshots\n';
+              comment += 'git add e2e/**/*-snapshots/\n';
+              comment += 'git commit -m "Update visual regression baselines"\n';
+              comment += '```\n';
+            }
+            
+            comment += `\n---\n`;
+            comment += `*Tested on: chromium, firefox, webkit*\n`;
+            comment += `*[Visual Regression Guide](https://github.com/${{ github.repository }}/blob/main/VISUAL-REGRESSION.md)*`;
+            
+            // Find and update or create comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('Visual Regression Test Results')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }

@@ -1,0 +1,136 @@
+name: Test Coverage
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+        continue-on-error: true
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
+
+      - name: Generate coverage summary
+        id: coverage
+        run: |
+          if [ -f coverage/coverage-summary.json ]; then
+            # Extract coverage percentages
+            LINES=$(jq '.total.lines.pct' coverage/coverage-summary.json)
+            STATEMENTS=$(jq '.total.statements.pct' coverage/coverage-summary.json)
+            FUNCTIONS=$(jq '.total.functions.pct' coverage/coverage-summary.json)
+            BRANCHES=$(jq '.total.branches.pct' coverage/coverage-summary.json)
+            
+            echo "lines=$LINES" >> $GITHUB_OUTPUT
+            echo "statements=$STATEMENTS" >> $GITHUB_OUTPUT
+            echo "functions=$FUNCTIONS" >> $GITHUB_OUTPUT
+            echo "branches=$BRANCHES" >> $GITHUB_OUTPUT
+          else
+            echo "lines=0" >> $GITHUB_OUTPUT
+            echo "statements=0" >> $GITHUB_OUTPUT
+            echo "functions=0" >> $GITHUB_OUTPUT
+            echo "branches=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment PR with coverage
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const lines = '${{ steps.coverage.outputs.lines }}';
+            const statements = '${{ steps.coverage.outputs.statements }}';
+            const functions = '${{ steps.coverage.outputs.functions }}';
+            const branches = '${{ steps.coverage.outputs.branches }}';
+            
+            const getEmoji = (pct) => {
+              const num = parseFloat(pct);
+              if (num >= 80) return '🟢';
+              if (num >= 60) return '🟡';
+              return '🔴';
+            };
+            
+            const getBar = (pct) => {
+              const num = parseFloat(pct);
+              const filled = Math.round(num / 10);
+              const empty = 10 - filled;
+              return '█'.repeat(filled) + '░'.repeat(empty);
+            };
+            
+            let comment = `## 📊 Test Coverage Report\n\n`;
+            comment += `| Metric | Coverage | Visual |\n`;
+            comment += `|--------|----------|--------|\n`;
+            comment += `| ${getEmoji(lines)} Lines | ${lines}% | \`${getBar(lines)}\` |\n`;
+            comment += `| ${getEmoji(statements)} Statements | ${statements}% | \`${getBar(statements)}\` |\n`;
+            comment += `| ${getEmoji(functions)} Functions | ${functions}% | \`${getBar(functions)}\` |\n`;
+            comment += `| ${getEmoji(branches)} Branches | ${branches}% | \`${getBar(branches)}\` |\n`;
+            comment += `\n`;
+            
+            const avgCoverage = (parseFloat(lines) + parseFloat(statements) + parseFloat(functions) + parseFloat(branches)) / 4;
+            
+            if (avgCoverage >= 70) {
+              comment += `✅ **Coverage meets thresholds!**\n`;
+            } else {
+              comment += `⚠️ **Coverage below target (70%)**\n`;
+              comment += `\nConsider adding tests for:\n`;
+              if (parseFloat(lines) < 70) comment += `- Line coverage\n`;
+              if (parseFloat(functions) < 70) comment += `- Function coverage\n`;
+              if (parseFloat(branches) < 65) comment += `- Branch coverage\n`;
+            }
+            
+            comment += `\n[View detailed report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('Test Coverage Report')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
