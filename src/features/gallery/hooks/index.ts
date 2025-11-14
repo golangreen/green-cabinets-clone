@@ -7,3 +7,6 @@ export { useAutoCompression } from './useAutoCompression';
 export { useGalleryState } from './useGalleryState';
 export { useGalleryActions } from './useGalleryActions';
 export { useGalleryManager } from './useGalleryManager';
+
+// Re-export context
+export { GalleryProvider, useGalleryContext } from '../context';
