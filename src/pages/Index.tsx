@@ -1,4 +1,4 @@
-import { Header, Footer, FeatureErrorBoundary, OfflineBanner, SyncStatusIndicator } from "@/components/layout";
+import { PublicLayout, FeatureErrorBoundary } from "@/components/layout";
 import { Hero, Services, Features, About, Gallery, Suppliers, CTA } from "@/components/marketing";
 import { ShopProducts } from "@/features/product-catalog";
 import { Contact } from "@/features/quote-request";
@@ -6,10 +6,7 @@ import { Chatbot } from "@/features/chatbot";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
-      <OfflineBanner />
-      <SyncStatusIndicator />
-      <Header />
+    <PublicLayout>
       <Hero />
       <div className="bg-brand-gray">
         <Services />
@@ -29,9 +26,8 @@ const Index = () => {
         <Contact />
       </div>
       <CTA />
-      <Footer />
       <Chatbot />
-    </div>
+    </PublicLayout>
   );
 };
 
