@@ -8,12 +8,18 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const fadeTimer = setTimeout(() => {
       setIsVisible(false);
-      setTimeout(onComplete, 300); // Wait for fade out animation
-    }, 2000);
+    }, 1500); // Reduced from 2000ms
+    
+    const completeTimer = setTimeout(() => {
+      onComplete();
+    }, 1800); // Complete just after fade
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(completeTimer);
+    };
   }, [onComplete]);
 
   if (!isVisible) {
@@ -21,7 +27,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   }
 
   return (
-    <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-background transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       <div className="animate-scale-in">
         <img 
           src="/logo.png" 
