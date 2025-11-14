@@ -4,6 +4,35 @@ This project uses Vitest for testing with comprehensive coverage tracking.
 
 ## Quick Start
 
+```bash
+# Install dependencies
+npm install
+
+# Run all tests
+npm test
+
+# Run with coverage
+npm run test:coverage
+
+# Run E2E tests
+npm run test:e2e
+
+# Run E2E in UI mode
+npm run test:e2e:ui
+
+# Update visual baselines
+npm run test:e2e e2e/gallery-visual-regression.spec.ts -- --update-snapshots
+```
+
+## CI/CD Integration
+
+This project includes automated testing workflows in GitHub Actions:
+- **E2E Tests**: Run on every PR with cross-browser testing
+- **Visual Regression**: Detect UI changes with screenshot comparison
+- **Test Coverage**: Track code coverage and enforce thresholds
+
+See [CI-CD-SETUP.md](./CI-CD-SETUP.md) for detailed workflow documentation.
+
 ### Run All Tests
 ```bash
 npm run test
