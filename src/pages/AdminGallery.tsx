@@ -4,8 +4,7 @@
  */
 
 import { Database } from 'lucide-react';
-import { AdminRoute } from '@/components/auth';
-import { Header, Footer } from '@/components/layout';
+import { AdminLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import {
   GalleryErrorBoundary,
@@ -16,38 +15,30 @@ import { GalleryProvider } from '@/features/gallery/hooks';
 
 export default function AdminGallery() {
   return (
-    <AdminRoute>
+    <AdminLayout>
       <GalleryProvider>
         <GalleryErrorBoundary>
-          <div className="min-h-screen bg-background">
-            <Header />
-            
-            <main className="container mx-auto px-4 py-8">
-              <div className="mb-8 flex items-start justify-between gap-4">
-                <div>
-                  <h1 className="text-4xl font-bold text-foreground mb-2">Gallery Management</h1>
-                  <p className="text-muted-foreground">Upload and manage gallery images with automatic metadata extraction</p>
-                </div>
-                <Button
-                  variant="outline"
-                  onClick={() => window.location.href = '/admin/storage-analyzer'}
-                  className="gap-2"
-                >
-                  <Database className="h-4 w-4" />
-                  Storage Analyzer
-                </Button>
-              </div>
+          <div className="mb-8 flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-4xl font-bold text-foreground mb-2">Gallery Management</h1>
+              <p className="text-muted-foreground">Upload and manage gallery images with automatic metadata extraction</p>
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => window.location.href = '/admin/storage-analyzer'}
+              className="gap-2"
+            >
+              <Database className="h-4 w-4" />
+              Storage Analyzer
+            </Button>
+          </div>
 
-              <div className="grid gap-6">
-                <GalleryFileSelector />
-                <GalleryImageProcessor />
-              </div>
-            </main>
-
-            <Footer />
+          <div className="grid gap-6">
+            <GalleryFileSelector />
+            <GalleryImageProcessor />
           </div>
         </GalleryErrorBoundary>
       </GalleryProvider>
-    </AdminRoute>
+    </AdminLayout>
   );
 }
