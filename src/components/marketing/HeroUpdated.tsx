@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Sparkles, Camera } from "lucide-react";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import { ROUTES } from "@/constants/routes";
-import { useHeroImages } from "@/hooks/useGalleryImages";
+import { useHeroImages } from "@/features/gallery";
 import logo from "@/assets/logo.jpg";
 
 const shuffleArray = <T,>(array: T[]): T[] => {

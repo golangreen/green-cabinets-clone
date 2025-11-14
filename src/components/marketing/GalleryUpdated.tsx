@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { useGalleryImages, useGalleryImagesByCategory } from "@/hooks/useGalleryImages";
-import { LazyImage } from "@/components/gallery/LazyImage";
+import { useGalleryImages, useGalleryImagesByCategory, LazyImage } from "@/features/gallery";
 import type { GalleryCategory } from "@/types/gallery";
 
 const GalleryUpdated = () => {

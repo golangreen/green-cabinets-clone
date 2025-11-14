@@ -12,3 +12,4 @@ export { StorageAnalyzer } from './StorageAnalyzer';
 export { BulkCompressionDialog } from './BulkCompressionDialog';
 export { GalleryFileSelector } from './GalleryFileSelector';
 export { GalleryImageProcessor } from './GalleryImageProcessor';
+export { LazyImage } from './LazyImage';

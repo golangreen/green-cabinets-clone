@@ -30,7 +30,6 @@ const AdminPerformance = lazy(() => import("./pages/AdminPerformance"));
 const AdminEmailSettings = lazy(() => import("./pages/AdminEmailSettings"));
 const AdminGallery = lazy(() => import("./pages/AdminGallery"));
 const StorageAnalyzerPage = lazy(() => import("./pages/StorageAnalyzerPage"));
-const TempGalleryTest = lazy(() => import("./pages/TempGalleryTest"));
 const RoomScan = lazy(() => import("./pages/RoomScan"));
 const DocsAuth = lazy(() => import("./pages/DocsAuth"));
 const DocsGettingStarted = lazy(() => import("./pages/DocsGettingStarted"));
@@ -178,14 +177,6 @@ const App = () => {
                     element={
                       <AdminRoute>
                         <StorageAnalyzerPage />
-                      </AdminRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/temp-gallery"
-                    element={
-                      <AdminRoute>
-                        <TempGalleryTest />
                       </AdminRoute>
                     } 
                   />
