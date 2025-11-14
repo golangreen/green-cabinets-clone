@@ -80,6 +80,23 @@ src/services/
     securityService.test.ts
 ```
 
+### Layout Component Tests
+Located in `src/components/layout/__tests__/` for testing layout wrapper components.
+
+Example:
+```
+src/components/layout/
+  AdminLayout.tsx
+  ProtectedLayout.tsx
+  PublicLayout.tsx
+  __tests__/
+    AdminLayout.test.tsx
+    ProtectedLayout.test.tsx
+    PublicLayout.test.tsx
+```
+
+**Snapshot Testing**: Layout tests use snapshots to ensure consistent structure and catch regressions.
+
 ### E2E Tests
 Located in `e2e/` directory for end-to-end user journey tests.
 
@@ -99,6 +116,38 @@ describe('MyComponent', () => {
     expect(screen.getByText('Hello')).toBeInTheDocument();
   });
 });
+```
+
+### Snapshot Test Example
+```typescript
+import { describe, it, expect } from 'vitest';
+import { render } from '@testing-library/react';
+import { AdminLayout } from '../AdminLayout';
+
+describe('AdminLayout', () => {
+  it('should match snapshot with default props', () => {
+    const { container } = render(
+      <AdminLayout>
+        <div>Content</div>
+      </AdminLayout>
+    );
+    expect(container.firstChild).toMatchSnapshot();
+  });
+  
+  it('should match snapshot with custom container', () => {
+    const { container } = render(
+      <AdminLayout containerClassName="custom-class">
+        <div>Content</div>
+      </AdminLayout>
+    );
+    expect(container.firstChild).toMatchSnapshot();
+  });
+});
+```
+
+**Updating Snapshots**: When intentional changes are made, update snapshots with:
+```bash
+npm test -- -u
 ```
 
 ### E2E Test Example
@@ -144,3 +193,5 @@ Tests run automatically on:
 4. **Keep tests isolated**: Each test should be independent
 5. **Mock external dependencies**: Don't make real API calls in tests
 6. **Test accessibility**: Use ARIA queries and check for proper semantics
+7. **Snapshot tests for layouts**: Use snapshots to prevent structural regressions
+8. **Review snapshot changes**: Always review diffs before updating snapshots
