@@ -5,39 +5,24 @@
 
 import { ImagePreviewList } from './ImagePreviewList';
 import { UploadControls } from './UploadControls';
-import type { ImagePreview, CompressionQuality } from '../types';
+import { useGalleryContext } from '../hooks';
 
-interface GalleryImageProcessorProps {
-  images: ImagePreview[];
-  selectedIndices: Set<number>;
-  uploading: boolean;
-  compressionQuality: CompressionQuality;
-  onToggleSelect: (index: number) => void;
-  onSelectAll: () => void;
-  onClearSelection: () => void;
-  onEdit: (index: number) => void;
-  onRemove: (index: number) => void;
-  onBatchEdit: () => void;
-  onMetadataEdit: () => void;
-  onCompressionChange: (quality: CompressionQuality) => void;
-  onUpload: () => void;
-}
-
-export function GalleryImageProcessor({
-  images,
-  selectedIndices,
-  uploading,
-  compressionQuality,
-  onToggleSelect,
-  onSelectAll,
-  onClearSelection,
-  onEdit,
-  onRemove,
-  onBatchEdit,
-  onMetadataEdit,
-  onCompressionChange,
-  onUpload,
-}: GalleryImageProcessorProps) {
+export function GalleryImageProcessor() {
+  const {
+    images,
+    selectedIndices,
+    uploading,
+    compressionQuality,
+    toggleSelection,
+    selectAll,
+    clearSelection,
+    openEditModal,
+    handleRemoveImage,
+    openBatchEditModal,
+    openMetadataModal,
+    setCompressionQuality,
+    handleUpload,
+  } = useGalleryContext();
   if (images.length === 0) {
     return null;
   }
@@ -48,21 +33,21 @@ export function GalleryImageProcessor({
         images={images}
         selectedIndices={selectedIndices}
         uploadProgress={{}}
-        onToggleSelect={onToggleSelect}
-        onSelectAll={onSelectAll}
-        onClearSelection={onClearSelection}
-        onEdit={onEdit}
-        onRemove={onRemove}
-        onBatchEdit={onBatchEdit}
-        onMetadataEdit={onMetadataEdit}
+        onToggleSelect={toggleSelection}
+        onSelectAll={() => selectAll(images.length)}
+        onClearSelection={clearSelection}
+        onEdit={openEditModal}
+        onRemove={handleRemoveImage}
+        onBatchEdit={() => openBatchEditModal(selectedIndices.size)}
+        onMetadataEdit={() => openMetadataModal(Array.from(selectedIndices))}
       />
 
       <UploadControls
         imageCount={images.length}
         compressionQuality={compressionQuality}
         uploading={uploading}
-        onCompressionChange={onCompressionChange}
-        onUpload={onUpload}
+        onCompressionChange={setCompressionQuality}
+        onUpload={handleUpload}
       />
     </>
   );

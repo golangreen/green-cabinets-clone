@@ -6,37 +6,25 @@
 import { useState } from 'react';
 import { GalleryUploadZone } from './GalleryUploadZone';
 import { CompressionDialog } from './CompressionDialog';
+import { useGalleryContext } from '../hooks';
 import { toast } from '@/hooks/use-toast';
 import type { CompressionQuality } from '../types';
-import type { OversizedFile } from '../services/compression';
 
-interface GalleryFileSelectorProps {
-  disabled?: boolean;
-  oversizedFiles: OversizedFile[];
-  onFilesSelected: (files: FileList) => Promise<void>;
-  onCompress: (files: FileList, quality: CompressionQuality) => Promise<void>;
-  onSkip: (files: FileList) => Promise<void>;
-  onCheckForOversized: (files: File[]) => Promise<{
-    needsCompression: boolean;
-    oversized: OversizedFile[];
-    acceptable: File[];
-  }>;
-}
-
-export function GalleryFileSelector({
-  disabled,
-  oversizedFiles,
-  onFilesSelected,
-  onCompress,
-  onSkip,
-  onCheckForOversized,
-}: GalleryFileSelectorProps) {
+export function GalleryFileSelector() {
+  const {
+    uploading,
+    oversizedFiles,
+    processFiles,
+    checkForOversizedFiles,
+    compressOversizedFiles,
+    clearOversizedFiles,
+  } = useGalleryContext();
   const [showCompressionDialog, setShowCompressionDialog] = useState(false);
   const [pendingFiles, setPendingFiles] = useState<FileList | null>(null);
 
   const handleFilesSelected = async (files: FileList) => {
     const fileArray = Array.from(files);
-    const result = await onCheckForOversized(fileArray);
+    const result = await checkForOversizedFiles(fileArray);
 
     if (result.needsCompression) {
       setPendingFiles(files);
@@ -48,7 +36,7 @@ export function GalleryFileSelector({
         variant: "default",
       });
     } else {
-      await onFilesSelected(files);
+      await processFiles(files);
     }
   };
 
@@ -56,7 +44,15 @@ export function GalleryFileSelector({
     if (!pendingFiles) return;
 
     try {
-      await onCompress(pendingFiles, quality);
+      const compressed = await compressOversizedFiles(quality);
+      const fileArray = Array.from(pendingFiles);
+      const result = await checkForOversizedFiles(fileArray);
+      
+      const allFiles = [...compressed, ...result.acceptable];
+      const dataTransfer = new DataTransfer();
+      allFiles.forEach(file => dataTransfer.items.add(file));
+      
+      await processFiles(dataTransfer.files);
       setPendingFiles(null);
       setShowCompressionDialog(false);
       
@@ -78,7 +74,27 @@ export function GalleryFileSelector({
     if (!pendingFiles) return;
 
     try {
-      await onSkip(pendingFiles);
+      const fileArray = Array.from(pendingFiles);
+      const result = await checkForOversizedFiles(fileArray);
+      
+      if (result.acceptable.length > 0) {
+        const dataTransfer = new DataTransfer();
+        result.acceptable.forEach(file => dataTransfer.items.add(file));
+        await processFiles(dataTransfer.files);
+        
+        toast({
+          title: "Oversized Files Skipped",
+          description: `Processing ${result.acceptable.length} acceptable file(s).`,
+        });
+      } else {
+        toast({
+          title: "No Files to Process",
+          description: "All selected files exceeded the size limit.",
+          variant: "default",
+        });
+      }
+      
+      clearOversizedFiles();
       setPendingFiles(null);
       setShowCompressionDialog(false);
     } catch (error) {
@@ -97,7 +113,7 @@ export function GalleryFileSelector({
     <>
       <GalleryUploadZone
         onFilesSelected={handleFilesSelected}
-        disabled={disabled}
+        disabled={uploading}
       />
 
       <CompressionDialog
