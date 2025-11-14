@@ -1,99 +1,57 @@
 /**
  * useGalleryManager Hook
- * Facade hook that combines all gallery management hooks into a single interface
+ * Facade hook that coordinates gallery actions using state from useGalleryState
  */
 
-import { useState, useCallback } from 'react';
-import { useImageManagement } from './useImageManagement';
-import { useImageSelection } from './useImageSelection';
-import { useImageUpload } from './useImageUpload';
-import { useModalManager } from './useModalManager';
-import { useAutoCompression } from './useAutoCompression';
+import { useCallback } from 'react';
+import { useGalleryState } from './useGalleryState';
 import type { CompressionQuality } from '../types';
 import type { GalleryCategory } from '@/types/gallery';
 
 export function useGalleryManager() {
-  const [compressionQuality, setCompressionQuality] = useState<CompressionQuality>('medium');
-
-  // Combine all sub-hooks
-  const imageManagement = useImageManagement();
-  const imageSelection = useImageSelection();
-  const imageUpload = useImageUpload();
-  const modalManager = useModalManager();
-  const autoCompression = useAutoCompression();
+  const state = useGalleryState();
 
   // Coordinated actions
   const handleRemoveImage = useCallback((index: number) => {
-    imageManagement.removeImage(index);
-    imageSelection.adjustSelectionAfterRemoval(index);
-  }, [imageManagement, imageSelection]);
+    state.removeImage(index);
+    state.adjustSelectionAfterRemoval(index);
+  }, [state]);
 
   const handleUpload = useCallback(async () => {
-    await imageUpload.uploadAllImages(
-      imageManagement.images,
-      compressionQuality,
-      imageManagement.clearImages
+    await state.uploadAllImages(
+      state.images,
+      state.compressionQuality,
+      state.clearImages
     );
-  }, [imageUpload, imageManagement, compressionQuality]);
+  }, [state]);
 
   const handleEditSave = useCallback((updates: Partial<any>) => {
-    if (modalManager.modalState.data?.imageIndex !== undefined) {
-      imageManagement.updateImage(modalManager.modalState.data.imageIndex, updates);
-      modalManager.closeModal();
+    if (state.modalState.data?.imageIndex !== undefined) {
+      state.updateImage(state.modalState.data.imageIndex, updates);
+      state.closeModal();
     }
-  }, [modalManager, imageManagement]);
+  }, [state]);
 
   const handleBatchEditSave = useCallback((updates: { 
     category?: GalleryCategory; 
     compressionQuality?: CompressionQuality 
   }) => {
-    imageManagement.updateMultipleImages(imageSelection.selectedIndices, updates);
-    modalManager.closeModal();
-  }, [imageManagement, imageSelection, modalManager]);
+    state.updateMultipleImages(state.selectedIndices, updates);
+    state.closeModal();
+  }, [state]);
 
   const handleMetadataSave = useCallback((updates: { 
     altText?: string; 
     description?: string; 
     displayName?: string 
   }) => {
-    imageManagement.updateMultipleImages(imageSelection.selectedIndices, updates);
-    modalManager.closeModal();
-  }, [imageManagement, imageSelection, modalManager]);
+    state.updateMultipleImages(state.selectedIndices, updates);
+    state.closeModal();
+  }, [state]);
 
   return {
-    // State
-    compressionQuality,
-    setCompressionQuality,
-    
-    // Image management
-    images: imageManagement.images,
-    processFiles: imageManagement.processFiles,
-    clearImages: imageManagement.clearImages,
-    
-    // Selection
-    selectedIndices: imageSelection.selectedIndices,
-    toggleSelection: imageSelection.toggleSelection,
-    selectAll: imageSelection.selectAll,
-    clearSelection: imageSelection.clearSelection,
-    
-    // Upload
-    uploading: imageUpload.uploading,
-    
-    // Modal state
-    modalState: modalManager.modalState,
-    isEditModalOpen: modalManager.isEditModalOpen,
-    isBatchEditModalOpen: modalManager.isBatchEditModalOpen,
-    isMetadataModalOpen: modalManager.isMetadataModalOpen,
-    openEditModal: modalManager.openEditModal,
-    openBatchEditModal: modalManager.openBatchEditModal,
-    openMetadataModal: modalManager.openMetadataModal,
-    closeModal: modalManager.closeModal,
-    
-    // Compression
-    oversizedFiles: autoCompression.oversizedFiles,
-    checkForOversizedFiles: autoCompression.checkForOversizedFiles,
-    compressOversizedFiles: autoCompression.compressOversizedFiles,
-    clearOversizedFiles: autoCompression.clearOversizedFiles,
+    // All state from useGalleryState
+    ...state,
     
     // Coordinated actions
     handleRemoveImage,
