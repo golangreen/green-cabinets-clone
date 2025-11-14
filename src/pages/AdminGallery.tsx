@@ -1,145 +1,48 @@
 /**
  * Admin Gallery Page
- * Main page for managing gallery images - now using custom hooks
+ * Main page for managing gallery images with clean component architecture
  */
 
-import { useState } from 'react';
 import { Database } from 'lucide-react';
 import { AdminRoute } from '@/components/auth';
 import { Header, Footer } from '@/components/layout';
 import { Button } from '@/components/ui/button';
-import type { CompressionQuality } from '@/hooks/useGalleryUpload';
-import type { GalleryCategory } from '@/types/gallery';
 import {
-  GalleryUploadZone,
-  ImagePreviewList,
-  UploadControls,
   GalleryErrorBoundary,
-  CompressionDialog,
+  GalleryFileSelector,
+  GalleryImageProcessor,
 } from '@/features/gallery/components';
-import {
-  useImageManagement,
-  useImageSelection,
-  useImageUpload,
-  useModalManager,
-  useAutoCompression,
-} from '@/features/gallery/hooks';
+import { useGalleryManager } from '@/features/gallery/hooks';
 import { toast } from '@/hooks/use-toast';
+import type { CompressionQuality } from '@/hooks/useGalleryUpload';
 
 export default function AdminGallery() {
-  const [compressionQuality, setCompressionQuality] = useState<CompressionQuality>('medium');
-  const [showCompressionDialog, setShowCompressionDialog] = useState(false);
-  const [pendingFiles, setPendingFiles] = useState<FileList | null>(null);
-
-  // Custom hooks for state management
-  const {
-    images,
-    processFiles,
-    removeImage,
-    updateImage,
-    updateMultipleImages,
-    clearImages,
-  } = useImageManagement();
-
-  const {
-    selectedIndices,
-    toggleSelection,
-    selectAll,
-    clearSelection,
-    adjustSelectionAfterRemoval,
-  } = useImageSelection();
-
-  const { uploading, uploadAllImages } = useImageUpload();
-
-  const {
-    modalState,
-    openEditModal,
-    openBatchEditModal,
-    openMetadataModal,
-    closeModal,
-    isEditModalOpen,
-    isBatchEditModalOpen,
-    isMetadataModalOpen,
-  } = useModalManager();
-
-  const {
-    oversizedFiles,
-    checkForOversizedFiles,
-    compressOversizedFiles,
-    clearOversizedFiles,
-  } = useAutoCompression();
+  const manager = useGalleryManager();
 
   const handleFilesSelected = async (files: FileList) => {
-    // Step 1: Check for oversized files
+    await manager.processFiles(files);
+  };
+
+  const handleCompress = async (files: FileList, quality: CompressionQuality) => {
+    const compressed = await manager.compressOversizedFiles(quality);
     const fileArray = Array.from(files);
-    const result = await checkForOversizedFiles(fileArray);
-
-    if (result.needsCompression) {
-      // Show compression dialog for oversized files
-      setPendingFiles(files);
-      setShowCompressionDialog(true);
-      
-      toast({
-        title: "Oversized Files Detected",
-        description: `${result.oversized.length} file(s) exceed the size limit. Please compress them to continue.`,
-        variant: "default",
-      });
-    } else {
-      // No oversized files, process directly
-      await processFiles(files);
-    }
+    const result = await manager.checkForOversizedFiles(fileArray);
+    
+    const allFiles = [...compressed, ...result.acceptable];
+    const dataTransfer = new DataTransfer();
+    allFiles.forEach(file => dataTransfer.items.add(file));
+    
+    await manager.processFiles(dataTransfer.files);
   };
 
-  const handleCompress = async (quality: CompressionQuality) => {
-    if (!pendingFiles) return;
-
-    try {
-      // Compress oversized files
-      const compressed = await compressOversizedFiles(quality);
-      
-      // Get acceptable files from pending files
-      const fileArray = Array.from(pendingFiles);
-      const result = await checkForOversizedFiles(fileArray);
-      
-      // Create new FileList with compressed + acceptable files
-      const allFiles = [...compressed, ...result.acceptable];
-      
-      // Convert back to FileList format for processFiles
-      const dataTransfer = new DataTransfer();
-      allFiles.forEach(file => dataTransfer.items.add(file));
-      
-      // Process all files (compressed + acceptable)
-      await processFiles(dataTransfer.files);
-      
-      // Clean up
-      setPendingFiles(null);
-      setShowCompressionDialog(false);
-      
-      toast({
-        title: "Compression Complete",
-        description: `Successfully compressed ${compressed.length} file(s). Processing all images...`,
-      });
-    } catch (error) {
-      console.error('Compression failed:', error);
-      toast({
-        title: "Compression Failed",
-        description: "Failed to compress files. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSkipOversized = async () => {
-    if (!pendingFiles) return;
-
-    // Process only acceptable files
-    const fileArray = Array.from(pendingFiles);
-    const result = await checkForOversizedFiles(fileArray);
+  const handleSkip = async (files: FileList) => {
+    const fileArray = Array.from(files);
+    const result = await manager.checkForOversizedFiles(fileArray);
     
     if (result.acceptable.length > 0) {
       const dataTransfer = new DataTransfer();
       result.acceptable.forEach(file => dataTransfer.items.add(file));
-      await processFiles(dataTransfer.files);
+      await manager.processFiles(dataTransfer.files);
       
       toast({
         title: "Oversized Files Skipped",
@@ -152,37 +55,8 @@ export default function AdminGallery() {
         variant: "default",
       });
     }
-
-    // Clean up
-    clearOversizedFiles();
-    setPendingFiles(null);
-    setShowCompressionDialog(false);
-  };
-
-  const handleRemoveImage = (index: number) => {
-    removeImage(index);
-    adjustSelectionAfterRemoval(index);
-  };
-
-  const handleEditSave = (updates: Partial<any>) => {
-    if (modalState.data?.imageIndex !== undefined) {
-      updateImage(modalState.data.imageIndex, updates);
-      closeModal();
-    }
-  };
-
-  const handleBatchEditSave = (updates: { category?: GalleryCategory; compressionQuality?: CompressionQuality }) => {
-    updateMultipleImages(selectedIndices, updates);
-    closeModal();
-  };
-
-  const handleMetadataSave = (updates: { altText?: string; description?: string; displayName?: string }) => {
-    updateMultipleImages(selectedIndices, updates);
-    closeModal();
-  };
-
-  const handleUpload = async () => {
-    await uploadAllImages(images, compressionQuality, clearImages);
+    
+    manager.clearOversizedFiles();
   };
 
   return (
@@ -208,75 +82,34 @@ export default function AdminGallery() {
             </div>
 
             <div className="grid gap-6">
-              <GalleryUploadZone
+              <GalleryFileSelector
+                disabled={manager.uploading}
+                oversizedFiles={manager.oversizedFiles}
                 onFilesSelected={handleFilesSelected}
-                disabled={uploading}
+                onCompress={handleCompress}
+                onSkip={handleSkip}
+                onCheckForOversized={manager.checkForOversizedFiles}
               />
 
-              {images.length > 0 && (
-                <>
-                  <ImagePreviewList
-                    images={images}
-                    selectedIndices={selectedIndices}
-                    uploadProgress={{}}
-                    onToggleSelect={toggleSelection}
-                    onSelectAll={() => selectAll(images.length)}
-                    onClearSelection={clearSelection}
-                    onEdit={openEditModal}
-                    onRemove={handleRemoveImage}
-                    onBatchEdit={() => openBatchEditModal(selectedIndices.size)}
-                    onMetadataEdit={() => openMetadataModal(Array.from(selectedIndices))}
-                  />
-
-                  <UploadControls
-                    imageCount={images.length}
-                    compressionQuality={compressionQuality}
-                    uploading={uploading}
-                    onCompressionChange={setCompressionQuality}
-                    onUpload={handleUpload}
-                  />
-                </>
-              )}
+              <GalleryImageProcessor
+                images={manager.images}
+                selectedIndices={manager.selectedIndices}
+                uploading={manager.uploading}
+                compressionQuality={manager.compressionQuality}
+                onToggleSelect={manager.toggleSelection}
+                onSelectAll={() => manager.selectAll(manager.images.length)}
+                onClearSelection={manager.clearSelection}
+                onEdit={manager.openEditModal}
+                onRemove={manager.handleRemoveImage}
+                onBatchEdit={() => manager.openBatchEditModal(manager.selectedIndices.size)}
+                onMetadataEdit={() => manager.openMetadataModal(Array.from(manager.selectedIndices))}
+                onCompressionChange={manager.setCompressionQuality}
+                onUpload={manager.handleUpload}
+              />
             </div>
           </main>
 
           <Footer />
-
-          {/* Compression Dialog */}
-          <CompressionDialog
-            open={showCompressionDialog}
-            onOpenChange={setShowCompressionDialog}
-            oversizedFiles={oversizedFiles}
-            onCompress={handleCompress}
-            onSkip={handleSkipOversized}
-          />
-
-          {/* Modals - Managed by useModalManager hook */}
-          {/* TODO: Integrate modal components with new type system
-          {isEditModalOpen && modalState.data?.imageIndex !== undefined && (
-            <ImageEditor
-              image={images[modalState.data.imageIndex]}
-              onSave={handleEditSave}
-              onClose={closeModal}
-            />
-          )}
-
-          {isBatchEditModalOpen && (
-            <BatchImageEditor
-              selectedCount={modalState.data?.selectedCount || 0}
-              onSave={handleBatchEditSave}
-              onClose={closeModal}
-            />
-          )}
-
-          {isMetadataModalOpen && modalState.data?.selectedIndices && (
-            <BulkMetadataEditor
-              images={modalState.data.selectedIndices.map((i: number) => images[i])}
-              onSave={handleMetadataSave}
-              onClose={closeModal}
-            />
-          )}
-          */}
         </div>
       </GalleryErrorBoundary>
     </AdminRoute>

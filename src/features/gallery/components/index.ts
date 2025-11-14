@@ -10,3 +10,5 @@ export { ValidationErrorDisplay, ValidationSummary, ValidationBadge } from './Va
 export { CompressionDialog } from './CompressionDialog';
 export { StorageAnalyzer } from './StorageAnalyzer';
 export { BulkCompressionDialog } from './BulkCompressionDialog';
+export { GalleryFileSelector } from './GalleryFileSelector';
+export { GalleryImageProcessor } from './GalleryImageProcessor';
