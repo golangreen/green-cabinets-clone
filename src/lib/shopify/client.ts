@@ -22,6 +22,16 @@ export async function storefrontApiRequest(
     return { data: null };
   }
   
+  // Check if token is configured
+  if (!SHOPIFY_CONFIG.STOREFRONT_TOKEN) {
+    console.error('❌ SHOPIFY STOREFRONT TOKEN NOT CONFIGURED');
+    console.error('Set VITE_SHOPIFY_STOREFRONT_TOKEN in your deployment environment variables');
+    return { data: null };
+  }
+  
+  console.log('🔑 Using Shopify token:', SHOPIFY_CONFIG.STOREFRONT_TOKEN.substring(0, 10) + '...');
+  console.log('🌐 Shopify URL:', SHOPIFY_STOREFRONT_URL);
+  
   try {
     const response = await fetch(SHOPIFY_STOREFRONT_URL, {
       method: 'POST',
@@ -35,26 +45,36 @@ export async function storefrontApiRequest(
       }),
     });
 
+    console.log('📡 Shopify API Response Status:', response.status);
+
     if (response.status === 402) {
-      console.warn('Shopify payment required - store needs to be on a paid plan');
+      console.error('❌ Shopify payment required - store needs to be on a paid plan');
+      return { data: null };
+    }
+
+    if (response.status === 401) {
+      console.error('❌ Unauthorized - Invalid Shopify Storefront Access Token');
+      console.error('Token being used:', SHOPIFY_CONFIG.STOREFRONT_TOKEN.substring(0, 10) + '...');
       return { data: null };
     }
 
     if (!response.ok) {
-      console.warn(`Shopify HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`❌ Shopify HTTP error! status: ${response.status}`, errorText);
       return { data: null };
     }
 
     const data = await response.json();
     
     if (data.errors) {
-      console.warn(`Shopify API errors:`, data.errors);
+      console.error(`❌ Shopify API errors:`, data.errors);
       return { data: null };
     }
 
+    console.log('✅ Shopify API request successful');
     return data;
   } catch (error) {
-    console.warn('Shopify API request failed:', error);
+    console.error('❌ Shopify API request failed:', error);
     return { data: null };
   }
 }
