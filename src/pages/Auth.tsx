@@ -107,6 +107,7 @@ const Auth = () => {
               type="button"
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm text-primary hover:underline"
+              aria-label={isLogin ? "Switch to sign up" : "Switch to login"}
             >
               {isLogin
                 ? "Don't have an account? Sign up"
