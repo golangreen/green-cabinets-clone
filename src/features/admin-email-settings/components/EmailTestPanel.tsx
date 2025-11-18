@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mail, Send, CheckCircle2, XCircle, Loader2, AlertTriangle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { emailService } from '@/services';
 import { toast } from '@/hooks/use-toast';
 
 interface EmailTestPanelProps {
@@ -32,46 +32,28 @@ export const EmailTestPanel = ({ hasVerifiedDomain = false, accountEmail = 'gree
     setLastResult(null);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        throw new Error('Not authenticated');
-      }
-
-      const response = await supabase.functions.invoke('send-test-email', {
-        body: { to_email: email },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      if (!response.data?.success) {
-        throw new Error(response.data?.error || 'Failed to send test email');
-      }
+      await emailService.sendTestEmail({ toEmail: email });
 
       setLastResult({
         success: true,
-        message: `Test email sent successfully to ${email}`,
+        message: 'Test email sent successfully!',
       });
 
       toast({
-        title: 'Test Email Sent',
-        description: `Check ${email} for the test message`,
+        title: 'Success',
+        description: 'Test email sent successfully!',
       });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to send test email';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send test email';
+      
       setLastResult({
         success: false,
-        message,
+        message: errorMessage,
       });
 
       toast({
-        title: 'Failed to Send',
-        description: message,
+        title: 'Error',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {

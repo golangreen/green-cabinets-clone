@@ -164,4 +164,29 @@ export {
 // Performance service exports
 export { performanceService } from './performanceService';
 
+// Checkout service exports
+export {
+  checkoutService,
+  type CheckoutSessionData
+} from './checkoutService';
+
+// Vanity service exports
+export {
+  vanityService,
+  type VanityPricingData,
+  type EmailQuoteParams
+} from './vanityService';
+
+// Email service exports
+export {
+  emailService,
+  type SendTestEmailParams,
+  type EmailHealthCheck
+} from './emailService';
+
+// Role test service exports
+export {
+  roleTestService,
+  type RoleExpirationTestResult
+} from './roleTestService';
 
