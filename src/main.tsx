@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import App from "./App.tsx";
 import "./index.css";
+import "./i18n/config";
 import { initSentry } from "./lib/sentry";
 import { ErrorFallback } from "./components/layout";
 import { setupBackgroundSync } from "./lib/backgroundSync";
