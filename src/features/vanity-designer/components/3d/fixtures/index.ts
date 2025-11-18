@@ -5,3 +5,5 @@ export { MirrorCabinet } from './MirrorCabinet';
 export { VanityFaucet } from './VanityFaucet';
 export { VanityBacksplash } from './VanityBacksplash';
 export { VanityLighting } from './VanityLighting';
+export { BathroomAccessories } from './BathroomAccessories';
+export { Countertop } from './Countertop';
