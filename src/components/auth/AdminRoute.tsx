@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/features/admin-security/hooks/useAdminCheck";
 import { LoadingState } from "@/components/layout";
@@ -12,6 +12,7 @@ interface AdminRouteProps {
 }
 
 export function AdminRoute({ children }: AdminRouteProps) {
+  const navigate = useNavigate();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { isAdmin, isLoading: adminLoading } = useAdminCheck();
 
@@ -41,7 +42,7 @@ export function AdminRoute({ children }: AdminRouteProps) {
           </CardHeader>
           <CardContent>
             <Button
-              onClick={() => window.location.href = ROUTES.HOME}
+              onClick={() => navigate(ROUTES.HOME)}
               className="w-full"
             >
               Return to Home
