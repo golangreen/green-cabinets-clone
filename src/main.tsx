@@ -1,4 +1,4 @@
-import { StrictMode, Suspense } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import App from "./App.tsx";
@@ -27,9 +27,7 @@ createRoot(document.getElementById("root")!).render(
       fallback={ErrorFallback}
       showDialog={false}
     >
-      <Suspense fallback={<div>Loading...</div>}>
-        <App />
-      </Suspense>
+      <App />
     </Sentry.ErrorBoundary>
   </StrictMode>
 );
