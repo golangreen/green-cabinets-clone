@@ -21,7 +21,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown, Mail, MessageCircle, Facebook, Twitter, Share2 } from "lucide-react";
+import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown } from "lucide-react";
+import jsPDF from "jspdf";
 import { FinishPreview } from "./FinishPreview";
 import { Checkbox } from "@/components/ui/checkbox";
 import logoImage from "@/assets/logo.jpg";
@@ -35,12 +36,6 @@ import { Vanity3DPreview } from "./Vanity3DPreview";
 import { TemplateGallery } from "./TemplateGallery";
 import { VanityTemplate } from "@/lib/vanityTemplates";
 import { useSavedTemplates } from "@/hooks/useSavedTemplates";
-import jsPDF from 'jspdf';
-import { CartItem } from "@/stores/cartStore";
-import { supabase } from "@/integrations/supabase/client";
-import html2canvas from 'html2canvas';
-import { SharePreviewCard } from "./SharePreviewCard";
-import { useRef } from "react";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -167,15 +162,6 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const [templateDescription, setTemplateDescription] = useState("");
-  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
-  const [recipientEmail, setRecipientEmail] = useState("");
-  const [recipientName, setRecipientName] = useState("");
-  const [isEmailSending, setIsEmailSending] = useState(false);
-  const [socialShareOpen, setSocialShareOpen] = useState(false);
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const shareCardRef = useRef<HTMLDivElement>(null);
-  const preview3DRef = useRef<HTMLDivElement>(null);
-  const [previewImageUrl, setPreviewImageUrl] = useState<string>("");
   const [texturePreviewOpen, setTexturePreviewOpen] = useState(false);
   const [previewFinish, setPreviewFinish] = useState("");
   const [fullscreenPreview, setFullscreenPreview] = useState(false);
@@ -442,289 +428,170 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     }
   }, [zipCode]);
 
-  const generateShareImage = async (): Promise<Blob | null> => {
-    if (!shareCardRef.current) return null;
-
-    try {
-      // Capture the 3D preview canvas
-      if (preview3DRef.current) {
-        const canvasElement = preview3DRef.current.querySelector('canvas');
-        if (canvasElement) {
-          const dataUrl = canvasElement.toDataURL('image/png');
-          setPreviewImageUrl(dataUrl);
-          // Wait a bit for the state to update and the image to render
-          await new Promise(resolve => setTimeout(resolve, 100));
-        }
-      }
-
-      const canvas = await html2canvas(shareCardRef.current, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: null,
-        logging: false,
-      });
-
-      return new Promise((resolve) => {
-        canvas.toBlob((blob) => {
-          resolve(blob);
-        }, 'image/png');
-      });
-    } catch (error) {
-      console.error('Error generating share image:', error);
-      return null;
-    }
-  };
-
-  const handleDownloadShareImage = async () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
-      toast.error("Please complete the configuration first");
-      return;
-    }
-
-    setIsGeneratingImage(true);
-    toast.info("Generating share image...");
-
-    try {
-      const blob = await generateShareImage();
-      if (!blob) {
-        throw new Error("Failed to generate image");
-      }
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `vanity-config-${Date.now()}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      toast.success("Share image downloaded!");
-    } catch (error) {
-      console.error('Error downloading share image:', error);
-      toast.error("Failed to generate share image");
-    } finally {
-      setIsGeneratingImage(false);
-    }
-  };
-
-  const getShareText = () => {
-    const widthFrac = getFractionDisplay(widthFraction);
-    const heightFrac = getFractionDisplay(heightFraction);
-    const depthFrac = getFractionDisplay(depthFraction);
-
-    return `Check out my custom vanity design! ${selectedBrand} ${selectedFinish} - ` +
-      `${width}${widthFrac ? ' ' + widthFrac : ''}" × ${height}${heightFrac ? ' ' + heightFrac : ''}" × ${depth}${depthFrac ? ' ' + depthFrac : ''}" ` +
-      `- $${totalPrice.toFixed(2)} - Green Cabinets NY`;
-  };
-
-  const handleFacebookShare = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
-      toast.error("Please complete the configuration first");
-      return;
-    }
-
-    const shareUrl = "https://greencabinetsny.com";
-    const text = getShareText();
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(text)}`;
-    
-    window.open(facebookUrl, '_blank', 'width=600,height=400');
-    toast.success("Opening Facebook...");
-  };
-
-  const handleTwitterShare = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
-      toast.error("Please complete the configuration first");
-      return;
-    }
-
-    const shareUrl = "https://greencabinetsny.com";
-    const text = getShareText();
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
-    
-    window.open(twitterUrl, '_blank', 'width=600,height=400');
-    toast.success("Opening Twitter...");
-  };
-
-  const handlePinterestShare = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
-      toast.error("Please complete the configuration first");
-      return;
-    }
-
-    const shareUrl = "https://greencabinetsny.com";
-    const text = getShareText();
-    const imageUrl = "https://greencabinetsny.com/logo.png"; // Using site logo as default
-    const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(text)}`;
-    
-    window.open(pinterestUrl, '_blank', 'width=600,height=400');
-    toast.success("Opening Pinterest...");
-  };
-
-  const handleWhatsAppShare = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
-      toast.error("Please complete the configuration first", {
-        description: "All dimensions and selections are required",
-      });
-      return;
-    }
-
-    const widthFrac = getFractionDisplay(widthFraction);
-    const heightFrac = getFractionDisplay(heightFraction);
-    const depthFrac = getFractionDisplay(depthFraction);
-
-    const message = `🛁 *Custom Vanity Configuration*\n\n` +
-      `📏 *Dimensions:* ${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D\n\n` +
-      `🎨 *Materials:*\n` +
-      `• Brand: ${selectedBrand}\n` +
-      `• Finish: ${selectedFinish}\n\n` +
-      `🚪 *Cabinet:* ${
-        doorStyle === "single" ? "Single Door" : 
-        doorStyle === "double" ? "Double Doors" : 
-        doorStyle === "drawers" ? "All Drawers" : 
-        doorStyle === "mixed" ? "Drawers + Doors" :
-        doorStyle === "door-drawer-split" ? `Door + Drawer (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
-        "Custom Configuration"
-      }\n\n` +
-      `🪨 *Countertop:* ${countertopMaterial} - ${countertopColor} (${countertopEdge} edge)\n` +
-      `🚰 *Sink:* ${sinkStyle} - ${sinkShape}\n\n` +
-      `💰 *Price Estimate:*\n` +
-      `• Vanity: $${basePrice.toFixed(2)}\n` +
-      `• Tax: $${tax.toFixed(2)}\n` +
-      `• Shipping (${state}): $${shipping.toFixed(2)}\n` +
-      `• *Total: $${totalPrice.toFixed(2)}*\n\n` +
-      `📍 Location: ${zipCode}\n\n` +
-      `For more details, visit: https://greencabinetsny.com`;
-
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    
-    window.open(whatsappUrl, '_blank');
-    
-    toast.success("Opening WhatsApp...", {
-      description: "Share your configuration with contacts",
-    });
-  };
-
-  const handleEmailConfig = async () => {
-    if (!recipientEmail.trim()) {
-      toast.error("Please enter an email address");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(recipientEmail)) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
-
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
-      toast.error("Please complete the configuration first");
-      return;
-    }
-
-    setIsEmailSending(true);
-
-    try {
-      const widthFrac = getFractionDisplay(widthFraction);
-      const heightFrac = getFractionDisplay(heightFraction);
-      const depthFrac = getFractionDisplay(depthFraction);
-
-      const { data, error } = await supabase.functions.invoke('email-vanity-config', {
-        body: {
-          recipientEmail: recipientEmail.trim(),
-          recipientName: recipientName.trim() || undefined,
-          config: {
-            brand: selectedBrand,
-            finish: selectedFinish,
-            dimensions: `${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D`,
-            doorStyle: doorStyle === "single" ? "Single Door" : 
-                       doorStyle === "double" ? "Double Doors" : 
-                       doorStyle === "drawers" ? "All Drawers" : 
-                       doorStyle === "mixed" ? "Drawers + Doors" :
-                       doorStyle === "door-drawer-split" ? `Door + Drawer (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
-                       "Custom Configuration",
-            countertop: `${countertopMaterial} - ${countertopColor} (${countertopEdge} edge)`,
-            sink: `${sinkStyle} - ${sinkShape}`,
-            pricing: {
-              vanity: `$${basePrice.toFixed(2)}`,
-              tax: `$${tax.toFixed(2)}`,
-              shipping: `$${shipping.toFixed(2)} (${state})`,
-              total: `$${totalPrice.toFixed(2)}`,
-            },
-          },
-        },
-      });
-
-      if (error) throw error;
-
-      toast.success("Configuration emailed successfully!", {
-        description: `Sent to ${recipientEmail}`,
-      });
-
-      setEmailDialogOpen(false);
-      setRecipientEmail("");
-      setRecipientName("");
-    } catch (error) {
-      console.error("Email error:", error);
-      toast.error("Failed to send email", {
-        description: error instanceof Error ? error.message : "Please try again",
-      });
-    } finally {
-      setIsEmailSending(false);
-    }
-  };
-
   const handleExportPDF = () => {
     if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
-      toast.error("Please complete all required fields", {
-        description: "All dimensions and selections are required for export",
+      toast.error("Please complete all fields", {
+        description: "Brand, finish, measurements, and zip code are required to export",
       });
       return;
     }
 
     try {
       const doc = new jsPDF();
-      const widthFrac = getFractionDisplay(widthFraction);
-      const heightFrac = getFractionDisplay(heightFraction);
-      const depthFrac = getFractionDisplay(depthFraction);
-      
+      const pageWidth = doc.internal.pageSize.getWidth();
+      let yPos = 20;
+      const lineHeight = 7;
+      const sectionSpacing = 10;
+
+      // Header
       doc.setFontSize(20);
-      doc.text('Custom Vanity Configuration', 20, 20);
+      doc.setFont("helvetica", "bold");
+      doc.text("Custom Vanity Configuration", pageWidth / 2, yPos, { align: "center" });
+      yPos += lineHeight + sectionSpacing;
+
+      // Company info
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text("Green Cabinets - Custom Bathroom Vanity", pageWidth / 2, yPos, { align: "center" });
+      yPos += lineHeight;
+      doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPos, { align: "center" });
+      yPos += lineHeight + sectionSpacing;
+
+      // Dimensions
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Dimensions", 20, yPos);
+      yPos += lineHeight;
       
-      doc.setFontSize(12);
-      let yPos = 40;
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
+      const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
+      const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
       
-      doc.text(`Dimensions: ${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D`, 20, yPos);
-      yPos += 10;
+      doc.text(`Width: ${widthInches.toFixed(2)}"`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Height: ${heightInches.toFixed(2)}"`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Depth: ${depthInches.toFixed(2)}"`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Brand & Finish
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Materials", 20, yPos);
+      yPos += lineHeight;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
       doc.text(`Brand: ${selectedBrand}`, 20, yPos);
-      yPos += 10;
+      yPos += lineHeight;
       doc.text(`Finish: ${selectedFinish}`, 20, yPos);
-      yPos += 10;
-      doc.text(`Cabinet: ${doorStyle}`, 20, yPos);
-      yPos += 10;
-      doc.text(`Countertop: ${countertopMaterial} - ${countertopColor}`, 20, yPos);
-      yPos += 10;
-      doc.text(`Sink: ${sinkStyle} - ${sinkShape}`, 20, yPos);
-      yPos += 15;
-      
+      yPos += lineHeight;
+      doc.text(`Price per Linear Foot: $${BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.price}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Cabinet Configuration
       doc.setFontSize(14);
-      doc.text('Price Breakdown', 20, yPos);
-      yPos += 10;
-      doc.setFontSize(12);
-      doc.text(`Vanity Price: $${basePrice.toFixed(2)}`, 20, yPos);
-      yPos += 10;
-      doc.text(`Tax: $${tax.toFixed(2)}`, 20, yPos);
-      yPos += 10;
-      doc.text(`Shipping to ${state}: $${shipping.toFixed(2)}`, 20, yPos);
-      yPos += 10;
-      doc.setFontSize(14);
-      doc.text(`Total: $${totalPrice.toFixed(2)}`, 20, yPos);
+      doc.setFont("helvetica", "bold");
+      doc.text("Cabinet Configuration", 20, yPos);
+      yPos += lineHeight;
       
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      const doorStyleText = doorStyle === "single" ? "Single Door" : 
+                            doorStyle === "double" ? "Double Doors" : 
+                            doorStyle === "drawers" ? "All Drawers" : 
+                            doorStyle === "mixed" ? "Drawers + Doors" :
+                            doorStyle === "door-drawer-split" ? `Door + Drawer (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+                            doorStyle === "door-shelf-split" ? `Door + Shelf (${cabinetPosition === 'left' ? 'Cabinet Left' : 'Cabinet Right'})` :
+                            "Custom";
+      doc.text(`Door Style: ${doorStyleText}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Number of Drawers: ${numDrawers}`, 20, yPos);
+      yPos += lineHeight;
+      const handleText = handleStyle === "bar" ? "Bar Handles" : handleStyle === "knob" ? "Knobs" : "Push-to-Open";
+      doc.text(`Handle Style: ${handleText}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Countertop & Sink
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Countertop & Sink", 20, yPos);
+      yPos += lineHeight;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Countertop Material: ${countertopMaterial.charAt(0).toUpperCase() + countertopMaterial.slice(1)}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Edge Profile: ${countertopEdge.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Sink Style: ${sinkStyle.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Sink Shape: ${sinkShape.charAt(0).toUpperCase() + sinkShape.slice(1)}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Pricing
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Pricing Estimate", 20, yPos);
+      yPos += lineHeight;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Vanity Base Price: $${basePrice.toFixed(2)}`, 20, yPos);
+      yPos += lineHeight;
+      
+      if (wallPrice > 0) {
+        doc.text(`Wall Configuration: $${wallPrice.toFixed(2)}`, 20, yPos);
+        yPos += lineHeight;
+      }
+      
+      if (floorPrice > 0) {
+        doc.text(`Floor Configuration: $${floorPrice.toFixed(2)}`, 20, yPos);
+        yPos += lineHeight;
+      }
+      
+      if (tax > 0) {
+        doc.text(`Sales Tax (${state}): $${tax.toFixed(2)}`, 20, yPos);
+        yPos += lineHeight;
+      }
+      
+      if (shipping > 0) {
+        doc.text(`Shipping to ${state}: $${shipping.toFixed(2)}`, 20, yPos);
+        yPos += lineHeight;
+      }
+      
+      doc.setFont("helvetica", "bold");
+      doc.text(`Total Estimate: $${totalPrice.toFixed(2)}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Delivery Info
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Delivery ZIP Code: ${zipCode}`, 20, yPos);
+      yPos += lineHeight;
+      doc.text(`Delivery State: ${state || "Unknown"}`, 20, yPos);
+      yPos += lineHeight + sectionSpacing;
+
+      // Footer
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "italic");
+      doc.text("Note: This is an estimate. Final pricing will be confirmed by our team.", 20, yPos);
+      yPos += lineHeight;
+      doc.text("Contact us for detailed quote and installation information.", 20, yPos);
+
+      // Save the PDF
       doc.save(`vanity-configuration-${Date.now()}.pdf`);
-      toast.success("PDF exported successfully!");
+      
+      toast.success("PDF exported successfully!", {
+        description: "Your configuration has been saved to your downloads",
+      });
     } catch (error) {
-      console.error("Export error:", error);
-      toast.error("Failed to export PDF");
+      console.error("Error generating PDF:", error);
+      toast.error("Failed to export PDF", {
+        description: "Please try again or contact support",
+      });
     }
   };
 
@@ -768,29 +635,36 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
     const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
 
-    const widthFrac = getFractionDisplay(widthFraction);
-    const heightFrac = getFractionDisplay(heightFraction);
-    const depthFrac = getFractionDisplay(depthFraction);
+    // Use the first available variant (custom products typically have one default variant)
+    const matchingVariant = product.node.variants.edges[0];
 
-    const cartItem: CartItem = {
-      product: product,
-      variantId: product.node.variants.edges[0]?.node.id || '',
-      variantTitle: `${selectedBrand} - ${selectedFinish}`,
+    if (!matchingVariant) {
+      toast.error("Configuration error", {
+        description: "Product variant not available.",
+      });
+      return;
+    }
+
+    const cartItem = {
+      product,
+      variantId: matchingVariant.node.id,
+      variantTitle: matchingVariant.node.title,
       price: {
-        amount: product.node.priceRange.minVariantPrice.amount,
-        currencyCode: product.node.priceRange.minVariantPrice.currencyCode,
+        amount: totalPrice.toFixed(2),
+        currencyCode: matchingVariant.node.price.currencyCode
       },
       quantity: 1,
       selectedOptions: [
         { name: "Brand", value: selectedBrand },
-        { name: "Finish", value: selectedFinish },
+        { name: "Finish", value: selectedFinish }
       ],
       customAttributes: [
-        { 
-          key: "Dimensions", 
-          value: `${width}${widthFrac ? ' ' + widthFrac : ''}" W × ${height}${heightFrac ? ' ' + heightFrac : ''}" H × ${depth}${depthFrac ? ' ' + depthFrac : ''}" D` 
-        },
-        { key: "ZIP Code", value: zipCode },
+        { key: "Brand", value: selectedBrand },
+        { key: "Finish", value: selectedFinish },
+        { key: "Width", value: `${widthInches.toFixed(4)}"` },
+        { key: "Height", value: `${heightInches.toFixed(4)}"` },
+        { key: "Depth", value: `${depthInches.toFixed(4)}"` },
+        { key: "Zip Code", value: zipCode },
         { key: "State", value: state || "Unknown" },
         { 
           key: "Door Style", 
@@ -1498,7 +1372,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         {/* 3D Preview and Product Images */}
         <div className="space-y-4 lg:col-span-1">
           {/* 3D Preview */}
-          <div ref={preview3DRef} className="animate-fade-in relative group">
+          <div className="animate-fade-in relative group">
             <Vanity3DPreview
               width={dimensionsInInches.widthInches}
               height={dimensionsInInches.heightInches}
@@ -2927,214 +2801,25 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             <span className="text-sm sm:text-base">Save</span>
           </Button>
           <Button 
-            onClick={handleAddToCart} 
-            className="touch-manipulation" 
-            size="lg"
-          >
-            <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">Cart</span>
-          </Button>
-        </div>
-        <div className="grid grid-cols-4 gap-3">
-          <Button 
             onClick={handleExportPDF} 
             variant="outline"
             className="touch-manipulation" 
             size="lg"
           >
-            <FileDown className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="sr-only">PDF</span>
-          </Button>
-          <Button 
-            onClick={() => setEmailDialogOpen(true)} 
-            variant="outline"
-            className="touch-manipulation" 
-            size="lg"
-          >
-            <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="sr-only">Email</span>
-          </Button>
-          <Button 
-            onClick={handleWhatsAppShare} 
-            variant="outline"
-            className="touch-manipulation bg-[#25D366]/10 hover:bg-[#25D366]/20 border-[#25D366]/30" 
-            size="lg"
-          >
-            <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="sr-only">WhatsApp</span>
-          </Button>
-          <Button 
-            onClick={() => setSocialShareOpen(true)} 
-            variant="outline"
-            className="touch-manipulation" 
-            size="lg"
-          >
-            <Share2 className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="sr-only">Share</span>
+            <FileDown className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Export PDF</span>
           </Button>
         </div>
+        <Button 
+          onClick={handleAddToCart} 
+          className="w-full touch-manipulation" 
+          size="lg"
+        >
+          <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="text-sm sm:text-base">Add to Cart</span>
+        </Button>
       </div>
     </div>
-
-      {/* Social Media Share Dialog */}
-      <Dialog open={socialShareOpen} onOpenChange={setSocialShareOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Share on Social Media</DialogTitle>
-            <DialogDescription>
-              Share your custom vanity configuration on social media
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <div className="bg-muted/50 p-4 rounded-lg text-sm mb-6">
-              <p className="font-medium mb-2">Your Configuration:</p>
-              <p className="text-muted-foreground">
-                {selectedBrand} - {selectedFinish} • {width}×{height}×{depth}" • ${totalPrice.toFixed(2)}
-              </p>
-            </div>
-
-            <div className="mb-6">
-              <Button
-                onClick={handleDownloadShareImage}
-                disabled={isGeneratingImage}
-                className="w-full justify-start gap-3 h-auto py-4"
-                size="lg"
-              >
-                <FileDown className="h-6 w-6" />
-                <div className="text-left">
-                  <p className="font-semibold">
-                    {isGeneratingImage ? "Generating..." : "Download Share Image"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Beautiful preview card for social posts
-                  </p>
-                </div>
-              </Button>
-            </div>
-            
-            <div className="space-y-3">
-              <Button
-                onClick={handleFacebookShare}
-                variant="outline"
-                className="w-full justify-start gap-3 h-auto py-4 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 border-[#1877F2]/30"
-              >
-                <Facebook className="h-6 w-6 text-[#1877F2]" />
-                <div className="text-left">
-                  <p className="font-semibold">Share on Facebook</p>
-                  <p className="text-xs text-muted-foreground">Post to your timeline</p>
-                </div>
-              </Button>
-
-              <Button
-                onClick={handleTwitterShare}
-                variant="outline"
-                className="w-full justify-start gap-3 h-auto py-4 bg-[#1DA1F2]/10 hover:bg-[#1DA1F2]/20 border-[#1DA1F2]/30"
-              >
-                <Twitter className="h-6 w-6 text-[#1DA1F2]" />
-                <div className="text-left">
-                  <p className="font-semibold">Share on Twitter</p>
-                  <p className="text-xs text-muted-foreground">Tweet your design</p>
-                </div>
-              </Button>
-
-              <Button
-                onClick={handlePinterestShare}
-                variant="outline"
-                className="w-full justify-start gap-3 h-auto py-4 bg-[#E60023]/10 hover:bg-[#E60023]/20 border-[#E60023]/30"
-              >
-                <svg className="h-6 w-6 text-[#E60023]" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
-                </svg>
-                <div className="text-left">
-                  <p className="font-semibold">Pin on Pinterest</p>
-                  <p className="text-xs text-muted-foreground">Create a pin</p>
-                </div>
-              </Button>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setSocialShareOpen(false)}>
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Hidden Share Preview Card */}
-      <SharePreviewCard
-        ref={shareCardRef}
-        brand={selectedBrand}
-        finish={selectedFinish}
-        dimensions={`${width}${getFractionDisplay(widthFraction) ? ' ' + getFractionDisplay(widthFraction) : ''}" W × ${height}${getFractionDisplay(heightFraction) ? ' ' + getFractionDisplay(heightFraction) : ''}" H × ${depth}${getFractionDisplay(depthFraction) ? ' ' + getFractionDisplay(depthFraction) : ''}" D`}
-        doorStyle={
-          doorStyle === "single" ? "Single Door" : 
-          doorStyle === "double" ? "Double Doors" : 
-          doorStyle === "drawers" ? "All Drawers" : 
-          doorStyle === "mixed" ? "Drawers + Doors" :
-          "Custom Configuration"
-        }
-        countertop={`${countertopMaterial} - ${countertopColor}`}
-        sink={`${sinkStyle} - ${sinkShape}`}
-        price={`$${totalPrice.toFixed(2)}`}
-        previewImage={previewImageUrl}
-        configUrl={window.location.href}
-      />
-
-      {/* Email Configuration Dialog */}
-      <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Email Configuration</DialogTitle>
-            <DialogDescription>
-              Send this vanity configuration to yourself or your sales team
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="recipient-name">Recipient Name (optional)</Label>
-              <Input
-                id="recipient-name"
-                placeholder="John Doe"
-                value={recipientName}
-                onChange={(e) => setRecipientName(e.target.value)}
-                disabled={isEmailSending}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="recipient-email">Email Address *</Label>
-              <Input
-                id="recipient-email"
-                type="email"
-                placeholder="customer@example.com"
-                value={recipientEmail}
-                onChange={(e) => setRecipientEmail(e.target.value)}
-                disabled={isEmailSending}
-              />
-            </div>
-            <div className="bg-muted/50 p-3 rounded-lg text-sm space-y-1">
-              <p className="font-medium">Configuration Summary:</p>
-              <p className="text-muted-foreground">
-                {selectedBrand} - {selectedFinish} • {width}×{height}×{depth}" • ${totalPrice.toFixed(2)}
-              </p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button 
-              variant="outline" 
-              onClick={() => setEmailDialogOpen(false)}
-              disabled={isEmailSending}
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleEmailConfig}
-              disabled={isEmailSending}
-            >
-              {isEmailSending ? "Sending..." : "Send Email"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* Save Template Dialog */}
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>

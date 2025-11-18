@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
@@ -149,25 +147,6 @@ const Hero = () => {
           }}
           loading="eager"
         />
-      </div>
-
-      {/* Hero Content */}
-      <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
-          Design Your Perfect Cabinet
-        </h1>
-        <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-8 drop-shadow-lg max-w-2xl mx-auto">
-          Create custom cabinets with our intuitive 3D design tool. See your vision come to life in real-time.
-        </p>
-        <Link to="/designer">
-          <Button 
-            size="lg" 
-            className="text-lg px-8 py-6 h-auto bg-primary hover:bg-primary/90 shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105"
-          >
-            <Sparkles className="mr-2 h-5 w-5" />
-            Launch Designer
-          </Button>
-        </Link>
       </div>
     </section>
   );
