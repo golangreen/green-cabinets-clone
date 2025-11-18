@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { authService } from "@/services";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,20 +23,20 @@ const Auth = () => {
 
   useEffect(() => {
     // Check if user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    authService.getSession().then(({ session }) => {
       if (session) {
         navigate("/");
       }
     });
 
     // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const unsubscribe = authService.onAuthStateChange((event, session) => {
       if (session) {
         navigate("/");
       }
     });
 
-    return () => subscription.unsubscribe();
+    return unsubscribe;
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,13 +57,10 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: email.trim(),
-          password,
-        });
+        const result = await authService.signIn(email.trim(), password);
 
-        if (error) {
-          if (error.message.includes("Invalid login credentials")) {
+        if (result.error) {
+          if (result.error.message.includes("Invalid login credentials")) {
             toast({
               title: "Login Failed",
               description: "Invalid email or password. Please try again.",
@@ -72,7 +69,7 @@ const Auth = () => {
           } else {
             toast({
               title: "Login Failed",
-              description: error.message,
+              description: result.error.message,
               variant: "destructive",
             });
           }
@@ -83,17 +80,10 @@ const Auth = () => {
           });
         }
       } else {
-        const redirectUrl = `${window.location.origin}/`;
-        const { error } = await supabase.auth.signUp({
-          email: email.trim(),
-          password,
-          options: {
-            emailRedirectTo: redirectUrl,
-          },
-        });
+        const result = await authService.signUp(email.trim(), password);
 
-        if (error) {
-          if (error.message.includes("already registered")) {
+        if (result.error) {
+          if (result.error.message.includes("already registered")) {
             toast({
               title: "Signup Failed",
               description: "This email is already registered. Please login instead.",
@@ -102,7 +92,7 @@ const Auth = () => {
           } else {
             toast({
               title: "Signup Failed",
-              description: error.message,
+              description: result.error.message,
               variant: "destructive",
             });
           }
