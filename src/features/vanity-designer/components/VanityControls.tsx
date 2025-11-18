@@ -6,9 +6,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TextureSwatch } from "./TextureSwatch";
+import { VirtualTextureGallery } from "./VirtualTextureGallery";
 import { Scan } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 import type { UseVanityConfigReturn } from "../hooks/useVanityConfig";
 
 interface VanityControlsProps {
@@ -27,6 +29,15 @@ export const VanityControls = ({
   onTextureClick,
 }: VanityControlsProps) => {
   const navigate = useNavigate();
+
+  // Preload texture images for faster rendering
+  useImagePreloader({
+    images: availableFinishes.slice(0, 20).map(finish => ({
+      src: `/textures/${vanityConfig.selectedBrand?.toLowerCase()}/${finish.toLowerCase().replace(/\s+/g, '-')}.jpg`,
+      priority: 'high'
+    })),
+    enabled: !!vanityConfig.selectedBrand && availableFinishes.length > 0
+  });
 
   return (
     <Card className="p-6 space-y-6">
@@ -62,18 +73,31 @@ export const VanityControls = ({
                   </SelectContent>
                 </Select>
 
-                <div className="flex flex-wrap gap-2 p-3 bg-secondary/10 rounded-lg max-h-40 overflow-y-auto">
-                  {availableFinishes.slice(0, 12).map((finish) => (
-                    <TextureSwatch
-                      key={finish}
-                      finishName={finish}
-                      brand={vanityConfig.selectedBrand}
-                      selected={vanityConfig.selectedFinish === finish}
-                      onClick={() => onTextureClick(finish)}
-                      size="sm"
-                    />
-                  ))}
-                </div>
+                {/* Use virtual scrolling for large texture collections */}
+                {availableFinishes.length > 30 ? (
+                  <VirtualTextureGallery
+                    textures={availableFinishes}
+                    selectedTexture={vanityConfig.selectedFinish}
+                    onTextureClick={onTextureClick}
+                    columnCount={4}
+                    rowHeight={100}
+                    width={600}
+                    height={300}
+                  />
+                ) : (
+                  <div className="flex flex-wrap gap-2 p-3 bg-secondary/10 rounded-lg max-h-40 overflow-y-auto">
+                    {availableFinishes.map((finish) => (
+                      <TextureSwatch
+                        key={finish}
+                        finishName={finish}
+                        brand={vanityConfig.selectedBrand}
+                        selected={vanityConfig.selectedFinish === finish}
+                        onClick={() => onTextureClick(finish)}
+                        size="sm"
+                      />
+                    ))}
+                  </div>
+                )}
               </>
             )}
           </div>
