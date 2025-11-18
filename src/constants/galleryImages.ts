@@ -1,5 +1,13 @@
 import type { GalleryImage, HeroImage } from '@/types/gallery';
 
+// Dynamic image loading using Vite's glob import
+const images = import.meta.glob<string>('/src/assets/gallery/*', { eager: true, import: 'default' });
+
+const getImageUrl = (filename: string): string => {
+  const path = `/src/assets/gallery/${filename}`;
+  return images[path] || '';
+};
+
 // Static imports for hero carousel images
 import modernKitchenIslandBarStools from '@/assets/gallery/modern-kitchen-island-bar-stools.jpeg';
 import luxuryKitchenMarbleDining from '@/assets/gallery/luxury-kitchen-marble-dining.jpeg';
@@ -22,48 +30,6 @@ import traditionalWhiteKitchenGrayIsland from '@/assets/gallery/traditional-whit
 import minimalistWhiteKitchenIsland from '@/assets/gallery/minimalist-white-kitchen-island.jpg';
 import modernWhiteKitchenOpenLiving from '@/assets/gallery/modern-white-kitchen-open-living.webp';
 import contemporaryWhiteKitchenBlueWall from '@/assets/gallery/contemporary-white-kitchen-blue-wall.jpg';
-import contemporaryWhiteGrayKitchen from '@/assets/gallery/contemporary-white-gray-kitchen.jpeg';
-import contemporaryWhiteKitchenMarbleIsland from '@/assets/gallery/contemporary-white-kitchen-marble-island.webp';
-import brightWhiteKitchenIslandWindows from '@/assets/gallery/bright-white-kitchen-island-windows.webp';
-import minimalistWhiteKitchenWoodFloor from '@/assets/gallery/minimalist-white-kitchen-wood-floor.webp';
-import modernWhiteKitchenBlackIslandCopperPendants from '@/assets/gallery/modern-white-kitchen-black-island-copper-pendants.webp';
-import openConceptWhiteKitchenBlackIslandDining from '@/assets/gallery/open-concept-white-kitchen-black-island-dining.webp';
-import openConceptLivingBlackKitchenIslandCopperPendants from '@/assets/gallery/open-concept-living-black-kitchen-island-copper-pendants.webp';
-import modernGrayWhiteLShapedKitchen from '@/assets/gallery/modern-gray-white-l-shaped-kitchen.webp';
-import minimalistWhiteKitchenWoodLowerCabinets from '@/assets/gallery/minimalist-white-kitchen-wood-lower-cabinets.webp';
-import contemporaryWhiteKitchenWoodIslandBar from '@/assets/gallery/contemporary-white-kitchen-wood-island-bar.webp';
-import contemporaryWhiteKitchenWoodIslandSeating from '@/assets/gallery/contemporary-white-kitchen-wood-island-seating.webp';
-import modernWhiteKitchenDiningOpenConcept from '@/assets/gallery/modern-white-kitchen-dining-open-concept.webp';
-import modernWhiteKitchenIslandBarStools from '@/assets/gallery/modern-white-kitchen-island-bar-stools.webp';
-import compactKitchenWoodIslandWhite from '@/assets/gallery/compact-kitchen-wood-island-white.webp';
-import modernWhiteWoodIslandKitchen from '@/assets/gallery/modern-white-wood-island-kitchen.jpg';
-import whiteWoodIslandSideView from '@/assets/gallery/white-wood-island-side-view.jpg';
-import naturalWoodKitchenMarble from '@/assets/gallery/natural-wood-kitchen-marble.jpeg';
-import naturalWoodGalleyKitchen from '@/assets/gallery/natural-wood-galley-kitchen.jpeg';
-import modernKitchenIslandOrangeStools from '@/assets/gallery/modern-kitchen-island-orange-stools.webp';
-import contemporaryKitchenGrayCountertop from '@/assets/gallery/contemporary-kitchen-gray-countertop.webp';
-import modernKitchenWoodCabinetsCloseup from '@/assets/gallery/modern-kitchen-wood-cabinets-closeup.webp';
-import modernKitchenMarbleWaterfallWoodBase from '@/assets/gallery/modern-kitchen-marble-waterfall-wood-base.webp';
-import lightWoodKitchenMarbleIslandBar from '@/assets/gallery/light-wood-kitchen-marble-island-bar.webp';
-import lightWoodKitchenDiningOpenConcept from '@/assets/gallery/light-wood-kitchen-dining-open-concept.webp';
-import modernWoodKitchenDarkBaseCabinets from '@/assets/gallery/modern-wood-kitchen-dark-base-cabinets.webp';
-import modernKitchenDiningWoodMarbleWindows from '@/assets/gallery/modern-kitchen-dining-wood-marble-windows.webp';
-import greenKitchenMarbleIsland from '@/assets/gallery/green-kitchen-marble-island.png';
-import greenOpenConceptKitchen from '@/assets/gallery/green-open-concept-kitchen.png';
-import modernKitchenDarkIsland from '@/assets/gallery/modern-kitchen-dark-island.jpg';
-import blumDrawerHardwareCloseup from '@/assets/gallery/blum-drawer-hardware-closeup.jpg';
-import minimalistCabinetDetail from '@/assets/gallery/minimalist-cabinet-detail.jpg';
-import whiteKitchenIslandDrawerOrganization from '@/assets/gallery/white-kitchen-island-drawer-organization.jpg';
-import whiteKitchenDrawerStorageOrganization from '@/assets/gallery/white-kitchen-drawer-storage-organization.jpg';
-import whiteCabinetLiftMechanismHardware from '@/assets/gallery/white-cabinet-lift-mechanism-hardware.jpg';
-import whiteKitchenConstructionDarkIsland from '@/assets/gallery/white-kitchen-construction-dark-island.jpg';
-import whiteKitchenDualIslandsPendants from '@/assets/gallery/white-kitchen-dual-islands-pendants.jpg';
-import whiteKitchenGrayIslandBarSeating from '@/assets/gallery/white-kitchen-gray-island-bar-seating.jpg';
-import whiteKitchenIslandDiningNook from '@/assets/gallery/white-kitchen-island-dining-nook.jpg';
-import whiteKitchenIslandOpenShelving from '@/assets/gallery/white-kitchen-island-open-shelving.jpg';
-import contemporaryBathroomDoubleVanity from '@/assets/gallery/contemporary-bathroom-double-vanity.webp';
-import modernBathroomGlassShowerWood from '@/assets/gallery/modern-bathroom-glass-shower-wood.webp';
-import contemporaryBathroomWoodVanityTubShower from '@/assets/gallery/contemporary-bathroom-wood-vanity-tub-shower.webp';
 import modernBathroomMarbleVanity from '@/assets/gallery/modern-bathroom-marble-vanity.jpeg';
 import marbleBathroomOutdoorAccess from '@/assets/gallery/marble-bathroom-outdoor-access.jpeg';
 import modernPowderRoomMarble from '@/assets/gallery/modern-powder-room-marble.jpeg';
