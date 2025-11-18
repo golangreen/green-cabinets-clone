@@ -37,7 +37,34 @@ This document summarizes the comprehensive architecture refactoring that transfo
 - Single source of truth for all data structures
 - Type safety across entire codebase
 
-### ✅ Phase 3: Custom Hooks (COMPLETE)
+### ✅ Phase 3: React Query Setup (COMPLETE)
+**Goal**: Implement proper caching and data fetching patterns
+
+**Implemented**:
+- `src/lib/queryClient.ts` - Centralized React Query configuration
+- Query key factory for consistent cache keys
+- Default cache settings (5min stale time, 10min gc time)
+- QueryClientProvider integrated in main.tsx
+
+**Impact**:
+- Consistent caching behavior
+- Reduced API calls by 60%
+- Better loading states
+
+### ✅ Phase 4: Configuration (COMPLETE)
+**Goal**: Centralize hardcoded values and constants
+
+**Implemented**:
+- `src/config/app.ts` - App metadata, Shopify config, cache settings, vanity pricing
+- Environment variable management
+- Type-safe configuration access
+
+**Impact**:
+- 50+ hardcoded values centralized
+- Easy configuration changes without searching codebase
+- Environment-aware settings
+
+### ✅ Phase 5: Custom Hooks (COMPLETE)
 **Goal**: Extract reusable component logic into hooks
 
 **Implemented**:
@@ -53,20 +80,7 @@ This document summarizes the comprehensive architecture refactoring that transfo
 - Components simplified by 30-50%
 - Logic easily testable in isolation
 
-### ✅ Phase 4: Configuration (COMPLETE)
-**Goal**: Centralize hardcoded values and constants
-
-**Implemented**:
-- `src/config/app.ts` - App metadata, Shopify config, cache settings, vanity pricing
-- Environment variable management
-- Type-safe configuration access
-
-**Impact**:
-- 50+ hardcoded values centralized
-- Easy configuration changes without searching codebase
-- Environment-aware settings
-
-### ✅ Phase 5: Edge Function Utilities (COMPLETE)
+### ✅ Phase 6: Edge Function Utilities (COMPLETE)
 **Goal**: Create shared utilities for edge functions
 
 **Implemented**:
@@ -80,8 +94,6 @@ This document summarizes the comprehensive architecture refactoring that transfo
 - 200+ lines of duplicated code eliminated
 - Consistent error handling across all functions
 - Structured logging for debugging
-
-### ✅ Phase 6: React Query Setup (COMPLETE)
 **Goal**: Implement proper caching and data fetching patterns
 
 **Implemented**:
