@@ -227,7 +227,6 @@ npm run test:ui       # Visual UI
 - **Bundle Size Optimization**:
   - Manual chunk splitting configured in vite.config.ts:
     - `react-vendor` - React core libraries (react, react-dom, react-router-dom)
-    - `ui-vendor` - UI component libraries (recharts, react-dropzone)
     - `state-vendor` - State management (zustand, react-query)
     - `supabase-vendor` - Backend integration (@supabase/supabase-js)
   - Chunk size warning limit set to 1000kb
