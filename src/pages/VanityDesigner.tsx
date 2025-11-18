@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logoTeal from "@/assets/logo-teal.svg";
 import { Button } from "@/components/ui/button";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
-import { HistoryTimeline } from "@/components/marketing";
+import { HistoryTimeline } from "@/features/marketing";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/ui/card";

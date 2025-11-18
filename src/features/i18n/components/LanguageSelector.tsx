@@ -1,4 +1,3 @@
-import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
@@ -24,18 +23,17 @@ export const LanguageSelector = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-foreground">
-          <Globe className="h-5 w-5" />
+        <Button variant="outline" size="sm">
+          {languages.find((lang) => lang.code === i18n.language)?.name || 'English'}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {languages.map((lang) => (
+      <DropdownMenuContent>
+        {languages.map((language) => (
           <DropdownMenuItem
-            key={lang.code}
-            onClick={() => changeLanguage(lang.code)}
-            className={i18n.language === lang.code ? 'bg-accent' : ''}
+            key={language.code}
+            onClick={() => changeLanguage(language.code)}
           >
-            {lang.name}
+            {language.name}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
