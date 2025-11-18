@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { compressImage } from './core';
 import { estimateCompressedSize } from './analysis';
 import type { CompressionQuality } from '../../types';
+import { logger } from '@/lib/logger';
 
 // ============================================================================
 // Types
@@ -147,7 +148,7 @@ export async function bulkCompressImages(
         savings: originalSize - compressedSize,
       });
     } catch (error) {
-      console.error(`Failed to compress ${image.name}:`, error);
+      logger.error(`Failed to compress ${image.name}`, error, { component: 'BulkCompression' });
       results.push({
         image,
         success: false,

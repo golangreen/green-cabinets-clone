@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
 
 // Add your reCAPTCHA v3 site key here
 // Get it from: https://www.google.com/recaptcha/admin
@@ -47,7 +48,7 @@ export const useRecaptcha = () => {
     };
 
     script.onerror = () => {
-      console.warn('reCAPTCHA script failed to load');
+      logger.warn('reCAPTCHA script failed to load', { hook: 'useRecaptcha' });
       setIsLoaded(false);
     };
 
@@ -69,7 +70,7 @@ export const useRecaptcha = () => {
     }
 
     if (!isLoaded || !window.grecaptcha) {
-      console.warn('reCAPTCHA not loaded');
+      logger.warn('reCAPTCHA not loaded', { hook: 'useRecaptcha' });
       return null;
     }
 
@@ -77,7 +78,7 @@ export const useRecaptcha = () => {
       const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action });
       return token;
     } catch (error) {
-      console.error('reCAPTCHA execution failed:', error);
+      logger.error('reCAPTCHA execution failed', error, { hook: 'useRecaptcha' });
       return null;
     }
   };

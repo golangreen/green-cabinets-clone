@@ -5,6 +5,7 @@
 
 import type { CompressionQuality } from '../../types';
 import { COMPRESSION_QUALITY_MAP } from '../../config/constants';
+import { logger } from '@/lib/logger';
 
 // ============================================================================
 // Core Compression Function
@@ -115,7 +116,7 @@ export async function compressFiles(
       const compressed = await compressImage(files[i], quality);
       compressedFiles.push(compressed);
     } catch (error) {
-      console.error(`Failed to compress ${files[i].name}:`, error);
+      logger.error(`Failed to compress ${files[i].name}`, error, { component: 'CompressionCore' });
       // On error, keep original file
       compressedFiles.push(files[i]);
     }
@@ -171,7 +172,7 @@ export async function compressFilesWithResults(
         reduction,
       });
     } catch (error) {
-      console.error(`Failed to compress ${originalFile.name}:`, error);
+      logger.error(`Failed to compress ${originalFile.name}`, error, { component: 'CompressionCore' });
       // On error, use original
       compressed.push(originalFile);
       results.push({

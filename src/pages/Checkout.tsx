@@ -12,6 +12,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ROUTES } from "@/constants/routes";
+import { logger } from '@/lib/logger';
 
 const checkoutSchema = z.object({
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
@@ -87,7 +88,7 @@ export default function Checkout() {
         throw new Error("No checkout URL received");
       }
     } catch (error) {
-      console.error("Checkout error:", error);
+      logger.error("Checkout error", error, { page: 'Checkout' });
       toast.error("Checkout failed. Please try again.");
       setIsProcessing(false);
     }

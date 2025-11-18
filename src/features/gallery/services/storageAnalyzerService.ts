@@ -10,6 +10,7 @@ import {
   suggestCompressionQuality,
   type StorageImage as StorageImageBase,
 } from './compression';
+import { logger } from '@/lib/logger';
 
 // ============================================================================
 // Types
@@ -69,7 +70,7 @@ export async function fetchGalleryImages(): Promise<StorageImageAnalyzer[]> {
       });
 
     if (error) {
-      console.error('Error fetching gallery images:', error);
+      logger.error('Error fetching gallery images', error, { service: 'StorageAnalyzer' });
       throw error;
     }
 
@@ -96,7 +97,7 @@ export async function fetchGalleryImages(): Promise<StorageImageAnalyzer[]> {
 
     return images;
   } catch (error) {
-    console.error('Failed to fetch gallery images:', error);
+    logger.error('Failed to fetch gallery images', error, { service: 'StorageAnalyzer' });
     throw error;
   }
 }

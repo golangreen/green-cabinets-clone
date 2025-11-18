@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { useProductCacheStore } from "@/features/product-catalog";
 import { trackOperation } from "@/lib/performance";
+import { logger } from '@/lib/logger';
 
 // Mock product for fallback
 const mockVanityProduct: ShopifyProduct = {
@@ -61,7 +62,7 @@ export default function ProductDetail() {
       try {
         // Check cache first
         if (isCacheValid() && productsList.length > 0) {
-          console.log('Using cached product data');
+          logger.debug('Using cached product data', { component: 'ProductDetail' });
           const cachedProduct = productsList.find(
             (p: ShopifyProduct) => p.node.handle === handle
           );
@@ -71,7 +72,7 @@ export default function ProductDetail() {
         }
 
         // Fetch fresh data if cache is invalid
-        console.log('Fetching fresh product data from Shopify');
+        logger.debug('Fetching fresh product data from Shopify', { component: 'ProductDetail' });
         
         // Track product detail loading performance
         await trackOperation(
@@ -93,7 +94,7 @@ export default function ProductDetail() {
           }
         );
       } catch (error) {
-        console.error("Error loading product:", error);
+        logger.error("Error loading product", error, { component: 'ProductDetail', handle });
         // Use mock product on error
         setProduct(mockVanityProduct);
       } finally {
