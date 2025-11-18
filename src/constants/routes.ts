@@ -34,13 +34,6 @@ export const DOCS_ROUTES = {
 } as const;
 
 /**
- * Debug routes (development only)
- */
-export const DEBUG_ROUTES = {
-  SERVICE_WORKER: '/sw-debug',
-} as const;
-
-/**
  * All routes (backward compatibility)
  */
 export const ROUTES = {
@@ -66,9 +59,6 @@ export const ROUTES = {
   CHECKOUT: PRODUCT_CATALOG_ROUTES.CHECKOUT,
   PAYMENT_SUCCESS: PRODUCT_CATALOG_ROUTES.PAYMENT_SUCCESS,
   PRODUCT_DETAIL: PRODUCT_CATALOG_ROUTES.PRODUCT_DETAIL,
-  
-  // Debug routes
-  SW_DEBUG: DEBUG_ROUTES.SERVICE_WORKER,
 } as const;
 
 /**

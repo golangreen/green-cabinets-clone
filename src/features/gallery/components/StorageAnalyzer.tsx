@@ -35,7 +35,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { toast } from '@/hooks/useToast';
+import { toast } from '@/hooks/use-toast';
 import { logger } from '@/lib/logger';
 import {
   analyzeGalleryStorage,

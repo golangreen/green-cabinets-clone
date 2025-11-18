@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
-import { useAdminCheck } from '@/features/admin-security/hooks/useAdminCheck';
+import { useAdminCheck } from '@/hooks/useAdminCheck';
 import * as cacheService from '@/services/cacheService';
 
 export function useCacheManagement() {

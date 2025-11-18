@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,19 +9,18 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings, Activity, Mail, Image, RefreshCw } from "lucide-react";
+import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings, Activity, Mail, Image } from "lucide-react";
 import logoTeal from "@/assets/logo-teal.svg";
 import logoBlack from "@/assets/logo-black.svg";
 import { CartDrawer } from "@/features/shopping-cart";
 import { ThemeToggle } from "@/features/theme";
 import { useAuth } from "@/contexts/AuthContext";
-import { useAdminCheck } from "@/features/admin-security/hooks/useAdminCheck";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { InstallPWADialog } from "@/features/pwa";
 import { ROUTES } from "@/constants/routes";
 
 const Header = () => {
-  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showInstallDialog, setShowInstallDialog] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -109,8 +107,8 @@ const Header = () => {
           <div className="w-12"></div>
           
           {/* Centered Logo */}
-          <button 
-            onClick={() => navigate('/')}
+          <a 
+            href="/" 
             className="cursor-pointer flex items-center absolute left-1/2 transform -translate-x-1/2"
             aria-label="Green Cabinets - Home"
           >
@@ -119,7 +117,7 @@ const Header = () => {
               alt="Green Cabinets Logo" 
               className="h-16 md:h-20 w-auto transition-all duration-300"
             />
-          </button>
+          </a>
           
           {/* Hamburger Menu - Right Side */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -213,7 +211,7 @@ const Header = () => {
                       <button
                         onClick={() => {
                           setIsMobileMenuOpen(false);
-                          navigate(ROUTES.DOCS_GETTING_STARTED);
+                          window.location.href = ROUTES.DOCS_GETTING_STARTED;
                         }}
                         className="text-left py-2 hover:text-primary transition-colors"
                       >
@@ -222,7 +220,7 @@ const Header = () => {
                       <button
                         onClick={() => {
                           setIsMobileMenuOpen(false);
-                          navigate(ROUTES.DOCS_AUTH);
+                          window.location.href = ROUTES.DOCS_AUTH;
                         }}
                         className="text-left py-2 hover:text-primary transition-colors"
                       >
@@ -231,7 +229,7 @@ const Header = () => {
                       <button
                         onClick={() => {
                           setIsMobileMenuOpen(false);
-                          navigate(ROUTES.DOCS_API);
+                          window.location.href = ROUTES.DOCS_API;
                         }}
                         className="text-left py-2 hover:text-primary transition-colors"
                       >
@@ -240,7 +238,7 @@ const Header = () => {
                       <button
                         onClick={() => {
                           setIsMobileMenuOpen(false);
-                          navigate(ROUTES.DOCS_TROUBLESHOOTING);
+                          window.location.href = ROUTES.DOCS_TROUBLESHOOTING;
                         }}
                         className="text-left py-2 hover:text-primary transition-colors"
                       >
@@ -282,7 +280,7 @@ const Header = () => {
                         size="sm"
                         onClick={() => {
                           setIsMobileMenuOpen(false);
-                          navigate(ROUTES.PROFILE);
+                          window.location.href = ROUTES.PROFILE;
                         }}
                         className="justify-start"
                       >
@@ -296,7 +294,7 @@ const Header = () => {
                             size="sm"
                             onClick={() => {
                               setIsMobileMenuOpen(false);
-                              navigate(ROUTES.ADMIN_SECURITY);
+                              window.location.href = ROUTES.ADMIN_SECURITY;
                             }}
                             className="justify-start"
                           >
@@ -308,7 +306,7 @@ const Header = () => {
                             size="sm"
                             onClick={() => {
                               setIsMobileMenuOpen(false);
-                              navigate(ROUTES.ADMIN_USERS);
+                              window.location.href = ROUTES.ADMIN_USERS;
                             }}
                             className="justify-start"
                           >
@@ -320,7 +318,7 @@ const Header = () => {
                             size="sm"
                             onClick={() => {
                               setIsMobileMenuOpen(false);
-                              navigate(ROUTES.ADMIN_AUDIT_LOG);
+                              window.location.href = ROUTES.ADMIN_AUDIT_LOG;
                             }}
                             className="justify-start"
                           >
@@ -332,7 +330,7 @@ const Header = () => {
                             size="sm"
                             onClick={() => {
                               setIsMobileMenuOpen(false);
-                              navigate(ROUTES.ADMIN_CACHE);
+                              window.location.href = ROUTES.ADMIN_CACHE;
                             }}
                             className="justify-start"
                           >
@@ -344,7 +342,7 @@ const Header = () => {
                             size="sm"
                             onClick={() => {
                               setIsMobileMenuOpen(false);
-                              navigate(ROUTES.ADMIN_GALLERY);
+                              window.location.href = '/admin/gallery';
                             }}
                             className="justify-start"
                           >
@@ -356,7 +354,7 @@ const Header = () => {
                             size="sm"
                             onClick={() => {
                               setIsMobileMenuOpen(false);
-                              navigate(ROUTES.ADMIN_CONFIG);
+                              window.location.href = '/admin/config';
                             }}
                             className="justify-start"
                           >
@@ -368,7 +366,7 @@ const Header = () => {
                             size="sm"
                             onClick={() => {
                               setIsMobileMenuOpen(false);
-                              navigate('/admin/performance');
+                              window.location.href = '/admin/performance';
                             }}
                             className="justify-start"
                           >
@@ -380,24 +378,12 @@ const Header = () => {
                             size="sm"
                             onClick={() => {
                               setIsMobileMenuOpen(false);
-                              navigate(ROUTES.ADMIN_EMAIL_SETTINGS);
+                              window.location.href = ROUTES.ADMIN_EMAIL_SETTINGS;
                             }}
                             className="justify-start"
                           >
                             <Mail className="mr-2 h-4 w-4" />
                             Email Settings
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setIsMobileMenuOpen(false);
-                              navigate(ROUTES.SW_DEBUG);
-                            }}
-                            className="justify-start"
-                          >
-                            <RefreshCw className="mr-2 h-4 w-4" />
-                            SW Debug
                           </Button>
                         </>
                       )}
@@ -419,7 +405,7 @@ const Header = () => {
                       variant="default"
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        navigate(ROUTES.AUTH);
+                        window.location.href = ROUTES.AUTH;
                       }}
                       className="w-full"
                     >
@@ -492,7 +478,7 @@ const Header = () => {
                       className="justify-start" 
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        navigate(ROUTES.DOCS_GETTING_STARTED);
+                        window.location.href = ROUTES.DOCS_GETTING_STARTED;
                       }}
                     >
                       Getting Started
@@ -502,7 +488,7 @@ const Header = () => {
                       className="justify-start" 
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        navigate(ROUTES.DOCS_AUTH);
+                        window.location.href = ROUTES.DOCS_AUTH;
                       }}
                     >
                       Authentication Guide
@@ -512,7 +498,7 @@ const Header = () => {
                       className="justify-start" 
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        navigate(ROUTES.DOCS_API);
+                        window.location.href = ROUTES.DOCS_API;
                       }}
                     >
                       API Reference
@@ -529,7 +515,7 @@ const Header = () => {
                       className="justify-start" 
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        navigate(ROUTES.DOCS_TROUBLESHOOTING);
+                        window.location.href = ROUTES.DOCS_TROUBLESHOOTING;
                       }}
                     >
                       Troubleshooting

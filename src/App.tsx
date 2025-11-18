@@ -12,8 +12,6 @@ import { FeatureErrorBoundary, ConfigValidationAlert, SplashScreen } from "@/com
 import { PreloadManager } from "@/features/product-catalog";
 import { CACHE_CONFIG } from "@/config";
 import { createQueryClient } from "@/config/reactQuery";
-import { SkipLink } from "@/components/accessibility";
-import { ServiceWorkerUpdateNotification } from "@/components/ServiceWorkerUpdateNotification";
 
 // Lazy load all pages for code-splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -37,11 +35,8 @@ const DocsAuth = lazy(() => import("./pages/DocsAuth"));
 const DocsGettingStarted = lazy(() => import("./pages/DocsGettingStarted"));
 const DocsConfiguration = lazy(() => import("./pages/DocsConfiguration"));
 const DocsAPI = lazy(() => import("./pages/DocsAPI"));
-const DocsAPIReference = lazy(() => import("./pages/DocsAPIReference"));
 const DocsTroubleshooting = lazy(() => import("./pages/DocsTroubleshooting"));
 const DocsSecurity = lazy(() => import("./pages/DocsSecurity"));
-const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
-const ServiceWorkerDebug = lazy(() => import("./pages/ServiceWorkerDebug"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = createQueryClient();
@@ -69,17 +64,12 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <SkipLink />
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <AuthProvider>
             <TooltipProvider>
               <Toaster />
               <Sonner />
-              
-              {/* Service Worker update notifications */}
-              <ServiceWorkerUpdateNotification />
-              
               {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
               
               {/* Configuration validation alert */}
@@ -195,18 +185,8 @@ const App = () => {
                   <Route path="/docs/getting-started" element={<DocsGettingStarted />} />
                   <Route path="/docs/configuration" element={<DocsConfiguration />} />
                   <Route path="/docs/api" element={<DocsAPI />} />
-                  <Route path="/docs/api-reference" element={<DocsAPIReference />} />
                   <Route path="/docs/security" element={<DocsSecurity />} />
                   <Route path="/docs/troubleshooting" element={<DocsTroubleshooting />} />
-                  <Route path="/accessibility" element={<AccessibilityStatement />} />
-                  <Route 
-                    path="/sw-debug"
-                    element={
-                      <AdminRoute>
-                        <ServiceWorkerDebug />
-                      </AdminRoute>
-                    } 
-                  />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

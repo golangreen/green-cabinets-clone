@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { roleTestService } from '@/services';
+import { supabase } from '@/integrations/supabase/client';
 import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,16 @@ export const RoleExpirationTestPanel = () => {
       setIsLoading(true);
       setPreviewResults(null);
 
-      const data = await roleTestService.previewExpirationNotifications();
+      const { data, error } = await supabase.functions.invoke('test-role-expiration', {
+        body: {
+          action: 'preview',
+          reminder_type: reminderType,
+          preview_email: previewEmail || undefined
+        }
+      });
+
+      if (error) throw error;
+
       setPreviewResults(data);
       toast.success('Email previews generated');
     } catch (error: any) {
@@ -39,12 +48,20 @@ export const RoleExpirationTestPanel = () => {
     setTriggerResults(null);
     
     try {
-      const data = await roleTestService.triggerExpirationCheck();
+      const { data, error } = await supabase.functions.invoke('test-role-expiration', {
+        body: {
+          action: 'trigger',
+          reminder_type: reminderType
+        }
+      });
+      
+      if (error) throw error;
+      
       setTriggerResults(data);
       toast.success('Role expiration check completed successfully');
     } catch (error) {
       logger.edgeFunctionError('test-role-expiration', error);
-      toast.error((error as Error).message || 'Failed to trigger check');
+      toast.error(error.message || 'Failed to trigger check');
     } finally {
       setIsLoading(false);
     }

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logoTeal from "@/assets/logo-teal.svg";
 import { Button } from "@/components/ui/button";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
-import { HistoryTimeline } from "@/features/marketing";
+import { HistoryTimeline } from "@/components/marketing";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/ui/card";
@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingState, FeatureErrorBoundary } from "@/components/layout";
-import { logger } from "@/lib/logger";
 import { 
   Plus,
   Trash2,
@@ -325,7 +324,7 @@ const VanityDesigner = () => {
           applyScannedMeasurementsToWalls(latestScan);
         }
       } catch (error) {
-        logger.error('Failed to load scanned measurements', error, { feature: 'VanityDesigner' });
+        console.error('Error loading scanned measurements:', error);
       }
     };
 
@@ -1032,7 +1031,7 @@ const VanityDesigner = () => {
       
       return canvas.toDataURL('image/png');
     } catch (error) {
-      logger.error('Failed to capture thumbnail', error, { feature: 'VanityDesigner' });
+      console.error('Failed to capture thumbnail:', error);
       return '';
     }
   }, []);

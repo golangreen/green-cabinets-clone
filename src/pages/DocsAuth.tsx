@@ -6,10 +6,6 @@ import { ShieldCheck, Lock, Code, AlertTriangle, CheckCircle2, XCircle } from "l
 import { Header, Footer } from "@/components/layout";
 import { DocsSidebar } from "@/features/docs";
 import { ROUTES } from "@/constants/routes";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { logger } from "@/lib/logger";
 
 const DocsAuth = () => {
   return (
@@ -476,7 +472,7 @@ export const useAdminCheck = () => {
 
         setIsAdmin(data);
       } catch (error) {
-        logger.error('Failed to check admin role', error, { page: 'DocsAuth' });
+        console.error('Error checking admin role:', error);
         navigate('/');
       } finally {
         setIsLoading(false);

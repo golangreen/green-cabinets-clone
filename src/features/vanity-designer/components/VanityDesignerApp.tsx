@@ -10,11 +10,10 @@ import { FullscreenPreview } from "./FullscreenPreview";
 import { useVanityConfig, useSavedTemplates } from "@/features/vanity-designer";
 import { calculateCompletePricing, generateVanityQuotePDF, generateShareableURL } from "@/features/vanity-designer/services";
 import { toast } from "sonner";
-import { getEggerColorNames } from "@/features/vanity-designer/data/finishes/egger";
+import { getEggerColorNames } from "@/lib/eggerColors";
 import { getTafisaColorNames } from "@/lib/tafisaColors";
-import { vanityService } from "@/services";
+import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/lib/logger";
-import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
 const EGGER_FINISHES = getEggerColorNames();
 const TAFISA_FINISHES = getTafisaColorNames();
@@ -36,17 +35,6 @@ const BRAND_INFO = {
 export const VanityDesignerApp = () => {
   const vanityConfig = useVanityConfig();
   const { savedTemplates, saveTemplate } = useSavedTemplates();
-  
-  // Performance monitoring
-  const { markStart, measureOperation } = usePerformanceMonitor({
-    name: 'VanityDesignerApp',
-    trackMount: true,
-    trackRender: true,
-    metadata: {
-      brand: vanityConfig.selectedBrand,
-      finish: vanityConfig.selectedFinish,
-    },
-  });
   
   const [fullscreenPreview, setFullscreenPreview] = useState(false);
   const [selectedTexture, setSelectedTexture] = useState<string | null>(null);
@@ -85,11 +73,9 @@ export const VanityDesignerApp = () => {
   const { basePrice, wallPrice, floorPrice, subtotal, tax, shipping, totalPrice } = pricing;
 
   const handleTextureClick = (finishName: string) => {
-    const mark = markStart('texture-selection');
     setSelectedTexture(finishName);
     setTextureModalOpen(true);
     vanityConfig.setSelectedFinish(finishName);
-    measureOperation('texture-selection', mark.name);
   };
 
   const handleSaveTemplate = () => {
@@ -127,7 +113,6 @@ export const VanityDesignerApp = () => {
       return;
     }
 
-    const mark = markStart('pdf-generation');
     setIsExporting(true);
     toast.loading("Generating PDF quote...");
 
@@ -154,12 +139,10 @@ export const VanityDesignerApp = () => {
 
       toast.dismiss();
       toast.success("PDF quote downloaded!");
-      measureOperation('pdf-generation', mark.name);
     } catch (error) {
       logger.error('Error generating PDF', error, { component: 'VanityDesignerApp' });
       toast.dismiss();
       toast.error("Failed to generate PDF");
-      measureOperation('pdf-generation', mark.name);
     } finally {
       setIsExporting(false);
     }
@@ -171,7 +154,6 @@ export const VanityDesignerApp = () => {
       return;
     }
 
-    const mark = markStart('share-url-generation');
     try {
       const url = generateShareableURL({
         brand: vanityConfig.selectedBrand,
@@ -199,11 +181,9 @@ export const VanityDesignerApp = () => {
 
       setShareUrl(url);
       setShareModalOpen(true);
-      measureOperation('share-url-generation', mark.name);
     } catch (error) {
       logger.error('Error generating share link', error, { component: 'VanityDesignerApp' });
       toast.error("Failed to generate share link");
-      measureOperation('share-url-generation', mark.name);
     }
   };
 
@@ -213,7 +193,6 @@ export const VanityDesignerApp = () => {
       return;
     }
 
-    const mark = markStart('quote-email-send');
     toast.loading("Generating and sending quote...");
 
     try {
@@ -241,31 +220,35 @@ export const VanityDesignerApp = () => {
       // Get PDF as base64 (jsPDF output method returns base64 when using 'datauristring')
       const pdfBase64 = pdfDoc.output('datauristring').split(',')[1];
 
-      // Call service to send email with PDF
-      await vanityService.emailQuotePDF(
-        email,
-        name,
-        ccSales,
-        pdfBase64,
-        {
-          brand: vanityConfig.selectedBrand,
-          finish: vanityConfig.selectedFinish,
-          width: vanityConfig.dimensionsInInches.width,
-          height: vanityConfig.dimensionsInInches.height,
-          depth: vanityConfig.dimensionsInInches.depth,
-          doorStyle: vanityConfig.doorStyle,
-          totalPrice: totalPrice,
-        }
-      );
+      // Call edge function to send email
+      const { error } = await supabase.functions.invoke('send-vanity-quote-email', {
+        body: {
+          recipientEmail: email,
+          recipientName: name,
+          ccSalesTeam: ccSales,
+          pdfBase64,
+          vanityConfig: {
+            brand: vanityConfig.selectedBrand,
+            finish: vanityConfig.selectedFinish,
+            width: vanityConfig.dimensionsInInches.width,
+            height: vanityConfig.dimensionsInInches.height,
+            depth: vanityConfig.dimensionsInInches.depth,
+            doorStyle: vanityConfig.doorStyle,
+            totalPrice: totalPrice,
+          },
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
 
       toast.dismiss();
       toast.success("Quote sent successfully! Check your email.");
-      measureOperation('quote-email-send', mark.name);
     } catch (error) {
       logger.error('Error sending quote', error, { component: 'VanityDesignerApp' });
       toast.dismiss();
       toast.error("Failed to send quote. Please try again.");
-      measureOperation('quote-email-send', mark.name);
       throw error;
     }
   };

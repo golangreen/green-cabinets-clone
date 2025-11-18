@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mail, Send, CheckCircle2, XCircle, Loader2, AlertTriangle } from 'lucide-react';
-import { emailService } from '@/services';
-import { toast } from '@/hooks/useToast';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 interface EmailTestPanelProps {
   hasVerifiedDomain?: boolean;
@@ -32,28 +32,46 @@ export const EmailTestPanel = ({ hasVerifiedDomain = false, accountEmail = 'gree
     setLastResult(null);
 
     try {
-      await emailService.sendTestEmail({ toEmail: email });
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await supabase.functions.invoke('send-test-email', {
+        body: { to_email: email },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Failed to send test email');
+      }
 
       setLastResult({
         success: true,
-        message: 'Test email sent successfully!',
+        message: `Test email sent successfully to ${email}`,
       });
 
       toast({
-        title: 'Success',
-        description: 'Test email sent successfully!',
+        title: 'Test Email Sent',
+        description: `Check ${email} for the test message`,
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to send test email';
-      
+      const message = error instanceof Error ? error.message : 'Failed to send test email';
       setLastResult({
         success: false,
-        message: errorMessage,
+        message,
       });
 
       toast({
-        title: 'Error',
-        description: errorMessage,
+        title: 'Failed to Send',
+        description: message,
         variant: 'destructive',
       });
     } finally {

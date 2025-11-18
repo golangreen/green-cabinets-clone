@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy, Play, Check, Terminal, Loader2, History, Trash2, Clock, Bookmark, Star } from "lucide-react";
-import { useToast } from "@/hooks/useToast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 // Components
 import { Header, Footer } from "@/components/layout";
@@ -19,9 +19,9 @@ import { DocsSidebar, QueryEditor, ValidationErrors, QueryResults } from "@/feat
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Hooks
-import { useQueryHistory, type QueryHistoryItem } from "@/features/docs/hooks";
-import { useQueryBookmarks } from "@/features/docs/hooks";
-import { useDatabaseSchema, convertToValidatorSchema } from "@/features/docs/hooks";
+import { useQueryHistory, type QueryHistoryItem } from "@/hooks/useQueryHistory";
+import { useQueryBookmarks, type BookmarkItem } from "@/hooks/useQueryBookmarks";
+import { useDatabaseSchema } from "@/hooks/useDatabaseSchema";
 import { useDebounce } from "@/hooks/useDebounce";
 
 // Utilities
@@ -40,7 +40,7 @@ const DocsTroubleshooting = () => {
 
   // Use custom hooks
   const { history: queryHistory, addToHistory, clearHistory: clearHistoryHook } = useQueryHistory();
-  const { bookmarks, addBookmark: addBookmarkHook, removeBookmark: removeBookmarkHook } = useQueryBookmarks();
+  const { bookmarks, addBookmark: addBookmarkHook, deleteBookmark: deleteBookmarkHook } = useQueryBookmarks();
   const { schema: schemaInfo } = useDatabaseSchema();
 
   // Debounce the query for validation (300ms delay)
@@ -49,8 +49,7 @@ const DocsTroubleshooting = () => {
   // Validate query when debounced value changes
   useEffect(() => {
     if (debouncedQuery && schemaInfo.length > 0) {
-      const validatorSchema = convertToValidatorSchema(schemaInfo);
-      const errors = validateQuery(debouncedQuery, validatorSchema);
+      const errors = validateQuery(debouncedQuery, schemaInfo);
       setValidationErrors(errors);
     }
   }, [debouncedQuery, schemaInfo]);
@@ -71,7 +70,7 @@ const DocsTroubleshooting = () => {
     });
   };
 
-  const loadBookmark = (bookmark: import("@/features/docs/hooks").QueryBookmark) => {
+  const loadBookmark = (bookmark: BookmarkItem) => {
     setSqlQuery(bookmark.query);
     toast({
       title: "Bookmark loaded",
@@ -80,7 +79,7 @@ const DocsTroubleshooting = () => {
   };
 
   const deleteBookmark = (id: string) => {
-    removeBookmarkHook(id);
+    deleteBookmarkHook(id);
     toast({
       title: "Bookmark deleted",
       description: "Bookmark has been removed",
@@ -92,8 +91,7 @@ const DocsTroubleshooting = () => {
     setQueryResult(null);
 
     // Validate query before execution
-    const validatorSchema = convertToValidatorSchema(schemaInfo);
-    const errors = validateQuery(sqlQuery, validatorSchema);
+    const errors = validateQuery(sqlQuery, schemaInfo);
     const hasErrors = errors.some(e => e.type === 'error');
     
     if (hasErrors) {
@@ -102,7 +100,7 @@ const DocsTroubleshooting = () => {
         type: "error"
       });
       setIsExecuting(false);
-      addToHistory({ query: sqlQuery, rowCount: undefined, error: errors.find(e => e.type === 'error')?.message, success: false });
+      addToHistory(sqlQuery, false, undefined, errors.find(e => e.type === 'error')?.message);
       return;
     }
 
@@ -113,13 +111,13 @@ const DocsTroubleshooting = () => {
 
     // Add to history
     if (result.type === 'success') {
-      addToHistory({ query: sqlQuery, rowCount: result.rowCount, success: true });
+      addToHistory(sqlQuery, true, result.rowCount);
       toast({
         title: "Query executed successfully",
         description: `Retrieved ${result.rowCount} rows`,
       });
     } else {
-      addToHistory({ query: sqlQuery, rowCount: undefined, error: result.error, success: false });
+      addToHistory(sqlQuery, false, undefined, result.error);
     }
   };
 
@@ -232,8 +230,7 @@ const DocsTroubleshooting = () => {
   ];
 
   // Create SQL autocompletion using extracted utility
-  const validatorSchemaForCompletions = convertToValidatorSchema(schemaInfo);
-  const sqlCompletions = createSqlCompletions(validatorSchemaForCompletions);
+  const sqlCompletions = createSqlCompletions(schemaInfo);
   
   return (
     <div className="min-h-screen bg-background">

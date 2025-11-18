@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { emailConfigService } from '@/services/emailConfigService';
-import { toast } from '@/hooks/useToast';
+import { toast } from '@/hooks/use-toast';
 import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 
 export const useEmailSettings = () => {

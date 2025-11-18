@@ -32,16 +32,10 @@ const docSections: DocSection[] = [
     keywords: ["auth", "login", "signup", "user", "role", "security", "session", "jwt"],
   },
   {
-    title: "API Overview",
+    title: "API Reference",
     path: ROUTES.DOCS_API,
     icon: Code,
-    keywords: ["api", "overview", "introduction", "guide"],
-  },
-  {
-    title: "API Reference",
-    path: "/docs/api-reference",
-    icon: Code,
-    keywords: ["api", "edge", "function", "endpoint", "webhook", "checkout", "security", "reference", "documentation"],
+    keywords: ["api", "edge", "function", "endpoint", "webhook", "checkout", "security"],
   },
   {
     title: "Security",

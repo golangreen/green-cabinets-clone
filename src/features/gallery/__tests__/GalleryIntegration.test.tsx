@@ -64,7 +64,7 @@ vi.mock('@/hooks/useGalleryUpload', () => ({
   })),
 }));
 
-vi.mock('@/hooks/useToast', () => ({
+vi.mock('@/hooks/use-toast', () => ({
   toast: vi.fn(),
   useToast: vi.fn(() => ({
     toast: vi.fn(),

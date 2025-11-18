@@ -1,9 +1,8 @@
-import React, { useMemo, useRef, useEffect, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { SCALE_FACTOR, getMaterialProps, createWoodTexture, createBumpMap } from '../MaterialUtils';
 import { MeasurementLine } from '../MeasurementTools';
 import { Countertop } from '../fixtures';
-import { useMaterialWorker } from '@/hooks/useMaterialWorker';
 
 type MeasurementType = 'height' | 'width' | 'depth' | 'door' | null;
 
@@ -47,16 +46,8 @@ export const VanityCabinet: React.FC<VanityCabinetProps> = ({
   const scaledHeight = height * SCALE_FACTOR;
   const scaledDepth = depth * SCALE_FACTOR;
 
-  // Offload material calculations to Web Worker for better performance
-  const { calculateMaterialProps } = useMaterialWorker();
-  const [materialProps, setMaterialProps] = useState(() => getMaterialProps(brand, finish));
-
-  useEffect(() => {
-    // Try Web Worker first, fallback to main thread
-    calculateMaterialProps(brand, finish)
-      .then(props => setMaterialProps(props))
-      .catch(() => setMaterialProps(getMaterialProps(brand, finish)));
-  }, [brand, finish, calculateMaterialProps]);
+  // Get material properties based on finish
+  const materialProps = useMemo(() => getMaterialProps(brand, finish), [brand, finish]);
 
   // Material thickness
   const thickness = 0.05;

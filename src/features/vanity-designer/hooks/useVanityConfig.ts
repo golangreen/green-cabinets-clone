@@ -5,14 +5,6 @@ import { inchesWithFractionToDecimal } from "../services/vanityPricingService";
 import { decodeShareableURL } from "../services/shareService";
 import { roomScanner } from "@/features/room-scanner/utils/roomScanner";
 import { logger } from "@/lib/logger";
-import { useVanityDimensions } from "./useVanityDimensions";
-import { useVanityFinishes } from "./useVanityFinishes";
-import { useVanityCabinetConfig } from "./useVanityCabinetConfig";
-import { useVanityWalls } from "./useVanityWalls";
-import { useVanityRoomConfig } from "./useVanityRoomConfig";
-import { useVanityFixtures } from "./useVanityFixtures";
-import { useVanityLighting } from "./useVanityLighting";
-import { useVanityLocation } from "./useVanityLocation";
 
 export interface UseVanityConfigReturn {
   // Brand & Finish

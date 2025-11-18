@@ -11,11 +11,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
-import { useToast } from "@/hooks/useToast";
-import { useRecaptcha, type UseRecaptchaReturn } from '@/features/quote-request/hooks';
+import { useToast } from "@/hooks/use-toast";
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { validators } from "@/lib/formValidation";
 import { logger } from '@/lib/logger';
-import { isRateLimited, getResetTime } from '@/lib/security';
 import { prepareQuoteForSubmission, createQuoteMailtoLink, type QuoteData } from "../services/quoteService";
 
 interface QuoteFormProps {
@@ -78,20 +77,6 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
     setIsSubmitting(true);
     
     try {
-      // Check rate limiting (3 submissions per 10 minutes)
-      const rateLimitKey = 'quote-submission';
-      if (isRateLimited(rateLimitKey, { maxRequests: 3, windowMs: 10 * 60 * 1000 })) {
-        const resetSeconds = getResetTime(rateLimitKey);
-        const resetMinutes = Math.ceil(resetSeconds / 60);
-        toast({
-          title: "Too Many Requests",
-          description: `Please wait ${resetMinutes} minute${resetMinutes > 1 ? 's' : ''} before submitting another quote request.`,
-          variant: "destructive",
-        });
-        setIsSubmitting(false);
-        return;
-      }
-      
       // Execute reCAPTCHA if configured (optional - app works without it)
       let recaptchaToken = null;
       if (isConfigured) {

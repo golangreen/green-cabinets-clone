@@ -4,23 +4,20 @@
  */
 
 import { Database } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { AdminLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import {
-  GalleryErrorBoundaryWithRouter,
+  GalleryErrorBoundary,
   GalleryFileSelector,
   GalleryImageProcessor,
 } from '@/features/gallery/components';
 import { GalleryProvider } from '@/features/gallery/hooks';
 
 export default function AdminGallery() {
-  const navigate = useNavigate();
-
   return (
     <AdminLayout>
       <GalleryProvider>
-        <GalleryErrorBoundaryWithRouter>
+        <GalleryErrorBoundary>
           <div className="mb-8 flex items-start justify-between gap-4">
             <div>
               <h1 className="text-4xl font-bold text-foreground mb-2">Gallery Management</h1>
@@ -28,7 +25,7 @@ export default function AdminGallery() {
             </div>
             <Button
               variant="outline"
-              onClick={() => navigate('/admin/storage-analyzer')}
+              onClick={() => window.location.href = '/admin/storage-analyzer'}
               className="gap-2"
             >
               <Database className="h-4 w-4" />
@@ -40,7 +37,7 @@ export default function AdminGallery() {
             <GalleryFileSelector />
             <GalleryImageProcessor />
           </div>
-        </GalleryErrorBoundaryWithRouter>
+        </GalleryErrorBoundary>
       </GalleryProvider>
     </AdminLayout>
   );

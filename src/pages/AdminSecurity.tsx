@@ -1,4 +1,4 @@
-import { useAdminCheck } from '@/features/admin-security/hooks/useAdminCheck';
+import { useAdminCheck } from '@/hooks/useAdminCheck';
 import { AdminLayout, Header } from '@/components/layout';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SecurityDashboard } from '@/features/admin-security';

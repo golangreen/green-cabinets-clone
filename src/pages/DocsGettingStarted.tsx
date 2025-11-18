@@ -571,7 +571,7 @@ sent_at: TIMESTAMPTZ`}</code>
                   <Button onClick={() => navigate(ROUTES.DOCS_AUTH)}>
                     Authentication Guide
                   </Button>
-                  <Button variant="outline" onClick={() => navigate(ROUTES.HOME)}>
+                  <Button variant="outline" onClick={() => window.location.href = ROUTES.HOME}>
                     Back to Home
                   </Button>
                 </div>
