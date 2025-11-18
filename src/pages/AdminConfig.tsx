@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { logger } from '@/lib/logger';
 import {
   Select,
   SelectContent,
@@ -374,7 +375,7 @@ const AdminConfig = () => {
       loadAuditLogs();
     } catch (error) {
       // Don't block the test simulation if logging fails
-      console.error('Failed to log config change:', error);
+      logger.error('Failed to log config change', error, { page: 'AdminConfig' });
     }
 
     toast.success(`Test simulation for ${key}`, {
@@ -462,7 +463,7 @@ const AdminConfig = () => {
       // Reload audit logs
       loadAuditLogs();
     } catch (error) {
-      console.error('Failed to log preset changes:', error);
+      logger.error('Failed to log preset changes', error, { page: 'AdminConfig' });
     }
     
     toast.success(`Applied ${pendingPreset.name} preset`, {
@@ -588,7 +589,7 @@ const AdminConfig = () => {
       // Reload audit logs
       loadAuditLogs();
     } catch (error) {
-      console.error('Failed to log import changes:', error);
+      logger.error('Failed to log import changes', error, { page: 'AdminConfig' });
     }
 
     toast.success('Configuration imported', {
@@ -635,7 +636,7 @@ const AdminConfig = () => {
       
       loadAuditLogs();
     } catch (error) {
-      console.error('Failed to log rollback:', error);
+      logger.error('Failed to log rollback', error, { page: 'AdminConfig' });
     }
 
     toast.success('Configuration rolled back', {

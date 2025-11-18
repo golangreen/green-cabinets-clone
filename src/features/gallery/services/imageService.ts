@@ -4,6 +4,7 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
 import type {
   GalleryCategory,
   AIGeneratedMetadata,
@@ -64,7 +65,7 @@ export async function uploadImageToStorage(
       });
 
     if (uploadError) {
-      console.error('Storage upload error:', uploadError);
+      logger.error('Storage upload error', uploadError, { service: 'ImageService' });
       return {
         success: false,
         error: uploadError.message,
@@ -76,7 +77,7 @@ export async function uploadImageToStorage(
       path: filePath,
     };
   } catch (error) {
-    console.error('Upload error:', error);
+    logger.error('Upload error', error, { service: 'ImageService' });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown upload error',
@@ -110,7 +111,7 @@ export async function saveImageMetadata(
     });
 
     if (error) {
-      console.error('Metadata save error:', error);
+      logger.error('Metadata save error', error, { service: 'ImageService' });
       return {
         success: false,
         error: error.message,
@@ -119,7 +120,7 @@ export async function saveImageMetadata(
 
     return { success: true };
   } catch (error) {
-    console.error('Save metadata error:', error);
+    logger.error('Save metadata error', error, { service: 'ImageService' });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -181,7 +182,7 @@ export async function generateAIMetadata(
     );
 
     if (error) {
-      console.error('AI generation error:', error);
+      logger.error('AI generation error', error, { service: 'ImageService' });
       return {
         success: false,
         error: error.message,
@@ -200,7 +201,7 @@ export async function generateAIMetadata(
       metadata: data.metadata,
     };
   } catch (error) {
-    console.error('AI metadata generation error:', error);
+    logger.error('AI metadata generation error', error, { service: 'ImageService' });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown AI error',
@@ -224,7 +225,7 @@ export async function deleteImageFromStorage(
       .remove([path]);
 
     if (error) {
-      console.error('Storage delete error:', error);
+      logger.error('Storage delete error', error, { service: 'ImageService' });
       return {
         success: false,
         error: error.message,
@@ -233,7 +234,7 @@ export async function deleteImageFromStorage(
 
     return { success: true };
   } catch (error) {
-    console.error('Delete error:', error);
+    logger.error('Delete error', error, { service: 'ImageService' });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown delete error',
@@ -254,7 +255,7 @@ export async function deleteImageMetadata(
       .eq('id', id);
 
     if (error) {
-      console.error('Metadata delete error:', error);
+      logger.error('Metadata delete error', error, { service: 'ImageService' });
       return {
         success: false,
         error: error.message,
@@ -263,7 +264,7 @@ export async function deleteImageMetadata(
 
     return { success: true };
   } catch (error) {
-    console.error('Delete metadata error:', error);
+    logger.error('Delete metadata error', error, { service: 'ImageService' });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -294,7 +295,7 @@ export async function fetchGalleryImages(
     const { data, error } = await query;
 
     if (error) {
-      console.error('Fetch images error:', error);
+      logger.error('Fetch images error', error, { service: 'ImageService' });
       return {
         success: false,
         error: error.message,
@@ -306,7 +307,7 @@ export async function fetchGalleryImages(
       data: (data || []) as unknown as MetadataRecord[],
     };
   } catch (error) {
-    console.error('Fetch error:', error);
+    logger.error('Fetch error', error, { service: 'ImageService' });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown fetch error',
@@ -345,7 +346,7 @@ export async function updateImageMetadata(
       .eq('id', id);
 
     if (error) {
-      console.error('Metadata update error:', error);
+      logger.error('Metadata update error', error, { service: 'ImageService' });
       return {
         success: false,
         error: error.message,
@@ -354,7 +355,7 @@ export async function updateImageMetadata(
 
     return { success: true };
   } catch (error) {
-    console.error('Update error:', error);
+    logger.error('Update error', error, { service: 'ImageService' });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown update error',
@@ -385,7 +386,7 @@ export async function batchUpdateImages(
       .in('id', imageIds);
 
     if (error) {
-      console.error('Batch update error:', error);
+      logger.error('Batch update error', error, { service: 'ImageService' });
       return {
         success: false,
         error: error.message,
@@ -394,7 +395,7 @@ export async function batchUpdateImages(
 
     return { success: true };
   } catch (error) {
-    console.error('Batch update error:', error);
+    logger.error('Batch update error', error, { service: 'ImageService' });
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

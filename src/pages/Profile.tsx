@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Mail, Calendar, Shield, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
+import { logger } from '@/lib/logger';
 import { ProtectedLayout } from "@/components/layout";
 
 interface UserRole {
@@ -29,7 +30,7 @@ export default function Profile() {
         const data = await fetchUserRoles(user.id);
         setRoles(data || []);
       } catch (err: any) {
-        console.error('Error fetching user roles:', err);
+        logger.error('Error fetching user roles', err, { component: 'Profile', userId: user.id });
         setError(err.message);
       } finally {
         setLoading(false);

@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { ROUTES } from "@/constants/routes";
+import { logger } from '@/lib/logger';
 
 const authSchema = z.object({
   email: z.string().email("Invalid email address").max(255, "Email must be less than 255 characters"),
@@ -54,7 +55,7 @@ const Auth = () => {
       }
     } catch (error) {
       // Error handling is done in the AuthContext
-      console.error("Authentication error:", error);
+      logger.error("Authentication error", error, { page: 'Auth' });
     } finally {
       setIsLoading(false);
     }
