@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Sparkles, Camera } from "lucide-react";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import { ROUTES } from "@/constants/routes";
-import { useHeroImages } from "@/features/gallery";
+import { HERO_IMAGES } from "@/constants/galleryImages";
 import logo from "@/assets/logo.jpg";
 
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -19,19 +19,12 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 const HeroUpdated = () => {
   const navigate = useNavigate();
   const { isMobile } = useDeviceType();
-  const { data: heroImages = [], isLoading } = useHeroImages();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [shuffledImages, setShuffledImages] = useState<typeof heroImages>([]);
+  const [shuffledImages] = useState(() => shuffleArray(HERO_IMAGES));
   const [recentIndices, setRecentIndices] = useState<number[]>([0]);
   const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
-
-  useEffect(() => {
-    if (heroImages.length > 0 && shuffledImages.length === 0) {
-      setShuffledImages(shuffleArray(heroImages));
-    }
-  }, [heroImages]);
 
   const handleLaunchClick = () => {
     if (isMobile) {
@@ -81,7 +74,7 @@ const HeroUpdated = () => {
 
   const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
 
-  if (isLoading || shuffledImages.length === 0) {
+  if (shuffledImages.length === 0) {
     return (
       <section className="relative bg-gray-50 pt-36 md:pt-44 pb-12 md:pb-16">
         <div className="container mx-auto px-6 text-center">
@@ -127,7 +120,7 @@ const HeroUpdated = () => {
         <div className="absolute inset-0">
           {shuffledImages[currentImageIndex] && (
             <img
-              src={shuffledImages[currentImageIndex].url}
+              src={shuffledImages[currentImageIndex].path}
               alt={shuffledImages[currentImageIndex].alt}
               className={`w-full h-full object-cover transition-all duration-[5000ms] ${
                 isTransitioning ? 'scale-110 opacity-0' : 'scale-100 opacity-100'
@@ -137,7 +130,7 @@ const HeroUpdated = () => {
           )}
           {shuffledImages[getNextIndex()] && (
             <img
-              src={shuffledImages[getNextIndex()].url}
+              src={shuffledImages[getNextIndex()].path}
               alt={shuffledImages[getNextIndex()].alt}
               className="absolute inset-0 w-full h-full object-cover"
               style={{ display: 'none' }}
@@ -155,7 +148,7 @@ const HeroUpdated = () => {
                 Featured Project
               </p>
               <h2 className="text-2xl md:text-4xl font-serif text-white mb-4 drop-shadow-lg">
-                {shuffledImages[currentImageIndex]?.displayName || shuffledImages[currentImageIndex]?.alt}
+                {shuffledImages[currentImageIndex]?.alt}
               </h2>
               <Link to={`${ROUTES.HOME}#gallery`}>
                 <Button 

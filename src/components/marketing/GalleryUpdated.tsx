@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { useGalleryImages, useGalleryImagesByCategory, LazyImage } from "@/features/gallery";
+import { GALLERY_IMAGES, getImagesByCategory } from "@/constants/galleryImages";
 import type { GalleryCategory } from "@/types/gallery";
+import { LazyImage } from "@/features/gallery";
 
 const GalleryUpdated = () => {
   const [activeCategory, setActiveCategory] = useState<GalleryCategory>("all");
@@ -13,8 +14,15 @@ const GalleryUpdated = () => {
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const { ref, isVisible } = useScrollReveal({ threshold: 0.1 });
 
-  const { data: images = [], isLoading } = useGalleryImages(activeCategory);
-  const { categories } = useGalleryImagesByCategory();
+  const images = getImagesByCategory(activeCategory);
+  
+  // Calculate category counts
+  const categories = {
+    kitchens: GALLERY_IMAGES.filter(img => img.category === 'kitchens'),
+    vanities: GALLERY_IMAGES.filter(img => img.category === 'vanities'),
+    closets: GALLERY_IMAGES.filter(img => img.category === 'closets'),
+    'design-to-reality': GALLERY_IMAGES.filter(img => img.category === 'design-to-reality'),
+  };
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -117,7 +125,7 @@ const GalleryUpdated = () => {
           ))}
         </div>
 
-        {isLoading ? (
+        {images.length === 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(12)].map((_, i) => (
               <div key={i} className="aspect-[4/3] bg-gray-200 animate-pulse rounded-lg" />
@@ -133,16 +141,14 @@ const GalleryUpdated = () => {
                   onClick={() => setSelectedImageIndex(index)}
                 >
                   <LazyImage
-                    src={image.url}
+                    src={image.path}
                     alt={image.alt}
-                    width={image.width}
-                    height={image.height}
                     className="w-full h-full object-cover aspect-[4/3]"
                     onLoad={() => setLoadedImages(prev => new Set([...prev, index]))}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <p className="text-white text-sm font-medium">{image.displayName || image.alt}</p>
+                      <p className="text-white text-sm font-medium">{image.alt}</p>
                     </div>
                   </div>
                 </div>
@@ -169,9 +175,9 @@ const GalleryUpdated = () => {
             <div className="relative w-full h-[80vh]">
               {selectedImageIndex !== null && displayedImages[selectedImageIndex] && (
                 <>
-                  <img
-                    src={displayedImages[selectedImageIndex].url}
-                    alt={displayedImages[selectedImageIndex].alt}
+              <img
+                src={displayedImages[selectedImageIndex].path}
+                alt={displayedImages[selectedImageIndex].alt}
                     className="w-full h-full object-contain"
                   />
                   <Button
