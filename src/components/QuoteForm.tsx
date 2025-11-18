@@ -67,86 +67,30 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
     if (step > 1) setStep(step - 1);
   };
 
-  // Sanitize input to prevent email header injection
-  const sanitizeInput = (input: string): string => {
-    return input
-      .replace(/[\r\n]/g, ' ')  // Remove carriage returns and newlines
-      .replace(/[\u0000-\u001F\u007F-\u009F]/g, '')  // Remove control characters
-      .replace(/%0[AD]/gi, '')  // Remove URL-encoded newlines
-      .trim();
-  };
-
   const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true);
-    
-    try {
-      // Sanitize all user inputs
-      const sanitizedData = {
-        projectType: sanitizeInput(data.projectType),
-        roomSize: sanitizeInput(data.roomSize),
-        style: sanitizeInput(data.style),
-        budget: sanitizeInput(data.budget),
-        timeline: sanitizeInput(data.timeline),
-        name: sanitizeInput(data.name),
-        email: sanitizeInput(data.email),
-        phone: sanitizeInput(data.phone),
-        address: sanitizeInput(data.address),
-        message: data.message ? sanitizeInput(data.message) : "None"
-      };
-      
-      // Format the quote request
-      const quoteDetails = `
-🏠 New Quote Request - Green Cabinets
-
-📋 PROJECT DETAILS:
-• Type: ${sanitizedData.projectType.toUpperCase()}
-• Room Size: ${sanitizedData.roomSize}
-• Style: ${sanitizedData.style}
-• Budget: ${sanitizedData.budget}
-• Timeline: ${sanitizedData.timeline}
-
-👤 CONTACT INFORMATION:
-• Name: ${sanitizedData.name}
-• Email: ${sanitizedData.email}
-• Phone: ${sanitizedData.phone}
-• Address: ${sanitizedData.address}
-
-💬 Additional Notes:
-${sanitizedData.message}
-
----
-Submitted from: Green Cabinets Website
+    // Transform form data into QuoteRequest format
+    const message = `
+Project Type: ${data.projectType.toUpperCase()}
+Room Size: ${data.roomSize}
+Style: ${data.style}
+Budget: ${data.budget}
+Timeline: ${data.timeline}
+Address: ${data.address}
+${data.message ? `\nAdditional Notes: ${data.message}` : ''}
 `.trim();
 
-      // Create mailto link with sanitized data
-      const subject = encodeURIComponent(`Quote Request: ${sanitizedData.projectType} - ${sanitizedData.name}`);
-      const body = encodeURIComponent(quoteDetails);
-      const mailtoLink = `mailto:greencabinets@gmail.com?subject=${subject}&body=${body}`;
-      
-      // Open email client
-      window.location.href = mailtoLink;
-      
-      toast({
-        title: "Quote Request Prepared!",
-        description: "Your email client will open with the quote details. Please send the email to complete your request.",
-      });
-      
-      // Reset form and close
-      setTimeout(() => {
-        reset();
-        setStep(1);
-        onClose();
-        setIsSubmitting(false);
-      }, 1000);
-      
-    } catch (error) {
-      console.error("Quote submission error:", error);
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try calling us directly.",
-        variant: "destructive",
-      });
-      setIsSubmitting(false);
+    const result = await submitQuote({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      message,
+      projectType: data.projectType,
+    });
+    
+    if (result.success) {
+      reset();
+      setStep(1);
+      onClose();
     }
   };
 
