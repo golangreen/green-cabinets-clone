@@ -51,7 +51,6 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           // Vendor splitting for better caching
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['recharts', 'react-dropzone'],
           'state-vendor': ['zustand', '@tanstack/react-query'],
           'supabase-vendor': ['@supabase/supabase-js'],
         },
