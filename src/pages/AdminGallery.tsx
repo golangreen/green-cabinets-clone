@@ -4,6 +4,7 @@
  */
 
 import { Database } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { AdminLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,6 +15,8 @@ import {
 import { GalleryProvider } from '@/features/gallery/hooks';
 
 export default function AdminGallery() {
+  const navigate = useNavigate();
+
   return (
     <AdminLayout>
       <GalleryProvider>
@@ -25,7 +28,7 @@ export default function AdminGallery() {
             </div>
             <Button
               variant="outline"
-              onClick={() => window.location.href = '/admin/storage-analyzer'}
+              onClick={() => navigate('/admin/storage-analyzer')}
               className="gap-2"
             >
               <Database className="h-4 w-4" />
