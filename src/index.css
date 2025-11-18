@@ -116,22 +116,3 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
-
-/* Print styles */
-@media print {
-  @page {
-    margin: 1cm;
-    size: landscape;
-  }
-  
-  body {
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-  }
-  
-  /* Hide everything except the canvas and specs */
-  button,
-  .print\:hidden {
-    display: none !important;
-  }
-}
