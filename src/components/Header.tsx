@@ -56,7 +56,18 @@ const Header = () => {
               behavior: 'smooth'
             });
           }} className="cursor-pointer flex flex-col items-center">
-              <img src={scrolled ? logoBlack : logoColor} alt="Green Cabinets Logo" className="h-20 md:h-24 w-auto transition-all duration-200" />
+              <div className="relative h-20 md:h-24 w-auto">
+                <img 
+                  src={logoColor} 
+                  alt="Green Cabinets Logo" 
+                  className={`h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-0' : 'opacity-100'}`}
+                />
+                <img 
+                  src={logoBlack} 
+                  alt="Green Cabinets Logo" 
+                  className={`absolute top-0 left-0 h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
+                />
+              </div>
               
             </a>
           </div>
