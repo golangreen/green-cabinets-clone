@@ -1,5 +1,7 @@
-// Comprehensive Egger color collection organized by wood type and finish
-// Data sourced from https://www.egger.com/en/furniture-interior-design/
+/**
+ * Comprehensive Egger color collection organized by wood type and finish
+ * Data sourced from https://www.egger.com/en/furniture-interior-design/
+ */
 
 export interface EggerColor {
   name: string;
@@ -62,83 +64,74 @@ export const EGGER_COLORS: EggerColor[] = [
   { name: 'Cashmere', code: 'U223 ST9', category: 'Solids' },
   { name: 'Vanilla', code: 'U224 ST9', category: 'Solids' },
   { name: 'Cream', code: 'U225 ST9', category: 'Solids' },
-  { name: 'Sand Beige', code: 'U702 ST9', category: 'Solids' },
-  { name: 'Linen Beige', code: 'U717 ST9', category: 'Solids' },
   
-  // SOLID COLORS - GRAYS
+  // SOLID COLORS - GREYS
   { name: 'Light Grey', code: 'U107 ST9', category: 'Solids' },
-  { name: 'Light Concrete Grey', code: 'U727 ST9', category: 'Solids' },
-  { name: 'Concrete Grey', code: 'U728 ST9', category: 'Solids' },
-  { name: 'Dark Concrete Grey', code: 'U732 ST9', category: 'Solids' },
-  { name: 'Stone Grey', code: 'U733 ST9', category: 'Solids' },
-  { name: 'Graphite Grey', code: 'U788 ST9', category: 'Solids' },
-  { name: 'Dust Grey', code: 'U702 PM', category: 'Solids' },
-  { name: 'Metallic Grey', code: 'U707 ST9', category: 'Solids' },
-  { name: 'Pearl Grey', code: 'U708 ST9', category: 'Solids' },
-  { name: 'Silver Grey', code: 'U763 ST9', category: 'Solids' },
-  { name: 'Platinum Grey', code: 'U765 ST9', category: 'Solids' },
-  { name: 'Anthracite', code: 'U961 ST2', category: 'Solids' },
-  { name: 'Lava Grey', code: 'U790 ST9', category: 'Solids' },
+  { name: 'Onyx Grey', code: 'U114 ST9', category: 'Solids' },
+  { name: 'Stone Grey', code: 'U702 ST9', category: 'Solids' },
+  { name: 'Dust Grey', code: 'U708 ST9', category: 'Solids' },
+  { name: 'Graphite Grey', code: 'U727 ST9', category: 'Solids' },
+  { name: 'Metallic Grey', code: 'U732 ST9', category: 'Solids' },
+  { name: 'Lava Grey', code: 'U788 ST9', category: 'Solids' },
+  { name: 'Anthracite', code: 'U899 ST9', category: 'Solids' },
+  { name: 'Basalt Grey', code: 'F121 ST87', category: 'Solids' },
   
-  // SOLID COLORS - BLACKS & DARKS
+  // SOLID COLORS - BLACKS & BROWNS
   { name: 'Black', code: 'U999 ST2', category: 'Solids' },
-  { name: 'Matt Black', code: 'U999 ST9', category: 'Solids' },
-  { name: 'Deep Black', code: 'U961 ST76', category: 'Solids' },
-  { name: 'Onyx Black', code: 'U963 ST9', category: 'Solids' },
+  { name: 'Black Brown', code: 'U963 ST2', category: 'Solids' },
+  { name: 'Havana Brown', code: 'U702 ST9', category: 'Solids' },
+  { name: 'Truffle Brown', code: 'U707 ST9', category: 'Solids' },
+  { name: 'Cognac Brown', code: 'U702 ST16', category: 'Solids' },
   
-  // SOLID COLORS - BLUES
-  { name: 'Indigo Blue', code: 'U522 ST9', category: 'Solids' },
-  { name: 'Marine Blue', code: 'U525 ST9', category: 'Solids' },
-  { name: 'Nordic Blue', code: 'U515 ST9', category: 'Solids' },
-  
-  // SOLID COLORS - REDS
-  { name: 'Signal Red', code: 'U321 ST9', category: 'Solids' },
-  
-  // SOLID COLORS - GREENS
+  // SOLID COLORS - BLUES & GREENS
+  { name: 'Pastel Blue', code: 'U522 ST9', category: 'Solids' },
+  { name: 'Petrol Blue', code: 'U525 ST9', category: 'Solids' },
+  { name: 'Ocean Blue', code: 'U534 ST9', category: 'Solids' },
+  { name: 'Denim Blue', code: 'U540 ST9', category: 'Solids' },
   { name: 'Olive Green', code: 'U626 ST9', category: 'Solids' },
+  { name: 'Moss Green', code: 'U630 ST9', category: 'Solids' },
+  { name: 'Forest Green', code: 'U650 ST9', category: 'Solids' },
   
-  // MAPLE SERIES
-  { name: 'Mountain Maple', code: 'H3700 ST10', category: 'Maple' },
-  { name: 'Natural Pacific Walnut', code: 'H1486 ST22', category: 'Maple' },
-  { name: 'Cognac Pacific Walnut', code: 'H1487 ST22', category: 'Maple' },
-  
-  // LARCH SERIES
-  { name: 'Brown-Grey Grained Larch', code: 'H1113 ST10', category: 'Larch' },
-  { name: 'Havanna Larch', code: 'H1114 ST10', category: 'Larch' },
-  
-  // ADDITIONAL OAK VARIETIES
-  { name: 'Light Grey Kendal Oak', code: 'H3303 ST10', category: 'Oak' },
-  { name: 'Natural Kendal Oak', code: 'H1318 ST10', category: 'Oak' },
-  { name: 'Dark Kendal Oak', code: 'H3309 ST10', category: 'Oak' },
-  { name: 'Brown Grey Craft Oak', code: 'H3158 ST10', category: 'Oak' },
-  { name: 'Natural Craft Oak', code: 'H3156 ST10', category: 'Oak' },
-  { name: 'Sand Oak', code: 'H1145 ST10', category: 'Oak' },
-  { name: 'Natural Sonoma Oak', code: 'H1334 ST10', category: 'Oak' },
-  { name: 'Cognac Sonoma Oak', code: 'H1334 ST19', category: 'Oak' },
-  { name: 'Light Odense Oak', code: 'H1332 ST10', category: 'Oak' },
-  { name: 'Natural Odense Oak', code: 'H1333 ST10', category: 'Oak' },
-  { name: 'Dark Odense Oak', code: 'H3304 ST10', category: 'Oak' },
-  { name: 'Natural Bardolino Oak', code: 'H1137 ST12', category: 'Oak' },
-  { name: 'Grey Bardolino Oak', code: 'H1146 ST10', category: 'Oak' },
-  
-  // CREATIVE MATERIALS
-  { name: 'Urban Concrete', code: 'F812 ST9', category: 'Materials' },
-  { name: 'Chicago Concrete', code: 'F186 ST9', category: 'Materials' },
-  { name: 'Chromix White/Aluminum', code: 'F508 ST2', category: 'Materials' },
-  { name: 'Metallic Brushed', code: 'F509 ST2', category: 'Materials' },
+  // SOLID COLORS - SPECIALTY
+  { name: 'Signal Red', code: 'U321 ST9', category: 'Solids' },
+  { name: 'Traffic Red', code: 'U323 ST9', category: 'Solids' },
+  { name: 'Bordeaux Red', code: 'U311 ST9', category: 'Solids' },
+  { name: 'Dakar Yellow', code: 'U114 ST9', category: 'Solids' },
+  { name: 'Beige', code: 'U201 ST9', category: 'Solids' },
+  { name: 'Sand Beige', code: 'U210 ST9', category: 'Solids' },
+  { name: 'Nude', code: 'U212 ST9', category: 'Solids' },
+  { name: 'Linen', code: 'U221 ST9', category: 'Solids' },
 ];
 
-// Helper function to get colors by category
-export const getEggerColorsByCategory = (category: string) => {
+/**
+ * Get list of all Egger color names
+ */
+export const getEggerColorNames = (): string[] => {
+  return EGGER_COLORS.map(color => color.name);
+};
+
+/**
+ * Get unique categories from Egger colors
+ */
+export const getEggerCategories = (): string[] => {
+  const categories = new Set(EGGER_COLORS.map(color => color.category));
+  return Array.from(categories).sort();
+};
+
+/**
+ * Get colors by category
+ */
+export const getEggerColorsByCategory = (category: string): EggerColor[] => {
   return EGGER_COLORS.filter(color => color.category === category);
 };
 
-// Get all unique categories
-export const getEggerCategories = () => {
-  return [...new Set(EGGER_COLORS.map(color => color.category))];
-};
-
-// Get color names only (for simple dropdown)
-export const getEggerColorNames = () => {
-  return EGGER_COLORS.map(color => color.name);
+/**
+ * Search colors by name or code
+ */
+export const searchEggerColors = (query: string): EggerColor[] => {
+  const lowerQuery = query.toLowerCase();
+  return EGGER_COLORS.filter(color => 
+    color.name.toLowerCase().includes(lowerQuery) || 
+    color.code.toLowerCase().includes(lowerQuery)
+  );
 };

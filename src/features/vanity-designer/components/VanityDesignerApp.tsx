@@ -10,7 +10,7 @@ import { FullscreenPreview } from "./FullscreenPreview";
 import { useVanityConfig, useSavedTemplates } from "@/features/vanity-designer";
 import { calculateCompletePricing, generateVanityQuotePDF, generateShareableURL } from "@/features/vanity-designer/services";
 import { toast } from "sonner";
-import { getEggerColorNames } from "@/lib/eggerColors";
+import { getEggerColorNames } from "@/features/vanity-designer/data/finishes/egger";
 import { getTafisaColorNames } from "@/lib/tafisaColors";
 import { vanityService } from "@/services";
 import { logger } from "@/lib/logger";

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TAFISA_COLORS } from "@/lib/tafisaColors";
-import { EGGER_COLORS } from "@/lib/eggerColors";
+import { EGGER_COLORS } from "@/features/vanity-designer/data/finishes/egger";
 
 // Map finish names to their actual product image URLs from manufacturer websites
 const FINISH_IMAGE_URLS: Record<string, string> = {
