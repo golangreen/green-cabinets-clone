@@ -238,6 +238,48 @@ npm run test:ui       # Visual UI
 - Lazy loaded components reduce Time to Interactive (TTI)
 - Improved Core Web Vitals scores
 
+---
+
+## Phase 12: Performance Monitoring ✅
+
+**Status:** COMPLETED
+
+### Core Web Vitals Tracking
+- Installed `web-vitals` package for tracking Core Web Vitals
+- Created performance tracking library (`src/lib/performance.ts`):
+  - Tracks LCP (Largest Contentful Paint), INP (Interaction to Next Paint), CLS (Cumulative Layout Shift), TTFB (Time to First Byte)
+  - Performance thresholds based on Google's recommendations
+  - Custom performance tracker for tracking async operations
+  - Bundle size estimation from loaded resources
+  - Connection and device memory info
+- Created `usePerformanceMonitor` hook to initialize tracking on app mount
+- Integrated performance monitoring into main app via `AppWithMonitoring` wrapper
+
+### Performance Service
+- Created `performanceService.ts` for storing and retrieving metrics:
+  - `storePerformanceMetric` - Store metrics to database
+  - `getPerformanceMetrics` - Get metrics for time range
+  - `getAverageMetrics` - Calculate averages over N days
+  - `getMetricsByUrl` - Group metrics by URL
+  - `cleanupOldMetrics` - Cleanup old data
+- Leverages existing `performance_metrics` table in database
+
+### Performance Dashboard
+- Created comprehensive dashboard at `/performance`:
+  - Real-time Core Web Vitals display with color-coded ratings
+  - Bundle size breakdown (JS, CSS, Total)
+  - Timeline chart showing metrics over time (1h, 24h, 7d, 30d)
+  - Metrics grouped by URL with bar charts
+  - Auto-refresh every minute
+- Dashboard accessible via lazy-loaded route
+
+**Impact**:
+- Complete visibility into application performance
+- Historical tracking of Core Web Vitals over time
+- Ability to identify performance regressions
+- Per-route performance analysis
+- Automated data collection with no manual intervention
+
 **Documentation Includes**:
 - Project structure and organization
 - Architecture principles and patterns (Services Layer, Type Safety, Configuration)
