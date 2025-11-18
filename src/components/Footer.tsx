@@ -8,7 +8,7 @@ const Footer = () => {
         {/* Logo and Tagline */}
         <div className="text-center mb-12 space-y-4">
           <div className="flex items-center justify-center gap-3">
-            <img src={logo} alt="Green Cabinets Logo" className="h-12 w-auto" />
+            <img src={logo} alt="Green Cabinets Logo" className="h-16 w-auto" />
             <span className="font-display text-xl font-bold text-white">Green Cabinets</span>
           </div>
           <p className="text-gray-400">
