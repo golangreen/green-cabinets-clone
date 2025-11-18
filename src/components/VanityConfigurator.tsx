@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ShopifyProduct } from "@/services";
+import type { ShopifyProduct } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";

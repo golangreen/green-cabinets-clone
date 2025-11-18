@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { shopifyService, ShopifyProduct } from "@/services";
+import { shopifyService } from "@/services";
+import type { ShopifyProduct } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart, Package } from "lucide-react";
