@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { logger } from '@/lib/logger';
 
 interface VanityConfigForPDF {
   brand: string;
@@ -69,7 +70,7 @@ export const generateVanityQuotePDF = async (
       pdf.addImage(imgData, 'JPEG', 20, yPosition, imgWidth, imgHeight);
       yPosition += imgHeight + 15;
     } catch (error) {
-      console.error('Error capturing preview:', error);
+      logger.error('Error capturing preview', error, { component: 'pdfExportService' });
     }
   }
 

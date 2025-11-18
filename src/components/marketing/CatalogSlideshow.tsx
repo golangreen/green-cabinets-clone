@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { logger } from "@/lib/logger";
 
 interface CatalogSlideshowProps {
   isOpen: boolean;
@@ -115,9 +116,8 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
         playChord();
         
         setIsMuted(false);
-        console.log("✅ Calm ambient music playing");
       } catch (error) {
-        console.error("❌ Error:", error);
+        logger.error('Failed to start audio', error, { component: 'CatalogSlideshow' });
         alert(`Could not create audio: ${error}`);
       }
     } else {

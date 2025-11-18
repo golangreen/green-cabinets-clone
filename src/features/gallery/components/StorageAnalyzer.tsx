@@ -36,6 +36,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
+import { logger } from '@/lib/logger';
 import {
   analyzeGalleryStorage,
   formatFileSize,
@@ -207,7 +208,7 @@ export function StorageAnalyzer() {
       const result = await analyzeGalleryStorage();
       setAnalysis(result);
     } catch (err) {
-      console.error('Analysis failed:', err);
+      logger.error('Storage analysis failed', err, { component: 'StorageAnalyzer' });
       setError('Failed to analyze storage. Please try again.');
     } finally {
       setIsLoading(false);
@@ -275,7 +276,7 @@ export function StorageAnalyzer() {
         runAnalysis();
       }, 2000);
     } catch (err) {
-      console.error('Bulk compression failed:', err);
+      logger.error('Bulk compression failed', err, { component: 'StorageAnalyzer' });
       toast({
         title: "Compression Failed",
         description: "Failed to compress images. Please try again.",

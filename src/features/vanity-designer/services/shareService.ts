@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+
 interface VanityConfigForSharing {
   brand: string;
   finish: string;
@@ -141,7 +143,7 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
     
     return successful;
   } catch (error) {
-    console.error('Failed to copy to clipboard:', error);
+    logger.error('Failed to copy to clipboard', error, { component: 'shareService' });
     return false;
   }
 };

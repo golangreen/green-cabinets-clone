@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { RotateCw, Palette, Save, X, Images } from 'lucide-react';
 import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
+import { logger } from '@/lib/logger';
 
 interface BatchImageEditorProps {
   open: boolean;
@@ -176,7 +177,7 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
       toast.success(`Successfully processed ${editedFiles.length} images`);
       onOpenChange(false);
     } catch (error) {
-      console.error('Batch processing error:', error);
+      logger.error('Batch processing error', error, { component: 'BatchImageEditor' });
       toast.error('Failed to process images');
     } finally {
       setProcessing(false);

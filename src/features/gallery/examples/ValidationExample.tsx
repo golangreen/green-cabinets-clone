@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { ValidationSummary, ValidationBadge } from '../components/ValidationErrorDisplay';
 import { validateImageFiles, type ValidationResult } from '../services/validationService';
+import { logger } from '@/lib/logger';
 
 export function ValidationExample() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -33,7 +34,7 @@ export function ValidationExample() {
   };
 
   const handleRetryFile = (fileName: string) => {
-    console.log('Retry file:', fileName);
+    logger.debug('Retry file requested', { fileName, component: 'ValidationExample' });
     // In a real implementation, you would prompt the user to fix the file
     // and then revalidate it
   };

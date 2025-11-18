@@ -27,6 +27,7 @@ import {
   willMeetLimit,
   type OversizedFile,
 } from '../services/compression';
+import { logger } from '@/lib/logger';
 
 // ============================================================================
 // Types
@@ -86,7 +87,7 @@ export function CompressionDialog({
         setCompressionProgress(0);
       }, 1000);
     } catch (error) {
-      console.error('Compression failed:', error);
+      logger.error('Compression failed', error, { component: 'CompressionDialog' });
       setIsCompressing(false);
       setCompressionProgress(0);
     }

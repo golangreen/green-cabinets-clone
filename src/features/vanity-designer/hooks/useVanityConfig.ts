@@ -4,6 +4,7 @@ import { VanityConfig, VanityDimensions } from "@/types/vanity";
 import { inchesWithFractionToDecimal } from "../services/vanityPricingService";
 import { decodeShareableURL } from "../services/shareService";
 import { roomScanner } from "@/features/room-scanner/utils/roomScanner";
+import { logger } from "@/lib/logger";
 
 export interface UseVanityConfigReturn {
   // Brand & Finish
@@ -316,7 +317,7 @@ export const useVanityConfig = (): UseVanityConfigReturn => {
         applyScannedMeasurements(latestScan);
       }
     } catch (error) {
-      console.error('Error loading scanned measurements:', error);
+      logger.error('Error loading scanned measurements', error, { component: 'useVanityConfig' });
     }
   };
 
@@ -360,7 +361,7 @@ export const useVanityConfig = (): UseVanityConfigReturn => {
   const loadSharedConfiguration = () => {
     const sharedConfig = decodeShareableURL();
     if (sharedConfig) {
-      console.log('Loading shared configuration from URL', sharedConfig);
+      logger.info('Loading shared configuration from URL', { sharedConfig, component: 'useVanityConfig' });
       
       if (sharedConfig.brand) setSelectedBrand(sharedConfig.brand);
       if (sharedConfig.finish) setSelectedFinish(sharedConfig.finish);

@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { Button } from "@/components/ui/button";
 import { Ruler, Camera, FileDown } from "lucide-react";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 
 interface Vanity3DPreviewProps {
   width: number;
@@ -3212,7 +3213,7 @@ export const Vanity3DPreview = ({
         }
       });
     } catch (error) {
-      console.error("Screenshot error:", error);
+      logger.error('Screenshot error', error, { component: 'Vanity3DPreview' });
       toast.error("Failed to capture screenshot");
     }
   };

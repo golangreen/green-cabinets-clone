@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { Save, X, Copy, Sparkles, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
 
 interface ImageMetadata {
   displayName: string;
@@ -75,7 +76,7 @@ export const BulkMetadataEditor = ({ open, onOpenChange, images, onSave }: BulkM
       });
 
       if (error) {
-        console.error('Error generating metadata:', error);
+        logger.error('Error generating metadata', error, { component: 'BulkMetadataEditor' });
         if (error.message?.includes('429')) {
           toast.error('Rate limit exceeded. Please try again in a moment.');
         } else if (error.message?.includes('402')) {
@@ -97,7 +98,7 @@ export const BulkMetadataEditor = ({ open, onOpenChange, images, onSave }: BulkM
         toast.success('AI metadata generated successfully!');
       }
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error generating metadata', error, { component: 'BulkMetadataEditor' });
       toast.error('Failed to generate metadata');
     } finally {
       setGenerating(null);
@@ -135,7 +136,7 @@ export const BulkMetadataEditor = ({ open, onOpenChange, images, onSave }: BulkM
           // Small delay between requests to avoid rate limiting
           await new Promise(resolve => setTimeout(resolve, 500));
         } catch (err) {
-          console.error(`Failed to generate metadata for image ${i}:`, err);
+          logger.error(`Failed to generate metadata for image ${i}`, err, { component: 'BulkMetadataEditor' });
           failCount++;
         }
       }
@@ -146,7 +147,7 @@ export const BulkMetadataEditor = ({ open, onOpenChange, images, onSave }: BulkM
         toast.error('Failed to generate metadata for any images');
       }
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error generating all metadata', error, { component: 'BulkMetadataEditor' });
       toast.error('Batch generation failed');
     } finally {
       setGenerating(null);
