@@ -578,11 +578,13 @@ usePerformanceMonitor({
 
 ### Phase 34 Candidates
 
-1. **Virtual Scrolling**: For texture galleries with 100+ items
-2. **Web Workers**: Offload heavy calculations to background thread
-3. **Progressive Loading**: Blur-up technique for texture previews
-4. **Intersection Observer**: Lazy render off-screen 3D elements
-5. **Request Deduplication**: Cache identical API requests
+Detailed implementation plan available at [ARCHITECTURE_PHASE34_PLAN.md](../ARCHITECTURE_PHASE34_PLAN.md):
+
+1. **Virtual Scrolling**: react-window for texture galleries with 100+ items (~70% render time reduction)
+2. **Web Workers**: Offload material calculations to background thread (~80% main thread blocking reduction)
+3. **Progressive Loading**: Blur-up technique for texture images (~60% perceived load time improvement)
+4. **Intersection Observer**: Lazy render 3D elements when viewport is near (~200ms initial load improvement)
+5. **Request Deduplication**: Cache identical texture/material requests (~40% network reduction)
 
 ### Architecture Evolution
 
