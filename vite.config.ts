@@ -167,6 +167,21 @@ export default defineConfig(({ mode }) => ({
       workbox: {
         // Increase max file size for large app bundle (3.85MB+)
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
+        
+        // CRITICAL: Force immediate activation of new service worker
+        skipWaiting: true,
+        
+        // CRITICAL: Take control of all open tabs immediately
+        clientsClaim: true,
+        
+        // CRITICAL: Delete outdated caches from previous deployments
+        cleanupOutdatedCaches: true,
+        
+        // CRITICAL: Fallback to index.html for missing navigation routes
+        navigateFallback: '/index.html',
+        navigateFallbackAllowlist: [/^(?!\/__).*/],
+        navigateFallbackDenylist: [/^\/api\//, /\.(?:png|jpg|jpeg|svg|gif|webp|ico|js|css|woff|woff2|ttf)$/],
+        
         runtimeCaching: [
           // Shopify API - NetworkFirst with timeout
           {
