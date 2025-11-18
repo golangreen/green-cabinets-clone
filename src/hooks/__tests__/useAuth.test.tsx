@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi, waitFor } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useAuth } from '../useAuth';
 import { createMockSupabaseClient, TestWrapper } from '@/test/utils';
@@ -49,10 +49,10 @@ describe('useAuth', () => {
       wrapper: TestWrapper,
     });
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
+    // Wait for loading to complete
+    await new Promise(resolve => setTimeout(resolve, 100));
 
+    expect(result.current.loading).toBe(false);
     expect(result.current.user).toEqual(mockUser);
   });
 
@@ -76,9 +76,10 @@ describe('useAuth', () => {
 
     await result.current.signIn('test@example.com', 'password123');
 
-    await waitFor(() => {
-      expect(result.current.user).toEqual(mockUser);
-    });
+    // Wait for state update
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    expect(result.current.user).toEqual(mockUser);
   });
 
   it('should handle sign out', async () => {
