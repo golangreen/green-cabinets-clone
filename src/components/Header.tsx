@@ -1,288 +1,187 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Download } from "lucide-react";
+import { Menu } from "lucide-react";
 import logo from "@/assets/logo-new.png";
-import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/components/CartDrawer";
-import { usePWAInstall } from "@/hooks/usePWAInstall";
-import { InstallPWADialog } from "@/components/InstallPWADialog";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showInstallDialog, setShowInstallDialog] = useState(false);
-  const { isInstallable, promptInstall } = usePWAInstall();
-
-  const handleInstall = async () => {
-    const installed = await promptInstall();
-    if (installed) {
-      setShowInstallDialog(false);
-    }
-  };
 
   const scrollToGallery = (category: string, event?: React.MouseEvent) => {
-    // Prevent any default behavior
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
     
-    // Immediately dispatch the category change
     const categoryEvent = new CustomEvent('categoryChange', { 
       detail: { category } 
     });
     window.dispatchEvent(categoryEvent);
     
-    // Update hash without triggering navigation
     window.history.replaceState(null, '', `#gallery?category=${category}`);
     
-    // Close menu after category is set
     setTimeout(() => {
       setIsMobileMenuOpen(false);
     }, 50);
     
-    // Scroll with longer delay to ensure rendering completes
     setTimeout(() => {
       const gallery = document.getElementById('gallery');
       if (gallery) {
-        // Get fresh position after category change
         const rect = gallery.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const targetPosition = rect.top + scrollTop - 80;
         
-        // Force scroll without smooth behavior for iOS reliability
         window.scrollTo({
           top: targetPosition,
-          behavior: 'auto'
+          behavior: 'smooth'
         });
-        
-        // Then smooth scroll to the exact position
-        setTimeout(() => {
-          window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-          });
-        }, 50);
       }
     }, 400);
   };
 
-  return <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border overflow-hidden" style={{
-      position: 'relative'
-    }}>
-      {/* Black to wood gradient overlay */}
-      <div className="absolute inset-0" style={{
-        background: `linear-gradient(to right, #000000 0%, #000000 15%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0) 70%)`,
-        zIndex: 1
-      }} />
-      {/* Wood texture background */}
-      <div className="absolute inset-0" style={{
-        backgroundImage: `url(${walnutTexture})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        opacity: 1,
-        imageRendering: 'crisp-edges',
-        zIndex: 0
-      }} />
-      <nav className="container relative mx-auto px-4 md:px-6 py-3 md:py-4" style={{ zIndex: 2 }}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
-              <img src={logo} alt="Green Cabinets Logo" className="h-16 md:h-20 w-auto" />
-            </a>
-          </div>
-          
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8 font-display ml-auto mr-8">
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger className="text-black hover:text-black/70 transition-colors flex items-center gap-1 outline-none text-xl font-semibold">
-                Catalog
-                <ChevronDown className="h-5 w-5" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-background border-border z-50">
-                <DropdownMenuItem 
-                  onClick={(e) => scrollToGallery('kitchens', e)}
-                  className="cursor-pointer"
-                >
-                  Kitchens
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={(e) => scrollToGallery('vanities', e)}
-                  className="cursor-pointer"
-                >
-                  Vanities
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={(e) => scrollToGallery('closets', e)}
-                  className="cursor-pointer"
-                >
-                  Closets
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={(e) => scrollToGallery('design-to-reality', e)}
-                  className="cursor-pointer"
-                >
-                  Design to Reality
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsMobileMenuOpen(false);
-                    setTimeout(() => {
-                      const suppliers = document.getElementById('suppliers');
-                      if (suppliers) {
-                        suppliers.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }, 100);
-                  }}
-                  className="cursor-pointer"
-                >
-                  Suppliers
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <a href="#solutions" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
-              Solutions
-            </a>
-            <a href="#about" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
-              About
-            </a>
-            <a href="#contact" className="text-black hover:text-black/70 transition-colors text-xl font-semibold">
-              Contact
-            </a>
-          </div>
-          
-          <div className="flex items-center gap-4 font-display">
-            {/* Install PWA Button */}
-            {isInstallable && (
-              <Button
-                size="default"
-                variant="outline"
-                className="hidden sm:inline-flex text-sm px-4"
-                onClick={() => setShowInstallDialog(true)}
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Install
-              </Button>
-            )}
-
-            {/* Get Quote Button - Desktop */}
-            <Button
-              size="default"
-              className="hidden md:inline-flex text-sm px-4"
-              onClick={() => {
-                const ctaSection = document.querySelector('section[class*="py-32"]');
-                if (ctaSection) {
-                  ctaSection.scrollIntoView({ behavior: 'smooth' });
-                  // Trigger the quote form after scrolling
-                  setTimeout(() => {
-                    const button = ctaSection.querySelector('button') as HTMLButtonElement;
-                    button?.click();
-                  }, 500);
-                }
-              }}
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+      <nav className="container mx-auto px-4 md:px-6 py-4">
+        <div className="flex items-center justify-between relative">
+          {/* Centered Logo */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+            <a 
+              href="/" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                window.scrollTo({ top: 0, behavior: 'smooth' }); 
+              }} 
+              className="cursor-pointer flex flex-col items-center"
             >
-              Get Quote
-            </Button>
+              <img src={logo} alt="Green Cabinets Logo" className="h-12 md:h-16 w-auto" />
+              <span className="font-display text-xs md:text-sm font-semibold text-foreground mt-1 tracking-wider">
+                GREEN CABINETS
+              </span>
+            </a>
+          </div>
 
+          {/* Right Side - Hamburger Menu */}
+          <div className="ml-auto flex items-center gap-2">
             <CartDrawer />
-
-            {/* Mobile Menu */}
+            
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-6 w-6" />
+              <SheetTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="hover:bg-gray-100"
+                  aria-label="Open menu"
+                >
+                  <Menu className="h-6 w-6 text-foreground" />
                 </Button>
               </SheetTrigger>
+              
               <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display">
                 <div className="flex flex-col gap-6 mt-8">
-                  <div className="flex flex-col gap-2">
-                    <h3 className="font-semibold mb-2">Catalog</h3>
-                    <Button 
-                      variant="ghost" 
-                      className="justify-start" 
-                      onClick={(e) => scrollToGallery('kitchens', e)}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-muted-foreground">GALLERY</h3>
+                    <div className="flex flex-col gap-3">
+                      <button
+                        onClick={(e) => scrollToGallery('kitchens', e)}
+                        className="text-left text-xl hover:text-primary transition-colors"
+                      >
+                        Kitchens
+                      </button>
+                      <button
+                        onClick={(e) => scrollToGallery('vanities', e)}
+                        className="text-left text-xl hover:text-primary transition-colors"
+                      >
+                        Vanities
+                      </button>
+                      <button
+                        onClick={(e) => scrollToGallery('closets', e)}
+                        className="text-left text-xl hover:text-primary transition-colors"
+                      >
+                        Closets
+                      </button>
+                      <button
+                        onClick={(e) => scrollToGallery('design-to-reality', e)}
+                        className="text-left text-xl hover:text-primary transition-colors"
+                      >
+                        Design to Reality
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsMobileMenuOpen(false);
+                          setTimeout(() => {
+                            const suppliers = document.getElementById('suppliers');
+                            if (suppliers) {
+                              suppliers.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }, 100);
+                        }}
+                        className="text-left text-xl hover:text-primary transition-colors"
+                      >
+                        Suppliers
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="border-t pt-4 space-y-3">
+                    <a 
+                      href="#services" 
+                      className="block text-xl hover:text-primary transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      Kitchens
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      className="justify-start" 
-                      onClick={(e) => scrollToGallery('vanities', e)}
+                      Services
+                    </a>
+                    <a 
+                      href="#solutions" 
+                      className="block text-xl hover:text-primary transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      Vanities
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      className="justify-start" 
-                      onClick={(e) => scrollToGallery('closets', e)}
+                      Solutions
+                    </a>
+                    <a 
+                      href="#about" 
+                      className="block text-xl hover:text-primary transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      Closets
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      className="justify-start" 
-                      onClick={(e) => scrollToGallery('design-to-reality', e)}
+                      About
+                    </a>
+                    <a 
+                      href="#contact" 
+                      className="block text-xl hover:text-primary transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      Design to Reality
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      className="justify-start" 
-                      onClick={(e) => {
-                        e.preventDefault();
+                      Contact
+                    </a>
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <Button
+                      size="lg"
+                      className="w-full"
+                      onClick={() => {
                         setIsMobileMenuOpen(false);
-                        setTimeout(() => {
-                          const suppliers = document.getElementById('suppliers');
-                          if (suppliers) {
-                            suppliers.scrollIntoView({ behavior: 'smooth' });
-                          }
-                        }, 100);
+                        const ctaSection = document.querySelector('section[class*="py-24"]');
+                        if (ctaSection) {
+                          ctaSection.scrollIntoView({ behavior: 'smooth' });
+                          setTimeout(() => {
+                            const button = ctaSection.querySelector('button') as HTMLButtonElement;
+                            button?.click();
+                          }, 500);
+                        }
                       }}
                     >
-                      Suppliers
+                      Get Quote
                     </Button>
                   </div>
-                  <a 
-                    href="#solutions" 
-                    className="text-black hover:text-black/70 transition-colors px-2 text-xl font-semibold"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Solutions
-                  </a>
-                  <a 
-                    href="#about" 
-                    className="text-black hover:text-black/70 transition-colors px-2 text-xl font-semibold"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    About
-                  </a>
-                  <a 
-                    href="#contact" 
-                    className="text-black hover:text-black/70 transition-colors px-2 text-xl font-semibold"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Contact
-                  </a>
-              </div>
+                </div>
               </SheetContent>
             </Sheet>
           </div>
         </div>
       </nav>
-
-      <InstallPWADialog 
-        open={showInstallDialog} 
-        onOpenChange={setShowInstallDialog}
-        onInstall={handleInstall}
-      />
-    </header>;
+    </header>
+  );
 };
+
 export default Header;
