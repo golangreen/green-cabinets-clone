@@ -1,0 +1,69 @@
+{
+  "header": {
+    "documentation": "Documentation",
+    "suppliers": "Suppliers",
+    "contact": "Contact",
+    "admin": "Admin"
+  },
+  "hero": {
+    "title": "Transform Your Kitchen with Premium Custom Cabinets",
+    "subtitle": "Design your dream kitchen with our 3D configurator. Choose from premium brands, customize every detail, and get instant pricing.",
+    "launchDesigner": "Launch Designer"
+  },
+  "vanity": {
+    "title": "Custom Vanity Designer",
+    "configuration": "Configuration",
+    "dimensions": "Dimensions",
+    "width": "Width",
+    "depth": "Depth",
+    "height": "Height",
+    "materials": "Materials",
+    "brand": "Brand",
+    "finish": "Finish",
+    "features": "Features",
+    "mirrorCabinet": "Mirror Cabinet",
+    "pricing": "Pricing",
+    "basePrice": "Base Price",
+    "materials_cost": "Materials",
+    "tax": "Tax",
+    "shipping": "Shipping",
+    "total": "Total",
+    "actions": {
+      "getQuote": "Get Quote",
+      "saveDesign": "Save Design",
+      "shareDesign": "Share Design",
+      "fullscreen": "View Fullscreen",
+      "exitFullscreen": "Exit Fullscreen"
+    }
+  },
+  "suppliers": {
+    "title": "Our Trusted Suppliers",
+    "subtitle": "We partner with the finest cabinet manufacturers to bring you quality and variety",
+    "egger": {
+      "name": "Egger",
+      "description": "European excellence in wood-based materials"
+    },
+    "tafisa": {
+      "name": "Tafisa",
+      "description": "North American leader in decorative panels"
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Ready to start your project? We're here to help",
+    "email": "Email Us",
+    "call": "Call Us",
+    "visit": "Visit Us",
+    "address": "Brooklyn, NY"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
+  }
+}
