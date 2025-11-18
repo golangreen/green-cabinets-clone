@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +19,7 @@ export default function ErrorFallback({
   eventId, 
   resetError 
 }: ErrorFallbackProps) {
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Log error details to console in development
@@ -37,7 +39,7 @@ export default function ErrorFallback({
 
   const handleGoHome = () => {
     resetError();
-    window.location.href = ROUTES.HOME;
+    navigate(ROUTES.HOME);
   };
 
   const handleReportIssue = () => {
