@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRecaptcha, type UseRecaptchaReturn } from '@/features/quote-request/hooks';
 import { validators } from "@/lib/formValidation";
 import { logger } from '@/lib/logger';
+import { isRateLimited, getResetTime } from '@/lib/security';
 import { prepareQuoteForSubmission, createQuoteMailtoLink, type QuoteData } from "../services/quoteService";
 
 interface QuoteFormProps {
@@ -77,6 +78,20 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
     setIsSubmitting(true);
     
     try {
+      // Check rate limiting (3 submissions per 10 minutes)
+      const rateLimitKey = 'quote-submission';
+      if (isRateLimited(rateLimitKey, { maxRequests: 3, windowMs: 10 * 60 * 1000 })) {
+        const resetSeconds = getResetTime(rateLimitKey);
+        const resetMinutes = Math.ceil(resetSeconds / 60);
+        toast({
+          title: "Too Many Requests",
+          description: `Please wait ${resetMinutes} minute${resetMinutes > 1 ? 's' : ''} before submitting another quote request.`,
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+      
       // Execute reCAPTCHA if configured (optional - app works without it)
       let recaptchaToken = null;
       if (isConfigured) {
