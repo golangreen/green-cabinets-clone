@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 import { Button } from "@/components/ui/button";
 import { Download, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 
 interface SharePreviewCardProps {
   open: boolean;
@@ -25,7 +26,7 @@ export const SharePreviewCard = ({ open, onOpenChange, shareUrl }: SharePreviewC
           light: '#ffffff',
         },
       }).catch((error) => {
-        console.error('Error generating QR code:', error);
+        logger.error('Error generating QR code', error, { component: 'SharePreviewCard' });
         toast.error("Failed to generate QR code");
       });
     }
