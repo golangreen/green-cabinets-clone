@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
+import { shopifyService, ShopifyProduct } from "@/services";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart, Package } from "lucide-react";
@@ -16,7 +16,7 @@ export const ShopProducts = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const productsData = await fetchProducts();
+        const productsData = await shopifyService.getProducts();
         setProducts(productsData);
       } catch (error) {
         console.error('Error loading products:', error);

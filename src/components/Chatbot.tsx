@@ -1,17 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { authService, chatService, ChatMessage } from "@/services";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, ChevronUp, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Session } from "@supabase/supabase-js";
 
-type Message = { role: "user" | "assistant"; content: string };
-
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
@@ -20,16 +18,16 @@ const Chatbot = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check authentication status
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Check authentication status using authService
+    authService.getSession().then(({ session }) => {
       setSession(session);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const unsubscribe = authService.onAuthStateChange((event, session) => {
       setSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return unsubscribe;
   }, []);
 
   const scrollToBottom = () => {
@@ -40,7 +38,7 @@ const Chatbot = () => {
     scrollToBottom();
   }, [messages]);
 
-  const streamChat = async (userMessage: Message) => {
+  const streamChat = async (userMessage: ChatMessage) => {
     if (!session) {
       toast({
         title: "Authentication Required",
@@ -148,7 +146,7 @@ const Chatbot = () => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = { role: "user", content: input.trim() };
+    const userMessage: ChatMessage = { role: "user", content: input.trim() };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
