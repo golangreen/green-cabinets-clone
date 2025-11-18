@@ -39,11 +39,11 @@ import { toast } from '@/hooks/use-toast';
 import { logger } from '@/lib/logger';
 import {
   analyzeGalleryStorage,
-  formatFileSize,
   getStorageStats,
   type StorageAnalysis,
   type CompressionRecommendation,
 } from '../services/storageAnalyzerService';
+import { formatBytes, formatFileSize } from '@/utils/formatters';
 import {
   bulkCompressImages,
   calculateTotalSavings,

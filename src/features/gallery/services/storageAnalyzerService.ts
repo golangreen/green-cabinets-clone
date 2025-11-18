@@ -11,6 +11,7 @@ import {
   type StorageImage as StorageImageBase,
 } from './compression';
 import { logger } from '@/lib/logger';
+import { formatBytes } from '@/utils/formatters';
 
 // ============================================================================
 // Types
@@ -263,18 +264,9 @@ export function getStorageStats(images: StorageImageAnalyzer[]): {
   return stats;
 }
 
-/**
- * Format file size for display
- */
-export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
-}
+// formatFileSize moved to @/utils/formatters
+// Use formatBytes for user-facing display
+// Use formatFileSize for compression analysis (MB only)
 
 /**
  * Calculate storage usage percentage

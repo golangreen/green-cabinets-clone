@@ -29,7 +29,7 @@ import {
   estimateCompressedSize,
   formatFileSizeWithUnit,
 } from '../services/compression';
-import { formatFileSize } from '../services/storageAnalyzerService';
+import { formatFileSize } from '@/utils/formatters';
 
 // ============================================================================
 // Types
