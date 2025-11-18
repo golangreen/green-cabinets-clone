@@ -239,6 +239,54 @@ export type Database = {
         }
         Relationships: []
       }
+      gallery_image_metadata: {
+        Row: {
+          alt_text: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          display_name: string | null
+          file_size: number | null
+          height: number | null
+          id: string
+          original_filename: string
+          storage_path: string
+          updated_at: string
+          uploaded_by: string | null
+          width: number | null
+        }
+        Insert: {
+          alt_text?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_name?: string | null
+          file_size?: number | null
+          height?: number | null
+          id?: string
+          original_filename: string
+          storage_path: string
+          updated_at?: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Update: {
+          alt_text?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_name?: string | null
+          file_size?: number | null
+          height?: number | null
+          id?: string
+          original_filename?: string
+          storage_path?: string
+          updated_at?: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
       notification_settings: {
         Row: {
           created_at: string
