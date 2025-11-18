@@ -367,7 +367,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error.message || "Failed to send email" 
+        error: "Failed to send configuration email. Please try again." 
       }),
       {
         status: 500,

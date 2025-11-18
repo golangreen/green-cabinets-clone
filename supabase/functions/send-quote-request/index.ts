@@ -196,7 +196,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const quoteData: QuoteRequest = validationResult.data;
-    console.log("Processing quote request");
+    console.log(`Processing quote request from IP: ${clientIp}, Email: ${quoteData.customerEmail}`);
 
     // Send email to business owner using Resend API
     const ownerEmailResponse = await fetch("https://api.resend.com/emails", {

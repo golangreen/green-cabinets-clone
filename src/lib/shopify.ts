@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 const SHOPIFY_API_VERSION = '2025-07';
 const SHOPIFY_STORE_PERMANENT_DOMAIN = 'green-cabinets-clone-5eeb3.myshopify.com';
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
@@ -142,69 +144,44 @@ const CART_CREATE_MUTATION = `
 `;
 
 export async function storefrontApiRequest(query: string, variables: any = {}) {
-  // Skip during SSR/build time
-  if (typeof window === 'undefined') {
-    return { data: null };
-  }
-  
-  try {
-    const response = await fetch(SHOPIFY_STOREFRONT_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
-      },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
+  const response = await fetch(SHOPIFY_STOREFRONT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
+    },
+    body: JSON.stringify({
+      query,
+      variables,
+    }),
+  });
+
+  if (response.status === 402) {
+    toast.error("Shopify: Payment required", {
+      description: "Shopify API access requires an active Shopify billing plan. Your store needs to be upgraded to a paid plan. Visit https://admin.shopify.com to upgrade.",
     });
-
-    if (response.status === 402) {
-      console.warn('Shopify payment required - store needs to be on a paid plan');
-      return { data: null };
-    }
-
-    if (!response.ok) {
-      console.warn(`Shopify HTTP error! status: ${response.status}`);
-      return { data: null };
-    }
-
-    const data = await response.json();
-    
-    if (data.errors) {
-      console.warn(`Shopify API errors:`, data.errors);
-      return { data: null };
-    }
-
-    return data;
-  } catch (error) {
-    console.warn('Shopify API request failed:', error);
-    return { data: null };
+    throw new Error('Shopify payment required - store needs to be on a paid plan');
   }
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  
+  if (data.errors) {
+    throw new Error(`Error calling Shopify: ${data.errors.map((e: any) => e.message).join(', ')}`);
+  }
+
+  return data;
 }
 
 export async function fetchProducts(first: number = 50, query?: string) {
-  // Skip during SSR/build time
-  if (typeof window === 'undefined') {
-    return [];
-  }
-  
-  try {
-    const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
-    return data?.data?.products?.edges || [];
-  } catch (error) {
-    console.warn('Failed to fetch products:', error);
-    return [];
-  }
+  const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
+  return data?.data?.products?.edges || [];
 }
 
 export async function createStorefrontCheckout(items: any[]): Promise<string> {
-  // Skip during SSR/build time
-  if (typeof window === 'undefined') {
-    throw new Error('Checkout creation not available during SSR');
-  }
-  
   try {
     console.log('Creating checkout with items:', items);
     
@@ -244,12 +221,14 @@ export async function createStorefrontCheckout(items: any[]): Promise<string> {
 
     if (cartData.data.cartCreate.userErrors.length > 0) {
       const errors = cartData.data.cartCreate.userErrors.map((e: any) => e.message).join(', ');
+      toast.error('Cart creation failed', { description: errors });
       throw new Error(`Cart creation failed: ${errors}`);
     }
 
     const cart = cartData.data.cartCreate.cart;
     
     if (!cart.checkoutUrl) {
+      toast.error('No checkout URL returned from Shopify');
       throw new Error('No checkout URL returned from Shopify');
     }
 
@@ -261,6 +240,9 @@ export async function createStorefrontCheckout(items: any[]): Promise<string> {
     return finalUrl;
   } catch (error) {
     console.error('Error creating storefront checkout:', error);
+    toast.error('Checkout failed', { 
+      description: error instanceof Error ? error.message : 'Unknown error occurred' 
+    });
     throw error;
   }
 }

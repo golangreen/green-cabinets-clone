@@ -2,16 +2,12 @@
   "name": "Kitchen Designer Pro - Custom Cabinet Design",
   "short_name": "Kitchen Designer",
   "description": "Professional kitchen and cabinet design tool with 2D/3D visualization, room scanning, and custom measurements",
-  "start_url": "/",
+  "start_url": "/designer",
   "display": "standalone",
   "background_color": "#030303",
   "theme_color": "#1e7b5f",
-  "orientation": "any",
-  "categories": ["productivity", "utilities", "design", "lifestyle"],
-  "prefer_related_applications": false,
-  "scope": "/",
-  "dir": "ltr",
-  "lang": "en-US",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "utilities", "design"],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -24,49 +20,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "wide"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Kitchen Designer",
-      "short_name": "Designer",
-      "description": "Start designing your kitchen",
-      "url": "/designer",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Vanity Designer",
-      "short_name": "Vanity",
-      "description": "Design custom bathroom vanity",
-      "url": "/product/custom-bathroom-vanity",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Room Scanner",
-      "short_name": "Scan",
-      "description": "Scan your room with AR",
-      "url": "/room-scan",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

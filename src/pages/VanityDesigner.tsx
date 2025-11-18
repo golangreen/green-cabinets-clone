@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import { HistoryTimeline } from "@/components/HistoryTimeline";
-import { useDeviceType } from "@/hooks/useDeviceType";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -130,15 +129,6 @@ const CABINET_LIBRARY = CABINET_CATALOG;
 
 const VanityDesigner = () => {
   const navigate = useNavigate();
-  const { isMobile, isTablet } = useDeviceType();
-  
-  // Redirect mobile phones to room scanner - only tablets and desktops can use designer
-  useEffect(() => {
-    if (isMobile) {
-      toast.info("Mobile phones can only scan rooms. Use a tablet or desktop for the designer.");
-      navigate("/room-scan");
-    }
-  }, [isMobile, navigate]);
   
   // Templates hook
   const { templates, isLoading: templatesLoading, saveTemplate, deleteTemplate, loadTemplate, duplicateTemplate } = useRoomTemplates();
@@ -151,17 +141,16 @@ const VanityDesigner = () => {
   // Cabinet wizard
   const [showWizard, setShowWizard] = useState(false);
   
-  // Mobile-specific state
-  const [showMobileTools, setShowMobileTools] = useState(false);
-  const [showMobileLibrary, setShowMobileLibrary] = useState(false);
-  
   // View mode: 'floorplan' or 'render'
   const [viewMode, setViewMode] = useState<"floorplan" | "render">("floorplan");
   const [activeTab, setActiveTab] = useState("room-layout");
-  const [showLeftPanel, setShowLeftPanel] = useState(true);
+  const [showLeftPanel, setShowLeftPanel] = useState(false); // Start hidden on mobile
   const [showGrid, setShowGrid] = useState(true);
   const [showDimensions, setShowDimensions] = useState(true);
   const [drawingTool, setDrawingTool] = useState<"select" | "wall" | "door" | "window">("select");
+  
+  // Mobile-specific state
+  const [mobileControlsOpen, setMobileControlsOpen] = useState(false);
   
   // Cabinets state
   const [cabinets, setCabinets] = useState<Cabinet[]>([
@@ -2147,6 +2136,22 @@ const VanityDesigner = () => {
                   </TabsList>
                   
                   <TabsContent value="presets" className="space-y-2 mt-3">
+                    <div>
+                      <Label className="text-xs font-semibold mb-2 block">3D Room Scanner</Label>
+                      <Button 
+                        variant="default" 
+                        size="sm"
+                        onClick={() => navigate('/scan')}
+                        className="w-full h-auto py-3 flex items-center justify-center gap-2 bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-xl hover:shadow-green-400/50 transition-all duration-300"
+                      >
+                        <Scan className="h-4 w-4" />
+                        <span className="text-xs">Scan Room with Camera</span>
+                      </Button>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Automatically measure your space with LiDAR or camera
+                      </p>
+                    </div>
+                    
                     <div>
                       <Label className="text-xs font-semibold mb-2 block">Quick Layouts</Label>
                       <div className="grid grid-cols-2 gap-2">

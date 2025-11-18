@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import { Sparkles, Camera } from "lucide-react";
-import { useDeviceType } from "@/hooks/useDeviceType";
+import { Link } from "react-router-dom";
+import { Sparkles } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
@@ -37,21 +36,11 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 };
 
 const Hero = () => {
-  const navigate = useNavigate();
-  const { isMobile } = useDeviceType();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [shuffledImages] = useState(() => shuffleArray(heroImages));
   const [recentIndices, setRecentIndices] = useState<number[]>([0]);
   const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
-
-  const handleLaunchClick = () => {
-    if (isMobile) {
-      navigate("/room-scan");
-    } else {
-      navigate("/designer");
-    }
-  };
 
   // Get a random index that hasn't been used recently
   const getNextRandomIndex = () => {
@@ -109,7 +98,7 @@ const Hero = () => {
             src={shuffledImages[currentImageIndex].src} 
             alt={shuffledImages[currentImageIndex].alt} 
             className="w-full h-full object-cover pointer-events-none" 
-            style={{ 
+            style={{
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
               willChange: 'opacity'
             }}
@@ -131,7 +120,7 @@ const Hero = () => {
             src={shuffledImages[getNextIndex()].src} 
             alt={shuffledImages[getNextIndex()].alt} 
             className="w-full h-full object-cover pointer-events-none" 
-            style={{ 
+            style={{
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
               willChange: 'opacity'
             }}
@@ -168,28 +157,17 @@ const Hero = () => {
           Design Your Dream
         </h1>
         <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-8 drop-shadow-lg max-w-2xl mx-auto">
-          {isMobile 
-            ? "Scan your room with your camera to get started. Design on a larger device later."
-            : "Create custom cabinets with our intuitive 3D design tool. See your vision come to life in real-time."
-          }
+          Create custom cabinets with our intuitive 3D design tool. See your vision come to life in real-time.
         </p>
-        <Button 
-          size="lg" 
-          onClick={handleLaunchClick}
-          className="text-lg px-8 py-6 h-auto bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-2xl hover:shadow-green-400/50 transition-all duration-300 hover:scale-105"
-        >
-          {isMobile ? (
-            <>
-              <Camera className="mr-2 h-5 w-5" />
-              Scan Room
-            </>
-          ) : (
-            <>
-              <Sparkles className="mr-2 h-5 w-5" />
-              Launch Designer
-            </>
-          )}
-        </Button>
+        <Link to="/designer">
+          <Button 
+            size="lg" 
+            className="text-lg px-8 py-6 h-auto bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-2xl hover:shadow-green-400/50 transition-all duration-300 hover:scale-105"
+          >
+            <Sparkles className="mr-2 h-5 w-5" />
+            Launch Designer
+          </Button>
+        </Link>
       </div>
     </section>
   );

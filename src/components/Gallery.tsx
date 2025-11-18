@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import bathroomMarble from "@/assets/gallery/bathroom-marble.jpg";
 import kitchenModernWhite from "@/assets/gallery/kitchen-modern-white.jpg";
 import kitchenFireplace from "@/assets/gallery/kitchen-fireplace.jpg";
@@ -396,11 +397,11 @@ const Gallery = () => {
             >
               <div className="relative">
                 <div className="aspect-[4/3] overflow-hidden bg-muted">
-                  <img 
+                  <OptimizedImage 
                     src={image.src} 
                     alt={image.alt}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
+                    eager={index < 3}
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">

@@ -105,11 +105,14 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    // Logging for monitoring (separated for security)
+    // Enhanced logging for monitoring
+    const clientIp = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
     const totalChars = messages.reduce((sum, msg) => sum + msg.content.length, 0);
     console.log("Processing chat request:", {
+      userId: user.id,
       messageCount: messages.length,
       totalCharacters: totalChars,
+      clientIp,
       timestamp: new Date().toISOString()
     });
 

@@ -14,20 +14,13 @@ export const ShopProducts = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Only run in browser, not during SSR/build
-    if (typeof window === 'undefined') {
-      setLoading(false);
-      return;
-    }
-
     const loadProducts = async () => {
       try {
         const productsData = await fetchProducts();
         setProducts(productsData);
       } catch (error) {
         console.error('Error loading products:', error);
-        // Silently fail - don't show error toast, just show no products
-        setProducts([]);
+        toast.error('Failed to load products');
       } finally {
         setLoading(false);
       }
@@ -68,9 +61,21 @@ export const ShopProducts = () => {
     );
   }
 
-  // Hide shop section if no products (including Shopify errors)
   if (products.length === 0) {
-    return null;
+    return (
+      <div className="py-24 px-4">
+        <div className="container mx-auto text-center max-w-2xl">
+          <Package className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
+          <h2 className="text-3xl font-bold mb-4">No Products Yet</h2>
+          <p className="text-muted-foreground mb-8">
+            Start building your product catalog by telling me what products you'd like to add!
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Example: "Add a custom kitchen cabinet priced at $2,500"
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -1,4 +1,4 @@
-@import './styles/mobile-optimizations.css';
+@import './styles/designer-responsive.css';
 
 @tailwind base;
 @tailwind components;
