@@ -11,6 +11,7 @@
 - ✅ **Phase 26c Complete**: Extracted VanityFaucet, VanityBacksplash, VanityLighting to `fixtures/`
 - ✅ **Phase 26d Complete**: Extracted BathroomAccessories, Countertop to `fixtures/`
 - ✅ **Phase 26e Complete**: Extracted BathroomRoom, Lighting to `room/`
+- ✅ **Phase 26f Complete**: Extracted VanityCabinet (~650 lines) to `cabinet/`
 
 ### Components Identified for Extraction (from 3,517-line monolith)
 
