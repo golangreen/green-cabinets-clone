@@ -80,72 +80,24 @@ const Hero = () => {
   const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden touch-pan-y">
-      {/* Background Images with Enhanced Crossfade */}
-      <div className="absolute inset-0 bg-black select-none">
-        {/* Current Image - fades out */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: isTransitioning ? 0 : 1,
-            transition: 'opacity 2500ms ease-in-out',
-            zIndex: 1,
-          }}
-        >
-          <img 
-            src={shuffledImages[currentImageIndex].src} 
-            alt={shuffledImages[currentImageIndex].alt} 
-            className="w-full h-full object-cover pointer-events-none" 
-            style={{ 
-              filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-              willChange: 'opacity'
-            }}
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-        
-        {/* Next Image - fades in */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: isTransitioning ? 1 : 0,
-            transition: 'opacity 2500ms ease-in-out',
-            zIndex: 2,
-          }}
-        >
-          <img 
-            src={shuffledImages[getNextIndex()].src} 
-            alt={shuffledImages[getNextIndex()].alt} 
-            className="w-full h-full object-cover pointer-events-none" 
-            style={{ 
-              filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
-              willChange: 'opacity'
-            }}
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-        
-        <div className="absolute inset-0 bg-black/25" style={{ zIndex: 3 }} />
-      </div>
-      
-      {/* Logo Overlay - Full Size Glass Effect */}
-      <div className="absolute inset-0" style={{ zIndex: 10 }}>
-        <img 
-          src={logo} 
-          alt="Company Logo" 
-          className="pointer-events-none"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center',
-            filter: 'grayscale(100%) brightness(2.5) contrast(0.2)',
-            opacity: 0.18,
-            mixBlendMode: 'overlay'
-          }}
+    <section className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden">
+      {/* Background images with crossfade */}
+      <div className="absolute inset-0">
+        <img
+          src={shuffledImages[currentImageIndex].src}
+          alt={shuffledImages[currentImageIndex].alt}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
+            isTransitioning ? 'opacity-0' : 'opacity-100'
+          }`}
           loading="eager"
+          fetchPriority="high"
+        />
+        <img
+          src={shuffledImages[getNextIndex()].src}
+          alt={shuffledImages[getNextIndex()].alt}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
+            isTransitioning ? 'opacity-100' : 'opacity-0'
+          }`}
         />
       </div>
     </section>

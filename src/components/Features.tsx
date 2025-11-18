@@ -26,35 +26,42 @@ const features = [
 
 const Features = () => {
   return (
-    <section id="solutions" className="py-24 bg-background">
+    <section id="solutions" className="py-20 bg-[#f8f8f8]">
       <div className="container mx-auto px-6">
-        <div className="max-w-6xl mx-auto space-y-16">
+        {/* Section Title */}
+        <div className="text-center mb-16">
+          <h2 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-4">
+            Why Choose Green Cabinets
+          </h2>
+        </div>
+
+        <div className="max-w-7xl mx-auto space-y-20">
           {features.map((feature, index) => (
-            <Card
+            <div
               key={feature.title}
-              className={`overflow-hidden border-0 shadow-[var(--shadow-elegant)] hover:shadow-[var(--shadow-glow)] transition-all duration-500 ${
+              className={`flex flex-col ${
                 index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-              } flex flex-col md:flex`}
+              } gap-12 items-center`}
             >
-              <div className="md:w-1/2 relative overflow-hidden group">
+              <div className="md:w-1/2 relative overflow-hidden rounded-2xl">
                 <img
                   src={feature.image}
                   alt={feature.title}
-                  className="w-full h-full min-h-[300px] object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-700"
                 />
               </div>
-              <div className="md:w-1/2 p-12 flex flex-col justify-center space-y-6">
-                <div className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold w-fit">
+              <div className="md:w-1/2 space-y-6">
+                <div className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold">
                   {feature.stats}
                 </div>
-                <h3 className="font-display text-4xl font-bold text-foreground">
+                <h3 className="font-display text-4xl font-bold text-[#1a1a1a]">
                   {feature.title}
                 </h3>
-                <p className="text-lg text-muted-foreground leading-relaxed">
+                <p className="text-lg text-[#666666] leading-relaxed">
                   {feature.description}
                 </p>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>
