@@ -14,16 +14,751 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alert_history: {
+        Row: {
+          alert_type: string
+          details: Json | null
+          id: string
+          sent_at: string
+        }
+        Insert: {
+          alert_type: string
+          details?: Json | null
+          id?: string
+          sent_at?: string
+        }
+        Update: {
+          alert_type?: string
+          details?: Json | null
+          id?: string
+          sent_at?: string
+        }
+        Relationships: []
+      }
+      alert_settings: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          setting_key: string
+          setting_value: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      block_history: {
+        Row: {
+          action: string
+          auto_blocked: boolean
+          blocked_until: string | null
+          created_at: string
+          id: string
+          ip_address: string
+          performed_by: string | null
+          reason: string | null
+        }
+        Insert: {
+          action: string
+          auto_blocked?: boolean
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          ip_address: string
+          performed_by?: string | null
+          reason?: string | null
+        }
+        Update: {
+          action?: string
+          auto_blocked?: boolean
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: string
+          performed_by?: string | null
+          reason?: string | null
+        }
+        Relationships: []
+      }
+      blocked_ips: {
+        Row: {
+          auto_blocked: boolean
+          blocked_at: string
+          blocked_until: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: string
+          reason: string
+          violation_count: number
+        }
+        Insert: {
+          auto_blocked?: boolean
+          blocked_at?: string
+          blocked_until: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address: string
+          reason: string
+          violation_count?: number
+        }
+        Update: {
+          auto_blocked?: boolean
+          blocked_at?: string
+          blocked_until?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: string
+          reason?: string
+          violation_count?: number
+        }
+        Relationships: []
+      }
+      config_change_audit: {
+        Row: {
+          change_type: string
+          config_key: string
+          created_at: string
+          id: string
+          new_value: string
+          old_value: string | null
+          preset_name: string | null
+          user_email: string
+          user_id: string
+        }
+        Insert: {
+          change_type: string
+          config_key: string
+          created_at?: string
+          id?: string
+          new_value: string
+          old_value?: string | null
+          preset_name?: string | null
+          user_email: string
+          user_id: string
+        }
+        Update: {
+          change_type?: string
+          config_key?: string
+          created_at?: string
+          id?: string
+          new_value?: string
+          old_value?: string | null
+          preset_name?: string | null
+          user_email?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_delivery_log: {
+        Row: {
+          created_at: string | null
+          email_id: string
+          email_type: string
+          event_data: Json | null
+          id: string
+          recipient_email: string
+          role: Database["public"]["Enums"]["app_role"] | null
+          status: string
+          subject: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_id: string
+          email_type: string
+          event_data?: Json | null
+          id?: string
+          recipient_email: string
+          role?: Database["public"]["Enums"]["app_role"] | null
+          status: string
+          subject?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_id?: string
+          email_type?: string
+          event_data?: Json | null
+          id?: string
+          recipient_email?: string
+          role?: Database["public"]["Enums"]["app_role"] | null
+          status?: string
+          subject?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      email_settings: {
+        Row: {
+          created_at: string
+          id: string
+          sender_email: string
+          sender_name: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          sender_email: string
+          sender_name?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          sender_email?: string
+          sender_name?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      failed_login_attempts: {
+        Row: {
+          attempt_count: number
+          created_at: string
+          email: string
+          id: string
+          ip_address: string
+          last_attempt_at: string
+          locked_until: string | null
+        }
+        Insert: {
+          attempt_count?: number
+          created_at?: string
+          email: string
+          id?: string
+          ip_address: string
+          last_attempt_at?: string
+          locked_until?: string | null
+        }
+        Update: {
+          attempt_count?: number
+          created_at?: string
+          email?: string
+          id?: string
+          ip_address?: string
+          last_attempt_at?: string
+          locked_until?: string | null
+        }
+        Relationships: []
+      }
+      gallery_image_metadata: {
+        Row: {
+          alt_text: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          display_name: string | null
+          file_size: number | null
+          height: number | null
+          id: string
+          original_filename: string
+          storage_path: string
+          updated_at: string
+          uploaded_by: string | null
+          width: number | null
+        }
+        Insert: {
+          alt_text?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_name?: string | null
+          file_size?: number | null
+          height?: number | null
+          id?: string
+          original_filename: string
+          storage_path: string
+          updated_at?: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Update: {
+          alt_text?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_name?: string | null
+          file_size?: number | null
+          height?: number | null
+          id?: string
+          original_filename?: string
+          storage_path?: string
+          updated_at?: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
+      notification_settings: {
+        Row: {
+          created_at: string
+          id: string
+          rate_limit_enabled: boolean
+          retry_threshold: number
+          severity_threshold: string
+          sound_enabled: boolean
+          updated_at: string
+          user_id: string
+          webhook_duplicate_enabled: boolean
+          webhook_retry_enabled: boolean
+          webhook_security_enabled: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rate_limit_enabled?: boolean
+          retry_threshold?: number
+          severity_threshold?: string
+          sound_enabled?: boolean
+          updated_at?: string
+          user_id: string
+          webhook_duplicate_enabled?: boolean
+          webhook_retry_enabled?: boolean
+          webhook_security_enabled?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rate_limit_enabled?: boolean
+          retry_threshold?: number
+          severity_threshold?: string
+          sound_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+          webhook_duplicate_enabled?: boolean
+          webhook_retry_enabled?: boolean
+          webhook_security_enabled?: boolean
+        }
+        Relationships: []
+      }
+      performance_metrics: {
+        Row: {
+          connection_type: string | null
+          created_at: string
+          device_memory: number | null
+          id: string
+          metadata: Json | null
+          metric_name: string
+          metric_value: number
+          timestamp: string
+          url: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          connection_type?: string | null
+          created_at?: string
+          device_memory?: number | null
+          id?: string
+          metadata?: Json | null
+          metric_name: string
+          metric_value: number
+          timestamp?: string
+          url: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          connection_type?: string | null
+          created_at?: string
+          device_memory?: number | null
+          id?: string
+          metadata?: Json | null
+          metric_name?: string
+          metric_value?: number
+          timestamp?: string
+          url?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      role_change_audit: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          performed_by_email: string
+          performed_by_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          target_user_email: string
+          target_user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          performed_by_email: string
+          performed_by_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          target_user_email: string
+          target_user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          performed_by_email?: string
+          performed_by_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          target_user_email?: string
+          target_user_id?: string
+        }
+        Relationships: []
+      }
+      security_events: {
+        Row: {
+          client_ip: string
+          created_at: string
+          details: Json | null
+          event_type: string
+          function_name: string
+          id: string
+          severity: string
+        }
+        Insert: {
+          client_ip: string
+          created_at?: string
+          details?: Json | null
+          event_type: string
+          function_name: string
+          id?: string
+          severity: string
+        }
+        Update: {
+          client_ip?: string
+          created_at?: string
+          details?: Json | null
+          event_type?: string
+          function_name?: string
+          id?: string
+          severity?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_temporary: boolean | null
+          reminder_3day_sent: boolean | null
+          reminder_sent: boolean | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_temporary?: boolean | null
+          reminder_3day_sent?: boolean | null
+          reminder_sent?: boolean | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_temporary?: boolean | null
+          reminder_3day_sent?: boolean | null
+          reminder_sent?: boolean | null
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      webhook_events: {
+        Row: {
+          client_ip: string | null
+          created_at: string
+          event_type: string
+          id: string
+          processed_at: string
+          retry_count: number | null
+          svix_id: string
+        }
+        Insert: {
+          client_ip?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          processed_at?: string
+          retry_count?: number | null
+          svix_id: string
+        }
+        Update: {
+          client_ip?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          processed_at?: string
+          retry_count?: number | null
+          svix_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_user_role:
+        | {
+            Args: {
+              target_role: Database["public"]["Enums"]["app_role"]
+              target_user_id: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              expiration_date?: string
+              target_role: Database["public"]["Enums"]["app_role"]
+              target_user_id: string
+            }
+            Returns: Json
+          }
+      auto_block_ip: {
+        Args: {
+          block_duration_hours?: number
+          target_ip: string
+          violation_threshold?: number
+        }
+        Returns: Json
+      }
+      bulk_add_user_role: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_ids: string[]
+        }
+        Returns: Json
+      }
+      bulk_extend_role_expiration: {
+        Args: { role_extensions: Json }
+        Returns: Json
+      }
+      bulk_remove_user_role: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_ids: string[]
+        }
+        Returns: Json
+      }
+      cleanup_expired_blocks: { Args: never; Returns: number }
+      cleanup_old_failed_attempts: { Args: never; Returns: number }
+      cleanup_old_performance_metrics: { Args: never; Returns: number }
+      cleanup_old_webhook_events: { Args: never; Returns: number }
+      extend_role_expiration: {
+        Args: {
+          new_expiration_date: string
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: Json
+      }
+      get_all_users_with_roles: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          role_details: Json[]
+          roles: Database["public"]["Enums"]["app_role"][]
+          user_id: string
+        }[]
+      }
+      get_blocked_ip_info: {
+        Args: { check_ip: string }
+        Returns: {
+          blocked: boolean
+          blocked_until: string
+          reason: string
+          violation_count: number
+        }[]
+      }
+      get_email_delivery_stats: {
+        Args: { days_back?: number }
+        Returns: {
+          delivery_rate: number
+          total_bounced: number
+          total_complained: number
+          total_delivered: number
+          total_failed: number
+          total_sent: number
+        }[]
+      }
+      get_expired_roles: {
+        Args: never
+        Returns: {
+          expires_at: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_email: string
+          user_id: string
+        }[]
+      }
+      get_expiring_roles: {
+        Args: { hours_before?: number }
+        Returns: {
+          expires_at: string
+          hours_until_expiry: number
+          role: Database["public"]["Enums"]["app_role"]
+          user_email: string
+          user_id: string
+        }[]
+      }
+      get_expiring_roles_by_stage: {
+        Args: { hours_before?: number; reminder_stage?: string }
+        Returns: {
+          expires_at: string
+          hours_until_expiry: number
+          role: Database["public"]["Enums"]["app_role"]
+          user_email: string
+          user_id: string
+        }[]
+      }
+      get_or_create_notification_settings: {
+        Args: { p_user_id: string }
+        Returns: {
+          created_at: string
+          id: string
+          rate_limit_enabled: boolean
+          retry_threshold: number
+          severity_threshold: string
+          sound_enabled: boolean
+          updated_at: string
+          user_id: string
+          webhook_duplicate_enabled: boolean
+          webhook_retry_enabled: boolean
+          webhook_security_enabled: boolean
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "notification_settings"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      get_roles_expiring_within_days: {
+        Args: { days_ahead?: number }
+        Returns: {
+          days_until_expiry: number
+          expires_at: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_email: string
+          user_id: string
+        }[]
+      }
+      get_security_summary: {
+        Args: { time_window_minutes?: number }
+        Returns: {
+          event_count: number
+          event_type: string
+          severity: string
+          unique_ips: number
+        }[]
+      }
+      get_suspicious_ips: {
+        Args: { threshold?: number; time_window_minutes?: number }
+        Returns: {
+          client_ip: string
+          first_violation: string
+          functions_affected: string[]
+          last_violation: string
+          violation_count: number
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_ip_blocked: { Args: { check_ip: string }; Returns: boolean }
+      log_role_change: {
+        Args: {
+          p_action: string
+          p_details?: Json
+          p_role: Database["public"]["Enums"]["app_role"]
+          p_target_user_email: string
+          p_target_user_id: string
+        }
+        Returns: undefined
+      }
+      manual_block_ip: {
+        Args: {
+          block_duration_hours?: number
+          block_reason: string
+          performed_by_user?: string
+          target_ip: string
+        }
+        Returns: Json
+      }
+      mark_3day_reminder_sent: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: undefined
+      }
+      mark_reminder_sent: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: undefined
+      }
+      remove_expired_roles: { Args: never; Returns: Json }
+      remove_user_role: {
+        Args: {
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_user_id: string
+        }
+        Returns: Json
+      }
+      unblock_ip: {
+        Args: {
+          performed_by_user?: string
+          target_ip: string
+          unblock_reason?: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +885,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

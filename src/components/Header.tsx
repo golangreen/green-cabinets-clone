@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronDown, Menu, Download } from "lucide-react";
-import logo from "@/assets/logo.jpg";
+import logo from "@/assets/logo-new.png";
 import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/components/CartDrawer";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
@@ -95,9 +95,7 @@ const Header = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="cursor-pointer">
-              <img src={logo} alt="Green Cabinets Logo" className="h-16 md:h-20 w-auto" style={{
-              mixBlendMode: 'lighten'
-            }} />
+              <img src={logo} alt="Green Cabinets Logo" className="h-16 md:h-20 w-auto" />
             </a>
           </div>
           
