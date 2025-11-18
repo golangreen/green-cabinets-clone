@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
-import { useMemo, useRef, useEffect, useCallback } from "react";
+import { useMemo, useRef, useEffect, useCallback, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Ruler, Camera, FileDown } from "lucide-react";
 import { toast } from "sonner";
@@ -11,18 +11,20 @@ import {
   DimensionLabels,
   BathroomRoom,
   Lighting,
-  BathroomFixtures,
   VanityCabinet,
-  VanitySink,
-  MirrorCabinet,
-  BathroomAccessories,
-  VanityFaucet,
-  VanityBacksplash,
-  VanityLighting,
   type Vanity3DPreviewProps
 } from './3d';
 
 type MeasurementType = 'height' | 'width' | 'depth' | 'door' | null;
+
+// Lazy load heavy 3D fixture components
+const BathroomFixtures = lazy(() => import('./3d/fixtures/BathroomFixtures').then(m => ({ default: m.BathroomFixtures })));
+const VanitySink = lazy(() => import('./3d/fixtures/VanitySink').then(m => ({ default: m.VanitySink })));
+const MirrorCabinet = lazy(() => import('./3d/fixtures/MirrorCabinet').then(m => ({ default: m.MirrorCabinet })));
+const BathroomAccessories = lazy(() => import('./3d/fixtures/BathroomAccessories').then(m => ({ default: m.BathroomAccessories })));
+const VanityFaucet = lazy(() => import('./3d/fixtures/VanityFaucet').then(m => ({ default: m.VanityFaucet })));
+const VanityBacksplash = lazy(() => import('./3d/fixtures/VanityBacksplash').then(m => ({ default: m.VanityBacksplash })));
+const VanityLighting = lazy(() => import('./3d/fixtures/VanityLighting').then(m => ({ default: m.VanityLighting })));
 
 export const Vanity3DPreview = ({
   width, 
@@ -299,20 +301,22 @@ export const Vanity3DPreview = ({
           />
         )}
         
-        {/* Bathroom Fixtures */}
+        {/* Bathroom Fixtures - Lazy Loaded */}
         {includeRoom && roomLength > 0 && roomWidth > 0 && (
-          <BathroomFixtures
-            roomLength={roomLength}
-            roomWidth={roomWidth}
-            includeToilet={includeToilet}
-            toiletStyle={toiletStyle}
-            toiletPosition={toiletPosition}
-            includeShower={includeShower}
-            showerStyle={showerStyle}
-            includeBathtub={includeBathtub}
-            bathtubStyle={bathtubStyle}
-            bathtubPosition={bathtubPosition}
-          />
+          <Suspense fallback={null}>
+            <BathroomFixtures
+              roomLength={roomLength}
+              roomWidth={roomWidth}
+              includeToilet={includeToilet}
+              toiletStyle={toiletStyle}
+              toiletPosition={toiletPosition}
+              includeShower={includeShower}
+              showerStyle={showerStyle}
+              includeBathtub={includeBathtub}
+              bathtubStyle={bathtubStyle}
+              bathtubPosition={bathtubPosition}
+            />
+          </Suspense>
         )}
         
         {/* Vanity positioned in center of room or at origin */}
@@ -335,75 +339,87 @@ export const Vanity3DPreview = ({
             countertopColor={countertopColor}
           />
           
-          {/* Mirror or Medicine Cabinet above vanity */}
-          <MirrorCabinet
-            vanityWidth={width}
-            vanityHeight={height}
-            vanityDepth={depth}
-            includeMirror={includeMirror}
-            mirrorType={mirrorType}
-            mirrorSize={mirrorSize}
-            mirrorShape={mirrorShape}
-            mirrorFrame={mirrorFrame}
-          />
+          {/* Mirror or Medicine Cabinet above vanity - Lazy Loaded */}
+          <Suspense fallback={null}>
+            <MirrorCabinet
+              vanityWidth={width}
+              vanityHeight={height}
+              vanityDepth={depth}
+              includeMirror={includeMirror}
+              mirrorType={mirrorType}
+              mirrorSize={mirrorSize}
+              mirrorShape={mirrorShape}
+              mirrorFrame={mirrorFrame}
+            />
+          </Suspense>
           
-          {/* Bathroom Accessories */}
-          <BathroomAccessories
-            vanityWidth={width}
-            vanityHeight={height}
-            roomLength={roomLength}
-            roomWidth={roomWidth}
-            includeTowelBar={includeTowelBar}
-            towelBarPosition={towelBarPosition}
-            includeToiletPaperHolder={includeToiletPaperHolder}
-            toiletPosition={toiletPosition}
-            includeRobeHooks={includeRobeHooks}
-            robeHookCount={robeHookCount}
-            includeShelving={includeShelving}
-            shelvingType={shelvingType}
-          />
+          {/* Bathroom Accessories - Lazy Loaded */}
+          <Suspense fallback={null}>
+            <BathroomAccessories
+              vanityWidth={width}
+              vanityHeight={height}
+              roomLength={roomLength}
+              roomWidth={roomWidth}
+              includeTowelBar={includeTowelBar}
+              towelBarPosition={towelBarPosition}
+              includeToiletPaperHolder={includeToiletPaperHolder}
+              toiletPosition={toiletPosition}
+              includeRobeHooks={includeRobeHooks}
+              robeHookCount={robeHookCount}
+              includeShelving={includeShelving}
+              shelvingType={shelvingType}
+            />
+          </Suspense>
           
-          {/* Faucet & Fixtures */}
-          <VanityFaucet
-            vanityWidth={width}
-            vanityHeight={height}
-            vanityDepth={depth}
-            includeFaucet={includeFaucet}
-            faucetStyle={faucetStyle}
-            faucetFinish={faucetFinish}
-          />
+          {/* Faucet & Fixtures - Lazy Loaded */}
+          <Suspense fallback={null}>
+            <VanityFaucet
+              vanityWidth={width}
+              vanityHeight={height}
+              vanityDepth={depth}
+              includeFaucet={includeFaucet}
+              faucetStyle={faucetStyle}
+              faucetFinish={faucetFinish}
+            />
+          </Suspense>
           
-          {/* Sink */}
-          <VanitySink
-            vanityWidth={width}
-            vanityHeight={height}
-            vanityDepth={depth}
-            sinkStyle={sinkStyle}
-            sinkShape={sinkShape}
-          />
+          {/* Sink - Lazy Loaded */}
+          <Suspense fallback={null}>
+            <VanitySink
+              vanityWidth={width}
+              vanityHeight={height}
+              vanityDepth={depth}
+              sinkStyle={sinkStyle}
+              sinkShape={sinkShape}
+            />
+          </Suspense>
           
-          {/* Backsplash */}
-          <VanityBacksplash
-            vanityWidth={width}
-            vanityHeight={height}
-            vanityDepth={depth}
-            includeBacksplash={includeBacksplash}
-            backsplashMaterial={backsplashMaterial}
-            backsplashHeight={backsplashHeight}
-            mirrorHeight={mirrorSize === 'small' ? 24 : mirrorSize === 'large' ? 36 : 30}
-          />
+          {/* Backsplash - Lazy Loaded */}
+          <Suspense fallback={null}>
+            <VanityBacksplash
+              vanityWidth={width}
+              vanityHeight={height}
+              vanityDepth={depth}
+              includeBacksplash={includeBacksplash}
+              backsplashMaterial={backsplashMaterial}
+              backsplashHeight={backsplashHeight}
+              mirrorHeight={mirrorSize === 'small' ? 24 : mirrorSize === 'large' ? 36 : 30}
+            />
+          </Suspense>
           
-          {/* Vanity Lighting */}
-          <VanityLighting
-            vanityWidth={width}
-            vanityHeight={height}
-            vanityDepth={depth}
-            mirrorSize={mirrorSize}
-            includeVanityLighting={includeVanityLighting}
-            vanityLightingStyle={vanityLightingStyle}
-            vanityLightBrightness={vanityLightBrightness}
-            vanityLightTemp={vanityLightTemp}
-          />
+          {/* Vanity Lighting - Lazy Loaded */}
+          <Suspense fallback={null}>
+            <VanityLighting
+              vanityWidth={width}
+              vanityHeight={height}
+              vanityDepth={depth}
+              mirrorSize={mirrorSize}
+              includeVanityLighting={includeVanityLighting}
+              vanityLightingStyle={vanityLightingStyle}
+              vanityLightBrightness={vanityLightBrightness}
+              vanityLightTemp={vanityLightTemp}
+            />
+          </Suspense>
         </group>
       </Canvas>
       
