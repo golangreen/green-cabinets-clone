@@ -227,8 +227,7 @@ npm run test:ui       # Visual UI
 - **Bundle Size Optimization**:
   - Manual chunk splitting configured in vite.config.ts:
     - `react-vendor` - React core libraries (react, react-dom, react-router-dom)
-    - `three-vendor` - Three.js libraries for 3D preview (separate large chunk)
-    - `ui-vendor` - UI component libraries (recharts, radix-ui, react-dropzone)
+    - `ui-vendor` - UI component libraries (recharts, react-dropzone)
     - `state-vendor` - State management (zustand, react-query)
     - `supabase-vendor` - Backend integration (@supabase/supabase-js)
   - Chunk size warning limit set to 1000kb
@@ -238,7 +237,6 @@ npm run test:ui       # Visual UI
 - Initial page load time reduced by ~40%
 - Better caching strategy with separate vendor chunks
 - Lazy loaded components reduce Time to Interactive (TTI)
-- Three.js only loaded when vanity designer is accessed
 - Improved Core Web Vitals scores
 
 **Documentation Includes**:
