@@ -11,7 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useQuoteForm } from "@/hooks";
 
 interface QuoteFormProps {
   isOpen: boolean;
@@ -37,8 +37,7 @@ type FormData = z.infer<typeof formSchema>;
 
 const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
   const [step, setStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const { submitQuote, isSubmitting } = useQuoteForm();
   const totalSteps = 4;
 
   const {
