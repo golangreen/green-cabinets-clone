@@ -1,12 +1,12 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Ruler, Camera, FileDown } from "lucide-react";
 import { toast } from "sonner";
 import { logger } from "@/lib/logger";
+import { useInteractionState } from '../hooks/useInteractionState';
 import {
-  SCALE_FACTOR,
   getMaterialProps,
   DimensionLabels,
   BathroomRoom,
@@ -87,17 +87,26 @@ export const Vanity3DPreview = ({
   vanityLightBrightness = 85,
   vanityLightTemp = 3000
 }: Vanity3DPreviewProps) => {
-  const [measurementMode, setMeasurementMode] = useState(false);
-  const [activeMeasurement, setActiveMeasurement] = useState<MeasurementType>(null);
-  const [zoom, setZoom] = useState(includeRoom && roomLength > 0 ? 5 : 3);
+  const defaultZoom = includeRoom && roomLength > 0 ? 5 : 3;
+  const {
+    measurementMode,
+    activeMeasurement,
+    zoom,
+    toggleMeasurementMode,
+    setActiveMeasurement,
+    zoomIn,
+    zoomOut,
+    resetZoom,
+  } = useInteractionState(defaultZoom);
+  
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Update zoom when room is toggled
-  useMemo(() => {
+  // Update zoom when room configuration changes
+  useEffect(() => {
     if (includeRoom && roomLength > 0) {
-      setZoom(5);
+      resetZoom(5);
     }
-  }, [includeRoom, roomLength]);
+  }, [includeRoom, roomLength, resetZoom]);
 
   const hasValidDimensions = useMemo(() => {
     return width > 0 && height > 0 && depth > 0;
@@ -110,13 +119,6 @@ export const Vanity3DPreview = ({
 
   const handleMeasurementClick = (type: MeasurementType) => {
     setActiveMeasurement(type);
-  };
-
-  const toggleMeasurementMode = () => {
-    setMeasurementMode(!measurementMode);
-    if (measurementMode) {
-      setActiveMeasurement(null);
-    }
   };
 
   const downloadScreenshot = () => {
@@ -201,7 +203,7 @@ export const Vanity3DPreview = ({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setZoom(Math.max(2, zoom - 0.5))}
+          onClick={zoomOut}
           className="shadow-lg h-10 w-10 p-0"
           title="Zoom out"
         >
@@ -210,7 +212,7 @@ export const Vanity3DPreview = ({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setZoom(Math.min(8, zoom + 0.5))}
+          onClick={zoomIn}
           className="shadow-lg h-10 w-10 p-0"
           title="Zoom in"
         >
@@ -219,7 +221,7 @@ export const Vanity3DPreview = ({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setZoom(includeRoom && roomLength > 0 ? 5 : 3)}
+          onClick={() => resetZoom(defaultZoom)}
           className="shadow-lg h-10 w-10 p-0"
           title="Reset zoom"
         >
