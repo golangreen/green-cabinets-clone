@@ -18,7 +18,9 @@ export {
   MirrorCabinet,
   VanityFaucet,
   VanityBacksplash,
-  VanityLighting
+  VanityLighting,
+  BathroomAccessories,
+  Countertop
 } from './fixtures';
 
 // Type definitions
