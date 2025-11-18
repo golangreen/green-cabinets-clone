@@ -7,6 +7,7 @@
 - ✅ Extracted `MaterialUtils.tsx` (material helpers, texture generation)
 - ✅ Extracted `types.ts` (Vanity3DPreviewProps interface)
 - ✅ Created `hooks/useVanityDimensions.ts` for dimension calculations
+- ✅ **Phase 26b Complete**: Extracted BathroomFixtures, VanitySink, MirrorCabinet to `fixtures/`
 
 ### Components Identified for Extraction (from 3,517-line monolith)
 

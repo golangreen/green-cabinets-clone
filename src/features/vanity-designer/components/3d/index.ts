@@ -11,5 +11,8 @@ export {
 } from './MaterialUtils';
 export type { MaterialProps, MeasurementType } from './MaterialUtils';
 
+// Fixture components
+export { BathroomFixtures, VanitySink, MirrorCabinet } from './fixtures';
+
 // Type definitions
 export type { Vanity3DPreviewProps } from './types';
