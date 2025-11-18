@@ -12,7 +12,14 @@ export {
 export type { MaterialProps, MeasurementType } from './MaterialUtils';
 
 // Fixture components
-export { BathroomFixtures, VanitySink, MirrorCabinet } from './fixtures';
+export { 
+  BathroomFixtures, 
+  VanitySink, 
+  MirrorCabinet,
+  VanityFaucet,
+  VanityBacksplash,
+  VanityLighting
+} from './fixtures';
 
 // Type definitions
 export type { Vanity3DPreviewProps } from './types';

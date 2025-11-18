@@ -8,6 +8,7 @@
 - ✅ Extracted `types.ts` (Vanity3DPreviewProps interface)
 - ✅ Created `hooks/useVanityDimensions.ts` for dimension calculations
 - ✅ **Phase 26b Complete**: Extracted BathroomFixtures, VanitySink, MirrorCabinet to `fixtures/`
+- ✅ **Phase 26c Complete**: Extracted VanityFaucet, VanityBacksplash, VanityLighting to `fixtures/`
 
 ### Components Identified for Extraction (from 3,517-line monolith)
 
