@@ -1,4 +1,4 @@
-import { useAdminCheck } from '@/hooks/useAdminCheck';
+import { useAdminCheck } from '@/features/admin-security/hooks/useAdminCheck';
 import { AdminLayout, LoadingState } from '@/components/layout';
 import { AdminAuditDashboard } from '@/features/admin-audit';
 import { ROUTES } from '@/constants/routes';

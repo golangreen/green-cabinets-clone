@@ -15,7 +15,7 @@ import logoBlack from "@/assets/logo-black.svg";
 import { CartDrawer } from "@/features/shopping-cart";
 import { ThemeToggle } from "@/features/theme";
 import { useAuth } from "@/contexts/AuthContext";
-import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useAdminCheck } from "@/features/admin-security/hooks/useAdminCheck";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { InstallPWADialog } from "@/features/pwa";
 import { ROUTES } from "@/constants/routes";

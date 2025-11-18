@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useAdminCheck } from "@/features/admin-security/hooks/useAdminCheck";
 import { LoadingState } from "@/components/layout";
 import { ROUTES } from "@/constants/routes";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
