@@ -47,3 +47,9 @@ verify_jwt = false
 
 [functions.send-security-alert]
 verify_jwt = true
+
+[functions.check-login-attempt]
+verify_jwt = false
+
+[functions.record-failed-login]
+verify_jwt = false
