@@ -45,6 +45,19 @@ All event handlers that are passed to child components or used in Canvas context
 - **Reduced re-renders**: Child components receiving callbacks no longer re-render when parent state changes
 - **Canvas stability**: 3D preview Canvas won't re-render unnecessarily when handler functions recreate
 - **Memory efficiency**: useCallback ensures functions are only recreated when their dependencies change
+- **React.memo optimization**: Pure presentational components skip re-renders when props are unchanged, further improving performance for frequently updated parent components
+
+### Optimized Components
+**useCallback optimizations (7 handlers):**
+- SharePreviewCard: handleCopyUrl, handleDownloadQR
+- Vanity3DPreview: handleMeasurementClick, downloadScreenshot, printView
+- TemplateGallery: handleDeleteClick, confirmDelete
+
+**React.memo optimizations (4 components):**
+- TextureSwatch: Prevents re-render when gallery updates but swatch props unchanged
+- MeasurementLine: Prevents 3D line re-render when parent state changes
+- DimensionLabels: Prevents label panel re-render on unrelated state changes  
+- VanityPricingCard: Prevents pricing card re-render when other config changes
 
 ### Best Practices Established
 1. ✅ Always wrap event handlers passed to child components in useCallback

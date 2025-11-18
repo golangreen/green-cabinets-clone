@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Line, Html } from "@react-three/drei";
 
 export interface MeasurementLineProps {
@@ -7,7 +8,7 @@ export interface MeasurementLineProps {
   color?: string;
 }
 
-export const MeasurementLine = ({ start, end, label, color = "#00ff00" }: MeasurementLineProps) => {
+const MeasurementLineComponent = ({ start, end, label, color = "#00ff00" }: MeasurementLineProps) => {
   const midpoint: [number, number, number] = [
     (start[0] + end[0]) / 2,
     (start[1] + end[1]) / 2,
@@ -35,7 +36,9 @@ export const MeasurementLine = ({ start, end, label, color = "#00ff00" }: Measur
   );
 };
 
-export const DimensionLabels = ({ width, height, depth }: { width: number; height: number; depth: number }) => {
+export const MeasurementLine = memo(MeasurementLineComponent);
+
+const DimensionLabelsComponent = ({ width, height, depth }: { width: number; height: number; depth: number }) => {
   return (
     <div className="absolute bottom-4 left-4 right-4 flex justify-between text-xs font-mono bg-background/90 backdrop-blur-sm rounded-lg p-3 border border-border">
       <div className="text-center">
@@ -53,3 +56,5 @@ export const DimensionLabels = ({ width, height, depth }: { width: number; heigh
     </div>
   );
 };
+
+export const DimensionLabels = memo(DimensionLabelsComponent);
