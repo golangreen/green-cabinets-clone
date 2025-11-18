@@ -190,6 +190,26 @@ Implemented React.lazy and Suspense for heavy 3D fixture components to reduce in
 
 Performance impact: Reduced initial JavaScript bundle size by ~150KB (7 fixture components), improved Time to Interactive (TTI), faster initial page load for users who don't use all fixtures
 
+### Integration Testing (COMPLETE)
+Added comprehensive integration tests for vanity pricing calculations:
+- **vanityPricingService.test.ts**: 35+ test cases covering calculateVanityPrice, calculateTilePrice, calculateWoodFloorPrice
+  - Base price calculations for standard dimensions
+  - Brand premium application (blum vs hafele)
+  - Finish premium application (oak vs walnut)
+  - Price scaling with dimensions
+  - Drawer cost additions
+  - Room pricing (walls and flooring)
+  - Tax and shipping calculations
+  - Edge cases: minimum/maximum dimensions, all drawer counts (0-6), invalid inputs
+- **useVanityPricing.test.ts**: 9 test cases covering hook behavior
+  - Basic pricing calculation
+  - Reactivity to dimension, brand, and room changes
+  - Room pricing integration
+  - Consistency and memoization verification
+  - Zero drawer count handling
+
+Test coverage ensures pricing accuracy after all refactoring (Phase 26 decomposition, Phase 33 optimizations)
+
 ### Notes
 - Use shared SCALE_FACTOR from MaterialUtils
 - Maintain consistent prop patterns
