@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecaptcha } from "@/hooks/useRecaptcha";
 import { ShopifyProduct } from "@/lib/shopify";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -263,7 +262,6 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   
   const addItem = useCartStore((state) => state.addItem);
   const { savedTemplates, saveTemplate, deleteTemplate } = useSavedTemplates();
-  const { executeRecaptcha, isConfigured: isRecaptchaConfigured } = useRecaptcha();
 
   // Load scanned measurements on mount
   useEffect(() => {
@@ -680,16 +678,6 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     setIsEmailSending(true);
 
     try {
-      // Execute reCAPTCHA if configured (optional - app works without it)
-      let recaptchaToken = null;
-      if (isRecaptchaConfigured) {
-        recaptchaToken = await executeRecaptcha('email_config');
-        // Don't block submission if reCAPTCHA fails - just continue without token
-        if (!recaptchaToken) {
-          console.warn('reCAPTCHA verification skipped');
-        }
-      }
-
       const widthFrac = getFractionDisplay(widthFraction);
       const heightFrac = getFractionDisplay(heightFraction);
       const depthFrac = getFractionDisplay(depthFraction);
@@ -698,7 +686,6 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
         body: {
           recipientEmail: recipientEmail.trim(),
           recipientName: recipientName.trim() || undefined,
-          recaptchaToken: recaptchaToken || undefined,
           config: {
             brand: selectedBrand,
             finish: selectedFinish,

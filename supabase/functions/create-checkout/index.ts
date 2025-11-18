@@ -112,9 +112,9 @@ serve(async (req) => {
     // Validate customer data
     const validationResult = customerDataSchema.safeParse({ customerEmail, customerName });
     if (!validationResult.success) {
-      console.error("Validation error:", validationResult.error, `IP: ${clientIp}`);
+      console.error("Validation error:", validationResult.error);
       return new Response(
-        JSON.stringify({ error: "Invalid request" }), 
+        JSON.stringify({ error: "Invalid customer information. Please check your details and try again." }), 
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
           status: 400,

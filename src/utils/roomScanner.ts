@@ -84,62 +84,21 @@ class RoomScanner {
     };
   }
 
-  async requestPermissions(): Promise<{ granted: boolean; message?: string }> {
+  async requestPermissions(): Promise<boolean> {
     try {
       const permissions = await Camera.checkPermissions();
       
-      if (permissions.camera === 'granted' && permissions.photos === 'granted') {
-        return { granted: true };
+      if (permissions.camera !== 'granted') {
+        const request = await Camera.requestPermissions({
+          permissions: ['camera', 'photos']
+        });
+        return request.camera === 'granted';
       }
       
-      if (permissions.camera === 'denied' || permissions.photos === 'denied') {
-        return { 
-          granted: false, 
-          message: 'Camera access was denied. Please enable camera permissions in your device settings to use the room scanner.' 
-        };
-      }
-      
-      // Request permissions
-      const request = await Camera.requestPermissions({
-        permissions: ['camera', 'photos']
-      });
-      
-      if (request.camera === 'granted' && request.photos === 'granted') {
-        return { granted: true };
-      }
-      
-      return { 
-        granted: false, 
-        message: 'Camera and photo library access is required to scan rooms. Please grant permissions when prompted.' 
-      };
+      return true;
     } catch (error) {
       console.error('Error requesting permissions:', error);
-      return { 
-        granted: false, 
-        message: 'Failed to request camera permissions. Please check your device settings.' 
-      };
-    }
-  }
-  
-  async getPermissionStatus(): Promise<{
-    camera: string;
-    photos: string;
-    needsRequest: boolean;
-  }> {
-    try {
-      const permissions = await Camera.checkPermissions();
-      return {
-        camera: permissions.camera,
-        photos: permissions.photos,
-        needsRequest: permissions.camera !== 'granted' || permissions.photos !== 'granted'
-      };
-    } catch (error) {
-      console.error('Error checking permissions:', error);
-      return {
-        camera: 'prompt',
-        photos: 'prompt',
-        needsRequest: true
-      };
+      return false;
     }
   }
 

@@ -98,7 +98,7 @@ const Hero = () => {
             src={shuffledImages[currentImageIndex].src} 
             alt={shuffledImages[currentImageIndex].alt} 
             className="w-full h-full object-cover pointer-events-none" 
-            style={{
+            style={{ 
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
               willChange: 'opacity'
             }}
@@ -120,7 +120,7 @@ const Hero = () => {
             src={shuffledImages[getNextIndex()].src} 
             alt={shuffledImages[getNextIndex()].alt} 
             className="w-full h-full object-cover pointer-events-none" 
-            style={{
+            style={{ 
               filter: 'brightness(1.22) contrast(1.1) saturate(1.05) hue-rotate(0deg)',
               willChange: 'opacity'
             }}
@@ -162,7 +162,7 @@ const Hero = () => {
         <Link to="/designer">
           <Button 
             size="lg" 
-            className="text-lg px-8 py-6 h-auto bg-green-500/40 hover:bg-green-400/50 border-2 border-green-400/60 backdrop-blur-sm text-white shadow-2xl hover:shadow-green-400/50 transition-all duration-300 hover:scale-105"
+            className="text-lg px-8 py-6 h-auto bg-primary hover:bg-primary/90 shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105"
           >
             <Sparkles className="mr-2 h-5 w-5" />
             Launch Designer

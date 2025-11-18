@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.76.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,55 +16,29 @@ serve(async (req) => {
   }
 
   try {
-    // Verify authentication
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader) {
-      console.error("Authentication required: No authorization header");
-      return new Response(
-        JSON.stringify({ error: "Authentication required" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
-    if (authError || !user) {
-      console.error("Invalid authentication:", authError);
-      return new Response(
-        JSON.stringify({ error: "Invalid authentication" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
     const { messages } = await req.json();
     
     // Input validation to prevent abuse and injection attacks
     if (!Array.isArray(messages)) {
-      console.error("Invalid request: messages is not an array", { userId: user.id });
+      console.error("Invalid request: messages is not an array");
       return new Response(
-        JSON.stringify({ error: "Invalid request format" }),
+        JSON.stringify({ error: "Invalid messages format" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     if (messages.length === 0) {
-      console.error("Invalid request: empty messages array", { userId: user.id });
+      console.error("Invalid request: empty messages array");
       return new Response(
-        JSON.stringify({ error: "Invalid request" }),
+        JSON.stringify({ error: "Messages array cannot be empty" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     if (messages.length > 50) {
-      console.error("Invalid request: too many messages", { userId: user.id, count: messages.length });
+      console.error("Invalid request: too many messages", messages.length);
       return new Response(
-        JSON.stringify({ error: "Request exceeds limits" }),
+        JSON.stringify({ error: "Too many messages in conversation. Maximum 50 allowed." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -75,25 +48,25 @@ serve(async (req) => {
       const msg = messages[i];
       
       if (!msg.content || typeof msg.content !== 'string') {
-        console.error(`Invalid message format at index ${i}`, { userId: user.id });
+        console.error(`Invalid message format at index ${i}:`, msg);
         return new Response(
-          JSON.stringify({ error: "Invalid request" }),
+          JSON.stringify({ error: "Invalid message format" }),
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       
       if (msg.content.length > 2000) {
-        console.error(`Message too long at index ${i}`, { userId: user.id, length: msg.content.length });
+        console.error(`Message too long at index ${i}:`, msg.content.length, "characters");
         return new Response(
-          JSON.stringify({ error: "Request exceeds limits" }),
+          JSON.stringify({ error: "Message too long. Maximum 2000 characters per message." }),
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
       if (!msg.role || (msg.role !== 'user' && msg.role !== 'assistant' && msg.role !== 'system')) {
-        console.error(`Invalid message role at index ${i}`, { userId: user.id, role: msg.role });
+        console.error(`Invalid message role at index ${i}:`, msg.role);
         return new Response(
-          JSON.stringify({ error: "Invalid request" }),
+          JSON.stringify({ error: "Invalid message role" }),
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -109,7 +82,6 @@ serve(async (req) => {
     const clientIp = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
     const totalChars = messages.reduce((sum, msg) => sum + msg.content.length, 0);
     console.log("Processing chat request:", {
-      userId: user.id,
       messageCount: messages.length,
       totalCharacters: totalChars,
       clientIp,
@@ -146,23 +118,23 @@ Keep responses conversational, helpful, and focused on helping them visualize th
 
     if (!response.ok) {
       if (response.status === 429) {
-        console.error("Rate limit exceeded", { userId: user.id });
+        console.error("Rate limit exceeded");
         return new Response(
-          JSON.stringify({ error: "Service temporarily unavailable" }),
+          JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       if (response.status === 402) {
-        console.error("Payment required", { userId: user.id });
+        console.error("Payment required");
         return new Response(
-          JSON.stringify({ error: "Service temporarily unavailable" }),
+          JSON.stringify({ error: "AI service requires payment. Please contact support." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       const errorText = await response.text();
-      console.error("AI gateway error:", { userId: user.id, status: response.status, error: errorText });
+      console.error("AI gateway error:", response.status, errorText);
       return new Response(
-        JSON.stringify({ error: "Service error" }),
+        JSON.stringify({ error: "AI service error" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -173,7 +145,7 @@ Keep responses conversational, helpful, and focused on helping them visualize th
   } catch (error) {
     console.error("Chat error:", error);
     return new Response(
-      JSON.stringify({ error: "Service error. Please try again." }),
+      JSON.stringify({ error: "An error occurred processing your message. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

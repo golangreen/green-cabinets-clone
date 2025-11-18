@@ -14,15 +14,11 @@ import {
   Smartphone,
   Tablet,
   Download,
-  Trash2,
-  Image as ImageIcon,
-  X,
-  ZoomIn
+  Trash2
 } from 'lucide-react';
 import { roomScanner, ScanSession } from '@/utils/roomScanner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface RoomScannerProps {
   onScanComplete?: (scan: ScanSession) => void;
@@ -35,21 +31,13 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
     hasARCore: false,
     canScan: false
   });
-  const [permissionStatus, setPermissionStatus] = useState({
-    camera: 'prompt',
-    photos: 'prompt',
-    needsRequest: true
-  });
   const [isScanning, setIsScanning] = useState(false);
   const [roomName, setRoomName] = useState('');
   const [savedScans, setSavedScans] = useState<ScanSession[]>([]);
   const [selectedScan, setSelectedScan] = useState<ScanSession | null>(null);
-  const [capturedImages, setCapturedImages] = useState<string[]>([]);
-  const [fullScreenImage, setFullScreenImage] = useState<string | null>(null);
 
   useEffect(() => {
     checkDeviceCapabilities();
-    checkPermissions();
     loadSavedScans();
   }, []);
 
@@ -57,48 +45,10 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
     const caps = await roomScanner.checkCapabilities();
     setCapabilities(caps);
   };
-  
-  const checkPermissions = async () => {
-    const status = await roomScanner.getPermissionStatus();
-    setPermissionStatus(status);
-  };
 
   const loadSavedScans = () => {
     const scans = roomScanner.getSavedScans();
     setSavedScans(scans);
-  };
-
-  const handleRequestPermissions = async () => {
-    toast.info('Requesting camera permissions...');
-    const result = await roomScanner.requestPermissions();
-    
-    if (result.granted) {
-      toast.success('Camera permissions granted!');
-      checkPermissions();
-    } else {
-      toast.error(result.message || 'Camera permission denied');
-    }
-  };
-
-  const handleCapturePhoto = async () => {
-    const result = await roomScanner.requestPermissions();
-    if (!result.granted) {
-      toast.error(result.message || 'Camera permission required');
-      return;
-    }
-
-    const image = await roomScanner.captureImage();
-    if (image) {
-      setCapturedImages(prev => [...prev, image]);
-      toast.success('Photo captured!');
-    } else {
-      toast.error('Failed to capture photo');
-    }
-  };
-
-  const handleDeleteImage = (index: number) => {
-    setCapturedImages(prev => prev.filter((_, i) => i !== index));
-    toast.success('Photo deleted');
   };
 
   const handleStartScan = async () => {
@@ -107,9 +57,9 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
       return;
     }
 
-    const result = await roomScanner.requestPermissions();
-    if (!result.granted) {
-      toast.error(result.message || 'Camera permission is required for scanning');
+    const hasPermission = await roomScanner.requestPermissions();
+    if (!hasPermission) {
+      toast.error('Camera permission is required for scanning');
       return;
     }
 
@@ -120,16 +70,12 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
       // Start the scanning process
       const scan = await roomScanner.startScan(roomName);
       
-      // Add captured images to the scan
-      scan.images = capturedImages;
-      
       // Simulate scanning progress
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Save the scan
       roomScanner.saveScanToStorage(scan);
       loadSavedScans();
-      checkPermissions();
       
       toast.success('Room scan completed successfully!');
       
@@ -138,7 +84,6 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
       }
       
       setRoomName('');
-      setCapturedImages([]);
       setSelectedScan(scan);
     } catch (error) {
       console.error('Scan error:', error);
@@ -240,40 +185,6 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
               </div>
             </div>
           )}
-          
-          {capabilities.canScan && permissionStatus.needsRequest && (
-            <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-lg">
-              <div className="flex items-start gap-3">
-                <Camera className="h-5 w-5 text-blue-600 dark:text-blue-500 flex-shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-medium text-blue-900 dark:text-blue-100 text-sm">
-                    Camera Access Required
-                  </p>
-                  <p className="text-blue-700 dark:text-blue-300 text-sm mt-1">
-                    This app needs access to your camera and photo library to scan rooms and capture measurements.
-                  </p>
-                  <Button 
-                    onClick={handleRequestPermissions}
-                    variant="outline"
-                    size="sm"
-                    className="mt-3 border-blue-300 text-blue-700 hover:bg-blue-100 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-950"
-                  >
-                    <Camera className="h-4 w-4 mr-2" />
-                    Grant Camera Access
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {capabilities.canScan && !permissionStatus.needsRequest && (
-            <div className="p-3 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900 rounded-lg">
-              <div className="flex items-center gap-2 text-sm text-green-800 dark:text-green-200">
-                <Check className="h-4 w-4" />
-                <span>Camera permissions granted</span>
-              </div>
-            </div>
-          )}
 
           <div className="space-y-4">
             <div>
@@ -287,100 +198,27 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                onClick={handleCapturePhoto}
-                disabled={!capabilities.canScan || !permissionStatus.needsRequest === false}
-                variant="outline"
-                size="lg"
-              >
-                <Camera className="h-5 w-5 mr-2" />
-                Capture Photo
-              </Button>
-              
-              <Button
-                onClick={handleStartScan}
-                disabled={isScanning || !capabilities.canScan || !roomName.trim()}
-                size="lg"
-              >
-                {isScanning ? (
-                  <>
-                    <Scan className="h-5 w-5 mr-2 animate-pulse" />
-                    Scanning...
-                  </>
-                ) : (
-                  <>
-                    <Scan className="h-5 w-5 mr-2" />
-                    Complete Scan
-                  </>
-                )}
-              </Button>
-            </div>
+            <Button
+              onClick={handleStartScan}
+              disabled={isScanning || !capabilities.canScan || !roomName.trim()}
+              className="w-full"
+              size="lg"
+            >
+              {isScanning ? (
+                <>
+                  <Scan className="h-5 w-5 mr-2 animate-pulse" />
+                  Scanning...
+                </>
+              ) : (
+                <>
+                  <Camera className="h-5 w-5 mr-2" />
+                  Start 3D Scan
+                </>
+              )}
+            </Button>
           </div>
-
-          {capturedImages.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">
-                  Captured Photos ({capturedImages.length})
-                </Label>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-2">
-                {capturedImages.map((image, index) => (
-                  <div key={index} className="relative group aspect-square">
-                    <img
-                      src={image}
-                      alt={`Capture ${index + 1}`}
-                      className="w-full h-full object-cover rounded-lg border-2 border-border cursor-pointer hover:border-primary transition-colors"
-                      onClick={() => setFullScreenImage(image)}
-                    />
-                    <Button
-                      size="icon"
-                      variant="destructive"
-                      className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => handleDeleteImage(index)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="absolute bottom-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => setFullScreenImage(image)}
-                    >
-                      <ZoomIn className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </CardContent>
       </Card>
-
-      {/* Full Screen Image Dialog */}
-      <Dialog open={!!fullScreenImage} onOpenChange={() => setFullScreenImage(null)}>
-        <DialogContent className="max-w-4xl h-[90vh] p-0">
-          <div className="relative w-full h-full flex items-center justify-center bg-black/95">
-            <Button
-              size="icon"
-              variant="ghost"
-              className="absolute top-4 right-4 z-10 text-white hover:bg-white/20"
-              onClick={() => setFullScreenImage(null)}
-            >
-              <X className="h-6 w-6" />
-            </Button>
-            {fullScreenImage && (
-              <img
-                src={fullScreenImage}
-                alt="Full screen preview"
-                className="max-w-full max-h-full object-contain"
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
 
       <Tabs defaultValue="scans" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
@@ -405,34 +243,15 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
             savedScans.map((scan) => (
               <Card key={scan.id} className="cursor-pointer hover:border-primary transition-colors">
                 <CardContent className="p-4">
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start justify-between">
                     <div className="flex-1" onClick={() => setSelectedScan(scan)}>
-                      <div className="flex items-start gap-3">
-                        {scan.images && scan.images.length > 0 && (
-                          <img
-                            src={scan.images[0]}
-                            alt="Scan thumbnail"
-                            className="w-16 h-16 object-cover rounded border"
-                          />
-                        )}
-                        <div className="flex-1">
-                          <h3 className="font-semibold">{scan.roomName}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {roomScanner.formatMeasurement(scan.measurements.width)} × {roomScanner.formatMeasurement(scan.measurements.depth)}
-                          </p>
-                          {scan.images && scan.images.length > 0 && (
-                            <div className="flex items-center gap-1 mt-1">
-                              <ImageIcon className="h-3 w-3 text-muted-foreground" />
-                              <span className="text-xs text-muted-foreground">
-                                {scan.images.length} {scan.images.length === 1 ? 'photo' : 'photos'}
-                              </span>
-                            </div>
-                          )}
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {new Date(scan.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
+                      <h3 className="font-semibold">{scan.roomName}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {roomScanner.formatMeasurement(scan.measurements.width)} × {roomScanner.formatMeasurement(scan.measurements.depth)}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {new Date(scan.createdAt).toLocaleDateString()}
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -512,34 +331,6 @@ export const RoomScanner = ({ onScanComplete }: RoomScannerProps) => {
                     </div>
                   </div>
                 </div>
-
-                {selectedScan.images && selectedScan.images.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold mb-2">Photo Gallery ({selectedScan.images.length})</h4>
-                    <ScrollArea className="h-48">
-                      <div className="grid grid-cols-3 gap-2 pr-4">
-                        {selectedScan.images.map((image, index) => (
-                          <div key={index} className="relative group aspect-square">
-                            <img
-                              src={image}
-                              alt={`Scan photo ${index + 1}`}
-                              className="w-full h-full object-cover rounded-lg border-2 border-border cursor-pointer hover:border-primary transition-colors"
-                              onClick={() => setFullScreenImage(image)}
-                            />
-                            <Button
-                              size="icon"
-                              variant="secondary"
-                              className="absolute bottom-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                              onClick={() => setFullScreenImage(image)}
-                            >
-                              <ZoomIn className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                  </div>
-                )}
 
                 <Button 
                   onClick={() => handleUseScan(selectedScan)}

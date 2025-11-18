@@ -16,28 +16,19 @@ const STORAGE_KEY = "room_templates";
 
 export const useRoomTemplates = () => {
   const [templates, setTemplates] = useState<RoomTemplate[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Load templates from localStorage on mount
   useEffect(() => {
-    const loadTemplates = async () => {
-      try {
-        // Simulate a brief loading time for better UX
-        await new Promise(resolve => setTimeout(resolve, 300));
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          setTemplates(parsed);
-        }
-      } catch (error) {
-        console.error("Failed to load templates:", error);
-        toast.error("Failed to load saved templates");
-      } finally {
-        setIsLoading(false);
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setTemplates(parsed);
       }
-    };
-    
-    loadTemplates();
+    } catch (error) {
+      console.error("Failed to load templates:", error);
+      toast.error("Failed to load saved templates");
+    }
   }, []);
 
   // Save templates to localStorage whenever they change
@@ -123,7 +114,6 @@ export const useRoomTemplates = () => {
 
   return {
     templates,
-    isLoading,
     saveTemplate,
     updateTemplate,
     deleteTemplate,

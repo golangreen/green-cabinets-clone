@@ -3,7 +3,6 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const RECAPTCHA_SECRET_KEY = Deno.env.get("RECAPTCHA_SECRET_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
@@ -23,7 +22,6 @@ const quoteRequestSchema = z.object({
   tax: z.string().trim().max(20),
   shipping: z.string().trim().max(20),
   totalPrice: z.string().trim().max(20),
-  recaptchaToken: z.string().optional(),
 });
 
 // Simple in-memory rate limiting (for basic protection)
@@ -72,7 +70,6 @@ interface QuoteRequest {
   tax: string;
   shipping: string;
   totalPrice: string;
-  recaptchaToken?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -131,46 +128,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     const rawData = await req.json();
     
-    // Verify reCAPTCHA token if provided and configured
-    if (RECAPTCHA_SECRET_KEY && rawData.recaptchaToken) {
-      try {
-        const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `secret=${RECAPTCHA_SECRET_KEY}&response=${rawData.recaptchaToken}`,
-        });
-
-        const recaptchaResult = await recaptchaResponse.json();
-        
-        // Check score threshold (0.5 recommended for v3, lower = more likely bot)
-        if (!recaptchaResult.success || (recaptchaResult.score && recaptchaResult.score < 0.5)) {
-          // Log failed verification
-          await supabase.from('security_events').insert({
-            event_type: 'recaptcha_failed',
-            function_name: 'send-quote-request',
-            client_ip: clientIp,
-            severity: 'medium',
-            details: { 
-              score: recaptchaResult.score,
-              action: recaptchaResult.action,
-              errors: recaptchaResult['error-codes']
-            }
-          });
-          
-          console.warn(`reCAPTCHA verification failed for IP: ${clientIp}, Score: ${recaptchaResult.score || 'N/A'}`);
-          return new Response(
-            JSON.stringify({ error: "Request verification failed" }),
-            { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-          );
-        }
-        
-        console.log(`reCAPTCHA verified for IP: ${clientIp}, Score: ${recaptchaResult.score}`);
-      } catch (error) {
-        console.error('reCAPTCHA verification error:', error);
-        // Continue without blocking if reCAPTCHA service fails
-      }
-    }
-    
     // Validate input data
     const validationResult = quoteRequestSchema.safeParse(rawData);
     if (!validationResult.success) {
@@ -183,10 +140,10 @@ const handler = async (req: Request): Promise<Response> => {
         details: { errors: validationResult.error.errors }
       });
       
-      console.error("Validation error:", validationResult.error, `IP: ${clientIp}`);
+      console.error("Validation error:", validationResult.error);
       return new Response(
         JSON.stringify({ 
-          error: "Invalid request. Please check your input." 
+          error: "Invalid input data. Please check your form and try again." 
         }),
         {
           status: 400,
