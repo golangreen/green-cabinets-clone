@@ -12,13 +12,20 @@ declare global {
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
-export const useRecaptcha = () => {
+export interface UseRecaptchaReturn {
+  isLoaded: boolean;
+  isReady: boolean;
+  isConfigured: boolean;
+  executeRecaptcha: (action: string) => Promise<string | null>;
+}
+
+export const useRecaptcha = (): UseRecaptchaReturn => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (!RECAPTCHA_SITE_KEY) {
-      logger.warn('useRecaptcha.config', 'reCAPTCHA site key not configured');
+      logger.warn('reCAPTCHA site key not configured', { hook: 'useRecaptcha' });
       return;
     }
 
@@ -32,13 +39,13 @@ export const useRecaptcha = () => {
       if (window.grecaptcha) {
         window.grecaptcha.ready(() => {
           setIsReady(true);
-          logger.info('useRecaptcha.ready', 'reCAPTCHA loaded and ready');
+          logger.info('reCAPTCHA loaded and ready', { hook: 'useRecaptcha' });
         });
       }
     };
 
     script.onerror = () => {
-      logger.error('useRecaptcha.load', 'Failed to load reCAPTCHA script');
+      logger.error('Failed to load reCAPTCHA script', new Error('Script load failed'), { hook: 'useRecaptcha' });
     };
 
     document.head.appendChild(script);
@@ -52,18 +59,18 @@ export const useRecaptcha = () => {
 
   const executeRecaptcha = async (action: string): Promise<string | null> => {
     if (!isReady || !window.grecaptcha) {
-      logger.warn('useRecaptcha.execute', 'reCAPTCHA not ready', { action });
+      logger.warn('reCAPTCHA not ready', { hook: 'useRecaptcha', action });
       return null;
     }
 
     try {
       const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action });
-      logger.debug('useRecaptcha.execute', 'Token generated', { action });
+      logger.debug('reCAPTCHA token generated', { hook: 'useRecaptcha', action });
       return token;
     } catch (error) {
-      logger.error('useRecaptcha.execute', 'Failed to execute reCAPTCHA', {
+      logger.error('Failed to execute reCAPTCHA', error, {
+        hook: 'useRecaptcha',
         action,
-        error: error instanceof Error ? error.message : 'Unknown error',
       });
       return null;
     }
@@ -72,6 +79,7 @@ export const useRecaptcha = () => {
   return {
     isLoaded,
     isReady,
+    isConfigured: !!RECAPTCHA_SITE_KEY,
     executeRecaptcha,
   };
 };

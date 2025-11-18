@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useRecaptcha } from '@/features/quote-request/hooks';
+import { useRecaptcha, type UseRecaptchaReturn } from '@/features/quote-request/hooks';
 import { validators } from "@/lib/formValidation";
 import { logger } from '@/lib/logger';
 import { prepareQuoteForSubmission, createQuoteMailtoLink, type QuoteData } from "../services/quoteService";

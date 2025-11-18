@@ -1,4 +1,4 @@
-export { useDatabaseSchema } from './useDatabaseSchema';
+export { useDatabaseSchema, convertToValidatorSchema } from './useDatabaseSchema';
 export { useQueryHistory } from './useQueryHistory';
 export { useQueryBookmarks } from './useQueryBookmarks';
 export type { TableSchema } from './useDatabaseSchema';
