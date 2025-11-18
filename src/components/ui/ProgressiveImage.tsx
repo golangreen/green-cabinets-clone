@@ -29,14 +29,8 @@ export const ProgressiveImage = ({
 
     const img = new Image();
     img.src = src;
-    
     img.onload = () => {
       setImgSrc(src);
-      setIsLoading(false);
-    };
-
-    img.onerror = () => {
-      // If full image fails to load, keep placeholder
       setIsLoading(false);
     };
   }, [src, placeholderSrc]);
@@ -48,12 +42,10 @@ export const ProgressiveImage = ({
       width={width}
       height={height}
       className={cn(
-        'transition-all duration-300 ease-out',
-        isLoading && 'blur-sm scale-105 opacity-80',
+        'transition-opacity duration-300',
+        isLoading ? 'opacity-50' : 'opacity-100',
         className
       )}
-      loading="lazy"
     />
   );
 };
-

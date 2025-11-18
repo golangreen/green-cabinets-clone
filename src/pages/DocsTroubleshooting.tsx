@@ -19,9 +19,9 @@ import { DocsSidebar, QueryEditor, ValidationErrors, QueryResults } from "@/feat
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Hooks
-import { useQueryHistory, type QueryHistoryItem } from "@/hooks/useQueryHistory";
-import { useQueryBookmarks, type BookmarkItem } from "@/hooks/useQueryBookmarks";
-import { useDatabaseSchema } from "@/hooks/useDatabaseSchema";
+import { useQueryHistory, type QueryHistoryItem } from "@/features/docs/hooks";
+import { useQueryBookmarks } from "@/features/docs/hooks";
+import { useDatabaseSchema } from "@/features/docs/hooks";
 import { useDebounce } from "@/hooks/useDebounce";
 
 // Utilities

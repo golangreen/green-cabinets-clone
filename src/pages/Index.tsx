@@ -1,5 +1,5 @@
 import { PublicLayout, FeatureErrorBoundary } from "@/components/layout";
-import { Hero, Services, Features, About, Gallery, Suppliers, CTA } from "@/components/marketing";
+import { Hero, Services, Features, About, Gallery, Suppliers, CTA } from "@/features/marketing";
 import { ShopProducts } from "@/features/product-catalog";
 import { Contact } from "@/features/quote-request";
 import { Chatbot } from "@/features/chatbot";
