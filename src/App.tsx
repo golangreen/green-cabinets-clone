@@ -13,6 +13,7 @@ import { PreloadManager } from "@/features/product-catalog";
 import { CACHE_CONFIG } from "@/config";
 import { createQueryClient } from "@/config/reactQuery";
 import { SkipLink } from "@/components/accessibility";
+import { ServiceWorkerUpdateNotification } from "@/components/ServiceWorkerUpdateNotification";
 
 // Lazy load all pages for code-splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -75,6 +76,10 @@ const App = () => {
             <TooltipProvider>
               <Toaster />
               <Sonner />
+              
+              {/* Service Worker update notifications */}
+              <ServiceWorkerUpdateNotification />
+              
               {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
               
               {/* Configuration validation alert */}

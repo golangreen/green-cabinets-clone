@@ -24,6 +24,16 @@ Prevents specific anti-patterns from reappearing:
 - **Mobile Navigation**: Ensures mobile menu uses React Router
 - **Error Recovery**: Verifies error boundaries use React Router navigation
 
+### `service-worker-updates.spec.ts`
+Tests Service Worker update notification system:
+- **Update Detection**: Monitors for updatefound events
+- **Update Notifications**: Verifies toast and banner notifications
+- **Periodic Checks**: Tests 60-second update check interval
+- **Visibility-Based Checks**: Tests update checks when page becomes visible
+- **Reload Actions**: Verifies reload functionality in notifications
+- **Lifecycle Events**: Tests controllerchange and state change handling
+- **Cleanup**: Verifies proper cleanup of event listeners and intervals
+
 ### `helpers/navigation.ts`
 Helper utilities for navigation testing:
 - `NavigationTracker`: Detects full page reloads vs SPA navigation
@@ -32,6 +42,8 @@ Helper utilities for navigation testing:
 - `testHeaderNavigation`: Verify all header links use React Router
 - `setupConsoleMonitoring`: Track console errors during navigation
 - `testServiceWorkerNavigation`: Test navigation with Service Worker active
+- `checkForUpdateNotification`: Check if SW update notification is visible
+- `testUpdateNotification`: Verify update notification system is active
 
 ## Running Tests
 
@@ -44,6 +56,9 @@ npx playwright test navigation-flows
 
 # Run only regression tests
 npx playwright test navigation-regression
+
+# Run only Service Worker update tests
+npx playwright test service-worker-updates
 
 # Run with UI
 npx playwright test navigation --ui

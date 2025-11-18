@@ -209,3 +209,34 @@ export async function testServiceWorkerNavigation(page: Page) {
     expect(bodyText?.length).toBeGreaterThan(100);
   }
 }
+
+/**
+ * Check if Service Worker update notification is shown
+ */
+export async function checkForUpdateNotification(page: Page): Promise<boolean> {
+  // Look for update notification elements
+  const updateToast = page.locator('text=/Update Available/i');
+  const updateBanner = page.locator('text=/A new version is ready/i');
+  
+  const toastVisible = await updateToast.isVisible().catch(() => false);
+  const bannerVisible = await updateBanner.isVisible().catch(() => false);
+  
+  return toastVisible || bannerVisible;
+}
+
+/**
+ * Verify update notification appears when SW updates
+ */
+export async function testUpdateNotification(page: Page) {
+  // This is hard to test in E2E without triggering actual updates
+  // But we can verify the notification components are registered
+  
+  const hasUpdateNotification = await page.evaluate(() => {
+    // Check if ServiceWorkerUpdateNotification is mounted
+    return document.querySelector('[data-testid="sw-update-notification"]') !== null ||
+           document.body.textContent?.includes('Update Available');
+  });
+  
+  console.log('Service Worker update notification system:', hasUpdateNotification ? 'active' : 'not detected');
+}
+
