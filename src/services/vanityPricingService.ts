@@ -1,12 +1,45 @@
-/**
- * Service for vanity pricing calculations and business logic
- */
 import { VANITY_CONFIG } from '@/config/app';
 import type { VanityConfiguration, VanityPricing } from '@/types';
 
+/**
+ * Service for vanity pricing calculations and business logic.
+ * Handles price calculations for custom vanity configurations including
+ * dimensions, finishes, countertops, hardware, and fixtures.
+ * 
+ * @example
+ * ```typescript
+ * const pricing = vanityPricingService.calculatePricing({
+ *   dimensions: { width: 36, depth: 21, height: 32 },
+ *   finish: 'white-oak',
+ *   countertop: 'quartz',
+ *   hardware: 'chrome',
+ *   sink: 'undermount',
+ *   mirror: true,
+ *   lighting: true
+ * });
+ * 
+ * console.log(`Total: ${vanityPricingService.formatPrice(pricing.total)}`);
+ * ```
+ */
 export class VanityPricingService {
   /**
    * Calculate complete pricing breakdown for a vanity configuration
+   * 
+   * @param config - Vanity configuration including dimensions and options
+   * @returns Complete pricing breakdown with all costs itemized
+   * 
+   * @example
+   * ```typescript
+   * const pricing = service.calculatePricing({
+   *   dimensions: { width: 48, depth: 22, height: 34 },
+   *   finish: 'walnut',
+   *   countertop: 'marble',
+   *   hardware: 'gold',
+   *   sink: 'vessel',
+   *   mirror: true,
+   *   lighting: true
+   * });
+   * ```
    */
   calculatePricing(config: VanityConfiguration): VanityPricing {
     const { dimensions } = config;
@@ -46,7 +79,11 @@ export class VanityPricingService {
   }
 
   /**
-   * Calculate finish upgrade cost
+   * Calculate finish upgrade cost based on base price
+   * 
+   * @param basePrice - Base vanity price
+   * @returns Finish upgrade cost (15% markup)
+   * @private
    */
   private calculateFinishCost(basePrice: number): number {
     return basePrice * 0.15; // 15% markup
@@ -54,6 +91,11 @@ export class VanityPricingService {
 
   /**
    * Calculate countertop cost based on dimensions
+   * 
+   * @param width - Vanity width in inches
+   * @param depth - Vanity depth in inches
+   * @returns Countertop cost in dollars ($8/sq ft)
+   * @private
    */
   private calculateCountertopCost(width: number, depth: number): number {
     const squareFeet = (width * depth) / 144; // Convert sq inches to sq feet
@@ -61,7 +103,16 @@ export class VanityPricingService {
   }
 
   /**
-   * Format price for display
+   * Format price for display with currency symbol
+   * 
+   * @param amount - Price amount in dollars
+   * @returns Formatted price string (e.g., "$1,234.56")
+   * 
+   * @example
+   * ```typescript
+   * const formatted = service.formatPrice(1234.56);
+   * console.log(formatted); // "$1,234.56"
+   * ```
    */
   formatPrice(amount: number): string {
     return new Intl.NumberFormat('en-US', {
@@ -71,14 +122,18 @@ export class VanityPricingService {
   }
 
   /**
-   * Get tax rate
+   * Get configured tax rate
+   * 
+   * @returns NY tax rate (8.875%)
    */
   getTaxRate(): number {
     return VANITY_CONFIG.pricing.taxRate;
   }
 
   /**
-   * Get shipping rate
+   * Get configured shipping rate
+   * 
+   * @returns Shipping rate (5% of subtotal)
    */
   getShippingRate(): number {
     return VANITY_CONFIG.pricing.shippingRate;

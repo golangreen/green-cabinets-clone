@@ -166,6 +166,20 @@ export class ShopifyService {
    * @param handle - The product handle (URL-friendly identifier)
    * @returns The product or null if not found
    */
+  /**
+   * Get a single product by its handle
+   * 
+   * @param handle - Product handle (URL-friendly identifier)
+   * @returns Promise resolving to product or null if not found
+   * 
+   * @example
+   * ```typescript
+   * const product = await shopifyService.getProductByHandle('oak-cabinet-door');
+   * if (product) {
+   *   console.log(product.node.title);
+   * }
+   * ```
+   */
   async getProductByHandle(handle: string): Promise<ShopifyProduct | null> {
     try {
       const products = await this.getProducts(50);
