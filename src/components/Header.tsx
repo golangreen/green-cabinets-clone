@@ -56,7 +56,7 @@ const Header = () => {
               behavior: 'smooth'
             });
           }} className="cursor-pointer flex flex-col items-center">
-              <img src={scrolled ? logoWhite : logoTeal} alt="Green Cabinets Logo" className="h-16 md:h-20 w-auto transition-opacity duration-500" />
+              <img src={scrolled ? logoWhite : logoTeal} alt="Green Cabinets Logo" className="h-20 md:h-24 w-auto transition-opacity duration-500" />
               
             </a>
           </div>
