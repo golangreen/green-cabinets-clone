@@ -5,6 +5,7 @@ import { Sparkles, Camera } from "lucide-react";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import { ROUTES } from "@/constants/routes";
 import { HERO_IMAGES } from "@/constants/galleryImages";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 import logo from "@/assets/logo.jpg";
 
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -25,6 +26,16 @@ const Hero = () => {
   const [recentIndices, setRecentIndices] = useState<number[]>([0]);
   const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+
+  // Preload all hero images for optimal performance
+  useImagePreloader({
+    images: HERO_IMAGES.map(img => ({ 
+      src: img.path, 
+      priority: 'high' 
+    })),
+    maxConcurrent: 6,
+    delay: 0
+  });
 
   const handleLaunchClick = () => {
     if (isMobile) {
@@ -122,19 +133,11 @@ const Hero = () => {
             <img
               src={shuffledImages[currentImageIndex].path}
               alt={shuffledImages[currentImageIndex].alt}
+              fetchPriority="high"
               className={`w-full h-full object-cover transition-all duration-[5000ms] ${
                 isTransitioning ? 'scale-110 opacity-0' : 'scale-100 opacity-100'
               }`}
               onLoad={() => setLoadedImages(prev => new Set([...prev, currentImageIndex]))}
-            />
-          )}
-          {shuffledImages[getNextIndex()] && (
-            <img
-              src={shuffledImages[getNextIndex()].path}
-              alt={shuffledImages[getNextIndex()].alt}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ display: 'none' }}
-              onLoad={() => setLoadedImages(prev => new Set([...prev, getNextIndex()]))}
             />
           )}
         </div>
