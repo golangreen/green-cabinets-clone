@@ -1,28 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-
-export interface CheckoutCustomerInfo {
-  email: string;
-  firstName: string;
-  lastName: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
-  phone?: string;
-}
-
-export interface CheckoutItem {
-  variantId: string;
-  quantity: number;
-  price: {
-    amount: string;
-    currencyCode: string;
-  };
-  customAttributes?: Array<{
-    key: string;
-    value: string;
-  }>;
-}
+import type { CheckoutCustomerInfo, CheckoutItem } from "@/types";
 
 export interface CheckoutResult {
   url: string | null;

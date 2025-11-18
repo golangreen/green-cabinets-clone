@@ -1,25 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { shopifyService, ShopifyProduct } from '@/services';
-
-export interface CartItem {
-  product: ShopifyProduct;
-  variantId: string;
-  variantTitle: string;
-  price: {
-    amount: string;
-    currencyCode: string;
-  };
-  quantity: number;
-  selectedOptions: Array<{
-    name: string;
-    value: string;
-  }>;
-  customAttributes?: Array<{
-    key: string;
-    value: string;
-  }>;
-}
+import { shopifyService } from '@/services';
+import type { ShopifyProduct, CartItem } from '@/types';
 
 interface CartStore {
   items: CartItem[];
