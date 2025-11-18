@@ -177,8 +177,8 @@ export default defineConfig(({ mode }) => ({
         // CRITICAL: Delete outdated caches from previous deployments
         cleanupOutdatedCaches: true,
         
-        // CRITICAL: Fallback to index.html for missing navigation routes
-        navigateFallback: '/index.html',
+        // CRITICAL: Fallback for SPA routing (use '/' not '/index.html')
+        navigateFallback: '/',
         navigateFallbackAllowlist: [/^(?!\/__).*/],
         navigateFallbackDenylist: [/^\/api\//, /\.(?:png|jpg|jpeg|svg|gif|webp|ico|js|css|woff|woff2|ttf)$/],
         
