@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchEmailDeliveryStats, fetchRecentEmailLogs } from '@/services';
-import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 
 interface EmailLog {
   id: string;
@@ -27,17 +26,15 @@ interface EmailLog {
 
 export const EmailDeliveryStats = () => {
   const { data: stats, isLoading: statsLoading } = useQuery({
-    queryKey: QUERY_KEYS.EMAIL_DELIVERY_STATS,
+    queryKey: ['email-delivery-stats'],
     queryFn: () => fetchEmailDeliveryStats(7),
-    refetchInterval: 30000, // Refresh every 30 seconds
-    staleTime: FEATURE_STALE_TIMES.SECURITY,
+    refetchInterval: 30000 // Refresh every 30 seconds
   });
 
   const { data: recentEmails, isLoading: emailsLoading } = useQuery({
-    queryKey: QUERY_KEYS.RECENT_EMAIL_LOGS,
+    queryKey: ['recent-email-logs'],
     queryFn: () => fetchRecentEmailLogs(50),
-    refetchInterval: 30000,
-    staleTime: FEATURE_STALE_TIMES.SECURITY,
+    refetchInterval: 30000
   });
 
   const getStatusIcon = (status: string) => {

@@ -5,7 +5,7 @@ import { Activity, TrendingUp, Users, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { LiveStatusIndicator } from './LiveStatusIndicator';
 import { fetchSecurityEvents } from '@/services';
-import { SECURITY_CONFIG, QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
+import { SECURITY_CONFIG } from '@/config';
 import { useRealtimeSecurityEvents } from '../hooks/useRealtimeSecurityEvents';
 
 interface RateLimitEvent {
@@ -24,16 +24,15 @@ interface RateLimitEvent {
 export function RateLimitingStats() {
   // Get rate limit events from the last 24 hours
   const { data: rateLimitEvents, isLoading } = useQuery({
-    queryKey: QUERY_KEYS.RATE_LIMIT_EVENTS,
+    queryKey: ['rate-limit-events'],
     queryFn: () => fetchSecurityEvents(SECURITY_CONFIG.SECURITY_EVENTS_TIME_WINDOW_MINUTES, 'rate_limit_exceeded'),
     refetchInterval: 30000, // Refresh every 30 seconds
-    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 
   // Setup realtime subscription
   const { isConnected: isRealtimeConnected } = useRealtimeSecurityEvents({
     channelName: 'rate-limit-realtime',
-    queryKey: QUERY_KEYS.RATE_LIMIT_EVENTS,
+    queryKey: ['rate-limit-events'],
     eventTypeFilter: 'rate_limit_exceeded',
     notificationType: 'rate_limit',
     showToast: true,

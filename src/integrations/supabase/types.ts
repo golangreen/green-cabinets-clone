@@ -212,33 +212,6 @@ export type Database = {
         }
         Relationships: []
       }
-      email_settings: {
-        Row: {
-          created_at: string
-          id: string
-          sender_email: string
-          sender_name: string
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          sender_email: string
-          sender_name?: string
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          sender_email?: string
-          sender_name?: string
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: []
-      }
       notification_settings: {
         Row: {
           created_at: string
@@ -278,48 +251,6 @@ export type Database = {
           webhook_duplicate_enabled?: boolean
           webhook_retry_enabled?: boolean
           webhook_security_enabled?: boolean
-        }
-        Relationships: []
-      }
-      performance_metrics: {
-        Row: {
-          connection_type: string | null
-          created_at: string
-          device_memory: number | null
-          id: string
-          metadata: Json | null
-          metric_name: string
-          metric_value: number
-          timestamp: string
-          url: string
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          connection_type?: string | null
-          created_at?: string
-          device_memory?: number | null
-          id?: string
-          metadata?: Json | null
-          metric_name: string
-          metric_value: number
-          timestamp?: string
-          url: string
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          connection_type?: string | null
-          created_at?: string
-          device_memory?: number | null
-          id?: string
-          metadata?: Json | null
-          metric_name?: string
-          metric_value?: number
-          timestamp?: string
-          url?: string
-          user_agent?: string | null
-          user_id?: string | null
         }
         Relationships: []
       }
@@ -500,7 +431,6 @@ export type Database = {
         Returns: Json
       }
       cleanup_expired_blocks: { Args: never; Returns: number }
-      cleanup_old_performance_metrics: { Args: never; Returns: number }
       cleanup_old_webhook_events: { Args: never; Returns: number }
       extend_role_expiration: {
         Args: {

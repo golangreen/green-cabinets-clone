@@ -19,65 +19,6 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  build: {
-    // Reduce build output verbosity to prevent truncation in Lovable
-    reportCompressedSize: false,
-    chunkSizeWarningLimit: 2000,
-    rollupOptions: {
-      output: {
-        // Manual chunks for better code-splitting
-        manualChunks: (id) => {
-          // Vendor libraries
-          if (id.includes('node_modules')) {
-            // React ecosystem
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'react-vendor';
-            }
-            // Three.js and 3D libraries
-            if (id.includes('three') || id.includes('@react-three')) {
-              return 'three-vendor';
-            }
-            // UI libraries
-            if (id.includes('@radix-ui') || id.includes('lucide-react')) {
-              return 'ui-vendor';
-            }
-            // Data fetching and state
-            if (id.includes('@tanstack') || id.includes('zustand')) {
-              return 'state-vendor';
-            }
-            // Supabase
-            if (id.includes('@supabase')) {
-              return 'supabase-vendor';
-            }
-            // Other vendors
-            return 'vendor';
-          }
-          
-          // Feature-based splitting
-          if (id.includes('src/features/vanity-designer')) {
-            return 'vanity-designer';
-          }
-          if (id.includes('src/features/admin-')) {
-            return 'admin-features';
-          }
-          if (id.includes('src/features/product-catalog') || id.includes('src/features/shopping-cart')) {
-            return 'shop-features';
-          }
-        },
-        // Suppress detailed asset reporting
-        assetFileNames: 'assets/[name]-[hash][extname]',
-      }
-    },
-    // Minimize build output
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: mode === 'production',
-      }
-    }
-  },
-  // Reduce logging verbosity
-  logLevel: mode === 'production' ? 'warn' : 'info',
   plugins: [
     react(), 
     mode === "development" && componentTagger(),
@@ -89,8 +30,6 @@ export default defineConfig(({ mode }) => ({
       },
       includeAssets: ['logo.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
       workbox: {
-        // Increase max file size for large app bundle (3.85MB+)
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.myshopify\.com\/api\/.*/i,

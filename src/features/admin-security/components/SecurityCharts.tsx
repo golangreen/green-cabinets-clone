@@ -4,37 +4,32 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertTriangle, Shield, Activity } from 'lucide-react';
-import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 
 const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'];
 
 export const SecurityCharts = () => {
   const { data: summary, isLoading: summaryLoading } = useQuery({
-    queryKey: QUERY_KEYS.SECURITY_SUMMARY,
+    queryKey: ['security-summary'],
     queryFn: () => getSecuritySummary(1440),
     refetchInterval: 30000,
-    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 
   const { data: suspiciousIps, isLoading: ipsLoading } = useQuery({
-    queryKey: QUERY_KEYS.SUSPICIOUS_IPS,
+    queryKey: ['suspicious-ips'],
     queryFn: () => getSuspiciousIPs(1440, 3),
     refetchInterval: 30000,
-    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 
   const { data: recentEvents } = useQuery({
-    queryKey: QUERY_KEYS.RECENT_EVENT_COUNT,
+    queryKey: ['recent-event-count'],
     queryFn: () => getRecentEventCount(60),
     refetchInterval: 10000,
-    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 
   const { data: activeBlocks } = useQuery({
-    queryKey: QUERY_KEYS.ACTIVE_BLOCKS_COUNT,
+    queryKey: ['active-blocks-count'],
     queryFn: getActiveBlocksCount,
     refetchInterval: 10000,
-    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 
   if (summaryLoading || ipsLoading) {

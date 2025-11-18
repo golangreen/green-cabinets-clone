@@ -1,5 +1,5 @@
 import { useAdminCheck } from '@/hooks/useAdminCheck';
-import { AdminLayout, LoadingState } from '@/components/layout';
+import { Header, Footer, LoadingState, FeatureErrorBoundary } from '@/components/layout';
 import { AdminUsersDashboard } from '@/features/admin-users';
 import { ROUTES } from '@/constants/routes';
 
@@ -15,16 +15,19 @@ const AdminUsers = () => {
   }
 
   return (
-    <AdminLayout
-      withContainer={false}
-      errorBoundary={{
-        featureName: 'Admin User Management',
-        featureTag: 'admin-users',
-        fallbackRoute: ROUTES.HOME,
-      }}
+    <FeatureErrorBoundary
+      featureName="Admin User Management"
+      featureTag="admin-users"
+      fallbackRoute={ROUTES.HOME}
     >
-      <AdminUsersDashboard />
-    </AdminLayout>
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <main className="flex-1">
+          <AdminUsersDashboard />
+        </main>
+        <Footer />
+      </div>
+    </FeatureErrorBoundary>
   );
 };
 

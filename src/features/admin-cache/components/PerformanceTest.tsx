@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { logger } from '@/lib/logger';
 import { Zap, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -25,7 +24,7 @@ export function PerformanceTest({ onTest }: PerformanceTestProps) {
       toast.success('Performance test completed');
     } catch (error) {
       toast.error('Performance test failed');
-      logger.error('Cache performance test failed', error, { component: 'PerformanceTest' });
+      console.error(error);
     } finally {
       setIsRunning(false);
     }

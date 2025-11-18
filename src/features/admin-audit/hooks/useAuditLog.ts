@@ -5,7 +5,6 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import type { RoleChangeAudit } from '@/types';
-import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 
 export const useAuditLog = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,9 +14,8 @@ export const useAuditLog = () => {
 
   // Fetch audit logs
   const { data: auditLogs, isLoading, refetch } = useQuery({
-    queryKey: QUERY_KEYS.AUDIT_LOGS,
+    queryKey: ['audit-logs'],
     queryFn: () => fetchAuditLogs(500) as Promise<RoleChangeAudit[]>,
-    staleTime: FEATURE_STALE_TIMES.ADMIN,
   });
 
   // Filter logs

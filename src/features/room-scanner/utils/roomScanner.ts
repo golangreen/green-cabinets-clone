@@ -1,5 +1,4 @@
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { logger } from '@/lib/logger';
 
 export interface RoomMeasurement {
   width: number;
@@ -114,9 +113,7 @@ class RoomScanner {
         message: 'Camera and photo library access is required to scan rooms. Please grant permissions when prompted.' 
       };
     } catch (error) {
-      logger.error('Failed to request camera permissions', error, { 
-        function: 'requestCameraPermission'
-      });
+      console.error('Error requesting permissions:', error);
       return { 
         granted: false, 
         message: 'Failed to request camera permissions. Please check your device settings.' 
@@ -137,9 +134,7 @@ class RoomScanner {
         needsRequest: permissions.camera !== 'granted' || permissions.photos !== 'granted'
       };
     } catch (error) {
-      logger.error('Failed to check camera permissions', error, { 
-        function: 'checkCameraPermission'
-      });
+      console.error('Error checking permissions:', error);
       return {
         camera: 'prompt',
         photos: 'prompt',
@@ -159,19 +154,14 @@ class RoomScanner {
 
       return image.dataUrl || null;
     } catch (error) {
-      logger.error('Failed to capture room image', error, { 
-        function: 'captureRoomImage'
-      });
+      console.error('Error capturing image:', error);
       return null;
     }
   }
 
   // Simulated room scanning - In production, this would use native AR frameworks
   async startScan(roomName: string): Promise<ScanSession> {
-    logger.info('Starting room scan', { 
-      roomName,
-      function: 'startRoomScan'
-    });
+    console.log('Starting room scan for:', roomName);
     
     // In a real implementation, this would:
     // 1. Initialize ARKit (iOS) or ARCore (Android)

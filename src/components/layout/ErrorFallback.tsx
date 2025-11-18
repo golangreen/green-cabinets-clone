@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { logger } from '@/lib/logger';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle, Home, RefreshCw, Mail } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
 interface ErrorFallbackProps {
@@ -18,11 +18,12 @@ export default function ErrorFallback({
   eventId, 
   resetError 
 }: ErrorFallbackProps) {
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Log error details to console in development
     if (import.meta.env.DEV) {
-      logger.error('Error Boundary caught an error', error, {
+      console.error('Error Boundary caught an error:', {
         error,
         componentStack,
         eventId,
@@ -37,7 +38,7 @@ export default function ErrorFallback({
 
   const handleGoHome = () => {
     resetError();
-    window.location.href = ROUTES.HOME;
+    navigate(ROUTES.HOME);
   };
 
   const handleReportIssue = () => {

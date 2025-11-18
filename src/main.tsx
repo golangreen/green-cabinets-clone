@@ -7,15 +7,9 @@ import { initSentry } from "./lib/sentry";
 import { ErrorFallback } from "./components/layout";
 import { setupBackgroundSync } from "./lib/backgroundSync";
 import { useCartStore } from "./features/shopping-cart/stores/cartStore";
-import { initPerformanceMonitoring } from "./lib/performance";
 
 // Initialize Sentry for production error tracking
 initSentry();
-
-// Initialize performance monitoring
-if (typeof window !== 'undefined') {
-  initPerformanceMonitoring();
-}
 
 // Setup background sync for offline cart operations with cart actions provider
 setupBackgroundSync(() => useCartStore.getState());

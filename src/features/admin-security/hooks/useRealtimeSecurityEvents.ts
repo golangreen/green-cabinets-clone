@@ -12,7 +12,7 @@ import { SecurityEvent, SecuritySeverity } from '@/types/security';
 
 interface UseRealtimeSecurityEventsOptions {
   channelName: string;
-  queryKey: readonly string[];
+  queryKey: string[];
   eventTypeFilter?: string;
   functionNameFilter?: string;
   onEvent?: (event: SecurityEvent) => void;

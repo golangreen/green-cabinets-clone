@@ -62,10 +62,7 @@ export {
   validateQuantity,
   isCartEmpty,
   findCartItem,
-  mergeCartItems,
-  addOrUpdateCartItem,
-  updateCartItemQuantity,
-  removeCartItem,
+  mergeCartItems
 } from './cartService';
 
 // Security service exports
@@ -160,8 +157,5 @@ export {
   type ChatMessage,
   type ChatStreamOptions
 } from './chatService';
-
-// Performance service exports
-export { performanceService } from './performanceService';
 
 

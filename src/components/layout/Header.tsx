@@ -9,9 +9,10 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings, Activity, Mail, Image } from "lucide-react";
+import { ChevronDown, Menu, Download, User, LogOut, Shield, Users, FileText, HardDrive, Settings } from "lucide-react";
 import logoTeal from "@/assets/logo-teal.svg";
 import logoBlack from "@/assets/logo-black.svg";
+import walnutTexture from "@/assets/walnut-wood-texture.jpg";
 import { CartDrawer } from "@/features/shopping-cart";
 import { ThemeToggle } from "@/features/theme";
 import { useAuth } from "@/contexts/AuthContext";
@@ -335,48 +336,12 @@ const Header = () => {
                             size="sm"
                             onClick={() => {
                               setIsMobileMenuOpen(false);
-                              window.location.href = '/admin/gallery';
-                            }}
-                            className="justify-start"
-                          >
-                            <Image className="mr-2 h-4 w-4" />
-                            Gallery CDN
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setIsMobileMenuOpen(false);
                               window.location.href = '/admin/config';
                             }}
                             className="justify-start"
                           >
                             <Settings className="mr-2 h-4 w-4" />
                             Configuration
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setIsMobileMenuOpen(false);
-                              window.location.href = '/admin/performance';
-                            }}
-                            className="justify-start"
-                          >
-                            <Activity className="mr-2 h-4 w-4" />
-                            Performance
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setIsMobileMenuOpen(false);
-                              window.location.href = ROUTES.ADMIN_EMAIL_SETTINGS;
-                            }}
-                            className="justify-start"
-                          >
-                            <Mail className="mr-2 h-4 w-4" />
-                            Email Settings
                           </Button>
                         </>
                       )}

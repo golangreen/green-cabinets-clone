@@ -26,6 +26,7 @@ export const AdminUsersDashboard = () => {
     searchTerm,
     setSearchTerm,
     selectedUsers,
+    setSelectedUsers,
     bulkRole,
     setBulkRole,
     debouncedSearch,
@@ -37,7 +38,6 @@ export const AdminUsersDashboard = () => {
     extendRole,
     toggleUserSelection,
     toggleSelectAll,
-    clearSelection,
     getRoleDetail,
     isRoleExpiringSoon,
   } = useUserManagement();
@@ -123,7 +123,7 @@ export const AdminUsersDashboard = () => {
               onBulkRoleChange={setBulkRole}
               onBulkAdd={bulkAddRole}
               onBulkRemove={bulkRemoveRole}
-              onClearSelection={clearSelection}
+              onClearSelection={() => setSelectedUsers(new Set())}
             />
 
             {debouncedSearch && (

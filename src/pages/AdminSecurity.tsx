@@ -1,5 +1,5 @@
 import { useAdminCheck } from '@/hooks/useAdminCheck';
-import { AdminLayout, Header } from '@/components/layout';
+import { Header, Footer, FeatureErrorBoundary } from '@/components/layout';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SecurityDashboard } from '@/features/admin-security';
 import { ROUTES } from '@/constants/routes';
@@ -27,16 +27,19 @@ const AdminSecurity = () => {
   }
 
   return (
-    <AdminLayout
-      withContainer={false}
-      errorBoundary={{
-        featureName: 'Admin Security Dashboard',
-        featureTag: 'admin-security',
-        fallbackRoute: ROUTES.HOME,
-      }}
+    <FeatureErrorBoundary
+      featureName="Admin Security Dashboard"
+      featureTag="admin-security"
+      fallbackRoute={ROUTES.HOME}
     >
-      <SecurityDashboard />
-    </AdminLayout>
+      <div className="min-h-screen">
+        <Header />
+        <main>
+          <SecurityDashboard />
+        </main>
+        <Footer />
+      </div>
+    </FeatureErrorBoundary>
   );
 };
 

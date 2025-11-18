@@ -3,9 +3,6 @@ project_id = "mczagaaiyzbhjvtrojia"
 [functions.chat]
 verify_jwt = true
 
-[functions.check-performance]
-verify_jwt = false
-
 [functions.send-quote-request]
 verify_jwt = false
 
@@ -14,9 +11,6 @@ verify_jwt = true
 
 [functions.check-role-expiration]
 verify_jwt = false
-
-[functions.check-resend-health]
-verify_jwt = true
 
 [functions.create-checkout]
 verify_jwt = false
@@ -34,10 +28,7 @@ verify_jwt = true
 verify_jwt = false
 
 [functions.test-role-expiration]
-verify_jwt = true
+verify_jwt = false
 
 [functions.check-email-health]
-verify_jwt = true
-
-[functions.generate-image-metadata]
 verify_jwt = true

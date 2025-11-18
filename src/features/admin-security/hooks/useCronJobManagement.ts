@@ -7,17 +7,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { logger } from '@/lib/logger';
 import { fetchCronJobs, triggerRoleExpirationCheck } from '@/services/securityService';
-import { QUERY_KEYS } from '@/config/queryKeys';
-import { FEATURE_STALE_TIMES } from '@/config/reactQuery';
 
 export function useCronJobManagement() {
   const queryClient = useQueryClient();
 
   // Fetch cron jobs
   const { data: cronJobs, isLoading } = useQuery({
-    queryKey: QUERY_KEYS.CRON_JOBS,
+    queryKey: ['cron-jobs'],
     queryFn: fetchCronJobs,
-    staleTime: FEATURE_STALE_TIMES.CRON_JOBS,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Manual trigger mutation
@@ -26,7 +24,7 @@ export function useCronJobManagement() {
     onSuccess: () => {
       toast.success('Role expiration check completed successfully');
       // Invalidate related queries
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ROLE_CHANGE_AUDIT });
+      queryClient.invalidateQueries({ queryKey: ['role-change-audit'] });
     },
     onError: (error: any) => {
       logger.edgeFunctionError('check-role-expiration', error, {

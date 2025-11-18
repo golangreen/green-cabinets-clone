@@ -9,8 +9,6 @@ export * from './performance';
 export * from './pwa';
 export * from './validation';
 export * from './presets';
-export * from './queryKeys';
-export * from './reactQuery';
 
 /**
  * Application-wide configuration

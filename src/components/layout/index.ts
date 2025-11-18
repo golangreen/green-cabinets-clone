@@ -8,5 +8,3 @@ export { default as FeatureErrorBoundary } from './FeatureErrorBoundary';
 export { default as OfflineBanner } from './OfflineBanner';
 export { default as SyncStatusIndicator } from './SyncStatusIndicator';
 export { ConfigValidationAlert } from './ConfigValidationAlert';
-export { default as AdminLayout } from './AdminLayout';
-export { default as PublicLayout } from './PublicLayout';

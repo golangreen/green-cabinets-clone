@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchWebhookEvents, fetchSecurityEvents } from '@/services';
-import { QUERY_KEYS, FEATURE_STALE_TIMES } from '@/config';
 
 export const useWebhookStats = (enabled: boolean = true) => {
   return useQuery({
-    queryKey: QUERY_KEYS.WEBHOOK_STATS,
+    queryKey: ['webhook-stats'],
     queryFn: async () => {
       const [webhookEvents, securityEvents] = await Promise.all([
         fetchWebhookEvents(100),
@@ -17,6 +16,5 @@ export const useWebhookStats = (enabled: boolean = true) => {
       };
     },
     enabled,
-    staleTime: FEATURE_STALE_TIMES.SECURITY,
   });
 };

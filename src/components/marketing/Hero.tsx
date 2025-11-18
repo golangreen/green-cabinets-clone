@@ -4,8 +4,28 @@ import { Link, useNavigate } from "react-router-dom";
 import { Sparkles, Camera } from "lucide-react";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import { ROUTES } from "@/constants/routes";
-import { HERO_IMAGES } from "@/constants/galleryImages";
 import logo from "@/assets/logo.jpg";
+import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
+import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
+import modernBathroomWoodMarble from "@/assets/gallery/modern-bathroom-wood-marble.jpeg";
+import contemporaryPowderRoomWood from "@/assets/gallery/contemporary-powder-room-wood.jpeg";
+import luxuryMarbleBathroomShower from "@/assets/gallery/luxury-marble-bathroom-shower.jpeg";
+import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
+import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
+import naturalWoodOpenConceptKitchen from "@/assets/gallery/natural-wood-open-concept-kitchen.jpeg";
+import woodKitchenOutdoorAccess from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
+
+const heroImages = [
+  { src: modernKitchenIslandBarStools, alt: "Modern kitchen island with wood bar stools and marble waterfall edge" },
+  { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration" },
+  { src: modernBathroomWoodMarble, alt: "Modern bathroom with floating wood cabinets and marble vanity" },
+  { src: contemporaryPowderRoomWood, alt: "Contemporary powder room with wood vanity and marble countertop" },
+  { src: luxuryMarbleBathroomShower, alt: "Luxury marble bathroom with wood vanity and walk-in glass shower" },
+  { src: modernBathroomFloatingWoodVanity, alt: "Modern bathroom with floating wood vanity and marble walk-in shower" },
+  { src: loftKitchenExposedBrickNaturalWood, alt: "Loft kitchen with natural wood cabinetry, exposed brick wall, and pendant lighting" },
+  { src: naturalWoodOpenConceptKitchen, alt: "Natural wood open concept kitchen with dining area" },
+  { src: woodKitchenOutdoorAccess, alt: "Wood kitchen with marble countertops and outdoor patio access" },
+];
 
 // Shuffle array randomly
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -22,10 +42,9 @@ const Hero = () => {
   const { isMobile } = useDeviceType();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [shuffledImages] = useState(() => shuffleArray(HERO_IMAGES));
+  const [shuffledImages] = useState(() => shuffleArray(heroImages));
   const [recentIndices, setRecentIndices] = useState<number[]>([0]);
   const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   const handleLaunchClick = () => {
     if (isMobile) {
@@ -111,35 +130,15 @@ const Hero = () => {
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 select-none">
-          {/* Loading skeleton with brand colors - visible until image loads */}
-          {!loadedImages.has(currentImageIndex) && (
-            <>
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-[#2dd4bf]/10 to-gray-200 animate-pulse z-10" />
-              <div 
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2dd4bf]/20 to-transparent z-20"
-                style={{
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer 2s infinite linear'
-                }}
-              />
-            </>
-          )}
-          
           <img 
-            src={shuffledImages[currentImageIndex].path} 
+            src={shuffledImages[currentImageIndex].src} 
             alt={shuffledImages[currentImageIndex].alt} 
-            className={`w-full h-full object-cover pointer-events-none transition-opacity duration-700 ${
-              loadedImages.has(currentImageIndex) ? 'opacity-100' : 'opacity-0'
-            }`}
+            className="w-full h-full object-cover pointer-events-none" 
             style={{ 
               filter: 'brightness(1.1) contrast(1.05)',
             }}
             loading="eager"
             decoding="async"
-            fetchPriority="high"
-            onLoad={() => {
-              setLoadedImages(prev => new Set(prev).add(currentImageIndex));
-            }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/20" />
         </div>
