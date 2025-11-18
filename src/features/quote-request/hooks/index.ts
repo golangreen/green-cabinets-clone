@@ -1,1 +1,1 @@
-export { useRecaptcha } from './useRecaptcha';
+export { useRecaptcha, type UseRecaptchaReturn } from './useRecaptcha';
