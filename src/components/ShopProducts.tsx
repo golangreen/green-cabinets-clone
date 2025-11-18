@@ -79,24 +79,35 @@ export const ShopProducts = () => {
   }
 
   return (
-    <section className="py-12 sm:py-16 md:py-24 px-4">
-      <div className="container mx-auto">
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Our Products</h2>
-          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">
+    <section className="py-20 bg-white">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-12">
+          <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-4">Our Products</h2>
+          <p className="text-lg text-[#666666] max-w-2xl mx-auto">
             Browse our collection of premium custom cabinetry
           </p>
+        </div>
+
+        {/* Search Bar */}
+        <div className="max-w-2xl mx-auto mb-12">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search products..."
+              className="w-full px-6 py-4 rounded-full bg-[#1a1a1a] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {products.map((product) => (
             <Card 
               key={product.node.id} 
-              className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer touch-manipulation active:scale-[0.98] transition-transform"
+              className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-gray-200"
               onClick={() => navigate(`/product/${product.node.handle}`)}
             >
               {product.node.images.edges[0] && (
-                <div className="aspect-square overflow-hidden bg-secondary/20">
+                <div className="aspect-square overflow-hidden bg-gray-100">
                   <img
                     src={product.node.images.edges[0].node.url}
                     alt={product.node.images.edges[0].node.altText || product.node.title}
@@ -105,20 +116,20 @@ export const ShopProducts = () => {
                 </div>
               )}
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg sm:text-xl">{product.node.title}</CardTitle>
-                <CardDescription className="line-clamp-2 text-sm">
+                <CardTitle className="text-lg sm:text-xl text-[#1a1a1a]">{product.node.title}</CardTitle>
+                <CardDescription className="line-clamp-2 text-sm text-[#666666]">
                   {product.node.description}
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-3">
-                <p className="text-xl sm:text-2xl font-bold">
+                <p className="text-xl sm:text-2xl font-bold text-[#1a1a1a]">
                   {product.node.priceRange.minVariantPrice.currencyCode}{' '}
                   {parseFloat(product.node.priceRange.minVariantPrice.amount).toFixed(2)}
                 </p>
               </CardContent>
               <CardFooter>
                 <Button 
-                  className="w-full touch-manipulation"
+                  className="w-full bg-primary hover:bg-primary/90 text-white"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleAddToCart(product);

@@ -146,22 +146,22 @@ const Suppliers = () => {
   const [showCatalogSlideshow, setShowCatalogSlideshow] = useState(false);
 
   return (
-    <section id="suppliers" className="py-20 bg-muted/30">
+    <section id="suppliers" className="py-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+          <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-4">
             Our Trusted Partners
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-[#666666] max-w-3xl mx-auto">
             We work with industry-leading suppliers to ensure the highest quality materials and hardware for your custom cabinetry.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {suppliers.map((supplier) => (
-            <Card
+            <div
               key={supplier.id}
-              className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105"
+              className="p-8 rounded-2xl bg-[#c5f3f0] hover:bg-[#b5e8e5] transition-all duration-300 cursor-pointer relative group"
               onClick={() => {
                 if (supplier.website === "catalog") {
                   setShowCatalogSlideshow(true);
@@ -170,84 +170,90 @@ const Suppliers = () => {
                 }
               }}
             >
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4 mb-4">
-                  {supplier.logo && (
-                    <img 
-                      src={supplier.logo} 
-                      alt={`${supplier.name} logo`}
-                      className="h-20 w-20 object-contain flex-shrink-0 rounded-xl"
-                    />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <h3 className="text-xl font-semibold">{supplier.name}</h3>
-                        {supplier.id === 'greencabinets' && (
-                          <p className="text-sm text-muted-foreground italic">(That's us)</p>
-                        )}
-                      </div>
-                      {supplier.website === "catalog" ? (
-                        <Image className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      ) : (
-                        <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {supplier.description}
-                </p>
-              </CardContent>
-            </Card>
+              <a
+                href={supplier.website !== "catalog" ? supplier.website : undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  if (supplier.website !== "catalog") {
+                    e.stopPropagation();
+                  } else {
+                    e.preventDefault();
+                  }
+                }}
+                className="absolute top-4 right-4 text-[#666666] hover:text-[#1a1a1a] transition-colors z-10"
+                aria-label={`Visit ${supplier.name} website`}
+              >
+                {supplier.website === "catalog" ? (
+                  <Image className="h-5 w-5" />
+                ) : (
+                  <ExternalLink className="h-5 w-5" />
+                )}
+              </a>
+
+              <div className="mb-6 bg-white rounded-xl p-6 h-32 flex items-center justify-center">
+                {supplier.logo ? (
+                  <img
+                    src={supplier.logo}
+                    alt={`${supplier.name} logo`}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                ) : (
+                  <span className="text-2xl font-bold text-[#1a1a1a]">{supplier.name}</span>
+                )}
+              </div>
+
+              <p className="text-[#666666] leading-relaxed">
+                {supplier.description}
+              </p>
+            </div>
           ))}
         </div>
-
-        <Dialog open={!!selectedSupplier} onOpenChange={() => setSelectedSupplier(null)}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-2xl">{selectedSupplier?.name}</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-6">
-              <p className="text-muted-foreground">
-                {selectedSupplier?.details}
-              </p>
-              
-              {selectedSupplier?.products && (
-                <div>
-                  <h4 className="font-semibold mb-3">Featured Products:</h4>
-                  <ul className="space-y-2">
-                    {selectedSupplier.products.map((product, index) => (
-                      <li key={index} className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                        <span className="text-sm">{product}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {selectedSupplier?.website !== "catalog" && (
-                <a
-                  href={selectedSupplier?.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-primary hover:underline"
-                >
-                  Visit {selectedSupplier?.name} Website
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              )}
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        <CatalogSlideshow 
-          isOpen={showCatalogSlideshow}
-          onClose={() => setShowCatalogSlideshow(false)}
-          images={allGalleryImages}
-        />
       </div>
+
+      <Dialog open={!!selectedSupplier} onOpenChange={() => setSelectedSupplier(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">{selectedSupplier?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <p className="text-muted-foreground">
+              {selectedSupplier?.details}
+            </p>
+            
+            {selectedSupplier?.products && (
+              <div>
+                <h4 className="font-semibold mb-3">Featured Products:</h4>
+                <ul className="space-y-2">
+                  {selectedSupplier.products.map((product, index) => (
+                    <li key={index} className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      <span className="text-sm">{product}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {selectedSupplier?.website !== "catalog" && (
+              <a
+                href={selectedSupplier?.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-primary hover:underline"
+              >
+                Visit Website <ExternalLink className="h-4 w-4" />
+              </a>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <CatalogSlideshow 
+        isOpen={showCatalogSlideshow} 
+        onClose={() => setShowCatalogSlideshow(false)}
+        images={allGalleryImages}
+      />
     </section>
   );
 };
