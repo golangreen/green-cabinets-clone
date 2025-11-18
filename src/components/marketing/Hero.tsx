@@ -7,7 +7,6 @@ import { ROUTES } from "@/constants/routes";
 import { HERO_IMAGES } from "@/constants/galleryImages";
 import logo from "@/assets/logo.jpg";
 
-// Shuffle array randomly
 const shuffleArray = <T,>(array: T[]): T[] => {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -35,14 +34,14 @@ const Hero = () => {
     }
   };
 
-  // Get a random index that hasn't been used recently
   const getNextRandomIndex = () => {
+    if (shuffledImages.length === 0) return 0;
+    
     const availableIndices = shuffledImages
       .map((_, idx) => idx)
       .filter(idx => !recentIndices.includes(idx));
     
     if (availableIndices.length === 0) {
-      // If all images have been shown recently, reset but keep current image excluded
       const resetIndices = shuffledImages
         .map((_, idx) => idx)
         .filter(idx => idx !== currentImageIndex);
@@ -53,6 +52,8 @@ const Hero = () => {
   };
 
   useEffect(() => {
+    if (shuffledImages.length === 0) return;
+
     const interval = setInterval(() => {
       const nextIdx = getNextRandomIndex();
       setNextImageIndex(nextIdx);
@@ -62,21 +63,29 @@ const Hero = () => {
         setCurrentImageIndex(nextIdx);
         setRecentIndices(prev => {
           const updated = [...prev, nextIdx];
-          // Keep only the last 5 indices
           return updated.slice(-5);
         });
         setIsTransitioning(false);
-      }, 2500); // Half of transition time
-    }, 7000); // Change image every 7 seconds
+      }, 2500);
+    }, 7000);
 
     return () => clearInterval(interval);
   }, [shuffledImages.length, currentImageIndex, recentIndices]);
 
   const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
 
+  if (shuffledImages.length === 0) {
+    return (
+      <section className="relative bg-gray-50 pt-36 md:pt-44 pb-12 md:pb-16">
+        <div className="container mx-auto px-6 text-center">
+          <div className="h-96 bg-gray-200 animate-pulse rounded-lg" />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <>
-      {/* Hero Text Section - Above Images */}
       <section className="relative bg-gray-50 pt-36 md:pt-44 pb-12 md:pb-16">
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-gray-900 mb-6 leading-tight drop-shadow-2xl opacity-0 animate-fade-in" style={{ animationFillMode: 'forwards' }}>
@@ -95,7 +104,7 @@ const Hero = () => {
             {isMobile ? (
               <>
                 <Camera className="mr-2 h-5 w-5" />
-                Scan Your Room
+                Scan Your Space
               </>
             ) : (
               <>
@@ -107,44 +116,62 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* Hero Images Section - Single Image */}
-      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 select-none">
-          {/* Loading skeleton with brand colors - visible until image loads */}
-          {!loadedImages.has(currentImageIndex) && (
-            <>
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-[#2dd4bf]/10 to-gray-200 animate-pulse z-10" />
-              <div 
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2dd4bf]/20 to-transparent z-20"
-                style={{
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer 2s infinite linear'
-                }}
-              />
-            </>
+      <section className="relative bg-gray-900 overflow-hidden" style={{ height: isMobile ? '50vh' : '70vh' }}>
+        <div className="absolute inset-0">
+          {shuffledImages[currentImageIndex] && (
+            <img
+              src={shuffledImages[currentImageIndex].path}
+              alt={shuffledImages[currentImageIndex].alt}
+              className={`w-full h-full object-cover transition-all duration-[5000ms] ${
+                isTransitioning ? 'scale-110 opacity-0' : 'scale-100 opacity-100'
+              }`}
+              onLoad={() => setLoadedImages(prev => new Set([...prev, currentImageIndex]))}
+            />
           )}
-          
+          {shuffledImages[getNextIndex()] && (
+            <img
+              src={shuffledImages[getNextIndex()].path}
+              alt={shuffledImages[getNextIndex()].alt}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ display: 'none' }}
+              onLoad={() => setLoadedImages(prev => new Set([...prev, getNextIndex()]))}
+            />
+          )}
+        </div>
+
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/30 to-transparent" />
+
+        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+          <div className="container mx-auto">
+            <div className="max-w-2xl">
+              <p className="text-white/90 text-sm md:text-base mb-4 font-light">
+                Featured Project
+              </p>
+              <h2 className="text-2xl md:text-4xl font-serif text-white mb-4 drop-shadow-lg">
+                {shuffledImages[currentImageIndex]?.alt}
+              </h2>
+              <Link to={`${ROUTES.HOME}#gallery`}>
+                <Button 
+                  variant="outline" 
+                  className="bg-white/10 text-white border-white/30 hover:bg-white/20 backdrop-blur-sm"
+                >
+                  View Gallery
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute top-8 right-8">
           <img 
-            src={shuffledImages[currentImageIndex].path} 
-            alt={shuffledImages[currentImageIndex].alt} 
-            className={`w-full h-full object-cover pointer-events-none transition-opacity duration-700 ${
-              loadedImages.has(currentImageIndex) ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ 
-              filter: 'brightness(1.1) contrast(1.05)',
-            }}
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-            onLoad={() => {
-              setLoadedImages(prev => new Set(prev).add(currentImageIndex));
-            }}
+            src={logo} 
+            alt="Green Cabinets Logo" 
+            className="h-16 md:h-20 w-auto opacity-90 drop-shadow-lg"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/20" />
         </div>
       </section>
     </>
   );
 };
+
 export default Hero;
