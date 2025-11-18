@@ -7,7 +7,7 @@ import { Database } from 'lucide-react';
 import { AdminLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import {
-  GalleryErrorBoundary,
+  GalleryErrorBoundaryWithRouter,
   GalleryFileSelector,
   GalleryImageProcessor,
 } from '@/features/gallery/components';
@@ -17,7 +17,7 @@ export default function AdminGallery() {
   return (
     <AdminLayout>
       <GalleryProvider>
-        <GalleryErrorBoundary>
+        <GalleryErrorBoundaryWithRouter>
           <div className="mb-8 flex items-start justify-between gap-4">
             <div>
               <h1 className="text-4xl font-bold text-foreground mb-2">Gallery Management</h1>
@@ -37,7 +37,7 @@ export default function AdminGallery() {
             <GalleryFileSelector />
             <GalleryImageProcessor />
           </div>
-        </GalleryErrorBoundary>
+        </GalleryErrorBoundaryWithRouter>
       </GalleryProvider>
     </AdminLayout>
   );
