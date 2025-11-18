@@ -1,14 +1,14 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import App from "./App.tsx";
 import "./index.css";
-import "./i18n/config";
 import { initSentry } from "./lib/sentry";
 import { ErrorFallback } from "./components/layout";
 import { setupBackgroundSync } from "./lib/backgroundSync";
 import { useCartStore } from "./features/shopping-cart/stores/cartStore";
 import { initPerformanceMonitoring } from "./lib/performance";
+import "./i18n/config";
 
 // Initialize Sentry for production error tracking
 initSentry();
@@ -27,7 +27,9 @@ createRoot(document.getElementById("root")!).render(
       fallback={ErrorFallback}
       showDialog={false}
     >
-      <App />
+      <Suspense fallback={<div>Loading...</div>}>
+        <App />
+      </Suspense>
     </Sentry.ErrorBoundary>
   </StrictMode>
 );
