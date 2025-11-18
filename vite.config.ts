@@ -292,6 +292,8 @@ export default defineConfig(({ mode }) => ({
         theme_color: '#1e7b5f',
         background_color: '#030303',
         display: 'standalone',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: '/icon-192.png',
