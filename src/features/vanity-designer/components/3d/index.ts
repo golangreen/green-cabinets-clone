@@ -23,5 +23,8 @@ export {
   Countertop
 } from './fixtures';
 
+// Room components
+export { BathroomRoom, Lighting } from './room';
+
 // Type definitions
 export type { Vanity3DPreviewProps } from './types';
