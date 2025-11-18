@@ -12,7 +12,7 @@ import { calculateCompletePricing, generateVanityQuotePDF, generateShareableURL 
 import { toast } from "sonner";
 import { getEggerColorNames } from "@/lib/eggerColors";
 import { getTafisaColorNames } from "@/lib/tafisaColors";
-import { supabase } from "@/integrations/supabase/client";
+import { vanityService } from "@/services";
 import { logger } from "@/lib/logger";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
@@ -241,28 +241,22 @@ export const VanityDesignerApp = () => {
       // Get PDF as base64 (jsPDF output method returns base64 when using 'datauristring')
       const pdfBase64 = pdfDoc.output('datauristring').split(',')[1];
 
-      // Call edge function to send email
-      const { error } = await supabase.functions.invoke('send-vanity-quote-email', {
-        body: {
-          recipientEmail: email,
-          recipientName: name,
-          ccSalesTeam: ccSales,
-          pdfBase64,
-          vanityConfig: {
-            brand: vanityConfig.selectedBrand,
-            finish: vanityConfig.selectedFinish,
-            width: vanityConfig.dimensionsInInches.width,
-            height: vanityConfig.dimensionsInInches.height,
-            depth: vanityConfig.dimensionsInInches.depth,
-            doorStyle: vanityConfig.doorStyle,
-            totalPrice: totalPrice,
-          },
-        },
-      });
-
-      if (error) {
-        throw error;
-      }
+      // Call service to send email with PDF
+      await vanityService.emailQuotePDF(
+        email,
+        name,
+        ccSales,
+        pdfBase64,
+        {
+          brand: vanityConfig.selectedBrand,
+          finish: vanityConfig.selectedFinish,
+          width: vanityConfig.dimensionsInInches.width,
+          height: vanityConfig.dimensionsInInches.height,
+          depth: vanityConfig.dimensionsInInches.depth,
+          doorStyle: vanityConfig.doorStyle,
+          totalPrice: totalPrice,
+        }
+      );
 
       toast.dismiss();
       toast.success("Quote sent successfully! Check your email.");

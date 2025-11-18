@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/features/shopping-cart";
-import { supabase } from "@/integrations/supabase/client";
+import { checkoutService } from "@/services";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -70,23 +70,15 @@ export default function Checkout() {
     setIsProcessing(true);
     
     try {
-      // Create Stripe checkout session
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: {
-          items: items,
-          customerEmail: formData.email,
-          customerName: `${formData.firstName} ${formData.lastName}`,
-        }
-      });
+      // Create Stripe checkout session using service layer
+      const { sessionUrl } = await checkoutService.createCheckoutSession(
+        items,
+        formData.email,
+        `${formData.firstName} ${formData.lastName}`
+      );
 
-      if (error) throw error;
-
-      if (data?.url) {
-        // Redirect to Stripe checkout
-        window.location.href = data.url;
-      } else {
-        throw new Error("No checkout URL received");
-      }
+      // Redirect to Stripe checkout
+      window.location.href = sessionUrl;
     } catch (error) {
       logger.error("Checkout error", error, { page: 'Checkout' });
       toast.error("Checkout failed. Please try again.");
