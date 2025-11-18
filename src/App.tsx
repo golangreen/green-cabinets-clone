@@ -41,7 +41,7 @@ const DocsAPIReference = lazy(() => import("./pages/DocsAPIReference"));
 const DocsTroubleshooting = lazy(() => import("./pages/DocsTroubleshooting"));
 const DocsSecurity = lazy(() => import("./pages/DocsSecurity"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
-const ServiceWorkerDebugPage = lazy(() => import("./pages/ServiceWorkerDebugPage"));
+const ServiceWorkerDebug = lazy(() => import("./pages/ServiceWorkerDebug"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = createQueryClient();
@@ -199,7 +199,14 @@ const App = () => {
                   <Route path="/docs/security" element={<DocsSecurity />} />
                   <Route path="/docs/troubleshooting" element={<DocsTroubleshooting />} />
                   <Route path="/accessibility" element={<AccessibilityStatement />} />
-                  <Route path="/sw-debug" element={<ServiceWorkerDebugPage />} />
+                  <Route 
+                    path="/sw-debug"
+                    element={
+                      <AdminRoute>
+                        <ServiceWorkerDebug />
+                      </AdminRoute>
+                    } 
+                  />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
