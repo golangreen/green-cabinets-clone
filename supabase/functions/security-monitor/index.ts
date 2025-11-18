@@ -1,17 +1,23 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { Resend } from "https://esm.sh/resend@4.0.0";
-import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
-import { createServiceRoleClient, createAuthenticatedClient } from "../_shared/supabase.ts";
-import { createLogger, generateRequestId } from "../_shared/logger.ts";
-import { withErrorHandling, AppError, ValidationError } from "../_shared/errors.ts";
 
+const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const resend = new Resend(resendApiKey);
 
 const ALERT_EMAIL = "info@greencabinets.com"; // Configure your alert email
 const TIME_WINDOW_MINUTES = 60;
 const RATE_LIMIT_THRESHOLD = 10; // Alert if same IP exceeds rate limit 10+ times
 const SUSPICIOUS_IP_THRESHOLD = 5; // Alert if IP has 5+ violations
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
 interface SecuritySummary {
   event_type: string;
@@ -29,50 +35,12 @@ interface SuspiciousIP {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  const corsResponse = handleCorsPreFlight(req);
-  if (corsResponse) return corsResponse;
-
-  const requestId = generateRequestId();
-  const logger = createLogger({ functionName: 'security-monitor', requestId });
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
 
   try {
-    // Verify authentication
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      throw new ValidationError('Authorization required');
-    }
-
-    // Create authenticated client to verify user
-    const authSupabase = await createAuthenticatedClient(authHeader);
-    const { data: { user }, error: authError } = await authSupabase.auth.getUser();
-
-    if (authError || !user) {
-      logger.error("Authentication failed", authError);
-      throw new ValidationError('Authentication failed');
-    }
-
-    // Verify admin role
-    const { data: isAdmin, error: roleError } = await authSupabase.rpc('has_role', { 
-      _user_id: user.id, 
-      _role: 'admin' 
-    });
-
-    if (roleError) {
-      logger.error("Error checking admin role", roleError);
-      throw new ValidationError('Role verification failed');
-    }
-
-    if (!isAdmin) {
-      logger.warn("Unauthorized access attempt to security-monitor", { userId: user.id });
-      throw new ValidationError('Admin access required');
-    }
-
-    logger.info("Admin access verified", { userId: user.id });
-
-    // Use service role client for database operations
-    const supabase = createServiceRoleClient();
-    
-    logger.info("Running security monitor check");
+    console.log("Running security monitor check...");
 
     // Check if we've already sent an alert in the last hour to avoid spam
     const { data: recentAlerts } = await supabase
@@ -85,11 +53,11 @@ const handler = async (req: Request): Promise<Response> => {
     if (recentAlerts && recentAlerts.length > 0) {
       const minutesSinceLastAlert = (Date.now() - new Date(recentAlerts[0].sent_at).getTime()) / 60000;
       if (minutesSinceLastAlert < 60) {
-        logger.info("Skipping alert - cooldown active", { minutesSinceLastAlert: Math.round(minutesSinceLastAlert) });
-        return createCorsResponse({
-          message: "Alert cooldown active",
-          minutesSinceLastAlert
-        }, 200);
+        console.log(`Skipping alert - last alert sent ${Math.round(minutesSinceLastAlert)} minutes ago`);
+        return new Response(
+          JSON.stringify({ message: "Alert cooldown active", minutesSinceLastAlert }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
       }
     }
 
@@ -98,8 +66,8 @@ const handler = async (req: Request): Promise<Response> => {
       .rpc("get_security_summary", { time_window_minutes: TIME_WINDOW_MINUTES });
 
     if (summaryError) {
-      logger.error("Error fetching security summary", summaryError);
-      throw new AppError("Failed to fetch security summary", 500);
+      console.error("Error fetching security summary:", summaryError);
+      throw summaryError;
     }
 
     // Get suspicious IPs
@@ -110,11 +78,12 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
     if (ipError) {
-      logger.error("Error fetching suspicious IPs", ipError);
-      throw new AppError("Failed to fetch suspicious IPs", 500);
+      console.error("Error fetching suspicious IPs:", ipError);
+      throw ipError;
     }
 
-    logger.info("Security summary retrieved", { eventCount: summary?.length || 0, suspiciousIPCount: suspiciousIPs?.length || 0 });
+    console.log("Security Summary:", summary);
+    console.log("Suspicious IPs:", suspiciousIPs);
 
     // Check suspicious IPs for auto-blocking
     const suspiciousIPsData = suspiciousIPs as SuspiciousIP[] || [];
@@ -125,10 +94,7 @@ const handler = async (req: Request): Promise<Response> => {
     
     for (const suspiciousIP of suspiciousIPsData) {
       if (suspiciousIP.violation_count >= AUTOBLOCK_THRESHOLD) {
-        logger.info("Auto-blocking IP", { 
-          ip: suspiciousIP.client_ip, 
-          violations: suspiciousIP.violation_count 
-        });
+        console.log(`Auto-blocking IP: ${suspiciousIP.client_ip} with ${suspiciousIP.violation_count} violations`);
         
         const { data: blockResult, error: blockError } = await supabase.rpc("auto_block_ip", {
           target_ip: suspiciousIP.client_ip,
@@ -137,9 +103,9 @@ const handler = async (req: Request): Promise<Response> => {
         });
         
         if (blockError) {
-          logger.error("Error auto-blocking IP", blockError, { ip: suspiciousIP.client_ip });
+          console.error("Error auto-blocking IP:", blockError);
         } else {
-          logger.info("IP auto-blocked successfully", { ip: suspiciousIP.client_ip, result: blockResult });
+          console.log("Auto-block result:", blockResult);
         }
       }
     }
@@ -158,11 +124,7 @@ const handler = async (req: Request): Promise<Response> => {
       suspiciousIPsData.length > 0;
 
     if (shouldAlert) {
-      logger.info("Security alert triggered - sending notification email", {
-        criticalCount: criticalEvents.length,
-        highCount: highEvents.length,
-        suspiciousIPCount: suspiciousIPsData.length
-      });
+      console.log("Security alert triggered - sending notification email");
 
       // Build alert email
       const alertHtml = `
@@ -298,29 +260,44 @@ const handler = async (req: Request): Promise<Response> => {
           },
         });
 
-      logger.info("Security alert email sent successfully");
+      console.log("Security alert email sent successfully");
 
-      return createCorsResponse({
-        alert_sent: true,
-        summary: summaryData,
-        suspicious_ips: suspiciousIPsData,
-      }, 200);
+      return new Response(
+        JSON.stringify({ 
+          alert_sent: true,
+          summary: summaryData,
+          suspicious_ips: suspiciousIPsData,
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
 
-    logger.info("No security issues detected - no alert needed");
-    return createCorsResponse({
-      alert_sent: false,
-      message: "No suspicious activity detected",
-      summary: summaryData,
-    }, 200);
+    console.log("No security issues detected - no alert needed");
+    return new Response(
+      JSON.stringify({ 
+        alert_sent: false,
+        message: "No suspicious activity detected",
+        summary: summaryData,
+      }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
 
   } catch (error: any) {
-    logger.error("Error in security-monitor function", error);
-    return createCorsErrorResponse(error.message, 500);
+    console.error("Error in security-monitor function:", error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
   }
 };
 
-serve(withErrorHandling(handler, (message, error) => {
-  const logger = createLogger({ functionName: 'security-monitor' });
-  logger.error(message, error);
-}));
+serve(handler);

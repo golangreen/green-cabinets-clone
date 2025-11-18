@@ -104,84 +104,6 @@ export type Database = {
         }
         Relationships: []
       }
-      email_delivery_log: {
-        Row: {
-          created_at: string | null
-          email_id: string
-          email_type: string
-          event_data: Json | null
-          id: string
-          recipient_email: string
-          role: Database["public"]["Enums"]["app_role"] | null
-          status: string
-          subject: string | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email_id: string
-          email_type: string
-          event_data?: Json | null
-          id?: string
-          recipient_email: string
-          role?: Database["public"]["Enums"]["app_role"] | null
-          status: string
-          subject?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email_id?: string
-          email_type?: string
-          event_data?: Json | null
-          id?: string
-          recipient_email?: string
-          role?: Database["public"]["Enums"]["app_role"] | null
-          status?: string
-          subject?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      role_change_audit: {
-        Row: {
-          action: string
-          created_at: string
-          details: Json | null
-          id: string
-          performed_by_email: string
-          performed_by_id: string
-          role: Database["public"]["Enums"]["app_role"]
-          target_user_email: string
-          target_user_id: string
-        }
-        Insert: {
-          action: string
-          created_at?: string
-          details?: Json | null
-          id?: string
-          performed_by_email: string
-          performed_by_id: string
-          role: Database["public"]["Enums"]["app_role"]
-          target_user_email: string
-          target_user_id: string
-        }
-        Update: {
-          action?: string
-          created_at?: string
-          details?: Json | null
-          id?: string
-          performed_by_email?: string
-          performed_by_id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          target_user_email?: string
-          target_user_id?: string
-        }
-        Relationships: []
-      }
       security_events: {
         Row: {
           client_ip: string
@@ -215,63 +137,21 @@ export type Database = {
       user_roles: {
         Row: {
           created_at: string
-          expires_at: string | null
           id: string
-          is_temporary: boolean | null
-          reminder_3day_sent: boolean | null
-          reminder_sent: boolean | null
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
           created_at?: string
-          expires_at?: string | null
           id?: string
-          is_temporary?: boolean | null
-          reminder_3day_sent?: boolean | null
-          reminder_sent?: boolean | null
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
           created_at?: string
-          expires_at?: string | null
           id?: string
-          is_temporary?: boolean | null
-          reminder_3day_sent?: boolean | null
-          reminder_sent?: boolean | null
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
-        }
-        Relationships: []
-      }
-      webhook_events: {
-        Row: {
-          client_ip: string | null
-          created_at: string
-          event_type: string
-          id: string
-          processed_at: string
-          retry_count: number | null
-          svix_id: string
-        }
-        Insert: {
-          client_ip?: string | null
-          created_at?: string
-          event_type: string
-          id?: string
-          processed_at?: string
-          retry_count?: number | null
-          svix_id: string
-        }
-        Update: {
-          client_ip?: string | null
-          created_at?: string
-          event_type?: string
-          id?: string
-          processed_at?: string
-          retry_count?: number | null
-          svix_id?: string
         }
         Relationships: []
       }
@@ -280,22 +160,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      add_user_role:
-        | {
-            Args: {
-              target_role: Database["public"]["Enums"]["app_role"]
-              target_user_id: string
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              expiration_date?: string
-              target_role: Database["public"]["Enums"]["app_role"]
-              target_user_id: string
-            }
-            Returns: Json
-          }
       auto_block_ip: {
         Args: {
           block_duration_hours?: number
@@ -304,44 +168,7 @@ export type Database = {
         }
         Returns: Json
       }
-      bulk_add_user_role: {
-        Args: {
-          target_role: Database["public"]["Enums"]["app_role"]
-          target_user_ids: string[]
-        }
-        Returns: Json
-      }
-      bulk_extend_role_expiration: {
-        Args: { role_extensions: Json }
-        Returns: Json
-      }
-      bulk_remove_user_role: {
-        Args: {
-          target_role: Database["public"]["Enums"]["app_role"]
-          target_user_ids: string[]
-        }
-        Returns: Json
-      }
       cleanup_expired_blocks: { Args: never; Returns: number }
-      cleanup_old_webhook_events: { Args: never; Returns: number }
-      extend_role_expiration: {
-        Args: {
-          new_expiration_date: string
-          target_role: Database["public"]["Enums"]["app_role"]
-          target_user_id: string
-        }
-        Returns: Json
-      }
-      get_all_users_with_roles: {
-        Args: never
-        Returns: {
-          created_at: string
-          email: string
-          role_details: Json[]
-          roles: Database["public"]["Enums"]["app_role"][]
-          user_id: string
-        }[]
-      }
       get_blocked_ip_info: {
         Args: { check_ip: string }
         Returns: {
@@ -349,56 +176,6 @@ export type Database = {
           blocked_until: string
           reason: string
           violation_count: number
-        }[]
-      }
-      get_email_delivery_stats: {
-        Args: { days_back?: number }
-        Returns: {
-          delivery_rate: number
-          total_bounced: number
-          total_complained: number
-          total_delivered: number
-          total_failed: number
-          total_sent: number
-        }[]
-      }
-      get_expired_roles: {
-        Args: never
-        Returns: {
-          expires_at: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_email: string
-          user_id: string
-        }[]
-      }
-      get_expiring_roles: {
-        Args: { hours_before?: number }
-        Returns: {
-          expires_at: string
-          hours_until_expiry: number
-          role: Database["public"]["Enums"]["app_role"]
-          user_email: string
-          user_id: string
-        }[]
-      }
-      get_expiring_roles_by_stage: {
-        Args: { hours_before?: number; reminder_stage?: string }
-        Returns: {
-          expires_at: string
-          hours_until_expiry: number
-          role: Database["public"]["Enums"]["app_role"]
-          user_email: string
-          user_id: string
-        }[]
-      }
-      get_roles_expiring_within_days: {
-        Args: { days_ahead?: number }
-        Returns: {
-          days_until_expiry: number
-          expires_at: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_email: string
-          user_id: string
         }[]
       }
       get_security_summary: {
@@ -428,44 +205,12 @@ export type Database = {
         Returns: boolean
       }
       is_ip_blocked: { Args: { check_ip: string }; Returns: boolean }
-      log_role_change: {
-        Args: {
-          p_action: string
-          p_details?: Json
-          p_role: Database["public"]["Enums"]["app_role"]
-          p_target_user_email: string
-          p_target_user_id: string
-        }
-        Returns: undefined
-      }
       manual_block_ip: {
         Args: {
           block_duration_hours?: number
           block_reason: string
           performed_by_user?: string
           target_ip: string
-        }
-        Returns: Json
-      }
-      mark_3day_reminder_sent: {
-        Args: {
-          target_role: Database["public"]["Enums"]["app_role"]
-          target_user_id: string
-        }
-        Returns: undefined
-      }
-      mark_reminder_sent: {
-        Args: {
-          target_role: Database["public"]["Enums"]["app_role"]
-          target_user_id: string
-        }
-        Returns: undefined
-      }
-      remove_expired_roles: { Args: never; Returns: Json }
-      remove_user_role: {
-        Args: {
-          target_role: Database["public"]["Enums"]["app_role"]
-          target_user_id: string
         }
         Returns: Json
       }

@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, ChevronUp, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Session } from "@supabase/supabase-js";
-import { ROUTES } from "@/constants/routes";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -48,7 +47,7 @@ const Chatbot = () => {
         description: "Please login to use the chatbot",
         variant: "destructive",
       });
-      navigate(ROUTES.AUTH);
+      navigate("/auth");
       return;
     }
 
@@ -183,7 +182,7 @@ const Chatbot = () => {
         <Button
           onClick={() => {
             if (!session) {
-              navigate(ROUTES.AUTH);
+              navigate("/auth");
             } else {
               setIsOpen(true);
             }

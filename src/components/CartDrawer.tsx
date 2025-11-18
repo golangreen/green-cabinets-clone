@@ -10,9 +10,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2, CreditCard } from "lucide-react";
-import { useCart } from "@/hooks/useCart";
+import { useCartStore } from "@/stores/cartStore";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,25 +20,36 @@ export const CartDrawer = () => {
   const { 
     items, 
     isLoading, 
-    totalItems,
-    totalPrice,
-    currencyCode,
-    incrementItem,
-    decrementItem,
-    removeItem,
-    checkout
-  } = useCart();
+    updateQuantity, 
+    removeItem, 
+    createCheckout 
+  } = useCartStore();
+  
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
 
   const handleCheckout = async () => {
-    const checkoutUrl = await checkout();
-    if (checkoutUrl) {
-      setIsOpen(false);
+    // Open window immediately to avoid popup blockers
+    const checkoutWindow = window.open('about:blank', '_blank');
+    
+    try {
+      const checkoutUrl = await createCheckout();
+      if (checkoutUrl && checkoutWindow) {
+        checkoutWindow.location.href = checkoutUrl;
+        setIsOpen(false);
+      } else if (!checkoutWindow) {
+        toast.error('Please allow popups to proceed to checkout');
+      }
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      if (checkoutWindow) checkoutWindow.close();
+      toast.error('Failed to create checkout. Please try again.');
     }
   };
 
   const handleCustomCheckout = () => {
     setIsOpen(false);
-    navigate(ROUTES.CHECKOUT);
+    navigate('/checkout');
   };
 
   return (
@@ -111,7 +122,7 @@ export const CartDrawer = () => {
                             variant="outline"
                             size="icon"
                             className="h-6 w-6"
-                            onClick={() => decrementItem(item.variantId)}
+                            onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -120,7 +131,7 @@ export const CartDrawer = () => {
                             variant="outline"
                             size="icon"
                             className="h-6 w-6"
-                            onClick={() => incrementItem(item.variantId)}
+                            onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
@@ -135,7 +146,7 @@ export const CartDrawer = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-semibold">Total</span>
                   <span className="text-xl font-bold">
-                    {currencyCode} {totalPrice.toFixed(2)}
+                    {items[0]?.price.currencyCode || '$'} {totalPrice.toFixed(2)}
                   </span>
                 </div>
                 

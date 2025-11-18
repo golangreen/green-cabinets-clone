@@ -1,17 +1,18 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
-import { createServiceRoleClient, getClientIP } from "../_shared/supabase.ts";
-import { isIPBlocked, checkRateLimit, logSecurityEvent, verifyRecaptcha } from "../_shared/security.ts";
-import { createLogger, generateRequestId } from "../_shared/logger.ts";
-import { ValidationError, RateLimitError, withErrorHandling } from "../_shared/errors.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const RECAPTCHA_SECRET_KEY = Deno.env.get("RECAPTCHA_SECRET_KEY");
 
 const resend = new Resend(RESEND_API_KEY);
+const supabase = createClient(
+  Deno.env.get("SUPABASE_URL")!,
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+);
 
+// Validation schema for email configuration
 const emailConfigSchema = z.object({
   recipientEmail: z.string().trim().email().max(255),
   recipientName: z.string().trim().max(100).optional(),
@@ -32,6 +33,29 @@ const emailConfigSchema = z.object({
   })
 });
 
+// Rate limiting
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+const MAX_REQUESTS_PER_WINDOW = 5;
+
+const checkRateLimit = (ip: string): boolean => {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+  
+  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    return false;
+  }
+  
+  record.count++;
+  return true;
+};
+
+// HTML escape function to prevent XSS
 const escapeHtml = (unsafe: string): string => {
   return unsafe
     .replace(/&/g, "&amp;")
@@ -39,6 +63,11 @@ const escapeHtml = (unsafe: string): string => {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+};
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 interface EmailConfigRequest {
@@ -62,99 +91,151 @@ interface EmailConfigRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  const corsResponse = handleCorsPreFlight(req);
-  if (corsResponse) return corsResponse;
-
-  // Initialize logger
-  const requestId = generateRequestId();
-  const logger = createLogger({ functionName: 'email-vanity-config', requestId });
-  logger.info('Email config request received');
-
-  const supabase = createServiceRoleClient();
-  const clientIP = getClientIP(req);
-  
-  // Check if IP is blocked
-  const blocked = await isIPBlocked(supabase, clientIP);
-  if (blocked) {
-    await logSecurityEvent(supabase, {
-      eventType: 'ip_blocked',
-      clientIP,
-      functionName: 'email-vanity-config',
-      severity: 'high',
-    });
-    logger.warn('Blocked IP attempted access', { ip: clientIP });
-    return createCorsErrorResponse('Access denied', 403);
-  }
-  
-  // Check rate limit
-  const rateLimitExceeded = checkRateLimit(clientIP, 5, 60 * 60 * 1000);
-  if (rateLimitExceeded) {
-    await logSecurityEvent(supabase, {
-      eventType: 'rate_limit_exceeded',
-      clientIP,
-      functionName: 'email-vanity-config',
-      severity: 'high',
-      details: { attempt: 'email configuration' }
-    });
-    logger.warn('Rate limit exceeded', { ip: clientIP });
-    throw new RateLimitError('Too many requests. Please try again later.');
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
   }
 
-  const rawData = await req.json();
-  
-  // Verify reCAPTCHA token if provided and configured
-  if (RECAPTCHA_SECRET_KEY && rawData.recaptchaToken) {
-    const isValid = await verifyRecaptcha(rawData.recaptchaToken, RECAPTCHA_SECRET_KEY);
-    if (!isValid) {
-      await logSecurityEvent(supabase, {
-        eventType: 'suspicious_activity',
-        clientIP,
-        functionName: 'email-vanity-config',
-        severity: 'medium',
-        details: { reason: 'reCAPTCHA verification failed' }
+  try {
+    // Get client IP for rate limiting and logging
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0] || 
+                     req.headers.get("x-real-ip") || 
+                     "unknown";
+    
+    // Check if IP is blocked
+    const { data: blockCheck } = await supabase.rpc("is_ip_blocked", { check_ip: clientIp });
+    if (blockCheck === true) {
+      const { data: blockInfo } = await supabase.rpc("get_blocked_ip_info", { check_ip: clientIp });
+      const blockedUntil = blockInfo && blockInfo.length > 0 ? blockInfo[0].blocked_until : null;
+      const reason = blockInfo && blockInfo.length > 0 ? blockInfo[0].reason : "Security violation";
+      
+      console.warn(`Blocked IP attempted access: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Access denied. Your IP has been temporarily blocked.",
+          reason: reason,
+          blocked_until: blockedUntil,
+        }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+    
+    // Check rate limit
+    if (!checkRateLimit(clientIp)) {
+      console.warn(`Rate limit exceeded for IP: ${clientIp}`);
+      
+      // Log security event (fire and forget)
+      supabase.from("security_events").insert({
+        event_type: "rate_limit_exceeded",
+        function_name: "email-vanity-config",
+        client_ip: clientIp,
+        details: { attempt: "email configuration" },
+        severity: "high",
       });
-      logger.warn('reCAPTCHA verification failed', { ip: clientIP });
-      return createCorsErrorResponse("Request verification failed", 403);
+      
+      return new Response(
+        JSON.stringify({ 
+          error: "Too many requests. Please try again later.",
+          retryAfter: 3600
+        }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
-    logger.info('reCAPTCHA verified', { ip: clientIP });
-  }
-  
-  // Validate input data
-  const validationResult = emailConfigSchema.safeParse(rawData);
-  if (!validationResult.success) {
-    await logSecurityEvent(supabase, {
-      eventType: 'validation_failed',
-      clientIP,
-      functionName: 'email-vanity-config',
-      severity: 'medium',
-      details: { errors: validationResult.error.errors }
-    });
-    logger.error('Validation error', { error: validationResult.error });
-    throw new ValidationError('Invalid request. Please check your input.');
-  }
 
-  const { recipientEmail, recipientName, config }: EmailConfigRequest = validationResult.data;
-  
-  logger.info('Sending vanity configuration email', { recipient: recipientEmail });
+    const rawData = await req.json();
+    
+    // Verify reCAPTCHA token if provided and configured
+    if (RECAPTCHA_SECRET_KEY && rawData.recaptchaToken) {
+      try {
+        const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `secret=${RECAPTCHA_SECRET_KEY}&response=${rawData.recaptchaToken}`,
+        });
 
-  // Escape all user-controlled strings to prevent XSS
-  const safeName = recipientName ? escapeHtml(recipientName) : null;
-  const safeConfig = {
-    dimensions: escapeHtml(config.dimensions),
-    brand: escapeHtml(config.brand),
-    finish: escapeHtml(config.finish),
-    doorStyle: escapeHtml(config.doorStyle),
-    countertop: escapeHtml(config.countertop),
-    sink: escapeHtml(config.sink),
-    pricing: {
-      vanity: escapeHtml(config.pricing.vanity),
-      tax: escapeHtml(config.pricing.tax),
-      shipping: escapeHtml(config.pricing.shipping),
-      total: escapeHtml(config.pricing.total),
+        const recaptchaResult = await recaptchaResponse.json();
+        
+        // Check score threshold (0.5 recommended for v3, lower = more likely bot)
+        if (!recaptchaResult.success || (recaptchaResult.score && recaptchaResult.score < 0.5)) {
+          // Log failed verification
+          supabase.from('security_events').insert({
+            event_type: 'recaptcha_failed',
+            function_name: 'email-vanity-config',
+            client_ip: clientIp,
+            severity: 'medium',
+            details: { 
+              score: recaptchaResult.score,
+              action: recaptchaResult.action,
+              errors: recaptchaResult['error-codes']
+            }
+          });
+          
+          console.warn(`reCAPTCHA verification failed for IP: ${clientIp}, Score: ${recaptchaResult.score || 'N/A'}`);
+          return new Response(
+            JSON.stringify({ error: "Request verification failed" }),
+            { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+        
+        console.log(`reCAPTCHA verified for IP: ${clientIp}, Score: ${recaptchaResult.score}`);
+      } catch (error) {
+        console.error('reCAPTCHA verification error:', error);
+        // Continue without blocking if reCAPTCHA service fails
+      }
     }
-  };
+    
+    // Validate input data
+    const validationResult = emailConfigSchema.safeParse(rawData);
+    if (!validationResult.success) {
+      console.error("Validation error:", validationResult.error, `IP: ${clientIp}`);
+      
+      // Log security event (fire and forget)
+      supabase.from("security_events").insert({
+        event_type: "validation_failed",
+        function_name: "email-vanity-config",
+        client_ip: clientIp,
+        details: { errors: validationResult.error.errors },
+        severity: "medium",
+      });
+      
+      return new Response(
+        JSON.stringify({ 
+          error: "Invalid request. Please check your input." 
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
-  const emailHtml = `
+    const { recipientEmail, recipientName, config }: EmailConfigRequest = validationResult.data;
+    
+    console.log(`Sending vanity configuration email to: ${recipientEmail}, IP: ${clientIp}`);
+
+    // Escape all user-controlled strings to prevent XSS
+    const safeName = recipientName ? escapeHtml(recipientName) : null;
+    const safeConfig = {
+      dimensions: escapeHtml(config.dimensions),
+      brand: escapeHtml(config.brand),
+      finish: escapeHtml(config.finish),
+      doorStyle: escapeHtml(config.doorStyle),
+      countertop: escapeHtml(config.countertop),
+      sink: escapeHtml(config.sink),
+      pricing: {
+        vanity: escapeHtml(config.pricing.vanity),
+        tax: escapeHtml(config.pricing.tax),
+        shipping: escapeHtml(config.pricing.shipping),
+        total: escapeHtml(config.pricing.total),
+      }
+    };
+
+    const emailHtml = `
       <!DOCTYPE html>
       <html>
         <head>
@@ -257,27 +338,43 @@ const handler = async (req: Request): Promise<Response> => {
               </p>
             </div>
           </div>
-      </body>
-    </html>
-  `;
+        </body>
+      </html>
+    `;
 
-  const emailResponse = await resend.emails.send({
-    from: "Green Cabinets <onboarding@resend.dev>",
-    to: [recipientEmail],
-    subject: "Your Custom Vanity Configuration",
-    html: emailHtml,
-  });
+    const emailResponse = await resend.emails.send({
+      from: "Green Cabinets <onboarding@resend.dev>",
+      to: [recipientEmail],
+      subject: "Your Custom Vanity Configuration",
+      html: emailHtml,
+    });
 
-  logger.info('Email sent successfully', { emailId: emailResponse.data?.id });
+    console.log("Email sent successfully:", emailResponse);
 
-  return createCorsResponse({
-    success: true,
-    message: "Configuration emailed successfully",
-    emailId: emailResponse.data?.id
-  }, 200);
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        message: "Configuration emailed successfully",
+        emailId: emailResponse.data?.id 
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      }
+    );
+  } catch (error: any) {
+    console.error("Error in email-vanity-config function:", error);
+    return new Response(
+      JSON.stringify({ 
+        success: false, 
+        error: error.message || "Failed to send email" 
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      }
+    );
+  }
 };
 
-serve(withErrorHandling(handler, (msg, error) => {
-  const logger = createLogger({ functionName: 'email-vanity-config' });
-  logger.error(msg, error);
-}));
+serve(handler);

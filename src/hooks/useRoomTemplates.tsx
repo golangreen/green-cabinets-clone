@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { useLocalStorage } from "./useLocalStorage";
 
 export interface RoomTemplate {
   id: string;
@@ -16,17 +15,40 @@ export interface RoomTemplate {
 const STORAGE_KEY = "room_templates";
 
 export const useRoomTemplates = () => {
-  const [templates, setTemplates] = useLocalStorage<RoomTemplate[]>(STORAGE_KEY, []);
+  const [templates, setTemplates] = useState<RoomTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate loading for better UX
+  // Load templates from localStorage on mount
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 300);
+    const loadTemplates = async () => {
+      try {
+        // Simulate a brief loading time for better UX
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setTemplates(parsed);
+        }
+      } catch (error) {
+        console.error("Failed to load templates:", error);
+        toast.error("Failed to load saved templates");
+      } finally {
+        setIsLoading(false);
+      }
+    };
     
-    return () => clearTimeout(timer);
+    loadTemplates();
   }, []);
+
+  // Save templates to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(templates));
+    } catch (error) {
+      console.error("Failed to save templates:", error);
+      toast.error("Failed to save templates");
+    }
+  }, [templates]);
 
   const saveTemplate = (
     name: string,

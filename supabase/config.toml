@@ -6,12 +6,6 @@ verify_jwt = true
 [functions.send-quote-request]
 verify_jwt = false
 
-[functions.send-role-notification]
-verify_jwt = true
-
-[functions.check-role-expiration]
-verify_jwt = false
-
 [functions.create-checkout]
 verify_jwt = false
 
@@ -22,13 +16,4 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.security-monitor]
-verify_jwt = true
-
-[functions.resend-webhook]
 verify_jwt = false
-
-[functions.test-role-expiration]
-verify_jwt = false
-
-[functions.check-email-health]
-verify_jwt = true

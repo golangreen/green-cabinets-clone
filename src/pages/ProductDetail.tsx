@@ -6,8 +6,6 @@ import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { VanityConfigurator } from "@/components/VanityConfigurator";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ROUTES } from "@/constants/routes";
-import { useProductCacheStore } from "@/stores/productCacheStore";
 
 // Mock product for fallback
 const mockVanityProduct: ShopifyProduct = {
@@ -47,7 +45,6 @@ export default function ProductDetail() {
   const { handle } = useParams<{ handle: string }>();
   const [product, setProduct] = useState<ShopifyProduct | null>(null);
   const [loading, setLoading] = useState(true);
-  const { productsList, isCacheValid, getProduct, setProducts } = useProductCacheStore();
 
   useEffect(() => {
     // Only run in browser, not during SSR/build
@@ -59,22 +56,7 @@ export default function ProductDetail() {
 
     const loadProduct = async () => {
       try {
-        // Check cache first
-        if (isCacheValid() && productsList.length > 0) {
-          console.log('Using cached product data');
-          const cachedProduct = productsList.find(
-            (p: ShopifyProduct) => p.node.handle === handle
-          );
-          setProduct(cachedProduct || mockVanityProduct);
-          setLoading(false);
-          return;
-        }
-
-        // Fetch fresh data if cache is invalid
-        console.log('Fetching fresh product data from Shopify');
         const products = await fetchProducts(50);
-        setProducts(products);
-        
         const foundProduct = products.find(
           (p: ShopifyProduct) => p.node.handle === handle
         );
@@ -89,7 +71,7 @@ export default function ProductDetail() {
       }
     };
     loadProduct();
-  }, [handle, isCacheValid, productsList, setProducts]);
+  }, [handle]);
 
   if (loading) {
     return (
@@ -110,7 +92,7 @@ export default function ProductDetail() {
       <Header />
       <main className="flex-1 py-6 sm:py-8 md:py-12">
         <div className="container mx-auto px-4">
-          <Link to={ROUTES.HOME}>
+          <Link to="/">
             <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Shop

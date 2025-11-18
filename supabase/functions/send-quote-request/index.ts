@@ -1,13 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { handleCorsPreFlight, createCorsResponse, createCorsErrorResponse } from "../_shared/cors.ts";
-import { createServiceRoleClient, getClientIP } from "../_shared/supabase.ts";
-import { isIPBlocked, checkRateLimit, logSecurityEvent, verifyRecaptcha } from "../_shared/security.ts";
-import { createLogger, generateRequestId } from "../_shared/logger.ts";
-import { ValidationError, RateLimitError, withErrorHandling } from "../_shared/errors.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const RECAPTCHA_SECRET_KEY = Deno.env.get("RECAPTCHA_SECRET_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 const quoteRequestSchema = z.object({
   customerName: z.string().trim().min(1).max(100),
@@ -25,6 +25,38 @@ const quoteRequestSchema = z.object({
   totalPrice: z.string().trim().max(20),
   recaptchaToken: z.string().optional(),
 });
+
+// Simple in-memory rate limiting (for basic protection)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+const MAX_REQUESTS_PER_WINDOW = 5;
+
+const checkRateLimit = (ip: string): boolean => {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+  
+  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    return false;
+  }
+  
+  record.count++;
+  return true;
+};
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "1; mode=block",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
+};
 
 interface QuoteRequest {
   customerName: string;
@@ -44,92 +76,140 @@ interface QuoteRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  const corsResponse = handleCorsPreFlight(req);
-  if (corsResponse) return corsResponse;
-
-  // Initialize logger
-  const requestId = generateRequestId();
-  const logger = createLogger({ functionName: 'send-quote-request', requestId });
-  logger.info('Quote request received');
-
-  const supabase = createServiceRoleClient();
-  const clientIP = getClientIP(req);
-  
-  // Check if IP is blocked
-  const blocked = await isIPBlocked(supabase, clientIP);
-  if (blocked) {
-    await logSecurityEvent(supabase, {
-      eventType: 'ip_blocked',
-      clientIP,
-      functionName: 'send-quote-request',
-      severity: 'high',
-    });
-    logger.warn('Blocked IP attempted access', { ip: clientIP });
-    return createCorsErrorResponse('Access denied', 403);
-  }
-  
-  // Check rate limit
-  const rateLimitExceeded = checkRateLimit(clientIP, 5, 60 * 60 * 1000);
-  if (rateLimitExceeded) {
-    await logSecurityEvent(supabase, {
-      eventType: 'rate_limit_exceeded',
-      clientIP,
-      functionName: 'send-quote-request',
-      severity: 'medium',
-      details: { max_requests: 5, window_minutes: 60 }
-    });
-    logger.warn('Rate limit exceeded', { ip: clientIP });
-    throw new RateLimitError('Too many requests. Please try again later.');
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
   }
 
-  const rawData = await req.json();
-  
-  // Verify reCAPTCHA token if provided and configured
-  if (RECAPTCHA_SECRET_KEY && rawData.recaptchaToken) {
-    const isValid = await verifyRecaptcha(rawData.recaptchaToken, RECAPTCHA_SECRET_KEY);
-    if (!isValid) {
-      await logSecurityEvent(supabase, {
-        eventType: 'suspicious_activity',
-        clientIP,
-        functionName: 'send-quote-request',
-        severity: 'medium',
-        details: { reason: 'reCAPTCHA verification failed' }
-      });
-      logger.warn('reCAPTCHA verification failed', { ip: clientIP });
-      return createCorsErrorResponse("Request verification failed", 403);
+  try {
+    // Get client IP for rate limiting
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0] || 
+                     req.headers.get("x-real-ip") || 
+                     "unknown";
+    
+    // Check if IP is blocked
+    const { data: isBlocked } = await supabase.rpc('is_ip_blocked', { check_ip: clientIp });
+    
+    if (isBlocked) {
+      const { data: blockInfo } = await supabase.rpc('get_blocked_ip_info', { check_ip: clientIp });
+      
+      console.warn(`Blocked IP attempted access: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Access denied. Your IP address has been temporarily blocked due to security concerns.',
+          blockedUntil: blockInfo?.blocked_until
+        }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
-    logger.info('reCAPTCHA verified', { ip: clientIP });
-  }
-  
-  // Validate input data
-  const validationResult = quoteRequestSchema.safeParse(rawData);
-  if (!validationResult.success) {
-    await logSecurityEvent(supabase, {
-      eventType: 'validation_failed',
-      clientIP,
-      functionName: 'send-quote-request',
-      severity: 'low',
-      details: { errors: validationResult.error.errors }
-    });
-    logger.error('Validation error', { error: validationResult.error });
-    throw new ValidationError('Invalid request. Please check your input.');
-  }
+    
+    // Check rate limit
+    if (!checkRateLimit(clientIp)) {
+      // Log security event
+      await supabase.from('security_events').insert({
+        event_type: 'rate_limit_exceeded',
+        function_name: 'send-quote-request',
+        client_ip: clientIp,
+        severity: 'medium',
+        details: { max_requests: MAX_REQUESTS_PER_WINDOW, window_minutes: 60 }
+      });
+      
+      console.warn(`Rate limit exceeded for IP: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Too many requests. Please try again later.",
+          retryAfter: 3600
+        }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
-  const quoteData: QuoteRequest = validationResult.data;
-  logger.info('Processing quote request', { customer: quoteData.customerEmail });
+    const rawData = await req.json();
+    
+    // Verify reCAPTCHA token if provided and configured
+    if (RECAPTCHA_SECRET_KEY && rawData.recaptchaToken) {
+      try {
+        const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `secret=${RECAPTCHA_SECRET_KEY}&response=${rawData.recaptchaToken}`,
+        });
 
-  // Send email to business owner using Resend API
-  const ownerEmailResponse = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({
-    from: "Green Cabinets Quote <onboarding@resend.dev>",
-    to: ["info@greencabinets.com"],
-    subject: `New Custom Vanity Quote Request from ${quoteData.customerName}`,
-    html: `
+        const recaptchaResult = await recaptchaResponse.json();
+        
+        // Check score threshold (0.5 recommended for v3, lower = more likely bot)
+        if (!recaptchaResult.success || (recaptchaResult.score && recaptchaResult.score < 0.5)) {
+          // Log failed verification
+          await supabase.from('security_events').insert({
+            event_type: 'recaptcha_failed',
+            function_name: 'send-quote-request',
+            client_ip: clientIp,
+            severity: 'medium',
+            details: { 
+              score: recaptchaResult.score,
+              action: recaptchaResult.action,
+              errors: recaptchaResult['error-codes']
+            }
+          });
+          
+          console.warn(`reCAPTCHA verification failed for IP: ${clientIp}, Score: ${recaptchaResult.score || 'N/A'}`);
+          return new Response(
+            JSON.stringify({ error: "Request verification failed" }),
+            { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+        
+        console.log(`reCAPTCHA verified for IP: ${clientIp}, Score: ${recaptchaResult.score}`);
+      } catch (error) {
+        console.error('reCAPTCHA verification error:', error);
+        // Continue without blocking if reCAPTCHA service fails
+      }
+    }
+    
+    // Validate input data
+    const validationResult = quoteRequestSchema.safeParse(rawData);
+    if (!validationResult.success) {
+      // Log security event
+      await supabase.from('security_events').insert({
+        event_type: 'validation_failed',
+        function_name: 'send-quote-request',
+        client_ip: clientIp,
+        severity: 'low',
+        details: { errors: validationResult.error.errors }
+      });
+      
+      console.error("Validation error:", validationResult.error, `IP: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Invalid request. Please check your input." 
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const quoteData: QuoteRequest = validationResult.data;
+    console.log("Processing quote request");
+
+    // Send email to business owner using Resend API
+    const ownerEmailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+      from: "Green Cabinets Quote <onboarding@resend.dev>",
+      to: ["info@greencabinets.com"],
+      subject: `New Custom Vanity Quote Request from ${quoteData.customerName}`,
+      html: `
         <h2>New Custom Bathroom Vanity Quote Request</h2>
         
         <h3>Customer Information</h3>
@@ -149,31 +229,31 @@ const handler = async (req: Request): Promise<Response> => {
         <p><strong>Shipping:</strong> $${quoteData.shipping}</p>
         <p><strong>Total Price:</strong> $${quoteData.totalPrice}</p>
         
-      <p style="margin-top: 30px; color: #666;">
-        Reply to this email to contact the customer directly.
-      </p>
-    `,
-    }),
-  });
+        <p style="margin-top: 30px; color: #666;">
+          Reply to this email to contact the customer directly.
+        </p>
+      `,
+      }),
+    });
 
-  if (!ownerEmailResponse.ok) {
-    throw new Error(`Failed to send owner email: ${await ownerEmailResponse.text()}`);
-  }
+    if (!ownerEmailResponse.ok) {
+      throw new Error(`Failed to send owner email: ${await ownerEmailResponse.text()}`);
+    }
 
-  const ownerEmail = await ownerEmailResponse.json();
+    const ownerEmail = await ownerEmailResponse.json();
 
-  // Send confirmation email to customer
-  const customerEmailResponse = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({
-    from: "Green Cabinets <onboarding@resend.dev>",
-    to: [quoteData.customerEmail],
-    subject: "We Received Your Custom Vanity Quote Request",
-    html: `
+    // Send confirmation email to customer
+    const customerEmailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+      from: "Green Cabinets <onboarding@resend.dev>",
+      to: [quoteData.customerEmail],
+      subject: "We Received Your Custom Vanity Quote Request",
+      html: `
         <h2>Thank you for your quote request, ${quoteData.customerName}!</h2>
         
         <p>We've received your custom bathroom vanity configuration and will get back to you within 24 hours with a detailed quote.</p>
@@ -193,26 +273,42 @@ const handler = async (req: Request): Promise<Response> => {
           If you have any questions, feel free to reply to this email or call us directly.
         </p>
         
-      <p style="color: #666;">
-        Best regards,<br>
-        Green Cabinets Team
-      </p>
-    `,
-    }),
-  });
+        <p style="color: #666;">
+          Best regards,<br>
+          Green Cabinets Team
+        </p>
+      `,
+      }),
+    });
 
-  if (!customerEmailResponse.ok) {
-    throw new Error(`Failed to send customer email: ${await customerEmailResponse.text()}`);
+    if (!customerEmailResponse.ok) {
+      throw new Error(`Failed to send customer email: ${await customerEmailResponse.text()}`);
+    }
+
+    const customerEmail = await customerEmailResponse.json();
+
+    console.log("Quote request emails sent successfully");
+
+    return new Response(
+      JSON.stringify({ success: true, ownerEmail, customerEmail }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
+      }
+    );
+  } catch (error: any) {
+    console.error("Error in send-quote-request function:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to process quote request. Please try again or contact us directly." }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      }
+    );
   }
-
-  const customerEmail = await customerEmailResponse.json();
-
-  logger.info('Quote request emails sent successfully');
-
-  return createCorsResponse({ success: true, ownerEmail, customerEmail }, 200);
 };
 
-serve(withErrorHandling(handler, (msg, error) => {
-  const logger = createLogger({ functionName: 'send-quote-request' });
-  logger.error(msg, error);
-}));
+serve(handler);

@@ -26,7 +26,6 @@ import { toast } from "sonner";
 import { ShoppingCart, ZoomIn, Save, Maximize2, X, Plus, FileDown, Mail, MessageCircle, Facebook, Twitter, Share2, Scan } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ROUTES } from "@/constants/routes";
 import logoImage from "@/assets/logo.jpg";
 import { TextureSwatch } from "./TextureSwatch";
 import { TexturePreviewModal } from "./TexturePreviewModal";
@@ -44,17 +43,6 @@ import { supabase } from "@/integrations/supabase/client";
 import html2canvas from 'html2canvas';
 import { SharePreviewCard } from "./SharePreviewCard";
 import { useRef } from "react";
-import { vanityEmailSchema, formatZodError } from "@/lib/formValidation";
-import { 
-  calculateCompletePricing,
-  getTaxRatePercentage,
-  getStateFromZipCode,
-  inchesWithFractionToDecimal,
-  formatPrice,
-  TAX_RATES,
-  SHIPPING_RATES
-} from "@/services/vanityPricingService";
-import { formatVanityForWhatsApp } from "@/services/quoteService";
 
 const dimensionSchema = z.object({
   width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
@@ -66,6 +54,22 @@ const dimensionSchema = z.object({
 interface VanityConfiguratorProps {
   product: ShopifyProduct;
 }
+
+const TAX_RATES: { [key: string]: number } = {
+  "NY": 0.08875, // 8.875%
+  "NJ": 0.06625, // 6.625%
+  "CT": 0.0635,  // 6.35%
+  "PA": 0.06,    // 6%
+  "other": 0,    // No tax for other states
+};
+
+const SHIPPING_RATES: { [key: string]: number } = {
+  "NY": 150,
+  "NJ": 200,
+  "CT": 250,
+  "PA": 300,
+  "other": 400,
+};
 
 // Get Tafisa finish options from comprehensive color library
 const TAFISA_FINISHES = getTafisaColorNames();
@@ -422,50 +426,74 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     }
   }, [selectedBrand]);
 
-  // Calculate all pricing using the pricing service
-  const widthInches = inchesWithFractionToDecimal(
-    parseFloat(width || '0'), 
-    parseInt(widthFraction)
-  );
-  
-  const pricing = calculateCompletePricing({
-    widthInches,
-    selectedBrand: selectedBrand || '',
-    state: state || '',
-    includeWalls,
-    wallHeight: 96, // Standard 8ft height for vanity walls
-    wallWidth: parseFloat(wallWidth || '0'),
-    wallTileStyle: 'white-subway', // Default tile style
-    includeFloor: includeRoom,
-    roomLength: parseFloat(roomLength || '0'),
-    roomWidth: parseFloat(roomWidth || '0'),
-    floorTileStyle: floorType === "tile" ? 'porcelain-white' : 'wood-look',
-  });
+  // Calculate price based on linear feet (width)
+  const calculatePrice = () => {
+    if (!width || !selectedBrand) return 0;
+    
+    const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
+    const linearFeet = widthInches / 12; // Convert inches to feet
+    
+    const pricePerLinearFoot = BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.price || 0;
+    
+    return linearFeet * pricePerLinearFoot;
+  };
 
-  const { basePrice, wallPrice, floorPrice, subtotal, tax, shipping, totalPrice } = pricing;
+  const calculateTax = (subtotal: number) => {
+    if (!state) return 0;
+    const taxRate = TAX_RATES[state] || 0;
+    return subtotal * taxRate;
+  };
+
+  const calculateShipping = () => {
+    if (!state) return 0;
+    return SHIPPING_RATES[state] || SHIPPING_RATES["other"];
+  };
+
+  // Calculate wall price
+  const calculateWallPrice = () => {
+    if (!includeWalls || !wallWidth) return 0;
+    const widthInches = parseFloat(wallWidth);
+    const linearFeet = widthInches / 12;
+    return linearFeet * 200; // $200 per linear foot
+  };
+
+  // Calculate floor price
+  const calculateFloorPrice = () => {
+    if (!includeRoom || !roomLength || !roomWidth) return 0;
+    const lengthFeet = parseFloat(roomLength);
+    const widthFeet = parseFloat(roomWidth);
+    const squareFeet = lengthFeet * widthFeet;
+    
+    // Tile: $15/sqft, Wood: $12/sqft
+    const pricePerSqFt = floorType === "tile" ? 15 : 12;
+    return squareFeet * pricePerSqFt;
+  };
+
+  const basePrice = calculatePrice();
+  const wallPrice = calculateWallPrice();
+  const floorPrice = calculateFloorPrice();
+  const subtotal = basePrice + wallPrice + floorPrice;
+  const tax = calculateTax(subtotal);
+  const shipping = calculateShipping();
+  const totalPrice = subtotal + tax + shipping;
 
   // Calculate dimensions in inches (with fractions) for 3D preview
   const dimensionsInInches = useMemo(() => {
-    const widthInches = inchesWithFractionToDecimal(
-      parseFloat(width || "0"), 
-      parseInt(widthFraction)
-    );
-    const heightInches = inchesWithFractionToDecimal(
-      parseFloat(height || "0"), 
-      parseInt(heightFraction)
-    );
-    const depthInches = inchesWithFractionToDecimal(
-      parseFloat(depth || "0"), 
-      parseInt(depthFraction)
-    );
+    const widthInches = (parseFloat(width || "0") + parseInt(widthFraction) / 16);
+    const heightInches = (parseFloat(height || "0") + parseInt(heightFraction) / 16);
+    const depthInches = (parseFloat(depth || "0") + parseInt(depthFraction) / 16);
     return { widthInches, heightInches, depthInches };
   }, [width, widthFraction, height, heightFraction, depth, depthFraction]);
 
-  // Determine state from ZIP code using service
+  // Determine zip code state
   useEffect(() => {
     if (zipCode.length === 5) {
-      const detectedState = getStateFromZipCode(zipCode);
-      setState(detectedState);
+      const zip = parseInt(zipCode);
+      if (zip >= 10000 && zip <= 14999) setState("NY");
+      else if (zip >= 7000 && zip <= 8999) setState("NJ");
+      else if (zip >= 6000 && zip <= 6999) setState("CT");
+      else if (zip >= 15000 && zip <= 19999) setState("PA");
+      else setState("other");
     }
   }, [zipCode]);
 
@@ -633,22 +661,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleEmailConfig = async () => {
-    // Validate email inputs using Zod schema
-    const validationResult = vanityEmailSchema.safeParse({
-      recipientName: recipientName.trim() || undefined,
-      recipientEmail: recipientEmail.trim(),
-    });
-
-    if (!validationResult.success) {
-      const errors = formatZodError(validationResult.error);
-      const errorMessage = Object.values(errors)[0];
-      toast.error("Invalid input", {
-        description: errorMessage,
-      });
+    if (!recipientEmail.trim()) {
+      toast.error("Please enter an email address");
       return;
     }
 
-    const validatedData = validationResult.data;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(recipientEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
 
     if (!selectedBrand || !selectedFinish || !width || !height || !depth) {
       toast.error("Please complete the configuration first");
@@ -674,8 +696,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
       const { data, error } = await supabase.functions.invoke('email-vanity-config', {
         body: {
-          recipientEmail: validatedData.recipientEmail,
-          recipientName: validatedData.recipientName,
+          recipientEmail: recipientEmail.trim(),
+          recipientName: recipientName.trim() || undefined,
           recaptchaToken: recaptchaToken || undefined,
           config: {
             brand: selectedBrand,
@@ -690,10 +712,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             countertop: `${countertopMaterial} - ${countertopColor} (${countertopEdge} edge)`,
             sink: `${sinkStyle} - ${sinkShape}`,
             pricing: {
-              vanity: formatPrice(basePrice),
-              tax: formatPrice(tax),
-              shipping: `${formatPrice(shipping)} (${state})`,
-              total: formatPrice(totalPrice),
+              vanity: `$${basePrice.toFixed(2)}`,
+              tax: `$${tax.toFixed(2)}`,
+              shipping: `$${shipping.toFixed(2)} (${state})`,
+              total: `$${totalPrice.toFixed(2)}`,
             },
           },
         },
@@ -702,7 +724,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       if (error) throw error;
 
       toast.success("Configuration emailed successfully!", {
-        description: `Sent to ${validatedData.recipientEmail}`,
+        description: `Sent to ${recipientEmail}`,
       });
 
       setEmailDialogOpen(false);
@@ -865,12 +887,12 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           { key: "Floor Type", value: floorType === "tile" ? "Tile" : "Wood" },
           { key: "Floor Finish", value: floorType === "tile" ? tileColor.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) : woodFloorFinish.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) },
           { key: "Floor Square Feet", value: `${(parseFloat(roomLength) * parseFloat(roomWidth)).toFixed(2)} sq ft` },
-          { key: "Floor Price", value: formatPrice(floorPrice) },
+          { key: "Floor Price", value: `$${floorPrice.toFixed(2)}` },
         ] : []),
-        { key: "Vanity Price", value: formatPrice(basePrice) },
-        { key: "Tax", value: formatPrice(tax) },
-        { key: "Shipping", value: formatPrice(shipping) },
-        { key: "Total Estimate", value: formatPrice(totalPrice) },
+        { key: "Vanity Price", value: `$${basePrice.toFixed(2)}` },
+        { key: "Tax", value: `$${tax.toFixed(2)}` },
+        { key: "Shipping", value: `$${shipping.toFixed(2)}` },
+        { key: "Total Estimate", value: `$${totalPrice.toFixed(2)}` },
       ],
     };
 
@@ -963,7 +985,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => navigate(ROUTES.ROOM_SCAN)}
+                      onClick={() => navigate('/scan')}
                       className="h-7 text-xs gap-1"
                     >
                       <Scan className="h-3 w-3" />
@@ -2215,10 +2237,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-muted-foreground">
-                      Wall Price ({(parseFloat(wallWidth) / 12).toFixed(2)} linear feet):
+                      Wall Price ({(parseFloat(wallWidth) / 12).toFixed(2)} linear feet × $200):
                     </span>
                     <span className="font-semibold text-primary">
-                      {formatPrice(wallPrice)}
+                      ${calculateWallPrice().toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -2362,10 +2384,10 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                   <div className="space-y-1">
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-muted-foreground">
-                        {floorType === "tile" ? "Tile" : "Wood"} Floor ({(parseFloat(roomLength) * parseFloat(roomWidth)).toFixed(2)} sq ft):
+                        {floorType === "tile" ? "Tile" : "Wood"} Floor ({(parseFloat(roomLength) * parseFloat(roomWidth)).toFixed(2)} sq ft × ${floorType === "tile" ? "15" : "12"}):
                       </span>
                       <span className="font-semibold text-primary">
-                        {formatPrice(floorPrice)}
+                        ${calculateFloorPrice().toFixed(2)}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground">
@@ -3169,7 +3191,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             <div className="bg-muted/50 p-3 rounded-lg text-sm space-y-1">
               <p className="font-medium">Configuration Summary:</p>
               <p className="text-muted-foreground">
-                {selectedBrand} - {selectedFinish} • {width}×{height}×{depth}" • {formatPrice(totalPrice)}
+                {selectedBrand} - {selectedFinish} • {width}×{height}×{depth}" • ${totalPrice.toFixed(2)}
               </p>
             </div>
           </div>

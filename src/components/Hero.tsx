@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { Sparkles, Camera } from "lucide-react";
 import { useDeviceType } from "@/hooks/useDeviceType";
-import { ROUTES } from "@/constants/routes";
 import logo from "@/assets/logo.jpg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
@@ -48,9 +47,9 @@ const Hero = () => {
 
   const handleLaunchClick = () => {
     if (isMobile) {
-      navigate(ROUTES.ROOM_SCAN);
+      navigate("/room-scan");
     } else {
-      navigate(ROUTES.VANITY_DESIGNER);
+      navigate("/designer");
     }
   };
 

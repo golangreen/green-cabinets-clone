@@ -1,5 +1,5 @@
+import { useState, useEffect } from "react";
 import { VanityTemplate } from "@/lib/vanityTemplates";
-import { useLocalStorage } from "./useLocalStorage";
 
 const STORAGE_KEY = "vanity-saved-templates";
 
@@ -8,7 +8,29 @@ export interface SavedTemplate extends VanityTemplate {
 }
 
 export const useSavedTemplates = () => {
-  const [savedTemplates, setSavedTemplates] = useLocalStorage<SavedTemplate[]>(STORAGE_KEY, []);
+  const [savedTemplates, setSavedTemplates] = useState<SavedTemplate[]>([]);
+
+  // Load templates from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setSavedTemplates(parsed);
+      }
+    } catch (error) {
+      console.error("Error loading saved templates:", error);
+    }
+  }, []);
+
+  // Save templates to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedTemplates));
+    } catch (error) {
+      console.error("Error saving templates:", error);
+    }
+  }, [savedTemplates]);
 
   const saveTemplate = (template: Omit<SavedTemplate, "createdAt">) => {
     const newTemplate: SavedTemplate = {

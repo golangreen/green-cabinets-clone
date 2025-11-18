@@ -1,100 +1,131 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { handleCorsPreFlight, createCorsErrorResponse, corsHeaders } from "../_shared/cors.ts";
-import { createAuthenticatedClient } from "../_shared/supabase.ts";
-import { createLogger, generateRequestId } from "../_shared/logger.ts";
-import { ValidationError, withErrorHandling } from "../_shared/errors.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.76.1";
 
-const handler = async (req: Request): Promise<Response> => {
-  const corsResponse = handleCorsPreFlight(req);
-  if (corsResponse) return corsResponse;
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "1; mode=block",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
+};
 
-  // Initialize logger
-  const requestId = generateRequestId();
-  const logger = createLogger({ functionName: 'chat', requestId });
-  logger.info('Chat request received');
-
-  // Verify authentication
-  const authHeader = req.headers.get('authorization');
-  if (!authHeader) {
-    logger.warn('Authentication required: No authorization header');
-    return createCorsErrorResponse("Authentication required", 401);
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
   }
 
-  const supabase = createAuthenticatedClient(authHeader);
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  
-  if (authError || !user) {
-    logger.warn('Invalid authentication', { error: authError });
-    return createCorsErrorResponse("Invalid authentication", 401);
-  }
+  try {
+    // Verify authentication
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      console.error("Authentication required: No authorization header");
+      return new Response(
+        JSON.stringify({ error: "Authentication required" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
-  logger.info('User authenticated', { userId: user.id });
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } }
+    );
 
-  const { messages } = await req.json();
-  
-  // Input validation to prevent abuse and injection attacks
-  if (!Array.isArray(messages)) {
-    logger.error('Invalid request: messages is not an array', { userId: user.id });
-    throw new ValidationError("Invalid request format");
-  }
-
-  if (messages.length === 0) {
-    logger.error('Invalid request: empty messages array', { userId: user.id });
-    throw new ValidationError("Invalid request");
-  }
-
-  if (messages.length > 50) {
-    logger.error('Invalid request: too many messages', { userId: user.id, count: messages.length });
-    throw new ValidationError("Request exceeds limits");
-  }
-
-  // Validate each message
-  for (let i = 0; i < messages.length; i++) {
-    const msg = messages[i];
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
     
-    if (!msg.content || typeof msg.content !== 'string') {
-      logger.error(`Invalid message format at index ${i}`, { userId: user.id });
-      throw new ValidationError("Invalid request");
+    if (authError || !user) {
+      console.error("Invalid authentication:", authError);
+      return new Response(
+        JSON.stringify({ error: "Invalid authentication" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
+
+    const { messages } = await req.json();
     
-    if (msg.content.length > 2000) {
-      logger.error(`Message too long at index ${i}`, { userId: user.id, length: msg.content.length });
-      throw new ValidationError("Request exceeds limits");
+    // Input validation to prevent abuse and injection attacks
+    if (!Array.isArray(messages)) {
+      console.error("Invalid request: messages is not an array", { userId: user.id });
+      return new Response(
+        JSON.stringify({ error: "Invalid request format" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    if (!msg.role || (msg.role !== 'user' && msg.role !== 'assistant' && msg.role !== 'system')) {
-      logger.error(`Invalid message role at index ${i}`, { userId: user.id, role: msg.role });
-      throw new ValidationError("Invalid request");
+    if (messages.length === 0) {
+      console.error("Invalid request: empty messages array", { userId: user.id });
+      return new Response(
+        JSON.stringify({ error: "Invalid request" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
-  }
 
-  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-  
-  if (!LOVABLE_API_KEY) {
-    throw new Error("LOVABLE_API_KEY is not configured");
-  }
+    if (messages.length > 50) {
+      console.error("Invalid request: too many messages", { userId: user.id, count: messages.length });
+      return new Response(
+        JSON.stringify({ error: "Request exceeds limits" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
-  // Logging for monitoring
-  const totalChars = messages.reduce((sum: number, msg: any) => sum + msg.content.length, 0);
-  logger.info('Processing chat request', {
-    userId: user.id,
-    messageCount: messages.length,
-    totalCharacters: totalChars,
-  });
+    // Validate each message
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      
+      if (!msg.content || typeof msg.content !== 'string') {
+        console.error(`Invalid message format at index ${i}`, { userId: user.id });
+        return new Response(
+          JSON.stringify({ error: "Invalid request" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      
+      if (msg.content.length > 2000) {
+        console.error(`Message too long at index ${i}`, { userId: user.id, length: msg.content.length });
+        return new Response(
+          JSON.stringify({ error: "Request exceeds limits" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
 
-  const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${LOVABLE_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "google/gemini-2.5-flash",
-      messages: [
-        { 
-          role: "system", 
-          content: `You are a friendly design assistant for Green Cabinets, a custom cabinet company. 
-          
+      if (!msg.role || (msg.role !== 'user' && msg.role !== 'assistant' && msg.role !== 'system')) {
+        console.error(`Invalid message role at index ${i}`, { userId: user.id, role: msg.role });
+        return new Response(
+          JSON.stringify({ error: "Invalid request" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    
+    if (!LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
+    }
+
+    // Logging for monitoring (separated for security)
+    const totalChars = messages.reduce((sum, msg) => sum + msg.content.length, 0);
+    console.log("Processing chat request:", {
+      messageCount: messages.length,
+      totalCharacters: totalChars,
+      timestamp: new Date().toISOString()
+    });
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { 
+            role: "system", 
+            content: `You are a friendly design assistant for Green Cabinets, a custom cabinet company. 
+            
 Your role is to help visitors:
 - Browse and discover our gallery of kitchen, bathroom, bedroom, and custom cabinet projects
 - Answer questions about our services, materials, and design options
@@ -103,34 +134,44 @@ Your role is to help visitors:
 - Share details about our premium features: custom designs, professional installation, and sustainable materials
 
 Keep responses conversational, helpful, and focused on helping them visualize their dream space. Be enthusiastic about cabinetry and design!` 
-        },
-        ...messages,
-      ],
-      stream: true,
-    }),
-  });
+          },
+          ...messages,
+        ],
+        stream: true,
+      }),
+    });
 
-  if (!response.ok) {
-    if (response.status === 429) {
-      logger.warn('Rate limit exceeded from AI gateway', { userId: user.id });
-      return createCorsErrorResponse("Service temporarily unavailable", 429);
+    if (!response.ok) {
+      if (response.status === 429) {
+        console.error("Rate limit exceeded", { userId: user.id });
+        return new Response(
+          JSON.stringify({ error: "Service temporarily unavailable" }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (response.status === 402) {
+        console.error("Payment required", { userId: user.id });
+        return new Response(
+          JSON.stringify({ error: "Service temporarily unavailable" }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      const errorText = await response.text();
+      console.error("AI gateway error:", { userId: user.id, status: response.status, error: errorText });
+      return new Response(
+        JSON.stringify({ error: "Service error" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
-    if (response.status === 402) {
-      logger.warn('Payment required from AI gateway', { userId: user.id });
-      return createCorsErrorResponse("Service temporarily unavailable", 402);
-    }
-    const errorText = await response.text();
-    logger.error('AI gateway error', { userId: user.id, status: response.status, error: errorText });
-    return createCorsErrorResponse("Service error", 500);
+
+    return new Response(response.body, {
+      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+    });
+  } catch (error) {
+    console.error("Chat error:", error);
+    return new Response(
+      JSON.stringify({ error: "Service error. Please try again." }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
-
-  logger.info('Chat response successful', { userId: user.id });
-  return new Response(response.body, {
-    headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
-  });
-};
-
-serve(withErrorHandling(handler, (msg, error) => {
-  const logger = createLogger({ functionName: 'chat' });
-  logger.error(msg, error);
-}));
+});

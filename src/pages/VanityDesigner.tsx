@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import { HistoryTimeline } from "@/components/HistoryTimeline";
 import { useDeviceType } from "@/hooks/useDeviceType";
-import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -137,7 +136,7 @@ const VanityDesigner = () => {
   useEffect(() => {
     if (isMobile) {
       toast.info("Mobile phones can only scan rooms. Use a tablet or desktop for the designer.");
-      navigate(ROUTES.ROOM_SCAN);
+      navigate("/room-scan");
     }
   }, [isMobile, navigate]);
   
@@ -2032,7 +2031,7 @@ const VanityDesigner = () => {
       <div className="border-b border-border bg-card flex-shrink-0">
         <div className="flex items-center h-10 md:h-12 px-1 md:px-2 overflow-x-auto">
           <button
-            onClick={() => navigate(ROUTES.HOME)}
+            onClick={() => navigate("/")}
             className="h-10 md:h-12 px-3 flex-shrink-0 hover:opacity-90 transition-opacity flex items-center bg-black"
           >
             <img 
