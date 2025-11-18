@@ -12,3 +12,4 @@ export type { ChatMessage, ChatStreamOptions } from './chatService';
 export { vanityPricingService, VanityPricingService } from './vanityPricingService';
 export { cabinetCatalogService, CabinetCatalogService } from './cabinetCatalogService';
 export { quoteService, QuoteService } from './quoteService';
+export * from './performanceService';
