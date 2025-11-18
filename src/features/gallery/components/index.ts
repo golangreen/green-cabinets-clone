@@ -4,7 +4,7 @@ export { QualityWarnings } from './QualityWarnings';
 export { ImagePreviewCard } from './ImagePreviewCard';
 export { ImagePreviewList } from './ImagePreviewList';
 export { UploadControls } from './UploadControls';
-export { GalleryErrorBoundary } from './GalleryErrorBoundary';
+export { GalleryErrorBoundary, GalleryErrorBoundaryWithRouter } from './GalleryErrorBoundary';
 export { ErrorFallback } from './ErrorFallback';
 export { ValidationErrorDisplay, ValidationSummary, ValidationBadge } from './ValidationErrorDisplay';
 export { CompressionDialog } from './CompressionDialog';

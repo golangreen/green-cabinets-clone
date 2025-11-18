@@ -4,6 +4,7 @@
  */
 
 import React, { Component, ReactNode } from 'react';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
@@ -13,6 +14,7 @@ interface Props {
   children: ReactNode;
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  navigate?: NavigateFunction;
 }
 
 interface State {
@@ -71,7 +73,9 @@ export class GalleryErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    if (this.props.navigate) {
+      this.props.navigate('/');
+    }
   };
 
   render() {
@@ -139,3 +143,14 @@ export class GalleryErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
+
+// HOC to inject navigate function into class component
+export function withRouter<P extends object>(Component: React.ComponentType<P & { navigate?: NavigateFunction }>) {
+  return function WithRouterWrapper(props: P) {
+    const navigate = useNavigate();
+    return <Component {...props} navigate={navigate} />;
+  };
+}
+
+// Export wrapped version with router for use in app
+export const GalleryErrorBoundaryWithRouter = withRouter(GalleryErrorBoundary);
