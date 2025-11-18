@@ -2,9 +2,11 @@
 
 ## Overview
 
-This project uses Vitest for unit and integration testing, along with React Testing Library for component tests.
+This project uses Vitest for unit and integration testing, React Testing Library for component tests, and Playwright for end-to-end testing.
 
 ## Running Tests
+
+### Unit & Integration Tests
 
 ```bash
 # Run all tests
@@ -18,6 +20,22 @@ npm run test:coverage
 
 # Run tests in UI mode
 npm run test:ui
+```
+
+### E2E Tests
+
+```bash
+# Run E2E tests
+npm run test:e2e
+
+# Run E2E tests with UI
+npm run test:e2e:ui
+
+# Run E2E tests in headed mode
+npm run test:e2e:headed
+
+# Debug E2E tests
+npm run test:e2e:debug
 ```
 
 ## Test Organization
@@ -35,6 +53,20 @@ src/
     └── [feature]/
         └── __tests__/
             └── Component.test.tsx
+
+supabase/
+└── functions/
+    └── __tests__/
+        ├── chat.test.ts
+        ├── create-checkout.test.ts
+        ├── send-quote-request.test.ts
+        └── stripe-webhook.test.ts
+
+e2e/
+├── homepage.spec.ts
+├── auth.spec.ts
+├── shop.spec.ts
+└── vanity-designer.spec.ts
 ```
 
 ## Writing Tests
