@@ -3,7 +3,7 @@ import Header from './Header';
 import Footer from './Footer';
 import OfflineBanner from './OfflineBanner';
 import SyncStatusIndicator from './SyncStatusIndicator';
-import { SkipLink } from './SkipLink';
+import { SkipLink } from '@/components/accessibility';
 
 interface PublicLayoutProps {
   children: ReactNode;

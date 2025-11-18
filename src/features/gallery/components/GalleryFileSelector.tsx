@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { GalleryUploadZone } from './GalleryUploadZone';
 import { CompressionDialog } from './CompressionDialog';
 import { useGalleryContext } from '../hooks';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/useToast';
 import type { CompressionQuality } from '../types';
 import { logger } from '@/lib/logger';
 

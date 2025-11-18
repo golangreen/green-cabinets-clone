@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mail, Send, CheckCircle2, XCircle, Loader2, AlertTriangle } from 'lucide-react';
 import { emailService } from '@/services';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/useToast';
 
 interface EmailTestPanelProps {
   hasVerifiedDomain?: boolean;
