@@ -16,29 +16,24 @@ const CTA = () => {
   };
 
   return (
-    <section className="py-32 relative overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-[image:var(--gradient-hero)]" />
-      <div className="absolute inset-0 bg-[image:var(--gradient-soft)] opacity-40" />
-      
+    <section className="py-24 relative overflow-hidden bg-[#0a0a0a]">
       {/* Content */}
       <div className="container relative z-10 mx-auto px-6 text-center">
         <div className="max-w-4xl mx-auto space-y-8">
-          <h2 className="font-display text-5xl md:text-6xl font-bold text-primary-foreground leading-tight">
+          <h2 className="font-display text-5xl md:text-6xl font-bold text-white leading-tight">
             All your storage needs,
             <br />
             in one place.
           </h2>
           
-          <p className="text-xl text-primary-foreground/90 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Join thousands of happy homeowners who transformed their spaces with Green Cabinets.
           </p>
           
           <div className="flex flex-col items-center justify-center gap-6 pt-8 max-w-md mx-auto">
             <Button 
               size="lg" 
-              variant="hero" 
-              className="text-lg px-8 py-6 w-full"
+              className="text-lg px-8 py-6 w-full bg-primary hover:bg-primary/90 text-white border-2 border-primary"
               onClick={() => setShowQuoteForm(true)}
             >
               Get Your Free Quote
@@ -46,7 +41,7 @@ const CTA = () => {
             
             <div className="w-full space-y-3">
               <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
-                <SelectTrigger className="w-full border-primary-foreground/30 text-primary-foreground bg-primary-foreground/5">
+                <SelectTrigger className="w-full border-gray-700 text-white bg-[#1a1a1a]">
                   <SelectValue placeholder="Choose contact method" />
                 </SelectTrigger>
                 <SelectContent>
@@ -57,8 +52,7 @@ const CTA = () => {
               
               <Button 
                 size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 w-full border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
+                className="text-lg px-8 py-6 w-full bg-primary hover:bg-primary/90 text-white border-2 border-primary"
                 onClick={handleConsultation}
               >
                 Schedule Consultation
