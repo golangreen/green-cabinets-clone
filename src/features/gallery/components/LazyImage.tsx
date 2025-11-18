@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
-import { getOptimalObserverConfig, decodeImage } from '@/lib/imageOptimization';
 
 interface LazyImageProps {
   src: string;
@@ -10,18 +9,6 @@ interface LazyImageProps {
   height?: number;
   onClick?: () => void;
   onLoad?: () => void;
-  /**
-   * Priority for loading this image
-   * 'high' = above the fold, load immediately
-   * 'low' = below the fold, use IntersectionObserver
-   * @default 'low'
-   */
-  priority?: 'high' | 'low';
-  /**
-   * Show blur-up effect while loading
-   * @default true
-   */
-  blurUp?: boolean;
 }
 
 export const LazyImage = ({ 
@@ -31,20 +18,14 @@ export const LazyImage = ({
   width, 
   height, 
   onClick, 
-  onLoad,
-  priority = 'low',
-  blurUp = true,
+  onLoad 
 }: LazyImageProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(priority === 'high');
+  const [isInView, setIsInView] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    // High priority images load immediately
-    if (priority === 'high' || !imgRef.current) return;
-
-    // Get optimal observer config based on device capabilities
-    const observerConfig = getOptimalObserverConfig();
+    if (!imgRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -55,7 +36,10 @@ export const LazyImage = ({
           }
         });
       },
-      observerConfig
+      {
+        rootMargin: '50px',
+        threshold: 0.01,
+      }
     );
 
     observer.observe(imgRef.current);
@@ -63,14 +47,9 @@ export const LazyImage = ({
     return () => {
       observer.disconnect();
     };
-  }, [priority]);
+  }, []);
 
-  const handleLoad = async (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    
-    // Decode image off main thread for smoother rendering
-    await decodeImage(img);
-    
+  const handleLoad = () => {
     setIsLoaded(true);
     onLoad?.();
   };
@@ -83,19 +62,17 @@ export const LazyImage = ({
         alt={alt}
         width={width}
         height={height}
-        loading={priority === 'high' ? 'eager' : 'lazy'}
-        fetchPriority={priority}
+        loading="lazy"
         className={cn(
-          'transition-all duration-500',
-          isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
-          blurUp && !isLoaded && isInView && 'blur-sm',
+          'transition-opacity duration-300',
+          isLoaded ? 'opacity-100' : 'opacity-0',
           className
         )}
         onClick={onClick}
         onLoad={handleLoad}
       />
       {!isLoaded && isInView && (
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse" />
+        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
     </div>
   );

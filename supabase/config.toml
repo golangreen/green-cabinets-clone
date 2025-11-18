@@ -41,15 +41,3 @@ verify_jwt = true
 
 [functions.generate-image-metadata]
 verify_jwt = true
-
-[functions.send-vanity-quote-email]
-verify_jwt = false
-
-[functions.send-security-alert]
-verify_jwt = true
-
-[functions.check-login-attempt]
-verify_jwt = false
-
-[functions.record-failed-login]
-verify_jwt = false

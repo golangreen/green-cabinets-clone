@@ -19,7 +19,7 @@ export {
 export * from './error';
 export * from './validationService';
 export * from './compression';
-// Export storage analyzer
+// Export storage analyzer but avoid formatFileSize conflict
 export {
   fetchGalleryImages,
   getImagePublicUrl,
@@ -27,6 +27,7 @@ export {
   generateRecommendation,
   analyzeGalleryStorage,
   getStorageStats,
+  formatFileSize as formatStorageFileSize,
   calculateStoragePercentage,
   type StorageImageAnalyzer,
   type CompressionRecommendation,

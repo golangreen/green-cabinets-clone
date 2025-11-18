@@ -21,8 +21,10 @@ export function ConfigValidationAlert() {
         errors: result.errors,
         warnings: result.warnings,
       });
+      console.error('Configuration Validation Failed:\n', formatValidationErrors(result));
     } else if (result.warnings.length > 0) {
       logger.warn('Configuration has warnings', { warnings: result.warnings });
+      console.warn('Configuration Warnings:\n', formatValidationErrors(result));
     } else {
       logger.info('Configuration validated successfully');
     }

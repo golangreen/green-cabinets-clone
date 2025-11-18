@@ -62,57 +62,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      // Check if login attempt is allowed before attempting authentication
-      const { data: checkData, error: checkError } = await supabase.functions.invoke(
-        'check-login-attempt',
-        { body: { email } }
-      );
-
-      if (checkError) {
-        toast({
-          title: "Error",
-          description: "Failed to verify login attempt. Please try again.",
-          variant: "destructive",
-        });
-        throw checkError;
-      }
-
-      if (!checkData.allowed) {
-        toast({
-          title: "Account Locked",
-          description: checkData.message,
-          variant: "destructive",
-        });
-        throw new Error(checkData.message);
-      }
-
-      // Attempt authentication
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) {
-        // Record failed login attempt
-        await supabase.functions.invoke('record-failed-login', {
-          body: { email }
-        });
+      if (error) throw error;
 
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
-        throw error;
-      }
-
-      // Success - clear any failed attempts (done automatically on server after successful login)
       toast({
         title: "Success",
         description: "Signed in successfully",
       });
     } catch (error: any) {
-      // Error already handled in toasts above
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
       throw error;
     }
   };

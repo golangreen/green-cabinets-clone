@@ -3,8 +3,6 @@
  * Core error creation and logging functionality
  */
 
-import { logger } from '@/lib/logger';
-
 // ============================================================================
 // Error Types
 // ============================================================================
@@ -94,7 +92,7 @@ export function logError(error: GalleryError): void {
   }
 
   // Console log for debugging
-  logger.error('[Gallery Error]', error, {
+  console.error('[Gallery Error]', {
     type: error.type,
     message: error.message,
     fileName: error.fileName,

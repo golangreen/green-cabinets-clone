@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { TableSchema } from '@/lib/sqlValidator';
-import { logger } from '@/lib/logger';
 
 const KNOWN_SCHEMA: TableSchema[] = [
   {
@@ -41,13 +40,13 @@ export function useDatabaseSchema() {
           .limit(0);
 
         if (error) {
-          logger.error('Schema fetch error', error, { component: 'useDatabaseSchema' });
+          console.error('Schema fetch error:', error);
         }
 
         // Use known schema (already set)
         setSchema(KNOWN_SCHEMA);
       } catch (err) {
-        logger.error('Failed to fetch schema', err, { component: 'useDatabaseSchema' });
+        console.error('Failed to fetch schema:', err);
       } finally {
         setLoading(false);
       }

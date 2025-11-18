@@ -16,7 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 interface TemplateGalleryProps {
   onSelectTemplate: (template: VanityTemplate | SavedTemplate) => void;
@@ -34,19 +34,19 @@ export const TemplateGallery = ({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<string | null>(null);
 
-  const handleDeleteClick = useCallback((e: React.MouseEvent, templateId: string) => {
+  const handleDeleteClick = (e: React.MouseEvent, templateId: string) => {
     e.stopPropagation();
     setTemplateToDelete(templateId);
     setDeleteDialogOpen(true);
-  }, []);
+  };
 
-  const confirmDelete = useCallback(() => {
+  const confirmDelete = () => {
     if (templateToDelete && onDeleteTemplate) {
       onDeleteTemplate(templateToDelete);
     }
     setDeleteDialogOpen(false);
     setTemplateToDelete(null);
-  }, [templateToDelete, onDeleteTemplate]);
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

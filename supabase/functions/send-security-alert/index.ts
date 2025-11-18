@@ -2,7 +2,6 @@ import { corsHeaders } from '../_shared/cors.ts';
 import { createLogger, generateRequestId } from '../_shared/logger.ts';
 import { withErrorHandling } from '../_shared/errors.ts';
 import { createSecurityAlertEmail } from '../_shared/emailTemplates.ts';
-import { createAuthenticatedClient, createServiceRoleClient } from '../_shared/supabase.ts';
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
@@ -22,51 +21,6 @@ const handler = async (req: Request): Promise<Response> => {
   const logger = createLogger({ functionName: 'send-security-alert', requestId });
 
   try {
-    // Dual authentication: service role OR admin user
-    const authHeader = req.headers.get('Authorization');
-    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    
-    if (authHeader?.includes(serviceRoleKey || '')) {
-      // Service role authentication (for automated systems like cron jobs)
-      logger.info('Authenticated via service role');
-    } else {
-      // Admin user authentication required
-      if (!authHeader) {
-        logger.warn('No authorization header provided');
-        return new Response(
-          JSON.stringify({ error: 'Authentication required' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      const supabase = createAuthenticatedClient(authHeader);
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        logger.warn('Authentication failed', { error: authError?.message });
-        return new Response(
-          JSON.stringify({ error: 'Authentication required' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      // Check if user is admin
-      const { data: hasAdminRole, error: roleError } = await supabase.rpc('has_role', {
-        _user_id: user.id,
-        _role: 'admin'
-      });
-
-      if (roleError || !hasAdminRole) {
-        logger.warn('Admin access required', { userId: user.id });
-        return new Response(
-          JSON.stringify({ error: 'Admin access required' }),
-          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      logger.info('Authenticated as admin user', { userId: user.id });
-    }
-
     const rawData = await req.json();
     const requestData = rawData as SecurityAlertRequest;
 

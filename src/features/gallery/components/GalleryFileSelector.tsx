@@ -9,7 +9,6 @@ import { CompressionDialog } from './CompressionDialog';
 import { useGalleryContext } from '../hooks';
 import { toast } from '@/hooks/use-toast';
 import type { CompressionQuality } from '../types';
-import { logger } from '@/lib/logger';
 
 export function GalleryFileSelector() {
   const {
@@ -62,7 +61,7 @@ export function GalleryFileSelector() {
         description: "Successfully compressed files. Processing images...",
       });
     } catch (error) {
-      logger.error('Compression failed', error, { component: 'GalleryFileSelector' });
+      console.error('Compression failed:', error);
       toast({
         title: "Compression Failed",
         description: "Failed to compress files. Please try again.",
@@ -99,7 +98,7 @@ export function GalleryFileSelector() {
       setPendingFiles(null);
       setShowCompressionDialog(false);
     } catch (error) {
-      logger.error('Skip failed', error, { component: 'GalleryFileSelector' });
+      console.error('Skip failed:', error);
     }
   };
 

@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, Loader2 } from "lucide-react";
-import { logger } from "@/lib/logger";
 
 interface EmailQuoteDialogProps {
   open: boolean;
@@ -60,7 +59,7 @@ export const EmailQuoteDialog = ({
       setErrors({});
       onOpenChange(false);
     } catch (error) {
-      logger.error('Failed to send email quote', error, { component: 'EmailQuoteDialog' });
+      console.error("Failed to send email:", error);
     } finally {
       setIsSubmitting(false);
     }

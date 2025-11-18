@@ -3,9 +3,7 @@ import { Resend } from "https://esm.sh/resend@4.0.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { corsHeaders } from "../_shared/cors.ts";
 import { createLogger, generateRequestId } from "../_shared/logger.ts";
-import { ValidationError, RateLimitError, withErrorHandling } from "../_shared/errors.ts";
-import { createServiceRoleClient, getClientIP } from "../_shared/supabase.ts";
-import { isIPBlocked, checkRateLimit, logSecurityEvent } from "../_shared/security.ts";
+import { ValidationError, withErrorHandling } from "../_shared/errors.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -39,31 +37,6 @@ const handler = async (req: Request): Promise<Response> => {
   });
 
   try {
-    const supabase = createServiceRoleClient();
-    const clientIP = getClientIP(req);
-
-    // Security checks
-    if (await isIPBlocked(supabase, clientIP)) {
-      logger.warn('Blocked IP attempted access', { clientIP });
-      return new Response(
-        JSON.stringify({ error: 'Access denied' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Rate limiting: 10 requests per minute per IP
-    if (checkRateLimit(clientIP, 10, 60000)) {
-      logger.warn('Rate limit exceeded', { clientIP });
-      await logSecurityEvent(supabase, {
-        eventType: 'rate_limit_exceeded',
-        clientIP,
-        functionName: 'send-vanity-quote-email',
-        severity: 'medium',
-        details: { reason: 'Exceeded vanity quote email rate limit' }
-      });
-      throw new RateLimitError('Too many requests. Please try again later.');
-    }
-
     const body = await req.json();
     
     // Validate request body

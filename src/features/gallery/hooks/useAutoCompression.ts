@@ -12,7 +12,6 @@ import {
   compressFilesWithResults,
   type OversizedFile,
 } from '../services/compression';
-import { logger } from '@/lib/logger';
 
 export function useAutoCompression() {
   const [oversizedFiles, setOversizedFiles] = useState<OversizedFile[]>([]);
@@ -71,22 +70,20 @@ export function useAutoCompression() {
         }
       );
 
-      // Log compression results for monitoring
-      logger.info('Compression completed', { 
-        count: results.length,
-        results: results.map(r => ({
-          filename: r.original.name,
-          originalSizeMB: (r.originalSize / 1024 / 1024).toFixed(2),
-          compressedSizeMB: (r.compressedSize / 1024 / 1024).toFixed(2),
-          reductionPercent: r.reduction.toFixed(1)
-        })),
-        component: 'useAutoCompression'
+      // Log compression results
+      console.log('Compression results:', results);
+      results.forEach(result => {
+        const reductionPercent = result.reduction.toFixed(1);
+        console.log(
+          `${result.original.name}: ${(result.originalSize / 1024 / 1024).toFixed(2)}MB → ` +
+          `${(result.compressedSize / 1024 / 1024).toFixed(2)}MB (${reductionPercent}% reduction)`
+        );
       });
 
       setOversizedFiles([]);
       return compressed;
     } catch (error) {
-      logger.error('Compression failed', error, { component: 'useAutoCompression' });
+      console.error('Compression failed:', error);
       throw error;
     } finally {
       setIsCompressing(false);

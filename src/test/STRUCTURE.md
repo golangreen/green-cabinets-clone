@@ -133,11 +133,6 @@ describe('useImageUpload', () => {           // Hook name
 
 ## Current Test Coverage
 
-### Layout Components with Tests
-- ✅ **AdminLayout** - Snapshot and structure tests
-- ✅ **ProtectedLayout** - Snapshot and structure tests  
-- ✅ **PublicLayout** - Snapshot and structure tests
-
 ### Features with Tests
 - ✅ **gallery** - Integration, context, and hook tests
 - ✅ **admin-security** - Component tests
@@ -146,31 +141,6 @@ describe('useImageUpload', () => {           // Hook name
 
 ### Services with Tests
 - ✅ **securityService** - Unit tests
-
-### Snapshot Tests
-
-Layout components use snapshot tests to ensure consistent structure:
-
-```typescript
-// src/components/layout/__tests__/AdminLayout.test.tsx
-describe('AdminLayout', () => {
-  it('should match snapshot with default props', () => {
-    const { container } = render(<AdminLayout><div>Content</div></AdminLayout>);
-    expect(container.firstChild).toMatchSnapshot();
-  });
-});
-```
-
-**Benefits:**
-- Catches unintended structural changes
-- Documents expected component output
-- Fast regression detection
-- Visual diff in pull requests
-
-**When snapshots fail:**
-1. Review the diff carefully
-2. If change is intentional: `npm test -- -u` to update
-3. If change is unintentional: fix the code
 
 ## Running Tests
 

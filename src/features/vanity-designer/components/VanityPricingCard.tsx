@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatPrice } from "../services";
@@ -10,7 +9,7 @@ interface VanityPricingCardProps {
   totalPrice: number;
 }
 
-const VanityPricingCardComponent = ({
+export const VanityPricingCard = ({
   basePrice,
   wallPrice,
   floorPrice,
@@ -49,5 +48,3 @@ const VanityPricingCardComponent = ({
     </Card>
   );
 };
-
-export const VanityPricingCard = memo(VanityPricingCardComponent);

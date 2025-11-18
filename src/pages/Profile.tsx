@@ -8,8 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Mail, Calendar, Shield, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
-import { logger } from '@/lib/logger';
-import { ProtectedLayout } from "@/components/layout";
+import { Header, Footer } from "@/components/layout";
 
 interface UserRole {
   role: string;
@@ -30,7 +29,7 @@ export default function Profile() {
         const data = await fetchUserRoles(user.id);
         setRoles(data || []);
       } catch (err: any) {
-        logger.error('Error fetching user roles', err, { component: 'Profile', userId: user.id });
+        console.error('Error fetching user roles:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -52,17 +51,20 @@ export default function Profile() {
   };
 
   return (
-    <ProtectedLayout containerClassName="container mx-auto max-w-4xl pt-24 pb-16 px-4">
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">My Profile</h1>
-        <p className="text-muted-foreground">
-          View your account information and assigned roles
-        </p>
-      </div>
+    <>
+      <Header />
+      <main className="min-h-screen bg-background pt-24 pb-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">My Profile</h1>
+            <p className="text-muted-foreground">
+              View your account information and assigned roles
+            </p>
+          </div>
 
-      <div className="grid gap-6">
-        {/* Account Information Card */}
-        <Card>
+          <div className="grid gap-6">
+            {/* Account Information Card */}
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="h-5 w-5" />
@@ -205,6 +207,9 @@ export default function Profile() {
               </CardContent>
             </Card>
           </div>
-    </ProtectedLayout>
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 }

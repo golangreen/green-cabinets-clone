@@ -8,11 +8,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { ROUTES } from "@/constants/routes";
-import { logger } from '@/lib/logger';
 
 const authSchema = z.object({
   email: z.string().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  password: z.string().min(8, "Password must be at least 8 characters").max(100, "Password must be less than 100 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters").max(100, "Password must be less than 100 characters"),
 });
 
 const Auth = () => {
@@ -55,7 +54,7 @@ const Auth = () => {
       }
     } catch (error) {
       // Error handling is done in the AuthContext
-      logger.error("Authentication error", error, { page: 'Auth' });
+      console.error("Authentication error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +94,7 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={8}
+                minLength={6}
                 maxLength={100}
               />
             </div>
@@ -108,7 +107,6 @@ const Auth = () => {
               type="button"
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm text-primary hover:underline"
-              aria-label={isLogin ? "Switch to sign up" : "Switch to login"}
             >
               {isLogin
                 ? "Don't have an account? Sign up"

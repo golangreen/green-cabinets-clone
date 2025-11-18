@@ -118,86 +118,69 @@ export const ImageEditor = ({ open, onOpenChange, imageUrl, onSave, originalFile
     if (!cropMode) return;
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
-    setCropStart({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-    setCropEnd(null);
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setCropStart({ x, y });
+    setCropEnd({ x, y });
   };
 
   const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!cropMode || !cropStart) return;
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
-    setCropEnd({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setCropEnd({ x, y });
   };
 
   const handleCanvasMouseUp = () => {
     if (cropMode && cropStart && cropEnd) {
-      setCropMode(false);
+      toast.success('Crop area selected');
     }
   };
 
   const applyCrop = () => {
-    if (!image || !cropStart || !cropEnd || !canvasRef.current) return;
+    if (!cropStart || !cropEnd || !canvasRef.current) return;
 
-    const canvas = document.createElement('canvas');
+    const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const cropWidth = Math.abs(cropEnd.x - cropStart.x);
-    const cropHeight = Math.abs(cropEnd.y - cropStart.y);
-    const cropX = Math.min(cropStart.x, cropEnd.x);
-    const cropY = Math.min(cropStart.y, cropEnd.y);
+    const x = Math.min(cropStart.x, cropEnd.x);
+    const y = Math.min(cropStart.y, cropEnd.y);
+    const width = Math.abs(cropEnd.x - cropStart.x);
+    const height = Math.abs(cropEnd.y - cropStart.y);
 
-    // Calculate scale factor
-    const displayCanvas = canvasRef.current;
-    const scaleX = image.width / displayCanvas.width;
-    const scaleY = image.height / displayCanvas.height;
+    const imageData = ctx.getImageData(x, y, width, height);
+    canvas.width = width;
+    canvas.height = height;
+    ctx.putImageData(imageData, 0, 0);
 
-    canvas.width = cropWidth * scaleX;
-    canvas.height = cropHeight * scaleY;
-
-    ctx.drawImage(
-      image,
-      cropX * scaleX,
-      cropY * scaleY,
-      cropWidth * scaleX,
-      cropHeight * scaleY,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    canvas.toBlob((blob) => {
-      if (blob) {
-        const newImg = new Image();
-        newImg.onload = () => {
-          setImage(newImg);
-          setCropStart(null);
-          setCropEnd(null);
-          toast.success('Image cropped successfully');
-        };
-        newImg.src = URL.createObjectURL(blob);
-      }
-    });
+    setCropMode(false);
+    setCropStart(null);
+    setCropEnd(null);
+    toast.success('Image cropped');
   };
 
-  const handleSave = () => {
+  const handleRotate = () => {
+    setRotation((prev) => (prev + 90) % 360);
+  };
+
+  const handleSave = async () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     canvas.toBlob((blob) => {
       if (blob) {
-        const file = new File([blob], originalFileName, { type: 'image/jpeg' });
+        const file = new File([blob], originalFileName, { type: 'image/png' });
         onSave(file);
         onOpenChange(false);
-        toast.success('Image saved successfully');
+        toast.success('Image edited successfully');
       }
-    }, 'image/jpeg', 0.9);
+    }, 'image/png');
   };
 
   const resetFilters = () => {
-    setRotation(0);
-    setScale(1);
     setFilters({
       brightness: 100,
       contrast: 100,
@@ -205,9 +188,8 @@ export const ImageEditor = ({ open, onOpenChange, imageUrl, onSave, originalFile
       grayscale: 0,
       sepia: 0,
     });
-    setCropMode(false);
-    setCropStart(null);
-    setCropEnd(null);
+    setRotation(0);
+    setScale(1);
   };
 
   return (
@@ -218,101 +200,122 @@ export const ImageEditor = ({ open, onOpenChange, imageUrl, onSave, originalFile
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="flex justify-center bg-muted p-4 rounded-lg">
+          <div className="flex justify-center border rounded-lg p-4 bg-muted/20">
             <canvas
               ref={canvasRef}
-              className="max-w-full h-auto border border-border rounded cursor-crosshair"
+              className={cropMode ? 'cursor-crosshair' : 'cursor-default'}
               onMouseDown={handleCanvasMouseDown}
               onMouseMove={handleCanvasMouseMove}
               onMouseUp={handleCanvasMouseUp}
             />
           </div>
 
-          <div className="flex gap-2">
-            <Button
-              variant={cropMode ? "default" : "outline"}
-              size="sm"
-              onClick={() => {
-                setCropMode(!cropMode);
-                setCropStart(null);
-                setCropEnd(null);
-              }}
-            >
-              <Crop className="h-4 w-4 mr-2" />
-              Crop Mode
-            </Button>
-            {cropStart && cropEnd && (
-              <Button size="sm" onClick={applyCrop}>
-                Apply Crop
-              </Button>
-            )}
-            <Button variant="outline" size="sm" onClick={() => setScale(1)}>
-              <Maximize2 className="h-4 w-4 mr-2" />
-              Reset Size
-            </Button>
-          </div>
-
           <Tabs defaultValue="transform" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="transform">Transform</TabsTrigger>
-              <TabsTrigger value="filters">Filters</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="transform">
+                <RotateCw className="w-4 h-4 mr-2" />
+                Transform
+              </TabsTrigger>
+              <TabsTrigger value="crop">
+                <Crop className="w-4 h-4 mr-2" />
+                Crop
+              </TabsTrigger>
+              <TabsTrigger value="filters">
+                <Palette className="w-4 h-4 mr-2" />
+                Filters
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="transform" className="space-y-4">
               <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <RotateCw className="h-4 w-4" />
-                  Rotation: {rotation}°
-                </Label>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    value={[rotation]}
-                    onValueChange={(value) => setRotation(value[0])}
-                    min={0}
-                    max={360}
-                    step={15}
-                    className="flex-1"
-                  />
+                <Label>Rotation: {rotation}°</Label>
+                <div className="flex gap-2">
+                  <Button onClick={handleRotate} variant="outline" className="flex-1">
+                    Rotate 90°
+                  </Button>
                   <Input
                     type="number"
                     value={rotation}
                     onChange={(e) => setRotation(Number(e.target.value))}
-                    className="w-20"
+                    className="w-24"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
                 <Label>Scale: {scale.toFixed(2)}x</Label>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    value={[scale]}
-                    onValueChange={(value) => setScale(value[0])}
-                    min={0.1}
-                    max={2}
-                    step={0.1}
+                <Slider
+                  value={[scale]}
+                  onValueChange={([value]) => setScale(value)}
+                  min={0.1}
+                  max={2}
+                  step={0.1}
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="crop" className="space-y-4">
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  {cropMode ? 'Click and drag on the image to select crop area' : 'Enable crop mode to start'}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => setCropMode(!cropMode)}
+                    variant={cropMode ? 'default' : 'outline'}
                     className="flex-1"
-                  />
-                  <Input
-                    type="number"
-                    value={scale}
-                    onChange={(e) => setScale(Number(e.target.value))}
-                    step="0.1"
-                    className="w-20"
-                  />
+                  >
+                    {cropMode ? 'Disable Crop Mode' : 'Enable Crop Mode'}
+                  </Button>
+                  {cropMode && cropStart && cropEnd && (
+                    <Button onClick={applyCrop} variant="default">
+                      Apply Crop
+                    </Button>
+                  )}
                 </div>
               </div>
             </TabsContent>
 
             <TabsContent value="filters" className="space-y-4">
               <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Palette className="h-4 w-4" />
-                  Brightness: {filters.brightness}%
-                </Label>
+                <Label>Quick Presets</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    onClick={() => setFilters({ brightness: 110, contrast: 90, saturation: 80, grayscale: 0, sepia: 60 })}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Vintage
+                  </Button>
+                  <Button
+                    onClick={() => setFilters({ brightness: 105, contrast: 110, saturation: 120, grayscale: 0, sepia: 0 })}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Cool
+                  </Button>
+                  <Button
+                    onClick={() => setFilters({ brightness: 110, contrast: 105, saturation: 110, grayscale: 0, sepia: 20 })}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Warm
+                  </Button>
+                  <Button
+                    onClick={() => setFilters({ brightness: 100, contrast: 120, saturation: 0, grayscale: 100, sepia: 0 })}
+                    variant="outline"
+                    size="sm"
+                  >
+                    B&W
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Brightness: {filters.brightness}%</Label>
                 <Slider
                   value={[filters.brightness]}
-                  onValueChange={(value) => setFilters({ ...filters, brightness: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, brightness: value })}
                   min={0}
                   max={200}
                   step={1}
@@ -323,7 +326,7 @@ export const ImageEditor = ({ open, onOpenChange, imageUrl, onSave, originalFile
                 <Label>Contrast: {filters.contrast}%</Label>
                 <Slider
                   value={[filters.contrast]}
-                  onValueChange={(value) => setFilters({ ...filters, contrast: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, contrast: value })}
                   min={0}
                   max={200}
                   step={1}
@@ -334,7 +337,7 @@ export const ImageEditor = ({ open, onOpenChange, imageUrl, onSave, originalFile
                 <Label>Saturation: {filters.saturation}%</Label>
                 <Slider
                   value={[filters.saturation]}
-                  onValueChange={(value) => setFilters({ ...filters, saturation: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, saturation: value })}
                   min={0}
                   max={200}
                   step={1}
@@ -345,7 +348,7 @@ export const ImageEditor = ({ open, onOpenChange, imageUrl, onSave, originalFile
                 <Label>Grayscale: {filters.grayscale}%</Label>
                 <Slider
                   value={[filters.grayscale]}
-                  onValueChange={(value) => setFilters({ ...filters, grayscale: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, grayscale: value })}
                   min={0}
                   max={100}
                   step={1}
@@ -356,26 +359,27 @@ export const ImageEditor = ({ open, onOpenChange, imageUrl, onSave, originalFile
                 <Label>Sepia: {filters.sepia}%</Label>
                 <Slider
                   value={[filters.sepia]}
-                  onValueChange={(value) => setFilters({ ...filters, sepia: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, sepia: value })}
                   min={0}
                   max={100}
                   step={1}
                 />
               </div>
+
+              <Button onClick={resetFilters} variant="outline" className="w-full">
+                Reset All Filters
+              </Button>
             </TabsContent>
           </Tabs>
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={resetFilters}>
-            Reset All
-          </Button>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            <X className="h-4 w-4 mr-2" />
+            <X className="w-4 h-4 mr-2" />
             Cancel
           </Button>
           <Button onClick={handleSave}>
-            <Save className="h-4 w-4 mr-2" />
+            <Save className="w-4 h-4 mr-2" />
             Save Changes
           </Button>
         </DialogFooter>

@@ -65,22 +65,26 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null;
   }
 
-  // Generate CSS custom properties as inline styles (safe, no dangerouslySetInnerHTML)
-  const cssVariables = React.useMemo(() => {
-    const vars: Record<string, string> = {};
-    
-    colorConfig.forEach(([key, itemConfig]) => {
-      // Use light theme color or fallback to base color
-      const color = itemConfig.theme?.light || itemConfig.color;
-      if (color) {
-        vars[`--color-${key}`] = color;
-      }
-    });
-    
-    return vars;
-  }, [colorConfig]);
-
-  return <div style={cssVariables as React.CSSProperties} className="contents" />;
+  return (
+    <style
+      dangerouslySetInnerHTML={{
+        __html: Object.entries(THEMES)
+          .map(
+            ([theme, prefix]) => `
+${prefix} [data-chart=${id}] {
+${colorConfig
+  .map(([key, itemConfig]) => {
+    const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
+    return color ? `  --color-${key}: ${color};` : null;
+  })
+  .join("\n")}
+}
+`,
+          )
+          .join("\n"),
+      }}
+    />
+  );
 };
 
 const ChartTooltip = RechartsPrimitive.Tooltip;

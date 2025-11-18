@@ -6,7 +6,6 @@
 import { SHOPIFY_STOREFRONT_URL, SHOPIFY_CONFIG } from './config';
 import { STOREFRONT_QUERY, CART_CREATE_MUTATION } from './queries';
 import type { ShopifyProduct, CartItem, CartLine, ShopifyApiResponse } from './types';
-import { logger } from '@/lib/logger';
 
 /**
  * Make a request to the Shopify Storefront API
@@ -23,14 +22,6 @@ export async function storefrontApiRequest(
     return { data: null };
   }
   
-  // Check if token is configured
-  if (!SHOPIFY_CONFIG.STOREFRONT_TOKEN) {
-    logger.error('SHOPIFY STOREFRONT TOKEN NOT CONFIGURED - Set VITE_SHOPIFY_STOREFRONT_TOKEN in your deployment environment variables', undefined, { module: 'ShopifyClient' });
-    return { data: null };
-  }
-  
-  logger.debug('Using Shopify token', { module: 'ShopifyClient', tokenPrefix: SHOPIFY_CONFIG.STOREFRONT_TOKEN.substring(0, 10), url: SHOPIFY_STOREFRONT_URL });
-  
   try {
     const response = await fetch(SHOPIFY_STOREFRONT_URL, {
       method: 'POST',
@@ -44,35 +35,26 @@ export async function storefrontApiRequest(
       }),
     });
 
-    logger.debug('Shopify API Response', { module: 'ShopifyClient', status: response.status });
-
     if (response.status === 402) {
-      logger.error('Shopify payment required - store needs to be on a paid plan', undefined, { module: 'ShopifyClient' });
-      return { data: null };
-    }
-
-    if (response.status === 401) {
-      logger.error('Unauthorized - Invalid Shopify Storefront Access Token', undefined, { module: 'ShopifyClient', tokenPrefix: SHOPIFY_CONFIG.STOREFRONT_TOKEN.substring(0, 10) });
+      console.warn('Shopify payment required - store needs to be on a paid plan');
       return { data: null };
     }
 
     if (!response.ok) {
-      const errorText = await response.text();
-      logger.error('Shopify HTTP error', undefined, { module: 'ShopifyClient', status: response.status, errorText });
+      console.warn(`Shopify HTTP error! status: ${response.status}`);
       return { data: null };
     }
 
     const data = await response.json();
     
     if (data.errors) {
-      logger.error('Shopify API errors', undefined, { module: 'ShopifyClient', errors: data.errors });
+      console.warn(`Shopify API errors:`, data.errors);
       return { data: null };
     }
 
-    logger.debug('Shopify API request successful', { module: 'ShopifyClient' });
     return data;
   } catch (error) {
-    logger.error('Shopify API request failed', error, { module: 'ShopifyClient' });
+    console.warn('Shopify API request failed:', error);
     return { data: null };
   }
 }
@@ -96,7 +78,7 @@ export async function fetchProducts(
     const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
     return data?.data?.products?.edges || [];
   } catch (error) {
-    logger.warn('Failed to fetch products', { module: 'ShopifyClient', error });
+    console.warn('Failed to fetch products:', error);
     return [];
   }
 }
@@ -113,7 +95,7 @@ export async function createStorefrontCheckout(items: CartItem[]): Promise<strin
   }
   
   try {
-    logger.debug('Creating checkout with items', { module: 'ShopifyClient', itemCount: items.length });
+    console.log('Creating checkout with items:', items);
     
     const lines: CartLine[] = items.map(item => {
       // Combine selectedOptions and customAttributes
@@ -135,7 +117,7 @@ export async function createStorefrontCheckout(items: CartItem[]): Promise<strin
       };
     });
 
-    logger.debug('Cart lines prepared', { module: 'ShopifyClient', lineCount: lines.length });
+    console.log('Cart lines with attributes:', lines);
 
     const cartData = await storefrontApiRequest(CART_CREATE_MUTATION, {
       input: {
@@ -147,7 +129,7 @@ export async function createStorefrontCheckout(items: CartItem[]): Promise<strin
       throw new Error('No response from Shopify API');
     }
 
-    logger.debug('Cart data received', { module: 'ShopifyClient' });
+    console.log('Cart data:', cartData);
 
     if (cartData.data.cartCreate.userErrors.length > 0) {
       const errors = cartData.data.cartCreate.userErrors.map((e: any) => e.message).join(', ');
@@ -164,10 +146,10 @@ export async function createStorefrontCheckout(items: CartItem[]): Promise<strin
     url.searchParams.set('channel', 'online_store');
     const finalUrl = url.toString();
     
-    logger.debug('Final checkout URL generated', { module: 'ShopifyClient' });
+    console.log('Final checkout URL:', finalUrl);
     return finalUrl;
   } catch (error) {
-    logger.error('Error creating storefront checkout', error, { module: 'ShopifyClient' });
+    console.error('Error creating storefront checkout:', error);
     throw error;
   }
 }

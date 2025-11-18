@@ -13,7 +13,6 @@ import { toast } from "sonner";
 import { getEggerColorNames } from "@/lib/eggerColors";
 import { getTafisaColorNames } from "@/lib/tafisaColors";
 import { supabase } from "@/integrations/supabase/client";
-import { logger } from "@/lib/logger";
 
 const EGGER_FINISHES = getEggerColorNames();
 const TAFISA_FINISHES = getTafisaColorNames();
@@ -140,7 +139,7 @@ export const VanityDesignerApp = () => {
       toast.dismiss();
       toast.success("PDF quote downloaded!");
     } catch (error) {
-      logger.error('Error generating PDF', error, { component: 'VanityDesignerApp' });
+      console.error("Error generating PDF:", error);
       toast.dismiss();
       toast.error("Failed to generate PDF");
     } finally {
@@ -182,7 +181,7 @@ export const VanityDesignerApp = () => {
       setShareUrl(url);
       setShareModalOpen(true);
     } catch (error) {
-      logger.error('Error generating share link', error, { component: 'VanityDesignerApp' });
+      console.error("Error generating share link:", error);
       toast.error("Failed to generate share link");
     }
   };
@@ -246,7 +245,7 @@ export const VanityDesignerApp = () => {
       toast.dismiss();
       toast.success("Quote sent successfully! Check your email.");
     } catch (error) {
-      logger.error('Error sending quote', error, { component: 'VanityDesignerApp' });
+      console.error("Error sending quote:", error);
       toast.dismiss();
       toast.error("Failed to send quote. Please try again.");
       throw error;

@@ -1,10 +1,9 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
 import { Button } from "@/components/ui/button";
 import { Download, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
-import { logger } from "@/lib/logger";
 
 interface SharePreviewCardProps {
   open: boolean;
@@ -26,13 +25,13 @@ export const SharePreviewCard = ({ open, onOpenChange, shareUrl }: SharePreviewC
           light: '#ffffff',
         },
       }).catch((error) => {
-        logger.error('Error generating QR code', error, { component: 'SharePreviewCard' });
+        console.error('Error generating QR code:', error);
         toast.error("Failed to generate QR code");
       });
     }
   }, [open, shareUrl]);
 
-  const handleCopyUrl = useCallback(async () => {
+  const handleCopyUrl = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
@@ -41,9 +40,9 @@ export const SharePreviewCard = ({ open, onOpenChange, shareUrl }: SharePreviewC
     } catch (error) {
       toast.error("Failed to copy URL");
     }
-  }, [shareUrl]);
+  };
 
-  const handleDownloadQR = useCallback(() => {
+  const handleDownloadQR = () => {
     if (!canvasRef.current) return;
     
     const url = canvasRef.current.toDataURL('image/png');
@@ -53,7 +52,7 @@ export const SharePreviewCard = ({ open, onOpenChange, shareUrl }: SharePreviewC
     link.click();
     
     toast.success("QR code downloaded");
-  }, []);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

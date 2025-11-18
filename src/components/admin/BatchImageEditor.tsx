@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { RotateCw, Palette, Save, X, Images } from 'lucide-react';
 import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
-import { logger } from '@/lib/logger';
 
 interface BatchImageEditorProps {
   open: boolean;
@@ -133,52 +132,51 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
       ctx.drawImage(img, 0, 0, width, height);
       ctx.restore();
 
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            resolve(blob);
-          } else {
-            reject(new Error('Failed to convert canvas to blob'));
-          }
-        },
-        'image/jpeg',
-        0.9
-      );
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error('Failed to create blob'));
+        }
+      }, 'image/png');
     });
   };
 
-  const handleSave = async () => {
-    if (images.length === 0) return;
-
+  const handleBatchProcess = async () => {
     setProcessing(true);
     setProgress(0);
 
-    try {
-      const editedFiles: File[] = [];
+    const editedFiles: File[] = [];
+    const currentTransform: Transform = { rotation, scale };
+    const currentFilters = { ...filters };
 
+    try {
       for (let i = 0; i < images.length; i++) {
-        const imageFile = images[i].file;
+        const image = images[i];
         
+        // Load the image
         const img = new Image();
         await new Promise((resolve, reject) => {
           img.onload = resolve;
           img.onerror = reject;
-          img.src = images[i].preview;
+          img.src = image.preview;
         });
 
-        const blob = await applyEditsToImage(img, { rotation, scale }, filters);
-        const file = new File([blob], imageFile.name, { type: 'image/jpeg' });
+        // Apply edits
+        const blob = await applyEditsToImage(img, currentTransform, currentFilters);
+        const file = new File([blob], image.file.name, { type: 'image/png' });
         editedFiles.push(file);
 
+        // Update progress
         setProgress(((i + 1) / images.length) * 100);
       }
 
       onSave(editedFiles);
-      toast.success(`Successfully processed ${editedFiles.length} images`);
       onOpenChange(false);
+      toast.success(`Successfully processed ${editedFiles.length} images`);
     } catch (error) {
-      logger.error('Batch processing error', error, { component: 'BatchImageEditor' });
-      toast.error('Failed to process images');
+      console.error('Batch processing error:', error);
+      toast.error('Failed to process some images');
     } finally {
       setProcessing(false);
       setProgress(0);
@@ -186,8 +184,6 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
   };
 
   const resetFilters = () => {
-    setRotation(0);
-    setScale(1);
     setFilters({
       brightness: 100,
       contrast: 100,
@@ -195,6 +191,8 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
       grayscale: 0,
       sepia: 0,
     });
+    setRotation(0);
+    setScale(1);
   };
 
   return (
@@ -202,83 +200,126 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Images className="h-5 w-5" />
-            Batch Edit Images ({images.length} {images.length === 1 ? 'image' : 'images'})
+            <Images className="w-5 h-5" />
+            Batch Edit {images.length} Images
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="flex justify-center bg-muted p-4 rounded-lg">
-            <canvas
-              ref={canvasRef}
-              className="max-w-full h-auto border border-border rounded"
-            />
+          <div className="flex justify-center border rounded-lg p-4 bg-muted/20">
+            <div className="text-center">
+              <canvas ref={canvasRef} className="mx-auto" />
+              <p className="text-sm text-muted-foreground mt-2">
+                Preview (showing first image)
+              </p>
+            </div>
           </div>
+
+          {processing && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Processing images...</span>
+                <span>{Math.round(progress)}%</span>
+              </div>
+              <Progress value={progress} />
+            </div>
+          )}
 
           <Tabs defaultValue="transform" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="transform">Transform</TabsTrigger>
-              <TabsTrigger value="filters">Filters</TabsTrigger>
+              <TabsTrigger value="transform">
+                <RotateCw className="w-4 h-4 mr-2" />
+                Transform
+              </TabsTrigger>
+              <TabsTrigger value="filters">
+                <Palette className="w-4 h-4 mr-2" />
+                Filters
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="transform" className="space-y-4">
               <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <RotateCw className="h-4 w-4" />
-                  Rotation: {rotation}°
-                </Label>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    value={[rotation]}
-                    onValueChange={(value) => setRotation(value[0])}
-                    min={0}
-                    max={360}
-                    step={15}
+                <Label>Rotation: {rotation}°</Label>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => setRotation((prev) => (prev + 90) % 360)} 
+                    variant="outline" 
                     className="flex-1"
-                  />
+                    disabled={processing}
+                  >
+                    Rotate 90°
+                  </Button>
                   <Input
                     type="number"
                     value={rotation}
                     onChange={(e) => setRotation(Number(e.target.value))}
-                    className="w-20"
+                    className="w-24"
+                    disabled={processing}
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
                 <Label>Scale: {scale.toFixed(2)}x</Label>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    value={[scale]}
-                    onValueChange={(value) => setScale(value[0])}
-                    min={0.1}
-                    max={2}
-                    step={0.1}
-                    className="flex-1"
-                  />
-                  <Input
-                    type="number"
-                    value={scale}
-                    onChange={(e) => setScale(Number(e.target.value))}
-                    step="0.1"
-                    className="w-20"
-                  />
-                </div>
+                <Slider
+                  value={[scale]}
+                  onValueChange={([value]) => setScale(value)}
+                  min={0.1}
+                  max={2}
+                  step={0.1}
+                  disabled={processing}
+                />
               </div>
             </TabsContent>
 
             <TabsContent value="filters" className="space-y-4">
               <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Palette className="h-4 w-4" />
-                  Brightness: {filters.brightness}%
-                </Label>
+                <Label>Quick Presets</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    onClick={() => setFilters({ brightness: 110, contrast: 90, saturation: 80, grayscale: 0, sepia: 60 })}
+                    variant="outline"
+                    size="sm"
+                    disabled={processing}
+                  >
+                    Vintage
+                  </Button>
+                  <Button
+                    onClick={() => setFilters({ brightness: 105, contrast: 110, saturation: 120, grayscale: 0, sepia: 0 })}
+                    variant="outline"
+                    size="sm"
+                    disabled={processing}
+                  >
+                    Cool
+                  </Button>
+                  <Button
+                    onClick={() => setFilters({ brightness: 110, contrast: 105, saturation: 110, grayscale: 0, sepia: 20 })}
+                    variant="outline"
+                    size="sm"
+                    disabled={processing}
+                  >
+                    Warm
+                  </Button>
+                  <Button
+                    onClick={() => setFilters({ brightness: 100, contrast: 120, saturation: 0, grayscale: 100, sepia: 0 })}
+                    variant="outline"
+                    size="sm"
+                    disabled={processing}
+                  >
+                    B&W
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Brightness: {filters.brightness}%</Label>
                 <Slider
                   value={[filters.brightness]}
-                  onValueChange={(value) => setFilters({ ...filters, brightness: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, brightness: value })}
                   min={0}
                   max={200}
                   step={1}
+                  disabled={processing}
                 />
               </div>
 
@@ -286,10 +327,11 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
                 <Label>Contrast: {filters.contrast}%</Label>
                 <Slider
                   value={[filters.contrast]}
-                  onValueChange={(value) => setFilters({ ...filters, contrast: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, contrast: value })}
                   min={0}
                   max={200}
                   step={1}
+                  disabled={processing}
                 />
               </div>
 
@@ -297,10 +339,11 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
                 <Label>Saturation: {filters.saturation}%</Label>
                 <Slider
                   value={[filters.saturation]}
-                  onValueChange={(value) => setFilters({ ...filters, saturation: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, saturation: value })}
                   min={0}
                   max={200}
                   step={1}
+                  disabled={processing}
                 />
               </div>
 
@@ -308,10 +351,11 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
                 <Label>Grayscale: {filters.grayscale}%</Label>
                 <Slider
                   value={[filters.grayscale]}
-                  onValueChange={(value) => setFilters({ ...filters, grayscale: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, grayscale: value })}
                   min={0}
                   max={100}
                   step={1}
+                  disabled={processing}
                 />
               </div>
 
@@ -319,37 +363,34 @@ export const BatchImageEditor = ({ open, onOpenChange, images, onSave }: BatchIm
                 <Label>Sepia: {filters.sepia}%</Label>
                 <Slider
                   value={[filters.sepia]}
-                  onValueChange={(value) => setFilters({ ...filters, sepia: value[0] })}
+                  onValueChange={([value]) => setFilters({ ...filters, sepia: value })}
                   min={0}
                   max={100}
                   step={1}
+                  disabled={processing}
                 />
               </div>
+
+              <Button 
+                onClick={resetFilters} 
+                variant="outline" 
+                className="w-full"
+                disabled={processing}
+              >
+                Reset All Filters
+              </Button>
             </TabsContent>
           </Tabs>
-
-          {processing && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span>Processing images...</span>
-                <span>{Math.round(progress)}%</span>
-              </div>
-              <Progress value={progress} />
-            </div>
-          )}
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={resetFilters} disabled={processing}>
-            Reset
-          </Button>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={processing}>
-            <X className="h-4 w-4 mr-2" />
+            <X className="w-4 h-4 mr-2" />
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={processing || images.length === 0}>
-            <Save className="h-4 w-4 mr-2" />
-            Apply to All ({images.length})
+          <Button onClick={handleBatchProcess} disabled={processing}>
+            <Save className="w-4 h-4 mr-2" />
+            Apply to All {images.length} Images
           </Button>
         </DialogFooter>
       </DialogContent>

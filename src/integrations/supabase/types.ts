@@ -239,84 +239,6 @@ export type Database = {
         }
         Relationships: []
       }
-      failed_login_attempts: {
-        Row: {
-          attempt_count: number
-          created_at: string
-          email: string
-          id: string
-          ip_address: string
-          last_attempt_at: string
-          locked_until: string | null
-        }
-        Insert: {
-          attempt_count?: number
-          created_at?: string
-          email: string
-          id?: string
-          ip_address: string
-          last_attempt_at?: string
-          locked_until?: string | null
-        }
-        Update: {
-          attempt_count?: number
-          created_at?: string
-          email?: string
-          id?: string
-          ip_address?: string
-          last_attempt_at?: string
-          locked_until?: string | null
-        }
-        Relationships: []
-      }
-      gallery_image_metadata: {
-        Row: {
-          alt_text: string | null
-          category: string | null
-          created_at: string
-          description: string | null
-          display_name: string | null
-          file_size: number | null
-          height: number | null
-          id: string
-          original_filename: string
-          storage_path: string
-          updated_at: string
-          uploaded_by: string | null
-          width: number | null
-        }
-        Insert: {
-          alt_text?: string | null
-          category?: string | null
-          created_at?: string
-          description?: string | null
-          display_name?: string | null
-          file_size?: number | null
-          height?: number | null
-          id?: string
-          original_filename: string
-          storage_path: string
-          updated_at?: string
-          uploaded_by?: string | null
-          width?: number | null
-        }
-        Update: {
-          alt_text?: string | null
-          category?: string | null
-          created_at?: string
-          description?: string | null
-          display_name?: string | null
-          file_size?: number | null
-          height?: number | null
-          id?: string
-          original_filename?: string
-          storage_path?: string
-          updated_at?: string
-          uploaded_by?: string | null
-          width?: number | null
-        }
-        Relationships: []
-      }
       notification_settings: {
         Row: {
           created_at: string
@@ -578,7 +500,6 @@ export type Database = {
         Returns: Json
       }
       cleanup_expired_blocks: { Args: never; Returns: number }
-      cleanup_old_failed_attempts: { Args: never; Returns: number }
       cleanup_old_performance_metrics: { Args: never; Returns: number }
       cleanup_old_webhook_events: { Args: never; Returns: number }
       extend_role_expiration: {

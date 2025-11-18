@@ -1,4 +1,4 @@
-import { useMemo, memo } from "react";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 interface TextureSwatchProps {
@@ -142,7 +142,7 @@ const getTextureStyle = (finishName: string, brand: string): React.CSSProperties
   };
 };
 
-const TextureSwatchComponent = ({ finishName, brand, selected, onClick, size = "md" }: TextureSwatchProps) => {
+export const TextureSwatch = ({ finishName, brand, selected, onClick, size = "md" }: TextureSwatchProps) => {
   const textureStyle = useMemo(() => getTextureStyle(finishName, brand), [finishName, brand]);
   
   const sizeClasses = {
@@ -192,5 +192,3 @@ const TextureSwatchComponent = ({ finishName, brand, selected, onClick, size = "
     </div>
   );
 };
-
-export const TextureSwatch = memo(TextureSwatchComponent);
