@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import logoColor from "@/assets/logos/logo-color.png";
-import logoWhite from "@/assets/logos/logo-white.svg";
+import logoBlack from "@/assets/logos/logo-black.png";
 import { CartDrawer } from "@/components/CartDrawer";
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -56,7 +56,7 @@ const Header = () => {
               behavior: 'smooth'
             });
           }} className="cursor-pointer flex flex-col items-center">
-              <img src={scrolled ? logoWhite : logoColor} alt="Green Cabinets Logo" className="h-20 md:h-24 w-auto transition-all duration-500" />
+              <img src={scrolled ? logoBlack : logoColor} alt="Green Cabinets Logo" className="h-20 md:h-24 w-auto transition-all duration-500" />
               
             </a>
           </div>
