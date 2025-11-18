@@ -1,6 +1,3 @@
-/**
- * Service for quote request operations
- */
 import { supabase } from "@/integrations/supabase/client";
 
 export interface QuoteRequest {
@@ -11,9 +8,42 @@ export interface QuoteRequest {
   projectType?: string;
 }
 
+/**
+ * Service for handling quote request operations.
+ * Validates, sanitizes, and submits quote requests to the backend.
+ * 
+ * @example
+ * ```typescript
+ * const result = await quoteService.submitQuote({
+ *   name: 'John Doe',
+ *   email: 'john@example.com',
+ *   phone: '555-1234',
+ *   message: 'Need custom cabinets for kitchen remodel',
+ *   projectType: 'kitchen'
+ * });
+ * 
+ * if (result.success) {
+ *   toast.success('Quote request submitted!');
+ * }
+ * ```
+ */
 export class QuoteService {
   /**
-   * Submit a quote request
+   * Submit a quote request to the backend
+   * 
+   * @param request - Quote request data
+   * @returns Promise resolving to success status and optional error message
+   * @throws {Error} If validation fails
+   * 
+   * @example
+   * ```typescript
+   * const result = await quoteService.submitQuote({
+   *   name: 'Jane Smith',
+   *   email: 'jane@example.com',
+   *   message: 'Interested in bathroom vanity',
+   *   projectType: 'bathroom'
+   * });
+   * ```
    */
   async submitQuote(request: QuoteRequest): Promise<{ success: boolean; error?: string }> {
     try {
@@ -46,6 +76,10 @@ export class QuoteService {
 
   /**
    * Validate quote request data
+   * 
+   * @param request - Quote request to validate
+   * @throws {Error} If validation fails
+   * @private
    */
   private validateQuoteRequest(request: QuoteRequest): void {
     if (!request.name || request.name.length < 2) {
@@ -60,7 +94,11 @@ export class QuoteService {
   }
 
   /**
-   * Sanitize string input
+   * Sanitize string input to prevent XSS attacks
+   * 
+   * @param input - String to sanitize
+   * @returns Sanitized string
+   * @private
    */
   private sanitizeString(input: string): string {
     return input.trim().slice(0, 1000);
@@ -68,6 +106,10 @@ export class QuoteService {
 
   /**
    * Validate email format
+   * 
+   * @param email - Email address to validate
+   * @returns True if email format is valid
+   * @private
    */
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -76,6 +118,15 @@ export class QuoteService {
 
   /**
    * Format contact information for display
+   * 
+   * @param request - Quote request data
+   * @returns Formatted contact string
+   * 
+   * @example
+   * ```typescript
+   * const formatted = quoteService.formatContactInfo(request);
+   * console.log(formatted); // "John Doe - john@example.com - 555-1234"
+   * ```
    */
   formatContactInfo(request: QuoteRequest): string {
     return `${request.name} - ${request.email}${request.phone ? ` - ${request.phone}` : ''}`;

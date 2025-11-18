@@ -9,11 +9,40 @@ export interface AuthResult {
 
 /**
  * Service for managing authentication operations.
- * Centralizes all Supabase auth interactions.
+ * Centralizes all Supabase Auth interactions including sign in, sign up, and sign out.
+ * 
+ * @example
+ * ```typescript
+ * // Sign in
+ * const result = await authService.signIn('user@example.com', 'password');
+ * if (result.user) {
+ *   console.log('Signed in:', result.user.email);
+ * }
+ * 
+ * // Sign up
+ * const newUser = await authService.signUp('new@example.com', 'password123');
+ * 
+ * // Sign out
+ * await authService.signOut();
+ * ```
  */
 export class AuthService {
   /**
    * Signs in a user with email and password
+   * 
+   * @param email - User email address
+   * @param password - User password
+   * @returns Promise resolving to AuthResult containing user, session, and any errors
+   * 
+   * @example
+   * ```typescript
+   * const result = await authService.signIn('user@example.com', 'mypassword');
+   * if (result.error) {
+   *   console.error('Login failed:', result.error.message);
+   * } else {
+   *   console.log('Welcome:', result.user?.email);
+   * }
+   * ```
    */
   async signIn(email: string, password: string): Promise<AuthResult> {
     try {
@@ -39,6 +68,18 @@ export class AuthService {
 
   /**
    * Signs up a new user with email and password
+   * 
+   * @param email - New user email address
+   * @param password - New user password
+   * @returns Promise resolving to AuthResult with user data
+   * 
+   * @example
+   * ```typescript
+   * const result = await authService.signUp('newuser@example.com', 'securepassword');
+   * if (result.user) {
+   *   console.log('Account created! Check email for verification.');
+   * }
+   * ```
    */
   async signUp(email: string, password: string): Promise<AuthResult> {
     try {

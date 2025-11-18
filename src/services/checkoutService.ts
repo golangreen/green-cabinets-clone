@@ -9,13 +9,34 @@ export interface CheckoutResult {
 /**
  * Service for managing checkout operations.
  * Handles creating Stripe checkout sessions via edge functions.
+ * 
+ * @example
+ * ```typescript
+ * const result = await checkoutService.createCheckout(
+ *   cartItems,
+ *   { email: 'customer@example.com', firstName: 'John', lastName: 'Doe' }
+ * );
+ * 
+ * if (result.url) {
+ *   window.location.href = result.url;
+ * }
+ * ```
  */
 export class CheckoutService {
   /**
    * Creates a checkout session for the given items and customer
+   * 
    * @param items - Array of items to checkout
-   * @param customer - Customer information
-   * @returns Checkout session URL or error
+   * @param customer - Customer information including email and name
+   * @returns Promise resolving to checkout session URL or error
+   * 
+   * @example
+   * ```typescript
+   * const checkout = await checkoutService.createCheckout(
+   *   [{ productId: '123', quantity: 2, price: 99.99 }],
+   *   { email: 'user@example.com', firstName: 'Jane', lastName: 'Smith' }
+   * );
+   * ```
    */
   async createCheckout(
     items: CheckoutItem[],
