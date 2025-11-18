@@ -80,27 +80,50 @@ const Hero = () => {
   const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
 
   return (
-    <section className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden">
-      {/* Background images with crossfade */}
-      <div className="absolute inset-0">
-        <img
-          src={shuffledImages[currentImageIndex].src}
-          alt={shuffledImages[currentImageIndex].alt}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
-            isTransitioning ? 'opacity-0' : 'opacity-100'
-          }`}
-          loading="eager"
-          fetchPriority="high"
-        />
-        <img
-          src={shuffledImages[getNextIndex()].src}
-          alt={shuffledImages[getNextIndex()].alt}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
-            isTransitioning ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-      </div>
-    </section>
+    <>
+      {/* Hero Text Section */}
+      <section className="bg-background py-24 md:py-32">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-5xl md:text-7xl font-serif mb-6 text-foreground">
+            Transform Your Space
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+            Premium custom cabinetry for kitchens, bathrooms, and closets
+          </p>
+          <Button 
+            size="lg"
+            onClick={() => window.location.href = '/designer'}
+            className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-lg px-8 py-6"
+          >
+            <span className="mr-2">✨</span>
+            Launch Designer
+          </Button>
+        </div>
+      </section>
+
+      {/* Hero Image Carousel */}
+      <section className="relative h-screen w-full overflow-hidden">
+        {/* Background images with crossfade */}
+        <div className="absolute inset-0">
+          <img
+            src={shuffledImages[currentImageIndex].src}
+            alt={shuffledImages[currentImageIndex].alt}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
+              isTransitioning ? 'opacity-0' : 'opacity-100'
+            }`}
+            loading="eager"
+            fetchPriority="high"
+          />
+          <img
+            src={shuffledImages[getNextIndex()].src}
+            alt={shuffledImages[getNextIndex()].alt}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
+              isTransitioning ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        </div>
+      </section>
+    </>
   );
 };
 export default Hero;
