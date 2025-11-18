@@ -1,0 +1,429 @@
+openapi: 3.0.3
+info:
+  title: Green Cabinets API
+  description: |
+    Green Cabinets backend API documentation for all edge functions.
+    
+    ## Authentication
+    Most endpoints require authentication via Supabase JWT tokens passed in the Authorization header.
+    
+    ## Rate Limiting
+    All endpoints are rate-limited to prevent abuse. Rate limits vary by endpoint.
+    
+    ## Error Responses
+    All endpoints follow a consistent error response format with appropriate HTTP status codes.
+  version: 1.0.0
+  contact:
+    email: greencabinetsny@gmail.com
+    
+servers:
+  - url: https://mczagaaiyzbhjvtrojia.supabase.co/functions/v1
+    description: Production API
+
+tags:
+  - name: Quote
+    description: Quote request operations
+  - name: Vanity
+    description: Vanity designer operations
+  - name: Checkout
+    description: Shopping cart and checkout operations
+  - name: Security
+    description: Security monitoring operations
+  - name: Admin
+    description: Administrative operations
+  - name: Email
+    description: Email notification operations
+
+paths:
+  /send-quote-request:
+    post:
+      tags:
+        - Quote
+      summary: Submit a quote request
+      description: |
+        Submits a customer quote request with contact information and optional PDF attachment.
+        Includes rate limiting and reCAPTCHA verification.
+      operationId: sendQuoteRequest
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - phone
+                - recaptchaToken
+              properties:
+                name:
+                  type: string
+                  description: Customer full name
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  description: Customer email address
+                  example: "john@example.com"
+                phone:
+                  type: string
+                  description: Customer phone number
+                  example: "(555) 123-4567"
+                message:
+                  type: string
+                  description: Optional customer message
+                  example: "I'm interested in custom cabinets"
+                pdfData:
+                  type: string
+                  description: Base64-encoded PDF attachment
+                recaptchaToken:
+                  type: string
+                  description: reCAPTCHA v3 token for bot protection
+      responses:
+        '200':
+          description: Quote request submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Quote request sent successfully"
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /email-vanity-config:
+    post:
+      tags:
+        - Vanity
+      summary: Email vanity configuration
+      description: |
+        Sends vanity designer configuration via email.
+        Requires authentication (service role or admin user).
+      operationId: emailVanityConfig
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - to
+                - config
+              properties:
+                to:
+                  type: string
+                  format: email
+                  description: Recipient email address
+                  example: "customer@example.com"
+                config:
+                  type: object
+                  description: Vanity designer configuration object
+                  properties:
+                    brand:
+                      type: string
+                      example: "Egger"
+                    finish:
+                      type: string
+                      example: "Walnut Wood"
+                    dimensions:
+                      type: object
+                      properties:
+                        width:
+                          type: number
+                        height:
+                          type: number
+                        depth:
+                          type: number
+      responses:
+        '200':
+          description: Email sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Configuration email sent"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /create-checkout:
+    post:
+      tags:
+        - Checkout
+      summary: Create Stripe checkout session
+      description: |
+        Creates a Stripe checkout session for cart items.
+        Includes rate limiting and reCAPTCHA verification.
+      operationId: createCheckout
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - items
+                - recaptchaToken
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - priceId
+                      - quantity
+                    properties:
+                      priceId:
+                        type: string
+                        description: Stripe price ID
+                        example: "price_1234567890"
+                      quantity:
+                        type: integer
+                        minimum: 1
+                        description: Item quantity
+                        example: 2
+                recaptchaToken:
+                  type: string
+                  description: reCAPTCHA v3 token
+      responses:
+        '200':
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    format: uri
+                    description: Stripe checkout URL
+                    example: "https://checkout.stripe.com/..."
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /check-performance:
+    post:
+      tags:
+        - Admin
+      summary: Check performance metrics
+      description: |
+        Analyzes recent performance metrics and sends alerts if thresholds are exceeded.
+        Requires authentication (service role or admin user).
+      operationId: checkPerformance
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Performance check completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metricsFound:
+                    type: integer
+                    description: Number of metrics analyzed
+                  alertsSent:
+                    type: integer
+                    description: Number of alerts triggered
+                  summary:
+                    type: object
+                    description: Performance metrics summary
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /check-role-expiration:
+    post:
+      tags:
+        - Admin
+      summary: Check role expirations
+      description: |
+        Checks for expiring/expired user roles and sends email notifications.
+        Requires authentication (service role or admin user).
+        Runs automatically via cron job.
+      operationId: checkRoleExpiration
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Role expiration check completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reminders3DaySent:
+                    type: integer
+                  reminders1DaySent:
+                    type: integer
+                  rolesRemoved:
+                    type: integer
+
+  /send-security-alert:
+    post:
+      tags:
+        - Security
+      summary: Send security alert
+      description: |
+        Sends security alert emails to admins.
+        Requires authentication (service role or admin user).
+      operationId: sendSecurityAlert
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - alertType
+              properties:
+                alertType:
+                  type: string
+                  enum:
+                    - rate_limit_spike
+                    - blocked_ip_threshold
+                    - webhook_security_issue
+                    - email_delivery_issues
+                    - webhook_retry_excessive
+                    - performance_degradation
+                  description: Type of security alert
+                data:
+                  type: object
+                  description: Alert-specific data
+      responses:
+        '200':
+          description: Alert sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  emailsSent:
+                    type: integer
+
+  /resend-webhook:
+    post:
+      tags:
+        - Email
+      summary: Handle Resend webhooks
+      description: |
+        Processes webhook events from Resend email delivery service.
+        Includes signature verification and deduplication.
+      operationId: resendWebhook
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Resend webhook payload
+      responses:
+        '200':
+          description: Webhook processed successfully
+        '400':
+          description: Invalid signature or request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chat:
+    post:
+      tags:
+        - AI
+      summary: Chat with AI assistant
+      description: |
+        Streams AI chat responses for customer support.
+        Requires authentication.
+      operationId: chat
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - messages
+              properties:
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum: [user, assistant, system]
+                      content:
+                        type: string
+      responses:
+        '200':
+          description: Streaming response
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token from authentication
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Invalid request parameters"
+        details:
+          type: object
+          description: Additional error details
