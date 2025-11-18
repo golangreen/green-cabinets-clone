@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Ruler, Camera, FileDown } from "lucide-react";
 import { toast } from "sonner";
@@ -117,11 +117,11 @@ export const Vanity3DPreview = ({
     return props.type;
   }, [brand, finish]);
 
-  const handleMeasurementClick = (type: MeasurementType) => {
+  const handleMeasurementClick = useCallback((type: MeasurementType) => {
     setActiveMeasurement(type);
-  };
+  }, [setActiveMeasurement]);
 
-  const downloadScreenshot = () => {
+  const downloadScreenshot = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
       toast.error("Canvas not ready");
@@ -146,14 +146,14 @@ export const Vanity3DPreview = ({
       logger.error('Screenshot error', error, { component: 'Vanity3DPreview' });
       toast.error("Failed to capture screenshot");
     }
-  };
+  }, [width, height, depth]);
 
-  const printView = () => {
+  const printView = useCallback(() => {
     toast.info("Opening print dialog...");
     setTimeout(() => {
       window.print();
     }, 500);
-  };
+  }, []);
 
   if (!hasValidDimensions) {
     return (

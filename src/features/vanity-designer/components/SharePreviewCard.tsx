@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import QRCode from "qrcode";
 import { Button } from "@/components/ui/button";
 import { Download, Copy, Check } from "lucide-react";
@@ -32,7 +32,7 @@ export const SharePreviewCard = ({ open, onOpenChange, shareUrl }: SharePreviewC
     }
   }, [open, shareUrl]);
 
-  const handleCopyUrl = async () => {
+  const handleCopyUrl = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
@@ -41,9 +41,9 @@ export const SharePreviewCard = ({ open, onOpenChange, shareUrl }: SharePreviewC
     } catch (error) {
       toast.error("Failed to copy URL");
     }
-  };
+  }, [shareUrl]);
 
-  const handleDownloadQR = () => {
+  const handleDownloadQR = useCallback(() => {
     if (!canvasRef.current) return;
     
     const url = canvasRef.current.toDataURL('image/png');
@@ -53,7 +53,7 @@ export const SharePreviewCard = ({ open, onOpenChange, shareUrl }: SharePreviewC
     link.click();
     
     toast.success("QR code downloaded");
-  };
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
