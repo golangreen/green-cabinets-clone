@@ -25,11 +25,11 @@ test.describe('Vanity Designer', () => {
     const brandSelect = page.getByLabel(/Brand/i);
     await brandSelect.click();
     
-    // Select a brand
-    await page.getByText(/Blum/i).click();
+    // Select a brand (Tafisa, Egger, or Shinnoki)
+    await page.getByText(/Tafisa/i).click();
     
     // Verify brand is selected
-    await expect(brandSelect).toContainText(/Blum/i);
+    await expect(brandSelect).toContainText(/Tafisa/i);
   });
 
   test('should generate and send quote', async ({ page }) => {
