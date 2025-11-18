@@ -110,6 +110,7 @@ const Header = () => {
           <a 
             href="/" 
             className="cursor-pointer flex items-center absolute left-1/2 transform -translate-x-1/2"
+            aria-label="Green Cabinets - Home"
           >
             <img 
               src={isScrolled ? logoBlack : logoTeal}
@@ -127,6 +128,7 @@ const Header = () => {
                 className={`transition-colors ${
                   isScrolled ? 'text-gray-900 hover:text-gray-700' : 'text-[#2dd4bf] hover:text-[#2dd4bf]/80'
                 }`}
+                aria-label="Open navigation menu"
               >
                 <Menu className="h-7 w-7" />
               </Button>
@@ -143,6 +145,7 @@ const Header = () => {
                           scrollToGallery('kitchens', e);
                         }}
                         className="text-left py-2 hover:text-primary transition-colors font-medium"
+                        aria-label="View kitchen galleries"
                       >
                         Kitchens
                       </button>
@@ -151,6 +154,7 @@ const Header = () => {
                           scrollToGallery('vanities', e);
                         }}
                         className="text-left py-2 hover:text-primary transition-colors font-medium"
+                        aria-label="View vanity galleries"
                       >
                         Vanities
                       </button>
@@ -159,6 +163,7 @@ const Header = () => {
                           scrollToGallery('closets', e);
                         }}
                         className="text-left py-2 hover:text-primary transition-colors font-medium"
+                        aria-label="View closet galleries"
                       >
                         Closets
                       </button>
@@ -167,6 +172,7 @@ const Header = () => {
                           scrollToGallery('design-to-reality', e);
                         }}
                         className="text-left py-2 hover:text-primary transition-colors font-medium"
+                        aria-label="View design to reality galleries"
                       >
                         Design to Reality
                       </button>
@@ -182,16 +188,17 @@ const Header = () => {
                           }, 100);
                         }}
                         className="text-left py-2 hover:text-primary transition-colors font-medium"
+                        aria-label="View suppliers section"
                       >
                         Suppliers
                       </button>
-                      <a href="#solutions" className="py-2 hover:text-primary transition-colors font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+                      <a href="#solutions" className="py-2 hover:text-primary transition-colors font-medium" onClick={() => setIsMobileMenuOpen(false)} aria-label="View solutions section">
                         Solutions
                       </a>
-                      <a href="#about" className="py-2 hover:text-primary transition-colors font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+                      <a href="#about" className="py-2 hover:text-primary transition-colors font-medium" onClick={() => setIsMobileMenuOpen(false)} aria-label="View about section">
                         About
                       </a>
-                      <a href="#contact" className="py-2 hover:text-primary transition-colors font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+                      <a href="#contact" className="py-2 hover:text-primary transition-colors font-medium" onClick={() => setIsMobileMenuOpen(false)} aria-label="View contact section">
                         Contact
                       </a>
                     </div>

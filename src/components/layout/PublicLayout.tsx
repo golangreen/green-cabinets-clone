@@ -3,6 +3,7 @@ import Header from './Header';
 import Footer from './Footer';
 import OfflineBanner from './OfflineBanner';
 import SyncStatusIndicator from './SyncStatusIndicator';
+import { SkipLink } from './SkipLink';
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -19,6 +20,7 @@ export default function PublicLayout({
 }: PublicLayoutProps) {
   return (
     <div className={className}>
+      <SkipLink />
       {showOfflineIndicators && (
         <>
           <OfflineBanner />
@@ -26,7 +28,9 @@ export default function PublicLayout({
         </>
       )}
       <Header />
-      {children}
+      <main id="main-content">
+        {children}
+      </main>
       <Footer />
     </div>
   );
