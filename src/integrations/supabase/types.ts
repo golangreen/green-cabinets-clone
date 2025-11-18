@@ -14,217 +14,16 @@ export type Database = {
   }
   public: {
     Tables: {
-      alert_history: {
-        Row: {
-          alert_type: string
-          details: Json | null
-          id: string
-          sent_at: string
-        }
-        Insert: {
-          alert_type: string
-          details?: Json | null
-          id?: string
-          sent_at?: string
-        }
-        Update: {
-          alert_type?: string
-          details?: Json | null
-          id?: string
-          sent_at?: string
-        }
-        Relationships: []
-      }
-      block_history: {
-        Row: {
-          action: string
-          auto_blocked: boolean
-          blocked_until: string | null
-          created_at: string
-          id: string
-          ip_address: string
-          performed_by: string | null
-          reason: string | null
-        }
-        Insert: {
-          action: string
-          auto_blocked?: boolean
-          blocked_until?: string | null
-          created_at?: string
-          id?: string
-          ip_address: string
-          performed_by?: string | null
-          reason?: string | null
-        }
-        Update: {
-          action?: string
-          auto_blocked?: boolean
-          blocked_until?: string | null
-          created_at?: string
-          id?: string
-          ip_address?: string
-          performed_by?: string | null
-          reason?: string | null
-        }
-        Relationships: []
-      }
-      blocked_ips: {
-        Row: {
-          auto_blocked: boolean
-          blocked_at: string
-          blocked_until: string
-          created_at: string
-          details: Json | null
-          id: string
-          ip_address: string
-          reason: string
-          violation_count: number
-        }
-        Insert: {
-          auto_blocked?: boolean
-          blocked_at?: string
-          blocked_until: string
-          created_at?: string
-          details?: Json | null
-          id?: string
-          ip_address: string
-          reason: string
-          violation_count?: number
-        }
-        Update: {
-          auto_blocked?: boolean
-          blocked_at?: string
-          blocked_until?: string
-          created_at?: string
-          details?: Json | null
-          id?: string
-          ip_address?: string
-          reason?: string
-          violation_count?: number
-        }
-        Relationships: []
-      }
-      security_events: {
-        Row: {
-          client_ip: string
-          created_at: string
-          details: Json | null
-          event_type: string
-          function_name: string
-          id: string
-          severity: string
-        }
-        Insert: {
-          client_ip: string
-          created_at?: string
-          details?: Json | null
-          event_type: string
-          function_name: string
-          id?: string
-          severity: string
-        }
-        Update: {
-          client_ip?: string
-          created_at?: string
-          details?: Json | null
-          event_type?: string
-          function_name?: string
-          id?: string
-          severity?: string
-        }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          created_at: string
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      auto_block_ip: {
-        Args: {
-          block_duration_hours?: number
-          target_ip: string
-          violation_threshold?: number
-        }
-        Returns: Json
-      }
-      cleanup_expired_blocks: { Args: never; Returns: number }
-      get_blocked_ip_info: {
-        Args: { check_ip: string }
-        Returns: {
-          blocked: boolean
-          blocked_until: string
-          reason: string
-          violation_count: number
-        }[]
-      }
-      get_security_summary: {
-        Args: { time_window_minutes?: number }
-        Returns: {
-          event_count: number
-          event_type: string
-          severity: string
-          unique_ips: number
-        }[]
-      }
-      get_suspicious_ips: {
-        Args: { threshold?: number; time_window_minutes?: number }
-        Returns: {
-          client_ip: string
-          first_violation: string
-          functions_affected: string[]
-          last_violation: string
-          violation_count: number
-        }[]
-      }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-      is_ip_blocked: { Args: { check_ip: string }; Returns: boolean }
-      manual_block_ip: {
-        Args: {
-          block_duration_hours?: number
-          block_reason: string
-          performed_by_user?: string
-          target_ip: string
-        }
-        Returns: Json
-      }
-      unblock_ip: {
-        Args: {
-          performed_by_user?: string
-          target_ip: string
-          unblock_reason?: string
-        }
-        Returns: Json
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -351,8 +150,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "moderator", "user"],
-    },
+    Enums: {},
   },
 } as const

@@ -8,35 +8,8 @@ const customerDataSchema = z.object({
   customerName: z.string().trim().min(1).max(100),
 });
 
-const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-);
-
 const sanitizeString = (str: string): string => {
   return str.trim().replace(/[<>]/g, '');
-};
-
-// Rate limiting
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
-const MAX_REQUESTS_PER_WINDOW = 10;
-
-const checkRateLimit = (ip: string): boolean => {
-  const now = Date.now();
-  const record = rateLimitMap.get(ip);
-  
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
-    return true;
-  }
-  
-  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
-    return false;
-  }
-  
-  record.count++;
-  return true;
 };
 
 const corsHeaders = {
@@ -55,59 +28,7 @@ serve(async (req) => {
   }
 
   try {
-    // Get client IP for rate limiting
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0] || 
-                     req.headers.get("x-real-ip") || 
-                     "unknown";
-    
-    // Check if IP is blocked
-    const { data: blockCheck } = await supabase.rpc("is_ip_blocked", { check_ip: clientIp });
-    if (blockCheck === true) {
-      const { data: blockInfo } = await supabase.rpc("get_blocked_ip_info", { check_ip: clientIp });
-      const blockedUntil = blockInfo && blockInfo.length > 0 ? blockInfo[0].blocked_until : null;
-      const reason = blockInfo && blockInfo.length > 0 ? blockInfo[0].reason : "Security violation";
-      
-      console.warn(`Blocked IP attempted access: ${clientIp}`);
-      return new Response(
-        JSON.stringify({ 
-          error: "Access denied. Your IP has been temporarily blocked.",
-          reason: reason,
-          blocked_until: blockedUntil,
-        }),
-        {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-    
-    // Check rate limit
-    if (!checkRateLimit(clientIp)) {
-      console.warn(`Rate limit exceeded for IP: ${clientIp}`);
-      
-      // Log security event (fire and forget)
-      supabase.from("security_events").insert({
-        event_type: "rate_limit_exceeded",
-        function_name: "create-checkout",
-        client_ip: clientIp,
-        details: { attempt: "checkout creation" },
-        severity: "medium",
-      });
-      
-      return new Response(
-        JSON.stringify({ 
-          error: "Too many checkout attempts. Please try again later.",
-          retryAfter: 3600
-        }),
-        {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
     const { items, customerEmail, customerName } = await req.json();
-    console.log(`Processing checkout for IP: ${clientIp}, Email: ${customerEmail}`);
     
     // Validate customer data
     const validationResult = customerDataSchema.safeParse({ customerEmail, customerName });

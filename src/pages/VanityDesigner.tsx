@@ -1,12 +1,9 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useUndoRedo } from "@/hooks/useUndoRedo";
-import { HistoryTimeline } from "@/components/HistoryTimeline";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Plus,
@@ -30,19 +27,11 @@ import {
   CircleDot,
   Settings,
   Layout,
-  ArrowRight,
-  FolderOpen,
-  Edit,
-  Upload,
-  Scan,
-  Undo,
-  Redo,
-  Sparkles,
-  RefreshCw
+  ArrowRight
 } from "lucide-react";
 import { toast } from "sonner";
 import { Vanity3DPreview } from "@/components/Vanity3DPreview";
-import { CABINET_CATALOG, calculateCabinetPrice, formatPrice, MATERIAL_FINISHES, HARDWARE_OPTIONS, DOOR_STYLES, type CabinetSpec } from "@/lib/cabinetCatalog";
+import { CABINET_CATALOG, calculateCabinetPrice, formatPrice, MATERIAL_FINISHES, HARDWARE_OPTIONS, type CabinetSpec } from "@/lib/cabinetCatalog";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -53,17 +42,6 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { CabinetWizard } from "@/components/CabinetWizard";
-import { useRoomTemplates } from "@/hooks/useRoomTemplates";
 
 interface Cabinet {
   id: number;
@@ -76,7 +54,6 @@ interface Cabinet {
   brand: string;
   finish: string;
   finishId?: string; // Material finish ID
-  doorStyleId?: string; // Door style ID
   label?: string;
   price?: number; // Calculated price
   catalogRef?: string; // Reference to catalog item
@@ -85,10 +62,6 @@ interface Cabinet {
   numHandles?: number; // Number of handles
   hasDrawers?: boolean; // Whether cabinet has drawers
   numDrawers?: number; // Number of drawers
-  toeKickHeight?: number; // Toe kick height in inches (default 4.5")
-  toeKickFinishId?: string; // Toe kick finish ID
-  moldingFinishId?: string; // Molding finish ID
-  lightMoldingFinishId?: string; // Light molding finish ID
 }
 
 interface Wall {
@@ -106,39 +79,13 @@ interface Opening {
   wallId: number;
   position: number; // Position along the wall (0-1)
   width: number; // Width in inches
-  height: number; // Height in inches
-  yPosition: number; // Height from floor in inches
 }
-
-// Professional default dimensions
-const DEFAULTS = {
-  WALL_HEIGHT: 96, // 96" wall height
-  BASE_CABINET_Y: 0, // Base cabinets on floor
-  WALL_CABINET_Y: 54, // Wall cabinets 54" from floor
-  DOOR_WIDTH: 30, // 30" door width
-  DOOR_HEIGHT: 84, // 84" door height
-  DOOR_Y: 0, // Doors at floor level
-  WINDOW_WIDTH: 30, // 30" window width
-  WINDOW_HEIGHT: 30, // 30" window height (default)
-  WINDOW_Y: 42, // Windows 42" from floor
-};
 
 // Use cabinet library from catalog
 const CABINET_LIBRARY = CABINET_CATALOG;
 
 const VanityDesigner = () => {
   const navigate = useNavigate();
-  
-  // Templates hook
-  const { templates, saveTemplate, deleteTemplate, loadTemplate, duplicateTemplate } = useRoomTemplates();
-  
-  // Save template dialog
-  const [showSaveDialog, setShowSaveDialog] = useState(false);
-  const [templateName, setTemplateName] = useState("");
-  const [templateDescription, setTemplateDescription] = useState("");
-  
-  // Cabinet wizard
-  const [showWizard, setShowWizard] = useState(false);
   
   // View mode: 'floorplan' or 'render'
   const [viewMode, setViewMode] = useState<"floorplan" | "render">("floorplan");
@@ -161,57 +108,18 @@ const VanityDesigner = () => {
       brand: "Tafisa",
       finish: "White",
       finishId: "tafisa-white",
-      doorStyleId: "flat-framed",
       label: "DB36",
       rotation: 0,
       handleType: "bar",
       numHandles: 2,
       hasDrawers: true,
-      numDrawers: 3,
-      toeKickHeight: 4.5,
-      toeKickFinishId: "tafisa-white",
-      moldingFinishId: "tafisa-white",
-      lightMoldingFinishId: "tafisa-white",
+      numDrawers: 3
     }
   ]);
-  
-  // Global design settings
-  const [globalFinishId, setGlobalFinishId] = useState<string>("tafisa-white");
-  const [globalDoorStyleId, setGlobalDoorStyleId] = useState<string>("flat-framed");
-  const [globalHandleType, setGlobalHandleType] = useState<keyof typeof HARDWARE_OPTIONS.handles>("bar");
-  const [globalToeKickFinishId, setGlobalToeKickFinishId] = useState<string>("match-door"); // "match-door" or specific finish ID
-  const [globalMoldingFinishId, setGlobalMoldingFinishId] = useState<string>("match-door");
-  const [globalLightMoldingFinishId, setGlobalLightMoldingFinishId] = useState<string>("match-door");
   const [selectedCabinetId, setSelectedCabinetId] = useState<number | null>(1);
   
-  // Walls and Openings state with undo/redo
-  const {
-    state: layoutState,
-    setState: setLayoutState,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-  } = useUndoRedo<{ walls: Wall[]; openings: Opening[] }>({ walls: [], openings: [] });
-  
-  const walls = layoutState.walls;
-  const openings = layoutState.openings;
-  
-  // Helper functions to update walls and openings with history tracking
-  const setWalls = useCallback((newWalls: Wall[] | ((prev: Wall[]) => Wall[])) => {
-    setLayoutState(prev => ({
-      ...prev,
-      walls: typeof newWalls === 'function' ? newWalls(prev.walls) : newWalls
-    }));
-  }, [setLayoutState]);
-  
-  const setOpenings = useCallback((newOpenings: Opening[] | ((prev: Opening[]) => Opening[])) => {
-    setLayoutState(prev => ({
-      ...prev,
-      openings: typeof newOpenings === 'function' ? newOpenings(prev.openings) : newOpenings
-    }));
-  }, [setLayoutState]);
-  
+  // Walls state
+  const [walls, setWalls] = useState<Wall[]>([]);
   const [drawingWall, setDrawingWall] = useState<{ x: number; y: number } | null>(null);
   const [tempWallEnd, setTempWallEnd] = useState<{ x: number; y: number } | null>(null);
   
@@ -220,32 +128,9 @@ const VanityDesigner = () => {
   const [rotationStartAngle, setRotationStartAngle] = useState<number>(0);
   const [currentRotation, setCurrentRotation] = useState<number>(0);
   
+  // Openings state (doors and windows)
+  const [openings, setOpenings] = useState<Opening[]>([]);
   const [selectedOpeningId, setSelectedOpeningId] = useState<number | null>(null);
-  
-  // Track which elements came from scan
-  const [scanSourced, setScanSourced] = useState<{
-    walls: number[];
-    openings: number[];
-  }>({ walls: [], openings: [] });
-  
-  // Drag handle state
-  const [draggingHandle, setDraggingHandle] = useState<{
-    type: 'wall-start' | 'wall-end' | 'opening';
-    id: number;
-  } | null>(null);
-  
-  // Drag feedback state
-  const [dragFeedback, setDragFeedback] = useState<{
-    x: number;
-    y: number;
-    label: string;
-  } | null>(null);
-  
-  // Drag trail state for visualizing movement path
-  const [dragTrail, setDragTrail] = useState<Array<{ x: number; y: number }>>([]);
-  
-  // Collision detection state
-  const [cabinetCollisions, setCabinetCollisions] = useState<Map<number, string[]>>(new Map());
   
   // Drag from library state
   const [draggingFromLibrary, setDraggingFromLibrary] = useState<CabinetSpec | null>(null);
@@ -255,19 +140,6 @@ const VanityDesigner = () => {
   const gridSize = 24; // 12" grid at 2px per inch scale
   const wallThickness = 9; // 9px = 4.5 inches at 2px per inch scale
   const canvasRef = useRef<HTMLDivElement>(null);
-  const svgCanvasRef = useRef<SVGSVGElement>(null);
-  
-  // History timeline state
-  const [historyThumbnails, setHistoryThumbnails] = useState<Array<{
-    id: number;
-    thumbnail: string;
-    timestamp: Date;
-    description: string;
-  }>>([]);
-  const [historyIndex, setHistoryIndex] = useState(0);
-  
-  // Selected wall for context menu
-  const [selectedWallId, setSelectedWallId] = useState<number | null>(null);
   
   // Snap to grid helper
   const snapToGrid = useCallback((value: number) => {
@@ -286,258 +158,6 @@ const VanityDesigner = () => {
     }
     return angle;
   }, []);
-
-  // Load scanned measurements and create room layout
-  useEffect(() => {
-    const loadScannedMeasurements = () => {
-      try {
-        // Check sessionStorage first (from recent scan)
-        const currentScanStr = sessionStorage.getItem('current_scan');
-        if (currentScanStr) {
-          const scan = JSON.parse(currentScanStr);
-          applyScannedMeasurementsToWalls(scan);
-          return;
-        }
-
-        // Check localStorage for saved scans
-        const savedScansStr = localStorage.getItem('room_scans');
-        if (savedScansStr) {
-          const scans = JSON.parse(savedScansStr);
-          if (scans.length > 0) {
-            // Use the most recent scan
-            const latestScan = scans[scans.length - 1];
-            applyScannedMeasurementsToWalls(latestScan);
-          }
-        }
-      } catch (error) {
-        console.error('Error loading scanned measurements:', error);
-      }
-    };
-
-    const applyScannedMeasurementsToWalls = (scan: any) => {
-      // Convert meters to pixels (1 meter = 39.3701 inches, 2px per inch)
-      const widthPx = Math.round(scan.measurements.width * 39.3701 * 2);
-      const depthPx = Math.round(scan.measurements.depth * 39.3701 * 2);
-      
-      const baseX = 200;
-      const baseY = 200;
-      
-      // Create a closed rectangular room based on scanned dimensions
-      const newWalls: Wall[] = [
-        {
-          id: 1,
-          x1: baseX,
-          y1: baseY,
-          x2: baseX + widthPx,
-          y2: baseY,
-          thickness: wallThickness
-        },
-        {
-          id: 2,
-          x1: baseX + widthPx,
-          y1: baseY,
-          x2: baseX + widthPx,
-          y2: baseY + depthPx,
-          thickness: wallThickness
-        },
-        {
-          id: 3,
-          x1: baseX + widthPx,
-          y1: baseY + depthPx,
-          x2: baseX,
-          y2: baseY + depthPx,
-          thickness: wallThickness
-        },
-        {
-          id: 4,
-          x1: baseX,
-          y1: baseY + depthPx,
-          x2: baseX,
-          y2: baseY,
-          thickness: wallThickness
-        }
-      ];
-      
-      setWalls(newWalls);
-      
-      // Track that these walls are from scan
-      setScanSourced(prev => ({
-        ...prev,
-        walls: newWalls.map(w => w.id)
-      }));
-      
-      // Apply detected windows and doors if available
-      const newOpenings: Opening[] = [];
-      let openingId = 1;
-      
-      // Add windows from scan
-      scan.measurements.windows?.forEach((window: any, idx: number) => {
-        const wallId = idx % 4 + 1; // Distribute across walls
-        newOpenings.push({
-          id: openingId++,
-          type: 'window',
-          wallId: wallId,
-          position: 0.5, // Center of wall
-          width: Math.round(window.width * 39.3701), // Convert meters to inches
-          height: Math.round(window.height * 39.3701),
-          yPosition: DEFAULTS.WINDOW_Y
-        });
-      });
-      
-      // Add doors from scan
-      scan.measurements.doors?.forEach((door: any, idx: number) => {
-        const wallId = idx % 4 + 1; // Distribute across walls
-        newOpenings.push({
-          id: openingId++,
-          type: 'door',
-          wallId: wallId,
-          position: 0.3, // Near edge of wall
-          width: Math.round(door.width * 39.3701), // Convert meters to inches
-          height: Math.round(door.height * 39.3701),
-          yPosition: DEFAULTS.DOOR_Y
-        });
-      });
-      
-      if (newOpenings.length > 0) {
-        setOpenings(newOpenings);
-        // Track that these openings are from scan
-        setScanSourced(prev => ({
-          ...prev,
-          openings: newOpenings.map(o => o.id)
-        }));
-      }
-      
-      const widthFeet = (scan.measurements.width * 3.28084).toFixed(1);
-      const depthFeet = (scan.measurements.depth * 3.28084).toFixed(1);
-      
-      toast.success(`Room layout loaded from ${scan.roomName}`, {
-        description: `${widthFeet}' × ${depthFeet}' with ${scan.measurements.windows?.length || 0} windows, ${scan.measurements.doors?.length || 0} doors`,
-      });
-    };
-
-    loadScannedMeasurements();
-  }, [wallThickness]);
-  
-  // Collision detection helpers
-  const checkCabinetWallCollision = useCallback((cabinet: Cabinet, walls: Wall[]): boolean => {
-    const widthPx = cabinet.width * 2;
-    const depthPx = cabinet.depth * 2;
-    const rotation = cabinet.rotation || 0;
-    
-    // Get cabinet bounds (simplified for now - treats as rectangle)
-    const cabinetLeft = cabinet.x;
-    const cabinetRight = cabinet.x + widthPx;
-    const cabinetTop = cabinet.y;
-    const cabinetBottom = cabinet.y + depthPx;
-    
-    for (const wall of walls) {
-      // Check if cabinet intersects with wall line segment
-      const wallLeft = Math.min(wall.x1, wall.x2) - wall.thickness / 2;
-      const wallRight = Math.max(wall.x1, wall.x2) + wall.thickness / 2;
-      const wallTop = Math.min(wall.y1, wall.y2) - wall.thickness / 2;
-      const wallBottom = Math.max(wall.y1, wall.y2) + wall.thickness / 2;
-      
-      // Check for overlap
-      if (
-        cabinetLeft < wallRight &&
-        cabinetRight > wallLeft &&
-        cabinetTop < wallBottom &&
-        cabinetBottom > wallTop
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }, []);
-  
-  const checkCabinetOpeningCollision = useCallback((cabinet: Cabinet, openings: Opening[], walls: Wall[]): boolean => {
-    const widthPx = cabinet.width * 2;
-    const depthPx = cabinet.depth * 2;
-    
-    const cabinetLeft = cabinet.x;
-    const cabinetRight = cabinet.x + widthPx;
-    const cabinetTop = cabinet.y;
-    const cabinetBottom = cabinet.y + depthPx;
-    
-    for (const opening of openings) {
-      const wall = walls.find(w => w.id === opening.wallId);
-      if (!wall) continue;
-      
-      // Calculate opening position on wall
-      const openingX = wall.x1 + (wall.x2 - wall.x1) * opening.position;
-      const openingY = wall.y1 + (wall.y2 - wall.y1) * opening.position;
-      const openingWidth = opening.width * 2; // Convert to pixels
-      
-      // Simplified collision check - treat opening as a rectangle
-      const openingLeft = openingX - openingWidth / 2;
-      const openingRight = openingX + openingWidth / 2;
-      const openingTop = openingY - 10;
-      const openingBottom = openingY + 10;
-      
-      if (
-        cabinetLeft < openingRight &&
-        cabinetRight > openingLeft &&
-        cabinetTop < openingBottom &&
-        cabinetBottom > openingTop
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }, []);
-  
-  // Detect all collisions
-  const detectCollisions = useCallback(() => {
-    const collisionMap = new Map<number, string[]>();
-    
-    cabinets.forEach(cabinet => {
-      const collisions: string[] = [];
-      
-      if (checkCabinetWallCollision(cabinet, walls)) {
-        collisions.push("wall");
-      }
-      
-      if (checkCabinetOpeningCollision(cabinet, openings, walls)) {
-        collisions.push("opening");
-      }
-      
-      if (collisions.length > 0) {
-        collisionMap.set(cabinet.id, collisions);
-      }
-    });
-    
-    setCabinetCollisions(collisionMap);
-  }, [cabinets, walls, openings, checkCabinetWallCollision, checkCabinetOpeningCollision]);
-  
-  // Run collision detection when cabinets, walls, or openings change
-  useEffect(() => {
-    detectCollisions();
-  }, [detectCollisions]);
-  
-  // Show warnings for collisions
-  useEffect(() => {
-    if (cabinetCollisions.size > 0) {
-      const collisionDetails: string[] = [];
-      cabinetCollisions.forEach((types, cabinetId) => {
-        const cabinet = cabinets.find(c => c.id === cabinetId);
-        if (cabinet) {
-          types.forEach(type => {
-            if (type === "wall") {
-              collisionDetails.push(`${cabinet.label || "Cabinet"} overlaps with wall`);
-            } else if (type === "opening") {
-              collisionDetails.push(`${cabinet.label || "Cabinet"} overlaps with door/window`);
-            }
-          });
-        }
-      });
-      
-      if (collisionDetails.length > 0) {
-        toast.error(`⚠️ Collision detected: ${collisionDetails[0]}${collisionDetails.length > 1 ? ` (+${collisionDetails.length - 1} more)` : ''}`, {
-          duration: 3000,
-        });
-      }
-    }
-  }, [cabinetCollisions.size]); // Only trigger when the number of collisions changes
   
   // Add a new cabinet
   const addCabinet = useCallback(() => {
@@ -551,11 +171,7 @@ const VanityDesigner = () => {
       y: 150,
       brand: "Tafisa",
       finish: "White",
-      label: `DB${36}`,
-      toeKickHeight: 4.5,
-      toeKickFinishId: "tafisa-white",
-      moldingFinishId: "tafisa-white",
-      lightMoldingFinishId: "tafisa-white",
+      label: `DB${36}`
     };
     setCabinets([...cabinets, newCabinet]);
     setSelectedCabinetId(newCabinet.id);
@@ -565,20 +181,9 @@ const VanityDesigner = () => {
   // Add cabinet from template
   const addCabinetFromTemplate = useCallback((template: CabinetSpec, x: number, y: number) => {
     const defaultFinishId = "tafisa-white";
-    const defaultDoorStyleId = "flat-framed";
     const defaultHandleType = "bar";
     const numHandles = template.subType === "drawer" ? 3 : 2;
-    const price = calculateCabinetPrice(template, defaultFinishId, defaultDoorStyleId, defaultHandleType, numHandles);
-    
-    // Set Y position based on cabinet type - professional standards
-    let yPosition: number;
-    if (template.type === "Base Cabinet") {
-      yPosition = DEFAULTS.BASE_CABINET_Y * 2; // Convert to pixels (2px per inch)
-    } else if (template.type === "Wall Cabinet") {
-      yPosition = DEFAULTS.WALL_CABINET_Y * 2; // Convert to pixels (2px per inch)
-    } else {
-      yPosition = snapToGrid(y); // Use clicked position for other types
-    }
+    const price = calculateCabinetPrice(template, defaultFinishId, defaultHandleType, numHandles);
     
     const newCabinet: Cabinet = {
       id: Math.max(...cabinets.map(c => c.id), 0) + 1,
@@ -587,11 +192,10 @@ const VanityDesigner = () => {
       height: template.height,
       depth: template.depth,
       x: snapToGrid(x),
-      y: yPosition,
+      y: snapToGrid(y),
       brand: "Tafisa",
       finish: "White",
       finishId: defaultFinishId,
-      doorStyleId: defaultDoorStyleId,
       label: template.label,
       price: price,
       catalogRef: template.label,
@@ -600,122 +204,11 @@ const VanityDesigner = () => {
       numHandles: numHandles,
       hasDrawers: template.subType === "drawer",
       numDrawers: template.subType === "drawer" ? 3 : 0,
-      toeKickHeight: 4.5,
-      toeKickFinishId: defaultFinishId,
-      moldingFinishId: defaultFinishId,
-      lightMoldingFinishId: defaultFinishId,
     };
     setCabinets([...cabinets, newCabinet]);
     setSelectedCabinetId(newCabinet.id);
     toast.success(`${template.description} added - ${formatPrice(price)}`);
   }, [cabinets, snapToGrid]);
-
-  // Handle wizard completion
-  const handleWizardComplete = useCallback((
-    template: CabinetSpec,
-    config: {
-      finishId: string;
-      doorStyleId: string;
-      handleType: keyof typeof HARDWARE_OPTIONS.handles;
-      numHandles: number;
-    }
-  ) => {
-    const price = calculateCabinetPrice(
-      template,
-      config.finishId,
-      config.doorStyleId,
-      config.handleType,
-      config.numHandles
-    );
-    
-    const finish = MATERIAL_FINISHES.find(f => f.id === config.finishId);
-    
-    // Set Y position based on cabinet type - professional standards
-    let yPosition: number;
-    if (template.type === "Base Cabinet") {
-      yPosition = DEFAULTS.BASE_CABINET_Y * 2;
-    } else if (template.type === "Wall Cabinet") {
-      yPosition = DEFAULTS.WALL_CABINET_Y * 2;
-    } else {
-      yPosition = 300; // Default center position for other types
-    }
-    
-    const newCabinet: Cabinet = {
-      id: Math.max(...cabinets.map(c => c.id), 0) + 1,
-      type: template.type,
-      width: template.width,
-      height: template.height,
-      depth: template.depth,
-      x: 300, // Center position
-      y: yPosition,
-      brand: finish?.brand || "Tafisa",
-      finish: finish?.name || "White",
-      finishId: config.finishId,
-      doorStyleId: config.doorStyleId,
-      label: template.label,
-      price: price,
-      catalogRef: template.label,
-      rotation: 0,
-      handleType: config.handleType,
-      numHandles: config.numHandles,
-      hasDrawers: template.subType === "drawer",
-      numDrawers: template.subType === "drawer" ? 3 : 0,
-      toeKickHeight: 4.5,
-      toeKickFinishId: config.finishId,
-      moldingFinishId: config.finishId,
-      lightMoldingFinishId: config.finishId,
-    };
-    
-    setCabinets([...cabinets, newCabinet]);
-    setSelectedCabinetId(newCabinet.id);
-    toast.success(`${template.description} added - ${formatPrice(price)}`);
-  }, [cabinets]);
-
-  // Apply global design settings to all cabinets
-  const applyGlobalDesignToAll = useCallback(() => {
-    const updatedCabinets = cabinets.map(cabinet => {
-      const numHandles = cabinet.hasDrawers ? 3 : 2;
-      return {
-        ...cabinet,
-        finishId: globalFinishId,
-        doorStyleId: globalDoorStyleId,
-        handleType: globalHandleType,
-        numHandles: numHandles,
-        toeKickHeight: 4.5, // Standard 4.5" toe kick
-        toeKickFinishId: globalToeKickFinishId === "match-door" ? globalFinishId : globalToeKickFinishId,
-        moldingFinishId: globalMoldingFinishId === "match-door" ? globalFinishId : globalMoldingFinishId,
-        lightMoldingFinishId: globalLightMoldingFinishId === "match-door" ? globalFinishId : globalLightMoldingFinishId,
-        finish: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.name || cabinet.finish,
-        brand: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.brand || cabinet.brand,
-      };
-    });
-    setCabinets(updatedCabinets);
-    toast.success("Global design applied to all cabinets!");
-  }, [cabinets, globalFinishId, globalDoorStyleId, globalHandleType, globalToeKickFinishId, globalMoldingFinishId, globalLightMoldingFinishId]);
-
-  // Reset single cabinet to global design settings
-  const resetCabinetToGlobal = useCallback((cabinetId: number) => {
-    const cabinet = cabinets.find(c => c.id === cabinetId);
-    if (!cabinet) return;
-    
-    const numHandles = cabinet.hasDrawers ? 3 : 2;
-    const updatedCabinet = {
-      ...cabinet,
-      finishId: globalFinishId,
-      doorStyleId: globalDoorStyleId,
-      handleType: globalHandleType,
-      numHandles: numHandles,
-      toeKickHeight: 4.5,
-      toeKickFinishId: globalToeKickFinishId === "match-door" ? globalFinishId : globalToeKickFinishId,
-      moldingFinishId: globalMoldingFinishId === "match-door" ? globalFinishId : globalMoldingFinishId,
-      lightMoldingFinishId: globalLightMoldingFinishId === "match-door" ? globalFinishId : globalLightMoldingFinishId,
-      finish: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.name || cabinet.finish,
-      brand: MATERIAL_FINISHES.find(f => f.id === globalFinishId)?.brand || cabinet.brand,
-    };
-    
-    setCabinets(cabinets.map(c => c.id === cabinetId ? updatedCabinet : c));
-    toast.success("Cabinet reset to global design!");
-  }, [cabinets, globalFinishId, globalDoorStyleId, globalHandleType, globalToeKickFinishId, globalMoldingFinishId, globalLightMoldingFinishId]);
 
   // Remove selected cabinet
   const removeCabinet = useCallback(() => {
@@ -878,38 +371,6 @@ const VanityDesigner = () => {
     toast.success("Cabinet rotated");
   }, [cabinets]);
 
-  // Calculate wall length in inches
-  const calculateWallLength = useCallback((wall: Wall): number => {
-    const dx = wall.x2 - wall.x1;
-    const dy = wall.y2 - wall.y1;
-    const lengthPx = Math.sqrt(dx * dx + dy * dy);
-    // Convert pixels to inches (2px = 1 inch)
-    return Math.round(lengthPx / 2);
-  }, []);
-
-  // Update wall endpoint
-  const updateWallEndpoint = useCallback((wallId: number, endpoint: 'start' | 'end', axis: 'x' | 'y', value: number) => {
-    setWalls(walls.map(wall => {
-      if (wall.id === wallId) {
-        if (endpoint === 'start') {
-          return axis === 'x' ? { ...wall, x1: value } : { ...wall, y1: value };
-        } else {
-          return axis === 'x' ? { ...wall, x2: value } : { ...wall, y2: value };
-        }
-      }
-      return wall;
-    }));
-  }, [walls]);
-  
-  // Update opening position along wall
-  const updateOpeningPosition = useCallback((openingId: number, newPosition: number) => {
-    setOpenings(openings.map(opening => 
-      opening.id === openingId 
-        ? { ...opening, position: Math.max(0, Math.min(1, newPosition)) }
-        : opening
-    ));
-  }, [openings]);
-
   const changeCabinetSize = useCallback((cabinetId: number, dimension: 'width' | 'height' | 'depth', value: number) => {
     setCabinets(cabinets.map(c => {
       if (c.id === cabinetId) {
@@ -921,7 +382,6 @@ const VanityDesigner = () => {
             updated.price = calculateCabinetPrice(
               { ...template, [dimension]: value },
               c.finishId,
-              c.doorStyleId || "flat",
               c.handleType || "bar",
               c.numHandles || 2
             );
@@ -954,7 +414,6 @@ const VanityDesigner = () => {
             updated.price = calculateCabinetPrice(
               template,
               finishId,
-              c.doorStyleId || "flat",
               c.handleType || "bar",
               c.numHandles || 2
             );
@@ -979,7 +438,6 @@ const VanityDesigner = () => {
             updated.price = calculateCabinetPrice(
               template,
               c.finishId,
-              c.doorStyleId || "flat",
               handleType,
               c.numHandles || 2
             );
@@ -991,101 +449,6 @@ const VanityDesigner = () => {
     }));
     toast.success("Hardware updated");
   }, [cabinets]);
-
-  // Capture canvas thumbnail for history
-  const captureCanvasThumbnail = useCallback((): string => {
-    if (!svgCanvasRef.current) return '';
-    
-    try {
-      const svgElement = svgCanvasRef.current;
-      const svgData = new XMLSerializer().serializeToString(svgElement);
-      const canvas = document.createElement('canvas');
-      canvas.width = 200;
-      canvas.height = 150;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return '';
-      
-      const img = new Image();
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(svgBlob);
-      
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, 200, 150);
-        URL.revokeObjectURL(url);
-      };
-      img.src = url;
-      
-      return canvas.toDataURL('image/png');
-    } catch (error) {
-      console.error('Failed to capture thumbnail:', error);
-      return '';
-    }
-  }, []);
-
-  // Track layout changes for history
-  useEffect(() => {
-    const description = walls.length === 0 && openings.length === 0 
-      ? 'Initial state'
-      : `${walls.length} walls, ${openings.length} openings`;
-    
-    // Use a timeout to ensure SVG is rendered before capturing
-    const timer = setTimeout(() => {
-      const thumbnail = captureCanvasThumbnail();
-      
-      setHistoryThumbnails(prev => {
-        // Check if this is a new state or an undo/redo navigation
-        const lastState = prev[prev.length - 1];
-        const stateKey = `${walls.length}-${openings.length}`;
-        const lastKey = lastState ? `${lastState.description}` : '';
-        
-        // Only add new thumbnail if state actually changed
-        if (lastKey !== description) {
-          return [
-            ...prev,
-            {
-              id: Date.now(),
-              thumbnail: thumbnail || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-              timestamp: new Date(),
-              description
-            }
-          ];
-        }
-        return prev;
-      });
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [layoutState, captureCanvasThumbnail, walls.length, openings.length]);
-
-  // Update history index based on undo/redo
-  useEffect(() => {
-    // Calculate index based on past states
-    const pastLength = historyThumbnails.length > 0 ? historyThumbnails.length - 1 : 0;
-    setHistoryIndex(pastLength);
-  }, [historyThumbnails.length]);
-
-  // Jump to specific history state
-  const jumpToHistoryState = useCallback((index: number) => {
-    if (index < 0 || index >= historyThumbnails.length) return;
-    
-    const diff = index - historyIndex;
-    
-    if (diff < 0) {
-      // Going backwards - undo
-      for (let i = 0; i < Math.abs(diff); i++) {
-        undo();
-      }
-    } else if (diff > 0) {
-      // Going forwards - redo
-      for (let i = 0; i < diff; i++) {
-        redo();
-      }
-    }
-    
-    setHistoryIndex(index);
-    toast.success(`Jumped to state ${index + 1}`);
-  }, [historyIndex, historyThumbnails.length, undo, redo]);
-
 
   const toggleCabinetDrawers = useCallback((cabinetId: number) => {
     setCabinets(cabinets.map(c => {
@@ -1111,69 +474,6 @@ const VanityDesigner = () => {
     }));
     toast.success("Height reset to standard 34.5\"");
   }, [cabinets]);
-
-  // Template handlers
-  const handleSaveTemplate = useCallback(() => {
-    if (!templateName.trim()) {
-      toast.error("Please enter a template name");
-      return;
-    }
-    
-    if (walls.length === 0 && cabinets.length === 0) {
-      toast.error("Nothing to save - add walls or cabinets first");
-      return;
-    }
-    
-    saveTemplate(templateName.trim(), walls, openings, cabinets, templateDescription.trim() || undefined);
-    setShowSaveDialog(false);
-    setTemplateName("");
-    setTemplateDescription("");
-  }, [templateName, templateDescription, walls, openings, cabinets, saveTemplate]);
-
-  const handleLoadTemplate = useCallback((templateId: string) => {
-    const template = loadTemplate(templateId);
-    if (template) {
-      // Regenerate IDs to avoid conflicts
-      const maxWallId = walls.length > 0 ? Math.max(...walls.map(w => w.id)) : 0;
-      const maxOpeningId = openings.length > 0 ? Math.max(...openings.map(o => o.id)) : 0;
-      const maxCabinetId = cabinets.length > 0 ? Math.max(...cabinets.map(c => c.id)) : 0;
-      
-      const newWalls = template.walls.map((w: any, idx: number) => ({
-        ...w,
-        id: maxWallId + idx + 1
-      }));
-      
-      const wallIdMap = new Map(template.walls.map((w: any, idx: number) => [w.id, maxWallId + idx + 1]));
-      
-      const newOpenings = template.openings.map((o: any, idx: number) => ({
-        ...o,
-        id: maxOpeningId + idx + 1,
-        wallId: wallIdMap.get(o.wallId) || o.wallId,
-        // Add defaults for legacy templates missing new properties
-        height: o.height ?? (o.type === "door" ? DEFAULTS.DOOR_HEIGHT : DEFAULTS.WINDOW_HEIGHT),
-        yPosition: o.yPosition ?? (o.type === "door" ? DEFAULTS.DOOR_Y : DEFAULTS.WINDOW_Y),
-      }));
-      
-      const newCabinets = template.cabinets.map((c: any, idx: number) => ({
-        ...c,
-        id: maxCabinetId + idx + 1
-      }));
-      
-      setWalls(newWalls);
-      setOpenings(newOpenings);
-      setCabinets(newCabinets);
-      setSelectedCabinetId(null);
-      setActiveTab("items");
-    }
-  }, [walls, openings, cabinets, loadTemplate]);
-
-  const openSaveDialog = useCallback(() => {
-    if (walls.length === 0 && cabinets.length === 0) {
-      toast.error("Nothing to save - add walls or cabinets first");
-      return;
-    }
-    setShowSaveDialog(true);
-  }, [walls, cabinets]);
 
   // Rotation handlers
   const handleRotateStart = useCallback((e: React.MouseEvent, cabinetId: number) => {
@@ -1328,72 +628,6 @@ const VanityDesigner = () => {
       return;
     }
     
-    // Handle drag handle movement
-    if (draggingHandle) {
-      const rect = canvasRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      if (draggingHandle.type === 'wall-start') {
-        const wall = walls.find(w => w.id === draggingHandle.id);
-        if (wall) {
-          const snappedX = snapToGrid(x);
-          const snappedY = snapToGrid(y);
-          updateWallEndpoint(wall.id, 'start', 'x', snappedX);
-          updateWallEndpoint(wall.id, 'start', 'y', snappedY);
-          // Add to trail
-          setDragTrail(prev => [...prev, { x: snappedX, y: snappedY }]);
-          // Show feedback
-          setDragFeedback({
-            x: e.clientX,
-            y: e.clientY - 40,
-            label: `X: ${Math.round(snappedX)}px, Y: ${Math.round(snappedY)}px`
-          });
-        }
-      } else if (draggingHandle.type === 'wall-end') {
-        const wall = walls.find(w => w.id === draggingHandle.id);
-        if (wall) {
-          const snappedX = snapToGrid(x);
-          const snappedY = snapToGrid(y);
-          updateWallEndpoint(wall.id, 'end', 'x', snappedX);
-          updateWallEndpoint(wall.id, 'end', 'y', snappedY);
-          // Add to trail
-          setDragTrail(prev => [...prev, { x: snappedX, y: snappedY }]);
-          // Show feedback
-          setDragFeedback({
-            x: e.clientX,
-            y: e.clientY - 40,
-            label: `X: ${Math.round(snappedX)}px, Y: ${Math.round(snappedY)}px`
-          });
-        }
-      } else if (draggingHandle.type === 'opening') {
-        const opening = openings.find(o => o.id === draggingHandle.id);
-        if (opening) {
-          const wall = walls.find(w => w.id === opening.wallId);
-          if (wall) {
-            const newPosition = getPositionOnWall({ x, y }, wall);
-            updateOpeningPosition(opening.id, newPosition);
-            // Calculate position on wall for trail
-            const pos = getPositionOnWall({ x, y }, wall);
-            const wallX = wall.x1 + (wall.x2 - wall.x1) * pos;
-            const wallY = wall.y1 + (wall.y2 - wall.y1) * pos;
-            setDragTrail(prev => [...prev, { x: wallX, y: wallY }]);
-            // Show feedback
-            const wallLength = calculateWallLength(wall);
-            const distanceFromStart = Math.round(newPosition * wallLength);
-            setDragFeedback({
-              x: e.clientX,
-              y: e.clientY - 40,
-              label: `${(newPosition * 100).toFixed(0)}% (${distanceFromStart}" from start)`
-            });
-          }
-        }
-      }
-      return;
-    }
-    
     if (draggingId === null) return;
     
     const newX = snapToGrid(e.clientX - dragOffset.x);
@@ -1402,20 +636,14 @@ const VanityDesigner = () => {
     setCabinets(cabinets.map(c => 
       c.id === draggingId ? { ...c, x: newX, y: newY } : c
     ));
-  }, [draggingId, dragOffset, snapToGrid, cabinets, rotatingCabinet, handleRotateMove, draggingHandle, walls, openings, updateWallEndpoint, updateOpeningPosition]);
+  }, [draggingId, dragOffset, snapToGrid, cabinets, rotatingCabinet, handleRotateMove]);
 
   const handleMouseUp = useCallback(() => {
     if (rotatingCabinet !== null) {
       handleRotateEnd();
     }
-    if (draggingHandle) {
-      setDraggingHandle(null);
-      setDragFeedback(null);
-      setDragTrail([]);
-      toast.success("Position updated");
-    }
     setDraggingId(null);
-  }, [rotatingCabinet, handleRotateEnd, draggingHandle]);
+  }, [rotatingCabinet, handleRotateEnd]);
   
   // Library drag handlers
   const handleLibraryDragStart = useCallback((template: CabinetSpec) => {
@@ -1484,9 +712,7 @@ const VanityDesigner = () => {
           type: drawingTool,
           wallId: nearestWall.id,
           position: wallPosition,
-          width: drawingTool === "door" ? DEFAULTS.DOOR_WIDTH : DEFAULTS.WINDOW_WIDTH,
-          height: drawingTool === "door" ? DEFAULTS.DOOR_HEIGHT : DEFAULTS.WINDOW_HEIGHT,
-          yPosition: drawingTool === "door" ? DEFAULTS.DOOR_Y : DEFAULTS.WINDOW_Y,
+          width: drawingTool === "door" ? 36 : 48 // Default: 36" door, 48" window
         };
         setOpenings([...openings, newOpening]);
         setSelectedOpeningId(newOpening.id);
@@ -1554,19 +780,12 @@ const VanityDesigner = () => {
   }, [drawingTool, drawingWall, snapToGrid]);
 
   const deleteSelectedWall = useCallback(() => {
-    if (selectedWallId) {
-      // Remove openings associated with this wall
-      setOpenings(openings.filter(o => o.wallId !== selectedWallId));
-      // Remove the wall
-      setWalls(walls.filter(w => w.id !== selectedWallId));
-      setSelectedWallId(null);
-      toast.success("Wall removed");
-    } else if (walls.length > 0) {
-      // Delete last wall if none selected
+    // For now, delete the last wall
+    if (walls.length > 0) {
       setWalls(walls.slice(0, -1));
       toast.success("Wall removed");
     }
-  }, [walls, openings, selectedWallId]);
+  }, [walls]);
   
   const deleteSelectedOpening = useCallback(() => {
     if (selectedOpeningId) {
@@ -1588,6 +807,14 @@ const VanityDesigner = () => {
         : o
     ));
   }, [openings, selectedOpeningId]);
+
+  const calculateWallLength = (wall: Wall) => {
+    const dx = wall.x2 - wall.x1;
+    const dy = wall.y2 - wall.y1;
+    const lengthPx = Math.sqrt(dx * dx + dy * dy);
+    const lengthInches = lengthPx / 2; // 2px per inch
+    return Math.round(lengthInches);
+  };
 
   // Render ribbon content based on active tab
   const renderRibbonContent = () => {
@@ -1677,39 +904,6 @@ const VanityDesigner = () => {
               </Button>
               <span className="text-[10px]">Clear Room</span>
             </div>
-            <div className="w-px h-12 bg-border" />
-            <div className="flex flex-col items-center gap-1">
-              <Button 
-                onClick={() => {
-                  undo();
-                  toast.success("Undone");
-                }}
-                variant="ghost"
-                size="sm" 
-                className="h-12 w-12 flex flex-col gap-1 hover:bg-accent"
-                disabled={!canUndo}
-                title="Undo (Ctrl+Z)"
-              >
-                <Undo className="h-5 w-5" />
-              </Button>
-              <span className="text-[10px]">Undo</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <Button 
-                onClick={() => {
-                  redo();
-                  toast.success("Redone");
-                }}
-                variant="ghost"
-                size="sm" 
-                className="h-12 w-12 flex flex-col gap-1 hover:bg-accent"
-                disabled={!canRedo}
-                title="Redo (Ctrl+Y)"
-              >
-                <Redo className="h-5 w-5" />
-              </Button>
-              <span className="text-[10px]">Redo</span>
-            </div>
             {selectedOpeningId && (
               <>
                 <div className="w-px h-12 bg-border" />
@@ -1742,19 +936,6 @@ const VanityDesigner = () => {
         return (
           <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
             <div className="flex flex-col items-center gap-1">
-              <Button 
-                onClick={() => setShowWizard(true)} 
-                variant="default" 
-                size="sm" 
-                className="h-12 px-4 flex items-center gap-2 bg-primary hover:bg-primary/90"
-              >
-                <Sparkles className="h-4 w-4" />
-                <span className="text-xs font-medium">Quick Add Wizard</span>
-              </Button>
-              <span className="text-[10px]">Guided Setup</span>
-            </div>
-            <div className="w-px h-12 bg-border" />
-            <div className="flex flex-col items-center gap-1">
               <Button onClick={addCabinet} variant="ghost" size="sm" className="h-12 w-12 flex flex-col gap-1 hover:bg-accent">
                 <Plus className="h-5 w-5" />
               </Button>
@@ -1772,193 +953,6 @@ const VanityDesigner = () => {
                 <Trash2 className="h-5 w-5" />
               </Button>
               <span className="text-[10px]">Delete</span>
-            </div>
-          </div>
-        );
-      case "design":
-        return (
-          <div className="flex items-center gap-4 px-4 py-3 bg-muted/30 overflow-x-auto">
-            <div className="flex flex-col gap-2 flex-shrink-0">
-              <Label className="text-xs font-semibold">Door/Drawer Finish</Label>
-              <select
-                value={globalFinishId}
-                onChange={(e) => setGlobalFinishId(e.target.value)}
-                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
-              >
-                <optgroup label="Tafisa">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Egger">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Shinnoki">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-              </select>
-            </div>
-            
-            <div className="flex flex-col gap-2 flex-shrink-0">
-              <Label className="text-xs font-semibold">Door Style</Label>
-              <select
-                value={globalDoorStyleId}
-                onChange={(e) => setGlobalDoorStyleId(e.target.value)}
-                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
-              >
-                <optgroup label="Framed">
-                  {DOOR_STYLES.filter(d => d.frameType === "framed").map(style => (
-                    <option key={style.id} value={style.id}>{style.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Frameless">
-                  {DOOR_STYLES.filter(d => d.frameType === "frameless").map(style => (
-                    <option key={style.id} value={style.id}>{style.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Inset">
-                  {DOOR_STYLES.filter(d => d.frameType === "inset").map(style => (
-                    <option key={style.id} value={style.id}>{style.name}</option>
-                  ))}
-                </optgroup>
-              </select>
-            </div>
-            
-            <div className="w-px h-12 bg-border" />
-            
-            <div className="flex flex-col gap-2 flex-shrink-0">
-              <Label className="text-xs font-semibold">Handle Type</Label>
-              <select
-                value={globalHandleType}
-                onChange={(e) => setGlobalHandleType(e.target.value as keyof typeof HARDWARE_OPTIONS.handles)}
-                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
-              >
-                {Object.entries(HARDWARE_OPTIONS.handles).map(([key, value]) => (
-                  <option key={key} value={key}>{value.name}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="w-px h-12 bg-border" />
-            
-            <div className="flex flex-col gap-2 flex-shrink-0">
-              <Label className="text-xs font-semibold">Toe Kick (4.5")</Label>
-              <select
-                value={globalToeKickFinishId}
-                onChange={(e) => setGlobalToeKickFinishId(e.target.value)}
-                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
-              >
-                <option value="match-door">Match Door</option>
-                <optgroup label="Tafisa">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Egger">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Shinnoki">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-              </select>
-            </div>
-            
-            <div className="flex flex-col gap-2 flex-shrink-0">
-              <Label className="text-xs font-semibold">Moldings</Label>
-              <select
-                value={globalMoldingFinishId}
-                onChange={(e) => setGlobalMoldingFinishId(e.target.value)}
-                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
-              >
-                <option value="match-door">Match Door</option>
-                <optgroup label="Tafisa">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Egger">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Shinnoki">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-              </select>
-            </div>
-            
-            <div className="flex flex-col gap-2 flex-shrink-0">
-              <Label className="text-xs font-semibold">Light Moldings</Label>
-              <select
-                value={globalLightMoldingFinishId}
-                onChange={(e) => setGlobalLightMoldingFinishId(e.target.value)}
-                className="w-44 h-9 text-xs border rounded-md px-2 bg-background z-50"
-              >
-                <option value="match-door">Match Door</option>
-                <optgroup label="Tafisa">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Egger">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Shinnoki">
-                  {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
-                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                  ))}
-                </optgroup>
-              </select>
-            </div>
-            
-            <div className="w-px h-12 bg-border" />
-            
-            <div className="flex flex-col items-center gap-1 flex-shrink-0">
-              <Button 
-                onClick={applyGlobalDesignToAll}
-                variant="default"
-                size="sm" 
-                className="h-12 px-6 flex items-center gap-2"
-                disabled={cabinets.length === 0}
-              >
-                <Paintbrush className="h-5 w-5" />
-                <span className="text-xs font-medium">Apply to All</span>
-              </Button>
-              <span className="text-[10px] text-muted-foreground">
-                {cabinets.length} cabinet{cabinets.length !== 1 ? 's' : ''}
-              </span>
-            </div>
-          </div>
-        );
-      case "templates":
-        return (
-          <div className="flex items-center gap-6 px-4 py-2 bg-muted/30">
-            <div className="flex flex-col items-center gap-1">
-              <Button 
-                onClick={openSaveDialog}
-                variant="ghost"
-                size="sm" 
-                className="h-12 w-12 flex flex-col gap-1 hover:bg-accent"
-              >
-                <Save className="h-5 w-5" />
-              </Button>
-              <span className="text-[10px]">Save Template</span>
-            </div>
-            <div className="w-px h-12 bg-border" />
-            <div className="text-xs text-muted-foreground">
-              {templates.length} saved template{templates.length !== 1 ? 's' : ''}
             </div>
           </div>
         );
@@ -2011,20 +1005,14 @@ const VanityDesigner = () => {
       {/* Top Ribbon Tabs */}
       <div className="border-b border-border bg-card flex-shrink-0">
         <div className="flex items-center h-10 md:h-12 px-1 md:px-2 overflow-x-auto">
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => navigate("/")}
-            className="h-10 md:h-12 px-3 flex-shrink-0 hover:opacity-90 transition-opacity flex items-center bg-black"
+            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm bg-[#FF8C00] hover:bg-[#FF8C00]/90 text-white flex-shrink-0"
           >
-            <img 
-              src="/logo.png" 
-              alt="Green Cabinets" 
-              className="h-8 md:h-10 w-auto object-cover"
-              style={{ 
-                filter: 'drop-shadow(0 0 0 #000)',
-                clipPath: 'inset(5% 5% 5% 5%)'
-              }}
-            />
-          </button>
+            FILE
+          </Button>
           
           <Button
             variant={activeTab === "room-layout" ? "default" : "ghost"}
@@ -2042,24 +1030,6 @@ const VanityDesigner = () => {
             className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
           >
             ITEMS
-          </Button>
-          
-          <Button
-            variant={activeTab === "design" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveTab("design")}
-            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
-          >
-            DESIGN
-          </Button>
-          
-          <Button
-            variant={activeTab === "templates" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveTab("templates")}
-            className="h-7 md:h-8 px-2 md:px-3 text-xs md:text-sm flex-shrink-0"
-          >
-            TEMPLATES
           </Button>
           
           <Button
@@ -2107,7 +1077,7 @@ const VanityDesigner = () => {
           <div className="w-full md:w-64 border-r border-border bg-card flex flex-col absolute md:relative z-30 md:z-0 h-full md:h-auto">
             <div className="p-2 md:p-3 border-b border-border flex items-center justify-between">
               <h3 className="font-semibold text-xs md:text-sm">
-                {activeTab === "room-layout" ? "Room Tools" : activeTab === "templates" ? "Saved Templates" : "Cabinet Library"}
+                {activeTab === "room-layout" ? "Room Tools" : "Cabinet Library"}
               </h3>
               <Button
                 variant="ghost"
@@ -2129,22 +1099,6 @@ const VanityDesigner = () => {
                   
                   <TabsContent value="presets" className="space-y-2 mt-3">
                     <div>
-                      <Label className="text-xs font-semibold mb-2 block">3D Room Scanner</Label>
-                      <Button 
-                        variant="default" 
-                        size="sm"
-                        onClick={() => navigate('/scan')}
-                        className="w-full h-auto py-3 flex items-center justify-center gap-2"
-                      >
-                        <Scan className="h-4 w-4" />
-                        <span className="text-xs">Scan Room with Camera</span>
-                      </Button>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Automatically measure your space with LiDAR or camera
-                      </p>
-                    </div>
-                    
-                    <div>
                       <Label className="text-xs font-semibold mb-2 block">Quick Layouts</Label>
                       <div className="grid grid-cols-2 gap-2">
                         <Button 
@@ -2162,14 +1116,7 @@ const VanityDesigner = () => {
                           onClick={() => createRoomLayout('l-shaped')}
                           className="h-auto py-3 flex flex-col gap-1"
                         >
-                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="h-4 w-4">
-                            <path
-                              d="M 2 2 L 6 2 L 6 10 L 14 10 L 14 14 L 2 14 Z"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              fill="none"
-                            />
-                          </svg>
+                          <ArrowRight className="h-4 w-4 rotate-[-90deg]" />
                           <span className="text-xs">L-Shaped</span>
                         </Button>
                         <Button 
@@ -2178,14 +1125,7 @@ const VanityDesigner = () => {
                           onClick={() => createRoomLayout('u-shaped')}
                           className="h-auto py-3 flex flex-col gap-1"
                         >
-                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="h-4 w-4">
-                            <path
-                              d="M 2 2 L 14 2 L 14 14 L 10 14 L 10 6 L 6 6 L 6 14 L 2 14 Z"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              fill="none"
-                            />
-                          </svg>
+                          <Layout className="h-4 w-4" />
                           <span className="text-xs">U-Shaped</span>
                         </Button>
                         <Button 
@@ -2213,341 +1153,77 @@ const VanityDesigner = () => {
                   <TabsContent value="properties" className="space-y-3 mt-3">
                     {walls.length > 0 && (
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-xs font-semibold">Walls</Label>
-                          {scanSourced.walls.length > 0 && (
-                            <Badge variant="secondary" className="text-[10px] h-5">
-                              <Scan className="h-2.5 w-2.5 mr-1" />
-                              From Scan
-                            </Badge>
-                          )}
-                        </div>
-                        {walls.map((wall, idx) => {
-                          const isFromScan = scanSourced.walls.includes(wall.id);
-                          return (
-                            <Card key={wall.id} className={`p-3 ${isFromScan ? 'border-blue-200 dark:border-blue-800' : ''}`}>
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs font-medium">Wall #{idx + 1}</span>
-                                  {isFromScan && (
-                                    <Badge variant="outline" className="text-[9px] h-4 px-1">
-                                      <Scan className="h-2 w-2 mr-0.5" />
-                                      Scanned
-                                    </Badge>
-                                  )}
-                                </div>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm"
-                                  className="h-6 w-6 p-0"
-                                  onClick={() => {
-                                    setWalls(walls.filter(w => w.id !== wall.id));
-                                    setScanSourced(prev => ({
-                                      ...prev,
-                                      walls: prev.walls.filter(id => id !== wall.id)
-                                    }));
-                                    toast.success("Wall removed");
-                                  }}
-                                >
-                                  <Trash2 className="h-3 w-3" />
-                                </Button>
-                              </div>
-                              
-                              <div className="space-y-2">
-                                <div className="text-xs text-muted-foreground mb-2">
-                                  Length: {calculateWallLength(wall)}"
-                                </div>
-                                
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div>
-                                    <Label className="text-[10px]">Start X</Label>
-                                    <Input 
-                                      type="number"
-                                      value={Math.round(wall.x1)}
-                                      onChange={(e) => updateWallEndpoint(wall.id, 'start', 'x', parseInt(e.target.value) || 0)}
-                                      className="h-6 text-xs"
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label className="text-[10px]">Start Y</Label>
-                                    <Input 
-                                      type="number"
-                                      value={Math.round(wall.y1)}
-                                      onChange={(e) => updateWallEndpoint(wall.id, 'start', 'y', parseInt(e.target.value) || 0)}
-                                      className="h-6 text-xs"
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label className="text-[10px]">End X</Label>
-                                    <Input 
-                                      type="number"
-                                      value={Math.round(wall.x2)}
-                                      onChange={(e) => updateWallEndpoint(wall.id, 'end', 'x', parseInt(e.target.value) || 0)}
-                                      className="h-6 text-xs"
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label className="text-[10px]">End Y</Label>
-                                    <Input 
-                                      type="number"
-                                      value={Math.round(wall.y2)}
-                                      onChange={(e) => updateWallEndpoint(wall.id, 'end', 'y', parseInt(e.target.value) || 0)}
-                                      className="h-6 text-xs"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </Card>
-                          );
-                        })}
+                        <Label className="text-xs font-semibold">Walls</Label>
+                        {walls.map((wall, idx) => (
+                          <Card key={wall.id} className="p-2">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs font-medium">Wall #{idx + 1}</span>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="h-6 w-6 p-0"
+                                onClick={() => {
+                                  setWalls(walls.filter(w => w.id !== wall.id));
+                                  toast.success("Wall removed");
+                                }}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Length: {calculateWallLength(wall)}"
+                            </div>
+                          </Card>
+                        ))}
                       </div>
                     )}
                     
                     {openings.length > 0 && (
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-xs font-semibold">Openings</Label>
-                          {scanSourced.openings.length > 0 && (
-                            <Badge variant="secondary" className="text-[10px] h-5">
-                              <Scan className="h-2.5 w-2.5 mr-1" />
-                              From Scan
-                            </Badge>
-                          )}
-                        </div>
-                        {openings.map((opening) => {
-                          const isFromScan = scanSourced.openings.includes(opening.id);
-                          return (
-                            <Card key={opening.id} className={`p-3 ${isFromScan ? 'border-blue-200 dark:border-blue-800' : ''}`}>
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs font-medium capitalize">{opening.type}</span>
-                                  {isFromScan && (
-                                    <Badge variant="outline" className="text-[9px] h-4 px-1">
-                                      <Scan className="h-2 w-2 mr-0.5" />
-                                      Scanned
-                                    </Badge>
-                                  )}
-                                </div>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm"
-                                  className="h-6 w-6 p-0"
-                                  onClick={() => {
-                                    setOpenings(openings.filter(o => o.id !== opening.id));
-                                    setScanSourced(prev => ({
-                                      ...prev,
-                                      openings: prev.openings.filter(id => id !== opening.id)
-                                    }));
-                                    toast.success("Opening removed");
-                                  }}
-                                >
-                                  <Trash2 className="h-3 w-3" />
-                                </Button>
-                              </div>
-                              
-                              <div className="space-y-2">
-                                <div>
-                                  <Label className="text-[10px]">Position on Wall (0-1)</Label>
-                                  <div className="flex items-center gap-2">
-                                    <Input 
-                                      type="number"
-                                      min="0"
-                                      max="1"
-                                      step="0.1"
-                                      value={opening.position}
-                                      onChange={(e) => {
-                                        const newPos = Math.max(0, Math.min(1, parseFloat(e.target.value) || 0));
-                                        setOpenings(openings.map(o => 
-                                          o.id === opening.id ? { ...o, position: newPos } : o
-                                        ));
-                                      }}
-                                      className="h-7 text-xs"
-                                    />
-                                  </div>
-                                  <p className="text-[9px] text-muted-foreground mt-0.5">
-                                    0 = start, 0.5 = center, 1 = end
-                                  </p>
-                                </div>
-                                
-                                <div>
-                                  <Label className="text-[10px]">Width (inches)</Label>
-                                  <Input 
-                                    type="number"
-                                    value={opening.width}
-                                    onChange={(e) => {
-                                      const newWidth = Math.max(24, Math.min(96, parseInt(e.target.value) || 24));
-                                      setOpenings(openings.map(o => 
-                                        o.id === opening.id ? { ...o, width: newWidth } : o
-                                      ));
-                                    }}
-                                    className="h-7 text-xs"
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <Label className="text-[10px]">Height (inches)</Label>
-                                  <Input 
-                                    type="number"
-                                    value={opening.height}
-                                    onChange={(e) => {
-                                      const newHeight = Math.max(12, Math.min(96, parseInt(e.target.value) || 30));
-                                      setOpenings(openings.map(o => 
-                                        o.id === opening.id ? { ...o, height: newHeight } : o
-                                      ));
-                                    }}
-                                    className="h-7 text-xs"
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <Label className="text-[10px]">Height from Floor (inches)</Label>
-                                  <Input 
-                                    type="number"
-                                    value={opening.yPosition}
-                                    onChange={(e) => {
-                                      const newY = Math.max(0, Math.min(84, parseInt(e.target.value) || 0));
-                                      setOpenings(openings.map(o => 
-                                        o.id === opening.id ? { ...o, yPosition: newY } : o
-                                      ));
-                                    }}
-                                    className="h-7 text-xs"
-                                  />
-                                </div>
-                              </div>
-                            </Card>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </TabsContent>
-                </Tabs>
-              ) : activeTab === "templates" ? (
-                <>
-                  {templates.length === 0 ? (
-                    <div className="text-center py-8 space-y-3">
-                      <FolderOpen className="h-12 w-12 mx-auto text-muted-foreground opacity-50" />
-                      <div>
-                        <p className="text-sm font-medium">No templates saved</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Create a room layout, then save it as a template for later use.
-                        </p>
-                      </div>
-                      <Button onClick={openSaveDialog} size="sm" className="mt-2">
-                        <Save className="h-4 w-4 mr-2" />
-                        Save Current Layout
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      {templates.map((template) => (
-                        <Card key={template.id} className="p-3 hover:bg-accent/50 transition-colors">
-                          <div className="space-y-2">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1 min-w-0">
-                                <h4 className="font-medium text-sm truncate">{template.name}</h4>
-                                {template.description && (
-                                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                                    {template.description}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                            
-                            <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
-                              <div className="flex items-center gap-1">
-                                <Minus className="h-3 w-3" />
-                                <span>{template.walls.length}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <DoorOpen className="h-3 w-3" />
-                                <span>{template.openings.length}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Box className="h-3 w-3" />
-                                <span>{template.cabinets.length}</span>
-                              </div>
-                            </div>
-                            
-                            <div className="flex gap-1 pt-2 border-t">
-                              <Button
-                                variant="outline"
+                        <Label className="text-xs font-semibold">Openings</Label>
+                        {openings.map((opening) => (
+                          <Card key={opening.id} className="p-2">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs font-medium capitalize">{opening.type}</span>
+                              <Button 
+                                variant="ghost" 
                                 size="sm"
-                                className="flex-1 h-7 text-xs"
-                                onClick={() => handleLoadTemplate(template.id)}
-                              >
-                                <Upload className="h-3 w-3 mr-1" />
-                                Load
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="h-7 px-2"
-                                onClick={() => duplicateTemplate(template.id)}
-                              >
-                                <Copy className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="h-7 px-2 text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                                onClick={() => deleteTemplate(template.id)}
+                                className="h-6 w-6 p-0"
+                                onClick={() => {
+                                  setOpenings(openings.filter(o => o.id !== opening.id));
+                                  toast.success("Opening removed");
+                                }}
                               >
                                 <Trash2 className="h-3 w-3" />
                               </Button>
                             </div>
-                            
-                            <div className="text-[10px] text-muted-foreground">
-                              Saved {new Date(template.createdAt).toLocaleDateString()}
+                            <div className="space-y-1">
+                              <Label className="text-[10px]">Width (inches)</Label>
+                              <Input 
+                                type="number"
+                                value={opening.width}
+                                onChange={(e) => {
+                                  const newWidth = Math.max(24, Math.min(96, parseInt(e.target.value) || 24));
+                                  setOpenings(openings.map(o => 
+                                    o.id === opening.id ? { ...o, width: newWidth } : o
+                                  ));
+                                }}
+                                className="h-7 text-xs"
+                              />
                             </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
               ) : (
                 <>
                   {/* Cabinet Properties Panel when one is selected */}
                   {selectedCabinetId && cabinets.find(c => c.id === selectedCabinetId) && (
                     <Card className="p-3 mb-3">
                       <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <Label className="text-xs font-semibold">Cabinet Properties</Label>
-                          {(() => {
-                            const cabinet = cabinets.find(c => c.id === selectedCabinetId);
-                            if (!cabinet) return null;
-                            
-                            // Check if any property differs from global settings
-                            const hasOverrides = 
-                              cabinet.finishId !== globalFinishId ||
-                              cabinet.doorStyleId !== globalDoorStyleId ||
-                              cabinet.handleType !== globalHandleType ||
-                              (cabinet.toeKickFinishId && cabinet.toeKickFinishId !== "match-door" && cabinet.toeKickFinishId !== (globalToeKickFinishId === "match-door" ? globalFinishId : globalToeKickFinishId)) ||
-                              (cabinet.moldingFinishId && cabinet.moldingFinishId !== "match-door" && cabinet.moldingFinishId !== (globalMoldingFinishId === "match-door" ? globalFinishId : globalMoldingFinishId)) ||
-                              (cabinet.lightMoldingFinishId && cabinet.lightMoldingFinishId !== "match-door" && cabinet.lightMoldingFinishId !== (globalLightMoldingFinishId === "match-door" ? globalFinishId : globalLightMoldingFinishId));
-                            
-                            if (hasOverrides) {
-                              return (
-                                <>
-                                  <Badge variant="secondary" className="text-[9px] h-5">
-                                    <Edit className="h-2.5 w-2.5 mr-1" />
-                                    Custom
-                                  </Badge>
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    className="h-6 text-[10px] px-2"
-                                    onClick={() => resetCabinetToGlobal(selectedCabinetId)}
-                                  >
-                                    <RefreshCw className="h-3 w-3 mr-1" />
-                                    Reset
-                                  </Button>
-                                </>
-                              );
-                            }
-                            return null;
-                          })()}
-                        </div>
+                        <Label className="text-xs font-semibold">Selected Cabinet</Label>
                         <Button 
                           variant="ghost" 
                           size="sm"
@@ -2562,8 +1238,7 @@ const VanityDesigner = () => {
                         if (!cabinet) return null;
                         
                         return (
-                          <div className="space-y-3">
-                            {/* Basic Info */}
+                          <div className="space-y-2">
                             <div>
                               <Label className="text-[10px]">Label</Label>
                               <Input 
@@ -2576,351 +1251,58 @@ const VanityDesigner = () => {
                                 className="h-7 text-xs"
                               />
                             </div>
-                            
-                            {/* Dimensions */}
-                            <div>
-                              <Label className="text-[10px] font-semibold mb-2 block">Dimensions</Label>
-                              <div className="grid grid-cols-3 gap-2">
-                                <div>
-                                  <Label className="text-[10px]">Width</Label>
-                                  <Input 
-                                    type="number"
-                                    value={cabinet.width}
-                                    onChange={(e) => changeCabinetSize(cabinet.id, 'width', parseFloat(e.target.value) || cabinet.width)}
-                                    className="h-7 text-xs"
-                                  />
-                                </div>
-                                <div>
-                                  <Label className="text-[10px]">Height</Label>
-                                  <Input 
-                                    type="number"
-                                    value={cabinet.height}
-                                    onChange={(e) => changeCabinetSize(cabinet.id, 'height', parseFloat(e.target.value) || cabinet.height)}
-                                    className="h-7 text-xs"
-                                  />
-                                </div>
-                                <div>
-                                  <Label className="text-[10px]">Depth</Label>
-                                  <Input 
-                                    type="number"
-                                    value={cabinet.depth}
-                                    onChange={(e) => changeCabinetSize(cabinet.id, 'depth', parseFloat(e.target.value) || cabinet.depth)}
-                                    className="h-7 text-xs"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {/* Rotation */}
-                            <div>
-                              <Label className="text-[10px]">Rotation (degrees)</Label>
-                              <div className="flex gap-2">
+                            <div className="grid grid-cols-3 gap-2">
+                              <div>
+                                <Label className="text-[10px]">Width</Label>
                                 <Input 
                                   type="number"
-                                  value={cabinet.rotation || 0}
-                                  onChange={(e) => {
-                                    const newRotation = parseInt(e.target.value) % 360;
-                                    setCabinets(cabinets.map(c => 
-                                      c.id === selectedCabinetId ? { ...c, rotation: newRotation as 0 | 90 | 180 | 270 } : c
-                                    ));
-                                  }}
-                                  className="h-7 text-xs flex-1"
+                                  value={cabinet.width}
+                                  onChange={(e) => changeCabinetSize(cabinet.id, 'width', parseFloat(e.target.value) || cabinet.width)}
+                                  className="h-7 text-xs"
                                 />
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="h-7 px-2"
-                                  onClick={() => {
-                                    const currentRot = cabinet.rotation || 0;
-                                    const newRot = (currentRot + 90) % 360;
-                                    setCabinets(cabinets.map(c => 
-                                      c.id === selectedCabinetId ? { ...c, rotation: newRot as 0 | 90 | 180 | 270 } : c
-                                    ));
-                                  }}
-                                >
-                                  <RotateCw className="h-3 w-3" />
-                                </Button>
                               </div>
-                            </div>
-                            
-                            {/* Door Style */}
-                            <div>
-                              <Label className="text-[10px]">Door Style</Label>
-                              <select
-                                value={cabinet.doorStyleId || "flat-framed"}
-                                onChange={(e) => {
-                                  setCabinets(cabinets.map(c => 
-                                    c.id === selectedCabinetId 
-                                      ? { ...c, doorStyleId: e.target.value } 
-                                      : c
-                                  ));
-                                }}
-                                className="w-full h-7 text-xs border rounded-md px-2 bg-background"
-                              >
-                                <optgroup label="Framed (Standard Overlay)">
-                                  {DOOR_STYLES.filter(d => d.frameType === "framed").map(style => (
-                                    <option key={style.id} value={style.id}>
-                                      {style.name}
-                                    </option>
-                                  ))}
-                                </optgroup>
-                                <optgroup label="Frameless (European)">
-                                  {DOOR_STYLES.filter(d => d.frameType === "frameless").map(style => (
-                                    <option key={style.id} value={style.id}>
-                                      {style.name}
-                                    </option>
-                                  ))}
-                                </optgroup>
-                                <optgroup label="Inset (Premium)">
-                                  {DOOR_STYLES.filter(d => d.frameType === "inset").map(style => (
-                                    <option key={style.id} value={style.id}>
-                                      {style.name}
-                                    </option>
-                                  ))}
-                                </optgroup>
-                              </select>
-                              <p className="text-[9px] text-muted-foreground mt-1">
-                                {DOOR_STYLES.find(d => d.id === (cabinet.doorStyleId || "flat-framed"))?.description}
-                              </p>
-                            </div>
-                            
-                            {/* Finish */}
-                            <div>
-                              <Label className="text-[10px]">Finish</Label>
-                              <select
-                                value={cabinet.finishId || "bright-white"}
-                                onChange={(e) => {
-                                  const finish = MATERIAL_FINISHES.find(f => f.id === e.target.value);
-                                  setCabinets(cabinets.map(c => 
-                                    c.id === selectedCabinetId 
-                                      ? { 
-                                          ...c, 
-                                          finishId: e.target.value,
-                                          finish: finish?.name || "White",
-                                          brand: finish?.brand || "Tafisa"
-                                        } 
-                                      : c
-                                  ));
-                                }}
-                                className="w-full h-7 text-xs border rounded-md px-2 bg-background"
-                              >
-                                <optgroup label="Tafisa">
-                                  {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
-                                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                  ))}
-                                </optgroup>
-                                <optgroup label="Egger">
-                                  {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
-                                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                  ))}
-                                </optgroup>
-                                <optgroup label="Shinnoki">
-                                  {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
-                                    <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                  ))}
-                                </optgroup>
-                              </select>
-                            </div>
-                            
-                            {/* Hardware */}
-                            <div>
-                              <Label className="text-[10px] font-semibold mb-2 block">Hardware</Label>
-                              <div className="space-y-2">
-                                <div>
-                                  <Label className="text-[10px]">Handle Type</Label>
-                                  <select
-                                    value={cabinet.handleType || "bar"}
-                                    onChange={(e) => {
-                                      setCabinets(cabinets.map(c => 
-                                        c.id === selectedCabinetId 
-                                          ? { ...c, handleType: e.target.value as keyof typeof HARDWARE_OPTIONS.handles } 
-                                          : c
-                                      ));
-                                    }}
-                                    className="w-full h-7 text-xs border rounded-md px-2 bg-background"
-                                  >
-                                    {Object.entries(HARDWARE_OPTIONS.handles).map(([key, handle]) => (
-                                      <option key={key} value={key}>{handle.name}</option>
-                                    ))}
-                                  </select>
-                                </div>
-                                <div>
-                                  <Label className="text-[10px]">Number of Handles</Label>
-                                  <Input 
-                                    type="number"
-                                    min={1}
-                                    max={6}
-                                    value={cabinet.numHandles || 2}
-                                    onChange={(e) => {
-                                      setCabinets(cabinets.map(c => 
-                                        c.id === selectedCabinetId 
-                                          ? { ...c, numHandles: parseInt(e.target.value) || 2 } 
-                                          : c
-                                      ));
-                                    }}
-                                    className="h-7 text-xs"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {/* Toe Kick */}
-                            <div>
-                              <Label className="text-[10px] font-semibold mb-2 block">Toe Kick (4.5")</Label>
                               <div>
-                                <Label className="text-[10px]">Toe Kick Finish</Label>
-                                <select
-                                  value={cabinet.toeKickFinishId || "match-door"}
-                                  onChange={(e) => {
-                                    setCabinets(cabinets.map(c => 
-                                      c.id === selectedCabinetId 
-                                        ? { ...c, toeKickFinishId: e.target.value } 
-                                        : c
-                                    ));
-                                  }}
-                                  className="w-full h-7 text-xs border rounded-md px-2 bg-background"
-                                >
-                                  <option value="match-door">Match Door Finish</option>
-                                  <optgroup label="Tafisa">
-                                    {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
-                                      <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                    ))}
-                                  </optgroup>
-                                  <optgroup label="Egger">
-                                    {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
-                                      <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                    ))}
-                                  </optgroup>
-                                  <optgroup label="Shinnoki">
-                                    {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
-                                      <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                    ))}
-                                  </optgroup>
-                                </select>
+                                <Label className="text-[10px]">Height</Label>
+                                <Input 
+                                  type="number"
+                                  value={cabinet.height}
+                                  onChange={(e) => changeCabinetSize(cabinet.id, 'height', parseFloat(e.target.value) || cabinet.height)}
+                                  className="h-7 text-xs"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-[10px]">Depth</Label>
+                                <Input 
+                                  type="number"
+                                  value={cabinet.depth}
+                                  onChange={(e) => changeCabinetSize(cabinet.id, 'depth', parseFloat(e.target.value) || cabinet.depth)}
+                                  className="h-7 text-xs"
+                                />
                               </div>
                             </div>
-                            
-                            {/* Moldings */}
                             <div>
-                              <Label className="text-[10px] font-semibold mb-2 block">Moldings</Label>
-                              <div className="space-y-2">
-                                <div>
-                                  <Label className="text-[10px]">Standard Molding</Label>
-                                  <select
-                                    value={cabinet.moldingFinishId || "match-door"}
-                                    onChange={(e) => {
-                                      setCabinets(cabinets.map(c => 
-                                        c.id === selectedCabinetId 
-                                          ? { ...c, moldingFinishId: e.target.value } 
-                                          : c
-                                      ));
-                                    }}
-                                    className="w-full h-7 text-xs border rounded-md px-2 bg-background"
-                                  >
-                                    <option value="match-door">Match Door Finish</option>
-                                    <optgroup label="Tafisa">
-                                      {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
-                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                      ))}
-                                    </optgroup>
-                                    <optgroup label="Egger">
-                                      {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
-                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                      ))}
-                                    </optgroup>
-                                    <optgroup label="Shinnoki">
-                                      {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
-                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                      ))}
-                                    </optgroup>
-                                  </select>
-                                </div>
-                                
-                                <div>
-                                  <Label className="text-[10px]">Light Molding</Label>
-                                  <select
-                                    value={cabinet.lightMoldingFinishId || "match-door"}
-                                    onChange={(e) => {
-                                      setCabinets(cabinets.map(c => 
-                                        c.id === selectedCabinetId 
-                                          ? { ...c, lightMoldingFinishId: e.target.value } 
-                                          : c
-                                      ));
-                                    }}
-                                    className="w-full h-7 text-xs border rounded-md px-2 bg-background"
-                                  >
-                                    <option value="match-door">Match Door Finish</option>
-                                    <optgroup label="Tafisa">
-                                      {MATERIAL_FINISHES.filter(f => f.brand === "Tafisa").map(finish => (
-                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                      ))}
-                                    </optgroup>
-                                    <optgroup label="Egger">
-                                      {MATERIAL_FINISHES.filter(f => f.brand === "Egger").map(finish => (
-                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                      ))}
-                                    </optgroup>
-                                    <optgroup label="Shinnoki">
-                                      {MATERIAL_FINISHES.filter(f => f.brand === "Shinnoki").map(finish => (
-                                        <option key={finish.id} value={finish.id}>{finish.name}</option>
-                                      ))}
-                                    </optgroup>
-                                  </select>
-                                </div>
-                              </div>
+                              <Label className="text-[10px]">Rotation (degrees)</Label>
+                              <Input 
+                                type="number"
+                                value={cabinet.rotation || 0}
+                                onChange={(e) => {
+                                  const newRotation = parseInt(e.target.value) % 360;
+                                  setCabinets(cabinets.map(c => 
+                                    c.id === selectedCabinetId ? { ...c, rotation: newRotation as 0 | 90 | 180 | 270 } : c
+                                  ));
+                                }}
+                                className="h-7 text-xs"
+                              />
                             </div>
-                            
-                            {/* Drawer Configuration */}
-                            <div>
-                              <Label className="text-[10px] font-semibold mb-2 block">Drawer Configuration</Label>
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <input
-                                    type="checkbox"
-                                    checked={cabinet.hasDrawers || false}
-                                    onChange={(e) => {
-                                      setCabinets(cabinets.map(c => 
-                                        c.id === selectedCabinetId 
-                                          ? { ...c, hasDrawers: e.target.checked } 
-                                          : c
-                                      ));
-                                    }}
-                                    className="h-3 w-3"
-                                  />
-                                  <Label className="text-[10px]">Has Drawers</Label>
-                                </div>
-                                {cabinet.hasDrawers && (
-                                  <div>
-                                    <Label className="text-[10px]">Number of Drawers</Label>
-                                    <Input 
-                                      type="number"
-                                      min={1}
-                                      max={6}
-                                      value={cabinet.numDrawers || 3}
-                                      onChange={(e) => {
-                                        setCabinets(cabinets.map(c => 
-                                          c.id === selectedCabinetId 
-                                            ? { ...c, numDrawers: parseInt(e.target.value) || 3 } 
-                                            : c
-                                        ));
-                                      }}
-                                      className="h-7 text-xs"
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            
                             {cabinet.price && (
                               <div className="pt-2 border-t text-xs">
-                                <span className="font-medium">Estimated Price: </span>
-                                <span className="text-primary font-semibold">{formatPrice(cabinet.price)}</span>
+                                <span className="font-medium">Price: </span>
+                                <span className="text-primary">{formatPrice(cabinet.price)}</span>
                               </div>
                             )}
-                            
-                            <div className="pt-1 text-[10px] text-muted-foreground border-t">
-                              💡 Shift+Drag to rotate<br/>
-                              📱 Two-finger touch to rotate
+                            <div className="pt-1 text-[10px] text-muted-foreground">
+                              💡 Desktop: Shift+Drag to rotate<br/>
+                              📱 Mobile: Two-finger touch to rotate
                             </div>
                           </div>
                         );
@@ -3081,81 +1463,6 @@ const VanityDesigner = () => {
                       })}
                     </div>
                   </div>
-                  
-                  {/* Moldings */}
-                  <div>
-                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">MOLDINGS</h4>
-                    <div className="space-y-1">
-                      {CABINET_LIBRARY.filter(c => c.category === "Moldings").map((template, idx) => (
-                        <Card
-                          key={idx}
-                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
-                          draggable
-                          onDragStart={() => handleLibraryDragStart(template)}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-xs font-medium">{template.label}</p>
-                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
-                            </div>
-                            <div className="text-[10px] text-muted-foreground">
-                              {template.width}"L
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Fillers */}
-                  <div>
-                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">FILLERS</h4>
-                    <div className="space-y-1">
-                      {CABINET_LIBRARY.filter(c => c.category === "Fillers").map((template, idx) => (
-                        <Card
-                          key={idx}
-                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
-                          draggable
-                          onDragStart={() => handleLibraryDragStart(template)}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-xs font-medium">{template.label}</p>
-                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
-                            </div>
-                            <div className="text-[10px] text-muted-foreground">
-                              {template.width}" × {template.height}"
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Panels */}
-                  <div>
-                    <h4 className="text-xs font-semibold mb-2 text-muted-foreground">PANELS</h4>
-                    <div className="space-y-1">
-                      {CABINET_LIBRARY.filter(c => c.category === "Panels").map((template, idx) => (
-                        <Card
-                          key={idx}
-                          className="p-2 cursor-move hover:bg-accent/50 transition-colors"
-                          draggable
-                          onDragStart={() => handleLibraryDragStart(template)}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-xs font-medium">{template.label}</p>
-                              <p className="text-[10px] text-muted-foreground">{template.description}</p>
-                            </div>
-                            <div className="text-[10px] text-muted-foreground">
-                              {template.width}" × {template.height}"
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
                 </>
               )}
             </div>
@@ -3209,68 +1516,8 @@ const VanityDesigner = () => {
                 />
               )}
 
-              {/* Walls with openings and context menus */}
-              {walls.map(wall => {
-                const length = calculateWallLength(wall);
-                const wallOpenings = openings.filter(o => o.wallId === wall.id);
-                const midX = (wall.x1 + wall.x2) / 2;
-                const midY = (wall.y1 + wall.y2) / 2;
-                
-                return (
-                  <ContextMenu key={`wall-ctx-${wall.id}`}>
-                    <ContextMenuTrigger>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          left: Math.min(wall.x1, wall.x2) - 10,
-                          top: Math.min(wall.y1, wall.y2) - 10,
-                          width: Math.abs(wall.x2 - wall.x1) + 20,
-                          height: Math.abs(wall.y2 - wall.y1) + 20,
-                          cursor: 'pointer',
-                          zIndex: 1
-                        }}
-                        onClick={() => setSelectedWallId(wall.id)}
-                      />
-                    </ContextMenuTrigger>
-                    <ContextMenuContent>
-                      <ContextMenuItem onClick={() => {
-                        setSelectedWallId(wall.id);
-                        setDrawingTool("door");
-                        toast.info("Click on wall to add door");
-                      }}>
-                        <DoorOpen className="mr-2 h-4 w-4" />
-                        Add Door
-                      </ContextMenuItem>
-                      <ContextMenuItem onClick={() => {
-                        setSelectedWallId(wall.id);
-                        setDrawingTool("window");
-                        toast.info("Click on wall to add window");
-                      }}>
-                        <RectangleHorizontal className="mr-2 h-4 w-4" />
-                        Add Window
-                      </ContextMenuItem>
-                      <ContextMenuSeparator />
-                      <ContextMenuItem 
-                        onClick={() => {
-                          setSelectedWallId(wall.id);
-                          deleteSelectedWall();
-                        }}
-                        className="text-destructive"
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete Wall
-                      </ContextMenuItem>
-                    </ContextMenuContent>
-                  </ContextMenu>
-                );
-              })}
-              
-              {/* SVG walls rendering */}
-              <svg 
-                ref={svgCanvasRef}
-                className="absolute inset-0" 
-                style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
-              >
+              {/* Walls with openings */}
+              <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
                 {walls.map(wall => {
                   const length = calculateWallLength(wall);
                   const wallOpenings = openings.filter(o => o.wallId === wall.id);
@@ -3294,7 +1541,7 @@ const VanityDesigner = () => {
                           y1={wall.y1}
                           x2={wall.x2}
                           y2={wall.y2}
-                          stroke={selectedWallId === wall.id ? "#FF8C00" : "#1F2937"}
+                          stroke="#1F2937"
                           strokeWidth={wall.thickness}
                           strokeLinecap="square"
                         />
@@ -3364,162 +1611,7 @@ const VanityDesigner = () => {
                     </g>
                   );
                 })}
-                
-                {/* Drag handles for wall endpoints */}
-                {walls.map(wall => (
-                  <g key={`handles-${wall.id}`}>
-                    {/* Start point handle */}
-                    <circle
-                      cx={wall.x1}
-                      cy={wall.y1}
-                      r="8"
-                      fill="white"
-                      stroke="#3B82F6"
-                      strokeWidth="2"
-                      style={{ 
-                        cursor: 'grab',
-                        pointerEvents: 'auto'
-                      }}
-                      onMouseDown={(e) => {
-                        e.stopPropagation();
-                        setDraggingHandle({ type: 'wall-start', id: wall.id });
-                      }}
-                    />
-                    <circle
-                      cx={wall.x1}
-                      cy={wall.y1}
-                      r="3"
-                      fill="#3B82F6"
-                      style={{ pointerEvents: 'none' }}
-                    />
-                    
-                    {/* End point handle */}
-                    <circle
-                      cx={wall.x2}
-                      cy={wall.y2}
-                      r="8"
-                      fill="white"
-                      stroke="#3B82F6"
-                      strokeWidth="2"
-                      style={{ 
-                        cursor: 'grab',
-                        pointerEvents: 'auto'
-                      }}
-                      onMouseDown={(e) => {
-                        e.stopPropagation();
-                        setDraggingHandle({ type: 'wall-end', id: wall.id });
-                      }}
-                    />
-                    <circle
-                      cx={wall.x2}
-                      cy={wall.y2}
-                      r="3"
-                      fill="#3B82F6"
-                      style={{ pointerEvents: 'none' }}
-                    />
-                  </g>
-                ))}
-                
-                {/* Drag handles for openings */}
-                {openings.map(opening => {
-                  const wall = walls.find(w => w.id === opening.wallId);
-                  if (!wall) return null;
-                  
-                  const handleX = wall.x1 + (wall.x2 - wall.x1) * opening.position;
-                  const handleY = wall.y1 + (wall.y2 - wall.y1) * opening.position;
-                  
-                  return (
-                    <g key={`opening-handle-${opening.id}`}>
-                      <circle
-                        cx={handleX}
-                        cy={handleY}
-                        r="10"
-                        fill="white"
-                        stroke={opening.type === 'door' ? "#F59E0B" : "#10B981"}
-                        strokeWidth="2"
-                        style={{ 
-                          cursor: 'grab',
-                          pointerEvents: 'auto'
-                        }}
-                        onMouseDown={(e) => {
-                          e.stopPropagation();
-                          setDraggingHandle({ type: 'opening', id: opening.id });
-                        }}
-                      />
-                      <text
-                        x={handleX}
-                        y={handleY}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fontSize="10"
-                        fill={opening.type === 'door' ? "#F59E0B" : "#10B981"}
-                        style={{ pointerEvents: 'none', fontWeight: 'bold' }}
-                      >
-                        {opening.type === 'door' ? 'D' : 'W'}
-                      </text>
-                    </g>
-                  );
-                })}
-                
-                {/* Drag trail visualization */}
-                {dragTrail.length > 1 && (
-                  <g>
-                    <defs>
-                      <linearGradient id="trailGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="rgb(59 130 246)" stopOpacity="0.2" />
-                        <stop offset="100%" stopColor="rgb(59 130 246)" stopOpacity="0.8" />
-                      </linearGradient>
-                    </defs>
-                    {/* Draw trail as connected line segments */}
-                    <polyline
-                      points={dragTrail.map(p => `${p.x},${p.y}`).join(' ')}
-                      fill="none"
-                      stroke="url(#trailGradient)"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeDasharray="5,5"
-                      opacity="0.6"
-                    />
-                    {/* Draw dots at each trail point */}
-                    {dragTrail.map((point, idx) => (
-                      <circle
-                        key={idx}
-                        cx={point.x}
-                        cy={point.y}
-                        r={2}
-                        fill="rgb(59 130 246)"
-                        opacity={0.3 + (idx / dragTrail.length) * 0.5}
-                      />
-                    ))}
-                  </g>
-                )}
               </svg>
-              
-              {/* Drag feedback tooltip */}
-              {dragFeedback && (
-                <div
-                  className="fixed z-50 pointer-events-none"
-                  style={{
-                    left: dragFeedback.x,
-                    top: dragFeedback.y,
-                    transform: 'translateX(-50%)'
-                  }}
-                >
-                  <div className="bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-md shadow-lg">
-                    {dragFeedback.label}
-                  </div>
-                  {/* Arrow pointing down */}
-                  <div 
-                    className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-0 h-0"
-                    style={{
-                      borderLeft: '4px solid transparent',
-                      borderRight: '4px solid transparent',
-                      borderTop: '4px solid rgb(37 99 235)'
-                    }}
-                  />
-                </div>
-              )}
               
               {/* Wall dimensions */}
               {showDimensions && walls.map(wall => {
@@ -3555,152 +1647,39 @@ const VanityDesigner = () => {
                 const isSelected = selectedOpeningId === opening.id;
                 
                 return (
-                  <ContextMenu key={opening.id}>
-                    <ContextMenuTrigger>
-                      <div
-                        className={`absolute cursor-pointer transition-all ${
-                          isSelected ? "z-20" : "z-10"
-                        }`}
-                        style={{
-                          left: x,
-                          top: y,
-                          width: opening.width * 2, // px
-                          height: 16,
-                          transform: `translate(-50%, -50%) rotate(${angle}rad)`,
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedOpeningId(opening.id);
-                        }}
-                      >
-                        {opening.type === "door" ? (
-                          <div className={`h-full flex items-center justify-center border-2 rounded ${
-                            isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-blue-500 bg-blue-100"
-                          }`}>
-                            <DoorOpen className="h-3 w-3" />
-                            <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
-                          </div>
-                        ) : (
-                          <div className={`h-full flex items-center justify-center border-2 rounded ${
-                            isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-cyan-500 bg-cyan-100"
-                          }`}>
-                            <RectangleHorizontal className="h-3 w-3" />
-                            <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
-                          </div>
-                        )}
+                  <div
+                    key={opening.id}
+                    className={`absolute cursor-pointer transition-all ${
+                      isSelected ? "z-20" : "z-10"
+                    }`}
+                    style={{
+                      left: x,
+                      top: y,
+                      width: opening.width * 2, // px
+                      height: 16,
+                      transform: `translate(-50%, -50%) rotate(${angle}rad)`,
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedOpeningId(opening.id);
+                    }}
+                  >
+                    {opening.type === "door" ? (
+                      <div className={`h-full flex items-center justify-center border-2 rounded ${
+                        isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-blue-500 bg-blue-100"
+                      }`}>
+                        <DoorOpen className="h-3 w-3" />
+                        <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
                       </div>
-                    </ContextMenuTrigger>
-                    <ContextMenuContent className="w-64">
-                      <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
-                        {opening.type === "door" ? "Door" : "Window"} Properties
+                    ) : (
+                      <div className={`h-full flex items-center justify-center border-2 rounded ${
+                        isSelected ? "border-[#FF8C00] bg-[#FF8C00]/20" : "border-cyan-500 bg-cyan-100"
+                      }`}>
+                        <RectangleHorizontal className="h-3 w-3" />
+                        <span className="text-[9px] ml-1 font-medium">{opening.width}"</span>
                       </div>
-                      <ContextMenuSeparator />
-                      
-                      <ContextMenuSub>
-                        <ContextMenuSubTrigger>
-                          <Maximize2 className="mr-2 h-4 w-4" />
-                          Width
-                        </ContextMenuSubTrigger>
-                        <ContextMenuSubContent className="w-48">
-                          {[24, 30, 36, 42, 48, 60, 72].map(w => (
-                            <ContextMenuItem 
-                              key={w}
-                              onClick={() => {
-                                setOpenings(openings.map(o => 
-                                  o.id === opening.id ? { ...o, width: w } : o
-                                ));
-                              }}
-                            >
-                              {w}" {opening.width === w && "✓"}
-                            </ContextMenuItem>
-                          ))}
-                        </ContextMenuSubContent>
-                      </ContextMenuSub>
-                      
-                      <ContextMenuSub>
-                        <ContextMenuSubTrigger>
-                          <Maximize2 className="mr-2 h-4 w-4" />
-                          Height
-                        </ContextMenuSubTrigger>
-                        <ContextMenuSubContent className="w-48">
-                          {opening.type === "door" 
-                            ? [78, 80, 84, 90, 96].map(h => (
-                                <ContextMenuItem 
-                                  key={h}
-                                  onClick={() => {
-                                    setOpenings(openings.map(o => 
-                                      o.id === opening.id ? { ...o, height: h } : o
-                                    ));
-                                  }}
-                                >
-                                  {h}" {opening.height === h && "✓"}
-                                </ContextMenuItem>
-                              ))
-                            : [24, 30, 36, 42, 48].map(h => (
-                                <ContextMenuItem 
-                                  key={h}
-                                  onClick={() => {
-                                    setOpenings(openings.map(o => 
-                                      o.id === opening.id ? { ...o, height: h } : o
-                                    ));
-                                  }}
-                                >
-                                  {h}" {opening.height === h && "✓"}
-                                </ContextMenuItem>
-                              ))
-                          }
-                        </ContextMenuSubContent>
-                      </ContextMenuSub>
-                      
-                      <ContextMenuSub>
-                        <ContextMenuSubTrigger>
-                          <ArrowRight className="mr-2 h-4 w-4" />
-                          Height from Floor
-                        </ContextMenuSubTrigger>
-                        <ContextMenuSubContent className="w-48">
-                          {opening.type === "door"
-                            ? [0].map(y => (
-                                <ContextMenuItem 
-                                  key={y}
-                                  onClick={() => {
-                                    setOpenings(openings.map(o => 
-                                      o.id === opening.id ? { ...o, yPosition: y } : o
-                                    ));
-                                  }}
-                                >
-                                  {y}" (Floor level) {opening.yPosition === y && "✓"}
-                                </ContextMenuItem>
-                              ))
-                            : [0, 24, 36, 42, 48, 54].map(y => (
-                                <ContextMenuItem 
-                                  key={y}
-                                  onClick={() => {
-                                    setOpenings(openings.map(o => 
-                                      o.id === opening.id ? { ...o, yPosition: y } : o
-                                    ));
-                                  }}
-                                >
-                                  {y}" {opening.yPosition === y && "✓"}
-                                </ContextMenuItem>
-                              ))
-                          }
-                        </ContextMenuSubContent>
-                      </ContextMenuSub>
-                      
-                      <ContextMenuSeparator />
-                      
-                      <ContextMenuItem 
-                        onClick={() => {
-                          setOpenings(openings.filter(o => o.id !== opening.id));
-                          setSelectedOpeningId(null);
-                          toast.success(`${opening.type === "door" ? "Door" : "Window"} removed`);
-                        }}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
-                      </ContextMenuItem>
-                    </ContextMenuContent>
-                  </ContextMenu>
+                    )}
+                  </div>
                 );
               })}
               
@@ -3731,8 +1710,6 @@ const VanityDesigner = () => {
                 const isDiagonal = cabinet.type === "Corner Cabinet" && (cabinet.label?.startsWith("DCB") || cabinet.label?.startsWith("DCW"));
                 const isLazySusan = cabinet.type === "Corner Cabinet" && (cabinet.label?.startsWith("LSBC") || cabinet.label?.startsWith("LSWC"));
                 const isPeninsula = cabinet.label?.startsWith("PEN");
-                const hasCollision = cabinetCollisions.has(cabinet.id);
-                const collisionTypes = cabinetCollisions.get(cabinet.id) || [];
                 
                 return (
                   <ContextMenu key={cabinet.id}>
@@ -3754,12 +1731,6 @@ const VanityDesigner = () => {
                         onMouseDown={(e) => handleMouseDown(e, cabinet.id)}
                         onTouchStart={(e) => handleTouchStart(e, cabinet.id)}
                       >
-                        {/* Collision warning indicator */}
-                        {hasCollision && (
-                          <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-destructive text-destructive-foreground px-2 py-0.5 rounded text-[9px] font-medium whitespace-nowrap shadow-lg animate-pulse">
-                            ⚠️ Collision
-                          </div>
-                        )}
                         {/* L-Shape rendering */}
                         {isLShaped && (
                           <svg 
@@ -3769,9 +1740,9 @@ const VanityDesigner = () => {
                           >
                             <path
                               d={`M 0 0 L ${widthPx * 0.4} 0 L ${widthPx * 0.4} ${depthPx * 0.6} L ${widthPx} ${depthPx * 0.6} L ${widthPx} ${depthPx} L 0 ${depthPx} Z`}
-                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
-                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
-                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
                             />
                           </svg>
                         )}
@@ -3785,9 +1756,9 @@ const VanityDesigner = () => {
                           >
                             <path
                               d={`M 0 0 L ${widthPx} 0 L ${widthPx} ${depthPx} L ${widthPx * 0.7} ${depthPx} L ${widthPx * 0.7} ${depthPx * 0.3} L ${widthPx * 0.3} ${depthPx * 0.3} L ${widthPx * 0.3} ${depthPx} L 0 ${depthPx} Z`}
-                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
-                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
-                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
                             />
                           </svg>
                         )}
@@ -3801,9 +1772,9 @@ const VanityDesigner = () => {
                           >
                             <path
                               d={`M 0 0 L ${widthPx} 0 L ${widthPx} ${depthPx} L 0 0 Z`}
-                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
-                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
-                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
                             />
                           </svg>
                         )}
@@ -3819,9 +1790,9 @@ const VanityDesigner = () => {
                               cx={widthPx / 2}
                               cy={depthPx / 2}
                               r={Math.min(widthPx, depthPx) / 2 - 2}
-                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
-                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
-                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
                             />
                             {/* Rotating indicator lines */}
                             <line
@@ -3829,7 +1800,7 @@ const VanityDesigner = () => {
                               y1={depthPx / 2}
                               x2={widthPx / 2}
                               y2={4}
-                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
                               strokeWidth="1"
                               opacity="0.5"
                             />
@@ -3838,7 +1809,7 @@ const VanityDesigner = () => {
                               y1={depthPx / 2}
                               x2={widthPx - 4}
                               y2={depthPx / 2}
-                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
                               strokeWidth="1"
                               opacity="0.5"
                             />
@@ -3858,9 +1829,9 @@ const VanityDesigner = () => {
                               y="0"
                               width={widthPx}
                               height={depthPx}
-                              fill={hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6')}
-                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
-                              strokeWidth={hasCollision ? 3 : (selectedCabinetId === cabinet.id ? 2 : 1)}
+                              fill={selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
+                              strokeWidth={selectedCabinetId === cabinet.id ? 2 : 1}
                             />
                             {/* End panel indicator (thicker line on one end) */}
                             <line
@@ -3868,7 +1839,7 @@ const VanityDesigner = () => {
                               y1="0"
                               x2={widthPx}
                               y2={depthPx}
-                              stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#6B7280')}
+                              stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#6B7280'}
                               strokeWidth="4"
                             />
                             {/* Divider lines to show multiple cabinets */}
@@ -3881,7 +1852,7 @@ const VanityDesigner = () => {
                                   y1="0"
                                   x2={xPos}
                                   y2={depthPx}
-                                  stroke={hasCollision ? '#DC2626' : (selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF')}
+                                  stroke={selectedCabinetId === cabinet.id ? '#FF8C00' : '#9CA3AF'}
                                   strokeWidth="1"
                                   strokeDasharray="4,4"
                                   opacity="0.4"
@@ -3897,8 +1868,8 @@ const VanityDesigner = () => {
                             style={{
                               width: '100%',
                               height: '100%',
-                              backgroundColor: hasCollision ? '#FEE2E2' : (selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6'),
-                              border: hasCollision ? '3px solid #DC2626' : (selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF'),
+                              backgroundColor: selectedCabinetId === cabinet.id ? '#FFE5CC' : '#F3F4F6',
+                              border: selectedCabinetId === cabinet.id ? '2px solid #FF8C00' : '1px solid #9CA3AF',
                             }}
                           />
                         )}
@@ -4125,11 +2096,6 @@ const VanityDesigner = () => {
                 <div>Walls: {walls.length}</div>
                 <div>Openings: {openings.length}</div>
                 <div>Cabinets: {cabinets.length}</div>
-                {cabinetCollisions.size > 0 && (
-                  <div className="text-destructive font-medium mt-1 flex items-center gap-1">
-                    ⚠️ Collisions: {cabinetCollisions.size}
-                  </div>
-                )}
                 {drawingTool === "wall" && <div className="text-[#FF8C00] font-medium mt-1">Click to place wall points</div>}
                 {(drawingTool === "door" || drawingTool === "window") && (
                   <div className="text-[#FF8C00] font-medium mt-1">Click on a wall to place {drawingTool}</div>
@@ -4162,87 +2128,6 @@ const VanityDesigner = () => {
           )}
         </div>
       </div>
-      
-      {/* Save Template Dialog */}
-      <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Save Room Template</DialogTitle>
-            <DialogDescription>
-              Save your current room layout as a reusable template
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="template-name">Template Name *</Label>
-              <Input
-                id="template-name"
-                placeholder="e.g., L-Shaped Kitchen with Island"
-                value={templateName}
-                onChange={(e) => setTemplateName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && templateName.trim()) {
-                    handleSaveTemplate();
-                  }
-                }}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="template-description">Description (Optional)</Label>
-              <Textarea
-                id="template-description"
-                placeholder="Add notes about this layout..."
-                value={templateDescription}
-                onChange={(e) => setTemplateDescription(e.target.value)}
-                rows={3}
-              />
-            </div>
-            
-            <div className="grid grid-cols-3 gap-4 p-3 bg-muted/50 rounded-md text-sm">
-              <div className="text-center">
-                <div className="font-semibold">{walls.length}</div>
-                <div className="text-xs text-muted-foreground">Walls</div>
-              </div>
-              <div className="text-center">
-                <div className="font-semibold">{openings.length}</div>
-                <div className="text-xs text-muted-foreground">Openings</div>
-              </div>
-              <div className="text-center">
-                <div className="font-semibold">{cabinets.length}</div>
-                <div className="text-xs text-muted-foreground">Cabinets</div>
-              </div>
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowSaveDialog(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveTemplate} disabled={!templateName.trim()}>
-              <Save className="h-4 w-4 mr-2" />
-              Save Template
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* History Timeline */}
-      <HistoryTimeline
-        history={historyThumbnails}
-        currentIndex={historyIndex}
-        onSelectState={jumpToHistoryState}
-        canUndo={canUndo}
-        canRedo={canRedo}
-      />
-
-      {/* Cabinet Wizard */}
-      <CabinetWizard
-        open={showWizard}
-        onOpenChange={setShowWizard}
-        onComplete={handleWizardComplete}
-      />
     </div>
   );
 };
