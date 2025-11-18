@@ -26,5 +26,8 @@ export {
 // Room components
 export { BathroomRoom, Lighting } from './room';
 
+// Cabinet components
+export { VanityCabinet } from './cabinet';
+
 // Type definitions
 export type { Vanity3DPreviewProps } from './types';
