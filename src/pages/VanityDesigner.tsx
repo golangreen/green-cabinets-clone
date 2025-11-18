@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingState, FeatureErrorBoundary } from "@/components/layout";
+import { logger } from "@/lib/logger";
 import { 
   Plus,
   Trash2,
@@ -324,7 +325,7 @@ const VanityDesigner = () => {
           applyScannedMeasurementsToWalls(latestScan);
         }
       } catch (error) {
-        console.error('Error loading scanned measurements:', error);
+        logger.error('Failed to load scanned measurements', error, { feature: 'VanityDesigner' });
       }
     };
 
@@ -1031,7 +1032,7 @@ const VanityDesigner = () => {
       
       return canvas.toDataURL('image/png');
     } catch (error) {
-      console.error('Failed to capture thumbnail:', error);
+      logger.error('Failed to capture thumbnail', error, { feature: 'VanityDesigner' });
       return '';
     }
   }, []);
