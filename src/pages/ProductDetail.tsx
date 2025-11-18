@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Header, Footer, FeatureErrorBoundary, OfflineBanner } from "@/components/layout";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
-import { VanityDesignerApp } from "@/features/vanity-designer";
+import { VanityConfigurator } from "@/components/VanityConfigurator";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
-import { useProductCacheStore } from "@/features/product-catalog";
+import { useProductCacheStore } from "@/stores/productCacheStore";
 
 // Mock product for fallback
 const mockVanityProduct: ShopifyProduct = {
@@ -105,27 +106,20 @@ export default function ProductDetail() {
   // Product will always be available (either from Shopify or mock)
 
   return (
-    <FeatureErrorBoundary
-      featureName="Product Detail"
-      featureTag="product-detail"
-      fallbackRoute={ROUTES.HOME}
-    >
-      <div className="min-h-screen flex flex-col">
-        <OfflineBanner />
-        <Header />
-        <main className="flex-1 py-6 sm:py-8 md:py-12 bg-brand-gray">
-          <div className="container mx-auto px-4">
-            <Link to={ROUTES.HOME}>
-              <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Shop
-              </Button>
-            </Link>
-            <VanityDesignerApp />
-          </div>
-        </main>
-        <Footer />
-      </div>
-    </FeatureErrorBoundary>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 py-6 sm:py-8 md:py-12">
+        <div className="container mx-auto px-4">
+          <Link to={ROUTES.HOME}>
+            <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Shop
+            </Button>
+          </Link>
+          <VanityConfigurator product={product} />
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }

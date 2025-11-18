@@ -15,7 +15,6 @@ export default {
     extend: {
       fontFamily: {
         'display': ['Outfit', 'sans-serif'],
-        'serif': ['Playfair Display', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -60,11 +59,6 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
-        },
-        brand: {
-          teal: "hsl(var(--brand-teal))",
-          gold: "hsl(var(--brand-gold))",
-          gray: "hsl(var(--brand-gray))",
         },
       },
       borderRadius: {

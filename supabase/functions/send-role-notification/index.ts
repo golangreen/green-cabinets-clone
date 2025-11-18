@@ -1,9 +1,9 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.76.1';
 import { corsHeaders } from '../_shared/cors.ts';
-import { createLogger, generateRequestId } from '../_shared/logger.ts';
+import { createLogger } from '../_shared/logger.ts';
 import { ValidationError, withErrorHandling } from '../_shared/errors.ts';
-import { createAuthenticatedClient, createServiceRoleClient } from '../_shared/supabase.ts';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const notificationSchema = z.object({
   userEmail: z.string().email(),
@@ -43,11 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const requestId = generateRequestId();
-  const logger = createLogger({ 
-    functionName: 'send-role-notification',
-    requestId 
-  });
+  const logger = createLogger({ functionName: 'send-role-notification' });
   logger.info('Role notification request received');
 
   try {
@@ -57,7 +53,11 @@ const handler = async (req: Request): Promise<Response> => {
       throw new ValidationError('Missing authorization header');
     }
 
-    const supabase = await createAuthenticatedClient(authHeader);
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
     // Verify user is authenticated and is admin
     const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -65,8 +65,11 @@ const handler = async (req: Request): Promise<Response> => {
       throw new ValidationError('Unauthorized');
     }
 
-    // Check if user is admin
-    const { data: isAdmin } = await supabase.rpc('has_role', {
+    // Check if user is admin using service role
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+    
+    const { data: isAdmin } = await supabaseAdmin.rpc('has_role', {
       _user_id: user.id,
       _role: 'admin'
     });

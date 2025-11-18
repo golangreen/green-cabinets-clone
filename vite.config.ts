@@ -4,15 +4,6 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
 
-// Note: Config values imported at build time from src/config/pwa.ts
-const PWA_CACHE_CONFIG = {
-  SHOPIFY_API_MAX_AGE_SECONDS: 60 * 60 * 24, // 24 hours
-  SHOPIFY_IMAGES_MAX_AGE_SECONDS: 60 * 60 * 24 * 30, // 30 days
-  SHOPIFY_API_MAX_ENTRIES: 50,
-  SHOPIFY_IMAGES_MAX_ENTRIES: 100,
-  NETWORK_TIMEOUT_SECONDS: 10,
-};
-
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -24,44 +15,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: 'auto',
-      devOptions: {
-        enabled: false
-      },
       includeAssets: ['logo.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
-      workbox: {
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/.*\.myshopify\.com\/api\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'shopify-api-cache',
-              expiration: {
-                maxEntries: PWA_CACHE_CONFIG.SHOPIFY_API_MAX_ENTRIES,
-                maxAgeSeconds: PWA_CACHE_CONFIG.SHOPIFY_API_MAX_AGE_SECONDS,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-              networkTimeoutSeconds: PWA_CACHE_CONFIG.NETWORK_TIMEOUT_SECONDS,
-            },
-          },
-          {
-            urlPattern: /^https:\/\/cdn\.shopify\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'shopify-images-cache',
-              expiration: {
-                maxEntries: PWA_CACHE_CONFIG.SHOPIFY_IMAGES_MAX_ENTRIES,
-                maxAgeSeconds: PWA_CACHE_CONFIG.SHOPIFY_IMAGES_MAX_AGE_SECONDS,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-        ],
-      },
       manifest: {
         name: 'Green Cabinets - Custom Cabinetry NYC',
         short_name: 'Green Cabinets',

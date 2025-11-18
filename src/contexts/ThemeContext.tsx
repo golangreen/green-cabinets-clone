@@ -1,5 +1,4 @@
-import { createContext, useContext, useEffect, ReactNode } from 'react';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -12,8 +11,12 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useLocalStorage<Theme>('theme', 'system');
-  const [resolvedTheme, setResolvedTheme] = useLocalStorage<'light' | 'dark'>('resolvedTheme', 'light');
+  const [theme, setThemeState] = useState<Theme>(() => {
+    const stored = localStorage.getItem('theme') as Theme;
+    return stored || 'system';
+  });
+
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -26,7 +29,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     root.classList.remove('light', 'dark');
     root.classList.add(activeTheme);
-  }, [theme, setResolvedTheme]);
+  }, [theme]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -43,7 +46,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [theme, setResolvedTheme]);
+  }, [theme]);
+
+  const setTheme = (newTheme: Theme) => {
+    localStorage.setItem('theme', newTheme);
+    setThemeState(newTheme);
+  };
 
   const value = {
     theme,

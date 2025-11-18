@@ -1,4 +1,4 @@
-import { VanityTemplate } from "@/types/vanity";
+import { VanityTemplate } from "@/lib/vanityTemplates";
 import { useLocalStorage } from "./useLocalStorage";
 
 const STORAGE_KEY = "vanity-saved-templates";
@@ -13,7 +13,6 @@ export const useSavedTemplates = () => {
   const saveTemplate = (template: Omit<SavedTemplate, "createdAt">) => {
     const newTemplate: SavedTemplate = {
       ...template,
-      tags: template.tags || [],
       createdAt: new Date().toISOString(),
     };
     setSavedTemplates((prev) => [newTemplate, ...prev]);

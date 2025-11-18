@@ -3,8 +3,9 @@ import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Terminal, Shield, Mail, ShoppingCart, AlertTriangle, Info } from "lucide-react";
-import { Header, Footer } from "@/components/layout";
-import { DocsSidebar } from "@/features/docs";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { DocsSidebar } from "@/components/DocsSidebar";
 
 const DocsAPI = () => {
   return (

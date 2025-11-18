@@ -1,1 +1,0 @@
-export { ConfigDiffViewer } from './ConfigDiffViewer';

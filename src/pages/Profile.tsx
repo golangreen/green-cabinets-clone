@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchUserRoles } from "@/services";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -8,7 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Mail, Calendar, Shield, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
-import { Header, Footer } from "@/components/layout";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface UserRole {
   role: string;
@@ -22,11 +23,18 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchRoles = async () => {
+    const fetchUserRoles = async () => {
       if (!user) return;
 
       try {
-        const data = await fetchUserRoles(user.id);
+        const { data, error } = await supabase
+          .from('user_roles')
+          .select('role, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
         setRoles(data || []);
       } catch (err: any) {
         console.error('Error fetching user roles:', err);
@@ -36,7 +44,7 @@ export default function Profile() {
       }
     };
 
-    fetchRoles();
+    fetchUserRoles();
   }, [user]);
 
   const getRoleBadgeVariant = (role: string) => {

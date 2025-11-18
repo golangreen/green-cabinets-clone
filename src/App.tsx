@@ -5,12 +5,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, ThemeProvider } from "@/contexts";
-import { ProtectedRoute } from "@/components/auth";
-import { AdminRoute } from "@/components/auth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AdminRoute } from "@/components/AdminRoute";
 import { ROUTES } from "@/constants/routes";
-import { FeatureErrorBoundary, ConfigValidationAlert } from "@/components/layout";
-import { PreloadManager } from "@/features/product-catalog";
-import { CACHE_CONFIG } from "@/config";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
@@ -21,17 +18,13 @@ import VanityDesigner from "./pages/VanityDesigner";
 import AdminSecurity from "./pages/AdminSecurity";
 import AdminUsers from "./pages/AdminUsers";
 import AdminAuditLog from "./pages/AdminAuditLog";
-import AdminCache from "./pages/AdminCache";
-import AdminConfig from "./pages/AdminConfig";
 import RoomScan from "./pages/RoomScan";
 import DocsAuth from "./pages/DocsAuth";
 import DocsGettingStarted from "./pages/DocsGettingStarted";
-import DocsConfiguration from "./pages/DocsConfiguration";
 import DocsAPI from "./pages/DocsAPI";
 import DocsTroubleshooting from "./pages/DocsTroubleshooting";
-import DocsSecurity from "./pages/DocsSecurity";
 import NotFound from "./pages/NotFound";
-import { SplashScreen } from "@/components/layout";
+import SplashScreen from "./components/SplashScreen";
 
 const queryClient = new QueryClient();
 
@@ -64,22 +57,6 @@ const App = () => {
             <Toaster />
             <Sonner />
             {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-            
-            {/* Configuration validation alert */}
-            <ConfigValidationAlert />
-            
-            {/* Background product preloader wrapped in error boundary */}
-            <FeatureErrorBoundary
-              featureName="Product Preloader"
-              featureTag="product-preload"
-              fallbackRoute="/"
-            >
-            <PreloadManager
-              prefetchCount={CACHE_CONFIG.PRELOAD_COUNT}
-              autoRefreshInterval={CACHE_CONFIG.PRELOAD_REFRESH_INTERVAL}
-            />
-            </FeatureErrorBoundary>
-
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -97,7 +74,11 @@ const App = () => {
                 />
                 <Route 
                   path="/designer" 
-                  element={<VanityDesigner />} 
+                  element={
+                    <ProtectedRoute>
+                      <VanityDesigner />
+                    </ProtectedRoute>
+                  } 
                 />
                 <Route 
                   path="/admin/security" 
@@ -123,28 +104,10 @@ const App = () => {
                     </AdminRoute>
                   } 
                 />
-                <Route 
-                  path={ROUTES.ADMIN_CACHE}
-                  element={
-                    <AdminRoute>
-                      <AdminCache />
-                    </AdminRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin/config"
-                  element={
-                    <AdminRoute>
-                      <AdminConfig />
-                    </AdminRoute>
-                  } 
-                />
                 <Route path="/room-scan" element={<RoomScan />} />
                 <Route path="/docs/auth" element={<DocsAuth />} />
                 <Route path="/docs/getting-started" element={<DocsGettingStarted />} />
-                <Route path="/docs/configuration" element={<DocsConfiguration />} />
                 <Route path="/docs/api" element={<DocsAPI />} />
-                <Route path="/docs/security" element={<DocsSecurity />} />
                 <Route path="/docs/troubleshooting" element={<DocsTroubleshooting />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

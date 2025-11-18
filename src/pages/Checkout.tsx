@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header, Footer, FeatureErrorBoundary } from "@/components/layout";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useCartStore } from "@/features/shopping-cart";
+import { useCartStore } from "@/stores/cartStore";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -112,26 +113,7 @@ export default function Checkout() {
   }
 
   return (
-    <FeatureErrorBoundary
-      featureName="Checkout"
-      featureTag="checkout"
-      fallbackRoute={ROUTES.HOME}
-      onReset={() => {
-        // Reset form on error recovery
-        setFormData({
-          email: "",
-          firstName: "",
-          lastName: "",
-          address: "",
-          city: "",
-          state: "",
-          zipCode: "",
-          phone: "",
-        });
-        setIsProcessing(false);
-      }}
-    >
-      <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
         <Button variant="ghost" onClick={() => navigate(ROUTES.HOME)} className="mb-6">
@@ -320,6 +302,5 @@ export default function Checkout() {
       </main>
       <Footer />
     </div>
-    </FeatureErrorBoundary>
   );
 }

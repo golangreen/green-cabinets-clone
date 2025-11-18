@@ -1,33 +1,28 @@
-import { Header, Footer, FeatureErrorBoundary, OfflineBanner, SyncStatusIndicator } from "@/components/layout";
-import { Hero, Services, Features, About, Gallery, Suppliers, CTA } from "@/components/marketing";
-import { ShopProducts } from "@/features/product-catalog";
-import { Contact } from "@/features/quote-request";
-import { Chatbot } from "@/features/chatbot";
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import Services from "@/components/Services";
+import Features from "@/components/Features";
+import About from "@/components/About";
+import Gallery from "@/components/Gallery";
+import Suppliers from "@/components/Suppliers";
+import { ShopProducts } from "@/components/ShopProducts";
+import Contact from "@/components/Contact";
+import CTA from "@/components/CTA";
+import Footer from "@/components/Footer";
+import Chatbot from "@/components/Chatbot";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
-      <OfflineBanner />
-      <SyncStatusIndicator />
       <Header />
       <Hero />
-      <div className="bg-brand-gray">
-        <Services />
-        <Features />
-        <About />
-      </div>
+      <Services />
+      <Features />
+      <About />
       <Gallery />
-      <div className="bg-brand-gray">
-        <FeatureErrorBoundary
-          featureName="Product Catalog"
-          featureTag="shop-products"
-          fallbackRoute="/"
-        >
-          <ShopProducts />
-        </FeatureErrorBoundary>
-        <Suppliers />
-        <Contact />
-      </div>
+      <Suppliers />
+      <ShopProducts />
+      <Contact />
       <CTA />
       <Footer />
       <Chatbot />

@@ -14,8 +14,12 @@ import { AlertTriangle, CheckCircle2, Database, Lock, Code, RefreshCw, Bug, Copy
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 // Components
-import { Header, Footer } from "@/components/layout";
-import { DocsSidebar, QueryEditor, ValidationErrors, QueryResults } from "@/features/docs";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { DocsSidebar } from "@/components/DocsSidebar";
+import { QueryEditor } from "@/components/docs/QueryEditor";
+import { ValidationErrors } from "@/components/docs/ValidationErrors";
+import { QueryResults } from "@/components/docs/QueryResults";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Hooks
