@@ -1,12 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import logo from "@/assets/logo-new.png";
+import logoWhite from "@/assets/logos/logo-white.svg";
+import logoBlack from "@/assets/logos/logo-black.svg";
 import { CartDrawer } from "@/components/CartDrawer";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setScrolled(scrollPosition > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToGallery = (category: string, event?: React.MouseEvent) => {
     if (event) {
@@ -41,11 +54,17 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
+        scrolled 
+          ? 'bg-white border-b border-gray-200' 
+          : 'bg-[#0a0a0a] border-b border-gray-800'
+      }`}
+    >
       <nav className="container mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between relative">
           {/* Centered Logo */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+          <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-all duration-500">
             <a 
               href="/" 
               onClick={(e) => { 
@@ -54,8 +73,16 @@ const Header = () => {
               }} 
               className="cursor-pointer flex flex-col items-center"
             >
-              <img src={logo} alt="Green Cabinets Logo" className="h-12 md:h-16 w-auto" />
-              <span className="font-display text-xs md:text-sm font-semibold text-foreground mt-1 tracking-wider">
+              <img 
+                src={scrolled ? logoBlack : logoWhite} 
+                alt="Green Cabinets Logo" 
+                className="h-12 md:h-16 w-auto transition-opacity duration-500" 
+              />
+              <span 
+                className={`font-display text-xs md:text-sm font-semibold mt-1 tracking-wider transition-colors duration-500 ${
+                  scrolled ? 'text-foreground' : 'text-white'
+                }`}
+              >
                 GREEN CABINETS
               </span>
             </a>
@@ -70,10 +97,18 @@ const Header = () => {
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className="hover:bg-gray-100"
+                  className={`transition-colors duration-500 ${
+                    scrolled 
+                      ? 'hover:bg-gray-100' 
+                      : 'hover:bg-white/10'
+                  }`}
                   aria-label="Open menu"
                 >
-                  <Menu className="h-6 w-6 text-foreground" />
+                  <Menu 
+                    className={`h-6 w-6 transition-colors duration-500 ${
+                      scrolled ? 'text-foreground' : 'text-white'
+                    }`} 
+                  />
                 </Button>
               </SheetTrigger>
               
