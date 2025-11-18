@@ -489,6 +489,54 @@ test('should configure vanity and request quote', async ({ page }) => {
 });
 ```
 
+## Performance Monitoring
+
+### Instrumented Operations
+
+VanityDesignerApp tracks the following operations:
+
+```typescript
+// Component lifecycle tracking
+usePerformanceMonitor({
+  name: 'VanityDesignerApp',
+  trackMount: true,      // Tracks mount time
+  trackRender: true,     // Warns on slow renders (>16ms)
+  metadata: {
+    brand: vanityConfig.selectedBrand,
+    finish: vanityConfig.selectedFinish,
+  },
+});
+
+// User operations tracked:
+- 'texture-selection'    // Finish selection time
+- 'pdf-generation'       // PDF quote generation time
+- 'share-url-generation' // Share URL encoding time
+- 'quote-email-send'     // Email sending time
+```
+
+### Viewing Performance Data
+
+1. **Admin Dashboard**: Visit `/admin/performance` to view:
+   - Real-time Web Vitals (LCP, CLS, TTFB, INP)
+   - Slowest operations table
+   - Performance budgets tracking
+   - Metric filtering by time period
+
+2. **Browser DevTools**:
+   - Open Performance tab
+   - Look for marks: `texture-selection`, `pdf-generation`, etc.
+   - Check Console for performance warnings
+
+3. **Database Queries**:
+   ```sql
+   SELECT metric_name, AVG(metric_value) as avg_duration
+   FROM performance_metrics
+   WHERE url LIKE '%designer%'
+   AND created_at > NOW() - INTERVAL '7 days'
+   GROUP BY metric_name
+   ORDER BY avg_duration DESC;
+   ```
+
 ## Best Practices
 
 ### 1. Component Design
