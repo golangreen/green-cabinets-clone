@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { GALLERY_IMAGES, getImagesByCategory } from "@/constants/galleryImages";
 import type { GalleryCategory } from "@/types/gallery";
 import { LazyImage } from "@/features/gallery";
@@ -23,6 +24,17 @@ const GalleryUpdated = () => {
     closets: GALLERY_IMAGES.filter(img => img.category === 'closets'),
     'design-to-reality': GALLERY_IMAGES.filter(img => img.category === 'design-to-reality'),
   };
+
+  // Preload first 6 images for faster initial render
+  useImagePreloader({
+    images: images.slice(0, 6).map((img, index) => ({
+      src: img.path,
+      priority: index < 3 ? 'high' : 'low', // First 3 images are high priority
+    })),
+    enabled: isVisible, // Only preload when section is visible
+    maxConcurrent: 3,
+    delay: 200, // Small delay to not compete with critical resources
+  });
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -144,6 +156,8 @@ const GalleryUpdated = () => {
                     src={image.path}
                     alt={image.alt}
                     className="w-full h-full object-cover aspect-[4/3]"
+                    priority={index < 3 ? 'high' : 'low'}
+                    blurUp={true}
                     onLoad={() => setLoadedImages(prev => new Set([...prev, index]))}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
