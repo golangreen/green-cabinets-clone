@@ -6,7 +6,7 @@ import { Slider } from '@/components/ui/slider';
 import { Bell, Settings, Shield, AlertTriangle, RefreshCw, Copy, Volume2 } from 'lucide-react';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/useToast';
 
 export function NotificationSettingsPanel() {
   const { settings, isLoading, updateSettings, isUpdating } = useNotificationSettings();
