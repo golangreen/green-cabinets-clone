@@ -25,43 +25,119 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
-        // Manual chunks for better code-splitting
+        // Phase 35b: Advanced manual chunks for optimal code-splitting
         manualChunks: (id) => {
-          // Vendor libraries
+          // Vendor libraries - fine-grained splitting
           if (id.includes('node_modules')) {
-            // React ecosystem
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'react-vendor';
+            // React core (most critical)
+            if (id.includes('react/') || id.includes('react-dom/')) {
+              return 'react-core';
             }
-            // Three.js and 3D libraries
-            if (id.includes('three') || id.includes('@react-three')) {
-              return 'three-vendor';
+            // React Router (lazy loaded)
+            if (id.includes('react-router')) {
+              return 'react-router';
             }
-            // UI libraries
-            if (id.includes('@radix-ui') || id.includes('lucide-react')) {
-              return 'ui-vendor';
+            // Three.js core
+            if (id.includes('three/')) {
+              return 'three-core';
             }
-            // Data fetching and state
-            if (id.includes('@tanstack') || id.includes('zustand')) {
-              return 'state-vendor';
+            // React Three Fiber (3D framework)
+            if (id.includes('@react-three/fiber')) {
+              return 'three-fiber';
             }
-            // Supabase
-            if (id.includes('@supabase')) {
-              return 'supabase-vendor';
+            // React Three Drei (3D helpers)
+            if (id.includes('@react-three/drei')) {
+              return 'three-drei';
+            }
+            // Radix UI components
+            if (id.includes('@radix-ui')) {
+              return 'radix-ui';
+            }
+            // Lucide icons
+            if (id.includes('lucide-react')) {
+              return 'lucide-icons';
+            }
+            // Charting library (heavy, admin only)
+            if (id.includes('recharts')) {
+              return 'charts';
+            }
+            // React Query
+            if (id.includes('@tanstack/react-query')) {
+              return 'react-query';
+            }
+            // Zustand (state management)
+            if (id.includes('zustand')) {
+              return 'zustand';
+            }
+            // Supabase client
+            if (id.includes('@supabase/supabase-js')) {
+              return 'supabase-client';
+            }
+            // Sentry (error tracking)
+            if (id.includes('@sentry/react')) {
+              return 'sentry';
             }
             // Other vendors
-            return 'vendor';
+            return 'vendor-misc';
           }
           
-          // Feature-based splitting
+          // Feature-based splitting (granular)
+          // Vanity Designer - split by module type
           if (id.includes('src/features/vanity-designer')) {
+            if (id.includes('/3d/')) {
+              return 'vanity-3d';
+            }
+            if (id.includes('/components/') && !id.includes('/3d/')) {
+              return 'vanity-ui';
+            }
+            if (id.includes('/services/') || id.includes('/hooks/')) {
+              return 'vanity-logic';
+            }
             return 'vanity-designer';
           }
-          if (id.includes('src/features/admin-')) {
-            return 'admin-features';
+          
+          // Admin features - split by area
+          if (id.includes('src/features/admin-security')) {
+            return 'admin-security';
           }
-          if (id.includes('src/features/product-catalog') || id.includes('src/features/shopping-cart')) {
-            return 'shop-features';
+          if (id.includes('src/pages/Admin')) {
+            if (id.includes('AdminUsers')) {
+              return 'admin-users';
+            }
+            if (id.includes('AdminAudit')) {
+              return 'admin-audit';
+            }
+            if (id.includes('AdminPerformance')) {
+              return 'admin-performance';
+            }
+            if (id.includes('AdminCache') || id.includes('AdminGallery') || id.includes('AdminEmail')) {
+              return 'admin-tools';
+            }
+            return 'admin-pages';
+          }
+          
+          // Shop features
+          if (id.includes('src/features/product-catalog')) {
+            return 'shop-catalog';
+          }
+          if (id.includes('src/features/shopping-cart')) {
+            return 'shop-cart';
+          }
+          
+          // Brand-specific code (lazy load by brand)
+          if (id.includes('tafisaColors')) {
+            return 'brand-tafisa';
+          }
+          if (id.includes('eggerColors')) {
+            return 'brand-egger';
+          }
+          
+          // Core utilities and services
+          if (id.includes('src/services/')) {
+            return 'services';
+          }
+          if (id.includes('src/lib/') && !id.includes('src/lib/utils')) {
+            return 'lib-utils';
           }
         },
         // Suppress detailed asset reporting
@@ -92,6 +168,7 @@ export default defineConfig(({ mode }) => ({
         // Increase max file size for large app bundle (3.85MB+)
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
         runtimeCaching: [
+          // Shopify API - NetworkFirst with timeout
           {
             urlPattern: /^https:\/\/.*\.myshopify\.com\/api\/.*/i,
             handler: 'NetworkFirst',
@@ -107,6 +184,7 @@ export default defineConfig(({ mode }) => ({
               networkTimeoutSeconds: PWA_CACHE_CONFIG.NETWORK_TIMEOUT_SECONDS,
             },
           },
+          // Shopify CDN images - CacheFirst
           {
             urlPattern: /^https:\/\/cdn\.shopify\.com\/.*/i,
             handler: 'CacheFirst',
@@ -118,6 +196,75 @@ export default defineConfig(({ mode }) => ({
               },
               cacheableResponse: {
                 statuses: [0, 200],
+              },
+            },
+          },
+          // Phase 35a: Supabase API caching
+          {
+            urlPattern: /^https:\/\/.*\.supabase\.co\/rest\/v1\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'supabase-api-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 5 * 60, // 5 minutes
+              },
+              networkTimeoutSeconds: 10,
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          // Phase 35a: Google Fonts
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-stylesheets',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-webfonts',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          // Phase 35a: Local images and assets
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'image-assets-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          // Phase 35a: JS and CSS assets
+          {
+            urlPattern: /\.(?:js|css)$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'static-resources',
+              expiration: {
+                maxEntries: 60,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
               },
             },
           },
