@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
+import { shopifyService, ShopifyProduct } from "@/services";
 import { VanityConfigurator } from "@/components/VanityConfigurator";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,10 @@ export default function ProductDetail() {
   useEffect(() => {
     const loadProduct = async () => {
       try {
-        const products = await fetchProducts(50);
-        const foundProduct = products.find(
-          (p: ShopifyProduct) => p.node.handle === handle
-        );
-        setProduct(foundProduct || null);
+        if (handle) {
+          const foundProduct = await shopifyService.getProductByHandle(handle);
+          setProduct(foundProduct);
+        }
       } catch (error) {
         console.error("Error loading product:", error);
       } finally {

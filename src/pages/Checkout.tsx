@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/stores/cartStore";
-import { supabase } from "@/integrations/supabase/client";
+import { checkoutService } from "@/services";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -40,12 +40,12 @@ export default function Checkout() {
     phone: "",
   });
 
-  // Calculate totals
+  // Calculate totals using checkoutService
   const calculateItemTotal = (item: any) => {
-    return parseFloat(item.price.amount) * item.quantity;
+    return checkoutService.calculateItemTotal(item);
   };
 
-  const subtotal = items.reduce((sum, item) => sum + calculateItemTotal(item), 0);
+  const subtotal = checkoutService.calculateSubtotal(items);
   const total = subtotal;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,20 +69,16 @@ export default function Checkout() {
     setIsProcessing(true);
     
     try {
-      // Create Stripe checkout session
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: {
-          items: items,
-          customerEmail: formData.email,
-          customerName: `${formData.firstName} ${formData.lastName}`,
-        }
-      });
+      // Create checkout session using checkoutService
+      const result = await checkoutService.createCheckout(items, formData);
 
-      if (error) throw error;
+      if (result.error) {
+        throw result.error;
+      }
 
-      if (data?.url) {
+      if (result.url) {
         // Redirect to Stripe checkout
-        window.location.href = data.url;
+        window.location.href = result.url;
       } else {
         throw new Error("No checkout URL received");
       }

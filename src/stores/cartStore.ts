@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { createStorefrontCheckout, ShopifyProduct } from '@/lib/shopify';
+import { shopifyService, ShopifyProduct } from '@/services';
 
 export interface CartItem {
   product: ShopifyProduct;
@@ -95,7 +95,13 @@ export const useCartStore = create<CartStore>()(
 
         setLoading(true);
         try {
-          const checkoutUrl = await createStorefrontCheckout(items);
+          const checkoutUrl = await shopifyService.createCheckout(
+            items.map(item => ({
+              variantId: item.variantId,
+              quantity: item.quantity,
+              customAttributes: item.customAttributes,
+            }))
+          );
           setCheckoutUrl(checkoutUrl);
           return checkoutUrl;
         } catch (error) {
