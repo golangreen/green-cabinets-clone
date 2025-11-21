@@ -92,22 +92,22 @@ const Hero = () => {
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
             Premium custom cabinetry for kitchens, bathrooms, and closets
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-start">
-            <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center w-full max-w-2xl mx-auto">
+            <div className="flex flex-col items-center gap-2 w-full sm:w-auto">
               <Button 
                 size="lg"
                 onClick={() => navigate('/designer')}
-                className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6"
+                className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
               >
                 Launch Designer
               </Button>
               <p className="text-sm text-[#2dd4bf]">* temporary under construction</p>
             </div>
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-2 w-full sm:w-auto">
               <Button 
                 size="lg"
                 onClick={() => navigate('/shop')}
-                className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6"
+                className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
               >
                 Shop
               </Button>
