@@ -48,17 +48,21 @@ const Shop = () => {
       <PromoBanner />
       <main className="flex-1 pt-24 sm:pt-28 md:pt-32">
         <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold">Shop</h1>
+          <h1 className="text-3xl font-bold mb-8">Shop</h1>
+          <ShopProducts />
+          
+          {/* Test Payment Button - Developer Tool */}
+          <div className="mt-12 pt-8 border-t border-border/50 flex justify-center">
             <Button 
               onClick={handleTestPayment}
               disabled={isProcessing}
-              className="bg-[#5C7650] hover:bg-[#5C7650]/80"
+              variant="outline"
+              size="sm"
+              className="text-muted-foreground"
             >
               {isProcessing ? "Processing..." : "$1 Test Payment"}
             </Button>
           </div>
-          <ShopProducts />
         </div>
       </main>
       <Footer />
