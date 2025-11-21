@@ -107,7 +107,7 @@ export const FinishComparison = ({
               <TabsTrigger 
                 key={category} 
                 value={category}
-                className="text-xs px-3 py-1.5 data-[state=active]:bg-[#2dd4bf] data-[state=active]:text-white"
+                className="text-xs px-3 py-1.5 data-[state=active]:bg-[#5C7650] data-[state=active]:text-white"
               >
                 {category}
               </TabsTrigger>
@@ -154,7 +154,7 @@ export const FinishComparison = ({
                   variant="secondary"
                   size="sm"
                   onClick={() => handleSelectFinish(finish)}
-                  className="h-7 px-2 text-xs bg-[#2dd4bf] hover:bg-[#2dd4bf]/80 text-white"
+                  className="h-7 px-2 text-xs bg-[#5C7650] hover:bg-[#5C7650]/80 text-white"
                 >
                   Select
                 </Button>

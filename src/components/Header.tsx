@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import logoColor from "@/assets/logos/logo-color.png";
-import logoBlack from "@/assets/logos/logo-black.png";
+import logoColor from "@/assets/logos/logo-color.svg";
+import logoBlack from "@/assets/logos/logo-black.svg";
 import { CartDrawer } from "@/components/CartDrawer";
 import { useNavigate } from "react-router-dom";
 
@@ -79,7 +79,7 @@ const Header = () => {
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className={`transition-all duration-300 hover:scale-110 ${scrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`} aria-label="Open menu">
-                  <Menu className={`h-6 w-6 text-[#2dd4bf]`} />
+                  <Menu className={`h-6 w-6 text-[#5C7650]`} />
                 </Button>
               </SheetTrigger>
               

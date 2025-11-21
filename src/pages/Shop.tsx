@@ -51,7 +51,7 @@ const Shop = () => {
             <Button 
               onClick={handleTestPayment}
               disabled={isProcessing}
-              className="bg-[#2dd4bf] hover:bg-[#2dd4bf]/80"
+              className="bg-[#5C7650] hover:bg-[#5C7650]/80"
             >
               {isProcessing ? "Processing..." : "$1 Test Payment"}
             </Button>
