@@ -3,44 +3,34 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useQuoteForm } from "@/hooks/useQuoteForm";
 import { Phone, Mail, MapPin, CheckCircle2 } from "lucide-react";
 import logo from "@/assets/logos/logo-color.svg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 
 const Landing = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { submitQuote, isSubmitting } = useQuoteForm();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Request Received!",
-        description: "We'll contact you within 24 hours to discuss your project.",
-      });
-      
+    const result = await submitQuote({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      message: formData.message,
+      projectType: "landing_page_inquiry",
+    });
+
+    if (result.success) {
       setFormData({ name: "", email: "", phone: "", message: "" });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
