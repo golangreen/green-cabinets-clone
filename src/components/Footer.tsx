@@ -1,6 +1,7 @@
 import logo from "@/assets/logo-new.png";
 import { Instagram } from "lucide-react";
 import ObfuscatedPhone from "@/components/ObfuscatedPhone";
+import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 
 const Footer = () => {
   return (
@@ -53,9 +54,10 @@ const Footer = () => {
             <h4 className="font-semibold text-white mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
-                <a href="mailto:orders@greencabinetsny.com" className="hover:text-white transition-colors">
-                  orders@greencabinetsny.com
-                </a>
+                <ObfuscatedEmail 
+                  encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
+                  className="hover:text-white transition-colors"
+                />
               </li>
               <li>
                 <ObfuscatedPhone 

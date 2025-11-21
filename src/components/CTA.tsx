@@ -9,7 +9,10 @@ const CTA = () => {
 
   const handleConsultation = () => {
     if (contactMethod === "email") {
-      window.location.href = 'mailto:orders@greencabinetsny.com';
+      // Decode email client-side to protect from bots
+      const encoded = 'b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20='; // Base64 encoded: orders@greencabinetsny.com
+      const email = atob(encoded);
+      window.location.href = `mailto:${email}`;
     } else {
       // Decode phone number client-side to protect from bots
       const encoded = 'NjQ2NTQ5Mzk1NQ=='; // Base64 encoded: 6465493955

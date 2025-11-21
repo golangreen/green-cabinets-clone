@@ -7,7 +7,8 @@ export const APP_CONFIG = {
   description: 'Custom Kitchen & Bathroom Cabinetry',
   url: import.meta.env.VITE_APP_URL || 'https://greencabinetsny.com',
   contact: {
-    email: 'orders@greencabinetsny.com',
+    // Email address stored encoded to protect from bots (Base64: orders@greencabinetsny.com)
+    emailEncoded: 'b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=',
     // Phone number stored encoded to protect from bots (Base64: 7188045488)
     phoneEncoded: 'NzE4ODA0NTQ4OA==',
     address: 'New York, NY',
