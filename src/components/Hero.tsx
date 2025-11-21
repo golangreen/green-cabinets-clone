@@ -99,7 +99,6 @@ const Hero = () => {
                 onClick={() => navigate('/designer')}
                 className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6"
               >
-                <span className="mr-2">✨</span>
                 Launch Designer
               </Button>
               <p className="text-sm text-[#2dd4bf]">* temporary under construction</p>
@@ -110,7 +109,6 @@ const Hero = () => {
                 onClick={() => navigate('/shop')}
                 className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6"
               >
-                <span className="mr-2">🛍️</span>
                 Shop
               </Button>
             </div>
