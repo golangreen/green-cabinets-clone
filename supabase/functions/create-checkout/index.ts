@@ -102,7 +102,7 @@ serve(async (req) => {
     // Keep only critical custom attributes needed for order fulfillment
     const orderItems = items.map((item: any) => {
       const essentialAttributes = item.customAttributes?.filter((attr: any) => 
-        ['Brand', 'Finish', 'Width', 'Height', 'Depth', 'price_per_linear_foot'].includes(attr.key)
+        ['Brand', 'Finish', 'Width', 'Height', 'Depth', 'price_per_linear_foot', 'cabinet_type'].includes(attr.key)
       ) || [];
       
       return {
