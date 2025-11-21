@@ -34,13 +34,13 @@ const Services = () => {
       </section>
 
       {/* Services Cards */}
-      <section id="services" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-white">
+      <section id="services" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {services.map((service, index) => (
               <div
                 key={service.title}
-                className="p-8 rounded-2xl bg-white border border-gray-200 hover:shadow-lg transition-all duration-300"
+                className="p-8 rounded-2xl bg-card border border-border hover:shadow-lg transition-all duration-300"
                 style={{
                   animationDelay: `${index * 150}ms`,
                 }}
