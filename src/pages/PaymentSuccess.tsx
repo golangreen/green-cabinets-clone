@@ -124,10 +124,10 @@ export default function PaymentSuccess() {
                 </a>
                 <span className="hidden sm:inline text-muted-foreground">•</span>
                 <a 
-                  href="tel:+19179099878"
+                  href="tel:+17188045488"
                   className="text-[#2dd4bf] hover:text-[#1aa39a]"
                 >
-                  (917) 909-9878
+                  (718) 804-5488
                 </a>
               </div>
             </div>
