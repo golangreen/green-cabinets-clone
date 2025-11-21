@@ -20,11 +20,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn } from "lucide-react";
+import { ShoppingCart, ZoomIn, CreditCard } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
 import { useCartStore } from "@/stores/cartStore";
+import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 
 const dimensionSchema = z.object({
@@ -144,6 +145,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [state, setState] = useState<string>("");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; alt: string } | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
   const openLightbox = (imageUrl: string, imageAlt: string) => {
@@ -166,27 +168,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     }
   }, [selectedBrand]);
 
-  // Calculate price based on total square footage
+  // Calculate price based on linear feet at $350/linear foot
   const calculatePrice = () => {
-    if (!width || !height || !depth || !selectedBrand) return 0;
+    if (!width || !selectedBrand) return 0;
     
     const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
-    const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
-    const depthInches = parseFloat(depth) + (parseInt(depthFraction) / 16);
+    const linearFeet = widthInches / 12; // Convert inches to feet
     
-    // Calculate square footage for all surfaces
-    // Front/Back: width × height (×2)
-    // Sides: depth × height (×2)
-    // Top/Bottom: width × depth (×2)
-    const frontBackSqIn = widthInches * heightInches * 2;
-    const sidesSqIn = depthInches * heightInches * 2;
-    const topBottomSqIn = widthInches * depthInches * 2;
-    const totalSqIn = frontBackSqIn + sidesSqIn + topBottomSqIn;
-    const totalSqFt = totalSqIn / 144; // Convert to square feet (12×12)
-    
-    const pricePerSqFt = BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.price || 0;
-    
-    return totalSqFt * pricePerSqFt;
+    return linearFeet * 350; // $350 per linear foot
   };
 
   const calculateTax = (subtotal: number) => {
@@ -288,6 +277,51 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     });
   };
 
+  const handleCheckout = async () => {
+    if (!selectedBrand || !selectedFinish || !width || !zipCode) {
+      toast.error("Please complete all fields", {
+        description: "Brand, finish, width, and zip code are required",
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
+      const linearFeet = widthInches / 12;
+      
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: {
+          customProduct: {
+            name: `Custom Vanity - ${selectedBrand} ${selectedFinish}`,
+            description: `Width: ${widthInches.toFixed(2)}" (${linearFeet.toFixed(2)} linear feet) | Brand: ${selectedBrand} | Finish: ${selectedFinish} | ZIP: ${zipCode}`,
+            amount: Math.round(totalPrice * 100), // Convert to cents
+            metadata: {
+              brand: selectedBrand,
+              finish: selectedFinish,
+              width: widthInches.toFixed(2),
+              zipCode,
+              state: state || "Unknown",
+              basePrice: basePrice.toFixed(2),
+              tax: tax.toFixed(2),
+              shipping: shipping.toFixed(2),
+            }
+          }
+        }
+      });
+      
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, '_blank');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast.error('Failed to create payment session');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6 md:gap-8">
@@ -340,7 +374,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               <strong>Available Brands:</strong> Tafisa (60+ melamine colors), Egger (98+ TFL & HPL finishes), and Shinnoki (prefinished wood veneer)
             </p>
             <p>
-              <strong>Pricing:</strong> Tafisa $250/sq ft • Egger $300/sq ft • Shinnoki $350/sq ft
+              <strong>Pricing:</strong> $350 per linear foot (based on vanity width)
             </p>
             <p>
               <strong>Shipping:</strong> Approximately 14-21 business days
@@ -365,7 +399,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 <SelectContent className="bg-background z-50">
                   {brands.map((brand) => (
                     <SelectItem key={brand} value={brand} className="cursor-pointer">
-                      {brand} - ${BRAND_INFO[brand as keyof typeof BRAND_INFO]?.price}/sq ft
+                      {brand}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -648,7 +682,14 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>Base Price ({selectedBrand}):</span>
+                <span>Width:</span>
+                <span className="font-medium">
+                  {(parseFloat(width || "0") + parseInt(widthFraction) / 16).toFixed(2)}" 
+                  ({((parseFloat(width || "0") + parseInt(widthFraction) / 16) / 12).toFixed(2)} linear feet)
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Base Price ($350/linear foot):</span>
                 <span className="font-medium">${basePrice.toFixed(2)}</span>
               </div>
               {tax > 0 && (
@@ -667,20 +708,33 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
                 <span>Total:</span>
                 <span>${totalPrice.toFixed(2)}</span>
               </div>
+              <div className="text-xs text-muted-foreground mt-4">
+                <p>* This is an estimate based on $350 per linear foot</p>
+                <p>* Final pricing will be confirmed by our team before shipping</p>
+              </div>
             </CardContent>
           </Card>
         )}
 
-        <div className="bg-muted/50 p-4 rounded-lg text-sm">
-          <p className="text-muted-foreground">
-            <strong>Note:</strong> Cart uses base Shopify pricing. Your custom dimensions and calculated price (${totalPrice.toFixed(2)}) will be included in the order details for manual price adjustment.
-          </p>
+        <div className="flex gap-2">
+          <Button 
+            onClick={handleAddToCart}
+            className="flex-1 bg-[#2dd4bf] hover:bg-[#2dd4bf]/80 touch-manipulation" 
+            size="lg"
+          >
+            <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Add to Cart</span>
+          </Button>
+          <Button 
+            onClick={handleCheckout}
+            disabled={isProcessing}
+            className="flex-1 bg-[#D4AF37] hover:bg-[#D4AF37]/80 touch-manipulation" 
+            size="lg"
+          >
+            <CreditCard className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">{isProcessing ? "Processing..." : "Checkout Now"}</span>
+          </Button>
         </div>
-
-        <Button onClick={handleAddToCart} className="w-full touch-manipulation" size="lg">
-          <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-          <span className="text-sm sm:text-base">Add to Cart</span>
-        </Button>
       </div>
     </div>
 
