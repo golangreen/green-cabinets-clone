@@ -18,6 +18,8 @@ serve(async (req) => {
   );
 
   try {
+    const { customProduct } = await req.json();
+    
     // Get user from auth header if provided (optional for guest checkout)
     const authHeader = req.headers.get("Authorization");
     let userEmail: string | undefined;
@@ -41,13 +43,34 @@ serve(async (req) => {
       }
     }
 
+    // If customProduct is provided, create a dynamic product
+    let priceId: string;
+    if (customProduct) {
+      const product = await stripe.products.create({
+        name: customProduct.name,
+        description: customProduct.description,
+        metadata: customProduct.metadata || {},
+      });
+
+      const price = await stripe.prices.create({
+        product: product.id,
+        unit_amount: customProduct.amount,
+        currency: 'usd',
+      });
+
+      priceId = price.id;
+    } else {
+      // Use the test price for $1 test payments
+      priceId = "price_1SVtRRGax5Fu3tml73kyGPOT";
+    }
+
     // Create a one-time payment session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : userEmail,
       line_items: [
         {
-          price: "price_1SVtRRGax5Fu3tml73kyGPOT",
+          price: priceId,
           quantity: 1,
         },
       ],
