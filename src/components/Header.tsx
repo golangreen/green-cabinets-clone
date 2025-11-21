@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, Sun, Moon } from "lucide-react";
 import logoColor from "@/assets/logos/logo-color.png";
 import logoBlack from "@/assets/logos/logo-black.png";
 import logoDark from "/logo-dark.png";
 import { CartDrawer } from "@/components/CartDrawer";
+import { useTheme } from "@/hooks/useTheme";
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { theme, setTheme } = useTheme();
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
@@ -20,16 +22,35 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDarkMode(darkModeQuery.matches);
-
-    const handleDarkModeChange = (e: MediaQueryListEvent) => {
-      setIsDarkMode(e.matches);
+    // Update isDarkMode based on current theme
+    const updateDarkMode = () => {
+      if (theme === 'system') {
+        const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        setIsDarkMode(darkModeQuery.matches);
+      } else {
+        setIsDarkMode(theme === 'dark');
+      }
     };
 
-    darkModeQuery.addEventListener('change', handleDarkModeChange);
-    return () => darkModeQuery.removeEventListener('change', handleDarkModeChange);
-  }, []);
+    updateDarkMode();
+
+    if (theme === 'system') {
+      const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleDarkModeChange = (e: MediaQueryListEvent) => {
+        setIsDarkMode(e.matches);
+      };
+      darkModeQuery.addEventListener('change', handleDarkModeChange);
+      return () => darkModeQuery.removeEventListener('change', handleDarkModeChange);
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    if (theme === 'system' || theme === 'light') {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  };
   const scrollToGallery = (category: string, event?: React.MouseEvent) => {
     if (event) {
       event.preventDefault();
@@ -99,8 +120,34 @@ const Header = () => {
             </a>
           </div>
 
-          {/* Right Side - Hamburger Menu */}
+          {/* Right Side - Theme Toggle and Menu */}
           <div className="ml-auto flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className={`transition-colors duration-500 ${
+                scrolled 
+                  ? 'hover:bg-muted'
+                  : 'hover:bg-white/10'
+              }`}
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? (
+                <Sun className={`h-5 w-5 transition-colors duration-500 ${
+                  scrolled 
+                    ? 'text-foreground'
+                    : 'text-white'
+                }`} />
+              ) : (
+                <Moon className={`h-5 w-5 transition-colors duration-500 ${
+                  scrolled 
+                    ? 'text-foreground'
+                    : 'text-white'
+                }`} />
+              )}
+            </Button>
+
             <CartDrawer />
             
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
