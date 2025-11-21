@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import QuoteForm from "@/components/QuoteForm";
 import ObfuscatedPhone from "@/components/ObfuscatedPhone";
+import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 
 const Contact = () => {
   const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
@@ -11,7 +12,10 @@ const Contact = () => {
 
   const handleContact = () => {
     if (contactMethod === "email") {
-      window.location.href = 'mailto:orders@greencabinetsny.com';
+      // Decode email client-side to protect from bots
+      const encoded = 'b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20='; // Base64 encoded: orders@greencabinetsny.com
+      const email = atob(encoded);
+      window.location.href = `mailto:${email}`;
     } else {
       // Decode phone number client-side to protect from bots
       const encoded = 'NjQ2NTQ5Mzk1NQ=='; // Base64 encoded: 6465493955
@@ -37,12 +41,10 @@ const Contact = () => {
               <Mail className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-3">Email Us</h3>
-            <a 
-              href="mailto:orders@greencabinetsny.com"
+            <ObfuscatedEmail 
+              encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
               className="text-[#666666] hover:text-[#1a1a1a] transition-colors"
-            >
-              orders@greencabinetsny.com
-            </a>
+            />
           </div>
 
           {/* Phone */}
