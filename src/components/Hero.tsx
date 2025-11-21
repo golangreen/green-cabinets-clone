@@ -82,18 +82,18 @@ const Hero = () => {
   return (
     <>
       {/* Hero Text Section */}
-      <section className="bg-background py-24 md:py-36">
+      <section className="bg-background py-16 sm:py-24 md:py-36">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-serif mb-6 text-foreground">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-6 text-foreground">
             Transform Your Space
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
             Premium custom cabinetry for kitchens, bathrooms, and closets
           </p>
           <Button 
             size="lg"
             onClick={() => window.location.href = '/designer'}
-            className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-lg px-8 py-6"
+            className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6"
           >
             <span className="mr-2">✨</span>
             Launch Designer

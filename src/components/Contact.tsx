@@ -28,45 +28,45 @@ const Contact = () => {
     <section id="contact" className="py-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-6">Get in Touch</h2>
-          <p className="text-lg text-[#666666] max-w-2xl mx-auto">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-6">Get in Touch</h2>
+          <p className="text-base sm:text-lg text-[#666666] max-w-2xl mx-auto px-4">
             Ready to transform your space? Contact us today for a free consultation.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mb-12 px-4">
           {/* Email */}
-          <div className="p-8 rounded-2xl bg-[#c5f3f0]">
+          <div className="p-6 md:p-8 rounded-2xl bg-[#c5f3f0]">
             <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
               <Mail className="w-8 h-8 text-white" />
             </div>
-            <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-3">Email Us</h3>
+            <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Email Us</h3>
             <ObfuscatedEmail 
               encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
-              className="text-[#666666] hover:text-[#1a1a1a] transition-colors break-words block"
+              className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors break-words block"
             />
           </div>
 
           {/* Phone */}
-          <div className="p-8 rounded-2xl bg-[#c5f3f0]">
+          <div className="p-6 md:p-8 rounded-2xl bg-[#c5f3f0]">
             <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
               <Phone className="w-8 h-8 text-white" />
             </div>
-            <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-3">Call Us</h3>
+            <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Call Us</h3>
             <ObfuscatedPhone 
               encoded="NzE4ODA0NTQ4OA=="
-              className="text-[#666666] hover:text-[#1a1a1a] transition-colors"
+              className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors break-words block"
               type="tel"
             />
           </div>
 
           {/* Address */}
-          <div className="p-8 rounded-2xl bg-[#c5f3f0]">
+          <div className="p-6 md:p-8 rounded-2xl bg-[#c5f3f0]">
             <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
               <MapPin className="w-8 h-8 text-white" />
             </div>
-            <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-3">Visit Us</h3>
-            <address className="text-[#666666] not-italic">
+            <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Visit Us</h3>
+            <address className="text-sm md:text-base text-[#666666] not-italic">
               BUSHWICK<br />
               Brooklyn, NY 11206
             </address>

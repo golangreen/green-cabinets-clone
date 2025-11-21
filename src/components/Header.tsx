@@ -45,7 +45,7 @@ const Header = () => {
     }, 400);
   };
   return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-in-out ${scrolled ? 'bg-white border-b border-gray-200' : 'bg-[#0a0a0a] border-b border-gray-800'}`}>
-      <nav className="container mx-auto px-4 md:px-6 py-6 md:py-8">
+      <nav className="container mx-auto px-4 md:px-6 py-4 sm:py-6 md:py-8">
         <div className="flex items-center justify-between relative">
           {/* Centered Logo */}
           <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-all duration-500">
@@ -56,16 +56,16 @@ const Header = () => {
               behavior: 'smooth'
             });
           }} className="cursor-pointer flex flex-col items-center">
-              <div className="relative h-20 md:h-24 w-auto">
+              <div className="relative h-16 sm:h-20 md:h-24 w-auto">
                 <img 
                   src={logoColor} 
                   alt="Green Cabinets Logo" 
-                  className={`h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-0' : 'opacity-100'}`}
+                  className={`h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-0' : 'opacity-100'}`}
                 />
                 <img 
                   src={logoBlack} 
                   alt="Green Cabinets Logo" 
-                  className={`absolute top-0 left-0 h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
+                  className={`absolute top-0 left-0 h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
                 />
               </div>
               
