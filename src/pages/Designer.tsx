@@ -377,7 +377,7 @@ export default function Designer() {
         </div>
 
         {/* Main Canvas Area */}
-        <div className="flex-1 bg-white relative overflow-hidden">
+        <div className="flex-1 bg-card relative overflow-hidden">
           {/* Grid Canvas */}
           <canvas
             ref={canvasRef}
@@ -394,7 +394,7 @@ export default function Designer() {
           />
 
           {/* Tool Instructions */}
-          <div className="absolute top-4 left-4 bg-white/90 p-3 rounded-lg shadow-lg border border-gray-300 text-sm">
+          <div className="absolute top-4 left-4 bg-card/90 p-3 rounded-lg shadow-lg border border-border text-sm">
             {selectedTool === "select" && <p><strong>under construction will be available soon</strong></p>}
             {selectedTool === "draw" && <p><strong>Draw Wall:</strong> {isDrawing ? 'Click to place end point' : 'Click to start drawing a wall'}</p>}
             {selectedTool === "door" && <p><strong>Add Door:</strong> Click on a wall to add a door</p>}
@@ -403,7 +403,7 @@ export default function Designer() {
           </div>
 
           {/* Grid Info */}
-          <div className="absolute bottom-4 right-4 text-xs text-gray-500 bg-white/90 p-2 rounded border border-gray-300">
+          <div className="absolute bottom-4 right-4 text-xs text-muted-foreground bg-card/90 p-2 rounded border border-border">
             <div>Grid: 12" × 12"</div>
             <div>Scale: 2px = 1"</div>
             <div>Mouse: ({Math.round(mousePos.x)}, {Math.round(mousePos.y)})</div>

@@ -146,7 +146,7 @@ const Suppliers = () => {
   const [showCatalogSlideshow, setShowCatalogSlideshow] = useState(false);
 
   return (
-    <section id="suppliers" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-white">
+    <section id="suppliers" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-4">
@@ -191,7 +191,7 @@ const Suppliers = () => {
                 )}
               </a>
 
-              <div className="mb-6 bg-white rounded-xl p-6 h-32 flex items-center justify-center">
+              <div className="mb-6 bg-card rounded-xl p-6 h-32 flex items-center justify-center">
                 {supplier.logo ? (
                   <img
                     src={supplier.logo}

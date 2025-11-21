@@ -47,7 +47,7 @@ const Header = () => {
       }
     }, 400);
   };
-  return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-in-out ${scrolled ? 'bg-white border-b border-gray-200' : 'bg-[#0a0a0a] border-b border-gray-800'}`}>
+  return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-in-out ${scrolled ? 'bg-background border-b border-border' : 'bg-[#0a0a0a] border-b border-gray-800'}`}>
       <nav className="container mx-auto px-4 md:px-6 py-4 sm:py-6 md:py-8">
         <div className="flex items-center justify-between relative">
           {/* Centered Logo */}
@@ -78,7 +78,7 @@ const Header = () => {
             
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className={`transition-all duration-300 hover:scale-110 ${scrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`} aria-label="Open menu">
+                <Button variant="ghost" size="icon" className={`transition-all duration-300 hover:scale-110 ${scrolled ? 'hover:bg-muted' : 'hover:bg-white/10'}`} aria-label="Open menu">
                   <Menu className={`h-6 w-6 text-[#5C7650]`} />
                 </Button>
               </SheetTrigger>
