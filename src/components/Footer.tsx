@@ -4,6 +4,29 @@ import ObfuscatedPhone from "@/components/ObfuscatedPhone";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 
 const Footer = () => {
+  const scrollToGallery = (category: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    
+    const categoryEvent = new CustomEvent('categoryChange', {
+      detail: { category }
+    });
+    window.dispatchEvent(categoryEvent);
+    window.history.replaceState(null, '', `#gallery?category=${category}`);
+    
+    setTimeout(() => {
+      const gallery = document.getElementById('gallery');
+      if (gallery) {
+        const rect = gallery.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const targetPosition = rect.top + scrollTop - 80;
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  };
+
   return (
     <footer className="bg-[#0a0a0a] border-t border-gray-800 py-16 sm:py-20 md:py-28 lg:py-32">
       <div className="container mx-auto px-4 sm:px-6">
@@ -34,9 +57,30 @@ const Footer = () => {
             <h4 className="font-semibold text-white mb-3 sm:mb-4 text-sm sm:text-base">Services</h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li><a href="#services" className="hover:text-white transition-colors">Our Services</a></li>
-              <li><a href="#gallery?category=kitchens" className="hover:text-white transition-colors">Kitchen Cabinets</a></li>
-              <li><a href="#gallery?category=vanities" className="hover:text-white transition-colors">Bathroom Vanities</a></li>
-              <li><a href="#gallery?category=closets" className="hover:text-white transition-colors">Custom Storage</a></li>
+              <li>
+                <button 
+                  onClick={(e) => scrollToGallery('kitchens', e)} 
+                  className="hover:text-white transition-colors text-left"
+                >
+                  Kitchen Cabinets
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={(e) => scrollToGallery('vanities', e)} 
+                  className="hover:text-white transition-colors text-left"
+                >
+                  Bathroom Vanities
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={(e) => scrollToGallery('closets', e)} 
+                  className="hover:text-white transition-colors text-left"
+                >
+                  Custom Storage
+                </button>
+              </li>
             </ul>
           </div>
           
