@@ -116,17 +116,6 @@ export const ShopProducts = () => {
             Browse our collection of premium custom cabinetry
           </p>
         </div>
-
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-12">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full px-6 py-4 rounded-full bg-[#1a1a1a] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {products.map((product) => (
