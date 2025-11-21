@@ -82,10 +82,12 @@ const Header = () => {
   const getHeaderClasses = () => {
     if (scrolled) {
       return isDarkMode 
-        ? 'bg-card border-b border-border' 
+        ? 'bg-card/95 backdrop-blur-md border-b border-border' 
         : 'bg-background border-b border-border';
     }
-    return 'bg-card/95 border-b border-border/50';
+    return isDarkMode 
+      ? 'bg-card/90 backdrop-blur-md border-b border-border/50'
+      : 'bg-card/95 border-b border-border/50';
   };
 
   const getScrolledLogo = () => {
