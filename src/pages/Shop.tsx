@@ -26,9 +26,9 @@ const Shop = () => {
       }
       
       if (data?.url) {
-        console.log('Opening checkout URL:', data.url);
-        window.open(data.url, '_blank');
+        console.log('Redirecting to checkout URL:', data.url);
         toast.success('Redirecting to payment...');
+        window.location.href = data.url;
       } else {
         console.error('No URL in response:', data);
         toast.error('No payment URL received');
