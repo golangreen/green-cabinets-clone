@@ -111,6 +111,7 @@ const Hero = () => {
               >
                 Shop
               </Button>
+              <p className="text-sm text-transparent select-none">placeholder</p>
             </div>
           </div>
         </div>
