@@ -161,7 +161,7 @@ const Suppliers = () => {
           {suppliers.map((supplier) => (
             <div
               key={supplier.id}
-              className="p-8 rounded-2xl bg-[#c5f3f0] hover:bg-[#b5e8e5] transition-all duration-300 cursor-pointer relative group"
+              className="p-8 rounded-2xl bg-[#5C7650]/10 hover:bg-[#5C7650]/20 transition-all duration-300 cursor-pointer relative group"
               onClick={() => {
                 if (supplier.website === "catalog") {
                   setShowCatalogSlideshow(true);
