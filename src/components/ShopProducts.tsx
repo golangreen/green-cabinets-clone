@@ -29,27 +29,6 @@ export const ShopProducts = () => {
     loadProducts();
   }, []);
 
-  const extractWidthInches = (product: ShopifyProduct): number => {
-    const text = `${product.node.title} ${product.node.description}`.toLowerCase();
-    
-    // Try to find width in inches: "36 inch", "36-inch", "36in", "36\"", "36 in"
-    const inchMatches = text.match(/(\d+)\s*(?:inch|in|"|')/i);
-    if (inchMatches) return parseInt(inchMatches[1]);
-    
-    // Try to find width in format "W: 36" or "Width: 36"
-    const widthMatches = text.match(/(?:width|w):\s*(\d+)/i);
-    if (widthMatches) return parseInt(widthMatches[1]);
-    
-    // Default to 36 inches if no dimension found
-    return 36;
-  };
-
-  const calculatePrice = (product: ShopifyProduct): number => {
-    const widthInches = extractWidthInches(product);
-    const linearFeet = widthInches / 12;
-    return linearFeet * 350;
-  };
-
   const handleAddToCart = (product: ShopifyProduct) => {
     const variant = product.node.variants.edges[0]?.node;
     if (!variant) {
@@ -57,22 +36,17 @@ export const ShopProducts = () => {
       return;
     }
 
-    const calculatedPrice = calculatePrice(product);
-    const widthInches = extractWidthInches(product);
-
     const cartItem = {
       product,
       variantId: variant.id,
       variantTitle: variant.title,
       price: {
-        amount: calculatedPrice.toFixed(2),
+        amount: '350.00',
         currencyCode: 'USD'
       },
       quantity: 1,
       selectedOptions: variant.selectedOptions || [],
       customAttributes: [
-        { key: 'width_inches', value: widthInches.toString() },
-        { key: 'linear_feet', value: (widthInches / 12).toFixed(2) },
         { key: 'price_per_linear_foot', value: '350' }
       ]
     };
@@ -156,10 +130,10 @@ export const ShopProducts = () => {
               </CardHeader>
               <CardContent className="pb-3">
                 <p className="text-xl sm:text-2xl font-bold text-[#1a1a1a]">
-                  ${calculatePrice(product).toFixed(2)}
+                  $350
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {extractWidthInches(product)}" wide ({(extractWidthInches(product) / 12).toFixed(2)} linear ft × $350)
+                  per linear foot
                 </p>
               </CardContent>
               <CardFooter>
