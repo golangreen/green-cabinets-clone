@@ -12,11 +12,26 @@ const Shop = () => {
   const handleTestPayment = async () => {
     setIsProcessing(true);
     try {
-      const { data, error } = await supabase.functions.invoke('create-payment');
+      console.log('Invoking payment function...');
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: {}
+      });
       
-      if (error) throw error;
+      console.log('Payment response:', { data, error });
+      
+      if (error) {
+        console.error('Payment error:', error);
+        toast.error(`Payment error: ${error.message}`);
+        throw error;
+      }
+      
       if (data?.url) {
+        console.log('Opening checkout URL:', data.url);
         window.open(data.url, '_blank');
+        toast.success('Redirecting to payment...');
+      } else {
+        console.error('No URL in response:', data);
+        toast.error('No payment URL received');
       }
     } catch (error) {
       console.error('Payment error:', error);
