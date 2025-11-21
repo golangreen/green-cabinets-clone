@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,11 +15,142 @@ import {
   Download,
   ChevronLeft
 } from "lucide-react";
+import { RoomDesignerEngine } from "@/lib/roomDesigner";
 import logoImage from "@/assets/logos/logo-color.svg";
+import { toast } from "sonner";
 
 export default function Designer() {
   const [selectedTool, setSelectedTool] = useState<string>("select");
   const [activeTab, setActiveTab] = useState("room");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const engineRef = useRef<RoomDesignerEngine | null>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isDrawing, setIsDrawing] = useState(false);
+
+  // Initialize the room designer engine
+  useEffect(() => {
+    if (canvasRef.current && !engineRef.current) {
+      engineRef.current = new RoomDesignerEngine(canvasRef.current);
+      engineRef.current.render();
+    }
+  }, []);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (canvasRef.current && engineRef.current) {
+        canvasRef.current.width = canvasRef.current.offsetWidth;
+        canvasRef.current.height = canvasRef.current.offsetHeight;
+        engineRef.current.render();
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!engineRef.current || !canvasRef.current) return;
+    
+    const rect = canvasRef.current.getBoundingClientRect();
+    const point = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+
+    if (selectedTool === "draw") {
+      if (!isDrawing) {
+        engineRef.current.startWall(point);
+        setIsDrawing(true);
+        toast.info("Click to place the end of the wall");
+      } else {
+        engineRef.current.completeWall(point);
+        setIsDrawing(false);
+        toast.success("Wall created!");
+      }
+    } else if (selectedTool === "door" || selectedTool === "window") {
+      const wall = engineRef.current.findWallAtPoint(point);
+      if (wall) {
+        engineRef.current.addOpening(wall.id, 0.5, selectedTool as 'door' | 'window');
+        toast.success(`${selectedTool === 'door' ? 'Door' : 'Window'} added!`);
+      } else {
+        toast.error("Click on a wall to add an opening");
+      }
+    } else if (selectedTool === "deleteWall") {
+      const wall = engineRef.current.findWallAtPoint(point);
+      if (wall) {
+        engineRef.current.deleteWall(wall.id);
+        toast.success("Wall deleted!");
+      }
+    }
+  };
+
+  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current) return;
+    
+    const rect = canvasRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  const handleUndo = () => {
+    if (engineRef.current?.undo()) {
+      toast.info("Undone");
+    } else {
+      toast.error("Nothing to undo");
+    }
+  };
+
+  const handleRedo = () => {
+    if (engineRef.current?.redo()) {
+      toast.info("Redone");
+    } else {
+      toast.error("Nothing to redo");
+    }
+  };
+
+  const handleClearRoom = () => {
+    if (engineRef.current) {
+      engineRef.current.clearRoom();
+      setIsDrawing(false);
+      toast.success("Room cleared!");
+    }
+  };
+
+  const handlePresetRoom = (type: 'straight' | 'l-shaped' | 'u-shaped' | 'closed') => {
+    if (engineRef.current) {
+      engineRef.current.createPresetRoom(type);
+      toast.success(`${type.replace('-', ' ').toUpperCase()} layout created!`);
+    }
+  };
+
+  const handleSave = () => {
+    if (engineRef.current) {
+      const room = engineRef.current.getRoom();
+      const json = JSON.stringify(room, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `room-design-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("Design saved!");
+    }
+  };
+
+  const handleExport = () => {
+    if (canvasRef.current) {
+      const url = canvasRef.current.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `room-design-${Date.now()}.png`;
+      a.click();
+      toast.success("Design exported!");
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen bg-[#1a1a1a] text-white">
@@ -65,11 +196,11 @@ export default function Designer() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" className="text-white hover:bg-gray-800 gap-2">
+          <Button variant="ghost" className="text-white hover:bg-gray-800 gap-2" onClick={handleSave}>
             <Save className="h-4 w-4" />
             Save
           </Button>
-          <Button variant="ghost" className="text-white hover:bg-gray-800 gap-2">
+          <Button variant="ghost" className="text-white hover:bg-gray-800 gap-2" onClick={handleExport}>
             <Download className="h-4 w-4" />
             Export
           </Button>
@@ -118,8 +249,9 @@ export default function Designer() {
 
             <div className="grid grid-cols-4 gap-2">
               <Button
-                variant="ghost"
+                variant={selectedTool === "deleteWall" ? "default" : "ghost"}
                 className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                onClick={() => setSelectedTool("deleteWall")}
               >
                 <Trash2 className="h-5 w-5 mb-1" />
                 <span className="text-xs">Delete Wall</span>
@@ -127,6 +259,7 @@ export default function Designer() {
               <Button
                 variant="ghost"
                 className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                onClick={() => setSelectedTool("deleteOpening")}
               >
                 <Trash2 className="h-5 w-5 mb-1" />
                 <span className="text-xs">Delete Opening</span>
@@ -134,6 +267,7 @@ export default function Designer() {
               <Button
                 variant="ghost"
                 className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                onClick={handleClearRoom}
               >
                 <Square className="h-5 w-5 mb-1" />
                 <span className="text-xs">Clear Room</span>
@@ -141,6 +275,7 @@ export default function Designer() {
               <Button
                 variant="ghost"
                 className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                onClick={handleUndo}
               >
                 <RotateCcw className="h-5 w-5 mb-1" />
                 <span className="text-xs">Undo</span>
@@ -151,6 +286,7 @@ export default function Designer() {
               <Button
                 variant="ghost"
                 className="w-full h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                onClick={handleRedo}
               >
                 <RotateCw className="h-5 w-5 mr-2" />
                 <span className="text-xs">Redo</span>
@@ -185,21 +321,33 @@ export default function Designer() {
                 <div>
                   <h4 className="text-xs font-semibold mb-3">Quick Layouts</h4>
                   <div className="grid grid-cols-2 gap-3">
-                    <Card className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2">
+                    <Card 
+                      className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
+                      onClick={() => handlePresetRoom('straight')}
+                    >
                       <Square className="h-8 w-8" />
                       <span className="text-xs">Straight</span>
                     </Card>
-                    <Card className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2">
+                    <Card 
+                      className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
+                      onClick={() => handlePresetRoom('l-shaped')}
+                    >
                       <div className="rotate-90">
                         <Square className="h-8 w-8" />
                       </div>
                       <span className="text-xs">L-Shaped</span>
                     </Card>
-                    <Card className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2">
+                    <Card 
+                      className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
+                      onClick={() => handlePresetRoom('u-shaped')}
+                    >
                       <Square className="h-8 w-8" />
                       <span className="text-xs">U-Shaped</span>
                     </Card>
-                    <Card className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2">
+                    <Card 
+                      className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
+                      onClick={() => handlePresetRoom('closed')}
+                    >
                       <Square className="h-8 w-8" />
                       <span className="text-xs">Closed</span>
                     </Card>
@@ -226,43 +374,36 @@ export default function Designer() {
         </div>
 
         {/* Main Canvas Area */}
-        <div className="flex-1 bg-white relative overflow-auto">
+        <div className="flex-1 bg-white relative overflow-hidden">
           {/* Grid Canvas */}
-          <div className="w-full h-full relative" style={{
-            backgroundImage: `
-              linear-gradient(to right, #e5e5e5 1px, transparent 1px),
-              linear-gradient(to bottom, #e5e5e5 1px, transparent 1px)
-            `,
-            backgroundSize: '24px 24px'
-          }}>
-            {/* Sample Room - Placeholder for actual drawing functionality */}
-            <div className="absolute" style={{ top: '200px', left: '300px' }}>
-              <div className="relative">
-                {/* Room Rectangle */}
-                <div 
-                  className="border-4 border-[#f5a623] bg-[#f5a623]/10"
-                  style={{ width: '144px', height: '96px' }}
-                >
-                  <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#f5a623] font-semibold text-sm">
-                    ROOM
-                  </span>
-                </div>
-                
-                {/* Dimension Labels */}
-                <div className="absolute -top-8 left-0 right-0 flex justify-center">
-                  <span className="text-blue-600 font-semibold text-sm">36"</span>
-                </div>
-                <div className="absolute top-0 bottom-0 -right-10 flex items-center">
-                  <span className="text-blue-600 font-semibold text-sm">24"</span>
-                </div>
-              </div>
-            </div>
+          <canvas
+            ref={canvasRef}
+            className="w-full h-full cursor-crosshair"
+            onClick={handleCanvasClick}
+            onMouseMove={handleCanvasMouseMove}
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, #e5e5e5 1px, transparent 1px),
+                linear-gradient(to bottom, #e5e5e5 1px, transparent 1px)
+              `,
+              backgroundSize: '24px 24px'
+            }}
+          />
 
-            {/* Grid Info */}
-            <div className="absolute bottom-4 right-4 text-xs text-gray-500 bg-white/90 p-2 rounded border border-gray-300">
-              <div>Grid: 12" × 12"</div>
-              <div>Scale: 2px = 1"</div>
-            </div>
+          {/* Tool Instructions */}
+          <div className="absolute top-4 left-4 bg-white/90 p-3 rounded-lg shadow-lg border border-gray-300 text-sm">
+            {selectedTool === "select" && <p><strong>Select Tool:</strong> Click elements to select them</p>}
+            {selectedTool === "draw" && <p><strong>Draw Wall:</strong> {isDrawing ? 'Click to place end point' : 'Click to start drawing a wall'}</p>}
+            {selectedTool === "door" && <p><strong>Add Door:</strong> Click on a wall to add a door</p>}
+            {selectedTool === "window" && <p><strong>Add Window:</strong> Click on a wall to add a window</p>}
+            {selectedTool === "deleteWall" && <p><strong>Delete Wall:</strong> Click on a wall to delete it</p>}
+          </div>
+
+          {/* Grid Info */}
+          <div className="absolute bottom-4 right-4 text-xs text-gray-500 bg-white/90 p-2 rounded border border-gray-300">
+            <div>Grid: 12" × 12"</div>
+            <div>Scale: 2px = 1"</div>
+            <div>Mouse: ({Math.round(mousePos.x)}, {Math.round(mousePos.y)})</div>
           </div>
         </div>
       </div>
