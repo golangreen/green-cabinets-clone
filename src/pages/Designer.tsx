@@ -159,7 +159,7 @@ export default function Designer() {
       <div className="flex items-center justify-between px-4 py-3 bg-[#0d0d0d] border-b border-gray-800">
         <div className="flex items-center gap-6 flex-1">
           <Link to="/" className="flex-shrink-0">
-            <img src={logoImage} alt="Green Cabinets" className="h-10 cursor-pointer" />
+            <img src={logoImage} alt="Green Cabinets" className="h-10 cursor-pointer transition-all duration-300 hover:scale-110 hover:opacity-80" />
           </Link>
           
           <Tabs value={activeTab} onValueChange={setActiveTab}>
