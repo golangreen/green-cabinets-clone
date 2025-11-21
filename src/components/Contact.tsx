@@ -11,7 +11,7 @@ const Contact = () => {
 
   const handleContact = () => {
     if (contactMethod === "email") {
-      window.location.href = 'mailto:greencabinets@gmail.com';
+      window.location.href = 'mailto:orders@greencabinetsny.com';
     } else {
       // Decode phone number client-side to protect from bots
       const encoded = 'NjQ2NTQ5Mzk1NQ=='; // Base64 encoded: 6465493955
@@ -38,10 +38,10 @@ const Contact = () => {
             </div>
             <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-3">Email Us</h3>
             <a 
-              href="mailto:greencabinets@gmail.com"
+              href="mailto:orders@greencabinetsny.com"
               className="text-[#666666] hover:text-[#1a1a1a] transition-colors"
             >
-              greencabinets@gmail.com
+              orders@greencabinetsny.com
             </a>
           </div>
 
