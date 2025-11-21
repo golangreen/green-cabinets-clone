@@ -5,9 +5,12 @@ import { Menu } from "lucide-react";
 import logoColor from "@/assets/logos/logo-color.png";
 import logoBlack from "@/assets/logos/logo-black.png";
 import { CartDrawer } from "@/components/CartDrawer";
+import { useNavigate } from "react-router-dom";
+
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -51,10 +54,7 @@ const Header = () => {
           <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-all duration-500">
             <a href="/" onClick={e => {
             e.preventDefault();
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth'
-            });
+            navigate('/');
           }} className="cursor-pointer flex flex-col items-center">
               <div className="relative h-16 sm:h-20 md:h-24 w-auto">
                 <img 
