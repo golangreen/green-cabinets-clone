@@ -22,7 +22,7 @@ const Services = () => {
   return (
     <>
       {/* Our Solutions Intro */}
-      <section className="py-20 bg-[#f8f8f8]">
+      <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#f8f8f8]">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
             Our Solutions
@@ -34,7 +34,7 @@ const Services = () => {
       </section>
 
       {/* Services Cards */}
-      <section id="services" className="py-16 bg-white">
+      <section id="services" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-white">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {services.map((service, index) => (

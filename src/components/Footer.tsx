@@ -5,7 +5,7 @@ import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0a0a0a] border-t border-gray-800 py-8 sm:py-12">
+    <footer className="bg-[#0a0a0a] border-t border-gray-800 py-16 sm:py-20 md:py-28 lg:py-32">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Logo and Tagline */}
         <div className="text-center mb-8 sm:mb-12 space-y-3 sm:space-y-4">
