@@ -154,6 +154,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
+  const [zipCodeError, setZipCodeError] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
   const openLightbox = (imageUrl: string, imageAlt: string) => {
@@ -216,6 +217,9 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
   const handleAddToCart = () => {
     if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
+      if (!zipCode) {
+        setZipCodeError(true);
+      }
       toast.error("Please complete all fields", {
         description: "Brand, finish, measurements, and zip code are required",
       });
@@ -232,9 +236,15 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
     if (!validationResult.success) {
       const firstError = validationResult.error.errors[0];
+      // Check if the error is related to zip code
+      if (firstError.path.includes('zipCode')) {
+        setZipCodeError(true);
+      }
       toast.error(firstError.message);
       return;
     }
+
+    setZipCodeError(false);
 
     const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
     const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
@@ -287,12 +297,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
   const handleCheckout = async () => {
     if (!selectedBrand || !selectedFinish || !width || !zipCode) {
+      if (!zipCode) {
+        setZipCodeError(true);
+      }
       toast.error("Please complete all fields", {
         description: "Brand, finish, width, and zip code are required",
       });
       return;
     }
 
+    setZipCodeError(false);
     setIsProcessing(true);
     try {
       const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
@@ -332,11 +346,15 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
   const handleRequestQuote = () => {
     if (!selectedBrand || !selectedFinish || !width || !zipCode) {
+      if (!zipCode) {
+        setZipCodeError(true);
+      }
       toast.error("Please complete all fields", {
         description: "Brand, finish, width, and zip code are required",
       });
       return;
     }
+    setZipCodeError(false);
     setShowQuoteDialog(true);
   };
 
@@ -736,14 +754,20 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
             {/* Zip Code */}
             <div className="space-y-2">
-              <Label htmlFor="zipCode">Zip Code (for shipping)</Label>
+              <Label htmlFor="zipCode" className={zipCodeError ? "text-destructive" : ""}>
+                Zip Code (for shipping) {zipCodeError && <span className="text-destructive">*</span>}
+              </Label>
               <Input
                 id="zipCode"
                 type="text"
                 placeholder="12345"
                 value={zipCode}
-                onChange={(e) => setZipCode(e.target.value.slice(0, 5))}
+                onChange={(e) => {
+                  setZipCode(e.target.value.slice(0, 5));
+                  setZipCodeError(false);
+                }}
                 maxLength={5}
+                className={zipCodeError ? "border-destructive focus-visible:ring-destructive" : ""}
               />
               {state && (
                 <p className="text-sm text-muted-foreground">
