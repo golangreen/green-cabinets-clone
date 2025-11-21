@@ -91,7 +91,7 @@ const Header = () => {
   };
 
   const getScrolledLogo = () => {
-    return isDarkMode ? logoDark : logoBlack;
+    return isDarkMode ? logoColor : logoBlack;
   };
 
   return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-in-out ${getHeaderClasses()}`}>
