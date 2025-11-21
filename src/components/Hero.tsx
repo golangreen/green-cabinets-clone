@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.jpg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
@@ -34,6 +35,7 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 };
 
 const Hero = () => {
+  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [shuffledImages] = useState(() => shuffleArray(heroImages));
@@ -92,7 +94,7 @@ const Hero = () => {
           </p>
           <Button 
             size="lg"
-            onClick={() => window.location.href = '/designer'}
+            onClick={() => navigate('/designer')}
             className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6"
           >
             <span className="mr-2">✨</span>
