@@ -23,6 +23,7 @@ import {
 import { toast } from "sonner";
 import { ShoppingCart, ZoomIn, CreditCard, Mail } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
+import { FinishComparison } from "./FinishComparison";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
 import { useCartStore } from "@/stores/cartStore";
@@ -543,6 +544,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               <FinishPreview 
                 brand={selectedBrand}
                 finish={selectedFinish}
+              />
+            )}
+
+            {/* Finish Comparison Tool */}
+            {selectedBrand && availableFinishes.length > 1 && (
+              <FinishComparison
+                brand={selectedBrand}
+                availableFinishes={availableFinishes}
+                selectedFinish={selectedFinish}
+                onFinishSelect={setSelectedFinish}
               />
             )}
 
