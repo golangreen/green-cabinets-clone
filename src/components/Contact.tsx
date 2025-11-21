@@ -36,7 +36,7 @@ const Contact = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mb-12 px-4">
           {/* Email */}
-          <div className="p-6 md:p-8 rounded-2xl bg-[#c5f3f0]">
+          <div className="p-6 md:p-8 rounded-2xl bg-primary/10">
             <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
               <Mail className="w-8 h-8 text-white" />
             </div>
@@ -48,7 +48,7 @@ const Contact = () => {
           </div>
 
           {/* Phone */}
-          <div className="p-6 md:p-8 rounded-2xl bg-[#c5f3f0]">
+          <div className="p-6 md:p-8 rounded-2xl bg-primary/10">
             <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
               <Phone className="w-8 h-8 text-white" />
             </div>
@@ -61,7 +61,7 @@ const Contact = () => {
           </div>
 
           {/* Address */}
-          <div className="p-6 md:p-8 rounded-2xl bg-[#c5f3f0]">
+          <div className="p-6 md:p-8 rounded-2xl bg-primary/10">
             <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
               <MapPin className="w-8 h-8 text-white" />
             </div>
@@ -83,10 +83,10 @@ const Contact = () => {
             Get Detailed Quote
           </Button>
           
-          <div className="text-center text-[#999999]">or</div>
+          <div className="text-center text-muted-foreground">or</div>
           
           <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
-            <SelectTrigger className="w-full bg-[#1a1a1a] text-white border-0">
+            <SelectTrigger className="w-full bg-card text-card-foreground border border-border">
               <SelectValue placeholder="Choose contact method" />
             </SelectTrigger>
             <SelectContent>
@@ -97,7 +97,8 @@ const Contact = () => {
           
           <Button 
             size="lg"
-            className="w-full bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white"
+            className="w-full"
+            variant="secondary"
             onClick={handleContact}
           >
             {contactMethod === "email" ? "Send Email" : "Send Text"}

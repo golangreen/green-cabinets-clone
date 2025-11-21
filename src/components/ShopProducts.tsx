@@ -104,11 +104,11 @@ export const ShopProducts = () => {
           {products.map((product) => (
             <Card 
               key={product.node.id} 
-              className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-gray-200"
+              className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
               onClick={() => navigate(`/product/${product.node.handle}`)}
             >
               {product.node.images.edges[0] && (
-                <div className="aspect-square overflow-hidden bg-gray-100">
+                <div className="aspect-square overflow-hidden bg-muted">
                   <img
                     src={product.node.images.edges[0].node.url}
                     alt={product.node.images.edges[0].node.altText || product.node.title}

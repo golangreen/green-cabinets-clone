@@ -64,7 +64,7 @@ const Header = () => {
         ? 'bg-card border-b border-border' 
         : 'bg-background border-b border-border';
     }
-    return 'bg-[#0a0a0a] border-b border-gray-800';
+    return 'bg-card/95 border-b border-border/50';
   };
 
   const getScrolledLogo = () => {
