@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import QuoteForm from "@/components/QuoteForm";
+import ObfuscatedPhone from "@/components/ObfuscatedPhone";
 
 const Contact = () => {
   const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
@@ -12,7 +13,10 @@ const Contact = () => {
     if (contactMethod === "email") {
       window.location.href = 'mailto:greencabinets@gmail.com';
     } else {
-      window.location.href = 'sms:+16465493955';
+      // Decode phone number client-side to protect from bots
+      const encoded = 'NjQ2NTQ5Mzk1NQ=='; // Base64 encoded: 6465493955
+      const phone = atob(encoded);
+      window.location.href = `sms:+1${phone}`;
     }
   };
 
@@ -47,12 +51,11 @@ const Contact = () => {
               <Phone className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-3">Call Us</h3>
-            <a 
-              href="tel:+17188045488"
+            <ObfuscatedPhone 
+              encoded="NzE4ODA0NTQ4OA=="
               className="text-[#666666] hover:text-[#1a1a1a] transition-colors"
-            >
-              (718) 804-5488
-            </a>
+              type="tel"
+            />
           </div>
 
           {/* Address */}

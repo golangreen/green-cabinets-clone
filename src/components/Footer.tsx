@@ -1,5 +1,6 @@
 import logo from "@/assets/logo-new.png";
 import { Instagram } from "lucide-react";
+import ObfuscatedPhone from "@/components/ObfuscatedPhone";
 
 const Footer = () => {
   return (
@@ -57,9 +58,11 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="tel:+17188045488" className="hover:text-white transition-colors">
-                  (718) 804-5488
-                </a>
+                <ObfuscatedPhone 
+                  encoded="NzE4ODA0NTQ4OA=="
+                  className="hover:text-white transition-colors"
+                  type="tel"
+                />
               </li>
               <li>BUSHWICK<br />Brooklyn, NY 11206</li>
             </ul>
