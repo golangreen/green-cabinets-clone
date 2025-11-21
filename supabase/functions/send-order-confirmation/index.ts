@@ -130,7 +130,7 @@ serve(async (req) => {
               <p>If you have any questions or need to make changes, please don't hesitate to reach out:</p>
               <p>
                 📧 Email: <a href="mailto:orders@greencabinetsny.com">orders@greencabinetsny.com</a><br>
-                📞 Phone: <a href="tel:+19179099878">(917) 909-9878</a>
+                📞 Phone: <a href="tel:+17188045488">(718) 804-5488</a>
               </p>
 
               <a href="${req.headers.get("origin") || "https://greencabinetsny.com"}" class="button">
