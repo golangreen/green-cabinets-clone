@@ -5,15 +5,15 @@ import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0a0a0a] border-t border-gray-800 py-8 sm:py-12">
+    <footer className="bg-card border-t border-border py-8 sm:py-12">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Logo and Tagline */}
         <div className="text-center mb-8 sm:mb-12 space-y-3 sm:space-y-4">
           <div className="flex items-center justify-center gap-2 sm:gap-3">
             <img src={logo} alt="Green Cabinets Logo" className="h-12 sm:h-16 w-auto" />
-            <span className="font-display text-lg sm:text-xl font-bold text-white">Green Cabinets</span>
+            <span className="font-display text-lg sm:text-xl font-bold text-card-foreground">Green Cabinets</span>
           </div>
-          <p className="text-sm sm:text-base text-gray-400 px-4">
+          <p className="text-sm sm:text-base text-muted-foreground px-4">
             Premium custom cabinetry for modern living.
           </p>
           <div className="flex justify-center gap-4">
@@ -21,7 +21,7 @@ const Footer = () => {
               href="https://instagram.com/green_cabinets_" 
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-card-foreground transition-colors"
               aria-label="Follow us on Instagram"
             >
               <Instagram className="h-5 w-5" />

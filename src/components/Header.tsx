@@ -61,8 +61,8 @@ const Header = () => {
   const getHeaderClasses = () => {
     if (scrolled) {
       return isDarkMode 
-        ? 'bg-gray-900 border-b border-gray-700' 
-        : 'bg-white border-b border-gray-200';
+        ? 'bg-card border-b border-border' 
+        : 'bg-background border-b border-border';
     }
     return 'bg-[#0a0a0a] border-b border-gray-800';
   };
@@ -110,14 +110,14 @@ const Header = () => {
                   size="icon" 
                   className={`transition-colors duration-500 ${
                     scrolled 
-                      ? (isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100')
+                      ? 'hover:bg-muted'
                       : 'hover:bg-white/10'
                   }`} 
                   aria-label="Open menu"
                 >
                   <Menu className={`h-6 w-6 transition-colors duration-500 ${
                     scrolled 
-                      ? (isDarkMode ? 'text-white' : 'text-foreground')
+                      ? 'text-foreground'
                       : 'text-white'
                   }`} />
                 </Button>

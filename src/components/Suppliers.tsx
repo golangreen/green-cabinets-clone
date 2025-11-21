@@ -146,13 +146,13 @@ const Suppliers = () => {
   const [showCatalogSlideshow, setShowCatalogSlideshow] = useState(false);
 
   return (
-    <section id="suppliers" className="py-20 bg-white">
+    <section id="suppliers" className="py-20 bg-background">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-4">
+          <h2 className="font-display text-5xl font-bold text-foreground mb-4">
             Our Trusted Partners
           </h2>
-          <p className="text-lg text-[#666666] max-w-3xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             We work with industry-leading suppliers to ensure the highest quality materials and hardware for your custom cabinetry.
           </p>
         </div>
@@ -181,7 +181,7 @@ const Suppliers = () => {
                     e.preventDefault();
                   }
                 }}
-                className="absolute top-4 right-4 text-[#666666] hover:text-[#1a1a1a] transition-colors z-10"
+                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10"
                 aria-label={`Visit ${supplier.name} website`}
               >
                 {supplier.website === "catalog" ? (
@@ -191,7 +191,7 @@ const Suppliers = () => {
                 )}
               </a>
 
-              <div className="mb-6 bg-white rounded-xl p-6 h-32 flex items-center justify-center">
+              <div className="mb-6 bg-card rounded-xl p-6 h-32 flex items-center justify-center border border-border">
                 {supplier.logo ? (
                   <img
                     src={supplier.logo}
@@ -199,11 +199,11 @@ const Suppliers = () => {
                     className="max-w-full max-h-full object-contain"
                   />
                 ) : (
-                  <span className="text-2xl font-bold text-[#1a1a1a]">{supplier.name}</span>
+                  <span className="text-2xl font-bold text-foreground">{supplier.name}</span>
                 )}
               </div>
 
-              <p className="text-[#666666] leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed">
                 {supplier.description}
               </p>
             </div>
