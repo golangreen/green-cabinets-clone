@@ -15,12 +15,12 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['logo.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
+      includeAssets: ['favicon.png', 'logo.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
       manifest: {
         name: 'Green Cabinets - Custom Cabinetry NYC',
         short_name: 'Green Cabinets',
         description: 'Premium custom cabinetry for kitchens, bathrooms, and closets in Brooklyn, NYC since 2009',
-        theme_color: '#1e7b5f',
+        theme_color: '#2dd4bf',
         background_color: '#030303',
         display: 'standalone',
         icons: [
