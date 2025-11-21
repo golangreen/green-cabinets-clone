@@ -58,7 +58,7 @@ serve(async (req) => {
 
     // Build line items with custom pricing from cart
     const lineItems = items.map((item: any) => {
-      // Extract total from custom attributes if available
+      // Extract total from custom attributes if available (for vanity configurator)
       const customTotal = item.customAttributes?.find((attr: any) => 
         attr.key === "Total Estimate"
       );
@@ -69,6 +69,9 @@ serve(async (req) => {
         // Parse the total from format like "$XXX.XX"
         const totalValue = parseFloat(customTotal.value.replace(/[^0-9.]/g, ''));
         unitAmount = Math.round(totalValue * 100); // Convert to cents
+      } else if (item.price?.amount) {
+        // Use price from cart item (for shop products with $350/linear foot)
+        unitAmount = Math.round(parseFloat(item.price.amount) * 100);
       }
 
       // Build product description from custom attributes
@@ -99,7 +102,7 @@ serve(async (req) => {
     // Keep only critical custom attributes needed for order fulfillment
     const orderItems = items.map((item: any) => {
       const essentialAttributes = item.customAttributes?.filter((attr: any) => 
-        ['Brand', 'Finish', 'Width', 'Height', 'Depth'].includes(attr.key)
+        ['Brand', 'Finish', 'Width', 'Height', 'Depth', 'width_inches', 'linear_feet', 'price_per_linear_foot'].includes(attr.key)
       ) || [];
       
       return {
