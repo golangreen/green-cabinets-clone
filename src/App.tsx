@@ -9,6 +9,7 @@ import AdminRoute from "@/components/auth/AdminRoute";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
+const Shop = lazy(() => import("./pages/Shop"));
 const Auth = lazy(() => import("./pages/Auth"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
 const Checkout = lazy(() => import("./pages/Checkout"));
@@ -35,6 +36,7 @@ const App = () => {
           }>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/shop" element={<Shop />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/product/:handle" element={<ProductDetail />} />
               <Route path="/checkout" element={<Checkout />} />

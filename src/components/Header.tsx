@@ -118,6 +118,9 @@ const Header = () => {
                   </div>
 
                   <div className="border-t pt-4 space-y-3">
+                    <a href="/shop" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                      Shop
+                    </a>
                     <a href="#services" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                       Services
                     </a>
