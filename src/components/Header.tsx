@@ -106,7 +106,11 @@ const Header = () => {
               behavior: 'smooth'
             });
           }} className="cursor-pointer flex flex-col items-center">
-              <div className="relative h-16 sm:h-20 md:h-24 w-auto">
+              <div className={`relative h-16 sm:h-20 md:h-24 w-auto px-2 rounded-lg transition-colors duration-200 ${
+                scrolled 
+                  ? (isDarkMode ? 'bg-card' : 'bg-background')
+                  : (isDarkMode ? 'bg-card' : 'bg-card')
+              }`}>
                 <img 
                   src={logoColor} 
                   alt="Green Cabinets Logo" 
