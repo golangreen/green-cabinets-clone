@@ -108,6 +108,7 @@ export const CartDrawer = () => {
                         <p className="text-xs text-muted-foreground">
                           per linear foot
                           {item.customAttributes?.find(attr => attr.key === 'cabinet_type')?.value === 'wall' && ' (Wall)'}
+                          {item.customAttributes?.find(attr => attr.key === 'cabinet_type')?.value === 'base' && ' (Base)'}
                         </p>
                       </div>
                       
