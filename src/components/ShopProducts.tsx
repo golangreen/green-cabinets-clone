@@ -35,8 +35,16 @@ export const ShopProducts = () => {
            (text.includes('wall') && text.includes('cabinet'));
   };
 
+  const isBaseCabinet = (product: ShopifyProduct): boolean => {
+    const text = `${product.node.title} ${product.node.description}`.toLowerCase();
+    return text.includes('base cabinet') || text.includes('base-cabinet') || 
+           (text.includes('base') && text.includes('cabinet'));
+  };
+
   const getPricePerLinearFoot = (product: ShopifyProduct): number => {
-    return isWallCabinet(product) ? 125 : 225;
+    if (isWallCabinet(product)) return 125;
+    if (isBaseCabinet(product)) return 225;
+    return 350;
   };
 
   const handleAddToCart = (product: ShopifyProduct) => {
@@ -47,6 +55,7 @@ export const ShopProducts = () => {
     }
 
     const pricePerFoot = getPricePerLinearFoot(product);
+    const cabinetType = isWallCabinet(product) ? 'wall' : isBaseCabinet(product) ? 'base' : 'other';
 
     const cartItem = {
       product,
@@ -60,7 +69,7 @@ export const ShopProducts = () => {
       selectedOptions: variant.selectedOptions || [],
       customAttributes: [
         { key: 'price_per_linear_foot', value: pricePerFoot.toString() },
-        { key: 'cabinet_type', value: isWallCabinet(product) ? 'wall' : 'base' }
+        { key: 'cabinet_type', value: cabinetType }
       ]
     };
     
@@ -146,7 +155,9 @@ export const ShopProducts = () => {
                   ${getPricePerLinearFoot(product)}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  per linear foot {isWallCabinet(product) && '(Wall Cabinet)'}
+                  per linear foot 
+                  {isWallCabinet(product) && ' (Wall Cabinet)'}
+                  {isBaseCabinet(product) && ' (Base Cabinet)'}
                 </p>
               </CardContent>
               <CardFooter>
