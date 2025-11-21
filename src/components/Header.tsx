@@ -4,10 +4,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import logoColor from "@/assets/logos/logo-color.png";
 import logoBlack from "@/assets/logos/logo-black.png";
+import logoDark from "/logo-dark.png";
 import { CartDrawer } from "@/components/CartDrawer";
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -15,6 +17,18 @@ const Header = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDarkMode(darkModeQuery.matches);
+
+    const handleDarkModeChange = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches);
+    };
+
+    darkModeQuery.addEventListener('change', handleDarkModeChange);
+    return () => darkModeQuery.removeEventListener('change', handleDarkModeChange);
   }, []);
   const scrollToGallery = (category: string, event?: React.MouseEvent) => {
     if (event) {
@@ -44,7 +58,20 @@ const Header = () => {
       }
     }, 400);
   };
-  return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-in-out ${scrolled ? 'bg-white border-b border-gray-200' : 'bg-[#0a0a0a] border-b border-gray-800'}`}>
+  const getHeaderClasses = () => {
+    if (scrolled) {
+      return isDarkMode 
+        ? 'bg-gray-900 border-b border-gray-700' 
+        : 'bg-white border-b border-gray-200';
+    }
+    return 'bg-[#0a0a0a] border-b border-gray-800';
+  };
+
+  const getScrolledLogo = () => {
+    return isDarkMode ? logoDark : logoBlack;
+  };
+
+  return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-in-out ${getHeaderClasses()}`}>
       <nav className="container mx-auto px-4 md:px-6 py-4 sm:py-6 md:py-8">
         <div className="flex items-center justify-between relative">
           {/* Centered Logo */}
@@ -63,7 +90,7 @@ const Header = () => {
                   className={`h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-0' : 'opacity-100'}`}
                 />
                 <img 
-                  src={logoBlack} 
+                  src={getScrolledLogo()} 
                   alt="Green Cabinets Logo" 
                   className={`absolute top-0 left-0 h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
                 />
@@ -78,8 +105,21 @@ const Header = () => {
             
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className={`transition-colors duration-500 ${scrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`} aria-label="Open menu">
-                  <Menu className={`h-6 w-6 transition-colors duration-500 ${scrolled ? 'text-foreground' : 'text-white'}`} />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`transition-colors duration-500 ${
+                    scrolled 
+                      ? (isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100')
+                      : 'hover:bg-white/10'
+                  }`} 
+                  aria-label="Open menu"
+                >
+                  <Menu className={`h-6 w-6 transition-colors duration-500 ${
+                    scrolled 
+                      ? (isDarkMode ? 'text-white' : 'text-foreground')
+                      : 'text-white'
+                  }`} />
                 </Button>
               </SheetTrigger>
               
