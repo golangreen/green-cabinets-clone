@@ -36,7 +36,7 @@ export const ShopProducts = () => {
   };
 
   const getPricePerLinearFoot = (product: ShopifyProduct): number => {
-    return isWallCabinet(product) ? 125 : 350;
+    return isWallCabinet(product) ? 125 : 225;
   };
 
   const handleAddToCart = (product: ShopifyProduct) => {
