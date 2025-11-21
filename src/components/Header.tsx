@@ -81,9 +81,9 @@ const Header = () => {
   };
   const getHeaderClasses = () => {
     if (scrolled) {
-      return 'bg-card/95 backdrop-blur-md border-b border-border';
+      return 'bg-[hsl(0,0%,5%)] backdrop-blur-md border-b border-border';
     }
-    return 'bg-card/90 backdrop-blur-md border-b border-border/50';
+    return 'bg-[hsl(0,0%,5%)]/90 backdrop-blur-md border-b border-border/50';
   };
 
   const getScrolledLogo = () => {
@@ -102,7 +102,7 @@ const Header = () => {
               behavior: 'smooth'
             });
           }} className="cursor-pointer flex flex-col items-center">
-              <div className="relative h-16 sm:h-20 md:h-24 w-auto px-2 rounded-lg bg-card transition-colors duration-200">
+              <div className="relative h-16 sm:h-20 md:h-24 w-auto px-2 rounded-lg bg-[hsl(0,0%,5%)] transition-colors duration-200">
                 <img 
                   src={logoColor} 
                   alt="Green Cabinets Logo" 
