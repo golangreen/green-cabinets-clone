@@ -22,25 +22,25 @@ const Services = () => {
   return (
     <>
       {/* Our Solutions Intro */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-[#f8f8f8]">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="font-display text-5xl md:text-6xl font-bold text-foreground mb-6">
+          <h2 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
             Our Solutions
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-xl text-[#666666] max-w-3xl mx-auto">
             Professional cabinetry solutions tailored to your needs
           </p>
         </div>
       </section>
 
       {/* Services Cards */}
-      <section id="services" className="py-16 bg-background">
+      <section id="services" className="py-16 bg-white">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {services.map((service, index) => (
               <div
                 key={service.title}
-                className="p-8 rounded-2xl bg-card border border-border hover:shadow-lg transition-all duration-300"
+                className="p-8 rounded-2xl bg-white border border-gray-200 hover:shadow-lg transition-all duration-300"
                 style={{
                   animationDelay: `${index * 150}ms`,
                 }}
@@ -48,10 +48,10 @@ const Services = () => {
                 <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                   <service.icon className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="font-display text-2xl font-bold text-foreground mb-3">
+                <h3 className="font-display text-2xl font-bold text-[#1a1a1a] mb-3">
                   {service.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-[#666666] leading-relaxed">
                   {service.description}
                 </p>
               </div>

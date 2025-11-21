@@ -22,24 +22,24 @@ const CTA = () => {
   };
 
   return (
-    <section className="py-16 sm:py-24 relative overflow-hidden bg-card">
+    <section className="py-16 sm:py-24 relative overflow-hidden bg-[#0a0a0a]">
       {/* Content */}
       <div className="container relative z-10 mx-auto px-4 sm:px-6 text-center">
         <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-card-foreground leading-tight">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
             All your storage needs,
             <br />
             in one place.
           </h2>
           
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto px-4">
             Join thousands of happy homeowners who transformed their spaces with Green Cabinets.
           </p>
           
           <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 pt-6 sm:pt-8 max-w-md mx-auto">
             <Button 
               size="lg" 
-              className="text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 w-full bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-primary"
+              className="text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 w-full bg-primary hover:bg-primary/90 text-white border-2 border-primary"
               onClick={() => setShowQuoteForm(true)}
             >
               Get Your Free Quote
@@ -47,7 +47,7 @@ const CTA = () => {
             
             <div className="w-full space-y-3">
               <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
-                <SelectTrigger className="w-full border-border text-foreground bg-background">
+                <SelectTrigger className="w-full border-gray-700 text-white bg-[#1a1a1a]">
                   <SelectValue placeholder="Choose contact method" />
                 </SelectTrigger>
                 <SelectContent>

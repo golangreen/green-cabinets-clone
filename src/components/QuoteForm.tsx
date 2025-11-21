@@ -135,7 +135,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                       key={type}
                       htmlFor={type}
                       className={`flex flex-col items-center justify-center p-6 border-2 rounded-lg cursor-pointer transition-all hover:border-primary ${
-                        projectType === type ? "border-primary bg-accent" : "border-border"
+                        projectType === type ? "border-primary bg-primary/5" : "border-border"
                       }`}
                     >
                       <RadioGroupItem value={type} id={type} className="sr-only" />

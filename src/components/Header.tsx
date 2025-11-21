@@ -1,17 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Sun, Moon } from "lucide-react";
+import { Menu } from "lucide-react";
 import logoColor from "@/assets/logos/logo-color.png";
 import logoBlack from "@/assets/logos/logo-black.png";
-import logoDark from "/logo-dark.png";
 import { CartDrawer } from "@/components/CartDrawer";
-import { useTheme } from "@/hooks/useTheme";
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -20,37 +16,6 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    // Update isDarkMode based on current theme
-    const updateDarkMode = () => {
-      if (theme === 'system') {
-        const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        setIsDarkMode(darkModeQuery.matches);
-      } else {
-        setIsDarkMode(theme === 'dark');
-      }
-    };
-
-    updateDarkMode();
-
-    if (theme === 'system') {
-      const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleDarkModeChange = (e: MediaQueryListEvent) => {
-        setIsDarkMode(e.matches);
-      };
-      darkModeQuery.addEventListener('change', handleDarkModeChange);
-      return () => darkModeQuery.removeEventListener('change', handleDarkModeChange);
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    if (theme === 'system' || theme === 'light') {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
-  };
   const scrollToGallery = (category: string, event?: React.MouseEvent) => {
     if (event) {
       event.preventDefault();
@@ -79,18 +44,7 @@ const Header = () => {
       }
     }, 400);
   };
-  const getHeaderClasses = () => {
-    if (scrolled) {
-      return 'bg-[hsl(0,0%,5%)] backdrop-blur-md border-b border-border';
-    }
-    return 'bg-[hsl(0,0%,5%)]/90 backdrop-blur-md border-b border-border/50';
-  };
-
-  const getScrolledLogo = () => {
-    return logoColor;
-  };
-
-  return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-in-out ${getHeaderClasses()}`}>
+  return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-in-out ${scrolled ? 'bg-white border-b border-gray-200' : 'bg-[#0a0a0a] border-b border-gray-800'}`}>
       <nav className="container mx-auto px-4 md:px-6 py-4 sm:py-6 md:py-8">
         <div className="flex items-center justify-between relative">
           {/* Centered Logo */}
@@ -102,14 +56,14 @@ const Header = () => {
               behavior: 'smooth'
             });
           }} className="cursor-pointer flex flex-col items-center">
-              <div className="relative h-16 sm:h-20 md:h-24 w-auto px-2 rounded-lg bg-[hsl(0,0%,5%)] transition-colors duration-200">
+              <div className="relative h-16 sm:h-20 md:h-24 w-auto">
                 <img 
                   src={logoColor} 
                   alt="Green Cabinets Logo" 
                   className={`h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-0' : 'opacity-100'}`}
                 />
                 <img 
-                  src={getScrolledLogo()} 
+                  src={logoBlack} 
                   alt="Green Cabinets Logo" 
                   className={`absolute top-0 left-0 h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
                 />
@@ -118,53 +72,14 @@ const Header = () => {
             </a>
           </div>
 
-          {/* Right Side - Theme Toggle and Menu */}
+          {/* Right Side - Hamburger Menu */}
           <div className="ml-auto flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className={`transition-colors duration-500 ${
-                scrolled 
-                  ? 'hover:bg-muted'
-                  : 'hover:bg-white/10'
-              }`}
-              aria-label="Toggle theme"
-            >
-              {isDarkMode ? (
-                <Sun className={`h-5 w-5 transition-colors duration-500 ${
-                  scrolled 
-                    ? 'text-foreground'
-                    : 'text-white'
-                }`} />
-              ) : (
-                <Moon className={`h-5 w-5 transition-colors duration-500 ${
-                  scrolled 
-                    ? 'text-foreground'
-                    : 'text-white'
-                }`} />
-              )}
-            </Button>
-
             <CartDrawer />
             
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className={`transition-colors duration-500 ${
-                    scrolled 
-                      ? 'hover:bg-muted'
-                      : 'hover:bg-white/10'
-                  }`} 
-                  aria-label="Open menu"
-                >
-                  <Menu className={`h-6 w-6 transition-colors duration-500 ${
-                    scrolled 
-                      ? 'text-foreground'
-                      : 'text-white'
-                  }`} />
+                <Button variant="ghost" size="icon" className={`transition-colors duration-500 ${scrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`} aria-label="Open menu">
+                  <Menu className={`h-6 w-6 transition-colors duration-500 ${scrolled ? 'text-foreground' : 'text-white'}`} />
                 </Button>
               </SheetTrigger>
               
