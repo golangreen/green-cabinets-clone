@@ -80,11 +80,11 @@ export const ShopProducts = () => {
   }
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-background">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-4">Our Products</h2>
-          <p className="text-lg text-[#666666] max-w-2xl mx-auto">
+          <h2 className="font-display text-5xl font-bold text-foreground mb-4">Our Products</h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Browse our collection of premium custom cabinetry
           </p>
         </div>
@@ -117,13 +117,13 @@ export const ShopProducts = () => {
                 </div>
               )}
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg sm:text-xl text-[#1a1a1a]">{product.node.title}</CardTitle>
-                <CardDescription className="line-clamp-2 text-sm text-[#666666]">
+                <CardTitle className="text-lg sm:text-xl text-foreground">{product.node.title}</CardTitle>
+                <CardDescription className="line-clamp-2 text-sm text-muted-foreground">
                   {product.node.description}
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-3">
-                <p className="text-xl sm:text-2xl font-bold text-[#1a1a1a]">
+                <p className="text-xl sm:text-2xl font-bold text-foreground">
                   {product.node.priceRange.minVariantPrice.currencyCode}{' '}
                   {parseFloat(product.node.priceRange.minVariantPrice.amount).toFixed(2)}
                 </p>
