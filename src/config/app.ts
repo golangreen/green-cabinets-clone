@@ -8,7 +8,8 @@ export const APP_CONFIG = {
   url: import.meta.env.VITE_APP_URL || 'https://greencabinetsny.com',
   contact: {
     email: 'orders@greencabinetsny.com',
-    phone: '(555) 123-4567',
+    // Phone number stored encoded to protect from bots (Base64: 7188045488)
+    phoneEncoded: 'NzE4ODA0NTQ4OA==',
     address: 'New York, NY',
   },
 } as const;
