@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -157,7 +158,9 @@ export default function Designer() {
       {/* Top Navigation Bar */}
       <div className="flex items-center justify-between px-4 py-3 bg-[#0d0d0d] border-b border-gray-800">
         <div className="flex items-center gap-6">
-          <img src={logoImage} alt="Green Cabinets" className="h-10" />
+          <Link to="/">
+            <img src={logoImage} alt="Green Cabinets" className="h-10 cursor-pointer" />
+          </Link>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
             <TabsList className="bg-transparent border-none h-auto p-0 gap-4">
