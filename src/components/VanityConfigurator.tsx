@@ -3,6 +3,7 @@ import type { ShopifyProduct } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -20,7 +21,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { ShoppingCart, ZoomIn, CreditCard } from "lucide-react";
+import { ShoppingCart, ZoomIn, CreditCard, Mail } from "lucide-react";
 import { FinishPreview } from "./FinishPreview";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
@@ -146,6 +147,12 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; alt: string } | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isRequestingQuote, setIsRequestingQuote] = useState(false);
+  const [showQuoteDialog, setShowQuoteDialog] = useState(false);
+  const [customerName, setCustomerName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [additionalNotes, setAdditionalNotes] = useState("");
   const addItem = useCartStore((state) => state.addItem);
 
   const openLightbox = (imageUrl: string, imageAlt: string) => {
@@ -319,6 +326,69 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       toast.error('Failed to create payment session');
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const handleRequestQuote = () => {
+    if (!selectedBrand || !selectedFinish || !width || !zipCode) {
+      toast.error("Please complete all fields", {
+        description: "Brand, finish, width, and zip code are required",
+      });
+      return;
+    }
+    setShowQuoteDialog(true);
+  };
+
+  const handleSubmitQuote = async () => {
+    if (!customerName || !customerEmail) {
+      toast.error("Please fill in your contact information");
+      return;
+    }
+
+    setIsRequestingQuote(true);
+    try {
+      const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
+      const heightInches = height ? parseFloat(height) + (parseInt(heightFraction) / 16) : undefined;
+      const depthInches = depth ? parseFloat(depth) + (parseInt(depthFraction) / 16) : undefined;
+
+      const { error } = await supabase.functions.invoke('send-vanity-quote', {
+        body: {
+          customerName,
+          customerEmail,
+          customerPhone: customerPhone || undefined,
+          brand: selectedBrand,
+          finish: selectedFinish,
+          width: widthInches,
+          height: heightInches,
+          depth: depthInches,
+          zipCode,
+          state: state || "Unknown",
+          basePrice,
+          tax,
+          shipping,
+          totalPrice,
+          additionalNotes: additionalNotes || undefined,
+        }
+      });
+
+      if (error) throw error;
+
+      toast.success("Quote request sent!", {
+        description: "We'll get back to you within 24 hours with a detailed quote.",
+      });
+
+      setShowQuoteDialog(false);
+      setCustomerName("");
+      setCustomerEmail("");
+      setCustomerPhone("");
+      setAdditionalNotes("");
+    } catch (error) {
+      console.error('Quote request error:', error);
+      toast.error('Failed to send quote request', {
+        description: 'Please try again or contact us directly.',
+      });
+    } finally {
+      setIsRequestingQuote(false);
     }
   };
 
@@ -716,40 +786,120 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           </Card>
         )}
 
-        <div className="flex gap-2">
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <Button 
+              onClick={handleAddToCart}
+              className="flex-1 bg-[#2dd4bf] hover:bg-[#2dd4bf]/80 touch-manipulation" 
+              size="lg"
+            >
+              <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-sm sm:text-base">Add to Cart</span>
+            </Button>
+            <Button 
+              onClick={handleCheckout}
+              disabled={isProcessing}
+              className="flex-1 bg-[#D4AF37] hover:bg-[#D4AF37]/80 touch-manipulation" 
+              size="lg"
+            >
+              <CreditCard className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-sm sm:text-base">{isProcessing ? "Processing..." : "Checkout Now"}</span>
+            </Button>
+          </div>
           <Button 
-            onClick={handleAddToCart}
-            className="flex-1 bg-[#2dd4bf] hover:bg-[#2dd4bf]/80 touch-manipulation" 
+            onClick={handleRequestQuote}
+            variant="outline"
+            className="w-full touch-manipulation border-[#2dd4bf] text-[#2dd4bf] hover:bg-[#2dd4bf]/10" 
             size="lg"
           >
-            <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">Add to Cart</span>
-          </Button>
-          <Button 
-            onClick={handleCheckout}
-            disabled={isProcessing}
-            className="flex-1 bg-[#D4AF37] hover:bg-[#D4AF37]/80 touch-manipulation" 
-            size="lg"
-          >
-            <CreditCard className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">{isProcessing ? "Processing..." : "Checkout Now"}</span>
+            <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="text-sm sm:text-base">Request Quote via Email</span>
           </Button>
         </div>
       </div>
     </div>
 
-      {/* Image Lightbox */}
-      <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
-        <DialogContent className="max-w-7xl w-[95vw] sm:w-full p-2 sm:p-6">
-          {lightboxImage && (
-            <div className="relative w-full h-[70vh] sm:h-[80vh] md:h-[90vh]">
-              <img
-                src={lightboxImage.url}
-                alt={lightboxImage.alt}
-                className="w-full h-full object-contain"
+      {/* Quote Request Dialog */}
+      <Dialog open={showQuoteDialog} onOpenChange={setShowQuoteDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Request a Quote</DialogTitle>
+            <DialogDescription>
+              Fill in your contact information and we'll send you a detailed quote within 24 hours.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="customerName">Full Name *</Label>
+              <Input
+                id="customerName"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="John Doe"
+                required
               />
             </div>
-          )}
+
+            <div className="space-y-2">
+              <Label htmlFor="customerEmail">Email *</Label>
+              <Input
+                id="customerEmail"
+                type="email"
+                value={customerEmail}
+                onChange={(e) => setCustomerEmail(e.target.value)}
+                placeholder="john@example.com"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="customerPhone">Phone (optional)</Label>
+              <Input
+                id="customerPhone"
+                type="tel"
+                value={customerPhone}
+                onChange={(e) => setCustomerPhone(e.target.value)}
+                placeholder="(555) 123-4567"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="additionalNotes">Additional Notes (optional)</Label>
+              <Textarea
+                id="additionalNotes"
+                value={additionalNotes}
+                onChange={(e) => setAdditionalNotes(e.target.value)}
+                placeholder="Any special requests or questions..."
+                rows={3}
+              />
+            </div>
+
+            <div className="bg-muted/50 p-3 rounded-lg text-sm space-y-1">
+              <p><strong>Configuration Summary:</strong></p>
+              <p>Brand: {selectedBrand}</p>
+              <p>Finish: {selectedFinish}</p>
+              <p>Width: {(parseFloat(width || "0") + parseInt(widthFraction) / 16).toFixed(2)}"</p>
+              <p className="text-[#2dd4bf] font-semibold">Estimated Total: ${totalPrice.toFixed(2)}</p>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowQuoteDialog(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSubmitQuote}
+                disabled={isRequestingQuote}
+                className="flex-1 bg-[#2dd4bf] hover:bg-[#2dd4bf]/80"
+              >
+                {isRequestingQuote ? "Sending..." : "Send Quote Request"}
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </>

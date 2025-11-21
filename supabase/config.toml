@@ -6,6 +6,9 @@ verify_jwt = true
 [functions.create-payment]
 verify_jwt = false
 
+[functions.send-vanity-quote]
+verify_jwt = false
+
 [functions.send-quote-request]
 verify_jwt = false
 
