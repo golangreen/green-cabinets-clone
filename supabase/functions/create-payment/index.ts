@@ -18,7 +18,15 @@ serve(async (req) => {
   );
 
   try {
-    const { customProduct } = await req.json();
+    // Parse request body, default to empty object if no body provided
+    let customProduct;
+    try {
+      const body = await req.json();
+      customProduct = body?.customProduct;
+    } catch {
+      // No body provided, use default test payment
+      customProduct = undefined;
+    }
     
     // Get user from auth header if provided (optional for guest checkout)
     const authHeader = req.headers.get("Authorization");
