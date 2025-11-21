@@ -84,7 +84,7 @@ const Hero = () => {
   return (
     <>
       {/* Hero Text Section */}
-      <section className="bg-background py-16 sm:py-24 md:py-36">
+      <section className="bg-background pt-28 pb-16 sm:py-24 md:py-36">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-6 text-foreground">
             Transform Your Space
