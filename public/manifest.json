@@ -4,8 +4,8 @@
   "description": "Premium custom cabinetry for kitchens, bathrooms, and closets in Brooklyn, NYC since 2009",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#030303",
-  "theme_color": "#2dd4bf",
+  "background_color": "#5C7650",
+  "theme_color": "#5C7650",
   "orientation": "portrait-primary",
   "icons": [
     {
