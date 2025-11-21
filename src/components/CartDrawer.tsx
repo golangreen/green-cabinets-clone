@@ -102,14 +102,11 @@ export const CartDrawer = () => {
                         <p className="text-sm text-muted-foreground">
                           {item.selectedOptions.map(option => option.value).join(' • ')}
                         </p>
-                        {item.customAttributes?.find(attr => attr.key === 'linear_feet') && (
-                          <p className="text-xs text-muted-foreground">
-                            {item.customAttributes.find(attr => attr.key === 'width_inches')?.value}" wide 
-                            ({item.customAttributes.find(attr => attr.key === 'linear_feet')?.value} LF × $350)
-                          </p>
-                        )}
                         <p className="font-semibold">
-                          {item.price.currencyCode} {parseFloat(item.price.amount).toFixed(2)}
+                          ${parseFloat(item.price.amount).toFixed(2)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          per linear foot
                         </p>
                       </div>
                       
