@@ -6,6 +6,7 @@ export interface QuoteRequest {
   phone?: string;
   message: string;
   projectType?: string;
+  recaptchaToken?: string;
 }
 
 /**
@@ -50,14 +51,20 @@ export class QuoteService {
       // Validate inputs
       this.validateQuoteRequest(request);
 
+      // Validate reCAPTCHA token if provided
+      if (!request.recaptchaToken) {
+        throw new Error('reCAPTCHA verification is required');
+      }
+
       // Send via edge function
-      const { error } = await supabase.functions.invoke('send-quote-request', {
+      const { error } = await supabase.functions.invoke('send-contact-form', {
         body: {
           name: this.sanitizeString(request.name),
           email: request.email,
           phone: request.phone,
           message: this.sanitizeString(request.message),
           projectType: request.projectType,
+          recaptchaToken: request.recaptchaToken,
         },
       });
 

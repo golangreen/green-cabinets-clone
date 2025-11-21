@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuoteForm } from "@/hooks/useQuoteForm";
 import { Phone, Mail, MapPin, CheckCircle2 } from "lucide-react";
+import { RECAPTCHA_SITE_KEY } from "@/config/recaptcha";
 import logo from "@/assets/logos/logo-color.svg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 
 const Landing = () => {
   const navigate = useNavigate();
   const { submitQuote, isSubmitting } = useQuoteForm();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,16 +24,24 @@ const Landing = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Get reCAPTCHA token
+    const recaptchaToken = recaptchaRef.current?.getValue();
+    if (!recaptchaToken) {
+      return;
+    }
+
     const result = await submitQuote({
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
       message: formData.message,
       projectType: "landing_page_inquiry",
+      recaptchaToken,
     });
 
     if (result.success) {
       setFormData({ name: "", email: "", phone: "", message: "" });
+      recaptchaRef.current?.reset();
     }
   };
 
@@ -211,6 +222,13 @@ const Landing = () => {
                   required
                   rows={5}
                   className="text-base resize-none"
+                />
+              </div>
+              <div className="flex justify-center">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={RECAPTCHA_SITE_KEY}
+                  theme="light"
                 />
               </div>
               <Button 

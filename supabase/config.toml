@@ -15,6 +15,9 @@ verify_jwt = false
 [functions.send-quote-request]
 verify_jwt = false
 
+[functions.send-contact-form]
+verify_jwt = false
+
 [functions.create-checkout]
 verify_jwt = false
 
