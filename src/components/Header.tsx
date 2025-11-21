@@ -79,7 +79,7 @@ const Header = () => {
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className={`transition-colors duration-500 ${scrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`} aria-label="Open menu">
-                  <Menu className={`h-6 w-6 transition-colors duration-500 ${scrolled ? 'text-foreground' : 'text-white'}`} />
+                  <Menu className={`h-6 w-6 transition-colors duration-500 text-[#2dd4bf]`} />
                 </Button>
               </SheetTrigger>
               
