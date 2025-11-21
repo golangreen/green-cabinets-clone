@@ -146,7 +146,7 @@ const Suppliers = () => {
   const [showCatalogSlideshow, setShowCatalogSlideshow] = useState(false);
 
   return (
-    <section id="suppliers" className="py-20 bg-white">
+    <section id="suppliers" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-4">

@@ -329,7 +329,7 @@ const Gallery = () => {
   const designToReality = galleryImages.filter(img => img.category === "design-to-reality");
 
   return (
-    <section id="gallery" className="py-24 bg-muted/30">
+    <section id="gallery" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-muted/30">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Our Work</h2>
