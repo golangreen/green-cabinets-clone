@@ -154,6 +154,11 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
+  const [brandError, setBrandError] = useState(false);
+  const [finishError, setFinishError] = useState(false);
+  const [widthError, setWidthError] = useState(false);
+  const [heightError, setHeightError] = useState(false);
+  const [depthError, setDepthError] = useState(false);
   const [zipCodeError, setZipCodeError] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
@@ -216,10 +221,24 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   }, [zipCode]);
 
   const handleAddToCart = () => {
-    if (!selectedBrand || !selectedFinish || !width || !height || !depth || !zipCode) {
-      if (!zipCode) {
-        setZipCodeError(true);
-      }
+    // Reset all errors
+    setBrandError(false);
+    setFinishError(false);
+    setWidthError(false);
+    setHeightError(false);
+    setDepthError(false);
+    setZipCodeError(false);
+
+    // Check for missing fields
+    let hasError = false;
+    if (!selectedBrand) { setBrandError(true); hasError = true; }
+    if (!selectedFinish) { setFinishError(true); hasError = true; }
+    if (!width) { setWidthError(true); hasError = true; }
+    if (!height) { setHeightError(true); hasError = true; }
+    if (!depth) { setDepthError(true); hasError = true; }
+    if (!zipCode) { setZipCodeError(true); hasError = true; }
+
+    if (hasError) {
       toast.error("Please complete all fields", {
         description: "Brand, finish, measurements, and zip code are required",
       });
@@ -235,16 +254,16 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
     });
 
     if (!validationResult.success) {
-      const firstError = validationResult.error.errors[0];
-      // Check if the error is related to zip code
-      if (firstError.path.includes('zipCode')) {
-        setZipCodeError(true);
-      }
-      toast.error(firstError.message);
+      const errors = validationResult.error.errors;
+      errors.forEach(error => {
+        if (error.path.includes('width')) setWidthError(true);
+        if (error.path.includes('height')) setHeightError(true);
+        if (error.path.includes('depth')) setDepthError(true);
+        if (error.path.includes('zipCode')) setZipCodeError(true);
+      });
+      toast.error(validationResult.error.errors[0].message);
       return;
     }
-
-    setZipCodeError(false);
 
     const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
     const heightInches = parseFloat(height) + (parseInt(heightFraction) / 16);
@@ -296,17 +315,26 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleCheckout = async () => {
-    if (!selectedBrand || !selectedFinish || !width || !zipCode) {
-      if (!zipCode) {
-        setZipCodeError(true);
-      }
+    // Reset all errors
+    setBrandError(false);
+    setFinishError(false);
+    setWidthError(false);
+    setZipCodeError(false);
+
+    // Check for missing fields
+    let hasError = false;
+    if (!selectedBrand) { setBrandError(true); hasError = true; }
+    if (!selectedFinish) { setFinishError(true); hasError = true; }
+    if (!width) { setWidthError(true); hasError = true; }
+    if (!zipCode) { setZipCodeError(true); hasError = true; }
+
+    if (hasError) {
       toast.error("Please complete all fields", {
         description: "Brand, finish, width, and zip code are required",
       });
       return;
     }
 
-    setZipCodeError(false);
     setIsProcessing(true);
     try {
       const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
@@ -345,16 +373,25 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
   };
 
   const handleRequestQuote = () => {
-    if (!selectedBrand || !selectedFinish || !width || !zipCode) {
-      if (!zipCode) {
-        setZipCodeError(true);
-      }
+    // Reset all errors
+    setBrandError(false);
+    setFinishError(false);
+    setWidthError(false);
+    setZipCodeError(false);
+
+    // Check for missing fields
+    let hasError = false;
+    if (!selectedBrand) { setBrandError(true); hasError = true; }
+    if (!selectedFinish) { setFinishError(true); hasError = true; }
+    if (!width) { setWidthError(true); hasError = true; }
+    if (!zipCode) { setZipCodeError(true); hasError = true; }
+
+    if (hasError) {
       toast.error("Please complete all fields", {
         description: "Brand, finish, width, and zip code are required",
       });
       return;
     }
-    setZipCodeError(false);
     setShowQuoteDialog(true);
   };
 
@@ -480,9 +517,20 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             <CardContent className="space-y-4">
             {/* Brand Selection */}
             <div className="space-y-2">
-              <Label htmlFor="brand">Brand</Label>
-              <Select value={selectedBrand} onValueChange={setSelectedBrand}>
-                <SelectTrigger id="brand" className="bg-background">
+              <Label htmlFor="brand" className={brandError ? "text-destructive" : ""}>
+                Brand {brandError && <span className="text-destructive">*</span>}
+              </Label>
+              <Select 
+                value={selectedBrand} 
+                onValueChange={(value) => {
+                  setSelectedBrand(value);
+                  setBrandError(false);
+                }}
+              >
+                <SelectTrigger 
+                  id="brand" 
+                  className={brandError ? "bg-background border-destructive focus:ring-destructive" : "bg-background"}
+                >
                   <SelectValue placeholder="Select brand" />
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50">
@@ -502,11 +550,22 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
             {/* Finish Selection */}
             <div className="space-y-2">
-              <Label htmlFor="finish">
+              <Label htmlFor="finish" className={finishError ? "text-destructive" : ""}>
                 Finish / Color {selectedBrand && `- ${selectedBrand} Collection`}
+                {finishError && <span className="text-destructive"> *</span>}
               </Label>
-              <Select value={selectedFinish} onValueChange={setSelectedFinish} disabled={!selectedBrand}>
-                <SelectTrigger id="finish" className="bg-background">
+              <Select 
+                value={selectedFinish} 
+                onValueChange={(value) => {
+                  setSelectedFinish(value);
+                  setFinishError(false);
+                }} 
+                disabled={!selectedBrand}
+              >
+                <SelectTrigger 
+                  id="finish" 
+                  className={finishError ? "bg-background border-destructive focus:ring-destructive" : "bg-background"}
+                >
                   <SelectValue placeholder={selectedBrand ? "Select finish" : "Select brand first"} />
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50 max-h-80">
@@ -577,16 +636,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
             {/* Width Input with Slider and Fraction */}
             <div className="space-y-3">
-              <Label>Width (inches)</Label>
+              <Label className={widthError ? "text-destructive" : ""}>
+                Width (inches) {widthError && <span className="text-destructive">*</span>}
+              </Label>
               <div className="flex gap-2">
                 <Input
                   type="number"
                   placeholder="Inches"
                   value={width}
-                  onChange={(e) => setWidth(e.target.value)}
+                  onChange={(e) => {
+                    setWidth(e.target.value);
+                    setWidthError(false);
+                  }}
                   min="0"
                   max="120"
-                  className="flex-1"
+                  className={widthError ? "flex-1 border-destructive focus-visible:ring-destructive" : "flex-1"}
                 />
                 <Select value={widthFraction} onValueChange={setWidthFraction}>
                   <SelectTrigger className="w-24 bg-background">
@@ -636,16 +700,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
             {/* Height Input with Slider and Fraction */}
             <div className="space-y-3">
-              <Label>Height (inches)</Label>
+              <Label className={heightError ? "text-destructive" : ""}>
+                Height (inches) {heightError && <span className="text-destructive">*</span>}
+              </Label>
               <div className="flex gap-2">
                 <Input
                   type="number"
                   placeholder="Inches"
                   value={height}
-                  onChange={(e) => setHeight(e.target.value)}
+                  onChange={(e) => {
+                    setHeight(e.target.value);
+                    setHeightError(false);
+                  }}
                   min="0"
                   max="120"
-                  className="flex-1"
+                  className={heightError ? "flex-1 border-destructive focus-visible:ring-destructive" : "flex-1"}
                 />
                 <Select value={heightFraction} onValueChange={setHeightFraction}>
                   <SelectTrigger className="w-24 bg-background">
@@ -695,16 +764,21 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
 
             {/* Depth Input with Slider and Fraction */}
             <div className="space-y-3">
-              <Label>Depth (inches)</Label>
+              <Label className={depthError ? "text-destructive" : ""}>
+                Depth (inches) {depthError && <span className="text-destructive">*</span>}
+              </Label>
               <div className="flex gap-2">
                 <Input
                   type="number"
                   placeholder="Inches"
                   value={depth}
-                  onChange={(e) => setDepth(e.target.value)}
+                  onChange={(e) => {
+                    setDepth(e.target.value);
+                    setDepthError(false);
+                  }}
                   min="0"
                   max="120"
-                  className="flex-1"
+                  className={depthError ? "flex-1 border-destructive focus-visible:ring-destructive" : "flex-1"}
                 />
                 <Select value={depthFraction} onValueChange={setDepthFraction}>
                   <SelectTrigger className="w-24 bg-background">
