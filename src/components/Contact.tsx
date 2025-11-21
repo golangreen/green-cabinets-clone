@@ -18,7 +18,7 @@ const Contact = () => {
       window.location.href = `mailto:${email}`;
     } else {
       // Decode phone number client-side to protect from bots
-      const encoded = 'NjQ2NTQ5Mzk1NQ=='; // Base64 encoded: 6465493955
+      const encoded = 'NzE4ODA0NTQ4OA=='; // Base64 encoded: 7188045488
       const phone = atob(encoded);
       window.location.href = `sms:+1${phone}`;
     }

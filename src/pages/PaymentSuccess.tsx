@@ -8,6 +8,8 @@ import { CheckCircle, Mail, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import ObfuscatedEmail from "@/components/ObfuscatedEmail";
+import ObfuscatedPhone from "@/components/ObfuscatedPhone";
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();
@@ -115,20 +117,19 @@ export default function PaymentSuccess() {
             <div className="border-t pt-4 space-y-2">
               <p className="text-sm font-medium">Need to make changes or have questions?</p>
               <div className="flex flex-col sm:flex-row gap-2 text-sm">
-                <a 
-                  href="mailto:orders@greencabinetsny.com" 
+                <ObfuscatedEmail 
+                  encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
                   className="text-[#2dd4bf] hover:text-[#1aa39a] flex items-center gap-1"
                 >
                   <Mail className="w-4 h-4" />
-                  orders@greencabinetsny.com
-                </a>
+                  <span>Email us</span>
+                </ObfuscatedEmail>
                 <span className="hidden sm:inline text-muted-foreground">•</span>
-                <a 
-                  href="tel:+17188045488"
+                <ObfuscatedPhone 
+                  encoded="NzE4ODA0NTQ4OA=="
+                  type="tel"
                   className="text-[#2dd4bf] hover:text-[#1aa39a]"
-                >
-                  (718) 804-5488
-                </a>
+                />
               </div>
             </div>
 
