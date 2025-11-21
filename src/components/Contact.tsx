@@ -36,14 +36,14 @@ const Contact = () => {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-12">
           {/* Email */}
-          <div className="p-8 rounded-2xl bg-[#c5f3f0] text-center">
-            <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6 mx-auto">
+          <div className="p-8 rounded-2xl bg-[#c5f3f0]">
+            <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
               <Mail className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-3">Email Us</h3>
             <ObfuscatedEmail 
               encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
-              className="text-[#666666] hover:text-[#1a1a1a] transition-colors"
+              className="text-[#666666] hover:text-[#1a1a1a] transition-colors break-words block"
             />
           </div>
 
