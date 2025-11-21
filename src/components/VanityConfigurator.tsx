@@ -899,7 +899,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           <div className="flex gap-2">
             <Button 
               onClick={handleAddToCart}
-              className="flex-1 bg-[#2dd4bf] hover:bg-[#2dd4bf]/80 touch-manipulation" 
+              className="flex-1 bg-[#5C7650] hover:bg-[#5C7650]/80 touch-manipulation" 
               size="lg"
             >
               <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
@@ -918,7 +918,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
           <Button 
             onClick={handleRequestQuote}
             variant="outline"
-            className="w-full touch-manipulation border-[#2dd4bf] text-[#2dd4bf] hover:bg-[#2dd4bf]/10" 
+            className="w-full touch-manipulation border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650]/10" 
             size="lg"
           >
             <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
@@ -989,7 +989,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               <p>Brand: {selectedBrand}</p>
               <p>Finish: {selectedFinish}</p>
               <p>Width: {(parseFloat(width || "0") + parseInt(widthFraction) / 16).toFixed(2)}"</p>
-              <p className="text-[#2dd4bf] font-semibold">Estimated Total: ${totalPrice.toFixed(2)}</p>
+              <p className="text-[#5C7650] font-semibold">Estimated Total: ${totalPrice.toFixed(2)}</p>
             </div>
 
             <div className="flex gap-2">
@@ -1003,7 +1003,7 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
               <Button
                 onClick={handleSubmitQuote}
                 disabled={isRequestingQuote}
-                className="flex-1 bg-[#2dd4bf] hover:bg-[#2dd4bf]/80"
+                className="flex-1 bg-[#5C7650] hover:bg-[#5C7650]/80"
               >
                 {isRequestingQuote ? "Sending..." : "Send Quote Request"}
               </Button>

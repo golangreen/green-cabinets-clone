@@ -17,9 +17,9 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
 
-    --primary: 172 65% 50%;
+    --primary: 92 13% 40%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 172 60% 60%;
+    --primary-light: 92 13% 50%;
     
     --secondary: 46 64% 52%;
     --secondary-foreground: 0 0% 100%;
@@ -27,7 +27,7 @@ All colors MUST be HSL.
     --muted: 0 0% 97%;
     --muted-foreground: 0 0% 40%;
 
-    --accent: 172 65% 35%;
+    --accent: 92 13% 30%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -35,15 +35,15 @@ All colors MUST be HSL.
 
     --border: 0 0% 90%;
     --input: 0 0% 97%;
-    --ring: 172 65% 50%;
+    --ring: 92 13% 40%;
 
     --radius: 0.75rem;
     
     /* Custom design tokens */
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 98%), hsl(172 65% 97%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 98%), hsl(92 13% 97%));
     --gradient-soft: linear-gradient(180deg, hsl(0 0% 100%), hsl(0 0% 98%));
     --shadow-elegant: 0 10px 30px -5px hsl(0 0% 0% / 0.1);
-    --shadow-glow: 0 0 40px hsl(172 65% 50% / 0.15);
+    --shadow-glow: 0 0 40px hsl(92 13% 40% / 0.15);
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
@@ -73,7 +73,7 @@ All colors MUST be HSL.
     --popover: 0 0% 5%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 172 65% 50%;
+    --primary: 92 13% 40%;
     --primary-foreground: 0 0% 0%;
 
     --secondary: 46 64% 52%;
@@ -82,7 +82,7 @@ All colors MUST be HSL.
     --muted: 0 0% 8%;
     --muted-foreground: 0 0% 70%;
 
-    --accent: 172 65% 35%;
+    --accent: 92 13% 30%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 50%;
@@ -90,12 +90,12 @@ All colors MUST be HSL.
 
     --border: 0 0% 15%;
     --input: 0 0% 10%;
-    --ring: 172 65% 50%;
+    --ring: 92 13% 40%;
     
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 0%), hsl(172 65% 10%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 0%), hsl(92 13% 10%));
     --gradient-soft: linear-gradient(180deg, hsl(0 0% 0%), hsl(0 0% 5%));
     --shadow-elegant: 0 20px 50px -12px hsl(0 0% 0% / 0.9);
-    --shadow-glow: 0 0 60px hsl(172 65% 30% / 0.4);
+    --shadow-glow: 0 0 60px hsl(92 13% 30% / 0.4);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

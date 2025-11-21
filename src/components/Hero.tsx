@@ -97,17 +97,17 @@ const Hero = () => {
               <Button 
                 size="lg"
                 onClick={() => navigate('/designer')}
-                className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
+                className="bg-[#5C7650]/20 hover:bg-[#5C7650]/40 text-foreground border-2 border-[#5C7650]/60 hover:border-[#5C7650] shadow-2xl hover:shadow-[#5C7650]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
               >
                 Launch Designer
               </Button>
-              <p className="text-sm text-[#2dd4bf]">* temporary under construction</p>
+              <p className="text-sm text-[#5C7650]">* temporary under construction</p>
             </div>
             <div className="flex flex-col items-center gap-2 w-full sm:w-auto">
               <Button 
                 size="lg"
                 onClick={() => navigate('/shop')}
-                className="bg-[#2dd4bf]/20 hover:bg-[#2dd4bf]/40 text-foreground border-2 border-[#2dd4bf]/60 hover:border-[#2dd4bf] shadow-2xl hover:shadow-[#2dd4bf]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
+                className="bg-[#5C7650]/20 hover:bg-[#5C7650]/40 text-foreground border-2 border-[#5C7650]/60 hover:border-[#5C7650] shadow-2xl hover:shadow-[#5C7650]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
               >
                 Shop
               </Button>

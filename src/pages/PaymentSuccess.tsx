@@ -73,8 +73,8 @@ export default function PaymentSuccess() {
               </div>
             )}
 
-            <div className="bg-[#2dd4bf]/10 border-l-4 border-[#2dd4bf] p-4 rounded">
-              <h3 className="font-semibold text-[#1aa39a] mb-2 flex items-center gap-2">
+            <div className="bg-[#5C7650]/10 border-l-4 border-[#5C7650] p-4 rounded">
+              <h3 className="font-semibold text-[#445339] mb-2 flex items-center gap-2">
                 <Mail className="w-5 h-5" />
                 Email Confirmation
               </h3>
@@ -96,19 +96,19 @@ export default function PaymentSuccess() {
               <h3 className="font-semibold text-lg">What Happens Next?</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#2dd4bf] font-bold">1.</span>
+                  <span className="text-[#5C7650] font-bold">1.</span>
                   <span>Our team will review your order within 24 hours</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#2dd4bf] font-bold">2.</span>
+                  <span className="text-[#5C7650] font-bold">2.</span>
                   <span>We'll contact you to confirm specifications and measurements</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#2dd4bf] font-bold">3.</span>
+                  <span className="text-[#5C7650] font-bold">3.</span>
                   <span>Production begins once all details are finalized</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#2dd4bf] font-bold">4.</span>
+                  <span className="text-[#5C7650] font-bold">4.</span>
                   <span>We'll keep you updated throughout the process</span>
                 </li>
               </ul>
@@ -119,7 +119,7 @@ export default function PaymentSuccess() {
               <div className="flex flex-col sm:flex-row gap-2 text-sm">
                 <ObfuscatedEmail 
                   encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
-                  className="text-[#2dd4bf] hover:text-[#1aa39a] flex items-center gap-1"
+                  className="text-[#5C7650] hover:text-[#445339] flex items-center gap-1"
                 >
                   <Mail className="w-4 h-4" />
                   <span>Email us</span>
@@ -128,7 +128,7 @@ export default function PaymentSuccess() {
                 <ObfuscatedPhone 
                   encoded="NzE4ODA0NTQ4OA=="
                   type="tel"
-                  className="text-[#2dd4bf] hover:text-[#1aa39a]"
+                  className="text-[#5C7650] hover:text-[#445339]"
                 />
               </div>
             </div>
