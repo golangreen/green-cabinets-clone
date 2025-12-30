@@ -395,7 +395,7 @@ export default function Designer() {
 
           {/* Tool Instructions */}
           <div className="absolute top-4 left-4 bg-card/90 p-3 rounded-lg shadow-lg border border-border text-sm">
-            {selectedTool === "select" && <p><strong>under construction will be available soon</strong></p>}
+            {selectedTool === "select" && <p><strong>Select Tool:</strong> Click on elements to select and move them</p>}
             {selectedTool === "draw" && <p><strong>Draw Wall:</strong> {isDrawing ? 'Click to place end point' : 'Click to start drawing a wall'}</p>}
             {selectedTool === "door" && <p><strong>Add Door:</strong> Click on a wall to add a door</p>}
             {selectedTool === "window" && <p><strong>Add Window:</strong> Click on a wall to add a window</p>}
