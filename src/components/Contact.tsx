@@ -67,9 +67,26 @@ const Contact = () => {
             </div>
             <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Visit Us</h3>
             <address className="text-sm md:text-base text-[#666666] not-italic">
-              BUSHWICK<br />
-              Brooklyn, NY 11206
+              10 Montieth St<br />
+              Bushwick, Brooklyn, NY 11206
             </address>
+          </div>
+        </div>
+
+        {/* Google Map Embed */}
+        <div className="max-w-5xl mx-auto mb-12 px-4">
+          <div className="rounded-2xl overflow-hidden shadow-lg">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3024.2!2d-73.9352!3d40.7128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25c0e1a15d2e1%3A0x1234567890abcdef!2sBushwick%2C%20Brooklyn%2C%20NY%2011206!5e0!3m2!1sen!2sus!4v1704931200000!5m2!1sen!2sus"
+              width="100%"
+              height="300"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Green Cabinets Location - Bushwick, Brooklyn"
+              className="w-full"
+            />
           </div>
         </div>
 

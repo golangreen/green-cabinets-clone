@@ -110,7 +110,12 @@ const Footer = () => {
                   type="tel"
                 />
               </li>
-              <li>BUSHWICK<br />Brooklyn, NY 11206</li>
+              <li>
+                <address className="not-italic">
+                  10 Montieth St<br />
+                  Bushwick, Brooklyn, NY 11206
+                </address>
+              </li>
             </ul>
           </div>
         </div>

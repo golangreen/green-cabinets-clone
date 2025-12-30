@@ -25,10 +25,10 @@ const Services = () => {
       <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#f8f8f8]">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
-            Our Solutions
+            Sustainable Cabinetry Solutions
           </h2>
           <p className="text-xl text-[#666666] max-w-3xl mx-auto">
-            Professional cabinetry solutions tailored to your needs
+            Custom Cabinets NYC - Professional millwork tailored to your needs
           </p>
         </div>
       </section>
