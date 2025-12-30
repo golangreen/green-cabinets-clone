@@ -48,6 +48,7 @@ const Features = () => {
                   src={feature.image}
                   alt={feature.title}
                   className="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
                 />
               </div>
               <div className="md:w-1/2 space-y-6">

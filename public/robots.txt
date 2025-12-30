@@ -17,6 +17,7 @@ Allow: /
 Disallow: /checkout
 Disallow: /auth
 Disallow: /payment-success
+Disallow: /designer
 
 # Sitemap
 Sitemap: https://greencabinetsny.com/sitemap.xml

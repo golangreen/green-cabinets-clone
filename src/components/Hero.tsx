@@ -87,32 +87,26 @@ const Hero = () => {
       <section className="bg-background pt-28 pb-16 sm:py-24 md:py-36">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-6 text-foreground">
-            Transform Your Space
+            Custom Kitchen & Bathroom Millwork
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
-            Premium custom cabinetry for kitchens, bathrooms, and closets
+            Premier sustainable cabinetry in Bushwick, Brooklyn. Custom cabinets NYC designed and built for homeowners and developers.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center w-full max-w-2xl mx-auto">
-            <div className="flex flex-col items-center gap-2 w-full sm:w-auto">
-              <Button 
-                size="lg"
-                onClick={() => navigate('/designer')}
-                className="bg-[#5C7650]/20 hover:bg-[#5C7650]/40 text-foreground border-2 border-[#5C7650]/60 hover:border-[#5C7650] shadow-2xl hover:shadow-[#5C7650]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
-              >
-                Launch Designer
-              </Button>
-              <p className="text-sm text-[#5C7650]">* temporary under construction</p>
-            </div>
-            <div className="flex flex-col items-center gap-2 w-full sm:w-auto">
-              <Button 
-                size="lg"
-                onClick={() => navigate('/shop')}
-                className="bg-[#5C7650]/20 hover:bg-[#5C7650]/40 text-foreground border-2 border-[#5C7650]/60 hover:border-[#5C7650] shadow-2xl hover:shadow-[#5C7650]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
-              >
-                Shop
-              </Button>
-              <p className="text-sm text-transparent select-none">placeholder</p>
-            </div>
+            <Button 
+              size="lg"
+              onClick={() => navigate('/designer')}
+              className="bg-[#5C7650]/20 hover:bg-[#5C7650]/40 text-foreground border-2 border-[#5C7650]/60 hover:border-[#5C7650] shadow-2xl hover:shadow-[#5C7650]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
+            >
+              Launch Designer
+            </Button>
+            <Button 
+              size="lg"
+              onClick={() => navigate('/shop')}
+              className="bg-[#5C7650]/20 hover:bg-[#5C7650]/40 text-foreground border-2 border-[#5C7650]/60 hover:border-[#5C7650] shadow-2xl hover:shadow-[#5C7650]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
+            >
+              Shop
+            </Button>
           </div>
         </div>
       </section>
