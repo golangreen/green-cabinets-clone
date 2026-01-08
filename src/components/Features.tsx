@@ -1,23 +1,32 @@
 import { Card } from "@/components/ui/card";
-import customImage from "@/assets/feature-custom.jpg";
+import customSolutionsVideo from "@/assets/custom-solutions.mp4";
 import sustainableImage from "@/assets/feature-sustainable.jpg";
 import installationImage from "@/assets/feature-installation.jpg";
 
-const features = [
+interface Feature {
+  media: string;
+  isVideo?: boolean;
+  title: string;
+  description: string;
+  stats: string;
+}
+
+const features: Feature[] = [
   {
-    image: customImage,
+    media: customSolutionsVideo,
+    isVideo: true,
     title: "Custom Solutions",
     description: "Every space is unique. Our designers work with you to create cabinets that maximize functionality and beauty.",
     stats: "500+ Custom Designs",
   },
   {
-    image: sustainableImage,
+    media: sustainableImage,
     title: "Sustainable Choice",
     description: "We source responsibly and build to last. Quality materials that stand the test of time.",
     stats: "100% Eco-Friendly",
   },
   {
-    image: installationImage,
+    media: installationImage,
     title: "Professional Service",
     description: "From consultation to installation, our team ensures every detail is perfect.",
     stats: "15+ Years Experience",
@@ -44,12 +53,23 @@ const Features = () => {
               } gap-12 items-center`}
             >
               <div className="md:w-1/2 relative overflow-hidden rounded-2xl">
-                <img
-                  src={feature.image}
-                  alt={feature.title}
-                  className="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-700"
-                  loading="lazy"
-                />
+                {feature.isVideo ? (
+                  <video
+                    src={feature.media}
+                    className="w-full h-[400px] object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={feature.media}
+                    alt={feature.title}
+                    className="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-700"
+                    loading="lazy"
+                  />
+                )}
               </div>
               <div className="md:w-1/2 space-y-6">
                 <div className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold">
