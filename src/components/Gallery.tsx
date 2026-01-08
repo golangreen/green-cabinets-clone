@@ -172,14 +172,9 @@ const Gallery = () => {
     
     // === WHITE KITCHENS ===
     { 
-      src: kitchenModernWhite, 
-      alt: "Modern white kitchen with pendant lighting", 
+      src: naturalWoodOpenConceptKitchen, 
+      alt: "Natural wood open concept kitchen with dining area", 
       category: "kitchens",
-      // Example: Add your product codes like this:
-      // products: [
-      //   { supplier: "Tafisa TFL", code: "W1000ST9", description: "Premium White" },
-      //   { supplier: "Blum", code: "SERVO-DRIVE", description: "Electronic Opening System" }
-      // ]
     },
     { src: kitchenPendantLights, alt: "White kitchen with glass pendant lights", category: "kitchens" },
     { src: classicWhiteKitchen, alt: "Classic white kitchen with gray island", category: "kitchens" },
