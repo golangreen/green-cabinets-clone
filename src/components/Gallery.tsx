@@ -176,7 +176,7 @@ const Gallery = () => {
       alt: "Natural wood open concept kitchen with dining area", 
       category: "kitchens",
     },
-    { src: kitchenPendantLights, alt: "White kitchen with glass pendant lights", category: "kitchens" },
+    { src: modernKitchenWoodCabinetsCloseup, alt: "Modern kitchen wood cabinets close-up with gray marble countertops", category: "kitchens" },
     { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration", category: "kitchens" },
     { src: laundryRoom, alt: "White laundry room cabinetry", category: "kitchens" },
     { src: whiteKitchenGlassPendants, alt: "White traditional kitchen with glass pendant lights and open shelving", category: "kitchens" },
