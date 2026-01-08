@@ -231,7 +231,7 @@ const Gallery = () => {
     { src: modernOpenLivingWoodKitchen, alt: "Modern open concept living area with wood kitchen and pendant lighting", category: "kitchens" },
     { src: loftKitchenExposedBrickNaturalWood, alt: "Loft kitchen with natural wood cabinetry, exposed brick wall, and pendant lighting", category: "kitchens" },
     { src: modernKitchenIslandOrangeStools, alt: "Modern kitchen with wood island, gray marble countertop, and orange bar stools", category: "kitchens" },
-    { src: contemporaryKitchenGrayCountertop, alt: "Contemporary kitchen with natural wood cabinetry, gray waterfall island, and pendant lighting", category: "kitchens" },
+    { src: kitchenPendantLights, alt: "White kitchen with glass pendant lights", category: "kitchens" },
     { src: modernKitchenWoodCabinetsCloseup, alt: "Modern kitchen wood cabinets close-up with gray marble countertops", category: "kitchens" },
     { src: modernKitchenMarbleWaterfallWoodBase, alt: "Modern kitchen with marble waterfall island and natural wood base", category: "kitchens" },
     { src: lightWoodKitchenMarbleIslandBar, alt: "Light wood kitchen with marble island and bar seating", category: "kitchens" },
