@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import customSolutionsVideo from "@/assets/custom-solutions.mp4";
-import sustainableImage from "@/assets/feature-sustainable.jpg";
-import installationImage from "@/assets/feature-installation.jpg";
+import kitchenImage1 from "@/assets/gallery/modern-kitchen-dining-wood-marble-windows.webp";
+import kitchenImage2 from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
+import kitchenImage3 from "@/assets/gallery/modern-kitchen-marble-waterfall-wood-base.webp";
 
 interface Feature {
   media: string;
@@ -20,13 +21,13 @@ const features: Feature[] = [
     stats: "500+ Custom Designs",
   },
   {
-    media: sustainableImage,
+    media: kitchenImage1,
     title: "Sustainable Choice",
     description: "We source responsibly and build to last. Quality materials that stand the test of time.",
     stats: "100% Eco-Friendly",
   },
   {
-    media: installationImage,
+    media: kitchenImage2,
     title: "Professional Service",
     description: "From consultation to installation, our team ensures every detail is perfect.",
     stats: "15+ Years Experience",
