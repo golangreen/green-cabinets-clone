@@ -110,6 +110,10 @@ import designRealityKitchen2CompletedView2 from "@/assets/gallery/design-reality
 import designRealityKitchen2CompletedView3 from "@/assets/gallery/design-reality-kitchen-2-completed-view3.webp";
 import contemporaryBathroomWoodVanityDoubleSink from "@/assets/gallery/contemporary-bathroom-wood-vanity-double-sink.webp";
 import contemporaryBathroomWoodVanityTubShower from "@/assets/gallery/contemporary-bathroom-wood-vanity-tub-shower.webp";
+import luxuryWalkInClosetWoodShelving from "@/assets/gallery/luxury-walk-in-closet-wood-shelving.jpg";
+import luxuryWalkInClosetIntegratedLighting from "@/assets/gallery/luxury-walk-in-closet-integrated-lighting.jpg";
+import darkWalkInClosetCenterIsland from "@/assets/gallery/dark-walk-in-closet-center-island.jpg";
+import whiteWalkInClosetModern from "@/assets/gallery/white-walk-in-closet-modern.jpg";
 
 type Category = "kitchens" | "vanities" | "closets" | "design-to-reality" | "all";
 
@@ -280,6 +284,10 @@ const Gallery = () => {
     { src: contemporaryBathroomWoodVanityTubShower, alt: "Contemporary bathroom with wood floating vanity, marble tile, built-in tub, and walk-in shower", category: "vanities" },
 
     // ==================== CLOSETS & STORAGE ====================
+    { src: luxuryWalkInClosetWoodShelving, alt: "Luxury walk-in closet with wood shelving and LED accent lighting", category: "closets" },
+    { src: luxuryWalkInClosetIntegratedLighting, alt: "Luxury walk-in closet with integrated lighting and mixed storage", category: "closets" },
+    { src: darkWalkInClosetCenterIsland, alt: "Dark wood walk-in closet with center island and extensive storage", category: "closets" },
+    { src: whiteWalkInClosetModern, alt: "Modern white walk-in closet with minimalist design", category: "closets" },
     { src: bedroomCloset, alt: "Custom gray bedroom built-in closet", category: "closets" },
     { src: grayWoodBedroomCloset, alt: "Gray wood bedroom closet with integrated drawer storage", category: "closets" },
     { src: grayWoodWardrobeConstruction, alt: "Gray wood wardrobe construction with open shelving design", category: "closets" },
