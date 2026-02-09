@@ -103,9 +103,18 @@ const Footer = () => {
                   className="hover:text-white transition-colors"
                 />
               </li>
-              <li>
+              <li className="flex gap-1">
+                <span>Golan Achdary:</span>
                 <ObfuscatedPhone 
                   encoded="NzE4ODA0NTQ4OA=="
+                  className="hover:text-white transition-colors"
+                  type="tel"
+                />
+              </li>
+              <li className="flex gap-1">
+                <span>Andy Lopez:</span>
+                <ObfuscatedPhone 
+                  encoded="OTE3ODE5NTUzOA=="
                   className="hover:text-white transition-colors"
                   type="tel"
                 />
