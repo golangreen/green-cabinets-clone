@@ -53,11 +53,22 @@ const Contact = () => {
               <Phone className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Call Us</h3>
-            <ObfuscatedPhone 
-              encoded="NzE4ODA0NTQ4OA=="
-              className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors break-words block"
-              type="tel"
-            />
+            <div className="flex gap-1 items-center">
+              <span className="text-sm md:text-base text-[#666666]">Golan Achdary:</span>
+              <ObfuscatedPhone 
+                encoded="NzE4ODA0NTQ4OA=="
+                className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors"
+                type="tel"
+              />
+            </div>
+            <div className="flex gap-1 items-center mt-1">
+              <span className="text-sm md:text-base text-[#666666]">Andy Lopez:</span>
+              <ObfuscatedPhone 
+                encoded="OTE3ODE5NTUzOA=="
+                className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors"
+                type="tel"
+              />
+            </div>
           </div>
 
           {/* Address */}
