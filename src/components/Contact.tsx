@@ -7,20 +7,19 @@ import ObfuscatedPhone from "@/components/ObfuscatedPhone";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 
 const Contact = () => {
-  const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
+  const [contactMethod, setContactMethod] = useState<string>("email-golan");
   const [showQuoteForm, setShowQuoteForm] = useState(false);
 
+  const contactOptions = {
+    "email-golan": { href: `mailto:${atob('b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=')}`, label: "Email Us" },
+    "text-golan": { href: `sms:+1${atob('NzE4ODA0NTQ4OA==')}`, label: "Text Golan" },
+    "text-andy": { href: `sms:+1${atob('OTE3ODE5NTUzOA==')}`, label: "Text Andy" },
+  };
+
   const handleContact = () => {
-    if (contactMethod === "email") {
-      // Decode email client-side to protect from bots
-      const encoded = 'b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20='; // Base64 encoded: orders@greencabinetsny.com
-      const email = atob(encoded);
-      window.location.href = `mailto:${email}`;
-    } else {
-      // Decode phone number client-side to protect from bots
-      const encoded = 'NzE4ODA0NTQ4OA=='; // Base64 encoded: 7188045488
-      const phone = atob(encoded);
-      window.location.href = `sms:+1${phone}`;
+    const option = contactOptions[contactMethod as keyof typeof contactOptions];
+    if (option) {
+      window.location.href = option.href;
     }
   };
 
@@ -113,13 +112,14 @@ const Contact = () => {
           
           <div className="text-center text-[#999999]">or</div>
           
-          <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
+          <Select value={contactMethod} onValueChange={(value: string) => setContactMethod(value)}>
             <SelectTrigger className="w-full bg-[#1a1a1a] text-white border-0">
               <SelectValue placeholder="Choose contact method" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="email">Email</SelectItem>
-              <SelectItem value="text">Text Message</SelectItem>
+            <SelectContent className="bg-white z-50">
+              <SelectItem value="email-golan">Email Us</SelectItem>
+              <SelectItem value="text-golan">Text Golan</SelectItem>
+              <SelectItem value="text-andy">Text Andy</SelectItem>
             </SelectContent>
           </Select>
           
@@ -128,7 +128,7 @@ const Contact = () => {
             className="w-full bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white"
             onClick={handleContact}
           >
-            {contactMethod === "email" ? "Send Email" : "Send Text"}
+            {contactOptions[contactMethod as keyof typeof contactOptions]?.label || "Contact Us"}
           </Button>
         </div>
       </div>
