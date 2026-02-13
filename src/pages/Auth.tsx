@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { authService } from "@/services";
 import { Button } from "@/components/ui/button";
@@ -116,6 +117,11 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 p-4">
+      <Helmet>
+        <title>Sign In | Green Cabinets</title>
+        <meta name="description" content="Sign in or create an account to access Green Cabinets admin features." />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>{isLogin ? "Login" : "Sign Up"}</CardTitle>

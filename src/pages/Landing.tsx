@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,14 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Get a Free Quote | Green Cabinets - Custom Millwork Brooklyn</title>
+        <meta name="description" content="Request a free quote for custom kitchen cabinets and bathroom vanities from Green Cabinets in Bushwick, Brooklyn. Quality craftsmanship with sustainable materials." />
+        <meta property="og:title" content="Get a Free Quote | Green Cabinets" />
+        <meta property="og:description" content="Request a free quote for custom kitchen cabinets and bathroom vanities in Brooklyn." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://greencabinetsny.com/landing" />
+      </Helmet>
       {/* Simple Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
