@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -155,6 +156,11 @@ export default function Designer() {
 
   return (
     <div className="flex flex-col h-screen bg-[#1a1a1a] text-white">
+      <Helmet>
+        <title>Room Designer | Green Cabinets - Plan Your Kitchen Layout</title>
+        <meta name="description" content="Design your dream kitchen layout with our interactive room designer. Draw walls, add doors and windows, and visualize your custom cabinet project." />
+        <link rel="canonical" href="https://greencabinetsny.com/designer" />
+      </Helmet>
       {/* Top Navigation Bar */}
       <div className="flex items-center justify-between px-4 py-3 bg-[#0d0d0d] border-b border-gray-800">
         <div className="flex items-center gap-6 flex-1">

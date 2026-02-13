@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ShopProducts } from "@/components/ShopProducts";
@@ -44,6 +45,11 @@ const Shop = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Helmet>
+        <title>Shop | Green Cabinets - Cabinet Hardware & Accessories</title>
+        <meta name="description" content="Shop premium cabinet hardware, handles, and accessories from Green Cabinets. Quality products for your custom kitchen and bathroom projects." />
+        <link rel="canonical" href="https://greencabinetsny.com/shop" />
+      </Helmet>
       <Header />
       <PromoBanner />
       <main className="flex-1 pt-24 sm:pt-28 md:pt-32">
