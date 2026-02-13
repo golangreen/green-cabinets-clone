@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
@@ -17,6 +18,15 @@ const ShopProducts = lazy(() => import("@/components/ShopProducts").then(m => ({
 const Index = () => {
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Green Cabinets | Custom Kitchen & Bathroom Millwork Brooklyn, NY</title>
+        <meta name="description" content="Custom kitchen cabinets, bathroom vanities & sustainable millwork in Bushwick, Brooklyn. European-quality craftsmanship with eco-friendly materials. Free quotes available." />
+        <link rel="canonical" href="https://greencabinetsny.com" />
+        <meta property="og:title" content="Green Cabinets | Custom Kitchen & Bathroom Millwork Brooklyn, NY" />
+        <meta property="og:description" content="Custom kitchen cabinets, bathroom vanities & sustainable millwork in Bushwick, Brooklyn." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://greencabinetsny.com" />
+      </Helmet>
       <Header />
       <Hero />
       <Services />
