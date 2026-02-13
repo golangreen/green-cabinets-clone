@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -109,6 +110,11 @@ export default function Checkout() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Helmet>
+        <title>Checkout | Green Cabinets</title>
+        <meta name="description" content="Complete your order from Green Cabinets. Secure checkout for custom cabinet hardware and accessories." />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
         <Button variant="ghost" onClick={() => navigate("/")} className="mb-6">

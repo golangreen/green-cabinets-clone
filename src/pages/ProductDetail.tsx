@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -63,6 +64,13 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Helmet>
+        <title>{product.node.title} | Green Cabinets Shop</title>
+        <meta name="description" content={product.node.description?.substring(0, 160) || `Shop ${product.node.title} from Green Cabinets.`} />
+        <meta property="og:title" content={`${product.node.title} | Green Cabinets`} />
+        <meta property="og:description" content={product.node.description?.substring(0, 160) || `Shop ${product.node.title} from Green Cabinets.`} />
+        <meta property="og:type" content="product" />
+      </Helmet>
       <Header />
       <main className="flex-1 py-6 sm:py-8 md:py-12">
         <div className="container mx-auto px-4">

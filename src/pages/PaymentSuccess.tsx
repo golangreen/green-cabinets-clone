@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -53,6 +54,10 @@ export default function PaymentSuccess() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Helmet>
+        <title>Payment Successful | Green Cabinets</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <Header />
       <main className="flex-1 container mx-auto px-4 py-16 flex items-center justify-center">
         <Card className="max-w-2xl w-full">
