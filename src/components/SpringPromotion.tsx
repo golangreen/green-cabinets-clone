@@ -3,8 +3,17 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import springPromoVideo from "@/assets/spring-promotion.mp4";
 
+const STORAGE_KEY = "spring-promo-dismissed";
+
 const SpringPromotion = () => {
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(() => {
+    return localStorage.getItem(STORAGE_KEY) === "true";
+  });
+
+  const handleDismiss = () => {
+    localStorage.setItem(STORAGE_KEY, "true");
+    setIsDismissed(true);
+  };
 
   if (isDismissed) return null;
 
@@ -15,7 +24,7 @@ const SpringPromotion = () => {
         variant="ghost"
         size="icon"
         className="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-9 w-9"
-        onClick={() => setIsDismissed(true)}
+        onClick={handleDismiss}
         aria-label="Dismiss promotion"
       >
         <X className="h-5 w-5" />
