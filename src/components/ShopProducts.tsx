@@ -118,7 +118,7 @@ export const ShopProducts = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {products.map((product) => (
+          {products.filter((product) => product.node.title.toLowerCase().includes('custom bathroom vanity')).map((product) => (
             <Card 
               key={product.node.id} 
               className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-gray-200"
