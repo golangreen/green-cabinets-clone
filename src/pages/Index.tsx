@@ -38,7 +38,7 @@ const Index = () => {
         <meta property="twitter:url" content="https://greencabinetsny.com/" />
         <meta property="twitter:title" content="Custom Kitchen Cabinets Brooklyn NYC | Green Cabinets NY" />
         <meta property="twitter:description" content="Premium custom kitchen cabinets, bathroom vanities & closet systems in Brooklyn, NYC." />
-        <meta property="twitter:image" content="https://greencabinetsny.com/images/green-cabinets-og-image.jpg" />
+        <meta property="twitter:image" content="https://greencabinetsny.com/images/green-cabinets-twitter-image.jpg" />
 
         {/* Canonical URL */}
         <link rel="canonical" href="https://greencabinetsny.com/" />
