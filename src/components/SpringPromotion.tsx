@@ -23,7 +23,7 @@ const SpringPromotion = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full h-9 w-9"
+        className="absolute top-2 right-2 z-[60] bg-black/50 hover:bg-black/70 text-white rounded-full h-8 w-8"
         onClick={handleDismiss}
         aria-label="Dismiss promotion"
       >
