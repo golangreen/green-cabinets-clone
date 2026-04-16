@@ -20,7 +20,7 @@ export function usePerformanceMonitor() {
       storePerformanceMetric(metric);
 
       // Log to console in development
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         console.log('[Performance]', {
           name: metric.name,
           value: metric.value.toFixed(2),
