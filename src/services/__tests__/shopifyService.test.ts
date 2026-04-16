@@ -40,7 +40,7 @@ describe('ShopifyService', () => {
         },
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      (globalThis.fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => mockProducts,
@@ -54,7 +54,7 @@ describe('ShopifyService', () => {
     });
 
     it('should handle API errors', async () => {
-      (global.fetch as any).mockResolvedValueOnce({
+      (globalThis.fetch as any).mockResolvedValueOnce({
         ok: false,
         status: 500,
       });
@@ -88,7 +88,7 @@ describe('ShopifyService', () => {
         },
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      (globalThis.fetch as any).mockResolvedValueOnce({
         ok: true,
         json: async () => mockProducts,
       });
@@ -100,7 +100,7 @@ describe('ShopifyService', () => {
     });
 
     it('should return null if product not found', async () => {
-      (global.fetch as any).mockResolvedValueOnce({
+      (globalThis.fetch as any).mockResolvedValueOnce({
         ok: true,
         json: async () => ({ data: { products: { edges: [] } } }),
       });
