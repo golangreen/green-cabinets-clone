@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ShopifyService } from '../shopifyService';
 
 // Mock fetch globally
-global.fetch = vi.fn();
+(globalThis as any).fetch = vi.fn();
 
 describe('ShopifyService', () => {
   let service: ShopifyService;
