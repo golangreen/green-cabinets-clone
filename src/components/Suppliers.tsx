@@ -10,6 +10,7 @@ import shinnokiLogo from "@/assets/logos/shinnoki-logo.png";
 import wilsonartLogo from "@/assets/logos/wilsonart-logo.png";
 import greenCabinetsLogo from "@/assets/logos/logo-color.svg";
 import eggerLogo from "@/assets/logos/egger-logo.png";
+import diamondApplianceLogo from "@/assets/logos/diamond-appliance-logo.png";
 
 interface Supplier {
   id: string;
@@ -119,6 +120,20 @@ const suppliers: Supplier[] = [
       "Extensive design library",
       "Durable decorative surfaces",
       "Modern colors and textures"
+    ]
+  },
+  {
+    id: "diamond-appliance",
+    name: "Diamond Appliance Group",
+    description: "Premium home appliances with exclusive Green Cabinets client discounts",
+    logo: diamondApplianceLogo,
+    website: "https://diamondappliancegroup.com/",
+    details: "Diamond Appliance Group is a trusted source for premium home appliances. Green Cabinets clients receive an exclusive 5%-10% discount on appliance purchases, making it easy to complete your kitchen with top-tier brands at preferred pricing.",
+    products: [
+      "Exclusive 5%-10% discount for Green Cabinets clients",
+      "Premium kitchen appliances",
+      "Major brand selection",
+      "Expert appliance consultation"
     ]
   },
   {
