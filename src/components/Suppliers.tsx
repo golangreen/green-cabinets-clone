@@ -123,6 +123,20 @@ const suppliers: Supplier[] = [
     ]
   },
   {
+    id: "diamond-appliance",
+    name: "Diamond Appliance Group",
+    description: "Premium home appliances with exclusive Green Cabinets client discounts",
+    logo: diamondApplianceLogo,
+    website: "https://diamondappliancegroup.com/",
+    details: "Diamond Appliance Group is a trusted source for premium home appliances. Green Cabinets clients receive an exclusive 5%-10% discount on appliance purchases, making it easy to complete your kitchen with top-tier brands at preferred pricing.",
+    products: [
+      "Exclusive 5%-10% discount for Green Cabinets clients",
+      "Premium kitchen appliances",
+      "Major brand selection",
+      "Expert appliance consultation"
+    ]
+  },
+  {
     id: "greencabinets",
     name: "Green Cabinets",
     description: "Premium custom cabinetry and design excellence",
