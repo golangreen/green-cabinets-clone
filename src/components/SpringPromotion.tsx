@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import springPromoVideo from "@/assets/spring-promotion.mp4";
 
 const STORAGE_KEY = "spring-promo-dismissed";
 
@@ -40,7 +39,7 @@ const SpringPromotion = () => {
           playsInline
           preload="metadata"
         >
-          <source src={springPromoVideo} type="video/mp4" />
+          <source src="/spring-promotion.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
