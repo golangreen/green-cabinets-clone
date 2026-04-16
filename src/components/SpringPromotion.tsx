@@ -6,11 +6,11 @@ const STORAGE_KEY = "spring-promo-dismissed";
 
 const SpringPromotion = () => {
   const [isDismissed, setIsDismissed] = useState(() => {
-    return localStorage.getItem(STORAGE_KEY) === "true";
+    return sessionStorage.getItem(STORAGE_KEY) === "true";
   });
 
   const handleDismiss = () => {
-    localStorage.setItem(STORAGE_KEY, "true");
+    sessionStorage.setItem(STORAGE_KEY, "true");
     setIsDismissed(true);
   };
 
