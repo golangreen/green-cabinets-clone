@@ -117,6 +117,23 @@ export const ShopProducts = () => {
           </p>
         </div>
         
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center w-full max-w-2xl mx-auto mb-12">
+          <Button
+            size="lg"
+            onClick={() => navigate('/designer')}
+            className="bg-[#5C7650]/20 hover:bg-[#5C7650]/40 text-foreground border-2 border-[#5C7650]/60 hover:border-[#5C7650] shadow-2xl hover:shadow-[#5C7650]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
+          >
+            Launch Designer
+          </Button>
+          <Button
+            size="lg"
+            onClick={() => navigate('/shop')}
+            className="bg-[#5C7650]/20 hover:bg-[#5C7650]/40 text-foreground border-2 border-[#5C7650]/60 hover:border-[#5C7650] shadow-2xl hover:shadow-[#5C7650]/50 transition-all duration-300 hover:scale-105 text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 w-full sm:w-auto min-w-[200px]"
+          >
+            Shop
+          </Button>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {products.filter((product) => product.node.title.toLowerCase().includes('custom bathroom vanity')).slice(0, 1).map((product) => (
             <Card 
