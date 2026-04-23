@@ -13,7 +13,6 @@ const Contact = () => {
   const contactOptions = {
     "email-golan": { href: `mailto:${atob('b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=')}`, label: "Email Us" },
     "text-golan": { href: `sms:+1${atob('NzE4ODA0NTQ4OA==')}`, label: "Text Golan" },
-    "text-andy": { href: `sms:+1${atob('OTE3ODE5NTUzOA==')}`, label: "Text Andy" },
   };
 
   const handleContact = () => {
@@ -56,14 +55,6 @@ const Contact = () => {
               <span className="text-sm md:text-base text-[#666666]">Golan Achdary:</span>
               <ObfuscatedPhone 
                 encoded="NzE4ODA0NTQ4OA=="
-                className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors"
-                type="tel"
-              />
-            </div>
-            <div className="flex gap-1 items-center mt-1">
-              <span className="text-sm md:text-base text-[#666666]">Andy Lopez:</span>
-              <ObfuscatedPhone 
-                encoded="OTE3ODE5NTUzOA=="
                 className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors"
                 type="tel"
               />
@@ -119,7 +110,6 @@ const Contact = () => {
             <SelectContent className="bg-white z-50">
               <SelectItem value="email-golan">Email Us</SelectItem>
               <SelectItem value="text-golan">Text Golan</SelectItem>
-              <SelectItem value="text-andy">Text Andy</SelectItem>
             </SelectContent>
           </Select>
           
