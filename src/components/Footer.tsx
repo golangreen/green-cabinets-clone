@@ -111,14 +111,6 @@ const Footer = () => {
                   type="tel"
                 />
               </li>
-              <li className="flex gap-1">
-                <span>Andy Lopez:</span>
-                <ObfuscatedPhone 
-                  encoded="OTE3ODE5NTUzOA=="
-                  className="hover:text-white transition-colors"
-                  type="tel"
-                />
-              </li>
               <li>
                 <address className="not-italic">
                   10 Montieth St<br />
