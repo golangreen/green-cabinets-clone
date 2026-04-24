@@ -30,3 +30,6 @@ jobs:
 
     - name: Build
       run: npm run build
+
+    - name: Deploy check (forbidden strings)
+      run: node scripts/deploy-check.mjs dist
