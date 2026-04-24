@@ -4,7 +4,8 @@
  * exposes no "Text Andy" / "Email Andy" options.
  */
 import { describe, it, expect, vi } from "vitest";
-import { renderWithProviders, screen } from "@/test/utils";
+import { renderWithProviders } from "@/test/utils";
+import { screen } from "@testing-library/react";
 import Footer from "@/components/Footer";
 import Contact from "@/components/Contact";
 
