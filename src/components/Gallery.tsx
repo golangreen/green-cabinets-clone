@@ -351,48 +351,50 @@ const Gallery = () => {
             { key: "all", label: "All Projects", count: null },
           ];
           return (
-            <div className="flex justify-center mb-12">
-              <div
-                role="tablist"
-                aria-label="Filter projects by category"
-                className="inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-card/60 backdrop-blur-sm border border-border/60 shadow-sm"
-              >
-                {filters.map((f) => {
-                  const isActive = activeCategory === f.key;
-                  return (
-                    <button
-                      key={f.key}
-                      role="tab"
-                      aria-selected={isActive}
-                      onClick={() => {
-                        setActiveCategory(f.key);
-                        setShowAllImages(false);
-                      }}
-                      className={[
-                        "group relative px-5 py-2.5 rounded-full text-sm font-medium tracking-wide",
-                        "transition-all duration-300 ease-out",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                        isActive
-                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
-                      ].join(" ")}
-                    >
-                      <span>{f.label}</span>
-                      {f.count !== null && (
-                        <span
-                          className={[
-                            "ml-2 inline-flex items-center justify-center text-[11px] font-semibold rounded-full px-1.5 min-w-[1.25rem] h-5 leading-none transition-colors",
-                            isActive
-                              ? "bg-primary-foreground/20 text-primary-foreground"
-                              : "bg-muted text-muted-foreground group-hover:bg-background",
-                          ].join(" ")}
-                        >
-                          {f.count}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
+            <div className="sticky top-16 md:top-20 z-30 -mx-6 px-6 mb-12 py-3 bg-muted/80 supports-[backdrop-filter]:bg-muted/60 backdrop-blur-md border-b border-border/40">
+              <div className="flex justify-center">
+                <div
+                  role="tablist"
+                  aria-label="Filter projects by category"
+                  className="inline-flex flex-nowrap md:flex-wrap justify-start md:justify-center gap-1.5 p-1.5 rounded-full bg-card/80 backdrop-blur-sm border border-border/60 shadow-sm max-w-full overflow-x-auto scrollbar-none"
+                >
+                  {filters.map((f) => {
+                    const isActive = activeCategory === f.key;
+                    return (
+                      <button
+                        key={f.key}
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => {
+                          setActiveCategory(f.key);
+                          setShowAllImages(false);
+                        }}
+                        className={[
+                          "group relative shrink-0 px-5 py-2.5 rounded-full text-sm font-medium tracking-wide whitespace-nowrap",
+                          "transition-all duration-300 ease-out",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                          isActive
+                            ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
+                        ].join(" ")}
+                      >
+                        <span>{f.label}</span>
+                        {f.count !== null && (
+                          <span
+                            className={[
+                              "ml-2 inline-flex items-center justify-center text-[11px] font-semibold rounded-full px-1.5 min-w-[1.25rem] h-5 leading-none transition-colors",
+                              isActive
+                                ? "bg-primary-foreground/20 text-primary-foreground"
+                                : "bg-muted text-muted-foreground group-hover:bg-background",
+                            ].join(" ")}
+                          >
+                            {f.count}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           );
