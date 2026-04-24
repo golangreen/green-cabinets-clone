@@ -5,7 +5,6 @@
  */
 import { describe, it, expect, vi } from "vitest";
 import { renderWithProviders } from "@/test/utils";
-import { screen } from "@testing-library/react";
 import Footer from "@/components/Footer";
 import Contact from "@/components/Contact";
 
@@ -45,11 +44,11 @@ describe("Andy Lopez removal regression guard", () => {
   });
 
   it("Contact dropdown trigger excludes Andy options", () => {
-    renderWithProviders(<Contact />);
-    // The select trigger is rendered immediately; option items only mount
-    // when opened, so we assert via the hidden <select> shadow that Radix
-    // does not register an Andy value. The trigger label must also be clean.
-    expect(screen.queryByText(/text andy/i)).toBeNull();
-    expect(screen.queryByText(/email andy/i)).toBeNull();
+    const { container } = renderWithProviders(<Contact />);
+    // Option items only mount when opened, but the trigger label and any
+    // pre-rendered hidden <select> values must never include Andy.
+    const html = container.innerHTML;
+    expect(/text\s+andy/i.test(html)).toBe(false);
+    expect(/email\s+andy/i.test(html)).toBe(false);
   });
 });
