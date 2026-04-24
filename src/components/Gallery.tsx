@@ -341,54 +341,62 @@ const Gallery = () => {
           </p>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex justify-center gap-4 mb-12 flex-wrap">
-          <Button
-            variant={activeCategory === "kitchens" ? "default" : "outline"}
-            onClick={() => {
-              setActiveCategory("kitchens");
-              setShowAllImages(false);
-            }}
-          >
-            Kitchens ({kitchens.length})
-          </Button>
-          <Button
-            variant={activeCategory === "vanities" ? "default" : "outline"}
-            onClick={() => {
-              setActiveCategory("vanities");
-              setShowAllImages(false);
-            }}
-          >
-            Vanities ({vanities.length})
-          </Button>
-          <Button
-            variant={activeCategory === "closets" ? "default" : "outline"}
-            onClick={() => {
-              setActiveCategory("closets");
-              setShowAllImages(false);
-            }}
-          >
-            Closets ({closets.length})
-          </Button>
-          <Button
-            variant={activeCategory === "design-to-reality" ? "default" : "outline"}
-            onClick={() => {
-              setActiveCategory("design-to-reality");
-              setShowAllImages(false);
-            }}
-          >
-            Design to Reality ({designToReality.length})
-          </Button>
-          <Button
-            variant={activeCategory === "all" ? "default" : "outline"}
-            onClick={() => {
-              setActiveCategory("all");
-              setShowAllImages(false);
-            }}
-          >
-            All Projects
-          </Button>
-        </div>
+        {/* Filter Pills */}
+        {(() => {
+          const filters = [
+            { key: "kitchens", label: "Kitchens", count: kitchens.length },
+            { key: "vanities", label: "Vanities", count: vanities.length },
+            { key: "closets", label: "Closets", count: closets.length },
+            { key: "design-to-reality", label: "Design to Reality", count: designToReality.length },
+            { key: "all", label: "All Projects", count: null as number | null },
+          ];
+          return (
+            <div className="flex justify-center mb-12">
+              <div
+                role="tablist"
+                aria-label="Filter projects by category"
+                className="inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-card/60 backdrop-blur-sm border border-border/60 shadow-sm"
+              >
+                {filters.map((f) => {
+                  const isActive = activeCategory === f.key;
+                  return (
+                    <button
+                      key={f.key}
+                      role="tab"
+                      aria-selected={isActive}
+                      onClick={() => {
+                        setActiveCategory(f.key);
+                        setShowAllImages(false);
+                      }}
+                      className={[
+                        "group relative px-5 py-2.5 rounded-full text-sm font-medium tracking-wide",
+                        "transition-all duration-300 ease-out",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                        isActive
+                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
+                      ].join(" ")}
+                    >
+                      <span>{f.label}</span>
+                      {f.count !== null && (
+                        <span
+                          className={[
+                            "ml-2 inline-flex items-center justify-center text-[11px] font-semibold rounded-full px-1.5 min-w-[1.25rem] h-5 leading-none transition-colors",
+                            isActive
+                              ? "bg-primary-foreground/20 text-primary-foreground"
+                              : "bg-muted text-muted-foreground group-hover:bg-background",
+                          ].join(" ")}
+                        >
+                          {f.count}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedImages.map((image, index) => (
