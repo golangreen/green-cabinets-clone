@@ -343,12 +343,12 @@ const Gallery = () => {
 
         {/* Filter Pills */}
         {(() => {
-          const filters = [
+          const filters: { key: Category; label: string; count: number | null }[] = [
             { key: "kitchens", label: "Kitchens", count: kitchens.length },
             { key: "vanities", label: "Vanities", count: vanities.length },
             { key: "closets", label: "Closets", count: closets.length },
             { key: "design-to-reality", label: "Design to Reality", count: designToReality.length },
-            { key: "all", label: "All Projects", count: null as number | null },
+            { key: "all", label: "All Projects", count: null },
           ];
           return (
             <div className="flex justify-center mb-12">
