@@ -43,6 +43,8 @@ const VideoMuteToggle = ({
     const next = !isMuted;
     video.muted = next;
     if (!next) {
+      // Ensure audible volume when unmuting
+      video.volume = 1;
       // Resume playback if browser paused on autoplay-with-sound
       video.play().catch(() => undefined);
     }
