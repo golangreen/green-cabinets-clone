@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import VideoMuteToggle from "@/components/VideoMuteToggle";
 
 const STORAGE_KEY = "spring-promo-dismissed";
 
 const SpringPromotion = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [isDismissed, setIsDismissed] = useState(() => {
     return sessionStorage.getItem(STORAGE_KEY) === "true";
   });
@@ -30,8 +32,9 @@ const SpringPromotion = () => {
       </Button>
 
       {/* Video */}
-      <div className="w-full">
+      <div className="relative w-full">
         <video
+          ref={videoRef}
           className="w-full h-auto max-h-[80vh] object-cover"
           autoPlay
           muted
@@ -42,6 +45,7 @@ const SpringPromotion = () => {
           <source src="/spring-promotion.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+        <VideoMuteToggle videoRef={videoRef} />
       </div>
     </section>
   );
