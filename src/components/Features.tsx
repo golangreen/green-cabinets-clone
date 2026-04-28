@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
-import { Volume2, VolumeX } from "lucide-react";
+import { useRef } from "react";
 import { Card } from "@/components/ui/card";
+import VideoMuteToggle from "@/components/VideoMuteToggle";
 import customSolutionsVideo from "@/assets/custom-solutions.mp4";
 import kitchenImage1 from "@/assets/gallery/modern-kitchen-dining-wood-marble-windows.webp";
 import kitchenImage2 from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
