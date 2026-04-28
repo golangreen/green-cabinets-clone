@@ -66,22 +66,10 @@ const Features = () => {
                       className="w-full h-[400px] object-cover"
                       autoPlay
                       loop
-                      muted={isMuted}
+                      muted
                       playsInline
                     />
-                    <button
-                      type="button"
-                      onClick={toggleMute}
-                      aria-label={isMuted ? "Unmute video" : "Mute video"}
-                      aria-pressed={!isMuted}
-                      className="absolute bottom-3 right-3 inline-flex items-center justify-center h-10 w-10 rounded-full bg-black/55 text-white backdrop-blur-sm hover:bg-black/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 transition-colors"
-                    >
-                      {isMuted ? (
-                        <VolumeX className="h-5 w-5" />
-                      ) : (
-                        <Volume2 className="h-5 w-5" />
-                      )}
-                    </button>
+                    <VideoMuteToggle videoRef={videoRef} />
                   </>
                 ) : (
                   <img
