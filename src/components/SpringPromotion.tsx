@@ -32,8 +32,9 @@ const SpringPromotion = () => {
       </Button>
 
       {/* Video */}
-      <div className="w-full">
+      <div className="relative w-full">
         <video
+          ref={videoRef}
           className="w-full h-auto max-h-[80vh] object-cover"
           autoPlay
           muted
@@ -44,6 +45,7 @@ const SpringPromotion = () => {
           <source src="/spring-promotion.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+        <VideoMuteToggle videoRef={videoRef} />
       </div>
     </section>
   );
