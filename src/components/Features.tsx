@@ -1,3 +1,5 @@
+import { useRef, useState } from "react";
+import { Volume2, VolumeX } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import customSolutionsVideo from "@/assets/custom-solutions.mp4";
 import kitchenImage1 from "@/assets/gallery/modern-kitchen-dining-wood-marble-windows.webp";
@@ -35,6 +37,21 @@ const features: Feature[] = [
 ];
 
 const Features = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    const next = !isMuted;
+    video.muted = next;
+    if (!next) {
+      // Ensure playback resumes when unmuting (some browsers pause on autoplay+sound)
+      video.play().catch(() => undefined);
+    }
+    setIsMuted(next);
+  };
+
   return (
     <section id="solutions" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#f8f8f8]">
       <div className="container mx-auto px-6">
@@ -55,14 +72,30 @@ const Features = () => {
             >
               <div className="md:w-1/2 relative overflow-hidden rounded-2xl">
                 {feature.isVideo ? (
-                  <video
-                    src={feature.media}
-                    className="w-full h-[400px] object-cover"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                  />
+                  <>
+                    <video
+                      ref={videoRef}
+                      src={feature.media}
+                      className="w-full h-[400px] object-cover"
+                      autoPlay
+                      loop
+                      muted={isMuted}
+                      playsInline
+                    />
+                    <button
+                      type="button"
+                      onClick={toggleMute}
+                      aria-label={isMuted ? "Unmute video" : "Mute video"}
+                      aria-pressed={!isMuted}
+                      className="absolute bottom-3 right-3 inline-flex items-center justify-center h-10 w-10 rounded-full bg-black/55 text-white backdrop-blur-sm hover:bg-black/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 transition-colors"
+                    >
+                      {isMuted ? (
+                        <VolumeX className="h-5 w-5" />
+                      ) : (
+                        <Volume2 className="h-5 w-5" />
+                      )}
+                    </button>
+                  </>
                 ) : (
                   <img
                     src={feature.media}
