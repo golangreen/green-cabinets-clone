@@ -37,6 +37,23 @@ const VideoMuteToggle = ({
     if (video) video.muted = isMuted;
   }, [isMuted, videoRef]);
 
+  // Auto-mute when video scrolls out of view, so only the on-screen video plays sound
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting && !video.muted) {
+          video.muted = true;
+          setIsMuted(true);
+        }
+      },
+      { threshold: 0.25 },
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [videoRef]);
+
   const toggle = () => {
     const video = videoRef.current;
     if (!video) return;
