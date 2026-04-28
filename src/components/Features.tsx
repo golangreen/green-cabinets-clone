@@ -37,6 +37,21 @@ const features: Feature[] = [
 ];
 
 const Features = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    const next = !isMuted;
+    video.muted = next;
+    if (!next) {
+      // Ensure playback resumes when unmuting (some browsers pause on autoplay+sound)
+      video.play().catch(() => undefined);
+    }
+    setIsMuted(next);
+  };
+
   return (
     <section id="solutions" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#f8f8f8]">
       <div className="container mx-auto px-6">
