@@ -6,6 +6,7 @@ import VideoMuteToggle from "@/components/VideoMuteToggle";
 const STORAGE_KEY = "spring-promo-dismissed";
 
 const SpringPromotion = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [isDismissed, setIsDismissed] = useState(() => {
     return sessionStorage.getItem(STORAGE_KEY) === "true";
   });
