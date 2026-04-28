@@ -351,12 +351,67 @@ const Gallery = () => {
             { key: "all", label: "All Projects", count: null },
           ];
           return (
-            <div className="sticky top-16 md:top-20 z-30 -mx-6 px-6 mb-12 py-3 bg-muted/80 supports-[backdrop-filter]:bg-muted/60 backdrop-blur-md border-b border-border/40">
-              <div className="flex justify-center">
+            <div className="sticky top-16 md:top-20 z-30 -mx-6 mb-10 md:mb-12 py-3 bg-muted/80 supports-[backdrop-filter]:bg-muted/60 backdrop-blur-md border-b border-border/40">
+              {/* Mobile: edge-to-edge horizontal scroll chip row with fade hints */}
+              <div className="md:hidden relative">
+                <div
+                  className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-muted to-transparent z-10"
+                  aria-hidden="true"
+                />
+                <div
+                  className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-muted to-transparent z-10"
+                  aria-hidden="true"
+                />
                 <div
                   role="tablist"
                   aria-label="Filter projects by category"
-                  className="inline-flex flex-nowrap md:flex-wrap justify-start md:justify-center gap-1.5 p-1.5 rounded-full bg-card/80 backdrop-blur-sm border border-border/60 shadow-sm max-w-full overflow-x-auto scrollbar-none"
+                  className="flex flex-nowrap gap-2 overflow-x-auto scrollbar-none snap-x snap-mandatory px-4 py-1 [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem]"
+                >
+                  {filters.map((f) => {
+                    const isActive = activeCategory === f.key;
+                    return (
+                      <button
+                        key={f.key}
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => {
+                          setActiveCategory(f.key);
+                          setShowAllImages(false);
+                        }}
+                        className={[
+                          "group relative shrink-0 snap-start inline-flex items-center px-4 py-2 rounded-full text-sm font-medium tracking-wide whitespace-nowrap border",
+                          "transition-all duration-300 ease-out active:scale-95",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                          isActive
+                            ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
+                            : "bg-card/80 text-muted-foreground border-border/60 hover:text-foreground",
+                        ].join(" ")}
+                      >
+                        <span>{f.label}</span>
+                        {f.count !== null && (
+                          <span
+                            className={[
+                              "ml-2 inline-flex items-center justify-center text-[11px] font-semibold rounded-full px-1.5 min-w-[1.25rem] h-5 leading-none transition-colors",
+                              isActive
+                                ? "bg-primary-foreground/20 text-primary-foreground"
+                                : "bg-muted text-muted-foreground",
+                            ].join(" ")}
+                          >
+                            {f.count}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Desktop: segmented pill container */}
+              <div className="hidden md:flex justify-center px-6">
+                <div
+                  role="tablist"
+                  aria-label="Filter projects by category"
+                  className="inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-card/80 backdrop-blur-sm border border-border/60 shadow-sm"
                 >
                   {filters.map((f) => {
                     const isActive = activeCategory === f.key;
