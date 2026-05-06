@@ -4,7 +4,7 @@ const About = () => {
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-6">
-            Brooklyn's Premier Custom Cabinet Makers
+            Brooklyn, Manhattan & Queens Custom Cabinet Makers
           </h2>
           <div className="space-y-6 text-lg text-[#666666] leading-relaxed">
             <p className="text-xl">
@@ -12,7 +12,7 @@ const About = () => {
               Green Cabinets has been crafting exceptional cabinetry solutions that transform spaces into works of art.
             </p>
             <p className="text-xl">
-              We specialize in <span className="text-[#1a1a1a] font-semibold">premium custom kitchen cabinets in Brooklyn</span> tailored for modern apartments, brownstones, and luxury homes.
+              We specialize in <span className="text-[#1a1a1a] font-semibold">premium custom kitchen cabinets in Brooklyn, Manhattan, and Queens</span> tailored for modern apartments, brownstones, and luxury homes.
             </p>
             <p>
               We specialize in both <span className="text-[#1a1a1a] font-semibold">stock and custom cabinets</span>, 
