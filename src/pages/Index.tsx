@@ -11,6 +11,7 @@ import Contact from "@/components/Contact";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
+import FAQ from "@/components/FAQ";
 
 // Lazy load heavy components
 const Gallery = lazy(() => import("@/components/Gallery"));
