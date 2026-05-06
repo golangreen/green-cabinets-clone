@@ -197,6 +197,7 @@ const Index = () => {
       }>
         <ShopProducts />
       </Suspense>
+      <FAQ />
       <Contact />
       <CTA />
       <Footer />
