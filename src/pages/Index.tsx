@@ -12,6 +12,7 @@ import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
 import FAQ from "@/components/FAQ";
+import NeighborhoodsServed from "@/components/NeighborhoodsServed";
 
 // Lazy load heavy components
 const Gallery = lazy(() => import("@/components/Gallery"));
@@ -190,6 +191,7 @@ const Index = () => {
         <Gallery />
       </Suspense>
       <Suppliers />
+      <NeighborhoodsServed />
       <Suspense fallback={
         <div className="py-20 flex justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
