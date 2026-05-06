@@ -134,26 +134,26 @@ const Index = () => {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "What makes your custom kitchen cabinets in Brooklyn different?",
+                "name": "What makes your custom kitchen cabinets in Brooklyn and Manhattan different?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Every project starts with a free in-home consultation in Brooklyn or NYC. Our custom kitchen cabinetry is designed, built, and finished in our Bushwick shop using FSC-certified hardwoods, low-VOC finishes, and European hardware."
+                  "text": "Every project starts with a free in-home consultation across Brooklyn, Manhattan, and the wider New York area. Our custom kitchen cabinetry is designed, built, and finished in our Bushwick shop using FSC-certified hardwoods, low-VOC finishes, and European hardware."
                 }
               },
               {
                 "@type": "Question",
-                "name": "How much do custom kitchen cabinets in Brooklyn cost?",
+                "name": "How much do custom kitchen cabinets in Brooklyn and New York cost?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Pricing for our custom cabinetry solutions in Brooklyn typically runs $350 per linear foot for full kitchens and vanities, $225/lf for base cabinets, and $125/lf for wall cabinets. A typical Brooklyn kitchen ranges between $8,000 and $25,000+."
+                  "text": "Pricing for our custom cabinetry solutions in Brooklyn and Manhattan typically runs $350 per linear foot for full kitchens and vanities, $225/lf for base cabinets, and $125/lf for wall cabinets. A typical NYC kitchen ranges between $8,000 and $25,000+."
                 }
               },
               {
                 "@type": "Question",
-                "name": "How long does a custom kitchen cabinetry project take?",
+                "name": "How long does a custom kitchen cabinetry project take in NYC?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Most projects take 4–6 weeks: 1–2 weeks for design, 2–3 weeks of in-shop fabrication, and 3–7 days for installation."
+                  "text": "Most projects take 4–6 weeks: 1–2 weeks for design, 2–3 weeks of in-shop fabrication, and 3–7 days for installation in your Brooklyn or Manhattan home."
                 }
               },
               {
@@ -161,15 +161,15 @@ const Index = () => {
                 "name": "Do you handle both kitchens and bathroom vanities?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes. Many clients who renovate bathrooms also upgrade their kitchens with our custom cabinetry solutions in Brooklyn, designed as a coordinated package."
+                  "text": "Yes. Many clients who renovate bathrooms also upgrade their kitchens with our custom cabinetry solutions in Brooklyn and Manhattan, designed as a coordinated package."
                 }
               },
               {
                 "@type": "Question",
-                "name": "Which Brooklyn and NYC neighborhoods do you serve?",
+                "name": "Which Brooklyn and New York neighborhoods do you serve?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "We work throughout Brooklyn — Park Slope, Williamsburg, DUMBO, Brooklyn Heights, Carroll Gardens, Bushwick — and across Manhattan, Queens, and the greater NYC metro area."
+                  "text": "We work throughout Brooklyn — Park Slope, Williamsburg, DUMBO, Brooklyn Heights, Carroll Gardens, Bushwick — and across Manhattan (Tribeca, SoHo, West Village, Upper East Side, Upper West Side, Harlem), plus Queens and the greater NYC metro area."
                 }
               }
             ]
