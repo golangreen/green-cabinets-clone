@@ -41,7 +41,7 @@ const FAQ = () => {
               Frequently Asked Questions
             </h2>
             <p className="text-lg text-[#555555]">
-              Answers about our custom kitchen cabinets in Brooklyn and Manhattan, New York — pricing, timelines, and process.
+              Answers about our custom kitchen cabinets in Brooklyn, Manhattan, and Queens, New York — pricing, timelines, and process.
             </p>
           </div>
 
