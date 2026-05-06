@@ -87,7 +87,10 @@ const Landing = () => {
               <span className="text-primary">Premium Custom Cabinets</span>
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-              NYC's trusted cabinetry experts since 2009. Get a free quote in 24 hours.
+              NYC's trusted experts in <span className="text-foreground font-semibold">custom kitchen cabinetry</span> since 2009. Get a free quote in 24 hours.
+            </p>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+              Many clients who renovate bathrooms also upgrade their kitchens with our <span className="text-foreground font-semibold">custom cabinetry solutions in Brooklyn</span>.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
               <Button 
