@@ -90,7 +90,7 @@ const Hero = () => {
             Custom Kitchen & Bathroom Millwork
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
-            Premier sustainable cabinetry in Bushwick, Brooklyn. Custom cabinets NYC designed and built for homeowners and developers.
+            Premier sustainable custom kitchen cabinets in Brooklyn. Designed and built in Bushwick for homeowners and developers across NYC.
           </p>
         </div>
       </section>
