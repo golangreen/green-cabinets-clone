@@ -22,23 +22,23 @@ const Index = () => {
     <div className="min-h-screen">
       <Helmet>
         {/* Primary Meta Tags */}
-        <title>Custom Kitchen Cabinets in Brooklyn, NYC | Green Cabinets NY</title>
-        <meta name="title" content="Custom Kitchen Cabinets in Brooklyn, NYC | Green Cabinets NY" />
-        <meta name="description" content="Custom kitchen cabinets in Brooklyn, NYC since 2009. Premium bathroom vanities, closet systems & sustainable millwork for homeowners, architects & developers. Free consultation: (718) 804-5488." />
-        <meta name="keywords" content="custom kitchen cabinets in Brooklyn, custom kitchen cabinets Brooklyn, bathroom vanities NYC, custom cabinetry Brooklyn, kitchen cabinets New York, closet systems Brooklyn, cabinet maker Brooklyn, sustainable cabinets NYC" />
+        <title>Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY</title>
+        <meta name="title" content="Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY" />
+        <meta name="description" content="Custom kitchen cabinets in Brooklyn, Manhattan, and Queens since 2009. Premium bathroom vanities, closet systems & sustainable millwork for NYC homeowners, architects & developers. Free consultation: (718) 804-5488." />
+        <meta name="keywords" content="custom kitchen cabinets in Brooklyn, custom kitchen cabinets Manhattan, custom kitchen cabinets Queens, bathroom vanities NYC, custom cabinetry Brooklyn, kitchen cabinets New York, closet systems Brooklyn, cabinet maker Brooklyn, sustainable cabinets NYC" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://greencabinetsny.com/" />
-        <meta property="og:title" content="Custom Kitchen Cabinets in Brooklyn, NYC | Green Cabinets NY" />
-        <meta property="og:description" content="Custom kitchen cabinets in Brooklyn, NYC. Premium bathroom vanities & sustainable millwork. Expert craftsmanship since 2009." />
+        <meta property="og:title" content="Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY" />
+        <meta property="og:description" content="Custom kitchen cabinets in Brooklyn, Manhattan, and Queens. Premium bathroom vanities & sustainable millwork. Expert craftsmanship since 2009." />
         <meta property="og:image" content="https://greencabinetsny.com/images/green-cabinets-og-image.jpg" />
 
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://greencabinetsny.com/" />
-        <meta property="twitter:title" content="Custom Kitchen Cabinets in Brooklyn, NYC | Green Cabinets NY" />
-        <meta property="twitter:description" content="Custom kitchen cabinets in Brooklyn, NYC. Premium bathroom vanities & sustainable millwork since 2009." />
+        <meta property="twitter:title" content="Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY" />
+        <meta property="twitter:description" content="Custom kitchen cabinets in Brooklyn, Manhattan, and Queens. Premium bathroom vanities & sustainable millwork since 2009." />
         <meta property="twitter:image" content="https://greencabinetsny.com/images/green-cabinets-twitter-image.jpg" />
 
         {/* Canonical URL */}
