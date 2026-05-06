@@ -11,6 +11,7 @@ import Contact from "@/components/Contact";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
+import FAQ from "@/components/FAQ";
 
 // Lazy load heavy components
 const Gallery = lazy(() => import("@/components/Gallery"));
@@ -133,42 +134,42 @@ const Index = () => {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "How much do custom kitchen cabinets cost in Brooklyn?",
+                "name": "What makes your custom kitchen cabinets in Brooklyn different?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Custom kitchen cabinets in Brooklyn typically range from $8,000 to $25,000+ depending on materials, size, and design complexity. We offer free consultations to provide accurate quotes based on your specific needs and budget."
+                  "text": "Every project starts with a free in-home consultation in Brooklyn or NYC. Our custom kitchen cabinetry is designed, built, and finished in our Bushwick shop using FSC-certified hardwoods, low-VOC finishes, and European hardware."
                 }
               },
               {
                 "@type": "Question",
-                "name": "How long does it take to install custom cabinets?",
+                "name": "How much do custom kitchen cabinets in Brooklyn cost?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Custom cabinet installation typically takes 2-4 weeks from design approval to completion. This includes manufacturing time (1-2 weeks) and professional installation (3-7 days). Timeline may vary based on project complexity."
+                  "text": "Pricing for our custom cabinetry solutions in Brooklyn typically runs $350 per linear foot for full kitchens and vanities, $225/lf for base cabinets, and $125/lf for wall cabinets. A typical Brooklyn kitchen ranges between $8,000 and $25,000+."
                 }
               },
               {
                 "@type": "Question",
-                "name": "Do you offer eco-friendly cabinet materials?",
+                "name": "How long does a custom kitchen cabinetry project take?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes! We specialize in sustainable cabinetry using FSC-certified hardwoods, low-VOC finishes, bamboo, and recycled materials. All our products prioritize environmental responsibility without compromising quality."
+                  "text": "Most projects take 4–6 weeks: 1–2 weeks for design, 2–3 weeks of in-shop fabrication, and 3–7 days for installation."
                 }
               },
               {
                 "@type": "Question",
-                "name": "What areas in NYC do you serve?",
+                "name": "Do you handle both kitchens and bathroom vanities?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "We serve all of Brooklyn including Park Slope, Williamsburg, DUMBO, Brooklyn Heights, Carroll Gardens, and surrounding neighborhoods. We also work in Manhattan, Queens, and throughout the NYC metro area."
+                  "text": "Yes. Many clients who renovate bathrooms also upgrade their kitchens with our custom cabinetry solutions in Brooklyn, designed as a coordinated package."
                 }
               },
               {
                 "@type": "Question",
-                "name": "Do you work with architects and developers?",
+                "name": "Which Brooklyn and NYC neighborhoods do you serve?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Absolutely! We have extensive experience collaborating with architects, interior designers, and developers on residential and commercial projects throughout Brooklyn and NYC. We provide detailed drawings and work closely with your team."
+                  "text": "We work throughout Brooklyn — Park Slope, Williamsburg, DUMBO, Brooklyn Heights, Carroll Gardens, Bushwick — and across Manhattan, Queens, and the greater NYC metro area."
                 }
               }
             ]
@@ -196,6 +197,7 @@ const Index = () => {
       }>
         <ShopProducts />
       </Suspense>
+      <FAQ />
       <Contact />
       <CTA />
       <Footer />
