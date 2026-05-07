@@ -142,6 +142,114 @@ const Index = () => {
           })}
         </script>
 
+        {/* Service Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Service",
+                "@id": "https://greencabinetsny.com/#service-kitchen",
+                "serviceType": "Custom Kitchen Cabinets",
+                "name": "Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens",
+                "description": "Bespoke kitchen cabinetry designed, built, and installed in NYC. Shaker, slim shaker, and modern styles using FSC-certified hardwoods and low-VOC finishes.",
+                "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com" },
+                "areaServed": [
+                  { "@type": "City", "name": "Brooklyn" },
+                  { "@type": "City", "name": "Manhattan" },
+                  { "@type": "City", "name": "Queens" }
+                ],
+                "offers": {
+                  "@type": "Offer",
+                  "priceCurrency": "USD",
+                  "price": "350",
+                  "priceSpecification": {
+                    "@type": "UnitPriceSpecification",
+                    "price": "350",
+                    "priceCurrency": "USD",
+                    "unitText": "linear foot"
+                  },
+                  "url": "https://greencabinetsny.com/"
+                }
+              },
+              {
+                "@type": "Service",
+                "@id": "https://greencabinetsny.com/#service-vanity",
+                "serviceType": "Custom Bathroom Vanities",
+                "name": "Custom Bathroom Vanities NYC",
+                "description": "Made-to-measure bathroom vanities with premium materials and hardware, designed and installed throughout NYC.",
+                "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com" },
+                "areaServed": [
+                  { "@type": "City", "name": "Brooklyn" },
+                  { "@type": "City", "name": "Manhattan" },
+                  { "@type": "City", "name": "Queens" }
+                ],
+                "offers": {
+                  "@type": "Offer",
+                  "priceCurrency": "USD",
+                  "price": "350",
+                  "priceSpecification": {
+                    "@type": "UnitPriceSpecification",
+                    "price": "350",
+                    "priceCurrency": "USD",
+                    "unitText": "linear foot"
+                  },
+                  "url": "https://greencabinetsny.com/"
+                }
+              },
+              {
+                "@type": "Service",
+                "@id": "https://greencabinetsny.com/#service-closets",
+                "serviceType": "Custom Closet Systems",
+                "name": "Custom Closet Systems Brooklyn & NYC",
+                "description": "Custom closet organization and built-in storage systems engineered for NYC apartments and brownstones.",
+                "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com" },
+                "areaServed": [
+                  { "@type": "City", "name": "Brooklyn" },
+                  { "@type": "City", "name": "Manhattan" },
+                  { "@type": "City", "name": "Queens" }
+                ]
+              }
+            ]
+          })}
+        </script>
+
+        {/* Product Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Custom Shaker Kitchen Cabinets",
+            "image": "https://greencabinetsny.com/og-image.jpg",
+            "description": "Handcrafted custom shaker kitchen cabinets built in Brooklyn using FSC-certified hardwoods, low-VOC finishes, and Blum/Hettich European hardware.",
+            "brand": { "@type": "Brand", "name": "Green Cabinets NY" },
+            "category": "Kitchen Cabinets",
+            "manufacturer": { "@type": "Organization", "name": "Green Cabinets NY" },
+            "offers": {
+              "@type": "Offer",
+              "url": "https://greencabinetsny.com/",
+              "priceCurrency": "USD",
+              "price": "350",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "350",
+                "priceCurrency": "USD",
+                "unitText": "linear foot"
+              },
+              "availability": "https://schema.org/InStock",
+              "itemCondition": "https://schema.org/NewCondition",
+              "seller": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com" }
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "5",
+              "reviewCount": "6",
+              "bestRating": "5",
+              "worstRating": "1"
+            }
+          })}
+        </script>
+
         {/* FAQ Schema */}
         <script type="application/ld+json">
           {JSON.stringify({
