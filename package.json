@@ -9,7 +9,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "validate:jsonld": "node scripts/validate-localbusiness-jsonld.mjs"
+    "validate:jsonld": "node scripts/validate-localbusiness-jsonld.mjs",
+    "prepare": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
