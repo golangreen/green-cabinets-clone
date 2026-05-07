@@ -13,6 +13,7 @@ import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PerformanceMonitor from "./pages/PerformanceMonitor";
 import NotFound from "./pages/NotFound";
+import Borough from "./pages/Borough";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 
@@ -42,6 +43,7 @@ const App = () => {
                 <PerformanceMonitor />
               </AdminRoute>
             } />
+            <Route path="/custom-kitchen-cabinets-:slug" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
