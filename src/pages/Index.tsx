@@ -48,7 +48,9 @@ const Index = () => {
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@greencabinetsny" />
+        <meta name="twitter:site" content="@GreenGr63406" />
+        <meta name="twitter:creator" content="@GreenGr63406" />
+        <meta name="twitter:domain" content="greencabinetsny.com" />
         <meta name="twitter:url" content="https://greencabinetsny.com/" />
         <meta name="twitter:title" content="Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY" />
         <meta name="twitter:description" content="Custom shaker & slim shaker kitchen cabinets, bathroom vanities & millwork built in Bushwick for NYC homes since 2009." />
