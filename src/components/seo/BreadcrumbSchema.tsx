@@ -9,25 +9,25 @@ interface BreadcrumbSchemaProps {
   items: BreadcrumbItem[];
 }
 
-const BASE = "https://greencabinetsny.com";
+export const BASE_URL = "https://greencabinetsny.com";
 
-const BreadcrumbSchema = ({ items }: BreadcrumbSchemaProps) => {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, idx) => ({
-      "@type": "ListItem",
-      position: idx + 1,
-      name: item.name,
-      item: item.url.startsWith("http") ? item.url : `${BASE}${item.url}`,
-    })),
-  };
+export const buildBreadcrumbSchema = (items: BreadcrumbItem[]) => ({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, idx) => ({
+    "@type": "ListItem",
+    position: idx + 1,
+    name: item.name,
+    item: /^https?:\/\//i.test(item.url) ? item.url : `${BASE_URL}${item.url}`,
+  })),
+});
 
-  return (
-    <Helmet>
-      <script type="application/ld+json">{JSON.stringify(schema)}</script>
-    </Helmet>
-  );
-};
+const BreadcrumbSchema = ({ items }: BreadcrumbSchemaProps) => (
+  <Helmet>
+    <script type="application/ld+json">
+      {JSON.stringify(buildBreadcrumbSchema(items))}
+    </script>
+  </Helmet>
+);
 
 export default BreadcrumbSchema;
