@@ -16,6 +16,7 @@ import NeighborhoodsServed from "@/components/NeighborhoodsServed";
 import LuxuryMillwork from "@/components/LuxuryMillwork";
 import LuxuryMillworkGallery from "@/components/LuxuryMillworkGallery";
 import QualityCraftsmanship from "@/components/QualityCraftsmanship";
+import Testimonials from "@/components/Testimonials";
 
 // Lazy load heavy components
 const Gallery = lazy(() => import("@/components/Gallery"));
@@ -198,6 +199,7 @@ const Index = () => {
       </Suspense>
       <Suppliers />
       <NeighborhoodsServed />
+      <Testimonials />
       <Suspense fallback={
         <div className="py-20 flex justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
