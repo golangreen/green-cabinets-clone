@@ -14,6 +14,7 @@ import Chatbot from "@/components/Chatbot";
 import FAQ from "@/components/FAQ";
 import NeighborhoodsServed from "@/components/NeighborhoodsServed";
 import LuxuryMillwork from "@/components/LuxuryMillwork";
+import LuxuryMillworkGallery from "@/components/LuxuryMillworkGallery";
 
 // Lazy load heavy components
 const Gallery = lazy(() => import("@/components/Gallery"));
@@ -183,6 +184,7 @@ const Index = () => {
       <Hero />
       <Services />
       <LuxuryMillwork />
+      <LuxuryMillworkGallery />
       <Features />
       <About />
       <Suspense fallback={
