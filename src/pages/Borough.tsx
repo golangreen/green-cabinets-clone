@@ -79,6 +79,17 @@ const Borough = () => {
           </h1>
           <p className="text-xl text-[#555555] mb-8">{borough.heroTagline}</p>
           <p className="text-lg text-[#555555]">{borough.intro}</p>
+          <p className="text-sm text-[#555555] mt-6">
+            Browse all{" "}
+            <Link to="/#neighborhoods" className="text-primary font-semibold hover:underline">
+              neighborhoods we serve
+            </Link>{" "}
+            across NYC, or jump straight to our{" "}
+            <Link to="/#faq" className="text-primary font-semibold hover:underline">
+              cabinetry FAQs
+            </Link>
+            .
+          </p>
         </div>
       </section>
 
@@ -89,11 +100,13 @@ const Borough = () => {
           </h2>
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {borough.neighborhoods.map((n) => (
-              <li
-                key={n}
-                className="bg-background rounded-lg px-4 py-3 text-center text-[#1a1a1a] font-medium"
-              >
-                {n}
+              <li key={n}>
+                <Link
+                  to={`/#borough-${borough.slug}`}
+                  className="block bg-background rounded-lg px-4 py-3 text-center text-[#1a1a1a] font-medium hover:text-primary transition-colors"
+                >
+                  {n}
+                </Link>
               </li>
             ))}
           </ul>
