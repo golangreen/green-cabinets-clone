@@ -144,13 +144,73 @@ function main() {
   }
 
   console.log(`Parsed ${blocks.length} JSON-LD block(s).`);
+
+  // ---------- Per-field report ----------
+  if (lb) {
+    const required = ["name", "address"];
+    const recommended = ["@id", "url", "telephone", "image", "priceRange", "description", "geo", "openingHoursSpecification", "email"];
+    const fmt = (v) => v === undefined ? "—" : (typeof v === "string" ? (v.length > 60 ? v.slice(0, 57) + "…" : v) : (Array.isArray(v) ? `[${v.length}]` : "[object]"));
+    const status = (cond, req) => cond ? "✓" : (req ? "✗" : "○");
+    const rows = [
+      ...required.map((f) => [status(!!lb[f], true), "required", f, fmt(lb[f])]),
+      ...recommended.map((f) => [status(!!lb[f], false), "recommended", f, fmt(lb[f])]),
+    ];
+    if (lb.address && typeof lb.address === "object") {
+      for (const f of ["streetAddress", "addressLocality", "addressRegion", "postalCode", "addressCountry"]) {
+        rows.push([status(!!lb.address[f], true), "address", `address.${f}`, fmt(lb.address[f])]);
+      }
+    }
+    const widths = [3, 12, 32, 62];
+    const pad = (s, w) => String(s).padEnd(w);
+    console.log("\n=== LocalBusiness Field Report ===");
+    console.log(pad("", widths[0]) + pad("level", widths[1]) + pad("field", widths[2]) + "value");
+    console.log("-".repeat(widths.reduce((a, b) => a + b, 0)));
+    for (const r of rows) console.log(pad(r[0], widths[0]) + pad(r[1], widths[1]) + pad(r[2], widths[2]) + r[3]);
+
+    // ---------- OHS Summary Table ----------
+    const ohs = Array.isArray(lb.openingHoursSpecification) ? lb.openingHoursSpecification : [];
+    if (ohs.length) {
+      console.log("\n=== OpeningHoursSpecification Summary ===");
+      const head = ["#", "name / kind", "dayOfWeek", "opens", "closes", "validFrom", "validThrough"];
+      const w = [3, 32, 28, 7, 7, 12, 14];
+      console.log(head.map((h, i) => pad(h, w[i])).join(""));
+      console.log("-".repeat(w.reduce((a, b) => a + b, 0)));
+      ohs.forEach((o, i) => {
+        const dow = o.dayOfWeek === undefined ? "—" : (Array.isArray(o.dayOfWeek) ? (o.dayOfWeek.length === 7 ? "All days" : o.dayOfWeek.map((d) => d.slice(0, 3)).join(",")) : o.dayOfWeek);
+        const name = o.name || (o.validFrom ? "(dated)" : "(recurring)");
+        const row = [
+          String(i + 1),
+          fmt(name),
+          dow.length > w[2] - 2 ? dow.slice(0, w[2] - 3) + "…" : dow,
+          o.opens ?? "—",
+          o.closes ?? "—",
+          o.validFrom ?? "—",
+          o.validThrough ?? "—",
+        ];
+        console.log(row.map((c, j) => pad(c, w[j])).join(""));
+      });
+      console.log(`\nTotal entries: ${ohs.length}`);
+    }
+  }
+
+  // ---------- Errors / Warnings ----------
   if (warnings.length) {
     console.log(`\n⚠ ${warnings.length} warning(s):`);
     warnings.forEach((w) => console.log(`  - ${w}`));
   }
   if (errors.length) {
-    console.log(`\n✗ ${errors.length} error(s):`);
-    errors.forEach((e) => console.log(`  - ${e}`));
+    // Group errors by leading field token, e.g. "OHS[Purim]" or "address.streetAddress"
+    const groups = new Map();
+    for (const e of errors) {
+      const key = (e.match(/^([A-Za-z@][\w.\[\]'\-/ ]*)/)?.[1] || "general").trim();
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(e);
+    }
+    console.log(`\n✗ ${errors.length} error(s) across ${groups.size} field(s):`);
+    for (const [field, list] of groups) {
+      console.log(`  • ${field} (${list.length})`);
+      list.forEach((e) => console.log(`      - ${e}`));
+    }
     process.exit(1);
   }
   console.log("\n✅ LocalBusiness JSON-LD valid");
