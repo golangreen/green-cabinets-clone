@@ -73,7 +73,7 @@ const Index = () => {
                 "serviceType": "Custom Kitchen Cabinets",
                 "name": "Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens",
                 "description": "Bespoke kitchen cabinetry designed, built, and installed in NYC. Shaker, slim shaker, and modern styles using FSC-certified hardwoods and low-VOC finishes.",
-                "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com" },
+                "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" },
                 "areaServed": [
                   { "@type": "City", "name": "Brooklyn" },
                   { "@type": "City", "name": "Manhattan" },
@@ -98,7 +98,7 @@ const Index = () => {
                 "serviceType": "Custom Bathroom Vanities",
                 "name": "Custom Bathroom Vanities NYC",
                 "description": "Made-to-measure bathroom vanities with premium materials and hardware, designed and installed throughout NYC.",
-                "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com" },
+                "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" },
                 "areaServed": [
                   { "@type": "City", "name": "Brooklyn" },
                   { "@type": "City", "name": "Manhattan" },
@@ -123,7 +123,7 @@ const Index = () => {
                 "serviceType": "Custom Closet Systems",
                 "name": "Custom Closet Systems Brooklyn & NYC",
                 "description": "Custom closet organization and built-in storage systems engineered for NYC apartments and brownstones.",
-                "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com" },
+                "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" },
                 "areaServed": [
                   { "@type": "City", "name": "Brooklyn" },
                   { "@type": "City", "name": "Manhattan" },
