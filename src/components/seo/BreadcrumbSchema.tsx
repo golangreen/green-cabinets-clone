@@ -11,6 +11,16 @@ interface BreadcrumbSchemaProps {
 
 export const BASE_URL = "https://greencabinetsny.com";
 
+const resolveUrl = (url: string): string => {
+  if (/^https?:\/\//i.test(url)) return url;
+  try {
+    // Use URL resolution so './x' and '../x' resolve correctly against the base.
+    return new URL(url, `${BASE_URL}/`).href;
+  } catch {
+    return `${BASE_URL}${url.startsWith("/") ? url : `/${url}`}`;
+  }
+};
+
 export const buildBreadcrumbSchema = (items: BreadcrumbItem[]) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -18,7 +28,7 @@ export const buildBreadcrumbSchema = (items: BreadcrumbItem[]) => ({
     "@type": "ListItem",
     position: idx + 1,
     name: item.name,
-    item: /^https?:\/\//i.test(item.url) ? item.url : `${BASE_URL}${item.url}`,
+    item: resolveUrl(item.url),
   })),
 });
 
