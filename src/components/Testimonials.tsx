@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { Quote, Star } from "lucide-react";
 
 const testimonials = [
@@ -40,14 +41,48 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
+  const reviewSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://greencabinetsny.com",
+    "name": "Green Cabinets NY",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": testimonials.length.toString(),
+      "bestRating": "5",
+      "worstRating": "1",
+    },
+    "review": testimonials.map((t) => ({
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5",
+      },
+      "author": { "@type": "Person", "name": t.name },
+      "reviewBody": t.quote,
+      "itemReviewed": {
+        "@type": "LocalBusiness",
+        "name": "Green Cabinets NY",
+      },
+      "publisher": { "@type": "Organization", "name": "Green Cabinets NY" },
+      "locationCreated": { "@type": "Place", "name": t.location },
+    })),
+  };
+
   return (
     <section
       id="testimonials"
+      aria-labelledby="testimonials-heading"
       className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#d5d5d5]"
     >
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(reviewSchema)}</script>
+      </Helmet>
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+          <h2 id="testimonials-heading" className="font-display text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
             Trusted by NYC Condo & Co-op Owners
           </h2>
           <p className="text-lg text-[#555555] leading-relaxed">
