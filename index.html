@@ -59,7 +59,9 @@
           "url": "https://greencabinetsny.com/",
           "name": "Green Cabinets NY",
           "description": "Custom kitchen cabinets, bathroom vanities, and closets in Brooklyn, NYC.",
-          "publisher": { "@id": "https://greencabinetsny.com/#organization" },
+          "publisher": {
+            "@id": "https://greencabinetsny.com/#organization"
+          },
           "inLanguage": "en-US"
         },
         {
@@ -78,14 +80,18 @@
           "foundingDate": "2009",
           "email": "orders@greencabinetsny.com",
           "telephone": "+1-718-804-5488",
-          "contactPoint": [{
-            "@type": "ContactPoint",
-            "telephone": "+1-718-804-5488",
-            "contactType": "customer service",
-            "email": "orders@greencabinetsny.com",
-            "areaServed": "US",
-            "availableLanguage": ["English"]
-          }],
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+1-718-804-5488",
+              "contactType": "customer service",
+              "email": "orders@greencabinetsny.com",
+              "areaServed": "US",
+              "availableLanguage": [
+                "English"
+              ]
+            }
+          ],
           "sameAs": [
             "https://www.instagram.com/greencabinetsny",
             "https://www.instagram.com/green_cabinets_",
@@ -113,7 +119,9 @@
           "email": "orders@greencabinetsny.com",
           "priceRange": "$$-$$$",
           "foundingDate": "2009",
-          "parentOrganization": { "@id": "https://greencabinetsny.com/#organization" },
+          "parentOrganization": {
+            "@id": "https://greencabinetsny.com/#organization"
+          },
           "address": {
             "@type": "PostalAddress",
             "streetAddress": "10 Montieth St",
@@ -130,18 +138,27 @@
           "openingHoursSpecification": [
             {
               "@type": "OpeningHoursSpecification",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "@id": "https://greencabinetsny.com/#hours-weekdays",
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday"
+              ],
               "opens": "08:00",
               "closes": "18:00"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-saturday",
               "dayOfWeek": "Saturday",
               "opens": "09:00",
               "closes": "15:00"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-new-years-day-2026",
               "name": "New Year's Day",
               "opens": "00:00",
               "closes": "00:00",
@@ -150,6 +167,7 @@
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-memorial-day-2026",
               "name": "Memorial Day",
               "opens": "00:00",
               "closes": "00:00",
@@ -158,6 +176,7 @@
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-independence-day-2026",
               "name": "Independence Day",
               "opens": "00:00",
               "closes": "00:00",
@@ -166,6 +185,7 @@
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-labor-day-2026",
               "name": "Labor Day",
               "opens": "00:00",
               "closes": "00:00",
@@ -174,6 +194,7 @@
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-thanksgiving-day-2026",
               "name": "Thanksgiving Day",
               "opens": "00:00",
               "closes": "00:00",
@@ -182,6 +203,7 @@
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-christmas-2026",
               "name": "Christmas",
               "opens": "00:00",
               "closes": "00:00",
@@ -190,149 +212,338 @@
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-purim-2026",
               "name": "Purim",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-03-03",
               "validThrough": "2026-03-03"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-passover-first-days-2026",
               "name": "Passover (first days)",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-04-02",
               "validThrough": "2026-04-03"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-passover-last-days-2026",
               "name": "Passover (last days)",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-04-08",
               "validThrough": "2026-04-09"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-shavuot-2026",
               "name": "Shavuot",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-05-22",
               "validThrough": "2026-05-23"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-rosh-hashanah-2026",
               "name": "Rosh Hashanah",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-09-12",
               "validThrough": "2026-09-13"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-yom-kippur-2026",
               "name": "Yom Kippur",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-09-21",
               "validThrough": "2026-09-21"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-sukkot-first-days-2026",
               "name": "Sukkot (first days)",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-09-26",
               "validThrough": "2026-09-27"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-shemini-atzeret-simchat-torah-2026",
               "name": "Shemini Atzeret / Simchat Torah",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-10-03",
               "validThrough": "2026-10-04"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-tisha-bav-2026",
               "name": "Tisha B'Av",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-07-23",
               "validThrough": "2026-07-23"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-chanukah-2026",
               "name": "Chanukah",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2026-12-05",
               "validThrough": "2026-12-12"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-purim-2027",
               "name": "Purim",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-03-23",
               "validThrough": "2027-03-23"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-passover-first-days-2027",
               "name": "Passover (first days)",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-04-22",
               "validThrough": "2027-04-23"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-passover-last-days-2027",
               "name": "Passover (last days)",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-04-28",
               "validThrough": "2027-04-29"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-shavuot-2027",
               "name": "Shavuot",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-06-11",
               "validThrough": "2027-06-12"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-tisha-bav-2027",
               "name": "Tisha B'Av",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-08-12",
               "validThrough": "2027-08-12"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-rosh-hashanah-2027",
               "name": "Rosh Hashanah",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-10-02",
               "validThrough": "2027-10-03"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-yom-kippur-2027",
               "name": "Yom Kippur",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-10-11",
               "validThrough": "2027-10-11"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-sukkot-first-days-2027",
               "name": "Sukkot (first days)",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-10-16",
               "validThrough": "2027-10-17"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-shemini-atzeret-simchat-torah-2027",
               "name": "Shemini Atzeret / Simchat Torah",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-10-23",
               "validThrough": "2027-10-24"
             },
             {
               "@type": "OpeningHoursSpecification",
+              "@id": "https://greencabinetsny.com/#hours-chanukah-2027",
               "name": "Chanukah",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
               "validFrom": "2027-12-25",
               "validThrough": "2028-01-01"
             }
           ],
           "areaServed": [
-            { "@type": "City", "name": "Brooklyn" },
-            { "@type": "City", "name": "Manhattan" },
-            { "@type": "City", "name": "Queens" }
+            {
+              "@type": "City",
+              "name": "Brooklyn"
+            },
+            {
+              "@type": "City",
+              "name": "Manhattan"
+            },
+            {
+              "@type": "City",
+              "name": "Queens"
+            }
           ],
           "sameAs": [
             "https://www.instagram.com/greencabinetsny",
@@ -374,6 +585,7 @@
       "step": [
         {
           "@type": "HowToStep",
+          "@id": "https://greencabinetsny.com/#step-consult",
           "position": 1,
           "name": "Free in-home consultation",
           "text": "We visit your Brooklyn, Manhattan, or Queens home to measure the space, discuss your style, workflow, and budget, and review material samples on-site.",
@@ -382,6 +594,7 @@
         },
         {
           "@type": "HowToStep",
+          "@id": "https://greencabinetsny.com/#step-design",
           "position": 2,
           "name": "Design and 3D rendering",
           "text": "Our designers produce CAD plans and photorealistic 3D renderings, finalize materials, finishes, and hardware, and lock pricing before any wood is cut.",
@@ -390,6 +603,7 @@
         },
         {
           "@type": "HowToStep",
+          "@id": "https://greencabinetsny.com/#step-fabricate",
           "position": 3,
           "name": "In-shop fabrication",
           "text": "Cabinets are built and finished by hand in our Bushwick, Brooklyn shop using FSC-certified hardwoods, formaldehyde-free plywood, and low-VOC conversion varnish over 2–3 weeks.",
@@ -398,6 +612,7 @@
         },
         {
           "@type": "HowToStep",
+          "@id": "https://greencabinetsny.com/#step-install",
           "position": 4,
           "name": "White-glove installation",
           "text": "Our insured install crew delivers, assembles, and installs your cabinets in 3–7 days, coordinates with your contractor, and provides COIs for NYC condos and co-ops.",
