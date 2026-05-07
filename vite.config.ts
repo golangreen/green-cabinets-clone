@@ -30,6 +30,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
+    validateJsonLdPlugin(),
     react(), 
     mode === "development" && componentTagger(),
     VitePWA({
