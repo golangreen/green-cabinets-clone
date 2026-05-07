@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import Borough from "./pages/Borough";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
+import HashScrollHandler from "@/components/HashScrollHandler";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <HashScrollHandler />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/landing" element={<Landing />} />
