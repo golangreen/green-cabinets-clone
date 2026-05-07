@@ -140,6 +140,8 @@ const Index = () => {
             "@context": "https://schema.org",
             "@type": "Product",
             "name": "Custom Shaker Kitchen Cabinets",
+            "sku": "GCNY-SHAKER-KITCHEN",
+            "mpn": "GCNY-SHAKER-KITCHEN",
             "image": "https://greencabinetsny.com/og-image.jpg",
             "description": "Handcrafted custom shaker kitchen cabinets built in Brooklyn using FSC-certified hardwoods, low-VOC finishes, and Blum/Hettich European hardware.",
             "brand": { "@type": "Brand", "name": "Green Cabinets NY" },
@@ -158,7 +160,22 @@ const Index = () => {
               },
               "availability": "https://schema.org/InStock",
               "itemCondition": "https://schema.org/NewCondition",
-              "seller": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" }
+              "seller": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" },
+              "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "applicableCountry": "US",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
+              },
+              "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" },
+                "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "USD" },
+                "deliveryTime": {
+                  "@type": "ShippingDeliveryTime",
+                  "handlingTime": { "@type": "QuantitativeValue", "minValue": 7, "maxValue": 14, "unitCode": "DAY" },
+                  "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 7, "unitCode": "DAY" }
+                }
+              }
             },
             "review": [{
               "@type": "Review",
