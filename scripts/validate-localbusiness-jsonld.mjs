@@ -143,7 +143,38 @@ function main() {
     }
   }
 
+  // ---------- HowTo validation ----------
+  const howtos = [];
+  for (const raw of blocks) {
+    let data; try { data = JSON.parse(raw); } catch { continue; }
+    const graph = data["@graph"] || [data];
+    for (const node of graph) {
+      const t = node?.["@type"];
+      if (t === "HowTo" || (Array.isArray(t) && t.includes("HowTo"))) howtos.push(node);
+    }
+  }
+  for (const h of howtos) {
+    const label = h.name || h["@id"] || "(unnamed HowTo)";
+    if (!h.name) err(`HowTo[${label}].name is required`);
+    if (!Array.isArray(h.step) || h.step.length === 0) {
+      err(`HowTo[${label}].step must be a non-empty array`);
+    } else {
+      h.step.forEach((s, i) => {
+        if (s["@type"] !== "HowToStep") err(`HowTo[${label}] step ${i + 1}: @type must be "HowToStep"`);
+        if (!s.name) err(`HowTo[${label}] step ${i + 1}: name is required`);
+        if (!s.text) err(`HowTo[${label}] step ${i + 1}: text is required`);
+        if (s.position !== undefined && s.position !== i + 1) {
+          warn(`HowTo[${label}] step ${i + 1}: position ${s.position} doesn't match index`);
+        }
+      });
+    }
+    if (h.totalTime && !/^P(?:\d+Y)?(?:\d+M)?(?:\d+W)?(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/.test(h.totalTime)) {
+      err(`HowTo[${label}].totalTime "${h.totalTime}" is not a valid ISO 8601 duration`);
+    }
+  }
+
   console.log(`Parsed ${blocks.length} JSON-LD block(s).`);
+  if (howtos.length) console.log(`Found ${howtos.length} HowTo node(s).`);
 
   // ---------- Per-field report ----------
   if (lb) {
@@ -193,7 +224,22 @@ function main() {
     }
   }
 
-  // ---------- Errors / Warnings ----------
+  // ---------- HowTo Summary ----------
+  if (howtos.length) {
+    const pad2 = (s, w) => String(s).padEnd(w);
+    for (const h of howtos) {
+      console.log(`\n=== HowTo: ${h.name || "(unnamed)"} ===`);
+      const w = [3, 36, 70];
+      console.log(pad2("#", w[0]) + pad2("step", w[1]) + "text");
+      console.log("-".repeat(w.reduce((a, b) => a + b, 0)));
+      (h.step || []).forEach((s, i) => {
+        const txt = (s.text || "").length > 67 ? s.text.slice(0, 64) + "…" : (s.text || "—");
+        console.log(pad2(String(i + 1), w[0]) + pad2((s.name || "—").slice(0, 35), w[1]) + txt);
+      });
+      if (h.totalTime) console.log(`totalTime: ${h.totalTime}`);
+    }
+  }
+
   if (warnings.length) {
     console.log(`\n⚠ ${warnings.length} warning(s):`);
     warnings.forEach((w) => console.log(`  - ${w}`));
