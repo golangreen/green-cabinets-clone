@@ -15,6 +15,7 @@ import FAQ from "@/components/FAQ";
 import NeighborhoodsServed from "@/components/NeighborhoodsServed";
 import LuxuryMillwork from "@/components/LuxuryMillwork";
 import LuxuryMillworkGallery from "@/components/LuxuryMillworkGallery";
+import QualityCraftsmanship from "@/components/QualityCraftsmanship";
 
 // Lazy load heavy components
 const Gallery = lazy(() => import("@/components/Gallery"));
@@ -185,6 +186,7 @@ const Index = () => {
       <Services />
       <LuxuryMillwork />
       <LuxuryMillworkGallery />
+      <QualityCraftsmanship />
       <Features />
       <About />
       <Suspense fallback={
