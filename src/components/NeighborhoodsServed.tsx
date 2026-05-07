@@ -39,9 +39,11 @@ const boroughs = [
   },
 ];
 
-const scrollToContact = () => {
-  document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+const scrollToId = (id: string) => {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 };
+
+const scrollToContact = () => scrollToId("contact");
 
 const NeighborhoodsServed = () => {
   return (
@@ -58,13 +60,29 @@ const NeighborhoodsServed = () => {
             Designed in Bushwick, installed across NYC. We build custom kitchen
             cabinetry for homes throughout Brooklyn, Manhattan, and Queens.
           </p>
+
+          <nav
+            aria-label="Jump to borough"
+            className="mt-6 flex flex-wrap justify-center gap-2"
+          >
+            {boroughs.map((b) => (
+              <button
+                key={`link-${b.name}`}
+                onClick={() => scrollToId(`borough-${b.name.toLowerCase()}`)}
+                className="px-4 py-2 rounded-full text-sm font-semibold bg-[#d5d5d5] text-[#1a1a1a] hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                {b.name}
+              </button>
+            ))}
+          </nav>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {boroughs.map((borough) => (
             <div
               key={borough.name}
-              className="bg-[#d5d5d5] rounded-xl p-6 sm:p-8 flex flex-col transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl"
+              id={`borough-${borough.name.toLowerCase()}`}
+              className="scroll-mt-24 bg-[#d5d5d5] rounded-xl p-6 sm:p-8 flex flex-col transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl"
             >
               <div className="flex items-center gap-3 mb-3">
                 <MapPin className="w-6 h-6 text-primary" />
