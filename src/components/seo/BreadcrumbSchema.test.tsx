@@ -86,10 +86,46 @@ describe("buildBreadcrumbSchema", () => {
     ]);
   });
 
-  it("does not treat protocol-relative URLs as absolute (joins to base)", () => {
+  it("treats protocol-relative URLs as absolute via URL resolution", () => {
     const json = buildBreadcrumbSchema([
       { name: "Weird", url: "//example.com/x" },
     ]);
-    expect(json.itemListElement[0].item).toBe(`${BASE_URL}//example.com/x`);
+    expect(json.itemListElement[0].item).toBe("https://example.com/x");
+  });
+
+  it("resolves './shop' against the base", () => {
+    const json = buildBreadcrumbSchema([{ name: "Shop", url: "./shop" }]);
+    expect(json.itemListElement[0].item).toBe(`${BASE_URL}/shop`);
+  });
+
+  it("resolves './shop/handle' against the base", () => {
+    const json = buildBreadcrumbSchema([
+      { name: "Handle", url: "./shop/handle" },
+    ]);
+    expect(json.itemListElement[0].item).toBe(`${BASE_URL}/shop/handle`);
+  });
+
+  it("resolves '../shop' against the base (clamped to root)", () => {
+    const json = buildBreadcrumbSchema([{ name: "Shop", url: "../shop" }]);
+    expect(json.itemListElement[0].item).toBe(`${BASE_URL}/shop`);
+  });
+
+  it("resolves '../../shop' against the base (clamped to root)", () => {
+    const json = buildBreadcrumbSchema([{ name: "Shop", url: "../../shop" }]);
+    expect(json.itemListElement[0].item).toBe(`${BASE_URL}/shop`);
+  });
+
+  it("resolves a bare relative segment 'shop' against the base", () => {
+    const json = buildBreadcrumbSchema([{ name: "Shop", url: "shop" }]);
+    expect(json.itemListElement[0].item).toBe(`${BASE_URL}/shop`);
+  });
+
+  it("preserves query and hash when resolving './shop'", () => {
+    const json = buildBreadcrumbSchema([
+      { name: "Shop", url: "./shop?cat=vanity#top" },
+    ]);
+    expect(json.itemListElement[0].item).toBe(
+      `${BASE_URL}/shop?cat=vanity#top`,
+    );
   });
 });
