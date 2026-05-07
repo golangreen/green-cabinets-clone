@@ -12,7 +12,7 @@ const About = () => {
               Green Cabinets has been crafting exceptional cabinetry solutions that transform spaces into works of art.
             </p>
             <p className="text-xl">
-              We specialize in <span className="text-[#1a1a1a] font-semibold">premium custom kitchen cabinets in Brooklyn, Manhattan, and Queens</span> tailored for modern apartments, brownstones, and luxury homes.
+              We specialize in <span className="text-[#1a1a1a] font-semibold">premium custom kitchen cabinets in Brooklyn, Manhattan, and Queens</span> — including signature <span className="text-[#1a1a1a] font-semibold">shaker and slim shaker</span> door styles — tailored for modern apartments, brownstones, and luxury homes.
             </p>
             <p>
               We specialize in both <span className="text-[#1a1a1a] font-semibold">stock and custom cabinets</span>, 
