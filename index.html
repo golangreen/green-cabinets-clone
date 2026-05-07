@@ -48,53 +48,94 @@
     <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
     <meta name="twitter:image:alt" content="Sage green shaker kitchen cabinets with marble countertops in a Brooklyn brownstone — Green Cabinets NY" />
     
-    <!-- LocalBusiness Schema -->
+    <!-- Organization + LocalBusiness Schema (site-wide) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "@id": "https://greencabinetsny.com",
-      "name": "Green Cabinets NY",
-      "image": "https://greencabinetsny.com/og-image.jpg",
-      "logo": "https://greencabinetsny.com/og-image.jpg",
-      "description": "Premium custom kitchen cabinets, bathroom vanities, and closet systems in Brooklyn, NYC. Eco-friendly materials and expert craftsmanship since 2009.",
-      "url": "https://greencabinetsny.com",
-      "telephone": "+1-718-804-5488",
-      "email": "orders@greencabinetsny.com",
-      "priceRange": "$$-$$$",
-      "foundingDate": "2009",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "1160 Broadway",
-        "addressLocality": "Brooklyn",
-        "addressRegion": "NY",
-        "postalCode": "11221",
-        "addressCountry": "US"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 40.6782,
-        "longitude": -73.9442
-      },
-      "openingHoursSpecification": [
+      "@graph": [
         {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          "opens": "08:00",
-          "closes": "18:00"
+          "@type": "Organization",
+          "@id": "https://greencabinetsny.com/#organization",
+          "name": "Green Cabinets NY",
+          "alternateName": "Green Cabinets",
+          "url": "https://greencabinetsny.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://greencabinetsny.com/og-image.jpg",
+            "width": 1216,
+            "height": 640
+          },
+          "image": "https://greencabinetsny.com/og-image.jpg",
+          "foundingDate": "2009",
+          "email": "orders@greencabinetsny.com",
+          "telephone": "+1-718-804-5488",
+          "contactPoint": [{
+            "@type": "ContactPoint",
+            "telephone": "+1-718-804-5488",
+            "contactType": "customer service",
+            "email": "orders@greencabinetsny.com",
+            "areaServed": "US",
+            "availableLanguage": ["English"]
+          }],
+          "sameAs": [
+            "https://www.instagram.com/greencabinetsny",
+            "https://www.instagram.com/green_cabinets_",
+            "https://twitter.com/GreenGr63406",
+            "https://x.com/GreenGr63406"
+          ]
         },
         {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": "Saturday",
-          "opens": "09:00",
-          "closes": "15:00"
+          "@type": "LocalBusiness",
+          "@id": "https://greencabinetsny.com/#localbusiness",
+          "name": "Green Cabinets NY",
+          "image": "https://greencabinetsny.com/og-image.jpg",
+          "logo": "https://greencabinetsny.com/og-image.jpg",
+          "description": "Premium custom kitchen cabinets, bathroom vanities, and closet systems in Brooklyn, NYC. Eco-friendly materials and expert craftsmanship since 2009.",
+          "url": "https://greencabinetsny.com",
+          "telephone": "+1-718-804-5488",
+          "email": "orders@greencabinetsny.com",
+          "priceRange": "$$-$$$",
+          "foundingDate": "2009",
+          "parentOrganization": { "@id": "https://greencabinetsny.com/#organization" },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "10 Montieth St",
+            "addressLocality": "Brooklyn",
+            "addressRegion": "NY",
+            "postalCode": "11206",
+            "addressCountry": "US"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 40.7128,
+            "longitude": -73.9352
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "08:00",
+              "closes": "18:00"
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": "Saturday",
+              "opens": "09:00",
+              "closes": "15:00"
+            }
+          ],
+          "areaServed": [
+            { "@type": "City", "name": "Brooklyn" },
+            { "@type": "City", "name": "Manhattan" },
+            { "@type": "City", "name": "Queens" }
+          ],
+          "sameAs": [
+            "https://www.instagram.com/greencabinetsny",
+            "https://www.instagram.com/green_cabinets_",
+            "https://twitter.com/GreenGr63406",
+            "https://x.com/GreenGr63406"
+          ]
         }
-      ],
-      "sameAs": ["https://www.instagram.com/greencabinetsny"],
-      "areaServed": [
-        { "@type": "City", "name": "Brooklyn" },
-        { "@type": "City", "name": "Manhattan" },
-        { "@type": "City", "name": "Queens" }
       ]
     }
     </script>
