@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Helmet } from "react-helmet-async";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import SpringPromotion from "@/components/SpringPromotion";
@@ -63,6 +64,7 @@ const Index = () => {
         {/* LocalBusiness, Service, and Product schemas are provided site-wide via index.html */}
 
       </Helmet>
+      <BreadcrumbSchema items={[{ name: "Home", url: "/" }]} />
       <Header />
       <SpringPromotion />
       <Hero />
