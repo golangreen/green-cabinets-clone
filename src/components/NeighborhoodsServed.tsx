@@ -1,4 +1,5 @@
 import { MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const boroughs = [
   {
@@ -103,12 +104,20 @@ const NeighborhoodsServed = () => {
                 ))}
               </ul>
 
-              <button
-                onClick={scrollToContact}
-                className="mt-auto inline-flex items-center justify-center text-sm font-semibold text-primary hover:text-[#445339] transition-colors"
-              >
-                Get a free quote in {borough.name} →
-              </button>
+              <div className="mt-auto flex flex-col gap-2">
+                <Link
+                  to={`/custom-kitchen-cabinets-${borough.name.toLowerCase()}`}
+                  className="inline-flex items-center justify-center text-sm font-semibold text-primary hover:text-[#445339] transition-colors"
+                >
+                  Custom kitchen cabinets in {borough.name} →
+                </Link>
+                <button
+                  onClick={scrollToContact}
+                  className="inline-flex items-center justify-center text-sm font-semibold text-[#1a1a1a] hover:text-primary transition-colors"
+                >
+                  Get a free quote
+                </button>
+              </div>
             </div>
           ))}
         </div>
