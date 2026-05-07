@@ -52,6 +52,8 @@ const faqs = [
 ];
 
 const FAQ = () => {
+  const [quoteOpen, setQuoteOpen] = useState(false);
+
   return (
     <section
       id="faq"
@@ -84,8 +86,21 @@ const FAQ = () => {
               </AccordionItem>
             ))}
           </Accordion>
+
+          <div className="mt-12 text-center">
+            <p className="text-[#555555] mb-4">Still have questions about your project?</p>
+            <Button
+              size="lg"
+              onClick={() => setQuoteOpen(true)}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-2xl hover:shadow-primary/40 hover:scale-105 transition-all duration-300"
+            >
+              Request a Quote
+            </Button>
+          </div>
         </div>
       </div>
+
+      <QuoteForm isOpen={quoteOpen} onClose={() => setQuoteOpen(false)} />
     </section>
   );
 };
