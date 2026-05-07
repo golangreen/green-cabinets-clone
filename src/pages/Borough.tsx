@@ -51,12 +51,19 @@ const Borough = () => {
         <meta property="og:url" content={borough.url} />
         <meta property="og:title" content={borough.title} />
         <meta property="og:description" content={borough.description} />
-        <meta property="og:image" content="https://greencabinetsny.com/images/green-cabinets-og-image.jpg" />
+        <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta property="og:image:secure_url" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1216" />
+        <meta property="og:image:height" content="640" />
+        <meta property="og:image:alt" content="Sage green shaker kitchen cabinets with marble countertops in a Brooklyn brownstone — Green Cabinets NY" />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={borough.url} />
         <meta property="twitter:title" content={borough.title} />
         <meta property="twitter:description" content={borough.description} />
+        <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta name="twitter:image:alt" content="Sage green shaker kitchen cabinets with marble countertops in a Brooklyn brownstone — Green Cabinets NY" />
 
         <link rel="canonical" href={borough.url} />
 
