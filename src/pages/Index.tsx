@@ -171,6 +171,38 @@ const Index = () => {
               },
               {
                 "@type": "Question",
+                "name": "Where do you source your materials?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "FSC-certified hardwoods from Northeast mills, formaldehyde-free plywood cores, NYC-area stone slabs, Blum and Hettich hardware, and low-VOC conversion varnish finishes."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What does the fabrication timeline look like?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "4–6 weeks total: design and shop drawings (1–2 weeks), CNC cutting and assembly (2 weeks), spray finishing and QC (1 week), then delivery and installation in your NYC home."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you provide Certificates of Insurance (COIs) for condo and co-op buildings?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. We carry general liability, workers' comp, and umbrella coverage and routinely issue building-specific COIs and alteration agreements within 48 hours for NYC condos and co-ops."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you handle building noise rules and freight elevator scheduling?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Loud work is scheduled within building-permitted hours (typically 9 AM–5 PM weekdays), freight elevators are reserved with the super or managing agent, and quiet finish work is done outside loud-work windows."
+                }
+              },
+              {
+                "@type": "Question",
                 "name": "Which Brooklyn, Manhattan, and Queens neighborhoods do you serve?",
                 "acceptedAnswer": {
                   "@type": "Answer",
