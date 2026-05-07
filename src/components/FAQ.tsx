@@ -8,11 +8,15 @@ import {
 const faqs = [
   {
     q: "What makes your custom kitchen cabinets in Brooklyn, Manhattan, and Queens different?",
-    a: "Every project starts with a free in-home consultation across Brooklyn, Manhattan, Queens, and the wider New York area. Our custom kitchen cabinetry is designed, built, and finished in our Bushwick shop using FSC-certified hardwoods, low-VOC finishes, and European hardware — so you get a true one-of-a-kind kitchen that fits your space exactly.",
+    a: "Every project starts with a free in-home consultation across Brooklyn, Manhattan, Queens, and the wider New York area. Our custom kitchen cabinetry — from classic shaker and modern slim shaker to flat-panel — is designed, built, and finished in our Bushwick shop using FSC-certified hardwoods, low-VOC finishes, and European hardware, so you get a true one-of-a-kind kitchen that fits your space exactly.",
+  },
+  {
+    q: "Do you build shaker and slim shaker cabinet doors?",
+    a: "Yes. Shaker and slim shaker are two of our most-requested door styles for custom kitchen cabinets in Brooklyn, Manhattan, and Queens. Traditional shaker uses a wider 2.25\" rail and stile for a timeless look, while slim shaker uses a narrower ~1.5\" frame for a cleaner, more modern profile — both available in painted, stained, or natural finishes.",
   },
   {
     q: "How much do custom kitchen cabinets in Brooklyn, Manhattan, and Queens cost?",
-    a: "Pricing for our custom cabinetry solutions in Brooklyn, Manhattan, and Queens typically runs $350 per linear foot for full kitchens and vanities, $225/lf for base cabinets, and $125/lf for wall cabinets. A typical NYC kitchen ranges between $8,000 and $25,000+ depending on size, materials, and finishes.",
+    a: "Pricing for our custom cabinetry solutions in Brooklyn, Manhattan, and Queens typically runs $350 per linear foot for full kitchens and vanities (shaker, slim shaker, or flat-panel), $225/lf for base cabinets, and $125/lf for wall cabinets. A typical NYC kitchen ranges between $8,000 and $25,000+ depending on size, materials, and finishes.",
   },
   {
     q: "How long does a custom kitchen cabinetry project take in NYC?",
@@ -20,7 +24,7 @@ const faqs = [
   },
   {
     q: "Do you handle both kitchens and bathroom vanities?",
-    a: "Yes. Many clients who renovate bathrooms also upgrade their kitchens with our custom cabinetry solutions in Brooklyn, Manhattan, and Queens. We design both as a coordinated package so finishes, hardware, and woodwork stay consistent across your home.",
+    a: "Yes. Many clients who renovate bathrooms also upgrade their kitchens with our custom cabinetry solutions in Brooklyn, Manhattan, and Queens. We design both as a coordinated package — matching shaker, slim shaker, or flat-panel doors — so finishes, hardware, and woodwork stay consistent across your home.",
   },
   {
     q: "Which Brooklyn, Manhattan, and Queens neighborhoods do you serve?",

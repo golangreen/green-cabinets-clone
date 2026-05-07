@@ -26,7 +26,7 @@ const Index = () => {
         <title>Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY</title>
         <meta name="title" content="Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY" />
         <meta name="description" content="Custom kitchen cabinets in Brooklyn, Manhattan, and Queens since 2009. Premium bathroom vanities, closet systems & sustainable millwork for NYC homeowners, architects & developers. Free consultation: (718) 804-5488." />
-        <meta name="keywords" content="custom kitchen cabinets in Brooklyn, custom kitchen cabinets Manhattan, custom kitchen cabinets Queens, bathroom vanities NYC, custom cabinetry Brooklyn, kitchen cabinets New York, closet systems Brooklyn, cabinet maker Brooklyn, sustainable cabinets NYC" />
+        <meta name="keywords" content="custom kitchen cabinets in Brooklyn, custom kitchen cabinets Manhattan, custom kitchen cabinets Queens, shaker cabinets NYC, slim shaker cabinets, shaker kitchen cabinets Brooklyn, bathroom vanities NYC, custom cabinetry Brooklyn, kitchen cabinets New York, closet systems Brooklyn, cabinet maker Brooklyn, sustainable cabinets NYC" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
