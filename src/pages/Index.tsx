@@ -158,8 +158,14 @@ const Index = () => {
               },
               "availability": "https://schema.org/InStock",
               "itemCondition": "https://schema.org/NewCondition",
-              "seller": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com" }
+              "seller": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" }
             },
+            "review": [{
+              "@type": "Review",
+              "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5", "worstRating": "1" },
+              "author": { "@type": "Person", "name": "Rebecca M." },
+              "reviewBody": "Our co-op board is notoriously tough on contractors, but Green Cabinets handled the COI, alteration agreement, and freight elevator scheduling without us lifting a finger. Install was spotless."
+            }],
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": "5",
