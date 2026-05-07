@@ -48,40 +48,99 @@
     <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
     <meta name="twitter:image:alt" content="Sage green shaker kitchen cabinets with marble countertops in a Brooklyn brownstone — Green Cabinets NY" />
     
-    <!-- Business Schema -->
+    <!-- LocalBusiness Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
-      "name": "Green Cabinets",
+      "@id": "https://greencabinetsny.com",
+      "name": "Green Cabinets NY",
       "image": "https://greencabinetsny.com/og-image.jpg",
-      "description": "Premium custom cabinetry for kitchens, bathrooms, and storage solutions in Brooklyn, NYC.",
+      "logo": "https://greencabinetsny.com/og-image.jpg",
+      "description": "Premium custom kitchen cabinets, bathroom vanities, and closet systems in Brooklyn, NYC. Eco-friendly materials and expert craftsmanship since 2009.",
+      "url": "https://greencabinetsny.com",
+      "telephone": "+1-718-804-5488",
+      "email": "orders@greencabinetsny.com",
+      "priceRange": "$$-$$$",
+      "foundingDate": "2009",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "10 Montieth St",
+        "streetAddress": "1160 Broadway",
         "addressLocality": "Brooklyn",
         "addressRegion": "NY",
-        "postalCode": "11206",
+        "postalCode": "11221",
         "addressCountry": "US"
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 40.7128,
-        "longitude": -73.9352
+        "latitude": 40.6782,
+        "longitude": -73.9442
       },
-      "telephone": "+16465493955",
-      "email": "greencabinets@gmail.com",
-      "priceRange": "$$-$$$",
-      "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        "opens": "08:00",
-        "closes": "18:00"
-      },
-      "sameAs": [
-        "https://instagram.com/green_cabinets_"
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "08:00",
+          "closes": "18:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Saturday",
+          "opens": "09:00",
+          "closes": "15:00"
+        }
       ],
-      "foundingDate": "2009"
+      "sameAs": ["https://www.instagram.com/greencabinetsny"],
+      "areaServed": [
+        { "@type": "City", "name": "Brooklyn" },
+        { "@type": "City", "name": "Manhattan" },
+        { "@type": "City", "name": "Queens" }
+      ]
+    }
+    </script>
+
+    <!-- FAQ Schema (static fallback for crawlers) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What makes your custom kitchen cabinets in Brooklyn, Manhattan, and Queens different?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Every project starts with a free in-home consultation across Brooklyn, Manhattan, Queens, and the wider New York area. Our custom kitchen cabinetry is designed, built, and finished in our Bushwick shop using FSC-certified hardwoods, low-VOC finishes, and European hardware." }
+        },
+        {
+          "@type": "Question",
+          "name": "How much do custom kitchen cabinets in Brooklyn, Manhattan, and Queens cost?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Pricing for our custom cabinetry solutions in Brooklyn, Manhattan, and Queens typically runs $350 per linear foot for full kitchens and vanities, $225/lf for base cabinets, and $125/lf for wall cabinets. A typical NYC kitchen ranges between $8,000 and $25,000+." }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does a custom kitchen cabinetry project take in NYC?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Most projects take 4–6 weeks: 1–2 weeks for design, 2–3 weeks of in-shop fabrication, and 3–7 days for installation in your Brooklyn, Manhattan, or Queens home." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you handle both kitchens and bathroom vanities?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Many clients who renovate bathrooms also upgrade their kitchens with our custom cabinetry solutions in Brooklyn, Manhattan, and Queens, designed as a coordinated package." }
+        },
+        {
+          "@type": "Question",
+          "name": "Where do you source your materials?",
+          "acceptedAnswer": { "@type": "Answer", "text": "FSC-certified hardwoods from Northeast mills, formaldehyde-free plywood cores, NYC-area stone slabs, Blum and Hettich hardware, and low-VOC conversion varnish finishes." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you provide Certificates of Insurance (COIs) for condo and co-op buildings?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. We carry general liability, workers' comp, and umbrella coverage and routinely issue building-specific COIs and alteration agreements within 48 hours for NYC condos and co-ops." }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Brooklyn, Manhattan, and Queens neighborhoods do you serve?",
+          "acceptedAnswer": { "@type": "Answer", "text": "We work throughout Brooklyn — Park Slope, Williamsburg, DUMBO, Brooklyn Heights, Carroll Gardens, Bushwick — across Manhattan (Tribeca, SoHo, West Village, Upper East Side, Upper West Side, Harlem), and Queens (Long Island City, Astoria, Forest Hills), plus the greater NYC metro area." }
+        }
+      ]
     }
     </script>
     
