@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -161,6 +162,7 @@ export default function Designer() {
         <meta name="description" content="Design your dream kitchen layout with our interactive room designer. Draw walls, add doors and windows, and visualize your custom cabinet project." />
         <link rel="canonical" href="https://greencabinetsny.com/designer" />
       </Helmet>
+      <BreadcrumbSchema items={[{ name: "Home", url: "/" }, { name: "Room Designer", url: "/designer" }]} />
       {/* Top Navigation Bar */}
       <div className="flex items-center justify-between px-4 py-3 bg-[#0d0d0d] border-b border-gray-800">
         <div className="flex items-center gap-6 flex-1">

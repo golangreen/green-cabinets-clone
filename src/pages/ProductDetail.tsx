@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -71,6 +72,13 @@ export default function ProductDetail() {
         <meta property="og:description" content={product.node.description?.substring(0, 160) || `Shop ${product.node.title} from Green Cabinets.`} />
         <meta property="og:type" content="product" />
       </Helmet>
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Shop", url: "/shop" },
+          { name: product.node.title, url: `/product/${handle}` },
+        ]}
+      />
       <Header />
       <main className="flex-1 py-6 sm:py-8 md:py-12">
         <div className="container mx-auto px-4">

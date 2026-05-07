@@ -1,5 +1,6 @@
 import { useParams, Navigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { MapPin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -70,6 +71,7 @@ const Borough = () => {
         <script type="application/ld+json">{JSON.stringify(serviceJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>
+      <BreadcrumbSchema items={[{ name: "Home", url: "/" }, { name: borough.name, url: borough.url }]} />
 
       <Header />
 

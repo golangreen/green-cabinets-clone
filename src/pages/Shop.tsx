@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ShopProducts } from "@/components/ShopProducts";
@@ -50,6 +51,7 @@ const Shop = () => {
         <meta name="description" content="Shop premium cabinet hardware, handles, and accessories from Green Cabinets. Quality products for your custom kitchen and bathroom projects." />
         <link rel="canonical" href="https://greencabinetsny.com/shop" />
       </Helmet>
+      <BreadcrumbSchema items={[{ name: "Home", url: "/" }, { name: "Shop", url: "/shop" }]} />
       <Header />
       <PromoBanner />
       <main className="flex-1 pt-24 sm:pt-28 md:pt-32">
