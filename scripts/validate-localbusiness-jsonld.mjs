@@ -224,7 +224,22 @@ function main() {
     }
   }
 
-  // ---------- Errors / Warnings ----------
+  // ---------- HowTo Summary ----------
+  if (howtos.length) {
+    const pad2 = (s, w) => String(s).padEnd(w);
+    for (const h of howtos) {
+      console.log(`\n=== HowTo: ${h.name || "(unnamed)"} ===`);
+      const w = [3, 36, 70];
+      console.log(pad2("#", w[0]) + pad2("step", w[1]) + "text");
+      console.log("-".repeat(w.reduce((a, b) => a + b, 0)));
+      (h.step || []).forEach((s, i) => {
+        const txt = (s.text || "").length > 67 ? s.text.slice(0, 64) + "…" : (s.text || "—");
+        console.log(pad2(String(i + 1), w[0]) + pad2((s.name || "—").slice(0, 35), w[1]) + txt);
+      });
+      if (h.totalTime) console.log(`totalTime: ${h.totalTime}`);
+    }
+  }
+
   if (warnings.length) {
     console.log(`\n⚠ ${warnings.length} warning(s):`);
     warnings.forEach((w) => console.log(`  - ${w}`));
