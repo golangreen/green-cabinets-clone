@@ -26,6 +26,8 @@ export interface NeighborhoodSeo {
   faqs: NeighborhoodFaq[];
   /** Lat/lng for LocalBusiness JSON-LD areaServed. */
   geo: { latitude: number; longitude: number };
+  /** Real Green Cabinets project photos shown on the neighborhood page. Files live in src/assets/gallery/. */
+  gallery: { file: string; caption: string }[];
 }
 
 const BASE = "https://greencabinetsny.com";
