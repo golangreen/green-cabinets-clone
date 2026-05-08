@@ -83,11 +83,11 @@ const Hero = () => {
 
   return (
     <>
-      {/* Hero Text Section */}
-      <section className="bg-background pt-28 pb-16 sm:py-24 md:py-36">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-6 text-foreground">
-            Custom Kitchen & Bathroom Millwork
+      {/* Hero Text Section - min-heights reserve space to prevent CLS during font swap */}
+      <section className="bg-background pt-28 pb-16 sm:py-24 md:py-36 min-h-[360px] sm:min-h-[420px] md:min-h-[560px] flex items-center">
+        <div className="container mx-auto px-4 text-center w-full">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-6 text-foreground min-h-[3em] sm:min-h-[2.4em] md:min-h-[2.4em] flex items-center justify-center">
+            <span>Custom Kitchen &amp; Bathroom Millwork</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
             Premier sustainable custom kitchen cabinets in Brooklyn, Manhattan, and Queens. Designed and built in Bushwick for homeowners and developers across NYC.
@@ -98,22 +98,29 @@ const Hero = () => {
       {/* Hero Image Carousel */}
       <section className="relative h-screen w-full overflow-hidden">
         {/* Background images with crossfade */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-muted">
           <img
             src={shuffledImages[currentImageIndex].src}
             alt={shuffledImages[currentImageIndex].alt}
+            width={1920}
+            height={1080}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
               isTransitioning ? 'opacity-0' : 'opacity-100'
             }`}
             loading="eager"
             fetchPriority="high"
+            decoding="async"
           />
           <img
             src={shuffledImages[getNextIndex()].src}
             alt={shuffledImages[getNextIndex()].alt}
+            width={1920}
+            height={1080}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
               isTransitioning ? 'opacity-100' : 'opacity-0'
             }`}
+            loading="eager"
+            decoding="async"
           />
         </div>
       </section>
