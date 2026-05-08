@@ -515,21 +515,13 @@ const Gallery = () => {
               )}
             </div>
           ))}
-        </div>
-
-        {/* Show All / Show Less Button */}
-        {filteredImages.length > 3 && (
-          <div className="flex justify-center mt-12">
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => setShowAllImages(!showAllImages)}
-              className="min-w-[200px]"
-            >
-              {showAllImages ? `Show Less` : `View All ${filteredImages.length} Images`}
-            </Button>
           </div>
-        )}
+          {filteredImages.length > 1 && (
+            <p className="mt-3 text-center text-xs text-muted-foreground md:hidden">
+              Swipe to browse {filteredImages.length} projects →
+            </p>
+          )}
+        </div>
       </div>
     </section>
   );
