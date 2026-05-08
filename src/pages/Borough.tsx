@@ -13,8 +13,14 @@ import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
 import { NEIGHBORHOODS } from "@/data/neighborhoodSeo";
 import Neighborhood from "@/pages/Neighborhood";
 
+const PREFIX = "custom-kitchen-cabinets-";
+
 const Borough = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { boroughPath } = useParams<{ boroughPath: string }>();
+  const slug =
+    boroughPath && boroughPath.startsWith(PREFIX)
+      ? boroughPath.slice(PREFIX.length)
+      : undefined;
   const borough = slug ? BOROUGHS[slug as BoroughSlug] : undefined;
   const neighborhood = slug ? NEIGHBORHOODS[slug] : undefined;
   const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
