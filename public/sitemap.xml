@@ -162,6 +162,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
+  <!-- Finishes & Colors -->
+  <url>
+    <loc>https://greencabinetsny.com/finishes-colors</loc>
+    <lastmod>2026-05-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <!-- Wood Species Guide -->
   <url>
     <loc>https://greencabinetsny.com/wood-species</loc>
