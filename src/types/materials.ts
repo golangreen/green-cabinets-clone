@@ -16,10 +16,16 @@ export interface MaterialPanel {
   category: string;
   /** Surface finish/texture used for filtering */
   finish: string;
-  /** ~220px square swatch (catalog thumbnail) */
+  /** ~220px square swatch (catalog thumbnail). Empty string if using swatchHex. */
   thumb: string;
-  /** Higher-resolution version for the modal/zoom */
+  /** Higher-resolution version for the modal/zoom. Empty string if using swatchHex. */
   hiRes: string;
   /** Link back to the manufacturer product page */
   detailUrl: string;
+  /**
+   * CSS color used as a fallback swatch when we don't host a hi-res image
+   * (e.g. Egger / Wilsonart, where we link out for the real photo).
+   * Can be a hex like "#ECECEA" or a CSS gradient string.
+   */
+  swatchHex?: string;
 }

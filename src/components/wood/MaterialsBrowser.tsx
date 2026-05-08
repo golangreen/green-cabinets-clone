@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { PANELS_BY_BRAND } from "@/data/finishes";
+import { PANELS_BY_BRAND, BRAND_FULL_CATALOG_URL } from "@/data/finishes";
 import type { MaterialBrand, MaterialPanel } from "@/types/materials";
 import { useFinishSelection } from "@/hooks/useFinishSelection";
 
@@ -62,13 +62,21 @@ function PanelCard({
         className="block w-full text-left focus:outline-none focus:ring-2 focus:ring-[#5C7650]"
       >
         <div className="aspect-square overflow-hidden bg-muted">
-          <img
-            src={panel.thumb}
-            alt={`${panel.brand} ${panel.name} panel sample`}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+          {panel.thumb ? (
+            <img
+              src={panel.thumb}
+              alt={`${panel.brand} ${panel.name} panel sample`}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div
+              className="w-full h-full group-hover:scale-105 transition-transform duration-500"
+              style={{ background: panel.swatchHex ?? "#ddd" }}
+              aria-label={`${panel.name} approximate color swatch`}
+            />
+          )}
         </div>
         <div className="p-2.5 space-y-1">
           <h4 className="text-sm font-semibold text-[#1a1a1a] line-clamp-1">
@@ -108,14 +116,25 @@ function PanelModal({
         </DialogHeader>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="aspect-square overflow-hidden rounded-lg bg-muted">
-            <img
-              src={panel.hiRes}
-              alt={`${panel.name} hi-res panel`}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = panel.thumb;
-              }}
-            />
+            {panel.hiRes ? (
+              <img
+                src={panel.hiRes}
+                alt={`${panel.name} hi-res panel`}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = panel.thumb;
+                }}
+              />
+            ) : (
+              <div
+                className="w-full h-full flex items-center justify-center text-xs text-white/80"
+                style={{ background: panel.swatchHex ?? "#ddd" }}
+              >
+                <span className="bg-black/30 px-2 py-1 rounded">
+                  Approx. color — see live photo on {panel.brand}
+                </span>
+              </div>
+            )}
           </div>
           <div className="space-y-3 text-sm">
             <div>
@@ -212,8 +231,27 @@ function BrandPanel({ brand }: { brand: MaterialBrand }) {
     );
   }
 
+  const fullCatalogUrl = BRAND_FULL_CATALOG_URL[brand];
+
   return (
     <div className="space-y-4">
+      {fullCatalogUrl && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-lg border border-[#5C7650]/30 bg-[#5C7650]/5 px-4 py-3">
+          <p className="text-sm text-[#1a1a1a]">
+            <span className="font-semibold">Curated picks below.</span>{" "}
+            <span className="text-[#555]">
+              These are the {brand} decors we order most for NYC kitchens — the brand offers many more.
+            </span>
+          </p>
+          <Button asChild variant="outline" size="sm" className="shrink-0 border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white">
+            <a href={fullCatalogUrl} target="_blank" rel="noopener noreferrer">
+              Browse full {brand} catalog
+              <ExternalLink className="ml-2 h-3.5 w-3.5" />
+            </a>
+          </Button>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
