@@ -95,12 +95,54 @@ const WoodSpecies = () => {
           </div>
         </section>
 
+        {/* Materials browser — top priority entry point */}
+        <section id="materials" className="py-14 sm:py-20 md:py-24 bg-[#5C7650] text-white">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+            <div className="grid md:grid-cols-[1.3fr_1fr] gap-8 items-center">
+              <div>
+                <p className="text-xs sm:text-sm uppercase tracking-widest text-white/80 font-semibold mb-2">
+                  Most Popular · Real Brand Catalog
+                </p>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                  Browse Every Finish &amp; Color
+                </h2>
+                <p className="text-base sm:text-lg text-white/90 mb-6 leading-relaxed">
+                  Real laminate, melamine, and veneer panels from Tafisa, Shinnoki, Egger,
+                  Wilsonart and AGT — with actual product codes. Save favorites, compare up
+                  to 4 side-by-side, and send your picks to us for pricing.
+                </p>
+                <Link
+                  to="/finishes-colors"
+                  className="inline-flex items-center gap-2 bg-white text-[#5C7650] hover:bg-white/90 font-semibold px-6 py-3 rounded-md transition-all hover:scale-105 hover:shadow-2xl"
+                >
+                  Open Finishes &amp; Colors
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  "#EFEAE0", "#B89970", "#5A3E2A",
+                  "#F1ECE2", "#8C8A85", "#1C1C1A",
+                  "#A8C8DD", "#5C7650", "#7A2A2A",
+                ].map((c, i) => (
+                  <span
+                    key={i}
+                    aria-hidden
+                    className="aspect-square rounded-md border border-white/20 shadow-md"
+                    style={{ backgroundColor: c }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Interactive compare */}
         <section className="py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-3">
-                Side-by-Side Comparison Tool
+                Solid Wood Side-by-Side Comparison
               </h2>
               <p className="text-[#555555] max-w-2xl mx-auto">
                 Pick two to four species and we will lay out their hardness, grain, cost tier, and
@@ -116,38 +158,13 @@ const WoodSpecies = () => {
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-3">
-                All Species at a Glance
+                All Solid Wood Species at a Glance
               </h2>
               <p className="text-[#555555] max-w-2xl mx-auto">
                 The headline numbers for every wood we work with. Tap any row for the deep dive.
               </p>
             </div>
             <WoodOverviewTable />
-          </div>
-        </section>
-
-        {/* Materials browser teaser — full browser lives at /finishes-colors */}
-        <section id="materials" className="py-12 sm:py-16 md:py-20 bg-[#f5f5f5]">
-          <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
-            <div className="text-center">
-              <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-2">
-                Beyond Solid Wood
-              </p>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-3">
-                Browse Every Finish &amp; Color
-              </h2>
-              <p className="text-[#555555] max-w-2xl mx-auto mb-6">
-                Explore real laminate, melamine, and veneer panels from Tafisa, Shinnoki, and
-                more. Save favorites, share with friends, and send your picks to us for pricing.
-              </p>
-              <Link
-                to="/finishes-colors"
-                className="inline-flex items-center gap-2 bg-[#5C7650] hover:bg-[#445339] text-white font-semibold px-6 py-3 rounded-md transition-all hover:scale-105 hover:shadow-2xl"
-              >
-                Browse Finishes &amp; Colors
-                <span aria-hidden>→</span>
-              </Link>
-            </div>
           </div>
         </section>
 
