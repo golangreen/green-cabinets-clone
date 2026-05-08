@@ -158,7 +158,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
 
       <Header />
 
-      <div className="pt-[88px] sm:pt-[112px] md:pt-[140px]">
+      <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
         <Breadcrumbs
           items={[
             { label: "Home", to: "/" },
