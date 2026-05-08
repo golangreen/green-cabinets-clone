@@ -1,6 +1,8 @@
 import { MapPin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { BOROUGH_LIST } from "@/data/boroughSeo";
+import NeighborhoodDialog from "@/components/NeighborhoodDialog";
 
 const scrollToId = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -9,6 +11,7 @@ const scrollToId = (id: string) => {
 const scrollToContact = () => scrollToId("contact");
 
 const NeighborhoodsServed = () => {
+  const [active, setActive] = useState<{ name: string; boroughSlug: string } | null>(null);
   return (
     <section
       id="neighborhoods"
@@ -85,12 +88,13 @@ const NeighborhoodsServed = () => {
                       key={n}
                       className="border-b border-background/60 pb-1"
                     >
-                      <Link
-                        to={boroughHref}
-                        className="text-[#1a1a1a] text-sm hover:text-primary transition-colors"
+                      <button
+                        type="button"
+                        onClick={() => setActive({ name: n, boroughSlug: borough.slug })}
+                        className="w-full text-left text-[#1a1a1a] text-sm hover:text-primary transition-colors"
                       >
                         {n}
-                      </Link>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -115,6 +119,12 @@ const NeighborhoodsServed = () => {
           })}
         </div>
       </div>
+
+      <NeighborhoodDialog
+        neighborhood={active?.name ?? null}
+        boroughSlug={active?.boroughSlug}
+        onClose={() => setActive(null)}
+      />
     </section>
   );
 };

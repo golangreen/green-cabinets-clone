@@ -1,5 +1,6 @@
 import { useParams, Navigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { useState } from "react";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { MapPin } from "lucide-react";
 import Header from "@/components/Header";
@@ -7,11 +8,13 @@ import Footer from "@/components/Footer";
 import CTA from "@/components/CTA";
 import Contact from "@/components/Contact";
 import Chatbot from "@/components/Chatbot";
+import NeighborhoodDialog from "@/components/NeighborhoodDialog";
 import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
 
 const Borough = () => {
   const { slug } = useParams<{ slug: string }>();
   const borough = slug ? BOROUGHS[slug as BoroughSlug] : undefined;
+  const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
 
   if (!borough) return <Navigate to="/" replace />;
 
@@ -110,12 +113,13 @@ const Borough = () => {
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {borough.neighborhoods.map((n) => (
               <li key={n}>
-                <Link
-                  to={`/#borough-${borough.slug}`}
-                  className="block bg-background rounded-lg px-4 py-3 text-center text-[#1a1a1a] font-medium hover:text-primary transition-colors"
+                <button
+                  type="button"
+                  onClick={() => setActiveNeighborhood(n)}
+                  className="w-full block bg-background rounded-lg px-4 py-3 text-center text-[#1a1a1a] font-medium hover:text-primary transition-colors"
                 >
                   {n}
-                </Link>
+                </button>
               </li>
             ))}
           </ul>
@@ -162,6 +166,12 @@ const Borough = () => {
       <CTA />
       <Footer />
       <Chatbot />
+
+      <NeighborhoodDialog
+        neighborhood={activeNeighborhood}
+        boroughSlug={borough.slug}
+        onClose={() => setActiveNeighborhood(null)}
+      />
     </div>
   );
 };
