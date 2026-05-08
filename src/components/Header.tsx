@@ -121,6 +121,9 @@ const Header = () => {
                     <a href="/shop" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                       Shop
                     </a>
+                    <a href="/finishes-colors" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                      Finishes &amp; Colors
+                    </a>
                     <a href="#services" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                       Services
                     </a>
