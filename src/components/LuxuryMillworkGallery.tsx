@@ -89,12 +89,12 @@ const LuxuryMillworkGallery = () => {
         </div>
 
         <div className="-mx-6">
-          <div className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none px-6 pb-4 [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.5rem]">
+          <div className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-proximity scrollbar-none px-6 pb-4 [-webkit-overflow-scrolling:touch] [scroll-padding-inline-start:1.5rem] md:[scroll-padding-inline-start:2rem] [scroll-snap-stop:normal] overscroll-x-contain">
             {filtered.map((item, i) => (
               <button
                 key={item.src}
                 onClick={() => setOpenIndex(i)}
-                className="group relative overflow-hidden rounded-xl aspect-[4/3] bg-card focus:outline-none focus:ring-2 focus:ring-primary snap-start shrink-0 w-[78vw] sm:w-[48vw] md:w-[36vw] lg:w-[28vw]"
+                className="group relative overflow-hidden rounded-xl aspect-[4/3] bg-card focus:outline-none focus:ring-2 focus:ring-primary snap-start md:snap-start shrink-0 w-[80vw] sm:w-[48vw] md:w-[36vw] lg:w-[28vw] scroll-ml-6 md:scroll-ml-8"
                 aria-label={`Open image: ${item.alt}`}
               >
                 <img
