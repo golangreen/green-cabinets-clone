@@ -160,9 +160,20 @@ const WoodSpecies = () => {
         {/* Species cards */}
         <section className="py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-8 text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 text-center">
               Browse Every Species
             </h2>
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {WOOD_SPECIES.map((w) => (
+                <a
+                  key={w.slug}
+                  href={`#${w.slug}`}
+                  className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white transition-colors"
+                >
+                  {w.name}
+                </a>
+              ))}
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {WOOD_SPECIES.map((w) => (
                 <Link
