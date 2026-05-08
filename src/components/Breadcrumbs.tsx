@@ -19,30 +19,30 @@ const Breadcrumbs = ({ items }: Props) => (
     aria-label="Breadcrumb"
     className="sticky top-[88px] sm:top-[112px] md:top-[140px] z-30 bg-background/95 backdrop-blur border-b border-border"
   >
-    <div className="container mx-auto px-6 max-w-5xl py-3">
-      <ol className="flex flex-wrap items-center gap-1.5 text-sm text-[#555555]">
+    <div className="container mx-auto px-4 sm:px-6 max-w-5xl py-2 sm:py-3">
+      <ol className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#555555] overflow-x-auto whitespace-nowrap scrollbar-none -mx-1 px-1">
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (
-            <li key={`${item.label}-${i}`} className="flex items-center gap-1.5">
+            <li key={`${item.label}-${i}`} className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               {item.to && !isLast ? (
                 <Link
                   to={item.to}
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary transition-colors inline-flex items-center min-h-[40px] px-1 -mx-1"
                 >
                   {item.label}
                 </Link>
               ) : (
                 <span
                   aria-current={isLast ? "page" : undefined}
-                  className={isLast ? "font-semibold text-[#1a1a1a]" : ""}
+                  className={`inline-flex items-center min-h-[40px] px-1 -mx-1 ${isLast ? "font-semibold text-[#1a1a1a]" : ""}`}
                 >
                   {item.label}
                 </span>
               )}
               {!isLast && (
                 <ChevronRight
-                  className="w-4 h-4 text-[#999999]"
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#999999] shrink-0"
                   aria-hidden="true"
                 />
               )}
