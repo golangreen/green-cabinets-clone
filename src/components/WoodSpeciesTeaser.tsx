@@ -11,7 +11,7 @@ const FEATURED = ["maple", "white-oak", "walnut", "cherry"];
 const WoodSpeciesTeaser = () => {
   const featured = WOOD_SPECIES.filter((w) => FEATURED.includes(w.slug));
   return (
-    <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#d5d5d5]/40">
+    <section className="py-16 sm:py-20 md:py-24 bg-[#d5d5d5]/40">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         <div className="text-center mb-10 space-y-3">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold">
