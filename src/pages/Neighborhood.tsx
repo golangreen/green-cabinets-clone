@@ -34,6 +34,19 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
   const borough = BOROUGHS[n.boroughSlug];
   const boroughHref = `/custom-kitchen-cabinets-${n.boroughSlug}`;
   const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const lightboxImages = n.gallery
+    .map((item) => {
+      const src = resolveGallery(item.file);
+      if (!src) return null;
+      return {
+        src,
+        alt: `${item.caption} — Green Cabinets NY, custom cabinetry in ${n.name}, ${n.boroughName}`,
+        caption: item.caption,
+      };
+    })
+    .filter((x): x is { src: string; alt: string; caption: string } => x !== null);
 
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
