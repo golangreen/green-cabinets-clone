@@ -324,8 +324,7 @@ const Gallery = () => {
     : galleryImages.filter(img => img.category === activeCategory);
 
   // Limit to 3 images unless "Show All" is clicked
-  void displayedImages_unused;
-  const displayedImages = showAllImages ? filteredImages : filteredImages;
+  void showAllImages;
 
   const kitchens = galleryImages.filter(img => img.category === "kitchens");
   const vanities = galleryImages.filter(img => img.category === "vanities");
