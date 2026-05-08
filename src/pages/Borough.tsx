@@ -14,6 +14,7 @@ import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
 const Borough = () => {
   const { slug } = useParams<{ slug: string }>();
   const borough = slug ? BOROUGHS[slug as BoroughSlug] : undefined;
+  const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
 
   if (!borough) return <Navigate to="/" replace />;
 
