@@ -19,16 +19,18 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, X, Copy, Check, Mail, Send } from "lucide-react";
+import { Heart, X, Copy, Check, Mail, Send, Columns3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useFinishSelection, buildShareUrl } from "@/hooks/useFinishSelection";
 import { ALL_PANELS } from "@/data/finishes";
 import { supabase } from "@/integrations/supabase/client";
+import CompareDialog from "./CompareDialog";
 
 export const SelectionDrawer = () => {
   const { ids, remove, clear } = useFinishSelection();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [compareOpen, setCompareOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -178,12 +180,28 @@ export const SelectionDrawer = () => {
           ))}
         </div>
 
-        <button
-          onClick={clear}
-          className="mt-2 text-xs text-muted-foreground hover:text-destructive underline"
-        >
-          Clear all
-        </button>
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            disabled={picks.length < 2}
+            onClick={() => {
+              setOpen(false);
+              setCompareOpen(true);
+            }}
+            className="border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white disabled:opacity-50"
+          >
+            <Columns3 className="h-4 w-4 mr-1.5" />
+            Compare {picks.length >= 2 ? `(${Math.min(picks.length, 4)})` : ""}
+          </Button>
+          <button
+            onClick={clear}
+            className="text-xs text-muted-foreground hover:text-destructive underline"
+          >
+            Clear all
+          </button>
+        </div>
 
         <Tabs defaultValue="share" className="mt-6">
           <TabsList className="grid grid-cols-3 w-full">
@@ -281,6 +299,7 @@ export const SelectionDrawer = () => {
           </TabsContent>
         </Tabs>
       </SheetContent>
+      <CompareDialog open={compareOpen} onOpenChange={setCompareOpen} />
     </Sheet>
   );
 };
