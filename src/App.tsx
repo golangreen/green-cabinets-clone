@@ -22,6 +22,7 @@ import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
 import LegacyRedirect from "@/components/LegacyRedirect";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 
 const queryClient = new QueryClient();
@@ -70,6 +71,7 @@ const App = () => {
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <ScrollToTopButton />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
