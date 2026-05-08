@@ -119,6 +119,12 @@ const NeighborhoodsServed = () => {
           })}
         </div>
       </div>
+
+      <NeighborhoodDialog
+        neighborhood={active?.name ?? null}
+        boroughSlug={active?.boroughSlug}
+        onClose={() => setActive(null)}
+      />
     </section>
   );
 };
