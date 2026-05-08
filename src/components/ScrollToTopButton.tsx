@@ -7,17 +7,25 @@
  * preview) and can also fail when extra scroll containers exist.
  */
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { ArrowUp } from "lucide-react";
 
 const ScrollToTopButton = () => {
   const [visible, setVisible] = useState(false);
+  const { pathname } = useLocation();
+  // Only show the green scroll-to-top arrow on the Finishes & Colors page.
+  const enabled = pathname.startsWith("/finishes-colors");
 
   useEffect(() => {
+    if (!enabled) {
+      setVisible(false);
+      return;
+    }
     const onScroll = () => setVisible(window.scrollY > 400);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [enabled]);
 
   const scrollUp = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
