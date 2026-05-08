@@ -88,12 +88,13 @@ const NeighborhoodsServed = () => {
                       key={n}
                       className="border-b border-background/60 pb-1"
                     >
-                      <Link
-                        to={boroughHref}
-                        className="text-[#1a1a1a] text-sm hover:text-primary transition-colors"
+                      <button
+                        type="button"
+                        onClick={() => setActive({ name: n, boroughSlug: borough.slug })}
+                        className="w-full text-left text-[#1a1a1a] text-sm hover:text-primary transition-colors"
                       >
                         {n}
-                      </Link>
+                      </button>
                     </li>
                   ))}
                 </ul>
