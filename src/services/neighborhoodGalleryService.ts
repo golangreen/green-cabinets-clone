@@ -106,6 +106,26 @@ export const neighborhoodGalleryService = {
     return data as NeighborhoodGalleryItem;
   },
 
+  async bulkSetPublished(ids: string[], is_published: boolean): Promise<void> {
+    if (ids.length === 0) return;
+    const { error } = await supabase
+      .from("neighborhood_gallery")
+      .update({ is_published })
+      .in("id", ids);
+    if (error) throw error;
+  },
+
+  async bulkRemove(items: Pick<NeighborhoodGalleryItem, "id" | "storage_path">[]): Promise<void> {
+    if (items.length === 0) return;
+    const ids = items.map((i) => i.id);
+    const { error } = await supabase.from("neighborhood_gallery").delete().in("id", ids);
+    if (error) throw error;
+    const paths = items.map((i) => i.storage_path).filter(Boolean);
+    if (paths.length > 0) {
+      await supabase.storage.from(BUCKET).remove(paths);
+    }
+  },
+
   async remove(item: Pick<NeighborhoodGalleryItem, "id" | "storage_path">): Promise<void> {
     const { error } = await supabase.from("neighborhood_gallery").delete().eq("id", item.id);
     if (error) throw error;
