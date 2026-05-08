@@ -20,14 +20,16 @@ const Breadcrumbs = ({ items }: Props) => {
   const scrollerRef = useRef<HTMLOListElement>(null);
   const currentRef = useRef<HTMLLIElement>(null);
 
-  // Auto-scroll to the current (last) item on mount so users see where they are.
+  // Auto-scroll the current (last) crumb into view whenever the route changes.
+  const last = items[items.length - 1];
+  const currentKey = `${last?.label ?? ""}|${last?.to ?? ""}|${items.length}`;
   useEffect(() => {
     currentRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "nearest",
       inline: "end",
     });
-  }, [items]);
+  }, [currentKey]);
 
   return (
     <nav
