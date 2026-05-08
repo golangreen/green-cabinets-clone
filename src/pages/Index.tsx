@@ -74,6 +74,7 @@ const Index = () => {
       <Hero />
       <Services />
       <LuxuryMillwork />
+      <FinishesColorsSection />
       <LuxuryMillworkGallery />
       <QualityCraftsmanship />
       <Features />
