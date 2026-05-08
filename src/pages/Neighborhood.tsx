@@ -67,6 +67,9 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
     })
     .filter((x): x is { src: string; alt: string; caption: string } => x !== null);
 
+  const lightboxImages = [...dbGallery, ...staticGallery];
+  const hasGallery = lightboxImages.length > 0;
+
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
