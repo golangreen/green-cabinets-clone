@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { authService, chatService, ChatMessage } from "@/services";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,11 @@ const Chatbot = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  // Hide the chevron section-nav arrows on the Finishes & Colors page —
+  // it has its own sticky Back button + global ScrollToTopButton, so the
+  // extra arrows just clutter the corner on mobile.
+  const hideSectionNavArrows = pathname.startsWith("/finishes-colors");
 
   useEffect(() => {
     // Check authentication status using authService
@@ -165,7 +170,7 @@ const Chatbot = () => {
   return (
     <>
       {/* Scroll to Top Button */}
-      {!isOpen && (
+      {!isOpen && !hideSectionNavArrows && (
         <Button
           onClick={scrollToTop}
           className="fixed bottom-[140px] right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
@@ -185,7 +190,9 @@ const Chatbot = () => {
               setIsOpen(true);
             }
           }}
-          className="fixed bottom-[80px] right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
+          className={`fixed ${
+            hideSectionNavArrows ? "bottom-6" : "bottom-[80px]"
+          } right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white`}
           size="icon"
         >
           <MessageCircle className="h-4 w-4" />
@@ -193,7 +200,7 @@ const Chatbot = () => {
       )}
 
       {/* Scroll to Bottom Button */}
-      {!isOpen && (
+      {!isOpen && !hideSectionNavArrows && (
         <Button
           onClick={scrollPageToBottom}
           className="fixed bottom-6 right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
