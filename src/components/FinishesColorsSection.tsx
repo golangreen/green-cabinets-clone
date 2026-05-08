@@ -91,7 +91,7 @@ const FinishesColorsSection = () => {
           </div>
         ) : (
           <div
-            className="-mx-4 sm:-mx-6 overflow-x-auto scrollbar-none [-webkit-overflow-scrolling:touch] snap-x snap-mandatory"
+            className="-mx-4 sm:-mx-6 overflow-x-auto scrollbar-none scroll-smooth snap-x snap-mandatory [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] [scroll-snap-stop:always] [overscroll-behavior-x:contain]"
             aria-label={`${active} panel previews`}
           >
             <ul className="flex flex-nowrap gap-4 px-4 sm:px-6 pb-2">
