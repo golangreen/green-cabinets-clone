@@ -32,7 +32,7 @@ export interface NeighborhoodSeo {
 
 const BASE = "https://greencabinetsny.com";
 
-export const NEIGHBORHOODS: Record<string, NeighborhoodSeo> = {
+const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
   bushwick: {
     slug: "bushwick",
     name: "Bushwick",
