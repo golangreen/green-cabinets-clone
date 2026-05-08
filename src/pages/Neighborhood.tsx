@@ -203,7 +203,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
         </div>
       </section>
 
-      {n.gallery.length > 0 && (
+      {hasGallery && (
         <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
           <div className="container mx-auto px-6 max-w-6xl">
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-3 text-center">
@@ -214,34 +214,28 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
               one designed, milled, and hand-finished in our Bushwick shop.
             </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {n.gallery.map((item, idx) => {
-                const src = resolveGallery(item.file);
-                if (!src) return null;
-                const lightboxIdx = lightboxImages.findIndex((i) => i.src === src);
-                const alt = `${item.caption} — Green Cabinets NY, custom cabinetry in ${n.name}, ${n.boroughName}`;
-                return (
-                  <li key={item.file}>
-                    <button
-                      type="button"
-                      onClick={() => setLightboxIndex(lightboxIdx >= 0 ? lightboxIdx : idx)}
-                      aria-label={`View larger: ${item.caption}`}
-                      className="group block w-full text-left bg-[#d5d5d5] rounded-xl overflow-hidden shadow-sm transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                    >
-                      <div className="aspect-[4/3] w-full overflow-hidden">
-                        <img
-                          src={src}
-                          alt={alt}
-                          loading="lazy"
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-                      <p className="text-sm text-[#1a1a1a] px-4 py-3">
-                        {item.caption}
-                      </p>
-                    </button>
-                  </li>
-                );
-              })}
+              {lightboxImages.map((item, idx) => (
+                <li key={item.src}>
+                  <button
+                    type="button"
+                    onClick={() => setLightboxIndex(idx)}
+                    aria-label={`View larger: ${item.caption}`}
+                    className="group block w-full text-left bg-[#d5d5d5] rounded-xl overflow-hidden shadow-sm transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  >
+                    <div className="aspect-[4/3] w-full overflow-hidden">
+                      <img
+                        src={item.src}
+                        alt={item.alt}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <p className="text-sm text-[#1a1a1a] px-4 py-3">
+                      {item.caption}
+                    </p>
+                  </button>
+                </li>
+              ))}
             </ul>
             <div className="mt-10 text-center">
               <Link
