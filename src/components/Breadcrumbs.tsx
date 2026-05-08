@@ -17,7 +17,7 @@ interface Props {
 const Breadcrumbs = ({ items }: Props) => (
   <nav
     aria-label="Breadcrumb"
-    className="sticky top-[88px] sm:top-[112px] md:top-[140px] z-30 bg-background/95 backdrop-blur border-b border-border"
+    className="sticky top-[96px] sm:top-[128px] md:top-[160px] z-30 bg-background/95 backdrop-blur border-b border-border"
   >
     <div className="container mx-auto px-4 sm:px-6 max-w-5xl py-2 sm:py-3">
       <ol className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#555555] overflow-x-auto whitespace-nowrap scrollbar-none -mx-1 px-1">
