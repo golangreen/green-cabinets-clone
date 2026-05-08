@@ -110,6 +110,18 @@ export const BOROUGHS: Record<BoroughSlug, BoroughSeo> = {
       "Harlem",
       "Chelsea",
       "Financial District",
+      "East Village",
+      "Lower East Side",
+      "Greenwich Village",
+      "NoHo",
+      "Nolita",
+      "Gramercy",
+      "Murray Hill",
+      "Midtown",
+      "Hell's Kitchen",
+      "Morningside Heights",
+      "Washington Heights",
+      "Battery Park City",
     ],
     faqs: [
       {
