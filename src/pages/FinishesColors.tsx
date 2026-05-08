@@ -28,16 +28,18 @@ const FinishesColors = () => {
       <Header />
 
       <main className="pt-32 sm:pt-36 md:pt-40">
-        {/* Back link */}
-        <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-2 pb-4">
-          <button
-            type="button"
-            onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")}
-            className="inline-flex items-center gap-2 text-sm text-[#5C7650] hover:text-[#445339] font-medium transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </button>
+        {/* Back link — sticky on mobile so it's always reachable */}
+        <div className="sticky top-16 z-30 bg-background/85 backdrop-blur-md border-b border-border/40 md:static md:bg-transparent md:backdrop-blur-none md:border-0">
+          <div className="container mx-auto px-4 sm:px-6 max-w-7xl py-2 md:py-3">
+            <button
+              type="button"
+              onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")}
+              className="inline-flex items-center gap-2 text-sm text-[#5C7650] hover:text-[#445339] font-medium transition-colors active:scale-95"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </button>
+          </div>
         </div>
 
         {/* Hero */}
