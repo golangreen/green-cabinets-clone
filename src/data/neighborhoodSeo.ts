@@ -656,7 +656,102 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
   },
 };
 
+/**
+ * Real Green Cabinets project photography for each neighborhood. Captions describe
+ * the cabinetry style, not specific addresses (we don't tag photos by street).
+ * Files must exist in src/assets/gallery/.
+ */
+const GALLERIES: Record<string, NeighborhoodSeo["gallery"]> = {
+  bushwick: [
+    { file: "two-tone-kitchen-island.jpg", caption: "Two-tone shaker kitchen with custom island" },
+    { file: "kitchen-construction-two-tone-cabinets.jpeg", caption: "Two-tone cabinetry mid-install in our Bushwick shop" },
+    { file: "modern-kitchen-dark-island.jpg", caption: "Modern kitchen with deep-tone island" },
+    { file: "two-tone-kitchen-wide.jpg", caption: "Wide-format two-tone kitchen with painted base cabinets" },
+    { file: "contemporary-wood-cabinets.jpg", caption: "Natural wood contemporary cabinetry" },
+    { file: "dark-modern-kitchen.jpg", caption: "Dark modern kitchen, full custom build" },
+  ],
+  williamsburg: [
+    { file: "loft-kitchen-exposed-brick-natural-wood.jpeg", caption: "Loft kitchen with exposed brick and natural wood cabinetry" },
+    { file: "modern-white-wood-island-kitchen.jpg", caption: "Modern kitchen with white cabinets and wood island" },
+    { file: "contemporary-white-kitchen-marble-island.webp", caption: "Contemporary white kitchen with marble island" },
+    { file: "bright-kitchen-island.jpg", caption: "Bright loft kitchen with custom island" },
+    { file: "contemporary-white-gray-kitchen.jpeg", caption: "Two-tone gray and white contemporary kitchen" },
+    { file: "modern-kitchen-dark-island.jpg", caption: "Modern kitchen with dark island and integrated appliances" },
+  ],
+  "park-slope": [
+    { file: "classic-white-kitchen.jpg", caption: "Classic white shaker kitchen for a brownstone parlor floor" },
+    { file: "green-kitchen-marble-island.png", caption: "Sage green inset shaker kitchen with marble island" },
+    { file: "green-open-concept-kitchen.png", caption: "Open-concept green kitchen, brownstone renovation" },
+    { file: "kitchen-traditional.jpg", caption: "Traditional inset cabinetry with period detail" },
+    { file: "kitchen-fireplace.jpg", caption: "Brownstone kitchen with original fireplace integrated" },
+    { file: "white-kitchen-glass-pendants.jpeg", caption: "White inset kitchen with glass pendant lighting" },
+  ],
+  soho: [
+    { file: "marble-wood-kitchen-island.jpg", caption: "Loft kitchen with rift-cut white oak and marble island" },
+    { file: "modern-kitchen-dark-island.jpg", caption: "Two-tone loft kitchen with dark island" },
+    { file: "contemporary-wood-cabinets.jpg", caption: "Custom natural wood cabinetry for a SoHo loft" },
+    { file: "dark-modern-kitchen.jpg", caption: "Modern dark kitchen with integrated appliance fronts" },
+    { file: "two-tone-kitchen-wide.jpg", caption: "Wide-format two-tone loft kitchen" },
+    { file: "contemporary-white-kitchen-marble-island.webp", caption: "Contemporary white kitchen with full marble island" },
+  ],
+  "long-island-city": [
+    { file: "modern-white-wood-island-kitchen.jpg", caption: "Modern condo kitchen with wood island" },
+    { file: "white-kitchen-island-cabinets.jpg", caption: "White cabinetry condo kitchen with custom island" },
+    { file: "contemporary-white-gray-kitchen.jpeg", caption: "Contemporary gray-and-white condo kitchen" },
+    { file: "bright-kitchen-island.jpg", caption: "Bright open-plan condo kitchen" },
+    { file: "white-wood-island-side-view.jpg", caption: "Side view, white kitchen with wood island detail" },
+    { file: "contemporary-white-kitchen-marble-island.webp", caption: "Contemporary kitchen with marble waterfall island" },
+  ],
+  dumbo: [
+    { file: "loft-kitchen-exposed-brick-natural-wood.jpeg", caption: "DUMBO-style loft kitchen with exposed brick" },
+    { file: "marble-wood-kitchen-island.jpg", caption: "Loft kitchen with white oak and marble island" },
+    { file: "dark-modern-kitchen.jpg", caption: "Dark modern loft kitchen" },
+    { file: "two-tone-kitchen-island.jpg", caption: "Two-tone island in a converted warehouse loft" },
+    { file: "modern-kitchen-dark-island.jpg", caption: "Loft kitchen with dark island and integrated appliances" },
+    { file: "kitchen-construction-two-tone-cabinets.jpeg", caption: "Two-tone cabinetry mid-build in our shop" },
+  ],
+  "brooklyn-heights": [
+    { file: "classic-white-kitchen.jpg", caption: "Classic white inset shaker for a Brooklyn Heights townhouse" },
+    { file: "kitchen-traditional.jpg", caption: "Traditional cabinetry detailed to match historic trim" },
+    { file: "green-kitchen-marble-island.png", caption: "Heritage green kitchen with marble island" },
+    { file: "white-kitchen-glass-pendants.jpeg", caption: "White inset kitchen, pre-war co-op" },
+    { file: "kitchen-fireplace.jpg", caption: "Townhouse kitchen with restored fireplace" },
+    { file: "marble-countertop-kitchen.jpg", caption: "Painted shaker kitchen with full marble counters" },
+  ],
+  tribeca: [
+    { file: "marble-wood-kitchen-island.jpg", caption: "Tribeca loft kitchen with rift-cut oak and marble island" },
+    { file: "luxury-kitchen-marble-dining.jpeg", caption: "Luxury loft kitchen with full marble dining area" },
+    { file: "modern-kitchen-dark-island.jpg", caption: "Two-tone loft kitchen with dark island" },
+    { file: "contemporary-white-kitchen-marble-island.webp", caption: "Contemporary white kitchen with marble waterfall island" },
+    { file: "dark-modern-kitchen.jpg", caption: "Dark modern loft kitchen with integrated panels" },
+    { file: "loft-kitchen-exposed-brick-natural-wood.jpeg", caption: "Loft kitchen with exposed brick and natural wood" },
+  ],
+  "upper-east-side": [
+    { file: "classic-white-kitchen.jpg", caption: "Classic white inset shaker for a pre-war co-op" },
+    { file: "white-kitchen-glass-pendants.jpeg", caption: "Pre-war kitchen with glass pendants and inset cabinets" },
+    { file: "kitchen-traditional.jpg", caption: "Traditional inset cabinetry, painted hardwood" },
+    { file: "green-open-concept-kitchen.png", caption: "Heritage green inset kitchen for a classic six" },
+    { file: "marble-countertop-kitchen.jpg", caption: "Painted shaker kitchen with full marble counters" },
+    { file: "kitchen-fireplace.jpg", caption: "Pre-war kitchen with original architectural detail" },
+  ],
+  astoria: [
+    { file: "bright-kitchen-island.jpg", caption: "Bright family kitchen with custom island" },
+    { file: "classic-white-kitchen.jpg", caption: "Classic white shaker for an Astoria rowhouse" },
+    { file: "contemporary-white-gray-kitchen.jpeg", caption: "Two-tone gray-and-white contemporary kitchen" },
+    { file: "modern-white-wood-island-kitchen.jpg", caption: "Modern condo kitchen with wood island" },
+    { file: "white-kitchen-island-cabinets.jpg", caption: "White cabinetry kitchen with custom island" },
+    { file: "two-tone-kitchen-island.jpg", caption: "Two-tone shaker kitchen with painted island" },
+  ],
+};
+
+export const NEIGHBORHOODS: Record<string, NeighborhoodSeo> = Object.fromEntries(
+  Object.entries(RAW).map(([slug, data]) => [
+    slug,
+    { ...data, gallery: GALLERIES[slug] ?? [] },
+  ]),
+);
+
 export const NEIGHBORHOOD_LIST = Object.values(NEIGHBORHOODS);
 
-export const isNeighborhoodSlug = (slug: string): slug is keyof typeof NEIGHBORHOODS =>
-  slug in NEIGHBORHOODS;
+export const isNeighborhoodSlug = (slug: string): boolean => slug in NEIGHBORHOODS;
+
