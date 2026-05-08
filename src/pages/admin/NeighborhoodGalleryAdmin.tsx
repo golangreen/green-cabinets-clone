@@ -72,6 +72,7 @@ const NeighborhoodGalleryAdmin = () => {
     }
   });
   const [bulkBusy, setBulkBusy] = useState(false);
+  const [lastFailed, setLastFailed] = useState<{ ids: string[]; is_published: boolean } | null>(null);
 
   const toggleSelected = (id: string) => {
     setSelected((prev) => {
