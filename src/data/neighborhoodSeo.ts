@@ -342,6 +342,316 @@ export const NEIGHBORHOODS: Record<string, NeighborhoodSeo> = {
     ],
     geo: { latitude: 40.7447, longitude: -73.9485 },
   },
+
+  dumbo: {
+    slug: "dumbo",
+    name: "DUMBO",
+    boroughSlug: "brooklyn",
+    boroughName: "Brooklyn",
+    url: `${BASE}/custom-kitchen-cabinets-dumbo`,
+    title: "Custom Kitchen Cabinets in DUMBO, Brooklyn | Green Cabinets NY",
+    description:
+      "Custom kitchen cabinets for DUMBO loft conversions and waterfront condos. Built in our Bushwick shop. Co-op and condo board experience. (718) 804-5488.",
+    keywords:
+      "custom kitchen cabinets DUMBO, DUMBO loft kitchen, DUMBO cabinet maker, custom cabinetry DUMBO Brooklyn, DUMBO condo kitchen renovation, kitchen cabinets 11201",
+    heroTagline:
+      "Loft and waterfront condo kitchens, designed to live up to a DUMBO view.",
+    intro:
+      "DUMBO's converted warehouse condos have some of the highest ceilings, biggest windows, and most demanding clients in NYC. Our Bushwick shop is fifteen minutes away — close enough to handle DUMBO projects with the speed and care the buildings require.",
+    body: [
+      {
+        heading: "Cabinetry built for DUMBO loft conversions",
+        paragraphs: [
+          "Most DUMBO residences are converted 19th-century industrial buildings — Clocktower, J Condo, Sweeney, One Brooklyn Bridge Park, the Front Street and Water Street loft buildings. Ceilings of 11–14 feet, exposed brick, exposed timber, and oversized windows are the norm. The standard developer kitchen never does these spaces justice.",
+          "Our DUMBO kitchens use the height. We build double-stacked uppers (real cabinets above the standard 30-inch run, not decorative crown), oversized islands often 10–12 feet long with waterfall-edge stone, integrated panel-front refrigerators and dishwashers, and full-height pantry walls that read as architecture instead of cabinetry.",
+          "For DUMBO's design-forward owners we lean into rift-cut white oak, deep matte lacquer, hand-rubbed steel hardware, and two-tone palettes. Inset shaker stays popular for the brick-and-timber lofts; flat slab and integrated handle-less for the more polished waterfront condos.",
+        ],
+      },
+      {
+        heading: "Co-op and condo board work in DUMBO",
+        paragraphs: [
+          "Every DUMBO building has its own alteration agreement, and the larger ones — Clocktower, One Brooklyn Bridge Park, J Condo — have especially strict rules. We handle the full paperwork: certificates of insurance, contractor licensing, alteration agreements, lobby and elevator protection plans. Our installers are experienced with freight-elevator scheduling and the building-staff coordination that DUMBO renovations require.",
+        ],
+      },
+      {
+        heading: "DUMBO kitchen pricing",
+        paragraphs: [
+          "Custom kitchen cabinets in DUMBO start at $350 per linear foot. A typical DUMBO loft kitchen — island, pantry wall, integrated appliances — runs $20,000–$45,000+ depending on materials, hardware, and stone. Free in-home consultation, fixed quote, no design fee.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you handle DUMBO condo board approvals and COIs?",
+        answer:
+          "Yes. We provide certificates of insurance, contractor licensing, and alteration agreement paperwork for the major DUMBO loft and condo buildings — Clocktower, J Condo, One Brooklyn Bridge Park, Sweeney, and the Front Street and Water Street buildings.",
+      },
+      {
+        question: "Can you design around exposed brick and timber in a DUMBO loft?",
+        answer:
+          "Yes — historic-loft cabinetry is one of our specialties. We mount cabinets on French cleats or steel sub-frames so we never have to anchor heavily into 19th-century masonry, and we detail end panels to sit cleanly against exposed brick and timber columns.",
+      },
+      {
+        question: "How much does a DUMBO loft kitchen cost?",
+        answer:
+          "Cabinetry alone for a DUMBO loft kitchen typically runs $20,000–$45,000. Full renovation including stone, appliances, plumbing, and electrical usually falls $80,000–$200,000+ depending on scope.",
+      },
+      {
+        question: "How long does a DUMBO kitchen install take?",
+        answer:
+          "4–6 weeks total: 1–2 weeks design, 2–3 weeks fabrication in our Bushwick shop, and 5–10 days on site in DUMBO (longer than a typical Brooklyn project because of freight-elevator scheduling and building protection requirements).",
+      },
+    ],
+    geo: { latitude: 40.7033, longitude: -73.9881 },
+  },
+
+  "brooklyn-heights": {
+    slug: "brooklyn-heights",
+    name: "Brooklyn Heights",
+    boroughSlug: "brooklyn",
+    boroughName: "Brooklyn",
+    url: `${BASE}/custom-kitchen-cabinets-brooklyn-heights`,
+    title:
+      "Custom Kitchen Cabinets in Brooklyn Heights | Green Cabinets NY",
+    description:
+      "Custom kitchen cabinets for Brooklyn Heights brownstones, co-ops, and townhouses. Historic-district experience, white-glove install. (718) 804-5488.",
+    keywords:
+      "custom kitchen cabinets Brooklyn Heights, Brooklyn Heights cabinet maker, Brooklyn Heights brownstone kitchen, historic district cabinetry Brooklyn, kitchen cabinets 11201",
+    heroTagline:
+      "Heritage cabinetry for Brooklyn Heights brownstones and pre-war co-ops.",
+    intro:
+      "Brooklyn Heights was NYC's first designated Historic District (1965). Many of its 19th-century townhouses still have original moldings, plaster ceilings, and out-of-square corners — exactly the homes our shop was built to work in.",
+    body: [
+      {
+        heading: "Brownstone and townhouse cabinetry, done with care",
+        paragraphs: [
+          "Brooklyn Heights' housing stock — Greek Revival, Italianate, and Federal townhouses from the 1820s–1880s — is some of the oldest and best-preserved in NYC. Working in these homes is half cabinetry, half restoration. We mill custom face frames, crown profiles, and door details to match existing trim, and we work around plaster, original wood floors, and architectural detail without damaging them.",
+          "Most Brooklyn Heights kitchens we build are inset shaker, painted in heritage colors — deep forest green, navy, soft cream, off-white — with traditional bead detail, cup pulls, and visible hinges that read as period-appropriate hardware rather than modern fixtures.",
+        ],
+      },
+      {
+        heading: "Co-op and condo work in the Heights",
+        paragraphs: [
+          "For the larger Brooklyn Heights pre-war co-ops — including buildings on Pierrepont, Montague, Hicks, and Henry — we handle alteration agreements, COIs, and the full board approval process. The 9–10 ft ceilings in these classic-six layouts let us push uppers higher and add display rows that read as architecture.",
+        ],
+      },
+      {
+        heading: "Brooklyn Heights kitchen pricing",
+        paragraphs: [
+          "Custom kitchen cabinets in Brooklyn Heights run $350 per linear foot for full kitchens. Townhouse projects typically land $14,000–$28,000; co-op kitchens fall $10,000–$22,000. Free consultation, fixed quote, no design fee.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you work in the Brooklyn Heights Historic District?",
+        answer:
+          "Yes — regularly. Interior cabinetry generally does not require Landmarks approval, but we work carefully around original moldings, plaster, and historic finishes, and we'll coordinate with your architect if Landmarks review is needed for any structural change.",
+      },
+      {
+        question: "Can you match original Brooklyn Heights brownstone trim?",
+        answer:
+          "Yes. We mill custom face frames, crown moldings, and door profiles to match existing 19th-century trim. For especially detailed homes we'll bring molding samples back to our Bushwick shop and replicate the profile in house.",
+      },
+      {
+        question: "How much does a Brooklyn Heights kitchen renovation cost?",
+        answer:
+          "Cabinetry alone for a Brooklyn Heights brownstone or co-op typically runs $10,000–$28,000. Full renovation including stone, appliances, plumbing, and electrical usually lands $45,000–$110,000+ depending on scope.",
+      },
+      {
+        question: "Which Brooklyn Heights blocks do you serve?",
+        answer:
+          "All of Brooklyn Heights — the historic district from Atlantic Avenue to the Brooklyn Bridge, including Pierrepont, Montague, Hicks, Henry, Joralemon, Willow, and Columbia Heights. Zip code 11201.",
+      },
+    ],
+    geo: { latitude: 40.696, longitude: -73.9933 },
+  },
+
+  tribeca: {
+    slug: "tribeca",
+    name: "Tribeca",
+    boroughSlug: "manhattan",
+    boroughName: "Manhattan",
+    url: `${BASE}/custom-kitchen-cabinets-tribeca`,
+    title: "Custom Kitchen Cabinets in Tribeca, Manhattan | Green Cabinets NY",
+    description:
+      "Custom kitchen cabinets for Tribeca lofts and luxury condos. Cast-iron and column-aware design, white-glove install, board approval experience. (718) 804-5488.",
+    keywords:
+      "custom kitchen cabinets Tribeca, Tribeca loft kitchen, Tribeca cabinet maker, luxury kitchen cabinets Tribeca, custom cabinetry Tribeca Manhattan, kitchen cabinets 10013",
+    heroTagline:
+      "Tribeca loft kitchens, built with the precision a 14-foot ceiling deserves.",
+    intro:
+      "Tribeca has the highest concentration of cast-iron loft buildings in the world — and some of the most demanding kitchens we build. Column-free spans, 12–14 ft ceilings, and clients who notice every reveal.",
+    body: [
+      {
+        heading: "Cabinetry for Tribeca lofts and luxury condos",
+        paragraphs: [
+          "The classic Tribeca residence is a 2,500–5,000 sq ft loft in a converted 19th-century cast-iron warehouse — Franklin, White, Walker, Hudson, Greenwich, Reade, Duane. Long column-free spans let us design true 12–14 ft galley runs, oversized islands with seating for six, full-height pantry walls, and integrated appliance fronts that disappear into the cabinetry.",
+          "Tribeca clients tend to be experienced renovators with strong design opinions. Our work skews toward inset shaker in painted hardwood, slab in rift-cut white oak, and handle-less integrated styles in matte lacquer. Two-tone kitchens (deep navy or charcoal base, natural oak upper) are especially popular, often paired with hand-rubbed bronze or polished nickel hardware.",
+          "All cabinets are built in solid hardwood with conversion-varnish or two-component polyurethane finishes — durable enough for daily use in a kitchen that will see heavy entertaining.",
+        ],
+      },
+      {
+        heading: "Loft board and condo approvals in Tribeca",
+        paragraphs: [
+          "Tribeca lofts are almost always co-ops or condos with strict alteration agreements. We handle the full paperwork — COIs, contractor licensing, alteration agreements, building rules, lobby and elevator protection — for the major Tribeca loft buildings. Our installers are experienced with the freight-elevator scheduling and building-staff coordination Tribeca renovations require.",
+        ],
+      },
+      {
+        heading: "Tribeca kitchen pricing",
+        paragraphs: [
+          "Custom kitchen cabinets in Tribeca start at $350 per linear foot. A full Tribeca loft kitchen — island, pantry wall, integrated appliances, premium hardware — typically runs $25,000–$60,000+ depending on materials and finish complexity. Free design consultation, fixed quote.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you handle Tribeca loft co-op and condo board approvals?",
+        answer:
+          "Yes. We provide alteration agreement specs, certificates of insurance, contractor licensing, and the full paperwork required by Tribeca loft co-op and condo boards. We've worked in most of the major buildings on Franklin, White, Walker, Hudson, Greenwich, Reade, and Duane.",
+      },
+      {
+        question: "Can you design around cast-iron columns in a Tribeca loft?",
+        answer:
+          "Yes — column-aware design is standard for Tribeca. We measure each column individually and detail cabinetry around it, often using the column as a natural separator between kitchen and dining zones.",
+      },
+      {
+        question: "What does a Tribeca loft kitchen cost?",
+        answer:
+          "Cabinetry alone for a Tribeca loft kitchen typically runs $25,000–$60,000. Full renovation including stone, appliances, plumbing, electrical, and trades usually falls $100,000–$300,000+ depending on scope.",
+      },
+      {
+        question: "How long does a Tribeca kitchen install take?",
+        answer:
+          "4–7 weeks total: 1–2 weeks design, 2–3 weeks fabrication in our Bushwick shop, and 7–14 days on site in Tribeca (longer than a Brooklyn project because of freight-elevator scheduling and building protection requirements).",
+      },
+    ],
+    geo: { latitude: 40.7163, longitude: -74.0086 },
+  },
+
+  "upper-east-side": {
+    slug: "upper-east-side",
+    name: "Upper East Side",
+    boroughSlug: "manhattan",
+    boroughName: "Manhattan",
+    url: `${BASE}/custom-kitchen-cabinets-upper-east-side`,
+    title:
+      "Custom Kitchen Cabinets in the Upper East Side, NYC | Green Cabinets NY",
+    description:
+      "Custom kitchen cabinets for Upper East Side pre-war co-ops and townhouses. Inset painted cabinetry, board-approved installs. (718) 804-5488.",
+    keywords:
+      "custom kitchen cabinets Upper East Side, UES cabinet maker, Upper East Side pre-war kitchen, custom cabinetry UES, kitchen cabinets 10021 10028 10075 10128",
+    heroTagline:
+      "Pre-war Upper East Side kitchens, built to look like they have always been there.",
+    intro:
+      "The Upper East Side's pre-war co-ops are some of the most architecturally significant apartments in the country. Their classic-six layouts, 9–10 ft ceilings, and original detail are exactly what our inset painted cabinetry is built for.",
+    body: [
+      {
+        heading: "Pre-war co-op cabinetry, done correctly",
+        paragraphs: [
+          "Most Upper East Side kitchens we work in are in pre-war co-op buildings on Park, Fifth, Madison, Lexington, and East End — many built between 1900 and 1930 and still managed by the same boards that ran them seventy years ago. The original kitchens are typically tucked at the back of the apartment, often with an adjoining maid's room or service entrance.",
+          "Our work here focuses on inset shaker cabinets in painted hardwood — heritage colors like off-white, soft cream, deep navy, and forest green — with traditional bead detail, cup pulls, and visible hinges. We mill face frames and crown moldings to match existing apartment trim so the new kitchen reads as original to the building. Where the layout allows, we also convert former maid's rooms into full pantries with floor-to-ceiling cabinetry.",
+        ],
+      },
+      {
+        heading: "UES co-op and condo board experience",
+        paragraphs: [
+          "Upper East Side co-op boards are among the most demanding in the country. We provide alteration agreement specs, certificates of insurance, contractor licensing, lobby and elevator protection plans, and the full paperwork the larger buildings require. We've worked in pre-war co-ops on Park, Fifth, Madison, and East End — and we know the building managers and supers in many of them.",
+        ],
+      },
+      {
+        heading: "Upper East Side kitchen pricing",
+        paragraphs: [
+          "Custom kitchen cabinets in the Upper East Side start at $350 per linear foot. A typical UES classic-six kitchen runs $14,000–$32,000 depending on size, finish, and pantry scope. Townhouse projects can run higher. Free in-home consultation, fixed quote, no design fee.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you handle Upper East Side co-op board approvals?",
+        answer:
+          "Yes — daily. We provide alteration agreement specs, COIs, contractor licensing, lobby and elevator protection plans, and the full paperwork required by UES pre-war co-op boards.",
+      },
+      {
+        question: "Can you match original pre-war moldings and trim?",
+        answer:
+          "Yes. We mill custom face frames, crown moldings, and door profiles to match existing apartment trim — including the heavier crown and base details typical of pre-war Park and Fifth Avenue buildings.",
+      },
+      {
+        question: "Can you convert a maid's room into a pantry?",
+        answer:
+          "We've done dozens. Former maid's rooms become full walk-in pantries with floor-to-ceiling cabinetry, drawer banks, integrated lighting, and counter space for second prep zones.",
+      },
+      {
+        question: "Which Upper East Side blocks do you serve?",
+        answer:
+          "All of the Upper East Side — Lenox Hill, Carnegie Hill, Yorkville, the Gold Coast on Fifth and Park. Zip codes 10021, 10028, 10065, 10075, and 10128.",
+      },
+    ],
+    geo: { latitude: 40.7736, longitude: -73.9566 },
+  },
+
+  astoria: {
+    slug: "astoria",
+    name: "Astoria",
+    boroughSlug: "queens",
+    boroughName: "Queens",
+    url: `${BASE}/custom-kitchen-cabinets-astoria`,
+    title: "Custom Kitchen Cabinets in Astoria, Queens | Green Cabinets NY",
+    description:
+      "Custom kitchen cabinets for Astoria rowhouses, co-ops, and condos. Built in our nearby Brooklyn shop. Free in-home consultation. (718) 804-5488.",
+    keywords:
+      "custom kitchen cabinets Astoria, Astoria cabinet maker, Astoria Queens kitchen renovation, custom cabinetry Astoria, kitchen cabinets 11102 11103 11105 11106",
+    heroTagline:
+      "Astoria rowhouse, co-op, and condo kitchens — built for the way the neighborhood cooks.",
+    intro:
+      "Astoria has one of the most diverse food cultures in the country, and kitchens here have to work hard. Our Bushwick shop is twenty minutes away — close enough to handle Astoria projects with the same speed and care we bring to Brooklyn.",
+    body: [
+      {
+        heading: "Cabinetry built for how Astoria lives",
+        paragraphs: [
+          "Astoria's housing mix is unusually broad: brick attached rowhouses (most built 1920s–1940s), pre-war and post-war co-ops, two- and three-family homes, and a growing wave of new-construction condos. Each calls for a different cabinetry approach, and we build for all of them.",
+          "Many of our Astoria clients cook constantly — extended-family meals, multiple ovens, dedicated baking zones, large pantries. We design for that. Floor-to-ceiling pantries with deep pull-outs, double-oven configurations, oversized drawer banks for pots and serving pieces, and durable conversion-varnish finishes that hold up to daily use.",
+          "Style-wise, Astoria is a mix. Rowhouse owners often want classic shaker in painted hardwood; condo owners lean modern slab or handle-less integrated; pre-war co-op owners want inset cabinets that respect the building's age.",
+        ],
+      },
+      {
+        heading: "Rowhouse, co-op, and condo work",
+        paragraphs: [
+          "For Astoria rowhouses we typically open the kitchen up to the dining room, add a peninsula or small island, and push uppers to the ceiling for storage. For co-ops and condos — including buildings in 11102, 11103, 11105, and 11106 — we handle COIs, alteration agreements, and the typical board approval process.",
+        ],
+      },
+      {
+        heading: "Astoria kitchen cabinet pricing",
+        paragraphs: [
+          "Custom kitchen cabinets in Astoria run $350 per linear foot for full kitchens. Most Astoria rowhouse kitchens land $10,000–$22,000; co-op and condo kitchens fall $8,000–$18,000. Free in-home consultation, written fixed quote, no design fee.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you work in Astoria rowhouses and two-family homes?",
+        answer:
+          "Yes — these are some of our most common Astoria projects. We open kitchens up to dining rooms, add islands or peninsulas where space allows, and design floor-to-ceiling storage for the way Astoria families actually cook.",
+      },
+      {
+        question: "Do you handle Astoria co-op and condo board approvals?",
+        answer:
+          "Yes. We provide certificates of insurance, alteration agreement paperwork, and contractor licensing for Astoria co-op and condo buildings throughout 11102, 11103, 11105, and 11106.",
+      },
+      {
+        question: "How much does an Astoria kitchen cost?",
+        answer:
+          "Cabinetry alone for an Astoria kitchen typically runs $8,000–$22,000. Full renovation including stone, appliances, plumbing, and electrical usually lands $30,000–$70,000+ depending on scope.",
+      },
+      {
+        question: "Which Astoria areas do you serve?",
+        answer:
+          "All of Astoria — Old Astoria, Ditmars-Steinway, Astoria Heights, and the rowhouse and condo blocks throughout 11102, 11103, 11105, and 11106.",
+      },
+    ],
+    geo: { latitude: 40.772, longitude: -73.9302 },
+  },
 };
 
 export const NEIGHBORHOOD_LIST = Object.values(NEIGHBORHOODS);
