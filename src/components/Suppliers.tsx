@@ -11,6 +11,7 @@ import wilsonartLogo from "@/assets/logos/wilsonart-logo.png";
 import greenCabinetsLogo from "@/assets/logos/logo-color.svg";
 import eggerLogo from "@/assets/logos/egger-logo.png";
 import diamondApplianceLogo from "@/assets/logos/diamond-appliance-logo.png";
+import agtLogo from "@/assets/logos/agt-logo.png";
 
 interface Supplier {
   id: string;
