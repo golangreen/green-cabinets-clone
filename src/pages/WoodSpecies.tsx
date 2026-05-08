@@ -13,7 +13,7 @@ import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import WoodCompare from "@/components/wood/WoodCompare";
 import WoodOverviewTable from "@/components/wood/WoodOverviewTable";
-import MaterialsBrowser from "@/components/wood/MaterialsBrowser";
+
 import { WOOD_SPECIES } from "@/data/woodSpecies";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
