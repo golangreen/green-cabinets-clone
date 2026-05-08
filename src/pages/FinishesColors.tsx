@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import MaterialsBrowser from "@/components/wood/MaterialsBrowser";
 import SelectionDrawer from "@/components/wood/SelectionDrawer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
 const FinishesColors = () => {
   return (
@@ -28,6 +28,17 @@ const FinishesColors = () => {
       <Header />
 
       <main className="pt-32 sm:pt-36 md:pt-40">
+        {/* Back link */}
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-2 pb-4">
+          <Link
+            to="/#finishes-colors"
+            className="inline-flex items-center gap-2 text-sm text-[#5C7650] hover:text-[#445339] font-medium transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to home
+          </Link>
+        </div>
+
         {/* Hero */}
         <section className="bg-[#d5d5d5] py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
