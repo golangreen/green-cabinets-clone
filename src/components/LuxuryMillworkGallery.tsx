@@ -72,35 +72,39 @@ const LuxuryMillworkGallery = () => {
           </p>
         </div>
 
-        <div className="-mx-6 mb-10">
-          <div
-            role="tablist"
-            aria-label="Filter gallery by category"
-            className="flex flex-nowrap items-center gap-3 overflow-x-auto scrollbar-none px-6 py-1 [-webkit-overflow-scrolling:touch]"
-          >
-            {categories.map((c, idx) => {
-              const isActive = active === c;
-              return (
-                <div key={c} className="flex items-center gap-3 shrink-0">
-                  {idx > 0 && (
-                    <ChevronRight className="w-4 h-4 text-[#888888]" aria-hidden="true" />
-                  )}
-                  <button
-                    role="tab"
-                    aria-selected={isActive}
-                    onClick={() => setActive(c)}
-                    className={[
-                      "shrink-0 whitespace-nowrap text-base md:text-lg tracking-wide transition-colors duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm",
-                      isActive
-                        ? "text-[#1a1a1a] font-semibold"
-                        : "text-[#888888] font-normal hover:text-[#1a1a1a]",
-                    ].join(" ")}
-                  >
-                    {c}
-                  </button>
-                </div>
-              );
-            })}
+        <div className="sticky top-16 md:top-20 z-30 -mx-6 mb-10 py-3 bg-[#d5d5d5]/85 supports-[backdrop-filter]:bg-[#d5d5d5]/70 backdrop-blur-md border-b border-border/40">
+          <div className="relative">
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#d5d5d5] to-transparent z-10" aria-hidden="true" />
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#d5d5d5] to-transparent z-10" aria-hidden="true" />
+            <div
+              role="tablist"
+              aria-label="Filter gallery by category"
+              className="flex flex-nowrap items-center gap-3 md:gap-4 overflow-x-auto scrollbar-none px-6 py-1 [-webkit-overflow-scrolling:touch] md:justify-center"
+            >
+              {categories.map((c, idx) => {
+                const isActive = active === c;
+                return (
+                  <div key={c} className="flex items-center gap-3 md:gap-4 shrink-0">
+                    {idx > 0 && (
+                      <ChevronRight className="w-4 h-4 text-[#888888]" aria-hidden="true" />
+                    )}
+                    <button
+                      role="tab"
+                      aria-selected={isActive}
+                      onClick={() => setActive(c)}
+                      className={[
+                        "shrink-0 whitespace-nowrap text-base md:text-lg tracking-wide transition-colors duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm",
+                        isActive
+                          ? "text-[#1a1a1a] font-semibold"
+                          : "text-[#888888] font-normal hover:text-[#1a1a1a]",
+                      ].join(" ")}
+                    >
+                      {c}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
