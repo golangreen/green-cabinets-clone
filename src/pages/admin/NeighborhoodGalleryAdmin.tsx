@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -50,6 +51,18 @@ const NeighborhoodGalleryAdmin = () => {
   const [items, setItems] = useState<NeighborhoodGalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
+
+  const toggleSelected = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+  const clearSelected = () => setSelected(new Set());
 
   const refresh = async () => {
     try {
@@ -209,6 +222,63 @@ const NeighborhoodGalleryAdmin = () => {
     }
     return Array.from(map.entries());
   }, [filteredItems]);
+
+  const visibleIds = useMemo(() => filteredItems.map((i) => i.id), [filteredItems]);
+  const allVisibleSelected =
+    visibleIds.length > 0 && visibleIds.every((id) => selected.has(id));
+  const selectedCount = selected.size;
+
+  const selectAllVisible = () => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (allVisibleSelected) {
+        visibleIds.forEach((id) => next.delete(id));
+      } else {
+        visibleIds.forEach((id) => next.add(id));
+      }
+      return next;
+    });
+  };
+
+  const bulkSetPublished = async (is_published: boolean) => {
+    if (selected.size === 0) return;
+    setBulkBusy(true);
+    try {
+      await neighborhoodGalleryService.bulkSetPublished(Array.from(selected), is_published);
+      toast({ title: is_published ? `Published ${selected.size} photos` : `Unpublished ${selected.size} photos` });
+      clearSelected();
+      await refresh();
+    } catch (err) {
+      toast({
+        title: "Bulk update failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
+    } finally {
+      setBulkBusy(false);
+    }
+  };
+
+  const bulkDelete = async () => {
+    if (selected.size === 0) return;
+    if (!confirm(`Delete ${selected.size} photo${selected.size === 1 ? "" : "s"}? This cannot be undone.`)) return;
+    setBulkBusy(true);
+    try {
+      const targets = items.filter((i) => selected.has(i.id)).map((i) => ({ id: i.id, storage_path: i.storage_path }));
+      await neighborhoodGalleryService.bulkRemove(targets);
+      toast({ title: `Deleted ${targets.length} photos` });
+      clearSelected();
+      await refresh();
+    } catch (err) {
+      toast({
+        title: "Bulk delete failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
+    } finally {
+      setBulkBusy(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
@@ -412,6 +482,57 @@ const NeighborhoodGalleryAdmin = () => {
           </Select>
         </div>
 
+        {/* Bulk action bar */}
+        {filteredItems.length > 0 && (
+          <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-lg border border-border bg-muted/30">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="select-all-visible"
+                checked={allVisibleSelected}
+                onCheckedChange={selectAllVisible}
+              />
+              <Label htmlFor="select-all-visible" className="text-sm cursor-pointer">
+                {allVisibleSelected ? "Deselect all" : "Select all visible"}
+              </Label>
+            </div>
+            <span className="text-sm text-muted-foreground">
+              {selectedCount} selected
+            </span>
+            <div className="flex gap-2 ml-auto">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void bulkSetPublished(true)}
+                disabled={selectedCount === 0 || bulkBusy}
+              >
+                {bulkBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Eye className="w-4 h-4 mr-1" /> Publish</>}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void bulkSetPublished(false)}
+                disabled={selectedCount === 0 || bulkBusy}
+              >
+                <EyeOff className="w-4 h-4 mr-1" /> Unpublish
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void bulkDelete()}
+                disabled={selectedCount === 0 || bulkBusy}
+                className="text-destructive hover:text-destructive"
+              >
+                <Trash2 className="w-4 h-4 mr-1" /> Delete
+              </Button>
+              {selectedCount > 0 && (
+                <Button size="sm" variant="ghost" onClick={clearSelected} disabled={bulkBusy}>
+                  Clear
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+
         {loading ? (
           <div className="flex justify-center py-16">
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
@@ -434,6 +555,8 @@ const NeighborhoodGalleryAdmin = () => {
                       <SavedItemCard
                         key={item.id}
                         item={item}
+                        selected={selected.has(item.id)}
+                        onToggleSelect={() => toggleSelected(item.id)}
                         onChange={refresh}
                       />
                     ))}
@@ -451,9 +574,13 @@ const NeighborhoodGalleryAdmin = () => {
 const SavedItemCard = ({
   item,
   onChange,
+  selected,
+  onToggleSelect,
 }: {
   item: NeighborhoodGalleryItem;
   onChange: () => Promise<void> | void;
+  selected?: boolean;
+  onToggleSelect?: () => void;
 }) => {
   const { toast } = useToast();
   const [editing, setEditing] = useState(false);
@@ -522,9 +649,18 @@ const SavedItemCard = ({
   };
 
   return (
-    <Card className="overflow-hidden">
+    <Card className={`overflow-hidden ${selected ? "ring-2 ring-primary" : ""}`}>
       <div className="aspect-[4/3] bg-muted relative">
         <img src={item.image_url} alt={item.alt_text} className="w-full h-full object-cover" />
+        {onToggleSelect && (
+          <div className="absolute top-2 right-2 bg-background/90 backdrop-blur rounded-md p-1.5 flex items-center">
+            <Checkbox
+              checked={!!selected}
+              onCheckedChange={onToggleSelect}
+              aria-label="Select for bulk actions"
+            />
+          </div>
+        )}
         {!item.is_published && (
           <Badge variant="secondary" className="absolute top-2 left-2">
             Draft
