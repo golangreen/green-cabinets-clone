@@ -18,6 +18,7 @@ import LuxuryMillworkGallery from "@/components/LuxuryMillworkGallery";
 import QualityCraftsmanship from "@/components/QualityCraftsmanship";
 import Testimonials from "@/components/Testimonials";
 import WoodSpeciesTeaser from "@/components/WoodSpeciesTeaser";
+import FinishesColorsSection from "@/components/FinishesColorsSection";
 
 // Lazy load heavy components
 const Gallery = lazy(() => import("@/components/Gallery"));
@@ -73,6 +74,7 @@ const Index = () => {
       <Hero />
       <Services />
       <LuxuryMillwork />
+      <FinishesColorsSection />
       <LuxuryMillworkGallery />
       <QualityCraftsmanship />
       <Features />
