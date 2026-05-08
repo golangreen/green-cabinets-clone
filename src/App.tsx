@@ -22,6 +22,7 @@ import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
 import LegacyRedirect from "@/components/LegacyRedirect";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 
 const queryClient = new QueryClient();
