@@ -27,6 +27,50 @@ const WoodSpecies = () => {
     navigate(`/wood-species#${slug}`);
   };
 
+  // Scrollspy: track which species card is currently in view and highlight its chip.
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+  useEffect(() => {
+    const headerOffset = 160; // approximate fixed-header + chip-bar height
+    const visible = new Map<string, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            visible.set(entry.target.id, entry.intersectionRatio);
+          } else {
+            visible.delete(entry.target.id);
+          }
+        }
+        if (visible.size === 0) return;
+        // Pick the entry closest to the top of the viewport (below the header).
+        let bestId: string | null = null;
+        let bestTop = Infinity;
+        visible.forEach((_ratio, id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const top = el.getBoundingClientRect().top - headerOffset;
+          const distance = top >= 0 ? top : Math.abs(top) * 1.2;
+          if (distance < bestTop) {
+            bestTop = distance;
+            bestId = id;
+          }
+        });
+        setActiveSlug(bestId);
+      },
+      {
+        rootMargin: `-${headerOffset}px 0px -55% 0px`,
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      },
+    );
+
+    const els = WOOD_SPECIES
+      .map((w) => document.getElementById(w.slug))
+      .filter((el): el is HTMLElement => !!el);
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
