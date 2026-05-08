@@ -352,8 +352,7 @@ const Gallery = () => {
           ];
           return (
             <div className="sticky top-16 md:top-20 z-30 -mx-6 mb-10 md:mb-12 py-3 bg-muted/80 supports-[backdrop-filter]:bg-muted/60 backdrop-blur-md border-b border-border/40">
-              {/* Mobile: edge-to-edge horizontal scroll chip row with fade hints */}
-              <div className="md:hidden relative">
+              <div className="relative">
                 <div
                   className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-muted to-transparent z-10"
                   aria-hidden="true"
@@ -365,88 +364,32 @@ const Gallery = () => {
                 <div
                   role="tablist"
                   aria-label="Filter projects by category"
-                  className="flex flex-nowrap gap-2 overflow-x-auto scrollbar-none snap-x snap-mandatory px-4 py-1 [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem]"
+                  className="flex flex-nowrap items-center gap-3 md:gap-4 overflow-x-auto scrollbar-none px-6 py-1 [-webkit-overflow-scrolling:touch] md:justify-center"
                 >
-                  {filters.map((f) => {
+                  {filters.map((f, idx) => {
                     const isActive = activeCategory === f.key;
                     return (
-                      <button
-                        key={f.key}
-                        role="tab"
-                        aria-selected={isActive}
-                        onClick={() => {
-                          setActiveCategory(f.key);
-                          setShowAllImages(false);
-                        }}
-                        className={[
-                          "group relative shrink-0 snap-start inline-flex items-center px-4 py-2 rounded-full text-sm font-medium tracking-wide whitespace-nowrap border",
-                          "transition-all duration-300 ease-out active:scale-95",
-                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
-                          isActive
-                            ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
-                            : "bg-card/80 text-muted-foreground border-border/60 hover:text-foreground",
-                        ].join(" ")}
-                      >
-                        <span>{f.label}</span>
-                        {f.count !== null && (
-                          <span
-                            className={[
-                              "ml-2 inline-flex items-center justify-center text-[11px] font-semibold rounded-full px-1.5 min-w-[1.25rem] h-5 leading-none transition-colors",
-                              isActive
-                                ? "bg-primary-foreground/20 text-primary-foreground"
-                                : "bg-muted text-muted-foreground",
-                            ].join(" ")}
-                          >
-                            {f.count}
-                          </span>
+                      <div key={f.key} className="flex items-center gap-3 md:gap-4 shrink-0">
+                        {idx > 0 && (
+                          <ChevronRight className="w-4 h-4 text-muted-foreground/60" aria-hidden="true" />
                         )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Desktop: segmented pill container */}
-              <div className="hidden md:flex justify-center px-6">
-                <div
-                  role="tablist"
-                  aria-label="Filter projects by category"
-                  className="inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-card/80 backdrop-blur-sm border border-border/60 shadow-sm"
-                >
-                  {filters.map((f) => {
-                    const isActive = activeCategory === f.key;
-                    return (
-                      <button
-                        key={f.key}
-                        role="tab"
-                        aria-selected={isActive}
-                        onClick={() => {
-                          setActiveCategory(f.key);
-                          setShowAllImages(false);
-                        }}
-                        className={[
-                          "group relative shrink-0 px-5 py-2.5 rounded-full text-sm font-medium tracking-wide whitespace-nowrap",
-                          "transition-all duration-300 ease-out",
-                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                          isActive
-                            ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
-                        ].join(" ")}
-                      >
-                        <span>{f.label}</span>
-                        {f.count !== null && (
-                          <span
-                            className={[
-                              "ml-2 inline-flex items-center justify-center text-[11px] font-semibold rounded-full px-1.5 min-w-[1.25rem] h-5 leading-none transition-colors",
-                              isActive
-                                ? "bg-primary-foreground/20 text-primary-foreground"
-                                : "bg-muted text-muted-foreground group-hover:bg-background",
-                            ].join(" ")}
-                          >
-                            {f.count}
-                          </span>
-                        )}
-                      </button>
+                        <button
+                          role="tab"
+                          aria-selected={isActive}
+                          onClick={() => {
+                            setActiveCategory(f.key);
+                            setShowAllImages(false);
+                          }}
+                          className={[
+                            "shrink-0 whitespace-nowrap text-base md:text-lg tracking-wide transition-colors duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm",
+                            isActive
+                              ? "text-foreground font-semibold"
+                              : "text-muted-foreground font-normal hover:text-foreground",
+                          ].join(" ")}
+                        >
+                          {f.label}
+                        </button>
+                      </div>
                     );
                   })}
                 </div>
