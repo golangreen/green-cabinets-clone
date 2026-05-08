@@ -7,7 +7,7 @@
  * Other brands stubbed — same component renders them once data lands.
  */
 import { useMemo, useState } from "react";
-import { Search, ExternalLink } from "lucide-react";
+import { Search, ExternalLink, Heart, Plus, Check } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { PANELS_BY_BRAND } from "@/data/finishes";
 import type { MaterialBrand, MaterialPanel } from "@/types/materials";
+import { useFinishSelection } from "@/hooks/useFinishSelection";
 
 const BRANDS: { key: MaterialBrand; label: string }[] = [
   { key: "Tafisa", label: "Tafisa" },
