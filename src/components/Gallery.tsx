@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
 import bathroomMarble from "@/assets/gallery/bathroom-marble.jpg";
 import kitchenModernWhite from "@/assets/gallery/kitchen-modern-white.jpg";
 import kitchenFireplace from "@/assets/gallery/kitchen-fireplace.jpg";
