@@ -223,6 +223,63 @@ const NeighborhoodGalleryAdmin = () => {
     return Array.from(map.entries());
   }, [filteredItems]);
 
+  const visibleIds = useMemo(() => filteredItems.map((i) => i.id), [filteredItems]);
+  const allVisibleSelected =
+    visibleIds.length > 0 && visibleIds.every((id) => selected.has(id));
+  const selectedCount = selected.size;
+
+  const selectAllVisible = () => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (allVisibleSelected) {
+        visibleIds.forEach((id) => next.delete(id));
+      } else {
+        visibleIds.forEach((id) => next.add(id));
+      }
+      return next;
+    });
+  };
+
+  const bulkSetPublished = async (is_published: boolean) => {
+    if (selected.size === 0) return;
+    setBulkBusy(true);
+    try {
+      await neighborhoodGalleryService.bulkSetPublished(Array.from(selected), is_published);
+      toast({ title: is_published ? `Published ${selected.size} photos` : `Unpublished ${selected.size} photos` });
+      clearSelected();
+      await refresh();
+    } catch (err) {
+      toast({
+        title: "Bulk update failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
+    } finally {
+      setBulkBusy(false);
+    }
+  };
+
+  const bulkDelete = async () => {
+    if (selected.size === 0) return;
+    if (!confirm(`Delete ${selected.size} photo${selected.size === 1 ? "" : "s"}? This cannot be undone.`)) return;
+    setBulkBusy(true);
+    try {
+      const targets = items.filter((i) => selected.has(i.id)).map((i) => ({ id: i.id, storage_path: i.storage_path }));
+      await neighborhoodGalleryService.bulkRemove(targets);
+      toast({ title: `Deleted ${targets.length} photos` });
+      clearSelected();
+      await refresh();
+    } catch (err) {
+      toast({
+        title: "Bulk delete failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
+    } finally {
+      setBulkBusy(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
       <Helmet>
