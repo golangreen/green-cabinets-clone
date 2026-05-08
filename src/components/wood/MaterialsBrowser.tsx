@@ -231,8 +231,27 @@ function BrandPanel({ brand }: { brand: MaterialBrand }) {
     );
   }
 
+  const fullCatalogUrl = BRAND_FULL_CATALOG_URL[brand];
+
   return (
     <div className="space-y-4">
+      {fullCatalogUrl && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-lg border border-[#5C7650]/30 bg-[#5C7650]/5 px-4 py-3">
+          <p className="text-sm text-[#1a1a1a]">
+            <span className="font-semibold">Curated picks below.</span>{" "}
+            <span className="text-[#555]">
+              These are the {brand} decors we order most for NYC kitchens — the brand offers many more.
+            </span>
+          </p>
+          <Button asChild variant="outline" size="sm" className="shrink-0 border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white">
+            <a href={fullCatalogUrl} target="_blank" rel="noopener noreferrer">
+              Browse full {brand} catalog
+              <ExternalLink className="ml-2 h-3.5 w-3.5" />
+            </a>
+          </Button>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
