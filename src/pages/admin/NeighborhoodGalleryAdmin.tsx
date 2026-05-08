@@ -296,9 +296,31 @@ const NeighborhoodGalleryAdmin = () => {
     if (selected.size === 0) return;
     setBulkBusy(true);
     try {
-      await neighborhoodGalleryService.bulkSetPublished(Array.from(selected), is_published);
-      toast({ title: is_published ? `Published ${selected.size} photos` : `Unpublished ${selected.size} photos` });
-      clearSelected();
+      const { succeeded, failed } = await neighborhoodGalleryService.bulkSetPublished(
+        Array.from(selected),
+        is_published,
+      );
+      const verb = is_published ? "published" : "unpublished";
+      const Verb = is_published ? "Published" : "Unpublished";
+      if (failed.length === 0) {
+        toast({ title: `${Verb} ${succeeded.length} photo${succeeded.length === 1 ? "" : "s"}` });
+      } else if (succeeded.length === 0) {
+        toast({
+          title: `Failed to ${verb.slice(0, -2)} ${failed.length} photo${failed.length === 1 ? "" : "s"}`,
+          description: failed[0]?.error,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: `${Verb} ${succeeded.length}, ${failed.length} failed`,
+          description: failed[0]?.error
+            ? `First error: ${failed[0].error}`
+            : undefined,
+          variant: "destructive",
+        });
+      }
+      // Keep failed items selected so the user can retry
+      setSelected(new Set(failed.map((f) => f.id)));
       await refresh();
     } catch (err) {
       toast({

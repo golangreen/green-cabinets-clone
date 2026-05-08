@@ -106,13 +106,27 @@ export const neighborhoodGalleryService = {
     return data as NeighborhoodGalleryItem;
   },
 
-  async bulkSetPublished(ids: string[], is_published: boolean): Promise<void> {
-    if (ids.length === 0) return;
-    const { error } = await supabase
-      .from("neighborhood_gallery")
-      .update({ is_published })
-      .in("id", ids);
-    if (error) throw error;
+  async bulkSetPublished(
+    ids: string[],
+    is_published: boolean,
+  ): Promise<{ succeeded: string[]; failed: { id: string; error: string }[] }> {
+    const succeeded: string[] = [];
+    const failed: { id: string; error: string }[] = [];
+    if (ids.length === 0) return { succeeded, failed };
+    const results = await Promise.all(
+      ids.map(async (id) => {
+        const { error } = await supabase
+          .from("neighborhood_gallery")
+          .update({ is_published })
+          .eq("id", id);
+        return { id, error };
+      }),
+    );
+    for (const r of results) {
+      if (r.error) failed.push({ id: r.id, error: r.error.message });
+      else succeeded.push(r.id);
+    }
+    return { succeeded, failed };
   },
 
   async bulkRemove(items: Pick<NeighborhoodGalleryItem, "id" | "storage_path">[]): Promise<void> {
