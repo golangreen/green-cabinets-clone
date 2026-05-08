@@ -16,6 +16,11 @@ const Chatbot = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  // Hide the chevron section-nav arrows on the Finishes & Colors page —
+  // it has its own sticky Back button + global ScrollToTopButton, so the
+  // extra arrows just clutter the corner on mobile.
+  const hideSectionNavArrows = pathname.startsWith("/finishes-colors");
 
   useEffect(() => {
     // Check authentication status using authService
