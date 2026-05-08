@@ -190,7 +190,9 @@ const Chatbot = () => {
               setIsOpen(true);
             }
           }}
-          className="fixed bottom-[80px] right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
+          className={`fixed ${
+            hideSectionNavArrows ? "bottom-6" : "bottom-[80px]"
+          } right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white`}
           size="icon"
         >
           <MessageCircle className="h-4 w-4" />
