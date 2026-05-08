@@ -17,10 +17,11 @@ const Chatbot = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  // Hide the chevron section-nav arrows on the Finishes & Colors page —
-  // it has its own sticky Back button + global ScrollToTopButton, so the
-  // extra arrows just clutter the corner on mobile.
-  const hideSectionNavArrows = pathname.startsWith("/finishes-colors");
+  // Show the chevron section-nav arrows ONLY on the Finishes & Colors page.
+  // Everywhere else (home included) we rely on the global ScrollToTopButton,
+  // so the green arrows would just clutter the corner.
+  const showSectionNavArrows = pathname.startsWith("/finishes-colors");
+  const hideSectionNavArrows = !showSectionNavArrows;
 
   useEffect(() => {
     // Check authentication status using authService
