@@ -176,69 +176,74 @@ const Suppliers = () => {
   const [showCatalogSlideshow, setShowCatalogSlideshow] = useState(false);
 
   return (
-    <section id="suppliers" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
+    <section id="suppliers" className="py-16 sm:py-20 md:py-24 bg-background">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-12">
-          <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="font-display text-4xl sm:text-5xl font-bold text-[#1a1a1a] mb-4">
             Our Trusted Partners
           </h2>
-          <p className="text-lg text-[#666666] max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg text-[#666666] max-w-3xl mx-auto">
             We work with industry-leading suppliers to ensure the highest quality materials and hardware for your custom cabinetry.
           </p>
+          <p className="md:hidden text-xs text-[#888] mt-3">Swipe to browse {suppliers.length} partners →</p>
         </div>
+      </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {suppliers.map((supplier) => (
-            <div
-              key={supplier.id}
-              className="p-8 rounded-2xl bg-[#5C7650]/10 hover:bg-[#5C7650]/20 transition-all duration-300 cursor-pointer relative group"
-              onClick={() => {
-                if (supplier.website === "catalog") {
-                  setShowCatalogSlideshow(true);
+      <div
+        role="region"
+        aria-label="Suppliers carousel"
+        className="flex overflow-x-auto snap-x snap-mandatory gap-5 px-6 pb-4 scrollbar-none [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.5rem]"
+      >
+        {suppliers.map((supplier) => (
+          <div
+            key={supplier.id}
+            className="snap-start shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[24vw] max-w-[340px] p-6 rounded-2xl bg-[#5C7650]/10 hover:bg-[#5C7650]/20 transition-all duration-300 cursor-pointer relative group"
+            onClick={() => {
+              if (supplier.website === "catalog") {
+                setShowCatalogSlideshow(true);
+              } else {
+                setSelectedSupplier(supplier);
+              }
+            }}
+          >
+            <a
+              href={supplier.website !== "catalog" ? supplier.website : undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                if (supplier.website !== "catalog") {
+                  e.stopPropagation();
                 } else {
-                  setSelectedSupplier(supplier);
+                  e.preventDefault();
                 }
               }}
+              className="absolute top-3 right-3 text-[#666666] hover:text-[#1a1a1a] transition-colors z-10"
+              aria-label={`Visit ${supplier.name} website`}
             >
-              <a
-                href={supplier.website !== "catalog" ? supplier.website : undefined}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  if (supplier.website !== "catalog") {
-                    e.stopPropagation();
-                  } else {
-                    e.preventDefault();
-                  }
-                }}
-                className="absolute top-4 right-4 text-[#666666] hover:text-[#1a1a1a] transition-colors z-10"
-                aria-label={`Visit ${supplier.name} website`}
-              >
-                {supplier.website === "catalog" ? (
-                  <Image className="h-5 w-5" />
-                ) : (
-                  <ExternalLink className="h-5 w-5" />
-                )}
-              </a>
+              {supplier.website === "catalog" ? (
+                <Image className="h-5 w-5" />
+              ) : (
+                <ExternalLink className="h-5 w-5" />
+              )}
+            </a>
 
-              <div className="mb-6 bg-card rounded-xl p-6 h-32 flex items-center justify-center">
-                {supplier.logo ? (
-                  <img
-                    src={supplier.logo}
-                    alt={`${supplier.name} logo`}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                ) : (
-                  <span className="text-2xl font-bold text-[#1a1a1a]">{supplier.name}</span>
-                )}
-              </div>
-
-              <p className="text-[#666666] leading-relaxed">
-                {supplier.description}
-              </p>
+            <div className="mb-4 bg-card rounded-xl p-4 h-28 flex items-center justify-center">
+              {supplier.logo ? (
+                <img
+                  src={supplier.logo}
+                  alt={`${supplier.name} logo`}
+                  className="max-w-full max-h-full object-contain"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-[#1a1a1a]">{supplier.name}</span>
+              )}
             </div>
-          ))}
-        </div>
+
+            <p className="text-sm text-[#666666] leading-relaxed">
+              {supplier.description}
+            </p>
+          </div>
+        ))}
       </div>
 
       <Dialog open={!!selectedSupplier} onOpenChange={() => setSelectedSupplier(null)}>
