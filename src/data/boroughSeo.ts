@@ -46,6 +46,18 @@ export const BOROUGHS: Record<BoroughSlug, BoroughSeo> = {
       "Bushwick",
       "Greenpoint",
       "Cobble Hill",
+      "Bedford-Stuyvesant",
+      "Crown Heights",
+      "Fort Greene",
+      "Prospect Heights",
+      "Clinton Hill",
+      "Boerum Hill",
+      "Gowanus",
+      "Red Hook",
+      "Sunset Park",
+      "Bay Ridge",
+      "Flatbush",
+      "Windsor Terrace",
     ],
     faqs: [
       {
