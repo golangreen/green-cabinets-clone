@@ -231,7 +231,7 @@ function PanelModal({
   );
 }
 
-function BrandPanel({ brand }: { brand: MaterialBrand }) {
+export function BrandPanel({ brand }: { brand: MaterialBrand }) {
   const allPanels = PANELS_BY_BRAND[brand];
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("All");
