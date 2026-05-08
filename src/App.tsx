@@ -18,6 +18,7 @@ import Borough from "./pages/Borough";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
+import LegacyRedirect from "@/components/LegacyRedirect";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,12 @@ const App = () => {
                 <NeighborhoodGalleryAdmin />
               </AdminRoute>
             } />
+            {/* Legacy URL redirects → /custom-kitchen-cabinets-{slug} */}
+            <Route path="/neighborhoods/:slug" element={<LegacyRedirect />} />
+            <Route path="/neighborhood/:slug" element={<LegacyRedirect />} />
+            <Route path="/borough/:slug" element={<LegacyRedirect />} />
+            <Route path="/boroughs/:slug" element={<LegacyRedirect />} />
+            <Route path="/custom-kitchen-cabinets/:slug" element={<LegacyRedirect />} />
             <Route path="/:boroughPath" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
