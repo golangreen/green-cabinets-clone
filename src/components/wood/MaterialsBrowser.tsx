@@ -92,7 +92,9 @@ function PanelModal({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
+  const { ids, toggle } = useFinishSelection();
   if (!panel) return null;
+  const selected = ids.includes(panel.id);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl">
