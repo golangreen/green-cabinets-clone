@@ -12,6 +12,19 @@ import NeighborhoodDialog from "@/components/NeighborhoodDialog";
 import type { NeighborhoodSeo } from "@/data/neighborhoodSeo";
 import { BOROUGHS } from "@/data/boroughSeo";
 
+// Eagerly resolve every gallery asset URL once at build time.
+const GALLERY_ASSETS = import.meta.glob(
+  "@/assets/gallery/*.{jpg,jpeg,png,webp}",
+  { eager: true, import: "default", query: "?url" },
+) as Record<string, string>;
+
+const resolveGallery = (file: string): string | undefined => {
+  const match = Object.entries(GALLERY_ASSETS).find(([path]) =>
+    path.endsWith(`/${file}`),
+  );
+  return match?.[1];
+};
+
 interface Props {
   neighborhood: NeighborhoodSeo;
 }
