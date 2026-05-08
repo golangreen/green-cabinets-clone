@@ -317,6 +317,54 @@ export type Database = {
         }
         Relationships: []
       }
+      neighborhood_gallery: {
+        Row: {
+          address_note: string | null
+          ai_suggested: boolean
+          alt_text: string
+          caption: string
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string
+          is_published: boolean
+          neighborhood_slug: string
+          sort_order: number
+          storage_path: string
+          updated_at: string
+        }
+        Insert: {
+          address_note?: string | null
+          ai_suggested?: boolean
+          alt_text?: string
+          caption?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url: string
+          is_published?: boolean
+          neighborhood_slug: string
+          sort_order?: number
+          storage_path: string
+          updated_at?: string
+        }
+        Update: {
+          address_note?: string | null
+          ai_suggested?: boolean
+          alt_text?: string
+          caption?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string
+          is_published?: boolean
+          neighborhood_slug?: string
+          sort_order?: number
+          storage_path?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notification_settings: {
         Row: {
           created_at: string
