@@ -15,6 +15,8 @@ import NeighborhoodDialog from "@/components/NeighborhoodDialog";
 import GalleryLightbox from "@/components/GalleryLightbox";
 import type { NeighborhoodSeo } from "@/data/neighborhoodSeo";
 import { BOROUGHS } from "@/data/boroughSeo";
+import { getProjectsByNeighborhood } from "@/data/projects";
+import FeaturedProject from "@/components/projects/FeaturedProject";
 
 // Eagerly resolve every gallery asset URL once at build time.
 const GALLERY_ASSETS = import.meta.glob(
@@ -214,6 +216,28 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
           ))}
         </div>
       </section>
+
+      {(() => {
+        const featured = getProjectsByNeighborhood(n.slug);
+        if (featured.length === 0) return null;
+        return (
+          <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#f5f5f5]">
+            <div className="container mx-auto px-6 max-w-6xl">
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-3 text-center">
+                Featured {n.name} project{featured.length > 1 ? "s" : ""}
+              </h2>
+              <p className="text-center text-[#555555] mb-10 max-w-2xl mx-auto">
+                Real installs in {n.name} — with the exact materials and product codes we used, so you can replicate the look or order samples.
+              </p>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {featured.map((p) => (
+                  <FeaturedProject key={p.id} project={p} />
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {hasGallery && (
         <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
