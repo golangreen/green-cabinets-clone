@@ -175,6 +175,7 @@ const WoodSpecies = () => {
                 <a
                   key={w.slug}
                   href={`#${w.slug}`}
+                  onClick={goToSpecies(w.slug)}
                   className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white transition-colors"
                 >
                   {w.name}
