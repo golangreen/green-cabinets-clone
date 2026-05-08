@@ -159,6 +159,13 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
 
       <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
         <div className="container mx-auto px-6 max-w-4xl text-center">
+          <Link
+            to="/#neighborhoods"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-[#445339] transition-colors mb-6"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to all neighborhoods
+          </Link>
           <div className="inline-flex items-center gap-2 text-primary mb-4">
             <MapPin className="w-5 h-5" />
             <span className="font-semibold uppercase tracking-wide text-sm">
