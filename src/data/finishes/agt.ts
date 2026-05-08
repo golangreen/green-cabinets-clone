@@ -21,6 +21,6 @@ export const AGT_PANELS: MaterialPanel[] = [
     thumb: "",
     hiRes: "",
     swatchHex: "#EFEAE0",
-    detailUrl: "https://www.agt.com.tr/en/category/decors/",
+    detailUrl: "https://www.agtwood.com/products/panel/panel",
   },
 ];
