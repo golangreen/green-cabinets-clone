@@ -51,7 +51,17 @@ const NeighborhoodGalleryAdmin = () => {
   const [items, setItems] = useState<NeighborhoodGalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const SELECTION_KEY = "neighborhood-gallery-admin:selected";
+  const [selected, setSelected] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem(SELECTION_KEY);
+      if (!raw) return new Set();
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? new Set(arr.filter((x): x is string => typeof x === "string")) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
   const [bulkBusy, setBulkBusy] = useState(false);
 
   const toggleSelected = (id: string) => {
@@ -83,6 +93,30 @@ const NeighborhoodGalleryAdmin = () => {
   useEffect(() => {
     void refresh();
   }, []);
+
+  // Persist selection across reloads
+  useEffect(() => {
+    try {
+      localStorage.setItem(SELECTION_KEY, JSON.stringify(Array.from(selected)));
+    } catch {
+      /* ignore quota errors */
+    }
+  }, [selected]);
+
+  // Prune selected IDs that no longer exist after items refresh
+  useEffect(() => {
+    if (loading || items.length === 0) return;
+    const existing = new Set(items.map((i) => i.id));
+    setSelected((prev) => {
+      let changed = false;
+      const next = new Set<string>();
+      prev.forEach((id) => {
+        if (existing.has(id)) next.add(id);
+        else changed = true;
+      });
+      return changed ? next : prev;
+    });
+  }, [items, loading]);
 
   const handleFiles = async (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return;
