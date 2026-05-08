@@ -7,7 +7,7 @@
  * color family, finish, and a link to the manufacturer page. Each column
  * has a remove button so the user can swap picks without leaving the view.
  */
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,10 +17,12 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, X } from "lucide-react";
+import { ExternalLink, X, Copy, Check, Download } from "lucide-react";
 import { useFinishSelection } from "@/hooks/useFinishSelection";
 import { ALL_PANELS } from "@/data/finishes";
 import type { MaterialPanel } from "@/types/materials";
+import { useToast } from "@/hooks/use-toast";
+import { downloadComparePdf, buildCompareText } from "@/lib/finishComparePdf";
 
 const MAX_COMPARE = 4;
 
