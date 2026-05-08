@@ -12,15 +12,20 @@ import NeighborhoodDialog from "@/components/NeighborhoodDialog";
 import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
 import { NEIGHBORHOODS } from "@/data/neighborhoodSeo";
 import Neighborhood from "@/pages/Neighborhood";
+import NotFound from "@/pages/NotFound";
+
+const PREFIX = "custom-kitchen-cabinets-";
 
 const Borough = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { boroughPath } = useParams<{ boroughPath: string }>();
+  const hasPrefix = !!boroughPath && boroughPath.startsWith(PREFIX);
+  const slug = hasPrefix ? boroughPath!.slice(PREFIX.length) : undefined;
   const borough = slug ? BOROUGHS[slug as BoroughSlug] : undefined;
   const neighborhood = slug ? NEIGHBORHOODS[slug] : undefined;
   const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
 
   if (neighborhood) return <Neighborhood neighborhood={neighborhood} />;
-  if (!borough) return <Navigate to="/" replace />;
+  if (!borough) return <NotFound />;
 
   const faqJsonLd = {
     "@context": "https://schema.org",

@@ -51,7 +51,7 @@ const App = () => {
                 <NeighborhoodGalleryAdmin />
               </AdminRoute>
             } />
-            <Route path="/custom-kitchen-cabinets-:slug" element={<Borough />} />
+            <Route path="/:boroughPath" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
