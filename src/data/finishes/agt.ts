@@ -3,11 +3,11 @@
  * cabinet doors. We use specific AGT decors on real installs but only catalog
  * the ones our shop stocks samples of. Add more as we use them.
  *
- * Source: https://www.agt.com.tr/en/category/decors/
+ * Source: https://www.agtwood.com/products/panel/panel
  */
 import type { MaterialPanel } from "@/types/materials";
 
-export const AGT_CATALOG_URL = "https://www.agt.com.tr/en/category/decors/";
+export const AGT_CATALOG_URL = "https://www.agtwood.com/products/panel/panel";
 
 export const AGT_PANELS: MaterialPanel[] = [
   {
@@ -21,6 +21,6 @@ export const AGT_PANELS: MaterialPanel[] = [
     thumb: "",
     hiRes: "",
     swatchHex: "#EFEAE0",
-    detailUrl: "https://www.agt.com.tr/en/category/decors/",
+    detailUrl: "https://www.agtwood.com/products/panel/panel",
   },
 ];
