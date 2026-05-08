@@ -15,26 +15,32 @@ const HashScrollHandler = () => {
       return;
     }
 
-    const id = hash.replace("#", "");
+    const id = decodeURIComponent(hash.replace("#", ""));
     const start = performance.now();
-    const totalMs = 2500;
-    const extraGap = 16; // breathing room below the header
+    // Wait up to 8s for the target to appear (lazy routes + late images),
+    // then keep correcting for another ~2s of layout shifts after first hit.
+    const findDeadline = 8000;
+    const settleAfterFoundMs = 2500;
+    const extraGap = 16;
+    let firstFoundAt = 0;
     let lastTarget = -1;
     let stableCount = 0;
     let timer = 0;
+    let mo: MutationObserver | null = null;
 
     const getHeaderOffset = () => {
-      const header =
-        document.querySelector("header") as HTMLElement | null;
+      const header = document.querySelector("header") as HTMLElement | null;
       return (header?.getBoundingClientRect().height ?? 0) + extraGap;
     };
 
     const tick = () => {
       const el = document.getElementById(id);
+      const now = performance.now();
+
       if (el) {
+        if (!firstFoundAt) firstFoundAt = now;
         const offset = getHeaderOffset();
-        const target =
-          el.getBoundingClientRect().top + window.scrollY - offset;
+        const target = el.getBoundingClientRect().top + window.scrollY - offset;
 
         if (Math.abs(target - lastTarget) < 1) {
           stableCount++;
@@ -43,14 +49,35 @@ const HashScrollHandler = () => {
           lastTarget = target;
           window.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
         }
+
+        if (stableCount >= 4 || now - firstFoundAt > settleAfterFoundMs) {
+          mo?.disconnect();
+          return;
+        }
+      } else if (now - start > findDeadline) {
+        mo?.disconnect();
+        return;
       }
-      if (performance.now() - start < totalMs && stableCount < 4) {
-        timer = window.setTimeout(tick, 100);
-      }
+
+      timer = window.setTimeout(tick, 100);
     };
 
+    // If the element is not in the DOM yet (lazy route), watch for it.
+    if (!document.getElementById(id)) {
+      mo = new MutationObserver(() => {
+        if (document.getElementById(id)) {
+          window.clearTimeout(timer);
+          tick();
+        }
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+    }
+
     window.requestAnimationFrame(tick);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      mo?.disconnect();
+    };
   }, [pathname, hash, key]);
 
   return null;
