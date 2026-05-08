@@ -36,6 +36,7 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <HashScrollHandler />
+          <FinishesFab />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/landing" element={<Landing />} />
