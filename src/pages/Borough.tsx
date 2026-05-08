@@ -9,6 +9,7 @@ import CTA from "@/components/CTA";
 import Contact from "@/components/Contact";
 import Chatbot from "@/components/Chatbot";
 import NeighborhoodDialog from "@/components/NeighborhoodDialog";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
 import { NEIGHBORHOODS } from "@/data/neighborhoodSeo";
 import Neighborhood from "@/pages/Neighborhood";
@@ -87,7 +88,17 @@ const Borough = () => {
 
       <Header />
 
-      <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
+      <div className="pt-[88px] sm:pt-[112px] md:pt-[140px]">
+        <Breadcrumbs
+          items={[
+            { label: "Home", to: "/" },
+            { label: "Neighborhoods", to: "/#neighborhoods" },
+            { label: borough.name },
+          ]}
+        />
+      </div>
+
+      <section className="pt-10 pb-16 sm:pb-20 md:pb-28 lg:pb-32 bg-background">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <div className="inline-flex items-center gap-2 text-primary mb-4">
             <MapPin className="w-5 h-5" />
