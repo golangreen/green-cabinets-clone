@@ -1,5 +1,6 @@
 import { useParams, Navigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { useState } from "react";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { MapPin } from "lucide-react";
 import Header from "@/components/Header";
@@ -7,6 +8,7 @@ import Footer from "@/components/Footer";
 import CTA from "@/components/CTA";
 import Contact from "@/components/Contact";
 import Chatbot from "@/components/Chatbot";
+import NeighborhoodDialog from "@/components/NeighborhoodDialog";
 import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
 
 const Borough = () => {
