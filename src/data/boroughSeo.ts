@@ -174,6 +174,18 @@ export const BOROUGHS: Record<BoroughSlug, BoroughSeo> = {
       "Jackson Heights",
       "Rego Park",
       "Bayside",
+      "Flushing",
+      "Woodside",
+      "Elmhurst",
+      "Maspeth",
+      "Glendale",
+      "Kew Gardens",
+      "Middle Village",
+      "Whitestone",
+      "College Point",
+      "Briarwood",
+      "Richmond Hill",
+      "Howard Beach",
     ],
     faqs: [
       {
