@@ -117,19 +117,15 @@ All colors MUST be HSL.
   }
 }
 
-/* Homepage snap-scroll.
-   - proximity (not mandatory) so flicks/wheel scroll past freely — no slow grab on every section.
-   - scroll-snap-stop: normal lets fast scroll skip multiple sections.
-   - scroll-margin-top matches the fixed header height per breakpoint so each section locks
-     precisely under it instead of behind it.
-   Header heights (logo + py): mobile ~96px (h-16 + py-4), sm ~108px (h-20 + py-6),
-   md/lg ~160px (h-24 + py-8). */
+/* Homepage vertical scroll: snap removed — it made wheel/trackpad scrolling feel
+   sluggish and "grabby". Horizontal rails inside each section keep the snappy
+   carousel feel where it actually helps. We still keep scroll-margin-top so any
+   anchor jump (e.g. nav clicks) lands cleanly under the fixed header. */
 html.snap-home {
-  scroll-snap-type: y proximity;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
 }
 html.snap-home body section {
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
   scroll-margin-top: 6rem;        /* 96px — mobile */
 }
 @media (min-width: 640px) {
@@ -137,14 +133,6 @@ html.snap-home body section {
 }
 @media (min-width: 768px) {
   html.snap-home body section { scroll-margin-top: 10rem; }  /* 160px */
-}
-
-/* Make in-page anchor jumps snappier than the browser default smooth-scroll easing.
-   Many components call scrollIntoView({behavior:'smooth'}) — without overriding the
-   global behavior, large jumps take 1.5–2s. Setting auto here keeps anchor jumps
-   instant; explicit smooth calls in JS still animate. */
-html.snap-home {
-  scroll-behavior: auto;
 }
 
 /* Hide horizontal rail scrollbars while keeping native swipe behavior */
