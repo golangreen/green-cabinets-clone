@@ -55,6 +55,17 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
                 </DialogDescription>
               </DialogHeader>
 
+              {dedicatedPage && (
+                <Link
+                  to={`/custom-kitchen-cabinets-${dedicatedPage.slug}`}
+                  onClick={onClose}
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-[#445339] transition-colors"
+                >
+                  Read more about cabinetry in {dedicatedPage.name}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              )}
+
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
