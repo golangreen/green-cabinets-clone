@@ -51,7 +51,17 @@ const NeighborhoodGalleryAdmin = () => {
   const [items, setItems] = useState<NeighborhoodGalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const SELECTION_KEY = "neighborhood-gallery-admin:selected";
+  const [selected, setSelected] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem(SELECTION_KEY);
+      if (!raw) return new Set();
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? new Set(arr.filter((x): x is string => typeof x === "string")) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
   const [bulkBusy, setBulkBusy] = useState(false);
 
   const toggleSelected = (id: string) => {
