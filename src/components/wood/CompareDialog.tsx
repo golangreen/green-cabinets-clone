@@ -7,7 +7,7 @@
  * color family, finish, and a link to the manufacturer page. Each column
  * has a remove button so the user can swap picks without leaving the view.
  */
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,10 +17,12 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, X } from "lucide-react";
+import { ExternalLink, X, Copy, Check, Download } from "lucide-react";
 import { useFinishSelection } from "@/hooks/useFinishSelection";
 import { ALL_PANELS } from "@/data/finishes";
 import type { MaterialPanel } from "@/types/materials";
+import { useToast } from "@/hooks/use-toast";
+import { downloadComparePdf, buildCompareText } from "@/lib/finishComparePdf";
 
 const MAX_COMPARE = 4;
 
@@ -31,6 +33,9 @@ interface Props {
 
 export const CompareDialog = ({ open, onOpenChange }: Props) => {
   const { ids, remove } = useFinishSelection();
+  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const panels = useMemo<MaterialPanel[]>(
     () =>
@@ -42,6 +47,47 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
   );
 
   const extraCount = Math.max(0, ids.length - MAX_COMPARE);
+
+  const shareUrl = useMemo(() => {
+    if (typeof window === "undefined") return "";
+    const url = new URL(window.location.origin + "/finishes-colors");
+    if (ids.length) url.searchParams.set("picks", ids.join(","));
+    return url.toString();
+  }, [ids]);
+
+  const summaryText = useMemo(() => buildCompareText(panels, shareUrl), [panels, shareUrl]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(summaryText);
+      setCopied(true);
+      toast({ title: "Summary copied", description: "Paste it anywhere — text, email, notes." });
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast({
+        title: "Copy failed",
+        description: "Select the text manually and copy it.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      await downloadComparePdf(panels, shareUrl);
+      toast({ title: "PDF downloaded", description: "Check your downloads folder." });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Could not generate PDF",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -166,11 +212,48 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
           </div>
         )}
 
-        {panels.length >= 2 && (
-          <div className="mt-4 rounded-lg bg-[#5C7650]/10 border border-[#5C7650]/30 p-3 text-xs text-[#1a1a1a]">
-            <span className="font-semibold">Pro tip:</span> Bring these codes to
-            our Bushwick showroom to see real samples side-by-side, or use the
-            "Send to us" tab in your selection to email them over for a quote.
+        {panels.length >= 1 && (
+          <div className="mt-6 rounded-lg border border-[#5C7650]/30 bg-[#5C7650]/5 p-4 space-y-3">
+            <div className="flex items-start justify-between gap-3 flex-wrap">
+              <div>
+                <h3 className="text-sm font-bold text-[#1a1a1a]">Comparison summary</h3>
+                <p className="text-xs text-[#555]">
+                  One-page recap of your {panels.length} pick{panels.length === 1 ? "" : "s"} — copy as text or download as PDF to share.
+                </p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={handleCopy}
+                  className="border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-4 w-4 mr-1.5" /> Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4 mr-1.5" /> Copy text
+                    </>
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleDownload}
+                  disabled={downloading}
+                  className="bg-[#5C7650] hover:bg-[#445339] text-white"
+                >
+                  <Download className="h-4 w-4 mr-1.5" />
+                  {downloading ? "Generating..." : "Download PDF"}
+                </Button>
+              </div>
+            </div>
+            <pre className="text-[11px] font-mono text-[#333] bg-white border border-border rounded p-3 max-h-44 overflow-auto whitespace-pre-wrap">
+              {summaryText}
+            </pre>
           </div>
         )}
       </DialogContent>
