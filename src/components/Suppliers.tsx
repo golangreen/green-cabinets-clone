@@ -124,6 +124,20 @@ const suppliers: Supplier[] = [
     ]
   },
   {
+    id: "agt",
+    name: "AGT",
+    description: "High-pressure laminate and PVC-membrane cabinet doors",
+    logo: agtLogo,
+    website: "https://www.agtwood.com/products/panel/panel",
+    details: "AGT is a leading Turkish manufacturer of decorative panels, high-gloss and soft-matte cabinet doors, and PVC-membrane surfaces. We use AGT decors — like 647 Antique White — on real installs where a refined, European-made finish is required.",
+    products: [
+      "High-gloss and soft-matte cabinet doors",
+      "PVC-membrane decorative surfaces",
+      "MDF panels and profiles",
+      "Wide range of colors and woodgrains"
+    ]
+  },
+  {
     id: "diamond-appliance",
     name: "Diamond Appliance Group",
     description: "Premium home appliances with exclusive Green Cabinets client discounts",
