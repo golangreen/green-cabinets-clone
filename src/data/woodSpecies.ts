@@ -8,6 +8,18 @@
  * pricing in the NYC market and refresh annually.
  */
 
+import mapleImg from "@/assets/wood/maple.jpg";
+import walnutImg from "@/assets/wood/walnut.jpg";
+import whiteOakImg from "@/assets/wood/white-oak.jpg";
+import redOakImg from "@/assets/wood/red-oak.jpg";
+import birchImg from "@/assets/wood/birch.jpg";
+import cherryImg from "@/assets/wood/cherry.jpg";
+import hickoryImg from "@/assets/wood/hickory.jpg";
+import ashImg from "@/assets/wood/ash.jpg";
+import mahoganyImg from "@/assets/wood/mahogany.jpg";
+import alderImg from "@/assets/wood/alder.jpg";
+import beechImg from "@/assets/wood/beech.jpg";
+
 export type CostTier = "$" | "$$" | "$$$" | "$$$$";
 export type Workability = "Excellent" | "Very Good" | "Good" | "Moderate" | "Difficult";
 export type StainTake = "Excellent" | "Very Good" | "Good" | "Tricky" | "Difficult";
@@ -94,8 +106,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Brilliant White paint", "Sage green paint", "Light natural lacquer", "Dye-stained gray"],
     bestDoorStyles: ["Shaker", "Slim Shaker", "Slab", "Beaded inset"],
     swatch: "#efe1c6",
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1604147495798-57beb5d6af73?auto=format&fit=crop&w=1200&q=80",
+    image: mapleImg,
+    grainImage: mapleImg,
     keywords: ["maple kitchen cabinets", "painted maple cabinets NYC", "hard maple shaker"],
     faqs: [
       {
@@ -146,8 +158,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Hardwax oil (natural)", "Matte conversion varnish", "Rubio Monocoat Pure", "Soft satin lacquer"],
     bestDoorStyles: ["Slab", "Shaker", "Reeded", "Frameless European"],
     swatch: "#5b3a29",
-    image: "https://images.unsplash.com/photo-1556909114-44e3e9399a2f?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=1200&q=80",
+    image: walnutImg,
+    grainImage: walnutImg,
     keywords: ["walnut kitchen cabinets NYC", "custom walnut cabinetry", "black walnut vanity"],
     faqs: [
       {
@@ -198,8 +210,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Hardwax oil natural", "Fumed/smoked", "Cerused white", "Reactive iron-acetate"],
     bestDoorStyles: ["Slab (rift-cut)", "Shaker", "Reeded", "Beaded inset"],
     swatch: "#c9a877",
-    image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1567016526105-22da7c13161a?auto=format&fit=crop&w=1200&q=80",
+    image: whiteOakImg,
+    grainImage: whiteOakImg,
     keywords: ["white oak kitchen cabinets", "rift cut white oak NYC", "fumed oak cabinets"],
     faqs: [
       {
@@ -250,8 +262,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Honey stain + matte topcoat", "Limed white", "Espresso pigment", "Cerused gray"],
     bestDoorStyles: ["Shaker", "Raised panel", "Slab (rift-cut)"],
     swatch: "#b07555",
-    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1542219550-37153d387c27?auto=format&fit=crop&w=1200&q=80",
+    image: redOakImg,
+    grainImage: redOakImg,
     keywords: ["red oak cabinets NYC", "affordable oak kitchen", "rift red oak"],
     faqs: [
       {
@@ -297,8 +309,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["White or sage paint", "Gel stain medium walnut", "Light natural lacquer"],
     bestDoorStyles: ["Shaker", "Slim Shaker", "Slab"],
     swatch: "#e8d3a8",
-    image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1200&q=80",
+    image: birchImg,
+    grainImage: birchImg,
     keywords: ["birch cabinets NYC", "affordable shaker cabinets", "baltic birch plywood"],
     faqs: [
       {
@@ -344,8 +356,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Hand-rubbed oil/wax", "Clear satin lacquer", "Light natural stain (no pigment)"],
     bestDoorStyles: ["Raised panel", "Beaded inset", "Shaker", "Slab"],
     swatch: "#9a4f30",
-    image: "https://images.unsplash.com/photo-1602872030490-4a484a7b3ba6?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1200&q=80",
+    image: cherryImg,
+    grainImage: cherryImg,
     keywords: ["cherry kitchen cabinets", "american cherry NYC", "shaker cherry"],
     faqs: [
       {
@@ -390,8 +402,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Clear hardwax oil", "Light natural stain", "Distressed/wire-brushed"],
     bestDoorStyles: ["Shaker", "Raised panel", "Plank-style"],
     swatch: "#8a5a3b",
-    image: "https://images.unsplash.com/photo-1556909114-18e4ddd00a98?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1567016432779-094069958ea5?auto=format&fit=crop&w=1200&q=80",
+    image: hickoryImg,
+    grainImage: hickoryImg,
     keywords: ["hickory cabinets", "rustic kitchen wood", "hardest cabinet wood"],
     faqs: [
       {
@@ -437,8 +449,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Cerused white", "Limed gray", "Hardwax oil natural", "Light pigment stain"],
     bestDoorStyles: ["Slab", "Shaker", "Reeded"],
     swatch: "#d2b48c",
-    image: "https://images.unsplash.com/photo-1556909195-9f12cf2ed4d6?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1567016526123-e0bf0fab02d4?auto=format&fit=crop&w=1200&q=80",
+    image: ashImg,
+    grainImage: ashImg,
     keywords: ["ash kitchen cabinets", "cerused ash NYC", "white ash slab doors"],
     faqs: [
       {
@@ -484,8 +496,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["French polish (shellac)", "Hand-rubbed oil", "Conversion varnish satin"],
     bestDoorStyles: ["Raised panel", "Fielded inset", "Library frame-and-panel"],
     swatch: "#7d3a1f",
-    image: "https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1200&q=80",
+    image: mahoganyImg,
+    grainImage: mahoganyImg,
     keywords: ["mahogany cabinets NYC", "khaya african mahogany", "library mahogany millwork"],
     faqs: [
       {
@@ -531,8 +543,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Hand-rubbed honey stain + glaze", "Distressed cherry-tone stain", "Antique espresso"],
     bestDoorStyles: ["Raised panel", "Arched raised", "Beaded inset", "Plank-style"],
     swatch: "#c08a5a",
-    image: "https://images.unsplash.com/photo-1556909172-89dd9c0b7e8b?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1604147495798-57beb5d6af73?auto=format&fit=crop&w=1200&q=80",
+    image: alderImg,
+    grainImage: alderImg,
     keywords: ["knotty alder cabinets", "rustic kitchen cabinets NYC", "affordable solid wood cabinets"],
     faqs: [
       {
@@ -578,8 +590,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Clear hardwax oil", "Soft white paint", "Light pigment stain"],
     bestDoorStyles: ["Slab (frameless)", "Shaker", "Reeded"],
     swatch: "#e6c9a8",
-    image: "https://images.unsplash.com/photo-1556909195-bf1a7569b53f?auto=format&fit=crop&w=1200&q=80",
-    grainImage: "https://images.unsplash.com/photo-1567016526184-7d4eb1eaa6f8?auto=format&fit=crop&w=1200&q=80",
+    image: beechImg,
+    grainImage: beechImg,
     keywords: ["beech cabinets", "european beech NYC", "scandinavian wood cabinets"],
     faqs: [
       {
