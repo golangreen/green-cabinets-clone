@@ -31,6 +31,8 @@ const ScrollToTopButton = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  if (!enabled) return null;
+
   return (
     <button
       type="button"
