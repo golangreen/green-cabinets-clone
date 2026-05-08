@@ -76,36 +76,29 @@ const LuxuryMillworkGallery = () => {
           <div
             role="tablist"
             aria-label="Filter gallery by category"
-            className="flex flex-nowrap gap-2 overflow-x-auto scrollbar-none snap-x snap-proximity px-6 py-1 [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.5rem]"
+            className="flex flex-nowrap items-center gap-3 overflow-x-auto scrollbar-none px-6 py-1 [-webkit-overflow-scrolling:touch]"
           >
-            {categories.map((c) => {
+            {categories.map((c, idx) => {
               const isActive = active === c;
-              const count = c === "All" ? items.length : items.filter((i) => i.category === c).length;
               return (
-                <button
-                  key={c}
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setActive(c)}
-                  className={[
-                    "shrink-0 snap-start inline-flex items-center px-4 py-2 rounded-full text-sm font-medium tracking-wide whitespace-nowrap border transition-all duration-300 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
-                    isActive
-                      ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
-                      : "bg-card/90 text-[#1a1a1a] border-border/60 hover:bg-card",
-                  ].join(" ")}
-                >
-                  <span>{c}</span>
-                  <span
+                <div key={c} className="flex items-center gap-3 shrink-0">
+                  {idx > 0 && (
+                    <ChevronRight className="w-4 h-4 text-[#888888]" aria-hidden="true" />
+                  )}
+                  <button
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActive(c)}
                     className={[
-                      "ml-2 inline-flex items-center justify-center text-[11px] font-semibold rounded-full px-1.5 min-w-[1.25rem] h-5 leading-none transition-colors",
+                      "shrink-0 whitespace-nowrap text-base md:text-lg tracking-wide transition-colors duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm",
                       isActive
-                        ? "bg-primary-foreground/20 text-primary-foreground"
-                        : "bg-muted text-muted-foreground",
+                        ? "text-[#1a1a1a] font-semibold"
+                        : "text-[#888888] font-normal hover:text-[#1a1a1a]",
                     ].join(" ")}
                   >
-                    {count}
-                  </span>
-                </button>
+                    {c}
+                  </button>
+                </div>
               );
             })}
           </div>
