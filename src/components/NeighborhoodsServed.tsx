@@ -10,8 +10,11 @@ const scrollToId = (id: string) => {
 
 const scrollToContact = () => scrollToId("contact");
 
+const DEFAULT_VISIBLE = 8;
+
 const NeighborhoodsServed = () => {
   const [active, setActive] = useState<{ name: string; boroughSlug: string } | null>(null);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   return (
     <section
       id="neighborhoods"
