@@ -52,6 +52,12 @@ const App = () => {
                 <NeighborhoodGalleryAdmin />
               </AdminRoute>
             } />
+            {/* Legacy URL redirects → /custom-kitchen-cabinets-{slug} */}
+            <Route path="/neighborhoods/:slug" element={<LegacyRedirect />} />
+            <Route path="/neighborhood/:slug" element={<LegacyRedirect />} />
+            <Route path="/borough/:slug" element={<LegacyRedirect />} />
+            <Route path="/boroughs/:slug" element={<LegacyRedirect />} />
+            <Route path="/custom-kitchen-cabinets/:slug" element={<LegacyRedirect />} />
             <Route path="/:boroughPath" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
