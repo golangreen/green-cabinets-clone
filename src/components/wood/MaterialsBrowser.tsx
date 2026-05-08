@@ -7,7 +7,9 @@
  * Other brands stubbed — same component renders them once data lands.
  */
 import { useMemo, useState } from "react";
-import { Search, ExternalLink, Heart, Plus, Check } from "lucide-react";
+import { Search, ExternalLink, Heart, Plus, Check, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
+import { getProjectsByMaterial } from "@/data/projects";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -157,6 +159,42 @@ function PanelModal({
                 you book a consultation and we will pull it for you.
               </p>
             </div>
+
+            {(() => {
+              const projects = getProjectsByMaterial(panel.id);
+              if (projects.length === 0) return null;
+              return (
+                <div className="rounded-lg border border-border bg-muted/40 p-3 space-y-2">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                    Used in {projects.length} real install{projects.length > 1 ? "s" : ""}
+                  </p>
+                  {projects.map((p) => (
+                    <Link
+                      key={p.id}
+                      to={`/custom-kitchen-cabinets-${p.neighborhoodSlug}#featured`}
+                      className="flex items-start gap-2 group"
+                      onClick={() => onOpenChange(false)}
+                    >
+                      <img
+                        src={p.images[0].src}
+                        alt={p.images[0].alt}
+                        loading="lazy"
+                        className="h-12 w-12 rounded object-cover flex-shrink-0"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold text-[#1a1a1a] group-hover:text-[#5C7650] truncate">
+                          {p.title}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+                          <MapPin className="h-2.5 w-2.5" />
+                          {p.neighborhood}, {p.borough}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              );
+            })()}
             <Button
               type="button"
               onClick={() => toggle(panel.id)}
