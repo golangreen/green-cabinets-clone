@@ -37,30 +37,49 @@ function PanelCard({
   panel: MaterialPanel;
   onClick: () => void;
 }) {
+  const { ids, toggle } = useFinishSelection();
+  const selected = ids.includes(panel.id);
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group text-left rounded-lg overflow-hidden border border-border bg-background hover:border-[#5C7650] hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#5C7650]"
-    >
-      <div className="aspect-square overflow-hidden bg-muted">
-        <img
-          src={panel.thumb}
-          alt={`${panel.brand} ${panel.name} panel sample`}
-          loading="lazy"
-          decoding="async"
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-      </div>
-      <div className="p-2.5 space-y-1">
-        <h4 className="text-sm font-semibold text-[#1a1a1a] line-clamp-1">
-          {panel.name}
-        </h4>
-        <p className="text-[11px] font-mono text-[#5C7650] line-clamp-1">
-          {panel.codes[0] ?? panel.brand}
-        </p>
-      </div>
-    </button>
+    <div className="group relative rounded-lg overflow-hidden border border-border bg-background hover:border-[#5C7650] hover:shadow-lg transition-all">
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          toggle(panel.id);
+        }}
+        aria-label={selected ? `Remove ${panel.name} from selection` : `Add ${panel.name} to selection`}
+        className={`absolute top-2 right-2 z-10 h-8 w-8 rounded-full flex items-center justify-center shadow-md transition-all ${
+          selected
+            ? "bg-[#5C7650] text-white scale-100"
+            : "bg-white/90 text-[#5C7650] opacity-0 group-hover:opacity-100 hover:scale-110"
+        } ${selected ? "opacity-100" : ""}`}
+      >
+        {selected ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+      </button>
+      <button
+        type="button"
+        onClick={onClick}
+        className="block w-full text-left focus:outline-none focus:ring-2 focus:ring-[#5C7650]"
+      >
+        <div className="aspect-square overflow-hidden bg-muted">
+          <img
+            src={panel.thumb}
+            alt={`${panel.brand} ${panel.name} panel sample`}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+        <div className="p-2.5 space-y-1">
+          <h4 className="text-sm font-semibold text-[#1a1a1a] line-clamp-1">
+            {panel.name}
+          </h4>
+          <p className="text-[11px] font-mono text-[#5C7650] line-clamp-1">
+            {panel.codes[0] ?? panel.brand}
+          </p>
+        </div>
+      </button>
+    </div>
   );
 }
 
