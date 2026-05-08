@@ -30,13 +30,14 @@ const FinishesColors = () => {
       <main className="pt-32 sm:pt-36 md:pt-40">
         {/* Back link */}
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-2 pb-4">
-          <Link
-            to="/#finishes-colors"
+          <button
+            type="button"
+            onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")}
             className="inline-flex items-center gap-2 text-sm text-[#5C7650] hover:text-[#445339] font-medium transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to home
-          </Link>
+            Back
+          </button>
         </div>
 
         {/* Hero */}
