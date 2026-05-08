@@ -72,20 +72,43 @@ const LuxuryMillworkGallery = () => {
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
-          {categories.map((c) => (
-            <button
-              key={c}
-              onClick={() => setActive(c)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                active === c
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-background text-[#1a1a1a] hover:bg-background/80"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
+        <div className="-mx-6 mb-10">
+          <div
+            role="tablist"
+            aria-label="Filter gallery by category"
+            className="flex flex-nowrap gap-2 overflow-x-auto scrollbar-none snap-x snap-proximity px-6 py-1 [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.5rem]"
+          >
+            {categories.map((c) => {
+              const isActive = active === c;
+              const count = c === "All" ? items.length : items.filter((i) => i.category === c).length;
+              return (
+                <button
+                  key={c}
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActive(c)}
+                  className={[
+                    "shrink-0 snap-start inline-flex items-center px-4 py-2 rounded-full text-sm font-medium tracking-wide whitespace-nowrap border transition-all duration-300 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                    isActive
+                      ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
+                      : "bg-card/90 text-[#1a1a1a] border-border/60 hover:bg-card",
+                  ].join(" ")}
+                >
+                  <span>{c}</span>
+                  <span
+                    className={[
+                      "ml-2 inline-flex items-center justify-center text-[11px] font-semibold rounded-full px-1.5 min-w-[1.25rem] h-5 leading-none transition-colors",
+                      isActive
+                        ? "bg-primary-foreground/20 text-primary-foreground"
+                        : "bg-muted text-muted-foreground",
+                    ].join(" ")}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="-mx-6">
