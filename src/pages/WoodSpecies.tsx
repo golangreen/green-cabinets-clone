@@ -126,23 +126,28 @@ const WoodSpecies = () => {
           </div>
         </section>
 
-        {/* Materials browser — real panels from Tafisa, Shinnoki, Egger, Wilsonart */}
-        <section id="materials" className="py-12 sm:py-16 md:py-20">
-          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-            <div className="text-center mb-8">
+        {/* Materials browser teaser — full browser lives at /finishes-colors */}
+        <section id="materials" className="py-12 sm:py-16 md:py-20 bg-[#f5f5f5]">
+          <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+            <div className="text-center">
               <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-2">
-                Real Panels, Real Codes
+                Beyond Solid Wood
               </p>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-3">
-                Browse the Materials We Stock
+                Browse Every Finish &amp; Color
               </h2>
-              <p className="text-[#555555] max-w-2xl mx-auto">
-                Beyond solid hardwoods, we work with leading laminate and melamine brands. Browse
-                actual panels, filter by color or finish, and bring the code to our Bushwick
-                showroom to see and feel the real sample.
+              <p className="text-[#555555] max-w-2xl mx-auto mb-6">
+                Explore real laminate, melamine, and veneer panels from Tafisa, Shinnoki, and
+                more. Save favorites, share with friends, and send your picks to us for pricing.
               </p>
+              <Link
+                to="/finishes-colors"
+                className="inline-flex items-center gap-2 bg-[#5C7650] hover:bg-[#445339] text-white font-semibold px-6 py-3 rounded-md transition-all hover:scale-105 hover:shadow-2xl"
+              >
+                Browse Finishes &amp; Colors
+                <span aria-hidden>→</span>
+              </Link>
             </div>
-            <MaterialsBrowser />
           </div>
         </section>
 
