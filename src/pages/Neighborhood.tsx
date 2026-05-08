@@ -37,8 +37,25 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
   const boroughHref = `/custom-kitchen-cabinets-${n.boroughSlug}`;
   const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [dbItems, setDbItems] = useState<PublicNeighborhoodGalleryItem[]>([]);
 
-  const lightboxImages = n.gallery
+  useEffect(() => {
+    let active = true;
+    neighborhoodGalleryService
+      .listPublishedBySlug(n.slug)
+      .then((items) => { if (active) setDbItems(items); })
+      .catch(() => { /* fall back to static gallery */ });
+    return () => { active = false; };
+  }, [n.slug]);
+
+  const dbGallery = dbItems.map((i) => ({
+    src: i.image_url,
+    alt: i.alt_text || `${i.caption} — Green Cabinets NY, custom cabinetry in ${n.name}, ${n.boroughName}`,
+    caption: i.caption,
+    key: i.id,
+  }));
+
+  const staticGallery = n.gallery
     .map((item) => {
       const src = resolveGallery(item.file);
       if (!src) return null;
