@@ -147,6 +147,191 @@ export const NEIGHBORHOOD_FACTS: Record<string, NeighborhoodInfo> = {
     "Queens",
     "Bayside sits on the shore of Little Neck Bay. Its waterfront single-family homes often feature open kitchens designed around the view — we love using clear-finished walnut to echo the water and sky.",
   ),
+  // Brooklyn — additional
+  "Bedford-Stuyvesant": make(
+    "Bedford-Stuyvesant",
+    "Brooklyn",
+    "Bed-Stuy has the largest concentration of intact Victorian-era brownstones in the country — over 8,800 of them. Their original parlor-floor layouts make for showstopping eat-in kitchens.",
+  ),
+  "Crown Heights": make(
+    "Crown Heights",
+    "Brooklyn",
+    "Crown Heights sits on the second-highest natural elevation in Brooklyn — hence the 'Crown.' The neighborhood's limestone rowhouses pair beautifully with painted inset cabinetry.",
+  ),
+  "Fort Greene": make(
+    "Fort Greene",
+    "Brooklyn",
+    "Fort Greene is named for a Revolutionary War fort once commanded by Nathanael Greene. Today its leafy blocks are full of 1860s Italianate brownstones with original kitchen hearths.",
+  ),
+  "Prospect Heights": make(
+    "Prospect Heights",
+    "Brooklyn",
+    "Prospect Heights is one of NYC's smallest historic districts — just 13 blocks. The tight footprint means every inch of cabinetry has to earn its keep.",
+  ),
+  "Clinton Hill": make(
+    "Clinton Hill",
+    "Brooklyn",
+    "Clinton Hill was Brooklyn's 'Gold Coast' in the 1880s — Charles Pratt's mansions still line the avenues. Their original butler's pantries inspire a lot of our two-tone designs.",
+  ),
+  "Boerum Hill": make(
+    "Boerum Hill",
+    "Brooklyn",
+    "Boerum Hill's blocks of Greek Revival rowhouses (1840s–60s) are some of the oldest in Brooklyn. We routinely match new face frames to 175-year-old door casings.",
+  ),
+  Gowanus: make(
+    "Gowanus",
+    "Brooklyn",
+    "Gowanus's converted industrial lofts have some of the largest open kitchen footprints in Brooklyn — perfect for double islands and 12-foot pantry walls.",
+  ),
+  "Red Hook": make(
+    "Red Hook",
+    "Brooklyn",
+    "Red Hook's Civil War-era warehouses have brick walls up to 24 inches thick. We mount cabinets on custom French cleats so nothing has to anchor through historic masonry.",
+  ),
+  "Sunset Park": make(
+    "Sunset Park",
+    "Brooklyn",
+    "Sunset Park's hilltop offers one of the best skyline views in NYC. Its limestone rowhouses often have galley kitchens crying out for floor-to-ceiling cabinetry.",
+  ),
+  "Bay Ridge": make(
+    "Bay Ridge",
+    "Brooklyn",
+    "Bay Ridge has more single-family homes than almost any Brooklyn neighborhood — many with original 1920s breakfast nooks we love restoring with bench seating and built-ins.",
+  ),
+  Flatbush: make(
+    "Flatbush",
+    "Brooklyn",
+    "Flatbush's Victorian Flatbush district has over 2,000 freestanding wood-frame Victorians — the largest concentration in the U.S. Their big country kitchens are a dream to build for.",
+  ),
+  "Windsor Terrace": make(
+    "Windsor Terrace",
+    "Brooklyn",
+    "Windsor Terrace was nearly bulldozed for the Prospect Expressway in the 1950s. The rowhouses that survived have unusually deep backyards — many of our clients knock through to garden-facing kitchens.",
+  ),
+
+  // Manhattan — additional
+  "East Village": make(
+    "East Village",
+    "Manhattan",
+    "The East Village's tenement buildings (1880s–1900s) were originally built without kitchens at all — cooking happened in the airshaft. Modernizing one is half history project, half puzzle.",
+  ),
+  "Lower East Side": make(
+    "Lower East Side",
+    "Manhattan",
+    "The LES once housed over 700 people per acre — denser than modern Mumbai. Its tenement kitchens are tiny, which is exactly why custom-milled cabinetry pays for itself fast.",
+  ),
+  "Greenwich Village": make(
+    "Greenwich Village",
+    "Manhattan",
+    "Greenwich Village has the city's largest historic district — over 2,000 protected buildings. Many original Federal-style houses still have working fireplaces in the kitchen.",
+  ),
+  NoHo: make(
+    "NoHo",
+    "Manhattan",
+    "NoHo ('North of Houston') has just 125 buildings in its historic district — and the highest concentration of cast-iron architecture left in the world after SoHo.",
+  ),
+  Nolita: make(
+    "Nolita",
+    "Manhattan",
+    "Nolita ('North of Little Italy') was carved out of Little Italy only in the 1990s. Its narrow tenement kitchens are perfect canvases for custom slim-shaker cabinetry.",
+  ),
+  Gramercy: make(
+    "Gramercy",
+    "Manhattan",
+    "Gramercy Park is one of only two private parks in NYC — keys go to surrounding residents only. The pre-war co-ops around it have classic-six layouts ideal for inset cabinetry.",
+  ),
+  "Murray Hill": make(
+    "Murray Hill",
+    "Manhattan",
+    "Murray Hill is named for Robert Murray, an 18th-century merchant whose wife famously stalled British troops with tea so American forces could escape. Its prewar kitchens have history baked in.",
+  ),
+  Midtown: make(
+    "Midtown",
+    "Manhattan",
+    "Midtown has more office-to-residential conversions in progress than any neighborhood in NYC. The unusual floor plates produce kitchens we have to design from scratch — every time.",
+  ),
+  "Hell's Kitchen": make(
+    "Hell's Kitchen",
+    "Manhattan",
+    "Hell's Kitchen got its name from a 19th-century police officer's quip about the rough tenement blocks. Today's converted lofts have soaring ceilings — we love double-stacked uppers here.",
+  ),
+  "Morningside Heights": make(
+    "Morningside Heights",
+    "Manhattan",
+    "Morningside Heights sits on the site of the 1776 Battle of Harlem Heights. Its grand pre-war co-ops near Columbia have full butler's pantries we routinely modernize without losing the architecture.",
+  ),
+  "Washington Heights": make(
+    "Washington Heights",
+    "Manhattan",
+    "Washington Heights has the highest natural elevation in Manhattan (265 ft). Its 1920s Art Deco apartments still have original kitchen tile we love designing cabinetry to complement.",
+  ),
+  "Battery Park City": make(
+    "Battery Park City",
+    "Manhattan",
+    "Battery Park City was built on landfill from the original World Trade Center excavation. Its newer condos give us clean, square layouts — a rare luxury in Manhattan.",
+  ),
+
+  // Queens — additional
+  Flushing: make(
+    "Flushing",
+    "Queens",
+    "Flushing's 1657 Flushing Remonstrance was one of the earliest American calls for religious freedom. Today it's home to NYC's largest Asian community — and some of our most ambitious wok-friendly kitchen designs.",
+  ),
+  Woodside: make(
+    "Woodside",
+    "Queens",
+    "Woodside grew up around the Long Island Rail Road in the 1860s. Its compact wood-frame homes have charming original kitchen footprints we modernize without losing the proportions.",
+  ),
+  Elmhurst: make(
+    "Elmhurst",
+    "Queens",
+    "Elmhurst is one of the most linguistically diverse zip codes on Earth — over 130 languages spoken. The kitchens here have to handle every cooking tradition, and we love that challenge.",
+  ),
+  Maspeth: make(
+    "Maspeth",
+    "Queens",
+    "Maspeth is one of the oldest continuously settled places in NYC — Dutch settlers arrived in 1642. The neighborhood's brick rowhouses hold custom cabinetry beautifully.",
+  ),
+  Glendale: make(
+    "Glendale",
+    "Queens",
+    "Glendale was named after Glendale, Ohio, by a developer hoping to attract Midwest buyers in the 1860s. Its detached homes give us rare freestanding-island opportunities in NYC.",
+  ),
+  "Kew Gardens": make(
+    "Kew Gardens",
+    "Queens",
+    "Kew Gardens was designed in 1910 as one of America's first planned 'garden communities,' modeled after Kew, England. Its Tudor and Colonial homes look stunning with leaded-glass uppers.",
+  ),
+  "Middle Village": make(
+    "Middle Village",
+    "Queens",
+    "Middle Village got its name as the midway stop on the old Williamsburg–Jamaica turnpike. Its postwar brick homes have remarkably consistent kitchen layouts — a custom designer's dream.",
+  ),
+  Whitestone: make(
+    "Whitestone",
+    "Queens",
+    "Whitestone is named for a large white limestone boulder once visible from the East River. Its waterfront homes pair gorgeously with clear-finished walnut and stone-toned painted cabinetry.",
+  ),
+  "College Point": make(
+    "College Point",
+    "Queens",
+    "College Point was a 19th-century rubber-manufacturing hub built by German immigrant Conrad Poppenhusen — who also founded America's first free kindergarten here in 1870.",
+  ),
+  Briarwood: make(
+    "Briarwood",
+    "Queens",
+    "Briarwood was developed in the 1920s as 'Briar-Wood-on-the-Hill' — a marketing flourish for the modest hilltop slope. Its mid-century co-ops are perfect for our space-efficient pantry walls.",
+  ),
+  "Richmond Hill": make(
+    "Richmond Hill",
+    "Queens",
+    "Richmond Hill was home to the largest Victorian planned community in Queens. Many homes still have original wraparound porches — and original 1890s kitchens we lovingly bring into this century.",
+  ),
+  "Howard Beach": make(
+    "Howard Beach",
+    "Queens",
+    "Howard Beach sits on Jamaica Bay — much of it built on filled-in marshland in the 1920s. Its waterfront ranch homes get our coastal-friendly painted cabinetry treatment.",
+  ),
 };
 
 export const getNeighborhoodInfo = (name: string): NeighborhoodInfo | null =>

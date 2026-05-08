@@ -10,8 +10,11 @@ const scrollToId = (id: string) => {
 
 const scrollToContact = () => scrollToId("contact");
 
+const DEFAULT_VISIBLE = 8;
+
 const NeighborhoodsServed = () => {
   const [active, setActive] = useState<{ name: string; boroughSlug: string } | null>(null);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   return (
     <section
       id="neighborhoods"
@@ -82,8 +85,11 @@ const NeighborhoodsServed = () => {
                   Custom kitchen cabinets in {borough.name}
                 </p>
 
-                <ul className="space-y-2 mb-6 flex-1">
-                  {borough.neighborhoods.slice(0, 6).map((n) => (
+                <ul className="space-y-2 mb-4 flex-1">
+                  {(expanded[borough.slug]
+                    ? borough.neighborhoods
+                    : borough.neighborhoods.slice(0, DEFAULT_VISIBLE)
+                  ).map((n) => (
                     <li
                       key={n}
                       className="border-b border-background/60 pb-1"
@@ -98,6 +104,23 @@ const NeighborhoodsServed = () => {
                     </li>
                   ))}
                 </ul>
+
+                {borough.neighborhoods.length > DEFAULT_VISIBLE && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpanded((prev) => ({
+                        ...prev,
+                        [borough.slug]: !prev[borough.slug],
+                      }))
+                    }
+                    className="self-start mb-4 text-xs font-semibold text-primary hover:text-[#445339] transition-colors"
+                  >
+                    {expanded[borough.slug]
+                      ? "Show fewer"
+                      : `+ ${borough.neighborhoods.length - DEFAULT_VISIBLE} more neighborhoods`}
+                  </button>
+                )}
 
                 <div className="mt-auto flex flex-col gap-2">
                   <Link
