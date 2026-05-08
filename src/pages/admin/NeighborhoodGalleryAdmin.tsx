@@ -649,9 +649,18 @@ const SavedItemCard = ({
   };
 
   return (
-    <Card className="overflow-hidden">
+    <Card className={`overflow-hidden ${selected ? "ring-2 ring-primary" : ""}`}>
       <div className="aspect-[4/3] bg-muted relative">
         <img src={item.image_url} alt={item.alt_text} className="w-full h-full object-cover" />
+        {onToggleSelect && (
+          <div className="absolute top-2 right-2 bg-background/90 backdrop-blur rounded-md p-1.5 flex items-center">
+            <Checkbox
+              checked={!!selected}
+              onCheckedChange={onToggleSelect}
+              aria-label="Select for bulk actions"
+            />
+          </div>
+        )}
         {!item.is_published && (
           <Badge variant="secondary" className="absolute top-2 left-2">
             Draft
