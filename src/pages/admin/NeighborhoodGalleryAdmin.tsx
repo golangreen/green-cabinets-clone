@@ -482,6 +482,57 @@ const NeighborhoodGalleryAdmin = () => {
           </Select>
         </div>
 
+        {/* Bulk action bar */}
+        {filteredItems.length > 0 && (
+          <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-lg border border-border bg-muted/30">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="select-all-visible"
+                checked={allVisibleSelected}
+                onCheckedChange={selectAllVisible}
+              />
+              <Label htmlFor="select-all-visible" className="text-sm cursor-pointer">
+                {allVisibleSelected ? "Deselect all" : "Select all visible"}
+              </Label>
+            </div>
+            <span className="text-sm text-muted-foreground">
+              {selectedCount} selected
+            </span>
+            <div className="flex gap-2 ml-auto">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void bulkSetPublished(true)}
+                disabled={selectedCount === 0 || bulkBusy}
+              >
+                {bulkBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Eye className="w-4 h-4 mr-1" /> Publish</>}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void bulkSetPublished(false)}
+                disabled={selectedCount === 0 || bulkBusy}
+              >
+                <EyeOff className="w-4 h-4 mr-1" /> Unpublish
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void bulkDelete()}
+                disabled={selectedCount === 0 || bulkBusy}
+                className="text-destructive hover:text-destructive"
+              >
+                <Trash2 className="w-4 h-4 mr-1" /> Delete
+              </Button>
+              {selectedCount > 0 && (
+                <Button size="sm" variant="ghost" onClick={clearSelected} disabled={bulkBusy}>
+                  Clear
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+
         {loading ? (
           <div className="flex justify-center py-16">
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
@@ -504,9 +555,17 @@ const NeighborhoodGalleryAdmin = () => {
                       <SavedItemCard
                         key={item.id}
                         item={item}
+                        selected={selected.has(item.id)}
+                        onToggleSelect={() => toggleSelected(item.id)}
                         onChange={refresh}
                       />
                     ))}
+                  </div>
+                </section>
+              );
+            })}
+          </div>
+        )}
                   </div>
                 </section>
               );
