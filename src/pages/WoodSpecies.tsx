@@ -7,7 +7,7 @@
  *  - links to per-species deep pages
  */
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -19,6 +19,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 const WoodSpecies = () => {
+  const navigate = useNavigate();
+  const goToSpecies = (slug: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Route through react-router so HashScrollHandler runs and offsets the header.
+    navigate(`/wood-species#${slug}`);
+  };
+
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -168,6 +175,7 @@ const WoodSpecies = () => {
                 <a
                   key={w.slug}
                   href={`#${w.slug}`}
+                  onClick={goToSpecies(w.slug)}
                   className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white transition-colors"
                 >
                   {w.name}
