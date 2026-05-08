@@ -166,6 +166,12 @@ const Borough = () => {
       <CTA />
       <Footer />
       <Chatbot />
+
+      <NeighborhoodDialog
+        neighborhood={activeNeighborhood}
+        boroughSlug={borough.slug}
+        onClose={() => setActiveNeighborhood(null)}
+      />
     </div>
   );
 };
