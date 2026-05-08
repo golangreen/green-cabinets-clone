@@ -107,6 +107,25 @@ const WoodSpecies = () => {
           </div>
         </section>
 
+        {/* Hero / intro */}
+        <section className="bg-[#d5d5d5]/40 py-16 sm:py-20 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl text-center space-y-4">
+            <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold">
+              The Material Library
+            </p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a]">
+              Cabinet Wood Species — A Complete Guide
+            </h1>
+            <p className="text-base sm:text-lg text-[#555555] max-w-3xl mx-auto leading-relaxed">
+              Choosing a wood is the single biggest decision in a custom cabinet project. It
+              determines how your kitchen looks, how it ages, how it stands up to daily life, and
+              what it costs. Below is everything we have learned in 15 years of building custom
+              cabinets in Brooklyn — every species we work with, head-to-head, with the tradeoffs
+              spelled out plainly.
+            </p>
+          </div>
+        </section>
+
         {/* Interactive compare */}
         <section className="py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
