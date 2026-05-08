@@ -595,18 +595,23 @@ const SavedItemCard = ({
                 📍 {item.address_note}
               </p>
             )}
-            <div className="flex justify-between items-center pt-2">
-              <Button variant="outline" size="sm" onClick={togglePublished} disabled={busy}>
-                {item.is_published ? (
-                  <>
-                    <EyeOff className="w-3 h-3 mr-1" /> Unpublish
-                  </>
-                ) : (
-                  <>
-                    <Eye className="w-3 h-3 mr-1" /> Publish
-                  </>
-                )}
-              </Button>
+            <div className="flex justify-between items-center pt-2 border-t border-border/60 mt-2">
+              <div className="flex items-center gap-2">
+                <Switch
+                  id={`pub-toggle-${item.id}`}
+                  checked={item.is_published}
+                  onCheckedChange={togglePublished}
+                  disabled={busy}
+                  aria-label={item.is_published ? "Unpublish photo" : "Publish photo"}
+                />
+                <Label htmlFor={`pub-toggle-${item.id}`} className="text-xs flex items-center gap-1 cursor-pointer">
+                  {item.is_published ? (
+                    <><Eye className="w-3 h-3 text-primary" /> <span className="text-primary font-medium">Live on site</span></>
+                  ) : (
+                    <><EyeOff className="w-3 h-3 text-muted-foreground" /> <span className="text-muted-foreground">Hidden (draft)</span></>
+                  )}
+                </Label>
+              </div>
               <div className="flex gap-1">
                 <Button variant="ghost" size="sm" onClick={() => setEditing(true)}>
                   Edit
