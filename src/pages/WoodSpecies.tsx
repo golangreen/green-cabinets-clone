@@ -19,6 +19,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 const WoodSpecies = () => {
+  const navigate = useNavigate();
+  const goToSpecies = (slug: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Route through react-router so HashScrollHandler runs and offsets the header.
+    navigate(`/wood-species#${slug}`);
+  };
+
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
