@@ -40,7 +40,7 @@ const Features = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   return (
-    <section id="solutions" className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#f8f8f8]">
+    <section id="solutions" className="py-16 sm:py-20 md:py-24 bg-[#f8f8f8]">
       <div className="container mx-auto px-6">
         {/* Section Title */}
         <div className="text-center mb-16">

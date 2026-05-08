@@ -64,7 +64,7 @@ const QualityCraftsmanship = () => {
   return (
     <section
       id="quality-craftsmanship"
-      className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background"
+      className="py-16 sm:py-20 md:py-24 bg-background"
     >
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
