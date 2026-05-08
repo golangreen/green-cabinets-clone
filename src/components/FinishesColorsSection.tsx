@@ -1,17 +1,16 @@
 /**
- * FinishesColorsSection — homepage section that surfaces the partner-brand
- * panel catalog directly inline, with a breadcrumb-style brand slider on
- * top (matching the Gallery / Luxury Millwork Gallery filter pattern).
- * Replaces the floating "Finishes & Colors" CTA.
+ * FinishesColorsSection — homepage section that surfaces a 4-panel preview
+ * of each partner brand inline, with a breadcrumb-style brand slider on top
+ * (matching the Gallery / Luxury Millwork Gallery filter pattern). The
+ * preview row scrolls horizontally so visitors can quickly skim the curated
+ * picks; the full filterable browser lives on /finishes-colors.
  */
 import { useState } from "react";
 import { ChevronRight, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BrandPanel } from "@/components/wood/MaterialsBrowser";
 import { PANELS_BY_BRAND } from "@/data/finishes";
 import type { MaterialBrand } from "@/types/materials";
-import SelectionDrawer from "@/components/wood/SelectionDrawer";
 
 const BRANDS: { key: MaterialBrand; label: string }[] = [
   { key: "Tafisa", label: "Tafisa" },
@@ -21,8 +20,11 @@ const BRANDS: { key: MaterialBrand; label: string }[] = [
   { key: "AGT", label: "AGT" },
 ];
 
+const PREVIEW_COUNT = 4;
+
 const FinishesColorsSection = () => {
   const [active, setActive] = useState<MaterialBrand>("Tafisa");
+  const panels = PANELS_BY_BRAND[active].slice(0, PREVIEW_COUNT);
 
   return (
     <section
@@ -39,7 +41,8 @@ const FinishesColorsSection = () => {
           </h2>
           <p className="text-base sm:text-lg text-[#444] max-w-2xl mx-auto">
             Browse the actual laminate, melamine, and veneer panels we order
-            from our partner brands. Tap a swatch to save favorites.
+            from our partner brands. Pick a brand, then swipe through a
+            preview of our most-ordered decors.
           </p>
         </div>
 
@@ -52,7 +55,6 @@ const FinishesColorsSection = () => {
               aria-label="Filter by brand"
             >
               {BRANDS.map((b, idx) => {
-                const count = PANELS_BY_BRAND[b.key].length;
                 const isActive = active === b.key;
                 return (
                   <div key={b.key} className="flex items-center gap-2 shrink-0">
@@ -74,11 +76,6 @@ const FinishesColorsSection = () => {
                       }`}
                     >
                       {b.label}
-                      {count > 0 && (
-                        <span className="ml-1 text-[11px] font-mono text-[#888]">
-                          ({count})
-                        </span>
-                      )}
                     </button>
                   </div>
                 );
@@ -87,7 +84,57 @@ const FinishesColorsSection = () => {
           </div>
         </div>
 
-        <BrandPanel brand={active} />
+        {/* Horizontal preview rail — 4 panels per brand */}
+        {panels.length === 0 ? (
+          <div className="text-center py-12 text-[#666] text-sm">
+            {active} catalog coming soon.
+          </div>
+        ) : (
+          <div
+            className="-mx-4 sm:-mx-6 overflow-x-auto scrollbar-none [-webkit-overflow-scrolling:touch] snap-x snap-mandatory"
+            aria-label={`${active} panel previews`}
+          >
+            <ul className="flex flex-nowrap gap-4 px-4 sm:px-6 pb-2">
+              {panels.map((panel) => (
+                <li
+                  key={panel.id}
+                  className="snap-start shrink-0 w-[70%] sm:w-[40%] md:w-[28%] lg:w-[22%]"
+                >
+                  <Link
+                    to="/finishes-colors"
+                    className="group block rounded-lg overflow-hidden border border-border bg-background hover:border-[#5C7650] hover:shadow-lg transition-all"
+                  >
+                    <div className="aspect-square overflow-hidden bg-muted">
+                      {panel.thumb ? (
+                        <img
+                          src={panel.thumb}
+                          alt={`${panel.brand} ${panel.name} panel sample`}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full group-hover:scale-105 transition-transform duration-500"
+                          style={{ background: panel.swatchHex ?? "#ddd" }}
+                          aria-label={`${panel.name} approximate color swatch`}
+                        />
+                      )}
+                    </div>
+                    <div className="p-2.5 space-y-1">
+                      <h4 className="text-sm font-semibold text-[#1a1a1a] line-clamp-1">
+                        {panel.name}
+                      </h4>
+                      <p className="text-[11px] font-mono text-[#5C7650] line-clamp-1">
+                        {panel.codes[0] ?? panel.brand}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="mt-10 text-center">
           <Button
@@ -96,14 +143,12 @@ const FinishesColorsSection = () => {
             className="border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
           >
             <Link to="/finishes-colors">
-              Open full Finishes &amp; Colors page
+              See all {active} finishes
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
       </div>
-
-      <SelectionDrawer />
     </section>
   );
 };
