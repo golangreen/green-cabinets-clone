@@ -215,17 +215,27 @@ const WoodSpecies = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 text-center">
               Browse Every Species
             </h2>
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {WOOD_SPECIES.map((w) => (
-                <a
-                  key={w.slug}
-                  href={`#${w.slug}`}
-                  onClick={goToSpecies(w.slug)}
-                  className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white transition-colors"
-                >
-                  {w.name}
-                </a>
-              ))}
+            <div className="sticky top-[88px] sm:top-[112px] md:top-[128px] z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 mb-8 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-y border-[#5C7650]/15">
+              <div className="flex flex-wrap justify-center gap-2">
+                {WOOD_SPECIES.map((w) => {
+                  const isActive = activeSlug === w.slug;
+                  return (
+                    <a
+                      key={w.slug}
+                      href={`#${w.slug}`}
+                      onClick={goToSpecies(w.slug)}
+                      aria-current={isActive ? "true" : undefined}
+                      className={`text-xs sm:text-sm px-3 py-1.5 rounded-full border transition-colors ${
+                        isActive
+                          ? "bg-[#5C7650] text-white border-[#5C7650] shadow-sm"
+                          : "border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
+                      }`}
+                    >
+                      {w.name}
+                    </a>
+                  );
+                })}
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {WOOD_SPECIES.map((w) => (
