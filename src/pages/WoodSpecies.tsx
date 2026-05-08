@@ -7,6 +7,7 @@
  *  - links to per-species deep pages
  */
 import { Helmet } from "react-helmet-async";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -25,6 +26,50 @@ const WoodSpecies = () => {
     // Route through react-router so HashScrollHandler runs and offsets the header.
     navigate(`/wood-species#${slug}`);
   };
+
+  // Scrollspy: track which species card is currently in view and highlight its chip.
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+  useEffect(() => {
+    const headerOffset = 160; // approximate fixed-header + chip-bar height
+    const visible = new Map<string, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            visible.set(entry.target.id, entry.intersectionRatio);
+          } else {
+            visible.delete(entry.target.id);
+          }
+        }
+        if (visible.size === 0) return;
+        // Pick the entry closest to the top of the viewport (below the header).
+        let bestId: string | null = null;
+        let bestTop = Infinity;
+        visible.forEach((_ratio, id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const top = el.getBoundingClientRect().top - headerOffset;
+          const distance = top >= 0 ? top : Math.abs(top) * 1.2;
+          if (distance < bestTop) {
+            bestTop = distance;
+            bestId = id;
+          }
+        });
+        setActiveSlug(bestId);
+      },
+      {
+        rootMargin: `-${headerOffset}px 0px -55% 0px`,
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      },
+    );
+
+    const els = WOOD_SPECIES
+      .map((w) => document.getElementById(w.slug))
+      .filter((el): el is HTMLElement => !!el);
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
 
   const itemListSchema = {
     "@context": "https://schema.org",
@@ -170,17 +215,27 @@ const WoodSpecies = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 text-center">
               Browse Every Species
             </h2>
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {WOOD_SPECIES.map((w) => (
-                <a
-                  key={w.slug}
-                  href={`#${w.slug}`}
-                  onClick={goToSpecies(w.slug)}
-                  className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white transition-colors"
-                >
-                  {w.name}
-                </a>
-              ))}
+            <div className="sticky top-[88px] sm:top-[112px] md:top-[128px] z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 mb-8 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-y border-[#5C7650]/15">
+              <div className="flex flex-wrap justify-center gap-2">
+                {WOOD_SPECIES.map((w) => {
+                  const isActive = activeSlug === w.slug;
+                  return (
+                    <a
+                      key={w.slug}
+                      href={`#${w.slug}`}
+                      onClick={goToSpecies(w.slug)}
+                      aria-current={isActive ? "true" : undefined}
+                      className={`text-xs sm:text-sm px-3 py-1.5 rounded-full border transition-colors ${
+                        isActive
+                          ? "bg-[#5C7650] text-white border-[#5C7650] shadow-sm"
+                          : "border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
+                      }`}
+                    >
+                      {w.name}
+                    </a>
+                  );
+                })}
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {WOOD_SPECIES.map((w) => (
