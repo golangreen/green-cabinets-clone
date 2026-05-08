@@ -137,6 +137,27 @@ function PanelModal({
                 you book a consultation and we will pull it for you.
               </p>
             </div>
+            <Button
+              type="button"
+              onClick={() => toggle(panel.id)}
+              className={`w-full ${
+                selected
+                  ? "bg-[#5C7650] hover:bg-[#445339] text-white"
+                  : "bg-white border border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650]/10"
+              }`}
+            >
+              {selected ? (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  Added to selection
+                </>
+              ) : (
+                <>
+                  <Heart className="h-4 w-4 mr-2" />
+                  Add to my selection
+                </>
+              )}
+            </Button>
             {panel.detailUrl && (
               <Button asChild variant="outline" size="sm" className="w-full">
                 <a href={panel.detailUrl} target="_blank" rel="noopener noreferrer">
