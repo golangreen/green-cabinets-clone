@@ -84,43 +84,48 @@ const Testimonials = () => {
     <section
       id="testimonials"
       aria-labelledby="testimonials-heading"
-      className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#d5d5d5]"
+      className="py-16 sm:py-20 md:py-24 bg-[#d5d5d5]"
     >
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(reviewSchema)}</script>
       </Helmet>
       <div className="container mx-auto px-6">
-        <div className="max-w-3xl mx-auto text-center mb-16">
+        <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
           <h2 id="testimonials-heading" className="font-display text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
             Trusted by NYC Condo & Co-op Owners
           </h2>
-          <p className="text-lg text-[#555555] leading-relaxed">
+          <p className="text-base sm:text-lg text-[#555555] leading-relaxed">
             Hear from clients across Brooklyn, Manhattan, and Queens about our condo/co-op expertise and installation precision.
           </p>
+          <p className="md:hidden text-xs text-[#666] mt-3">Swipe to read all {testimonials.length} reviews →</p>
         </div>
+      </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {testimonials.map((t) => (
-            <figure
-              key={t.name}
-              className="relative p-8 rounded-2xl bg-card border border-border hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col"
-            >
-              <Quote className="absolute top-6 right-6 w-8 h-8 text-primary/20" />
-              <div className="flex gap-1 mb-4">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-primary text-primary" />
-                ))}
-              </div>
-              <blockquote className="text-[#444444] leading-relaxed mb-6 flex-1">
-                "{t.quote}"
-              </blockquote>
-              <figcaption>
-                <div className="font-semibold text-[#1a1a1a]">{t.name}</div>
-                <div className="text-sm text-[#666666]">{t.location}</div>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+      <div
+        role="region"
+        aria-label="Customer testimonials carousel"
+        className="flex overflow-x-auto snap-x snap-mandatory gap-5 px-6 pb-4 scrollbar-none [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.5rem]"
+      >
+        {testimonials.map((t) => (
+          <figure
+            key={t.name}
+            className="snap-start shrink-0 w-[82vw] sm:w-[55vw] md:w-[40vw] lg:w-[30vw] max-w-[420px] relative p-7 rounded-2xl bg-card border border-border hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col"
+          >
+            <Quote className="absolute top-6 right-6 w-8 h-8 text-primary/20" />
+            <div className="flex gap-1 mb-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-primary text-primary" />
+              ))}
+            </div>
+            <blockquote className="text-[#444444] leading-relaxed mb-6 flex-1">
+              "{t.quote}"
+            </blockquote>
+            <figcaption>
+              <div className="font-semibold text-[#1a1a1a]">{t.name}</div>
+              <div className="text-sm text-[#666666]">{t.location}</div>
+            </figcaption>
+          </figure>
+        ))}
       </div>
     </section>
   );

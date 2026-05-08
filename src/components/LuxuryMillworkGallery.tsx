@@ -60,7 +60,7 @@ const LuxuryMillworkGallery = () => {
   return (
     <section
       id="luxury-millwork-gallery"
-      className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#d5d5d5]"
+      className="py-16 sm:py-20 md:py-24 bg-[#d5d5d5]"
     >
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-12">

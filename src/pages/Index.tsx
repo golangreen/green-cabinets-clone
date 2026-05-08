@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -24,6 +24,10 @@ const Gallery = lazy(() => import("@/components/Gallery"));
 const ShopProducts = lazy(() => import("@/components/ShopProducts").then(m => ({ default: m.ShopProducts })));
 
 const Index = () => {
+  useEffect(() => {
+    document.documentElement.classList.add("snap-home");
+    return () => document.documentElement.classList.remove("snap-home");
+  }, []);
   return (
     <div className="min-h-screen">
       <Helmet>

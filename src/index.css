@@ -116,3 +116,17 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Homepage snap-scroll: each top-level <section> proximity-snaps under the fixed header.
+   Proximity (not mandatory) keeps free scrolling natural and won't fight users. */
+html.snap-home {
+  scroll-snap-type: y proximity;
+}
+html.snap-home body section {
+  scroll-snap-align: start;
+  scroll-margin-top: 5rem;
+}
+
+/* Hide horizontal rail scrollbars while keeping native swipe behavior */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
