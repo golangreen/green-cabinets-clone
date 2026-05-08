@@ -157,15 +157,42 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
 
       <Header />
 
-      <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
+      <nav
+        aria-label="Breadcrumb"
+        className="bg-background border-b border-border pt-24 sm:pt-28 pb-4"
+      >
+        <div className="container mx-auto px-6 max-w-4xl">
+          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-[#555555]">
+            <li>
+              <Link to="/" className="hover:text-primary transition-colors">
+                Home
+              </Link>
+            </li>
+            <ChevronRight className="w-4 h-4 text-[#999999]" aria-hidden="true" />
+            <li>
+              <Link
+                to="/#neighborhoods"
+                className="hover:text-primary transition-colors"
+              >
+                Neighborhoods
+              </Link>
+            </li>
+            <ChevronRight className="w-4 h-4 text-[#999999]" aria-hidden="true" />
+            <li>
+              <Link to={boroughHref} className="hover:text-primary transition-colors">
+                {borough.name}
+              </Link>
+            </li>
+            <ChevronRight className="w-4 h-4 text-[#999999]" aria-hidden="true" />
+            <li aria-current="page" className="font-semibold text-[#1a1a1a]">
+              {n.name}
+            </li>
+          </ol>
+        </div>
+      </nav>
+
+      <section className="pt-10 pb-16 sm:pb-20 md:pb-28 lg:pb-32 bg-background">
         <div className="container mx-auto px-6 max-w-4xl text-center">
-          <Link
-            to="/#neighborhoods"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-[#445339] transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to all neighborhoods
-          </Link>
           <div className="inline-flex items-center gap-2 text-primary mb-4">
             <MapPin className="w-5 h-5" />
             <span className="font-semibold uppercase tracking-wide text-sm">
