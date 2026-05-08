@@ -577,9 +577,27 @@ const NeighborhoodGalleryAdmin = () => {
                 <Trash2 className="w-4 h-4 mr-1" /> Delete
               </Button>
               {selectedCount > 0 && (
-                <Button size="sm" variant="ghost" onClick={clearSelected} disabled={bulkBusy}>
-                  Clear
-                </Button>
+                <>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={async () => {
+                      const url = `${window.location.origin}${window.location.pathname}?sel=${Array.from(selected).join(",")}`;
+                      try {
+                        await navigator.clipboard.writeText(url);
+                        toast({ title: "Selection link copied", description: `${selectedCount} item${selectedCount === 1 ? "" : "s"}` });
+                      } catch {
+                        toast({ title: "Copy failed", description: "Could not access clipboard", variant: "destructive" });
+                      }
+                    }}
+                    disabled={bulkBusy}
+                  >
+                    <Link2 className="w-4 h-4 mr-1" /> Copy selection link
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={clearSelected} disabled={bulkBusy}>
+                    Clear
+                  </Button>
+                </>
               )}
             </div>
           </div>
