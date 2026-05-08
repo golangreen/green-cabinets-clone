@@ -13,6 +13,7 @@ import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import WoodCompare from "@/components/wood/WoodCompare";
 import WoodOverviewTable from "@/components/wood/WoodOverviewTable";
+import MaterialsBrowser from "@/components/wood/MaterialsBrowser";
 import { WOOD_SPECIES } from "@/data/woodSpecies";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -122,6 +123,26 @@ const WoodSpecies = () => {
               </p>
             </div>
             <WoodOverviewTable />
+          </div>
+        </section>
+
+        {/* Materials browser — real panels from Tafisa, Shinnoki, Egger, Wilsonart */}
+        <section id="materials" className="py-12 sm:py-16 md:py-20">
+          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+            <div className="text-center mb-8">
+              <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-2">
+                Real Panels, Real Codes
+              </p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-3">
+                Browse the Materials We Stock
+              </h2>
+              <p className="text-[#555555] max-w-2xl mx-auto">
+                Beyond solid hardwoods, we work with leading laminate and melamine brands. Browse
+                actual panels, filter by color or finish, and bring the code to our Bushwick
+                showroom to see and feel the real sample.
+              </p>
+            </div>
+            <MaterialsBrowser />
           </div>
         </section>
 
