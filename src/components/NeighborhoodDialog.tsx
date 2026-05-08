@@ -1,4 +1,5 @@
-import { MapPin, Images, MessageSquare } from "lucide-react";
+import { MapPin, Images, MessageSquare, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +8,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { getNeighborhoodInfo } from "@/data/neighborhoodFacts";
+import { NEIGHBORHOOD_LIST } from "@/data/neighborhoodSeo";
 
 interface Props {
   neighborhood: string | null;
