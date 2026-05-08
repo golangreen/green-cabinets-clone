@@ -46,6 +46,11 @@ const App = () => {
                 <PerformanceMonitor />
               </AdminRoute>
             } />
+            <Route path="/admin/gallery" element={
+              <AdminRoute>
+                <NeighborhoodGalleryAdmin />
+              </AdminRoute>
+            } />
             <Route path="/custom-kitchen-cabinets-:slug" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
