@@ -28,6 +28,7 @@ const BRANDS: { key: MaterialBrand; label: string }[] = [
   { key: "Shinnoki", label: "Shinnoki" },
   { key: "Egger", label: "Egger" },
   { key: "Wilsonart", label: "Wilsonart" },
+  { key: "AGT", label: "AGT" },
 ];
 
 function PanelCard({
