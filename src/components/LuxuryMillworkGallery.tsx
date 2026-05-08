@@ -88,25 +88,27 @@ const LuxuryMillworkGallery = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
-          {filtered.map((item, i) => (
-            <button
-              key={item.src}
-              onClick={() => setOpenIndex(i)}
-              className="group relative overflow-hidden rounded-xl aspect-[4/3] bg-card focus:outline-none focus:ring-2 focus:ring-primary"
-              aria-label={`Open image: ${item.alt}`}
-            >
-              <img
-                src={item.src}
-                alt={item.alt}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                <span className="text-white text-sm font-medium">{item.category}</span>
-              </div>
-            </button>
-          ))}
+        <div className="-mx-6">
+          <div className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none px-6 pb-4 [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.5rem]">
+            {filtered.map((item, i) => (
+              <button
+                key={item.src}
+                onClick={() => setOpenIndex(i)}
+                className="group relative overflow-hidden rounded-xl aspect-[4/3] bg-card focus:outline-none focus:ring-2 focus:ring-primary snap-start shrink-0 w-[78vw] sm:w-[48vw] md:w-[36vw] lg:w-[28vw]"
+                aria-label={`Open image: ${item.alt}`}
+              >
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex items-end p-4">
+                  <span className="text-white text-sm font-medium">{item.category}</span>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
