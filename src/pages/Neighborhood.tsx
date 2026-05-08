@@ -9,6 +9,7 @@ import CTA from "@/components/CTA";
 import Contact from "@/components/Contact";
 import Chatbot from "@/components/Chatbot";
 import NeighborhoodDialog from "@/components/NeighborhoodDialog";
+import GalleryLightbox from "@/components/GalleryLightbox";
 import type { NeighborhoodSeo } from "@/data/neighborhoodSeo";
 import { BOROUGHS } from "@/data/boroughSeo";
 
