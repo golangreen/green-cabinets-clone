@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import MaterialsBrowser from "@/components/wood/MaterialsBrowser";
 import SelectionDrawer from "@/components/wood/SelectionDrawer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
 const FinishesColors = () => {
   return (
