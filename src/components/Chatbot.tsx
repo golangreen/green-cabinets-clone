@@ -170,7 +170,7 @@ const Chatbot = () => {
   return (
     <>
       {/* Scroll to Top Button */}
-      {!isOpen && (
+      {!isOpen && !hideSectionNavArrows && (
         <Button
           onClick={scrollToTop}
           className="fixed bottom-[140px] right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
