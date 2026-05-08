@@ -324,7 +324,7 @@ const Gallery = () => {
     : galleryImages.filter(img => img.category === activeCategory);
 
   // Limit to 3 images unless "Show All" is clicked
-  const displayedImages = showAllImages ? filteredImages : filteredImages.slice(0, 3);
+  void showAllImages;
 
   const kitchens = galleryImages.filter(img => img.category === "kitchens");
   const vanities = galleryImages.filter(img => img.category === "vanities");
@@ -455,12 +455,25 @@ const Gallery = () => {
           );
         })()}
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedImages.map((image, index) => (
+        {/* Horizontal swipeable rail with edge fades */}
+        <div className="relative -mx-6 md:-mx-8">
+          <div
+            className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 md:w-12 bg-gradient-to-r from-background to-transparent z-10"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 md:w-12 bg-gradient-to-l from-background to-transparent z-10"
+            aria-hidden="true"
+          />
+          <div
+            role="region"
+            aria-label="Project gallery — swipe to browse"
+            className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-none snap-x snap-mandatory px-6 md:px-8 pb-4 [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.5rem]"
+          >
+          {filteredImages.map((image, index) => (
             <div 
               key={index}
-              className="group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 bg-card"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="group shrink-0 snap-start w-[80vw] sm:w-[60vw] md:w-[44vw] lg:w-[32vw] xl:w-[26vw] max-w-[480px] overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 bg-card"
             >
               <div className="relative">
                 <div className="aspect-[4/3] overflow-hidden bg-muted">
@@ -502,21 +515,13 @@ const Gallery = () => {
               )}
             </div>
           ))}
-        </div>
-
-        {/* Show All / Show Less Button */}
-        {filteredImages.length > 3 && (
-          <div className="flex justify-center mt-12">
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => setShowAllImages(!showAllImages)}
-              className="min-w-[200px]"
-            >
-              {showAllImages ? `Show Less` : `View All ${filteredImages.length} Images`}
-            </Button>
           </div>
-        )}
+          {filteredImages.length > 1 && (
+            <p className="mt-3 text-center text-xs text-muted-foreground md:hidden">
+              Swipe to browse {filteredImages.length} projects →
+            </p>
+          )}
+        </div>
       </div>
     </section>
   );
