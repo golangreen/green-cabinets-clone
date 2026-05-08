@@ -617,6 +617,17 @@ const NeighborhoodGalleryAdmin = () => {
               >
                 <Trash2 className="w-4 h-4 mr-1" /> Delete
               </Button>
+              {lastFailed && lastFailed.ids.length > 0 && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={retryLastFailed}
+                  disabled={bulkBusy}
+                  title={`Retry ${lastFailed.is_published ? "publish" : "unpublish"} for ${lastFailed.ids.length} failed item${lastFailed.ids.length === 1 ? "" : "s"}`}
+                >
+                  Retry failed ({lastFailed.ids.length})
+                </Button>
+              )}
               {selectedCount > 0 && (
                 <>
                   <Button
