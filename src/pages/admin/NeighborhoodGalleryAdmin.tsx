@@ -94,6 +94,30 @@ const NeighborhoodGalleryAdmin = () => {
     void refresh();
   }, []);
 
+  // Persist selection across reloads
+  useEffect(() => {
+    try {
+      localStorage.setItem(SELECTION_KEY, JSON.stringify(Array.from(selected)));
+    } catch {
+      /* ignore quota errors */
+    }
+  }, [selected]);
+
+  // Prune selected IDs that no longer exist after items refresh
+  useEffect(() => {
+    if (loading || items.length === 0) return;
+    const existing = new Set(items.map((i) => i.id));
+    setSelected((prev) => {
+      let changed = false;
+      const next = new Set<string>();
+      prev.forEach((id) => {
+        if (existing.has(id)) next.add(id);
+        else changed = true;
+      });
+      return changed ? next : prev;
+    });
+  }, [items, loading]);
+
   const handleFiles = async (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return;
     const files = Array.from(fileList).filter((f) => f.type.startsWith("image/"));
