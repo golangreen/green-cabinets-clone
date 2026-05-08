@@ -65,36 +65,6 @@ const WoodSpecies = () => {
       />
 
       <main className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
-        {/* Hero */}
-        <section className="bg-[#d5d5d5]/40 py-16 sm:py-20 md:py-24">
-          <div className="container mx-auto px-4 sm:px-6 max-w-5xl text-center space-y-4">
-            <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold">
-              The Material Library
-            </p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a]">
-              Cabinet Wood Species — A Complete Guide
-            </h1>
-            <p className="text-base sm:text-lg text-[#555555] max-w-3xl mx-auto leading-relaxed">
-              Choosing a wood is the single biggest decision in a custom cabinet project. It
-              determines how your kitchen looks, how it ages, how it stands up to daily life, and
-              what it costs. Below is everything we have learned in 15 years of building custom
-              cabinets in Brooklyn — every species we work with, head-to-head, with the tradeoffs
-              spelled out plainly.
-            </p>
-            <div className="flex flex-wrap justify-center gap-2 pt-4">
-              {WOOD_SPECIES.map((w) => (
-                <a
-                  key={w.slug}
-                  href={`#${w.slug}`}
-                  className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white transition-colors"
-                >
-                  {w.name}
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Materials browser — top priority entry point */}
         <section id="materials" className="py-14 sm:py-20 md:py-24 bg-[#5C7650] text-white">
           <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
@@ -137,6 +107,25 @@ const WoodSpecies = () => {
           </div>
         </section>
 
+        {/* Hero / intro */}
+        <section className="bg-[#d5d5d5]/40 py-16 sm:py-20 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl text-center space-y-4">
+            <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold">
+              The Material Library
+            </p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a]">
+              Cabinet Wood Species — A Complete Guide
+            </h1>
+            <p className="text-base sm:text-lg text-[#555555] max-w-3xl mx-auto leading-relaxed">
+              Choosing a wood is the single biggest decision in a custom cabinet project. It
+              determines how your kitchen looks, how it ages, how it stands up to daily life, and
+              what it costs. Below is everything we have learned in 15 years of building custom
+              cabinets in Brooklyn — every species we work with, head-to-head, with the tradeoffs
+              spelled out plainly.
+            </p>
+          </div>
+        </section>
+
         {/* Interactive compare */}
         <section className="py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
@@ -171,9 +160,20 @@ const WoodSpecies = () => {
         {/* Species cards */}
         <section className="py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-8 text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 text-center">
               Browse Every Species
             </h2>
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {WOOD_SPECIES.map((w) => (
+                <a
+                  key={w.slug}
+                  href={`#${w.slug}`}
+                  className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white transition-colors"
+                >
+                  {w.name}
+                </a>
+              ))}
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {WOOD_SPECIES.map((w) => (
                 <Link
