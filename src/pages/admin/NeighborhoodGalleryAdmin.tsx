@@ -547,6 +547,15 @@ const NeighborhoodGalleryAdmin = () => {
                 {allVisibleSelected ? "Deselect all" : "Select all visible"}
               </Label>
             </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setSelected(new Set(visibleIds))}
+              disabled={bulkBusy || visibleIds.length === 0 || allVisibleSelected}
+              title={filter === "all" ? "Select every item across all neighborhoods" : `Select all items in ${filter}`}
+            >
+              Select all filtered ({visibleIds.length})
+            </Button>
             <span className="text-sm text-muted-foreground">
               {selectedCount} selected
             </span>
