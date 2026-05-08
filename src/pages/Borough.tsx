@@ -9,6 +9,7 @@ import CTA from "@/components/CTA";
 import Contact from "@/components/Contact";
 import Chatbot from "@/components/Chatbot";
 import NeighborhoodDialog from "@/components/NeighborhoodDialog";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
 import { NEIGHBORHOODS } from "@/data/neighborhoodSeo";
 import Neighborhood from "@/pages/Neighborhood";
