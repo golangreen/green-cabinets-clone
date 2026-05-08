@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check, X, ArrowRight, ArrowLeft } from "lucide-react";
 import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
+import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
 
 const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -104,13 +105,10 @@ const WoodSpeciesDetail = () => {
                   <em>{wood.scientificName}</em> · {wood.origin}
                 </p>
               </div>
-              <div className="rounded-xl overflow-hidden shadow-2xl">
-                <img
-                  src={wood.image}
-                  alt={`${wood.name} cabinet wood sample showing grain and color`}
-                  className="w-full aspect-[4/3] object-cover"
-                />
-              </div>
+              <WoodGalleryCarousel
+                speciesName={wood.name}
+                images={[wood.image, wood.grainImage, ...(wood.gallery ?? [])]}
+              />
             </div>
           </div>
         </section>

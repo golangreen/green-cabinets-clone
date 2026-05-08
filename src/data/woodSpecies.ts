@@ -63,6 +63,8 @@ export interface WoodSpecies {
   image: string;
   /** Close-up grain image. */
   grainImage: string;
+  /** Optional additional panel shots shown in the detail-page carousel. */
+  gallery?: string[];
   /** SEO keywords for the species detail page. */
   keywords: string[];
   /** FAQ entries shown on detail page (also used for FAQPage schema). */
