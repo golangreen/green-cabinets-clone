@@ -19,6 +19,9 @@ interface Props {
 const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
   const open = !!neighborhood;
   const info = neighborhood ? getNeighborhoodInfo(neighborhood) : null;
+  const dedicatedPage = neighborhood
+    ? NEIGHBORHOOD_LIST.find((n) => n.name === neighborhood)
+    : undefined;
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
