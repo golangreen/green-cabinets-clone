@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { neighborhoodGalleryService } from "@/services/neighborhoodGalleryService";
+import type { PublicNeighborhoodGalleryItem } from "@/types/neighborhoodGallery";
 import { MapPin } from "lucide-react";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import Header from "@/components/Header";
