@@ -10,12 +10,16 @@ import Contact from "@/components/Contact";
 import Chatbot from "@/components/Chatbot";
 import NeighborhoodDialog from "@/components/NeighborhoodDialog";
 import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
+import { NEIGHBORHOODS } from "@/data/neighborhoodSeo";
+import Neighborhood from "@/pages/Neighborhood";
 
 const Borough = () => {
   const { slug } = useParams<{ slug: string }>();
   const borough = slug ? BOROUGHS[slug as BoroughSlug] : undefined;
+  const neighborhood = slug ? NEIGHBORHOODS[slug] : undefined;
   const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
 
+  if (neighborhood) return <Neighborhood neighborhood={neighborhood} />;
   if (!borough) return <Navigate to="/" replace />;
 
   const faqJsonLd = {
