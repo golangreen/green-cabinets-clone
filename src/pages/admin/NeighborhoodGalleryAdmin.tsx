@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Loader2, Sparkles, Trash2, Upload, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,8 +52,17 @@ const NeighborhoodGalleryAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
   const SELECTION_KEY = "neighborhood-gallery-admin:selected";
+  const SELECTION_PARAM = "sel";
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selected, setSelected] = useState<Set<string>>(() => {
+    // URL takes precedence over localStorage so shared links work.
     try {
+      const params = new URLSearchParams(window.location.search);
+      const fromUrl = params.get(SELECTION_PARAM);
+      if (fromUrl) {
+        const ids = fromUrl.split(",").map((s) => s.trim()).filter(Boolean);
+        if (ids.length) return new Set(ids);
+      }
       const raw = localStorage.getItem(SELECTION_KEY);
       if (!raw) return new Set();
       const arr = JSON.parse(raw);
@@ -94,14 +103,23 @@ const NeighborhoodGalleryAdmin = () => {
     void refresh();
   }, []);
 
-  // Persist selection across reloads
+  // Persist selection across reloads (localStorage + URL query string for sharing)
   useEffect(() => {
     try {
       localStorage.setItem(SELECTION_KEY, JSON.stringify(Array.from(selected)));
     } catch {
       /* ignore quota errors */
     }
-  }, [selected]);
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (selected.size === 0) next.delete(SELECTION_PARAM);
+        else next.set(SELECTION_PARAM, Array.from(selected).join(","));
+        return next;
+      },
+      { replace: true },
+    );
+  }, [selected, setSearchParams]);
 
   // Prune selected IDs that no longer exist after items refresh
   useEffect(() => {
