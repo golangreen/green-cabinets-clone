@@ -63,6 +63,7 @@ const App = () => {
             <Route path="/custom-kitchen-cabinets/:slug" element={<LegacyRedirect />} />
             <Route path="/wood-species" element={<WoodSpecies />} />
             <Route path="/wood-species/:slug" element={<WoodSpeciesDetail />} />
+            <Route path="/finishes-colors" element={<FinishesColors />} />
             <Route path="/:boroughPath" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
