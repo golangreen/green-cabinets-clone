@@ -1,4 +1,5 @@
-import { MapPin, Images, MessageSquare } from "lucide-react";
+import { MapPin, Images, MessageSquare, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +8,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { getNeighborhoodInfo } from "@/data/neighborhoodFacts";
+import { NEIGHBORHOOD_LIST } from "@/data/neighborhoodSeo";
 
 interface Props {
   neighborhood: string | null;
@@ -17,6 +19,9 @@ interface Props {
 const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
   const open = !!neighborhood;
   const info = neighborhood ? getNeighborhoodInfo(neighborhood) : null;
+  const dedicatedPage = neighborhood
+    ? NEIGHBORHOOD_LIST.find((n) => n.name === neighborhood)
+    : undefined;
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -49,6 +54,17 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
                   {info.fact}
                 </DialogDescription>
               </DialogHeader>
+
+              {dedicatedPage && (
+                <Link
+                  to={`/custom-kitchen-cabinets-${dedicatedPage.slug}`}
+                  onClick={onClose}
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-[#445339] transition-colors"
+                >
+                  Read more about cabinetry in {dedicatedPage.name}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              )}
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <button
