@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
-import { Loader2, Sparkles, Trash2, Upload, Eye, EyeOff } from "lucide-react";
+import { Loader2, Sparkles, Trash2, Upload, Eye, EyeOff, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
