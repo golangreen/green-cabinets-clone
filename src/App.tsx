@@ -22,7 +22,7 @@ import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
 import LegacyRedirect from "@/components/LegacyRedirect";
-import FinishesFab from "@/components/FinishesFab";
+
 
 const queryClient = new QueryClient();
 
