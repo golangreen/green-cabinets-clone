@@ -574,9 +574,13 @@ const NeighborhoodGalleryAdmin = () => {
 const SavedItemCard = ({
   item,
   onChange,
+  selected,
+  onToggleSelect,
 }: {
   item: NeighborhoodGalleryItem;
   onChange: () => Promise<void> | void;
+  selected?: boolean;
+  onToggleSelect?: () => void;
 }) => {
   const { toast } = useToast();
   const [editing, setEditing] = useState(false);
