@@ -12,6 +12,19 @@ import NeighborhoodDialog from "@/components/NeighborhoodDialog";
 import type { NeighborhoodSeo } from "@/data/neighborhoodSeo";
 import { BOROUGHS } from "@/data/boroughSeo";
 
+// Eagerly resolve every gallery asset URL once at build time.
+const GALLERY_ASSETS = import.meta.glob(
+  "@/assets/gallery/*.{jpg,jpeg,png,webp}",
+  { eager: true, import: "default", query: "?url" },
+) as Record<string, string>;
+
+const resolveGallery = (file: string): string | undefined => {
+  const match = Object.entries(GALLERY_ASSETS).find(([path]) =>
+    path.endsWith(`/${file}`),
+  );
+  return match?.[1];
+};
+
 interface Props {
   neighborhood: NeighborhoodSeo;
 }
@@ -153,6 +166,53 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
           ))}
         </div>
       </section>
+
+      {n.gallery.length > 0 && (
+        <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
+          <div className="container mx-auto px-6 max-w-6xl">
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-3 text-center">
+              Recent Green Cabinets projects
+            </h2>
+            <p className="text-center text-[#555555] mb-10 max-w-2xl mx-auto">
+              A small sample of cabinetry styles we build for {n.name} kitchens — each
+              one designed, milled, and hand-finished in our Bushwick shop.
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {n.gallery.map((item) => {
+                const src = resolveGallery(item.file);
+                if (!src) return null;
+                const alt = `${item.caption} — Green Cabinets NY, custom cabinetry in ${n.name}, ${n.boroughName}`;
+                return (
+                  <li
+                    key={item.file}
+                    className="bg-[#d5d5d5] rounded-xl overflow-hidden shadow-sm transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
+                  >
+                    <div className="aspect-[4/3] w-full overflow-hidden">
+                      <img
+                        src={src}
+                        alt={alt}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="text-sm text-[#1a1a1a] px-4 py-3">
+                      {item.caption}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="mt-10 text-center">
+              <Link
+                to="/#gallery"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-[#445339] transition-colors"
+              >
+                See the full project gallery →
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
         <div className="container mx-auto px-6 max-w-3xl">
