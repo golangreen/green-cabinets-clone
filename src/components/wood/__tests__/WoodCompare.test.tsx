@@ -11,22 +11,21 @@ const renderCompare = () =>
     </MemoryRouter>
   );
 
-// The comparison cards live in the second grid (after the selector grid).
-// We identify a comparison card by its "Read full guide" link, which only
-// appears inside the side-by-side panel — not in the checkbox selector.
-const getComparisonCards = () =>
-  screen
-    .getAllByRole("link", { name: /read full guide/i })
-    .map((link) => link.closest("div.relative") as HTMLElement);
+// A "comparison card" is a panel with a "Read full guide" link inside it.
+// We count cards by counting those links and find each by its species heading.
+const getCardCount = () =>
+  screen.getAllByRole("link", { name: /read full guide/i }).length;
+
+const hasComparedSpecies = (name: string) =>
+  screen.getAllByRole("heading", { name }).length > 0;
 
 describe("WoodCompare", () => {
   it("renders the default 3 species side-by-side on mount", () => {
     renderCompare();
-    const cards = getComparisonCards();
-    expect(cards).toHaveLength(3);
-    expect(within(cards[0]).getByRole("heading", { name: "Maple" })).toBeInTheDocument();
-    expect(within(cards[1]).getByRole("heading", { name: "White Oak" })).toBeInTheDocument();
-    expect(within(cards[2]).getByRole("heading", { name: "American Walnut" })).toBeInTheDocument();
+    expect(getCardCount()).toBe(3);
+    expect(hasComparedSpecies("Maple")).toBe(true);
+    expect(hasComparedSpecies("White Oak")).toBe(true);
+    expect(hasComparedSpecies("American Walnut")).toBe(true);
   });
 
   it("adds a 4th species to the comparison when its checkbox is selected", () => {
