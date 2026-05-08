@@ -24,6 +24,10 @@ const Gallery = lazy(() => import("@/components/Gallery"));
 const ShopProducts = lazy(() => import("@/components/ShopProducts").then(m => ({ default: m.ShopProducts })));
 
 const Index = () => {
+  useEffect(() => {
+    document.documentElement.classList.add("snap-home");
+    return () => document.documentElement.classList.remove("snap-home");
+  }, []);
   return (
     <div className="min-h-screen">
       <Helmet>
