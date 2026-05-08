@@ -72,6 +72,7 @@ const NeighborhoodGalleryAdmin = () => {
     }
   });
   const [bulkBusy, setBulkBusy] = useState(false);
+  const [lastFailed, setLastFailed] = useState<{ ids: string[]; is_published: boolean } | null>(null);
 
   const toggleSelected = (id: string) => {
     setSelected((prev) => {
@@ -292,32 +293,33 @@ const NeighborhoodGalleryAdmin = () => {
     });
   };
 
-  const bulkSetPublished = async (is_published: boolean) => {
-    if (selected.size === 0) return;
+  const runBulkSetPublished = async (ids: string[], is_published: boolean) => {
+    if (ids.length === 0) return;
     setBulkBusy(true);
     try {
       const { succeeded, failed } = await neighborhoodGalleryService.bulkSetPublished(
-        Array.from(selected),
+        ids,
         is_published,
       );
       const verb = is_published ? "published" : "unpublished";
       const Verb = is_published ? "Published" : "Unpublished";
       if (failed.length === 0) {
         toast({ title: `${Verb} ${succeeded.length} photo${succeeded.length === 1 ? "" : "s"}` });
+        setLastFailed(null);
       } else if (succeeded.length === 0) {
         toast({
           title: `Failed to ${verb.slice(0, -2)} ${failed.length} photo${failed.length === 1 ? "" : "s"}`,
           description: failed[0]?.error,
           variant: "destructive",
         });
+        setLastFailed({ ids: failed.map((f) => f.id), is_published });
       } else {
         toast({
           title: `${Verb} ${succeeded.length}, ${failed.length} failed`,
-          description: failed[0]?.error
-            ? `First error: ${failed[0].error}`
-            : undefined,
+          description: failed[0]?.error ? `First error: ${failed[0].error}` : undefined,
           variant: "destructive",
         });
+        setLastFailed({ ids: failed.map((f) => f.id), is_published });
       }
       // Keep failed items selected so the user can retry
       setSelected(new Set(failed.map((f) => f.id)));
@@ -331,6 +333,14 @@ const NeighborhoodGalleryAdmin = () => {
     } finally {
       setBulkBusy(false);
     }
+  };
+
+  const bulkSetPublished = (is_published: boolean) =>
+    runBulkSetPublished(Array.from(selected), is_published);
+
+  const retryLastFailed = () => {
+    if (!lastFailed || lastFailed.ids.length === 0) return;
+    void runBulkSetPublished(lastFailed.ids, lastFailed.is_published);
   };
 
   const bulkDelete = async () => {
@@ -607,6 +617,17 @@ const NeighborhoodGalleryAdmin = () => {
               >
                 <Trash2 className="w-4 h-4 mr-1" /> Delete
               </Button>
+              {lastFailed && lastFailed.ids.length > 0 && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={retryLastFailed}
+                  disabled={bulkBusy}
+                  title={`Retry ${lastFailed.is_published ? "publish" : "unpublish"} for ${lastFailed.ids.length} failed item${lastFailed.ids.length === 1 ? "" : "s"}`}
+                >
+                  Retry failed ({lastFailed.ids.length})
+                </Button>
+              )}
               {selectedCount > 0 && (
                 <>
                   <Button
