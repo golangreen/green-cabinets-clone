@@ -17,6 +17,7 @@ import NeighborhoodGalleryAdmin from "./pages/admin/NeighborhoodGalleryAdmin";
 import Borough from "./pages/Borough";
 import WoodSpecies from "./pages/WoodSpecies";
 import WoodSpeciesDetail from "./pages/WoodSpeciesDetail";
+import FinishesColors from "./pages/FinishesColors";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
