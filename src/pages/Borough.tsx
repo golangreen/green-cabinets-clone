@@ -113,12 +113,13 @@ const Borough = () => {
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {borough.neighborhoods.map((n) => (
               <li key={n}>
-                <Link
-                  to={`/#borough-${borough.slug}`}
-                  className="block bg-background rounded-lg px-4 py-3 text-center text-[#1a1a1a] font-medium hover:text-primary transition-colors"
+                <button
+                  type="button"
+                  onClick={() => setActiveNeighborhood(n)}
+                  className="w-full block bg-background rounded-lg px-4 py-3 text-center text-[#1a1a1a] font-medium hover:text-primary transition-colors"
                 >
                   {n}
-                </Link>
+                </button>
               </li>
             ))}
           </ul>
