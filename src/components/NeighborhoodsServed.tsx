@@ -1,6 +1,8 @@
 import { MapPin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { BOROUGH_LIST } from "@/data/boroughSeo";
+import NeighborhoodDialog from "@/components/NeighborhoodDialog";
 
 const scrollToId = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -9,6 +11,7 @@ const scrollToId = (id: string) => {
 const scrollToContact = () => scrollToId("contact");
 
 const NeighborhoodsServed = () => {
+  const [active, setActive] = useState<{ name: string; boroughSlug: string } | null>(null);
   return (
     <section
       id="neighborhoods"
