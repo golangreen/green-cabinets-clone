@@ -65,6 +65,12 @@ const WoodCompare = () => {
           })}
         </div>
 
+        {chosen.length === 0 && (
+          <p className="text-sm text-muted-foreground text-center py-6">
+            Check a species above to start comparing.
+          </p>
+        )}
+
         {/* Comparison grid */}
         <div
           className={`grid gap-4 ${
