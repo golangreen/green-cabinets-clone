@@ -117,22 +117,31 @@ All colors MUST be HSL.
   }
 }
 
-/* Homepage vertical scroll: snap removed — it made wheel/trackpad scrolling feel
-   sluggish and "grabby". Horizontal rails inside each section keep the snappy
-   carousel feel where it actually helps. We still keep scroll-margin-top so any
-   anchor jump (e.g. nav clicks) lands cleanly under the fixed header. */
+/* Homepage vertical scroll snapping — uses `proximity` so wheel/trackpad
+   scrolling stays free-flowing but sections gently lock into place when you
+   stop near a boundary. Keeps the thin scrollbar perfectly aligned with
+   section transitions without feeling "grabby". */
 html.snap-home {
-  scroll-snap-type: none;
-  scroll-behavior: auto;
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 html.snap-home body section {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
   scroll-margin-top: 6rem;        /* 96px — mobile */
 }
 @media (min-width: 640px) {
+  html.snap-home { scroll-padding-top: 7rem; }
   html.snap-home body section { scroll-margin-top: 7rem; }   /* 112px */
 }
 @media (min-width: 768px) {
+  html.snap-home { scroll-padding-top: 10rem; }
   html.snap-home body section { scroll-margin-top: 10rem; }  /* 160px */
+}
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html.snap-home { scroll-snap-type: none; scroll-behavior: auto; }
 }
 
 /* Hide horizontal rail scrollbars while keeping native swipe behavior */
