@@ -56,15 +56,24 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
     });
 
+    interface CartAttribute { key: string; value: string }
+    interface CartItem {
+      variantId: string;
+      quantity: number;
+      customAttributes?: CartAttribute[];
+      price?: { amount: string };
+      product: { node: { title: string; description?: string; images?: { edges?: Array<{ node?: { url?: string } }> } } };
+    }
+
     // Build line items with custom pricing from cart
-    const lineItems = items.map((item: any) => {
+    const lineItems = (items as CartItem[]).map((item) => {
       // Extract total from custom attributes if available (for vanity configurator)
-      const customTotal = item.customAttributes?.find((attr: any) => 
+      const customTotal = item.customAttributes?.find((attr) =>
         attr.key === "Total Estimate"
       );
-      
+
       let unitAmount = 25000; // Default base price in cents
-      
+
       if (customTotal) {
         // Parse the total from format like "$XXX.XX"
         const totalValue = parseFloat(customTotal.value.replace(/[^0-9.]/g, ''));
@@ -76,8 +85,8 @@ serve(async (req) => {
 
       // Build product description from custom attributes
       const description = item.customAttributes
-        ?.filter((attr: any) => attr.key !== "Total Estimate")
-        .map((attr: any) => `${attr.key}: ${attr.value}`)
+        ?.filter((attr) => attr.key !== "Total Estimate")
+        .map((attr) => `${attr.key}: ${attr.value}`)
         .join(", ") || item.product.node.description;
 
       return {
@@ -100,8 +109,8 @@ serve(async (req) => {
 
     // Extract only essential data for metadata (Stripe has 500 char limit per value)
     // Keep only critical custom attributes needed for order fulfillment
-    const orderItems = items.map((item: any) => {
-      const essentialAttributes = item.customAttributes?.filter((attr: any) => 
+    const orderItems = (items as CartItem[]).map((item) => {
+      const essentialAttributes = item.customAttributes?.filter((attr) =>
         ['Brand', 'Finish', 'Width', 'Height', 'Depth', 'price_per_linear_foot', 'cabinet_type'].includes(attr.key)
       ) || [];
       

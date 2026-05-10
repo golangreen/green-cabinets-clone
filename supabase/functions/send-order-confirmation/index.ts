@@ -43,7 +43,7 @@ serve(async (req) => {
     // Build order items HTML
     let orderItemsHtml = '';
     if (session.line_items?.data) {
-      orderItemsHtml = session.line_items.data.map((item: any) => `
+      orderItemsHtml = session.line_items.data.map((item: { description?: string; quantity: number; amount_total: number }) => `
         <tr>
           <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
             ${item.description || 'Item'}
@@ -170,10 +170,10 @@ serve(async (req) => {
         headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in send-order-confirmation:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },

@@ -22,7 +22,7 @@ const checkoutSchema = z.object({
   city: z.string().trim().min(1, "City is required").max(100, "City must be less than 100 characters"),
   state: z.string().trim().min(2, "State is required").max(50, "State must be less than 50 characters"),
   zipCode: z.string().trim().regex(/^\d{5}(-\d{4})?$/, "Invalid ZIP code format (e.g., 12345 or 12345-6789)"),
-  phone: z.string().trim().regex(/^[\d\s\-\(\)\.+]*$/, "Invalid phone number format").max(20, "Phone number must be less than 20 characters").optional(),
+  phone: z.string().trim().regex(/^[\d\s\-().+]*$/, "Invalid phone number format").max(20, "Phone number must be less than 20 characters").optional(),
 });
 
 export default function Checkout() {
@@ -42,7 +42,7 @@ export default function Checkout() {
   });
 
   // Calculate totals using checkoutService
-  const calculateItemTotal = (item: any) => {
+  const calculateItemTotal = (item: Parameters<typeof checkoutService.calculateItemTotal>[0]) => {
     return checkoutService.calculateItemTotal(item);
   };
 
@@ -274,7 +274,7 @@ export default function Checkout() {
                       
                       {customAttrs.length > 0 && (
                         <div className="pl-24 space-y-1">
-                          {customAttrs.map((attr: any, idx: number) => (
+                          {customAttrs.map((attr: { key: string; value: string }, idx: number) => (
                             <p key={idx} className="text-xs text-muted-foreground">
                               {attr.key}: {attr.value}
                             </p>

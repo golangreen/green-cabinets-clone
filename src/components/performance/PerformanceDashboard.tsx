@@ -91,7 +91,7 @@ const PerformanceDashboard = () => {
     }
     
     return acc;
-  }, [] as any[]);
+  }, [] as Array<Record<string, string | number>>);
 
   // Get metric rating color
   const getRatingColor = (metricName: string, value: number) => {

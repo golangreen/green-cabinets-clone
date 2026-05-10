@@ -26,7 +26,7 @@ export interface AuditLogEntry {
   performed_by_id: string;
   performed_by_email: string;
   created_at: string;
-  details: Record<string, any> | null;
+  details: Record<string, unknown> | null;
 }
 
 export interface RoleAssignment {

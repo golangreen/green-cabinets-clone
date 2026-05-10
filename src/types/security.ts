@@ -9,7 +9,7 @@ export interface SecurityEvent {
   severity: 'low' | 'medium' | 'high' | 'critical';
   client_ip: string;
   created_at: string;
-  details: Record<string, any> | null;
+  details: Record<string, unknown> | null;
 }
 
 export interface BlockedIP {
@@ -20,7 +20,7 @@ export interface BlockedIP {
   blocked_until: string;
   auto_blocked: boolean;
   violation_count: number;
-  details: Record<string, any> | null;
+  details: Record<string, unknown> | null;
 }
 
 export interface WebhookEvent {
@@ -36,7 +36,7 @@ export interface WebhookEvent {
 export interface AlertSettings {
   id: string;
   setting_key: string;
-  setting_value: any;
+  setting_value: unknown;
   description: string | null;
   updated_by: string | null;
   updated_at: string;

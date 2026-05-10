@@ -127,7 +127,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                 <h3 className="text-lg font-semibold">What type of project do you have?</h3>
                 <RadioGroup
                   value={projectType}
-                  onValueChange={(value) => setValue("projectType", value as any)}
+                  onValueChange={(value) => setValue("projectType", value as "kitchen" | "bathroom" | "closet" | "other")}
                   className="grid grid-cols-2 gap-4"
                 >
                   {["kitchen", "bathroom", "closet", "other"].map((type) => (

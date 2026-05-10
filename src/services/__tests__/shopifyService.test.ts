@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import { ShopifyService } from '../shopifyService';
 
 // Mock fetch globally
-(globalThis as any).fetch = vi.fn();
+(globalThis as { fetch: typeof fetch }).fetch = vi.fn() as unknown as typeof fetch;
+const mockFetch = globalThis.fetch as unknown as Mock;
 
 describe('ShopifyService', () => {
   let service: ShopifyService;
@@ -40,7 +41,7 @@ describe('ShopifyService', () => {
         },
       };
 
-      (globalThis.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => mockProducts,
@@ -54,7 +55,7 @@ describe('ShopifyService', () => {
     });
 
     it('should handle API errors', async () => {
-      (globalThis.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
       });
@@ -88,7 +89,7 @@ describe('ShopifyService', () => {
         },
       };
 
-      (globalThis.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockProducts,
       });
@@ -100,7 +101,7 @@ describe('ShopifyService', () => {
     });
 
     it('should return null if product not found', async () => {
-      (globalThis.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ data: { products: { edges: [] } } }),
       });

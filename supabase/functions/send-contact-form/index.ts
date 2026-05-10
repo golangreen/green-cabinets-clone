@@ -167,7 +167,7 @@ const handler = async (req: Request): Promise<Response> => {
         },
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in send-contact-form function:", error);
     return new Response(
       JSON.stringify({ error: "Failed to process request. Please try again or contact us directly." }),
