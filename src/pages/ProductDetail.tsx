@@ -82,7 +82,7 @@ export default function ProductDetail() {
         ]}
       />
       <Header />
-      <main className="flex-1 py-6 sm:py-8 md:py-12">
+      <main className="flex-1 pt-[96px] sm:pt-[128px] md:pt-[160px] pb-6 sm:pb-8 md:pb-12">
         <div className="container mx-auto px-4">
           <Link to="/">
             <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
