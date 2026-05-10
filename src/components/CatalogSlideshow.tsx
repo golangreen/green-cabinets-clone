@@ -26,7 +26,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   const [direction, setDirection] = useState(slideDirections[0]);
   const [isMuted, setIsMuted] = useState(true);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const musicNodesRef = useRef<AudioNode[]>([]);
+  const musicNodesRef = useRef<Array<AudioScheduledSourceNode | AudioNode>>([]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -41,9 +41,9 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
       // Clean up all audio nodes
       musicNodesRef.current.forEach(node => {
         try {
-          if (node.stop) node.stop();
-          if (node.disconnect) node.disconnect();
-        } catch (e) {
+          if ('stop' in node && typeof node.stop === 'function') node.stop();
+          if ('disconnect' in node) node.disconnect();
+        } catch {
           // Already stopped
         }
       });
@@ -123,8 +123,8 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     } else {
       musicNodesRef.current.forEach(node => {
         try {
-          if (node.stop) node.stop();
-        } catch (e) {
+          if ('stop' in node && typeof node.stop === 'function') node.stop();
+        } catch {
           // Already stopped
         }
       });
