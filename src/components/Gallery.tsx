@@ -9,14 +9,12 @@ import kitchenIslandView from "@/assets/gallery/kitchen-island-view.jpg";
 import kitchenTraditional from "@/assets/gallery/kitchen-traditional.jpg";
 import bedroomCloset from "@/assets/gallery/bedroom-closet.jpg";
 import blackCabinet from "@/assets/gallery/black-cabinet.jpg";
-import laundryRoom from "@/assets/gallery/laundry-room.jpg";
-import radiatorCover from "@/assets/gallery/radiator-cover.jpg";
 import grayKitchenCorner from "@/assets/gallery/gray-kitchen-corner.jpg";
 import twoToneKitchenIsland from "@/assets/gallery/two-tone-kitchen-island.jpg";
 import twoToneKitchenWide from "@/assets/gallery/two-tone-kitchen-wide.jpg";
 import classicWhiteKitchen from "@/assets/gallery/classic-white-kitchen.jpg";
 import marbleCountertopKitchen from "@/assets/gallery/marble-countertop-kitchen.jpg";
-import brightKitchenIsland from "@/assets/gallery/bright-kitchen-island.jpg";
+
 import openConceptMarbleKitchen from "@/assets/gallery/open-concept-marble-kitchen.jpg";
 import marbleWoodKitchenIsland from "@/assets/gallery/marble-wood-kitchen-island.jpg";
 import contemporaryWoodCabinets from "@/assets/gallery/contemporary-wood-cabinets.jpg";
@@ -66,11 +64,11 @@ import whiteKitchenDualIslandsPendants from "@/assets/gallery/white-kitchen-dual
 import whiteKitchenGrayIslandBarSeating from "@/assets/gallery/white-kitchen-gray-island-bar-seating.jpg";
 import whiteKitchenIslandDiningNook from "@/assets/gallery/white-kitchen-island-dining-nook.jpg";
 import whiteKitchenIslandOpenShelving from "@/assets/gallery/white-kitchen-island-open-shelving.jpg";
-import customRadiatorCoverMeshPanels from "@/assets/gallery/custom-radiator-cover-mesh-panels.jpg";
+
 import grayWoodBedroomCloset from "@/assets/gallery/gray-wood-bedroom-closet.jpg";
 import grayWoodWardrobeConstruction from "@/assets/gallery/gray-wood-wardrobe-construction.jpg";
 import customClosetAngledCeiling from "@/assets/gallery/custom-closet-angled-ceiling.jpg";
-import lightGrayTallStorageCabinet from "@/assets/gallery/light-gray-tall-storage-cabinet.jpg";
+
 import darkWoodCornerWardrobe from "@/assets/gallery/dark-wood-corner-wardrobe.jpg";
 import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
 import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
@@ -183,7 +181,7 @@ const Gallery = () => {
     },
     { src: modernKitchenWoodCabinetsCloseup, alt: "Modern kitchen wood cabinets close-up with gray marble countertops", category: "kitchens" },
     { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration", category: "kitchens" },
-    { src: laundryRoom, alt: "White laundry room cabinetry", category: "kitchens" },
+    
     { src: whiteKitchenGlassPendants, alt: "White traditional kitchen with glass pendant lights and open shelving", category: "kitchens" },
     { src: whiteKitchenIslandCabinets, alt: "White kitchen island with custom cabinet installation", category: "kitchens" },
     { src: whiteKitchenCabinetsProgress, alt: "White kitchen cabinets installation progress", category: "kitchens" },
@@ -257,7 +255,7 @@ const Gallery = () => {
     { src: kitchenIslandView, alt: "Kitchen island with bar seating", category: "kitchens" },
     { src: kitchenTraditional, alt: "Traditional style kitchen installation", category: "kitchens" },
     { src: marbleCountertopKitchen, alt: "Kitchen with marble countertops and wood trim", category: "kitchens" },
-    { src: brightKitchenIsland, alt: "Bright open kitchen with large island", category: "kitchens" },
+    
     { src: openConceptMarbleKitchen, alt: "Open concept kitchen with marble and wood accents", category: "kitchens" },
     { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration", category: "kitchens" },
     { src: modernKitchenIslandBarStools, alt: "Modern kitchen island with wood bar stools and marble waterfall edge", category: "kitchens" },
@@ -292,7 +290,7 @@ const Gallery = () => {
     { src: bedroomCloset, alt: "Custom gray bedroom built-in closet", category: "closets" },
     { src: grayWoodBedroomCloset, alt: "Gray wood bedroom closet with integrated drawer storage", category: "closets" },
     { src: grayWoodWardrobeConstruction, alt: "Gray wood wardrobe construction with open shelving design", category: "closets" },
-    { src: lightGrayTallStorageCabinet, alt: "Light gray tall storage cabinet with minimalist design", category: "closets" },
+    
     { src: darkWoodCornerWardrobe, alt: "Dark wood corner wardrobe with floor-to-ceiling design", category: "closets" },
     { src: customClosetAngledCeiling, alt: "Custom closet installation with angled ceiling accommodation", category: "closets" },
     { src: contemporaryWoodCabinets, alt: "Contemporary wood cabinet installation", category: "closets" },
