@@ -112,10 +112,14 @@ const SectionJumpMenu = () => {
       const s = sections[idx];
       if (!s) return;
       setOpen(false);
-      // Slight delay so the sheet close animation doesn't fight the scroll.
+      // Wait for sheet close animation, then scroll with header offset.
       setTimeout(() => {
-        s.el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 120);
+        const header = document.querySelector("header") as HTMLElement | null;
+        const headerH = header?.offsetHeight ?? 0;
+        const top =
+          s.el.getBoundingClientRect().top + window.scrollY - headerH - 8;
+        window.scrollTo({ top, behavior: "smooth" });
+      }, 250);
     },
     [sections]
   );
