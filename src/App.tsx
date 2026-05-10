@@ -76,7 +76,7 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
           <ScrollToTopButton />
-          <SectionJumpMenu />
+          
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
