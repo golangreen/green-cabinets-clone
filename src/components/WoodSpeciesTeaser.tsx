@@ -4,8 +4,6 @@
  * for a cleaner, more cohesive feel.
  */
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { WOOD_SPECIES } from "@/data/woodSpecies";
 
 const WoodSpeciesTeaser = () => {
@@ -67,19 +65,6 @@ const WoodSpeciesTeaser = () => {
               </li>
             ))}
           </ul>
-        </div>
-
-        <div className="mt-10 text-center">
-          <Button
-            asChild
-            variant="outline"
-            className="border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
-          >
-            <Link to="/wood-species">
-              Explore the wood species guide
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
         </div>
       </div>
     </section>
