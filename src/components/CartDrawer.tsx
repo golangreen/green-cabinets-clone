@@ -58,7 +58,7 @@ export const CartDrawer = () => {
         <Button variant="ghost" size="icon" aria-label="Open shopping cart" data-testid="cart-button" className="relative text-[#5C7650] hover:text-[#5C7650] hover:bg-[#5C7650]/10 transition-transform duration-200 hover:scale-110">
           <ShoppingCart className="h-5 w-5" />
           {totalItems > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
+            <Badge data-testid="cart-count" className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
               {totalItems}
             </Badge>
           )}
