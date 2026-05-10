@@ -4,6 +4,8 @@
  * for a cleaner, more cohesive feel.
  */
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { WOOD_SPECIES } from "@/data/woodSpecies";
 
 const WoodSpeciesTeaser = () => {
