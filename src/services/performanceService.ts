@@ -19,9 +19,9 @@ export async function storePerformanceMetric(metric: PerformanceMetric) {
         metric_value: metric.value,
         timestamp: new Date(metric.timestamp).toISOString(),
         url: metric.url,
-        metadata: metric.metadata || {},
-        connection_type: (navigator as any).connection?.effectiveType || null,
-        device_memory: (navigator as any).deviceMemory || null,
+        metadata: (metric.metadata ?? {}) as Record<string, unknown> as never,
+        connection_type: (navigator as Navigator & { connection?: { effectiveType?: string } }).connection?.effectiveType || null,
+        device_memory: (navigator as Navigator & { deviceMemory?: number }).deviceMemory || null,
         user_agent: navigator.userAgent,
       });
 
