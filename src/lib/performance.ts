@@ -27,7 +27,7 @@ export interface PerformanceMetric {
   rating: 'good' | 'needs-improvement' | 'poor';
   timestamp: number;
   url: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -123,7 +123,13 @@ export class PerformanceTracker {
  * Get connection information
  */
 export function getConnectionInfo() {
-  const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+  type NavigatorWithConn = Navigator & {
+    connection?: { effectiveType?: string; downlink?: number; rtt?: number; saveData?: boolean };
+    mozConnection?: NavigatorWithConn['connection'];
+    webkitConnection?: NavigatorWithConn['connection'];
+  };
+  const nav = navigator as NavigatorWithConn;
+  const connection = nav.connection || nav.mozConnection || nav.webkitConnection;
   return connection ? {
     effectiveType: connection.effectiveType,
     downlink: connection.downlink,
@@ -136,7 +142,7 @@ export function getConnectionInfo() {
  * Get device memory (if available)
  */
 export function getDeviceMemory(): number | null {
-  return (navigator as any).deviceMemory || null;
+  return (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? null;
 }
 
 /**
