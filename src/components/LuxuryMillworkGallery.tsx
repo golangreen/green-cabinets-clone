@@ -70,7 +70,7 @@ const LuxuryMillworkGallery = () => {
           </p>
         </div>
 
-        <div className="sticky top-16 md:top-20 z-30 -mx-6 mb-10 py-3 bg-[#d5d5d5]/85 supports-[backdrop-filter]:bg-[#d5d5d5]/70 backdrop-blur-md border-b border-border/40">
+        <div className="sticky top-24 sm:top-32 md:top-40 z-30 -mx-6 mb-10 py-3 bg-[#d5d5d5]/85 supports-[backdrop-filter]:bg-[#d5d5d5]/70 backdrop-blur-md border-b border-border/40">
           <div className="relative">
             <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#d5d5d5] to-transparent z-10" aria-hidden="true" />
             <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#d5d5d5] to-transparent z-10" aria-hidden="true" />
