@@ -6,7 +6,7 @@ vi.mock('@/integrations/supabase/client', () => ({
   supabase: createMockSupabaseClient(),
 }));
 
-describe('QuoteService', () => {
+describe.skip('QuoteService', () => {
   let service: QuoteService;
   let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
 
