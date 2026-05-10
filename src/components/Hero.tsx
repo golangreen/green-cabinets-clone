@@ -108,7 +108,7 @@ const Hero = () => {
               isTransitioning ? 'opacity-0' : 'opacity-100'
             }`}
             loading="eager"
-            fetchPriority="high"
+            fetchpriority="high"
             decoding="async"
           />
           <img
