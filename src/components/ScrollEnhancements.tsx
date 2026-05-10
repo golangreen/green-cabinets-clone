@@ -125,7 +125,7 @@ const ScrollEnhancements = () => {
   return (
     <nav
       aria-label="Page sections"
-      className="fixed right-2 sm:right-3 top-1/2 -translate-y-1/2 z-[200] flex flex-col items-center gap-2.5 py-2 px-1.5 rounded-full bg-black/10 backdrop-blur-sm"
+      className="fixed right-2 sm:right-3 top-24 bottom-24 z-[200] flex flex-col items-center justify-between py-2"
     >
       {sections.map((s, i) => {
         const isActive = i === activeIdx;
