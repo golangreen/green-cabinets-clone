@@ -29,7 +29,7 @@ const FinishesColors = () => {
 
       <main className="pt-32 sm:pt-36 md:pt-40">
         {/* Back link — sticky on mobile so it's always reachable */}
-        <div className="sticky top-16 z-30 bg-background/85 backdrop-blur-md border-b border-border/40 md:static md:bg-transparent md:backdrop-blur-none md:border-0">
+        <div className="sticky top-16 md:top-20 z-40 bg-background/85 backdrop-blur-md border-b border-border/40">
           <div className="container mx-auto px-4 sm:px-6 max-w-7xl py-2 md:py-3">
             <button
               type="button"
