@@ -47,7 +47,7 @@ const FinishesColorsSection = () => {
         </div>
 
         {/* Brand breadcrumb slider */}
-        <div className="sticky top-16 md:top-20 z-30 -mx-4 sm:-mx-6 mb-6 bg-[#d5d5d5]/85 backdrop-blur-md border-b border-border/40">
+        <div className="sticky top-24 sm:top-32 md:top-40 z-30 -mx-4 sm:-mx-6 mb-6 bg-[#d5d5d5]/85 backdrop-blur-md border-b border-border/40">
           <div className="relative">
             <div
               className="flex flex-nowrap items-center gap-2 overflow-x-auto scrollbar-none px-6 py-2 md:justify-center [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.8rem]"
