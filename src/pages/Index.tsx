@@ -10,7 +10,7 @@ import Suppliers from "@/components/Suppliers";
 import Contact from "@/components/Contact";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
-import Chatbot from "@/components/Chatbot";
+
 import FAQ from "@/components/FAQ";
 import NeighborhoodsServed from "@/components/NeighborhoodsServed";
 import LuxuryMillwork from "@/components/LuxuryMillwork";
@@ -102,7 +102,6 @@ const Index = () => {
       <Contact />
       <CTA />
       <Footer />
-      <Chatbot />
       <ScrollEnhancements />
     </div>
   );
