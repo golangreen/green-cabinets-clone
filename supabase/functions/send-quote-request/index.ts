@@ -6,7 +6,7 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const quoteRequestSchema = z.object({
   customerName: z.string().trim().min(1).max(100),
   customerEmail: z.string().trim().email().max(255),
-  customerPhone: z.string().trim().regex(/^[\d\s\-\(\)\.+]+$/).min(10).max(20),
+  customerPhone: z.string().trim().regex(/^[\d\s\-().+]+$/).min(10).max(20),
   brand: z.string().trim().min(1).max(100),
   finish: z.string().trim().min(1).max(100),
   width: z.string().trim().min(1).max(20),
