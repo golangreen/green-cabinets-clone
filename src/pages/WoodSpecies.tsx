@@ -17,7 +17,7 @@ import WoodOverviewTable from "@/components/wood/WoodOverviewTable";
 
 import { WOOD_SPECIES } from "@/data/woodSpecies";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
 const WoodSpecies = () => {
   const navigate = useNavigate();
