@@ -297,8 +297,6 @@ const Gallery = () => {
     { src: naturalWoodHallwayCabinets, alt: "Natural wood hallway with built-in storage cabinets and ceiling panels", category: "closets" },
     
     // === OTHER STORAGE & SPECIALTY ===
-    { src: radiatorCover, alt: "Custom radiator cover with mesh panels", category: "closets" },
-    { src: customRadiatorCoverMeshPanels, alt: "Custom radiator cover with decorative mesh panels and wood finish", category: "closets" },
     { src: modernWorkspaceWoodDeskBrick, alt: "Modern workspace with natural wood desk and exposed brick wall", category: "closets" },
     { src: modernStudioWoodCabinetry, alt: "Modern studio apartment with custom wood cabinetry and dining area", category: "closets" },
 
