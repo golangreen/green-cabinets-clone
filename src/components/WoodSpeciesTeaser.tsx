@@ -39,18 +39,13 @@ const WoodSpeciesTeaser = () => {
                   to={`/wood-species/${w.slug}`}
                   className="group block rounded-lg overflow-hidden border border-border bg-background hover:border-[#5C7650] hover:shadow-lg transition-all"
                 >
-                  <div className="relative aspect-square overflow-hidden bg-muted">
+                  <div className="aspect-square overflow-hidden bg-muted">
                     <img
                       src={w.image}
                       alt={`${w.name} cabinet wood`}
                       loading="lazy"
                       decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <span
-                      className="absolute top-2 left-2 inline-block w-6 h-6 rounded-full border-2 border-white shadow-md"
-                      style={{ backgroundColor: w.swatch }}
-                      aria-hidden="true"
                     />
                   </div>
                   <div className="p-2.5 space-y-1">
