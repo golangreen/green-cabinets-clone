@@ -190,14 +190,15 @@ const handler = async (req: Request): Promise<Response> => {
         headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error sending quote email:", error);
-    
-    if (error.name === 'ZodError') {
+
+    const err = error as { name?: string; errors?: unknown };
+    if (err.name === 'ZodError') {
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           error: "Invalid quote data",
-          details: error.errors 
+          details: err.errors
         }),
         {
           status: 400,

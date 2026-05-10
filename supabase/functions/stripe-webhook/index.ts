@@ -121,12 +121,20 @@ serve(async (req) => {
       }
 
       // Build line items for Shopify
-      const lineItems = orderItems.map((item: any) => {
-        const customTotal = item.customAttributes?.find((attr: any) => 
+      interface OrderAttr { key: string; value: string }
+      interface OrderItem {
+        variantId: string;
+        quantity: number;
+        price: string;
+        productTitle: string;
+        customAttributes?: OrderAttr[];
+      }
+      const lineItems = (orderItems as OrderItem[]).map((item) => {
+        const customTotal = item.customAttributes?.find((attr) =>
           attr.key === "Total Estimate"
         );
-        
-        const totalValue = customTotal 
+
+        const totalValue = customTotal
           ? parseFloat(customTotal.value.replace(/[^0-9.]/g, ''))
           : parseFloat(item.price) * item.quantity;
 
@@ -139,7 +147,7 @@ serve(async (req) => {
           quantity: item.quantity,
           price: totalValue.toFixed(2),
           title: item.productTitle,
-          properties: item.customAttributes?.map((attr: any) => ({
+          properties: item.customAttributes?.map((attr) => ({
             name: attr.key,
             value: attr.value,
           })) || [],
@@ -217,9 +225,9 @@ serve(async (req) => {
         
         if (customerEmail) {
           // Build order summary HTML
-          const itemsHtml = orderItems.map((item: any) => {
+          const itemsHtml = (orderItems as Array<{ quantity: number; customAttributes?: Array<{ key: string; value: string }> }>).map((item) => {
             const attributes = item.customAttributes
-              ?.map((attr: any) => `${attr.key}: ${attr.value}`)
+              ?.map((attr) => `${attr.key}: ${attr.value}`)
               .join("<br/>") || "";
             
             return `

@@ -109,8 +109,8 @@ serve(async (req) => {
 
     // Extract only essential data for metadata (Stripe has 500 char limit per value)
     // Keep only critical custom attributes needed for order fulfillment
-    const orderItems = items.map((item: any) => {
-      const essentialAttributes = item.customAttributes?.filter((attr: any) => 
+    const orderItems = (items as CartItem[]).map((item) => {
+      const essentialAttributes = item.customAttributes?.filter((attr) =>
         ['Brand', 'Finish', 'Width', 'Height', 'Depth', 'price_per_linear_foot', 'cabinet_type'].includes(attr.key)
       ) || [];
       
