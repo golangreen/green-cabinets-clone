@@ -94,7 +94,7 @@ export default function Checkout() {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 container mx-auto px-4 py-16 flex items-center justify-center">
+        <main className="flex-1 container mx-auto px-4 pt-[112px] sm:pt-[144px] md:pt-[176px] pb-16 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
             <Button onClick={() => navigate("/")}>
