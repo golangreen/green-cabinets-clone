@@ -68,9 +68,11 @@ export default function ProductDetail() {
       <Helmet>
         <title>{product.node.title} | Green Cabinets Shop</title>
         <meta name="description" content={product.node.description?.substring(0, 160) || `Shop ${product.node.title} from Green Cabinets.`} />
+        <link rel="canonical" href={`https://greencabinetsny.com/product/${handle}`} />
         <meta property="og:title" content={`${product.node.title} | Green Cabinets`} />
         <meta property="og:description" content={product.node.description?.substring(0, 160) || `Shop ${product.node.title} from Green Cabinets.`} />
         <meta property="og:type" content="product" />
+        <meta property="og:url" content={`https://greencabinetsny.com/product/${handle}`} />
       </Helmet>
       <BreadcrumbSchema
         items={[
