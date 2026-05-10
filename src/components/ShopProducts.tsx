@@ -169,6 +169,7 @@ export const ShopProducts = () => {
               </CardContent>
               <CardFooter>
                 <Button 
+                  data-testid="add-to-cart"
                   className="w-full bg-primary hover:bg-primary/90 text-white"
                   onClick={(e) => {
                     e.stopPropagation();
