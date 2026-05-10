@@ -9,7 +9,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { List, X } from "lucide-react";
+import { List } from "lucide-react";
 import {
   Sheet,
   SheetContent,
