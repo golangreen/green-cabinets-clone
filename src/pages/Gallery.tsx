@@ -52,7 +52,7 @@ const GalleryPage = () => {
 
       <Header />
 
-      <main className="pt-24 pb-20">
+      <main className="pt-[96px] sm:pt-[128px] md:pt-[160px] pb-20">
         {/* Back link — sticky on mobile so it's always reachable */}
         <div className="sticky top-24 sm:top-32 md:top-40 z-40 bg-background/85 backdrop-blur-md border-b border-border/40">
           <div className="container mx-auto px-4 sm:px-6 max-w-7xl py-2 md:py-3">
