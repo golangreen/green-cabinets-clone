@@ -12,6 +12,14 @@ const ScrollEnhancements = () => {
   const rafRef = useRef<number | null>(null);
   const draggingRef = useRef(false);
 
+  // Debug overlay: enable with ?debug=scroll in the URL.
+  const debug = typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("debug") === "scroll";
+  const [stats, setStats] = useState({
+    pageTop: 0, height: 0, scrollHeight: 0, max: 0, target: 0,
+    source: "window" as "vv" | "window",
+  });
+
   useEffect(() => {
     const vv = window.visualViewport;
     let target = 0;
