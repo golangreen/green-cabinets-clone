@@ -19,7 +19,7 @@ import QualityCraftsmanship from "@/components/QualityCraftsmanship";
 import Testimonials from "@/components/Testimonials";
 import WoodSpeciesTeaser from "@/components/WoodSpeciesTeaser";
 import FinishesColorsSection from "@/components/FinishesColorsSection";
-import ScrollEnhancements from "@/components/ScrollEnhancements";
+
 
 // Lazy load heavy components
 const Gallery = lazy(() => import("@/components/Gallery"));
