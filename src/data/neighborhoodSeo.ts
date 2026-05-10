@@ -674,7 +674,6 @@ const GALLERIES: Record<string, NeighborhoodSeo["gallery"]> = {
     { file: "loft-kitchen-exposed-brick-natural-wood.jpeg", caption: "Loft kitchen with exposed brick and natural wood cabinetry" },
     { file: "modern-white-wood-island-kitchen.jpg", caption: "Modern kitchen with white cabinets and wood island" },
     { file: "contemporary-white-kitchen-marble-island.webp", caption: "Contemporary white kitchen with marble island" },
-    
     { file: "contemporary-white-gray-kitchen.jpeg", caption: "Two-tone gray and white contemporary kitchen" },
     { file: "modern-kitchen-dark-island.jpg", caption: "Modern kitchen with dark island and integrated appliances" },
   ],
@@ -698,7 +697,6 @@ const GALLERIES: Record<string, NeighborhoodSeo["gallery"]> = {
     { file: "modern-white-wood-island-kitchen.jpg", caption: "Modern condo kitchen with wood island" },
     { file: "white-kitchen-island-cabinets.jpg", caption: "White cabinetry condo kitchen with custom island" },
     { file: "contemporary-white-gray-kitchen.jpeg", caption: "Contemporary gray-and-white condo kitchen" },
-    
     { file: "white-wood-island-side-view.jpg", caption: "Side view, white kitchen with wood island detail" },
     { file: "contemporary-white-kitchen-marble-island.webp", caption: "Contemporary kitchen with marble waterfall island" },
   ],
@@ -735,7 +733,6 @@ const GALLERIES: Record<string, NeighborhoodSeo["gallery"]> = {
     { file: "kitchen-fireplace.jpg", caption: "Pre-war kitchen with original architectural detail" },
   ],
   astoria: [
-    
     { file: "classic-white-kitchen.jpg", caption: "Classic white shaker for an Astoria rowhouse" },
     { file: "contemporary-white-gray-kitchen.jpeg", caption: "Two-tone gray-and-white contemporary kitchen" },
     { file: "modern-white-wood-island-kitchen.jpg", caption: "Modern condo kitchen with wood island" },
