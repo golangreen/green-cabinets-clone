@@ -33,7 +33,19 @@ const ScrollEnhancements = () => {
         return true;
       });
 
-      const entries: SectionEntry[] = all.map((el, i) => {
+      // Cap at 8 dots — evenly sample across the page so each dot covers
+      // a meaningful chunk of scroll distance instead of crowding the rail.
+      const MAX_DOTS = 8;
+      let picked = all;
+      if (all.length > MAX_DOTS) {
+        picked = [];
+        for (let i = 0; i < MAX_DOTS; i++) {
+          const idx = Math.round((i * (all.length - 1)) / (MAX_DOTS - 1));
+          if (!picked.includes(all[idx])) picked.push(all[idx]);
+        }
+      }
+
+      const entries: SectionEntry[] = picked.map((el, i) => {
         const labelAttr =
           el.getAttribute("data-nav-label") ||
           el.getAttribute("aria-label") ||
