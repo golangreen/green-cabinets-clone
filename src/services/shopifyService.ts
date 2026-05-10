@@ -108,7 +108,7 @@ export class ShopifyService {
   /**
    * Makes a request to the Shopify Storefront API
    */
-  private async storefrontApiRequest(query: string, variables: any = {}): Promise<any> {
+  private async storefrontApiRequest<T = unknown>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
     const response = await fetch(SHOPIFY_STOREFRONT_URL, {
       method: 'POST',
       headers: {
@@ -135,7 +135,7 @@ export class ShopifyService {
     const data = await response.json();
     
     if (data.errors) {
-      throw new Error(`Error calling Shopify: ${data.errors.map((e: any) => e.message).join(', ')}`);
+      throw new Error(`Error calling Shopify: ${data.errors.map((e: { message: string }) => e.message).join(', ')}`);
     }
 
     return data;
@@ -215,7 +215,7 @@ export class ShopifyService {
       });
 
       if (cartData.data.cartCreate.userErrors.length > 0) {
-        throw new Error(`Cart creation failed: ${cartData.data.cartCreate.userErrors.map((e: any) => e.message).join(', ')}`);
+        throw new Error(`Cart creation failed: ${cartData.data.cartCreate.userErrors.map((e: { message: string }) => e.message).join(', ')}`);
       }
 
       const cart = cartData.data.cartCreate.cart;
