@@ -143,7 +143,7 @@ const CART_CREATE_MUTATION = `
   }
 `;
 
-export async function storefrontApiRequest(query: string, variables: any = {}) {
+export async function storefrontApiRequest(query: string, variables: Record<string, unknown> = {}) {
   const response = await fetch(SHOPIFY_STOREFRONT_URL, {
     method: 'POST',
     headers: {
@@ -170,7 +170,7 @@ export async function storefrontApiRequest(query: string, variables: any = {}) {
   const data = await response.json();
   
   if (data.errors) {
-    throw new Error(`Error calling Shopify: ${data.errors.map((e: any) => e.message).join(', ')}`);
+    throw new Error(`Error calling Shopify: ${data.errors.map((e: { message: string }) => e.message).join(', ')}`);
   }
 
   return data;
@@ -181,18 +181,25 @@ export async function fetchProducts(first: number = 50, query?: string) {
   return data?.data?.products?.edges || [];
 }
 
-export async function createStorefrontCheckout(items: any[]): Promise<string> {
+interface CheckoutItemInput {
+  variantId: string;
+  quantity: number;
+  selectedOptions?: Array<{ name: string; value: string }>;
+  customAttributes?: Array<{ key: string; value: string }>;
+}
+
+export async function createStorefrontCheckout(items: CheckoutItemInput[]): Promise<string> {
   try {
     console.log('Creating checkout with items:', items);
-    
+
     const lines = items.map(item => {
       // Combine selectedOptions and customAttributes
       const attributes = [
-        ...(item.selectedOptions?.map((opt: any) => ({
+        ...(item.selectedOptions?.map((opt) => ({
           key: opt.name,
           value: opt.value
         })) || []),
-        ...(item.customAttributes?.map((attr: any) => ({
+        ...(item.customAttributes?.map((attr) => ({
           key: attr.key,
           value: attr.value
         })) || [])
@@ -220,7 +227,7 @@ export async function createStorefrontCheckout(items: any[]): Promise<string> {
     console.log('Cart data:', cartData);
 
     if (cartData.data.cartCreate.userErrors.length > 0) {
-      const errors = cartData.data.cartCreate.userErrors.map((e: any) => e.message).join(', ');
+      const errors = cartData.data.cartCreate.userErrors.map((e: { message: string }) => e.message).join(', ');
       toast.error('Cart creation failed', { description: errors });
       throw new Error(`Cart creation failed: ${errors}`);
     }
