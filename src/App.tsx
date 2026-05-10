@@ -24,6 +24,7 @@ import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
 import LegacyRedirect from "@/components/LegacyRedirect";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import ScrollEnhancements from "@/components/ScrollEnhancements";
 
 
 const queryClient = new QueryClient();
