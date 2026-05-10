@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import VideoMuteToggle from "@/components/VideoMuteToggle";
@@ -7,6 +7,7 @@ const STORAGE_KEY = "spring-promo-dismissed";
 
 const SpringPromotion = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isDismissed, setIsDismissed] = useState(() => {
     return sessionStorage.getItem(STORAGE_KEY) === "true";
   });
@@ -15,6 +16,32 @@ const SpringPromotion = () => {
     sessionStorage.setItem(STORAGE_KEY, "true");
     setIsDismissed(true);
   };
+
+  // Pause the video when it scrolls out of view. On iOS, an off-screen
+  // playing video keeps decoding on the main thread and stalls scroll
+  // events / rAF, which makes the thin progress bar lurch. Pausing it
+  // restores smooth scroll tracking once the user moves past the hero.
+  useEffect(() => {
+    if (isDismissed) return;
+    const video = videoRef.current;
+    const container = containerRef.current;
+    if (!video || !container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (video.paused) {
+            video.play().catch(() => { /* autoplay may be blocked */ });
+          }
+        } else if (!video.paused) {
+          video.pause();
+        }
+      },
+      { threshold: 0.01 }
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [isDismissed]);
 
   if (isDismissed) return null;
 
