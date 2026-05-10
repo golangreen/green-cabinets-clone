@@ -63,6 +63,19 @@ const WoodSpeciesTeaser = () => {
             ))}
           </ul>
         </div>
+
+        <div className="mt-10 text-center">
+          <Button
+            asChild
+            variant="outline"
+            className="border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
+          >
+            <Link to="/wood-species">
+              See all wood species
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   );
