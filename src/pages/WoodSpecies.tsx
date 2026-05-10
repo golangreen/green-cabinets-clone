@@ -166,20 +166,7 @@ const WoodSpecies = () => {
           </div>
         </section>
 
-        {/* Overview table */}
-        <section className="py-12 sm:py-16 md:py-20 bg-muted/40">
-          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-3">
-                All Solid Wood Species at a Glance
-              </h2>
-              <p className="text-[#555555] max-w-2xl mx-auto">
-                The headline numbers for every wood we work with. Tap any row for the deep dive.
-              </p>
-            </div>
-            <WoodOverviewTable />
-          </div>
-        </section>
+
 
         {/* Species cards */}
         <section className="py-12 sm:py-16 md:py-20">
