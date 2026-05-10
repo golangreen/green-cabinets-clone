@@ -35,6 +35,16 @@ const ScrollEnhancements = () => {
       const scrollY = vv ? vv.pageTop : window.scrollY;
       const max = doc.scrollHeight - viewportH;
       target = max > 0 ? Math.max(0, Math.min(100, (scrollY / max) * 100)) : 0;
+      if (debug) {
+        setStats({
+          pageTop: scrollY,
+          height: viewportH,
+          scrollHeight: doc.scrollHeight,
+          max,
+          target,
+          source: vv ? "vv" : "window",
+        });
+      }
     };
 
     const tick = () => {
