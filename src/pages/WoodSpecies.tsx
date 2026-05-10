@@ -118,7 +118,7 @@ const WoodSpecies = () => {
 
       <main className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
         {/* Sticky back button */}
-        <div className="sticky top-16 md:top-20 z-40 bg-background/85 backdrop-blur-md border-b border-border/40">
+        <div className="sticky top-24 sm:top-32 md:top-40 z-40 bg-background/85 backdrop-blur-md border-b border-border/40">
           <div className="container mx-auto px-4 sm:px-6 max-w-7xl py-2 md:py-3">
             <button
               type="button"
