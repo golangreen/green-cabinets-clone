@@ -138,6 +138,7 @@ export const ShopProducts = () => {
           {products.filter((product) => product.node.title.toLowerCase().includes('custom bathroom vanity')).slice(0, 1).map((product) => (
             <Card 
               key={product.node.id} 
+              data-testid="product-card"
               className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border-gray-200"
               onClick={() => navigate(`/product/${product.node.handle}`)}
             >
@@ -151,7 +152,7 @@ export const ShopProducts = () => {
                 </div>
               )}
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg sm:text-xl text-[#1a1a1a]">{product.node.title}</CardTitle>
+                <CardTitle data-testid="product-title" className="text-lg sm:text-xl text-[#1a1a1a]">{product.node.title}</CardTitle>
                 <CardDescription className="line-clamp-2 text-sm text-[#666666]">
                   {product.node.description}
                 </CardDescription>

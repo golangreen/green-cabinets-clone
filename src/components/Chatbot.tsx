@@ -195,6 +195,8 @@ const Chatbot = () => {
             hideSectionNavArrows ? "bottom-6" : "bottom-[80px]"
           } right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white`}
           size="icon"
+          aria-label="Open chat assistant"
+          data-testid="chatbot-toggle"
         >
           <MessageCircle className="h-4 w-4" />
         </Button>
@@ -213,7 +215,7 @@ const Chatbot = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-96 h-[500px] bg-background border border-border rounded-lg shadow-elegant flex flex-col z-50">
+        <div data-testid="chatbot-window" className="fixed bottom-6 right-6 w-96 h-[500px] bg-background border border-border rounded-lg shadow-elegant flex flex-col z-50">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border bg-primary text-primary-foreground rounded-t-lg">
             <div className="flex items-center gap-2">
@@ -225,6 +227,8 @@ const Chatbot = () => {
               size="icon"
               onClick={() => setIsOpen(false)}
               className="text-primary-foreground hover:bg-primary-foreground/10"
+              aria-label="Close chat assistant"
+              data-testid="chatbot-close"
             >
               <X className="h-5 w-5" />
             </Button>

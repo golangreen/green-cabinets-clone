@@ -96,7 +96,7 @@ const Hero = () => {
       </section>
 
       {/* Hero Image Carousel */}
-      <section className="relative h-screen w-full overflow-hidden">
+      <section data-testid="hero-carousel" className="relative h-screen w-full overflow-hidden">
         {/* Background images with crossfade */}
         <div className="absolute inset-0 bg-muted">
           <img
