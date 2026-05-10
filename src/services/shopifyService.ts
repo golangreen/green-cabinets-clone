@@ -149,7 +149,9 @@ export class ShopifyService {
    */
   async getProducts(first: number = 50, query?: string): Promise<ShopifyProduct[]> {
     try {
-      const data = await this.storefrontApiRequest(STOREFRONT_QUERY, {
+      const data = await this.storefrontApiRequest<{
+        data: { products: { edges: ShopifyProduct[] } };
+      }>(STOREFRONT_QUERY, {
         first,
         query,
       });
@@ -208,7 +210,14 @@ export class ShopifyService {
       }));
 
       // Create cart with initial items
-      const cartData = await this.storefrontApiRequest(CART_CREATE_MUTATION, {
+      const cartData = await this.storefrontApiRequest<{
+        data: {
+          cartCreate: {
+            cart: { checkoutUrl: string | null };
+            userErrors: Array<{ message: string }>;
+          };
+        };
+      }>(CART_CREATE_MUTATION, {
         input: {
           lines,
         },
