@@ -42,7 +42,7 @@ export default function Checkout() {
   });
 
   // Calculate totals using checkoutService
-  const calculateItemTotal = (item: any) => {
+  const calculateItemTotal = (item: Parameters<typeof checkoutService.calculateItemTotal>[0]) => {
     return checkoutService.calculateItemTotal(item);
   };
 
@@ -274,7 +274,7 @@ export default function Checkout() {
                       
                       {customAttrs.length > 0 && (
                         <div className="pl-24 space-y-1">
-                          {customAttrs.map((attr: any, idx: number) => (
+                          {customAttrs.map((attr: { key: string; value: string }, idx: number) => (
                             <p key={idx} className="text-xs text-muted-foreground">
                               {attr.key}: {attr.value}
                             </p>
