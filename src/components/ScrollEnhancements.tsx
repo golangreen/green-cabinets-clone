@@ -72,8 +72,8 @@ const ScrollEnhancements = () => {
       className="fixed right-2 top-24 bottom-24 z-[200] w-[10px] rounded-full bg-black/15 cursor-pointer touch-none select-none backdrop-blur-sm"
     >
       <div
-        className="absolute top-0 left-0 right-0 rounded-full bg-[#5C7650] shadow-[0_0_12px_rgba(92,118,80,0.9)] transition-[height] duration-100 ease-out"
-        style={{ height: `${progress}%` }}
+        className="absolute top-0 left-0 right-0 h-full origin-top rounded-full bg-[#5C7650] shadow-[0_0_12px_rgba(92,118,80,0.9)] will-change-transform"
+        style={{ transform: `scaleY(${progress / 100})` }}
       />
     </div>
   );
