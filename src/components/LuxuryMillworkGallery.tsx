@@ -11,7 +11,6 @@ import darkWalkInClosetCenterIsland from "@/assets/gallery/dark-walk-in-closet-c
 import naturalWoodHallwayCabinets from "@/assets/gallery/natural-wood-hallway-cabinets.jpeg";
 import modernWorkspaceWoodDeskBrick from "@/assets/gallery/modern-workspace-wood-desk-brick.jpeg";
 import modernStudioWoodCabinetry from "@/assets/gallery/modern-studio-wood-cabinetry.jpeg";
-
 import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
 import modernOpenLivingWoodKitchen from "@/assets/gallery/modern-open-living-wood-kitchen.jpeg";
 
@@ -31,7 +30,6 @@ const items: Item[] = [
   { src: luxuryWalkInClosetIntegratedLighting, alt: "Walk-in closet with integrated lighting", category: "Closets" },
   { src: darkWalkInClosetCenterIsland, alt: "Dark walk-in closet with center island", category: "Closets" },
   { src: naturalWoodHallwayCabinets, alt: "Natural wood hallway built-in cabinets", category: "Built-ins" },
-  
   { src: modernStudioWoodCabinetry, alt: "Modern studio with floor-to-ceiling wood cabinetry", category: "Built-ins" },
   { src: modernWorkspaceWoodDeskBrick, alt: "Commercial workspace with custom wood desk and millwork", category: "Commercial Millwork" },
   { src: loftKitchenExposedBrickNaturalWood, alt: "Loft commercial kitchen with natural wood millwork", category: "Commercial Millwork" },
