@@ -46,7 +46,7 @@ const SpringPromotion = () => {
   if (isDismissed) return null;
 
   return (
-    <section className="relative w-full bg-background overflow-hidden">
+    <section ref={containerRef} className="relative w-full bg-background overflow-hidden">
       {/* Dismiss button */}
       <Button
         variant="ghost"
