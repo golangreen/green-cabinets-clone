@@ -13,19 +13,59 @@ const ScrollEnhancements = () => {
   const draggingRef = useRef(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      if (rafRef.current) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        const doc = document.documentElement;
-        const max = doc.scrollHeight - doc.clientHeight;
-        setProgress(max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0);
-      });
+    const vv = window.visualViewport;
+    let target = 0;
+    let current = 0;
+    let ticking = false;
+
+    const compute = () => {
+      const doc = document.documentElement;
+      // Use visualViewport height when available — on iOS this stays
+      // stable as the URL bar shows/hides, preventing the `max` value
+      // (and therefore the progress %) from jittering mid-scroll.
+      const viewportH = vv?.height ?? doc.clientHeight;
+      const scrollY = vv ? vv.pageTop : window.scrollY;
+      const max = doc.scrollHeight - viewportH;
+      target = max > 0 ? Math.max(0, Math.min(100, (scrollY / max) * 100)) : 0;
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const tick = () => {
+      // Smooth between sparse iOS scroll events: ease current toward target.
+      const diff = target - current;
+      if (Math.abs(diff) < 0.05) {
+        current = target;
+        setProgress(current);
+        rafRef.current = null;
+        ticking = false;
+        return;
+      }
+      current += diff * 0.25;
+      setProgress(current);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    const schedule = () => {
+      compute();
+      if (!ticking) {
+        ticking = true;
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    };
+
+    compute();
+    current = target;
+    setProgress(current);
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    vv?.addEventListener("scroll", schedule);
+    vv?.addEventListener("resize", schedule);
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      vv?.removeEventListener("scroll", schedule);
+      vv?.removeEventListener("resize", schedule);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
