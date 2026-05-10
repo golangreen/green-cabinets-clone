@@ -102,7 +102,7 @@ const Index = () => {
       <Contact />
       <CTA />
       <Footer />
-      <ScrollEnhancements />
+      
     </div>
   );
 };
