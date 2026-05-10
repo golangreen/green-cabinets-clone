@@ -54,7 +54,7 @@ const Shop = () => {
       <BreadcrumbSchema items={[{ name: "Home", url: "/" }, { name: "Shop", url: "/shop" }]} />
       <Header />
       <PromoBanner />
-      <main className="flex-1 pt-24 sm:pt-28 md:pt-32">
+      <main className="flex-1 pt-[96px] sm:pt-[128px] md:pt-[160px]">
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-8">Shop</h1>
           <ShopProducts />

@@ -174,7 +174,7 @@ const WoodSpecies = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 text-center">
               Browse Every Species
             </h2>
-            <div className="sticky top-[88px] sm:top-[112px] md:top-[128px] z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 mb-8 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-y border-[#5C7650]/15">
+            <div className="sticky top-[136px] sm:top-[168px] md:top-[200px] z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 mb-8 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-y border-[#5C7650]/15">
               <div className="flex flex-wrap justify-center gap-2">
                 {WOOD_SPECIES.map((w) => {
                   const isActive = activeSlug === w.slug;

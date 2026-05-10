@@ -59,7 +59,7 @@ export default function PaymentSuccess() {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <Header />
-      <main className="flex-1 container mx-auto px-4 py-16 flex items-center justify-center">
+      <main className="flex-1 container mx-auto px-4 pt-[112px] sm:pt-[144px] md:pt-[176px] pb-16 flex items-center justify-center">
         <Card className="max-w-2xl w-full">
           <CardHeader className="text-center">
             <div className="mx-auto mb-4 w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
