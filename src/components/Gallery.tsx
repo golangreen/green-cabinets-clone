@@ -88,32 +88,40 @@ const Gallery = () => {
           </div>
         </div>
 
-        {/* 4-image preview grid */}
+        {/* Horizontal preview rail — 4 projects per category, swipe to reveal */}
         {previews.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground text-sm">
             No projects in this category yet.
           </div>
         ) : (
-          <ul className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {previews.map((image, idx) => (
-              <li key={idx}>
-                <Link
-                  to={seeAllHref}
-                  className="group block rounded-lg overflow-hidden border border-border bg-card hover:border-[#5C7650] hover:shadow-lg transition-all"
+          <div
+            className="-mx-4 sm:-mx-6 overflow-x-auto scrollbar-none scroll-smooth snap-x snap-mandatory [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1rem] sm:[scroll-padding-inline:1.5rem] [scroll-snap-stop:always] [overscroll-behavior-x:contain]"
+            aria-label={`${activeLabel} project previews`}
+          >
+            <ul className="flex flex-nowrap gap-4 px-4 sm:px-6 pb-2">
+              {previews.map((image, idx) => (
+                <li
+                  key={idx}
+                  className="snap-start shrink-0 w-[70%] sm:w-[40%] md:w-[28%] lg:w-[22%]"
                 >
-                  <div className="aspect-square overflow-hidden bg-muted">
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                  <Link
+                    to={seeAllHref}
+                    className="group block rounded-lg overflow-hidden border border-border bg-card hover:border-[#5C7650] hover:shadow-lg transition-all"
+                  >
+                    <div className="aspect-square overflow-hidden bg-muted">
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <div className="mt-10 text-center">
