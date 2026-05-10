@@ -26,7 +26,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
   const [direction, setDirection] = useState(slideDirections[0]);
   const [isMuted, setIsMuted] = useState(true);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const musicNodesRef = useRef<any[]>([]);
+  const musicNodesRef = useRef<AudioNode[]>([]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -60,7 +60,7 @@ export const CatalogSlideshow = ({ isOpen, onClose, images }: CatalogSlideshowPr
     if (isMuted) {
       try {
         if (!audioContextRef.current) {
-          audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+          audioContextRef.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
         }
         
         const ctx = audioContextRef.current;

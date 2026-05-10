@@ -11,7 +11,7 @@ interface InstallPWADialogProps {
 export const InstallPWADialog = ({ open, onOpenChange, onInstall }: InstallPWADialogProps) => {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   const isAndroid = /Android/.test(navigator.userAgent);
-  const isChrome = !!(window as any).chrome;
+  const isChrome = !!(window as unknown as { chrome?: unknown }).chrome;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
