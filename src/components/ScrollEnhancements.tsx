@@ -67,16 +67,16 @@ const ScrollEnhancements = () => {
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
-      className="fixed top-0 left-0 right-0 z-[100] h-[6px] bg-black/10 cursor-pointer touch-none select-none"
+      className="fixed top-0 left-0 right-0 z-[200] h-[8px] bg-black/20 cursor-pointer touch-none select-none"
     >
       <div
-        className="h-full bg-[#5C7650] shadow-[0_0_10px_rgba(92,118,80,0.7)] transition-[width] duration-100 ease-out"
+        className="h-full bg-[#5C7650] shadow-[0_0_12px_rgba(92,118,80,0.9)] transition-[width] duration-100 ease-out"
         style={{ width: `${progress}%` }}
       />
       {/* Draggable thumb at the leading edge */}
       <div
-        className="absolute -top-[3px] h-3 w-3 rounded-full bg-[#5C7650] shadow-md ring-2 ring-white transition-[left] duration-100 ease-out"
-        style={{ left: `calc(${progress}% - 6px)` }}
+        className="absolute -top-[4px] h-4 w-4 rounded-full bg-[#5C7650] shadow-lg ring-2 ring-white transition-[left] duration-100 ease-out"
+        style={{ left: `calc(${progress}% - 8px)` }}
       />
     </div>
   );
