@@ -117,32 +117,13 @@ All colors MUST be HSL.
   }
 }
 
-/* Homepage vertical scroll snapping — uses `proximity` so wheel/trackpad
-   scrolling stays free-flowing but sections gently lock into place when you
-   stop near a boundary. Keeps the thin scrollbar perfectly aligned with
-   section transitions without feeling "grabby". */
-html.snap-home {
-  scroll-snap-type: y proximity;
-  scroll-behavior: smooth;
-  scroll-padding-top: 6rem;
-}
-html.snap-home body section {
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
-  scroll-margin-top: 6rem;        /* 96px — mobile */
-}
-@media (min-width: 640px) {
-  html.snap-home { scroll-padding-top: 7rem; }
-  html.snap-home body section { scroll-margin-top: 7rem; }   /* 112px */
-}
-@media (min-width: 768px) {
-  html.snap-home { scroll-padding-top: 10rem; }
-  html.snap-home body section { scroll-margin-top: 10rem; }  /* 160px */
-}
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  html.snap-home { scroll-snap-type: none; scroll-behavior: auto; }
-}
+/* Homepage scroll: intentionally NO scroll-snap.
+   With ~20 sections on the homepage, scroll-snap (even `proximity`) causes
+   the browser to override the user's release point with a snap animation,
+   which makes the thin progress scrollbar lurch and feel jumpy. Native
+   free-flowing scroll keeps the progress bar perfectly 1:1 with the wheel
+   or finger. Do not re-enable scroll-snap on .snap-home without a plan to
+   reduce snap targets to ~3–4 hand-picked sections. */
 
 /* Hide horizontal rail scrollbars while keeping native swipe behavior */
 .scrollbar-none::-webkit-scrollbar { display: none; }
