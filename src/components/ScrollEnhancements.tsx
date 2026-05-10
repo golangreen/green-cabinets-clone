@@ -35,7 +35,7 @@ const ScrollEnhancements = () => {
 
       // Cap at 8 dots — evenly sample across the page so each dot covers
       // a meaningful chunk of scroll distance instead of crowding the rail.
-      const MAX_DOTS = 8;
+      const MAX_DOTS = 10;
       let picked = all;
       if (all.length > MAX_DOTS) {
         picked = [];
