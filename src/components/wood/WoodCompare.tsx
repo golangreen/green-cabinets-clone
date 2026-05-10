@@ -11,14 +11,12 @@ import { Button } from "@/components/ui/button";
 import { Filter, X, ArrowRight } from "lucide-react";
 import { WOOD_SPECIES } from "@/data/woodSpecies";
 
-const DEFAULT_SELECTION = ["maple", "white-oak", "walnut"];
-
 const WoodCompare = () => {
-  const [selected, setSelected] = useState<string[]>(DEFAULT_SELECTION);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const toggle = (slug: string) => {
     if (selected.includes(slug)) {
-      if (selected.length > 1) setSelected(selected.filter((s) => s !== slug));
+      setSelected(selected.filter((s) => s !== slug));
     } else if (selected.length < 4) {
       setSelected([...selected, slug]);
     }
@@ -66,6 +64,12 @@ const WoodCompare = () => {
             );
           })}
         </div>
+
+        {chosen.length === 0 && (
+          <p className="text-sm text-muted-foreground text-center py-6">
+            Check a species above to start comparing.
+          </p>
+        )}
 
         {/* Comparison grid */}
         <div
