@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import { ShopifyService } from '../shopifyService';
 
 // Mock fetch globally
-(globalThis as any).fetch = vi.fn();
+(globalThis as { fetch: typeof fetch }).fetch = vi.fn() as unknown as typeof fetch;
+const mockFetch = globalThis.fetch as unknown as Mock;
 
 describe('ShopifyService', () => {
   let service: ShopifyService;
