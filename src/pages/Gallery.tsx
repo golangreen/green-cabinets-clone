@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useSearchParams, Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { ChevronRight, ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { galleryImages, type GalleryCategory } from "@/data/galleryImages";
