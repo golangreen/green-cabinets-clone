@@ -24,6 +24,7 @@ import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
 import LegacyRedirect from "@/components/LegacyRedirect";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import SectionJumpMenu from "@/components/SectionJumpMenu";
 
 
 
@@ -75,6 +76,7 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
           <ScrollToTopButton />
+          <SectionJumpMenu />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
