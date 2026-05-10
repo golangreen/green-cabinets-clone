@@ -75,11 +75,6 @@ const ScrollEnhancements = () => {
         className="absolute top-0 left-0 right-0 rounded-full bg-[#5C7650] shadow-[0_0_12px_rgba(92,118,80,0.9)] transition-[height] duration-100 ease-out"
         style={{ height: `${progress}%` }}
       />
-      {/* Draggable thumb at the leading edge */}
-      <div
-        className="absolute -left-[5px] h-5 w-5 rounded-full bg-[#5C7650] shadow-lg ring-2 ring-white transition-[top] duration-100 ease-out"
-        style={{ top: `calc(${progress}% - 10px)` }}
-      />
     </div>
   );
 };
