@@ -12,6 +12,7 @@ import greenCabinetsLogo from "@/assets/logos/logo-color.svg";
 import eggerLogo from "@/assets/logos/egger-logo.png";
 import diamondApplianceLogo from "@/assets/logos/diamond-appliance-logo.png";
 import agtLogo from "@/assets/logos/agt-logo.png";
+import raphaelStoneLogo from "@/assets/logos/raphael-stone-logo.png";
 
 interface Supplier {
   id: string;
@@ -136,6 +137,20 @@ const suppliers: Supplier[] = [
       "MDF panels and profiles",
       "Wide range of colors and woodgrains"
     ]
+  },
+  {
+    id: "raphael-stone",
+    name: "Raphael Stone",
+    description: "Engineered, natural, printed & mineral stone surfaces",
+    logo: raphaelStoneLogo,
+    website: "https://www.raphaelstoneusa.com",
+    details: "Raphael Stone offers a curated collection of over 300 high-performance surfaces — engineered quartz, natural quartzite, printed and mineral stones — backed by generations of expertise. We specify their slabs for countertops, vanities, and statement surfaces that complement our cabinetry.",
+    products: [
+      "Engineered stone (quartz) slabs",
+      "Natural stone & quartzite",
+      "Printed stone surfaces",
+      "Mineral stone & large-format slabs",
+    ],
   },
   {
     id: "diamond-appliance",
