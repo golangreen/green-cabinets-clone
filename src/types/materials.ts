@@ -3,7 +3,7 @@
  * (Tafisa, Shinnoki, Egger, Wilsonart, etc.) that the showroom stocks or
  * can order. Used by the Materials Browser on /wood-species.
  */
-export type MaterialBrand = "Tafisa" | "Shinnoki" | "Egger" | "Wilsonart" | "AGT";
+export type MaterialBrand = "Tafisa" | "Shinnoki" | "Egger" | "Wilsonart" | "AGT" | "Raphael Stone";
 
 export interface MaterialPanel {
   id: string;
