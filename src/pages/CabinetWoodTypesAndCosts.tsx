@@ -78,6 +78,27 @@ const itemListSchema = {
   })),
 };
 
+const FAQ = [
+  { q: "What are the most common types of wood used for kitchen cabinets?", a: "The seven most-used species in custom kitchens are hard maple, white oak, red oak, cherry, walnut, hickory, and birch. Maple dominates paint-grade work; white oak dominates stained and natural; walnut and rift-cut white oak lead the premium tier." },
+  { q: "What is the cheapest wood for cabinets?", a: "Knotty alder and red oak are the two cheapest hardwoods we mill — both run roughly $15–$25 per linear foot below our $350/lf blended baseline. Birch is close behind. For paint-grade work on a tight budget, birch beats alder." },
+  { q: "What is the most expensive wood for cabinets?", a: "Mahogany and American walnut, each adding $100–$250 per linear foot over the baseline. Rift-cut white oak is the third-most expensive at $75–$125/lf premium, mostly due to lumber yield — straight-grain rift cuts waste roughly half the log." },
+  { q: "How much do custom wood kitchen cabinets cost per linear foot?", a: "Our blended baseline at the Bushwick shop is $350/lf for a full custom kitchen in hard maple, painted, with shaker doors, dovetail boxes, and Blum soft-close hardware. Species premiums on top of that range from −$25/lf (red oak) to +$250/lf (mahogany). Door style, finish, and hardware can each shift the total another $20–$60/lf." },
+  { q: "Which wood is most durable for kitchen cabinets?", a: "Hickory, by Janka hardness — 1,820 lbf, roughly 25% harder than hard maple and 40% harder than red oak. For families with kids, dogs, or rentals, nothing else comes close at the same price point." },
+  { q: "What's the difference between rift-cut and quartersawn oak?", a: "Both produce straight grain instead of cathedral arches. Quartersawn shows visible medullary ray flecks (the Mission/Stickley look). Rift-cut hides them — straight, plain, modern. Same hardness and stability, rift-cut runs ~20% pricier due to even tighter lumber yield." },
+  { q: "Is solid wood better than plywood for cabinets?", a: "Different parts, different jobs. Doors and face frames should be solid hardwood — they're seen and they take wear. Cabinet boxes are usually 3/4\" hardwood plywood (more dimensionally stable than solid wood at large widths). A 'solid wood cabinet' built entirely from solid lumber will warp; quality custom cabinets mix solid and ply on purpose." },
+  { q: "Does the wood species affect cabinet durability or just look?", a: "Both. Janka hardness predicts dent resistance — under 1,000 (alder, walnut, cherry) wants a careful household; 1,200–1,500 (red oak, birch, maple) is the sweet spot; 1,800+ (hickory) handles anything. Color and grain are the other axis — open-pore species (oak, ash, walnut) hide wear better than closed-pore species (maple, cherry, birch) where every dent shows." },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 const tierBadge: Record<Row["tier"], string> = {
   Budget: "bg-emerald-100 text-emerald-900 dark:bg-emerald-900/30 dark:text-emerald-200",
   Mid: "bg-blue-100 text-blue-900 dark:bg-blue-900/30 dark:text-blue-200",
@@ -109,6 +130,7 @@ const CabinetWoodTypesAndCosts = () => (
       <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
       <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
       <script type="application/ld+json">{JSON.stringify(itemListSchema)}</script>
+      <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
     </Helmet>
 
     <BreadcrumbSchema
@@ -220,6 +242,16 @@ const CabinetWoodTypesAndCosts = () => (
             <li><strong>Box construction</strong> — 3/4" plywood baseline; melamine interior or pre-finished maple ply add cost.</li>
             <li><strong>Install</strong> — Brooklyn brownstone parlor floor is cheap; 5th-floor walk-up is not.</li>
           </ul>
+
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Frequently asked questions</h2>
+          <div className="space-y-5 mb-10">
+            {FAQ.map((f) => (
+              <div key={f.q} className="border-l-2 border-[#5C7650] pl-4 py-1">
+                <h3 className="font-bold text-foreground mb-1">{f.q}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.a}</p>
+              </div>
+            ))}
+          </div>
 
           <div className="p-6 border border-border rounded-lg bg-muted/30 mb-10">
             <h2 className="text-xl font-bold mb-2">Want a real number for your kitchen?</h2>
