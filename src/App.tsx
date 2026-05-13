@@ -26,6 +26,7 @@ import CaseStudies from "./pages/CaseStudies";
 import CaseStudyDetail from "./pages/CaseStudyDetail";
 import BestWoodForKitchenCabinets from "./pages/BestWoodForKitchenCabinets";
 import CabinetWoodTypesAndCosts from "./pages/CabinetWoodTypesAndCosts";
+import NaturalWoodKitchenCabinets from "./pages/NaturalWoodKitchenCabinets";
 import DoubleSinkVanityGuide from "./pages/DoubleSinkVanityGuide";
 import FloatingBathroomVanity from "./pages/FloatingBathroomVanity";
 import SmallBathroomVanityIdeas from "./pages/SmallBathroomVanityIdeas";
@@ -93,6 +94,7 @@ const App = () => {
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/best-wood-for-kitchen-cabinets" element={<BestWoodForKitchenCabinets />} />
             <Route path="/cabinet-wood-types-and-costs" element={<CabinetWoodTypesAndCosts />} />
+            <Route path="/natural-wood-kitchen-cabinets" element={<NaturalWoodKitchenCabinets />} />
             <Route path="/double-sink-vanity-guide" element={<DoubleSinkVanityGuide />} />
             <Route path="/floating-bathroom-vanity" element={<FloatingBathroomVanity />} />
             <Route path="/small-bathroom-vanity-ideas" element={<SmallBathroomVanityIdeas />} />

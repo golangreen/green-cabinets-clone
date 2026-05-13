@@ -28,6 +28,7 @@ const entries: SitemapEntry[] = [
   { path: "/case-studies", changefreq: "monthly", priority: "0.8", lastmod: today },
   { path: "/best-wood-for-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/cabinet-wood-types-and-costs", changefreq: "monthly", priority: "0.85", lastmod: today },
+  { path: "/natural-wood-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/double-sink-vanity-guide", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/floating-bathroom-vanity", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/small-bathroom-vanity-ideas", changefreq: "monthly", priority: "0.85", lastmod: today },
