@@ -199,7 +199,12 @@ const WoodSpecies = () => {
               determines how your kitchen looks, how it ages, how it stands up to daily life, and
               what it costs. Below is everything we have learned in 15 years of building custom
               cabinets in Brooklyn — every species we work with, head-to-head, with the tradeoffs
-              spelled out plainly.
+              spelled out plainly. Need help narrowing it down? Start with our{" "}
+              <Link to="/best-wood-for-kitchen-cabinets" className="text-[#5C7650] underline underline-offset-2 hover:text-[#445339] font-medium">best wood for kitchen cabinets</Link>{" "}
+              picks, see full{" "}
+              <Link to="/cabinet-wood-types-and-costs" className="text-[#5C7650] underline underline-offset-2 hover:text-[#445339] font-medium">wood types and costs per linear foot</Link>, or
+              browse{" "}
+              <Link to="/natural-wood-kitchen-cabinets" className="text-[#5C7650] underline underline-offset-2 hover:text-[#445339] font-medium">natural wood kitchen cabinets</Link>.
             </p>
             <div className="flex flex-wrap gap-3 justify-center pt-2">
               <Link
@@ -302,6 +307,68 @@ const WoodSpecies = () => {
                   </div>
                 </Link>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Related deep-dive guides */}
+        <section className="py-12 sm:py-16 md:py-20 bg-[#d5d5d5]/30 border-y border-[#5C7650]/10">
+          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+            <div className="text-center mb-10">
+              <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-2">
+                Go Deeper
+              </p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a]">
+                Related Long-Form Guides
+              </h2>
+              <p className="text-[#555555] max-w-2xl mx-auto mt-3">
+                Three pillar reads that pair with this species library — picks by use case,
+                full pricing per linear foot, and the natural-finish playbook.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <Link
+                to="/best-wood-for-kitchen-cabinets"
+                className="group block rounded-xl border border-border bg-background p-6 hover:border-[#5C7650] hover:shadow-lg transition-all"
+              >
+                <p className="text-xs uppercase tracking-wider text-[#5C7650] font-semibold mb-2">Pillar guide</p>
+                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Best Wood for Kitchen Cabinets</h3>
+                <p className="text-sm text-[#555555] mb-4">
+                  Recommendations by use case — busy family kitchen, modern minimalist,
+                  paint-grade, luxury, and more.
+                </p>
+                <span className="inline-flex items-center gap-1 text-sm text-[#5C7650] font-medium group-hover:gap-2 transition-all">
+                  Read guide <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </Link>
+              <Link
+                to="/cabinet-wood-types-and-costs"
+                className="group block rounded-xl border border-border bg-background p-6 hover:border-[#5C7650] hover:shadow-lg transition-all"
+              >
+                <p className="text-xs uppercase tracking-wider text-[#5C7650] font-semibold mb-2">Pillar guide</p>
+                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Cabinet Wood Types & Costs</h3>
+                <p className="text-sm text-[#555555] mb-4">
+                  Side-by-side cost comparison of every species we offer — budget, mid-tier,
+                  and premium, with $/linear-foot ranges for NYC.
+                </p>
+                <span className="inline-flex items-center gap-1 text-sm text-[#5C7650] font-medium group-hover:gap-2 transition-all">
+                  See pricing <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </Link>
+              <Link
+                to="/natural-wood-kitchen-cabinets"
+                className="group block rounded-xl border border-border bg-background p-6 hover:border-[#5C7650] hover:shadow-lg transition-all"
+              >
+                <p className="text-xs uppercase tracking-wider text-[#5C7650] font-semibold mb-2">Pillar guide</p>
+                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Natural Wood Kitchen Cabinets</h3>
+                <p className="text-sm text-[#555555] mb-4">
+                  Which species look best with a clear or hardwax-oil finish, plus cuts
+                  (rift, quartersawn) and finish systems.
+                </p>
+                <span className="inline-flex items-center gap-1 text-sm text-[#5C7650] font-medium group-hover:gap-2 transition-all">
+                  Explore naturals <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </Link>
             </div>
           </div>
         </section>
