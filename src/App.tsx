@@ -94,6 +94,7 @@ const App = () => {
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/best-wood-for-kitchen-cabinets" element={<BestWoodForKitchenCabinets />} />
             <Route path="/cabinet-wood-types-and-costs" element={<CabinetWoodTypesAndCosts />} />
+            <Route path="/natural-wood-kitchen-cabinets" element={<NaturalWoodKitchenCabinets />} />
             <Route path="/double-sink-vanity-guide" element={<DoubleSinkVanityGuide />} />
             <Route path="/floating-bathroom-vanity" element={<FloatingBathroomVanity />} />
             <Route path="/small-bathroom-vanity-ideas" element={<SmallBathroomVanityIdeas />} />
