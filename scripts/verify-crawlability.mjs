@@ -1,24 +1,47 @@
 #!/usr/bin/env node
 /**
  * Post-deploy crawlability check.
- * Fetches production robots.txt + sitemap.xml, asserts:
- *  - both return 200
- *  - robots.txt has Allow:/, Sitemap:, and disallows admin/auth/checkout
- *  - every public guide URL is reachable AND not blocked by robots
+ * Parses production robots.txt into per-User-agent groups and asserts:
+ *  - the `*` group has every expected Disallow + Allow rule
+ *  - sitemap.xml returns 200 and contains every guide URL
+ *  - every guide URL returns 200 with no `noindex` X-Robots-Tag
  *
- * Usage: node scripts/verify-crawlability.mjs
  * Exits non-zero on any failure (CI-friendly).
  */
 const HOST = "https://greencabinetsny.com";
 
-const REQUIRED_ROBOTS = [
-  /^User-agent:\s*\*/m,
-  /^Allow:\s*\/$/m,
-  /^Disallow:\s*\/admin/m,
-  /^Disallow:\s*\/auth/m,
-  /^Disallow:\s*\/checkout/m,
-  /^Sitemap:\s*https:\/\/greencabinetsny\.com\/sitemap\.xml/m,
+// --- expectations for the `*` user-agent group ---------------------------
+const EXPECTED_DISALLOW = [
+  "/admin/",
+  "/admin",
+  "/auth",
+  "/checkout",
+  "/payment-success",
+  "/performance",
 ];
+
+const EXPECTED_ALLOW = [
+  "/",
+  "/assets/",
+  "/icons/",
+  "/images/",
+  "/*.css$",
+  "/*.js$",
+  "/*.mjs$",
+  "/*.woff2$",
+  "/*.woff$",
+  "/*.svg$",
+  "/*.png$",
+  "/*.jpg$",
+  "/*.jpeg$",
+  "/*.webp$",
+  "/*.avif$",
+  "/*.ico$",
+  "/*.json$",
+  "/*.xml$",
+];
+
+const EXPECTED_SITEMAP = `${HOST}/sitemap.xml`;
 
 const MUST_BE_INDEXED = [
   "/",
@@ -38,46 +61,112 @@ const MUST_BE_INDEXED = [
   "/kitchen-renovation-brooklyn",
 ];
 
-const c = { red: (s) => `\x1b[31m${s}\x1b[0m`, green: (s) => `\x1b[32m${s}\x1b[0m`, dim: (s) => `\x1b[2m${s}\x1b[0m` };
-const fails = [];
+// --- robots.txt parser ---------------------------------------------------
+/**
+ * Parse robots.txt into a map of `User-agent` → { allow: Set, disallow: Set }.
+ * Handles grouped UA blocks (multiple `User-agent:` lines sharing rules) and
+ * collects top-level `Sitemap:` directives separately.
+ */
+function parseRobots(text) {
+  const groups = new Map();
+  const sitemaps = [];
+  let pendingUAs = [];
+  let currentRules = null;
 
-async function head(url) {
-  const r = await fetch(url, { method: "HEAD", redirect: "follow" });
-  return { status: r.status, robots: r.headers.get("x-robots-tag") || "" };
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.replace(/#.*$/, "").trim();
+    if (!line) continue;
+    const m = line.match(/^([A-Za-z-]+)\s*:\s*(.*)$/);
+    if (!m) continue;
+    const field = m[1].toLowerCase();
+    const value = m[2].trim();
+
+    if (field === "sitemap") {
+      sitemaps.push(value);
+      continue;
+    }
+    if (field === "user-agent") {
+      // New UA after rules → start fresh group of UAs
+      if (currentRules) {
+        pendingUAs = [];
+        currentRules = null;
+      }
+      pendingUAs.push(value);
+      if (!groups.has(value)) groups.set(value, { allow: new Set(), disallow: new Set() });
+      continue;
+    }
+    if (field === "allow" || field === "disallow") {
+      if (!pendingUAs.length) continue; // orphan rule
+      if (!currentRules) currentRules = true;
+      for (const ua of pendingUAs) {
+        groups.get(ua)[field].add(value);
+      }
+    }
+  }
+  return { groups, sitemaps };
 }
+
+// --- runner --------------------------------------------------------------
+const c = {
+  red: (s) => `\x1b[31m${s}\x1b[0m`,
+  green: (s) => `\x1b[32m${s}\x1b[0m`,
+  yellow: (s) => `\x1b[33m${s}\x1b[0m`,
+  dim: (s) => `\x1b[2m${s}\x1b[0m`,
+};
+const fails = [];
+const log = (ok, msg) => console.log(`${ok ? c.green("✓") : c.red("✗")} ${msg}`);
 
 console.log(c.dim(`→ Verifying ${HOST}\n`));
 
-// 1. robots.txt
+// 1. robots.txt — full parse + per-rule assertions
 const rRes = await fetch(`${HOST}/robots.txt`);
 const rBody = await rRes.text();
-if (rRes.status !== 200) fails.push(`robots.txt status ${rRes.status}`);
-for (const re of REQUIRED_ROBOTS) {
-  if (!re.test(rBody)) fails.push(`robots.txt missing directive: ${re}`);
+if (rRes.status !== 200) {
+  fails.push(`robots.txt status ${rRes.status}`);
+  log(false, `robots.txt status ${rRes.status}`);
+} else {
+  log(true, "robots.txt 200");
+  const { groups, sitemaps } = parseRobots(rBody);
+  const star = groups.get("*");
+  if (!star) {
+    fails.push("robots.txt missing User-agent: * group");
+    log(false, "User-agent: * group present");
+  } else {
+    log(true, `User-agent: * group parsed (${star.allow.size} allow, ${star.disallow.size} disallow)`);
+    for (const rule of EXPECTED_DISALLOW) {
+      const ok = star.disallow.has(rule);
+      log(ok, `  Disallow: ${rule}`);
+      if (!ok) fails.push(`* group missing Disallow: ${rule}`);
+    }
+    for (const rule of EXPECTED_ALLOW) {
+      const ok = star.allow.has(rule);
+      log(ok, `  Allow: ${rule}`);
+      if (!ok) fails.push(`* group missing Allow: ${rule}`);
+    }
+  }
+  const hasSitemap = sitemaps.includes(EXPECTED_SITEMAP);
+  log(hasSitemap, `Sitemap: ${EXPECTED_SITEMAP}`);
+  if (!hasSitemap) fails.push(`robots.txt missing Sitemap: ${EXPECTED_SITEMAP} (got ${JSON.stringify(sitemaps)})`);
 }
-console.log(rRes.status === 200 ? c.green("✓ robots.txt 200") : c.red(`✗ robots.txt ${rRes.status}`));
 
 // 2. sitemap.xml
+console.log("");
 const sRes = await fetch(`${HOST}/sitemap.xml`);
 const sBody = await sRes.text();
 if (sRes.status !== 200) fails.push(`sitemap.xml status ${sRes.status}`);
 const sitemapLocs = new Set([...sBody.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
-console.log(sRes.status === 200 ? c.green(`✓ sitemap.xml 200 (${sitemapLocs.size} urls)`) : c.red(`✗ sitemap.xml ${sRes.status}`));
+log(sRes.status === 200, `sitemap.xml 200 (${sitemapLocs.size} urls)`);
 
 // 3. Each guide URL: must be in sitemap, return 200, no noindex
 console.log("");
 for (const path of MUST_BE_INDEXED) {
   const url = `${HOST}${path}`;
   const inSitemap = sitemapLocs.has(url) || sitemapLocs.has(url.replace(/\/$/, ""));
-  const { status, robots } = await head(url);
-  const noindex = /noindex/i.test(robots);
-  const ok = status === 200 && inSitemap && !noindex;
-  if (!ok) {
-    fails.push(`${path} → status=${status} sitemap=${inSitemap} noindex=${noindex}`);
-    console.log(c.red(`✗ ${path}`) + c.dim(`  status=${status} sitemap=${inSitemap} noindex=${noindex}`));
-  } else {
-    console.log(c.green(`✓ ${path}`));
-  }
+  const r = await fetch(url, { method: "HEAD", redirect: "follow" });
+  const noindex = /noindex/i.test(r.headers.get("x-robots-tag") || "");
+  const ok = r.status === 200 && inSitemap && !noindex;
+  if (!ok) fails.push(`${path} → status=${r.status} sitemap=${inSitemap} noindex=${noindex}`);
+  log(ok, `${path}${ok ? "" : c.dim(`  status=${r.status} sitemap=${inSitemap} noindex=${noindex}`)}`);
 }
 
 console.log("");
@@ -86,4 +175,4 @@ if (fails.length) {
   fails.forEach((f) => console.log(c.red(`  • ${f}`)));
   process.exit(1);
 }
-console.log(c.green(`PASS — robots, sitemap, and ${MUST_BE_INDEXED.length} guide URLs all crawlable.`));
+console.log(c.green(`PASS — robots groups, sitemap, and ${MUST_BE_INDEXED.length} guide URLs all verified.`));
