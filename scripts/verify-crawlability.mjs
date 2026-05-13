@@ -68,58 +68,12 @@ const EXPECTED_GUIDES = [
 
 const MUST_BE_INDEXED = [...CORE_PAGES, ...EXPECTED_GUIDES];
 
-// Heuristic for "looks like a migrated guide": multi-word kebab slug at root,
-// not a core page, and not part of the location landing-page namespace
-// (`/custom-kitchen-cabinets-*`) which is its own category.
-const GUIDE_LIKE = (path) =>
-  /^\/[a-z0-9]+(?:-[a-z0-9]+){2,}$/.test(path) &&
-  !CORE_PAGES.includes(path) &&
-  !path.startsWith("/custom-kitchen-cabinets-");
+import { parseRobots, makeGuideLike } from "./lib/robots-parser.mjs";
 
-// --- robots.txt parser ---------------------------------------------------
-/**
- * Parse robots.txt into a map of `User-agent` → { allow: Set, disallow: Set }.
- * Handles grouped UA blocks (multiple `User-agent:` lines sharing rules) and
- * collects top-level `Sitemap:` directives separately.
- */
-function parseRobots(text) {
-  const groups = new Map();
-  const sitemaps = [];
-  let pendingUAs = [];
-  let currentRules = null;
-
-  for (const raw of text.split(/\r?\n/)) {
-    const line = raw.replace(/#.*$/, "").trim();
-    if (!line) continue;
-    const m = line.match(/^([A-Za-z-]+)\s*:\s*(.*)$/);
-    if (!m) continue;
-    const field = m[1].toLowerCase();
-    const value = m[2].trim();
-
-    if (field === "sitemap") {
-      sitemaps.push(value);
-      continue;
-    }
-    if (field === "user-agent") {
-      // New UA after rules → start fresh group of UAs
-      if (currentRules) {
-        pendingUAs = [];
-        currentRules = null;
-      }
-      pendingUAs.push(value);
-      if (!groups.has(value)) groups.set(value, { allow: new Set(), disallow: new Set() });
-      continue;
-    }
-    if (field === "allow" || field === "disallow") {
-      if (!pendingUAs.length) continue; // orphan rule
-      if (!currentRules) currentRules = true;
-      for (const ua of pendingUAs) {
-        groups.get(ua)[field].add(value);
-      }
-    }
-  }
-  return { groups, sitemaps };
-}
+const GUIDE_LIKE = makeGuideLike({
+  corePages: CORE_PAGES,
+  excludePrefixes: ["/custom-kitchen-cabinets-"],
+});
 
 // --- runner --------------------------------------------------------------
 const c = {
