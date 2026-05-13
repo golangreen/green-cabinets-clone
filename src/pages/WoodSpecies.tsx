@@ -199,7 +199,12 @@ const WoodSpecies = () => {
               determines how your kitchen looks, how it ages, how it stands up to daily life, and
               what it costs. Below is everything we have learned in 15 years of building custom
               cabinets in Brooklyn — every species we work with, head-to-head, with the tradeoffs
-              spelled out plainly.
+              spelled out plainly. Need help narrowing it down? Start with our{" "}
+              <Link to="/best-wood-for-kitchen-cabinets" className="text-[#5C7650] underline underline-offset-2 hover:text-[#445339] font-medium">best wood for kitchen cabinets</Link>{" "}
+              picks, see full{" "}
+              <Link to="/cabinet-wood-types-and-costs" className="text-[#5C7650] underline underline-offset-2 hover:text-[#445339] font-medium">wood types and costs per linear foot</Link>, or
+              browse{" "}
+              <Link to="/natural-wood-kitchen-cabinets" className="text-[#5C7650] underline underline-offset-2 hover:text-[#445339] font-medium">natural wood kitchen cabinets</Link>.
             </p>
             <div className="flex flex-wrap gap-3 justify-center pt-2">
               <Link
