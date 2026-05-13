@@ -25,20 +25,13 @@ const ZONES = [
   { name: "Adjustable shelves", depth: "12\"–14\" deep", width: "Above drawer bank or along ends", note: "Folded items, shoe stacks, bins. Always adjustable — never fixed." },
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${URL}#article`,
+const articleSchema = buildArticleSchema({
+  url: URL,
   headline: TITLE,
   description: DESC,
-  author: authorRef("golan"),
-  publisher: { "@id": ORG_ID },
   datePublished: "2026-05-13",
-  dateModified: new Date().toISOString().slice(0, 10),
-  image: ["https://greencabinetsny.com/og-image.jpg"],
-  mainEntityOfPage: { "@type": "WebPage", "@id": URL },
   keywords: "reach in closet, reach in closet systems, custom closet nyc, custom reach in closet, closet system brooklyn, closet organizer nyc",
-};
+});
 
 const faqSchema = {
   "@context": "https://schema.org",
