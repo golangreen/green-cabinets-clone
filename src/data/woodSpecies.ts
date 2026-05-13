@@ -72,6 +72,11 @@ export interface WoodSpecies {
   keywords: string[];
   /** FAQ entries shown on detail page (also used for FAQPage schema). */
   faqs: { question: string; answer: string }[];
+  /** Optional per-species SEO overrides. Fall back to generic template when omitted. */
+  metaTitle?: string;
+  metaDescription?: string;
+  h1?: string;
+  aboutHeading?: string;
 }
 
 export const WOOD_SPECIES: WoodSpecies[] = [
