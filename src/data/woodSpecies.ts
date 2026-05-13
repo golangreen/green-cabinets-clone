@@ -421,6 +421,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       "farmhouse hickory cabinets",
       "hickory vs oak cabinets",
     ],
+    faqs: [
       {
         question: "Is hickory good for a busy family kitchen?",
         answer:
