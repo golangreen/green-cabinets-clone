@@ -19,6 +19,7 @@ import WoodSpecies from "./pages/WoodSpecies";
 import WoodSpeciesDetail from "./pages/WoodSpeciesDetail";
 import FinishesColors from "./pages/FinishesColors";
 import GalleryPage from "./pages/Gallery";
+import KitchenRenovationBrooklyn from "./pages/KitchenRenovationBrooklyn";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
@@ -71,6 +72,7 @@ const App = () => {
             <Route path="/wood-species/:slug" element={<WoodSpeciesDetail />} />
             <Route path="/finishes-colors" element={<FinishesColors />} />
             <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/kitchen-renovation-brooklyn" element={<KitchenRenovationBrooklyn />} />
             <Route path="/:boroughPath" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
