@@ -318,7 +318,7 @@ const WoodSpeciesDetail = () => {
                     className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="p-4">
-                    <h3 className="font-semibold text-[#1a1a1a]">{w.name}</h3>
+                    <h3 className="font-semibold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
                     <p className="text-xs text-[#555555] mt-1 line-clamp-2">{w.tagline}</p>
                   </div>
                 </Link>
