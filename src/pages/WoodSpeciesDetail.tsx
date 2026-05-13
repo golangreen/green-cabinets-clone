@@ -17,6 +17,7 @@ import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
 import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
 import { authorRef, ORG_ID } from "@/data/authors";
+import AuthorByline from "@/components/AuthorByline";
 
 const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
