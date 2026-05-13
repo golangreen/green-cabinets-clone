@@ -1,5 +1,4 @@
 import { describe, it, expect } from "vitest";
-// @ts-expect-error — plain .mjs module, no types needed
 import { parseRobots, makeGuideLike } from "../../scripts/lib/robots-parser.mjs";
 
 type Group = { allow: Set<string>; disallow: Set<string> };
