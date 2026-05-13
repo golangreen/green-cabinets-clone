@@ -43,6 +43,15 @@ const WoodSpeciesDetail = () => {
     q.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").slice(0, 80);
   const faqsWithIds = wood.faqs.map((f) => ({ ...f, id: faqSlug(f.question) }));
 
+  // Client-side FAQ filter — matches against question + answer, case-insensitive.
+  const filteredFaqs = useMemo(() => {
+    const q = faqQuery.trim().toLowerCase();
+    if (!q) return faqsWithIds;
+    return faqsWithIds.filter(
+      (f) => f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q)
+    );
+  }, [faqQuery, faqsWithIds]);
+
   const isoToday = new Date().toISOString().slice(0, 10);
   const articleSchema = {
     "@context": "https://schema.org",
