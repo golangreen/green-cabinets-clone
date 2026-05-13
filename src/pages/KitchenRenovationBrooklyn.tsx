@@ -8,6 +8,7 @@ import Contact from "@/components/Contact";
 import Chatbot from "@/components/Chatbot";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
+import { authorRef } from "@/data/authors";
 
 const URL = "https://greencabinetsny.com/kitchen-renovation-brooklyn";
 const TITLE = "Kitchen Renovation Brooklyn | Costs, Permits & Timeline (2026)";
@@ -65,6 +66,8 @@ const howToJsonLd = {
   name: "How to Plan a Kitchen Renovation in Brooklyn",
   description:
     "Step-by-step guide to planning a Brooklyn kitchen renovation: budget, board approval, design, custom cabinet build, demo, install, and punch list.",
+  author: authorRef("golan"),
+  publisher: { "@id": "https://greencabinetsny.com/#organization" },
   totalTime: "P10W",
   estimatedCost: { "@type": "MonetaryAmount", currency: "USD", value: "45000" },
   supply: [
