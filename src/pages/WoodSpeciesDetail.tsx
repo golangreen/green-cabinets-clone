@@ -70,7 +70,7 @@ const WoodSpeciesDetail = () => {
         <meta property="og:url" content={url} />
         <meta property="og:title" content={`${wood.name} Cabinets — Complete Guide`} />
         <meta property="og:description" content={wood.shortDescription} />
-        <meta property="og:image" content={wood.image} />
+        <meta property="og:image" content={wood.image.startsWith("http") ? wood.image : `https://greencabinetsny.com${wood.image}`} />
         <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
