@@ -12,7 +12,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, X, ArrowRight, ArrowLeft, Link2, Search } from "lucide-react";
+import { Check, X, ArrowRight, ArrowLeft, Link2, Search, ChevronDown } from "lucide-react";
 import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
 import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
@@ -21,6 +21,10 @@ const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const [faqQuery, setFaqQuery] = useState("");
+  // Default-open on md+ screens, collapsed on mobile to save space.
+  const [tocOpen, setTocOpen] = useState(() =>
+    typeof window === "undefined" ? true : window.matchMedia("(min-width: 768px)").matches
+  );
   const wood = slug ? getWoodSpecies(slug) : undefined;
 
   if (!wood) return <Navigate to="/wood-species" replace />;
@@ -302,22 +306,35 @@ const WoodSpeciesDetail = () => {
 
               {/* Jump-to TOC (filtered) */}
               {filteredFaqs.length > 0 && (
-                <nav aria-label="FAQ contents" className="mb-10 rounded-lg border border-border bg-background p-5">
-                  <p className="text-sm font-semibold text-[#1a1a1a] mb-3">
-                    {faqQuery ? "Matching questions" : "Jump to a question"}
-                  </p>
-                  <ul className="space-y-2">
-                    {filteredFaqs.map((f) => (
-                      <li key={`toc-${f.id}`}>
-                        <a
-                          href={`#faq-${f.id}`}
-                          className="text-sm text-[#5C7650] hover:text-[#445339] hover:underline leading-snug"
-                        >
-                          <HighlightedText text={f.question} query={faqQuery} />
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                <nav aria-label="FAQ contents" className="mb-10 rounded-lg border border-border bg-background overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setTocOpen((v) => !v)}
+                    aria-expanded={tocOpen}
+                    aria-controls="faq-toc-list"
+                    className="w-full flex items-center justify-between gap-3 p-5 text-left hover:bg-muted/30 transition-colors"
+                  >
+                    <span className="text-sm font-semibold text-[#1a1a1a]">
+                      {faqQuery ? `Matching questions (${filteredFaqs.length})` : `Jump to a question (${filteredFaqs.length})`}
+                    </span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-[#5C7650] shrink-0 transition-transform duration-200 ${tocOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {tocOpen && (
+                    <ul id="faq-toc-list" className="space-y-2 px-5 pb-5">
+                      {filteredFaqs.map((f) => (
+                        <li key={`toc-${f.id}`}>
+                          <a
+                            href={`#faq-${f.id}`}
+                            className="text-sm text-[#5C7650] hover:text-[#445339] hover:underline leading-snug"
+                          >
+                            <HighlightedText text={f.question} query={faqQuery} />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </nav>
               )}
 
