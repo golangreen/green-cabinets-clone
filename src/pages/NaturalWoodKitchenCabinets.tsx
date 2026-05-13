@@ -11,8 +11,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Leaf, Droplets, Sun, ShieldCheck } from "lucide-react";
-import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema, buildFaqSchema } from "@/lib/articleSchema";
 import { WOOD_SPECIES } from "@/data/woodSpecies";
 
 const URL = "https://greencabinetsny.com/natural-wood-kitchen-cabinets";
