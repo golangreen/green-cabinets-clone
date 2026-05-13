@@ -670,7 +670,7 @@
 
     <!-- BreadcrumbList is injected per-page via <BreadcrumbSchema /> -->
 
-    <!-- Service + Product Schema (static for crawlers) -->
+    <!-- Service Schema (static for crawlers). Product schema lives on /product/:handle only. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -737,61 +737,6 @@
             { "@type": "City", "name": "Manhattan" },
             { "@type": "City", "name": "Queens" }
           ]
-        },
-        {
-          "@type": "Product",
-          "@id": "https://greencabinetsny.com/#product-shaker-kitchen",
-          "name": "Custom Shaker Kitchen Cabinets",
-          "sku": "GCNY-SHAKER-KITCHEN",
-          "mpn": "GCNY-SHAKER-KITCHEN",
-          "image": "https://greencabinetsny.com/og-image.jpg",
-          "description": "Handcrafted custom shaker kitchen cabinets built in Brooklyn using FSC-certified hardwoods, low-VOC finishes, and Blum/Hettich European hardware.",
-          "brand": { "@type": "Brand", "name": "Green Cabinets NY" },
-          "category": "Kitchen Cabinets",
-          "manufacturer": { "@type": "Organization", "name": "Green Cabinets NY" },
-          "offers": {
-            "@type": "Offer",
-            "url": "https://greencabinetsny.com/",
-            "priceCurrency": "USD",
-            "price": "350",
-            "priceSpecification": {
-              "@type": "UnitPriceSpecification",
-              "price": "350",
-              "priceCurrency": "USD",
-              "unitText": "linear foot"
-            },
-            "availability": "https://schema.org/InStock",
-            "itemCondition": "https://schema.org/NewCondition",
-            "seller": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" },
-            "hasMerchantReturnPolicy": {
-              "@type": "MerchantReturnPolicy",
-              "applicableCountry": "US",
-              "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
-            },
-            "shippingDetails": {
-              "@type": "OfferShippingDetails",
-              "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" },
-              "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "USD" },
-              "deliveryTime": {
-                "@type": "ShippingDeliveryTime",
-                "handlingTime": { "@type": "QuantitativeValue", "minValue": 7, "maxValue": 14, "unitCode": "DAY" },
-                "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 7, "unitCode": "DAY" }
-              }
-            }
-          },
-          "review": [{
-            "@type": "Review",
-            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5", "worstRating": "1" },
-            "author": { "@type": "Person", "name": "Rebecca M." },
-            "reviewBody": "Our co-op board is notoriously tough on contractors, but Green Cabinets handled the COI, alteration agreement, and freight elevator scheduling without us lifting a finger. Install was spotless."
-          }],
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "5",
-            "reviewCount": "6",
-            "bestRating": "5",
-            "worstRating": "1"
-          }
         }
       ]
     }
