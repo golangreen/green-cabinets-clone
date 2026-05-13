@@ -236,6 +236,53 @@ const WoodSpeciesDetail = () => {
           </section>
         )}
 
+        {/* Direct head-to-head comparisons (internal linking for topical authority) */}
+        {comparisons.length > 0 && (
+          <section className="py-12 sm:py-16 bg-[#f7f7f5]">
+            <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-3 text-center">
+                {wood.name} Comparisons
+              </h2>
+              <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
+                Choosing between species or cuts? These head-to-head guides break down grain, cost, durability, and best use.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {comparisons.map((c) => {
+                  const target = getWoodSpecies(c.slug)!;
+                  return (
+                    <Link
+                      key={c.slug}
+                      to={`/wood-species/${c.slug}`}
+                      className="group flex flex-col rounded-lg border border-border bg-background p-5 hover:border-[#5C7650] hover:shadow-lg transition-all"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <span
+                          aria-hidden="true"
+                          className="inline-block w-6 h-6 rounded border border-border"
+                          style={{ backgroundColor: wood.swatch }}
+                        />
+                        <span className="text-[#999] text-sm">vs</span>
+                        <span
+                          aria-hidden="true"
+                          className="inline-block w-6 h-6 rounded border border-border"
+                          style={{ backgroundColor: target.swatch }}
+                        />
+                      </div>
+                      <h3 className="font-semibold text-[#1a1a1a] group-hover:text-[#5C7650] transition-colors">
+                        {c.title}
+                      </h3>
+                      <p className="text-sm text-[#555555] mt-2 leading-relaxed flex-1">{c.blurb}</p>
+                      <span className="inline-flex items-center text-[#5C7650] text-sm font-medium mt-4">
+                        Read the comparison <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Related */}
         <section className="py-12 sm:py-16">
           <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
