@@ -261,6 +261,16 @@ const BestWoodForKitchenCabinets = () => (
             </li>
           </ol>
 
+          <h2 className="text-2xl sm:text-3xl font-bold mt-16 mb-3">Frequently asked questions</h2>
+          <div className="space-y-5">
+            {FAQ.map((f) => (
+              <div key={f.q} className="border-l-2 border-[#5C7650] pl-4 py-1">
+                <h3 className="font-bold text-foreground mb-1">{f.q}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.a}</p>
+              </div>
+            ))}
+          </div>
+
           <div className="mt-12 p-6 border border-border rounded-lg bg-muted/30">
             <p className="text-sm text-muted-foreground mb-3">
               Want the full spec on any species above — Janka, grain, cost tier, finish behavior,
