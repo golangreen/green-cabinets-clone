@@ -134,8 +134,12 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       "Black walnut is the prestige hardwood of American cabinetmaking — deep brown heartwood, gentle figure, and a soft, hand-finished feel that elevates any kitchen, library, or vanity.",
     longDescription: [
       "American black walnut (Juglans nigra) is the only commercially harvested dark hardwood native to North America. Heartwood is a deep chocolate brown often streaked with purple, gray, or violet undertones, while the sapwood is creamy yellow. Most premium millwork specifies steamed walnut, which evens out the contrast between heart and sap so doors and panels read as a single warm tone.",
-      "Walnut works beautifully — it cuts cleanly, glues well, and finishes to a soft luster with minimal effort. Its medium density (Janka 1,010 lbf) makes it kind on tooling and on the wallet of a custom shop, but it is not the toughest hardwood here. We recommend walnut for upper cabinets, vanities, libraries, and feature islands rather than heavily-used base runs in busy households.",
-      "Walnut darkens slightly with age and then mellows toward a golden brown after years of UV exposure — the opposite of cherry's reddening patina. For NYC clients we typically specify a hardwax oil or matte conversion varnish to preserve that natural depth without adding plastic-looking sheen. Pair walnut with brushed brass, antique bronze, or matte black hardware.",
+      "Walnut works beautifully — it cuts cleanly, glues well, and finishes to a soft luster with minimal effort. Its medium density (Janka 1,010 lbf) makes it kind on tooling and on the wallet of a custom shop, but it is not the toughest hardwood here. We recommend walnut for upper cabinets, vanities, libraries, feature islands, and master suite millwork rather than heavily-used base runs in busy households with kids and dogs.",
+      "Walnut darkens slightly with age and then mellows toward a golden brown after years of UV exposure — the opposite of cherry's reddening patina. For NYC clients we typically specify a hardwax oil (Rubio Monocoat Pure, Osmo Polyx) or matte conversion varnish to preserve that natural depth without adding plastic-looking sheen. Pair walnut with brushed brass, antique bronze, polished nickel, or matte black hardware. Avoid bright chrome — the contrast reads cold.",
+      "Cost in the NYC market currently runs $14-$18 per board foot for FAS-grade walnut, making it the most expensive common domestic cabinet hardwood — roughly 2-3× the cost of maple and 30-50% more than white oak. For a typical 30-linear-foot custom kitchen, expect walnut cabinetry to run $30,000-$45,000 from a Brooklyn shop, depending on door style, finish, and hardware selection.",
+      "Walnut's prestige status is partly historical and partly supply-driven. The trees grow slowly (60-80 years to commercial size), yields are limited per log because of significant sapwood content, and demand for dark domestic hardwoods has stayed strong since the post-2010 mid-century revival. Unlike imported tropical hardwoods, walnut has no ethical sourcing concerns — it is FSC-certified, harvested in expanding eastern US forests, and entirely traceable.",
+      "Best uses include feature islands (where it earns its premium against perimeter cabinets in a less expensive species), library and home office millwork, master bath vanities, primary bedroom built-ins, and any project where the client wants quiet luxury rather than statement contrast. We have specified walnut for prewar Manhattan apartments, Brooklyn brownstones, and several Hamptons projects where the goal was warmth without ostentation.",
+      "Care is straightforward but not zero-effort. Wipe with damp cloth and mild soap, never use abrasive cleaners or ammonia-based products (which can dull the topcoat and oxidize the wood). Refresh hardwax-oil finishes every 2-3 years with a thin coat to maintain depth. UV exposure will gradually lighten walnut over decades — this is a feature, not a defect, and most owners come to prefer the mellowed tone.",
     ],
     jankaHardness: 1010,
     specificGravity: 0.55,
@@ -145,34 +149,75 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     workability: "Excellent",
     stainTake: "Excellent",
     stability: 5,
-    uses: ["Feature islands", "Library and office millwork", "Vanities", "Slab and shaker doors"],
+    uses: ["Feature islands", "Library and office millwork", "Vanities", "Slab and shaker doors", "Master bedroom built-ins", "Statement range hoods"],
     pros: [
       "Naturally rich color — no stain required",
       "One of the most dimensionally stable hardwoods",
       "Easy to machine and hand-finish",
       "Reads as luxury without dramatic figure",
+      "FSC-certified and ethically sourced",
     ],
     cons: [
-      "Premium price tier (~3-4× maple)",
+      "Premium price tier (2-3× maple, 30-50% over white oak)",
       "Sapwood-heartwood color contrast must be sorted carefully",
       "Softer than maple or oak — more prone to denting",
+      "Lightens with UV exposure over decades",
     ],
-    bestFinishes: ["Hardwax oil (natural)", "Matte conversion varnish", "Rubio Monocoat Pure", "Soft satin lacquer"],
-    bestDoorStyles: ["Slab", "Shaker", "Reeded", "Frameless European"],
+    bestFinishes: ["Hardwax oil (natural)", "Matte conversion varnish", "Rubio Monocoat Pure", "Soft satin lacquer", "Osmo Polyx"],
+    bestDoorStyles: ["Slab", "Shaker", "Reeded", "Frameless European", "Inset shaker"],
     swatch: "#5b3a29",
     image: walnutImg,
     grainImage: walnutImg,
-    keywords: ["walnut kitchen cabinets NYC", "custom walnut cabinetry", "black walnut vanity"],
+    keywords: [
+      "walnut cabinets",
+      "walnut kitchen cabinets",
+      "walnut cabinets NYC",
+      "custom walnut cabinetry",
+      "black walnut vanity",
+      "walnut vs cherry",
+      "walnut island cabinets",
+      "modern walnut kitchen",
+    ],
     faqs: [
       {
         question: "Why is walnut more expensive than other woods?",
         answer:
-          "Walnut grows slowly, yields are limited per log because of sapwood, and demand for dark domestic hardwoods has stayed strong. Expect walnut cabinetry to run 2–3× the cost of maple of equivalent construction.",
+          "Walnut grows slowly (60-80 years to commercial size), yields are limited per log because of significant sapwood content, and demand for dark domestic hardwoods has stayed strong since the post-2010 mid-century revival. Expect walnut cabinetry to run 2-3× the cost of maple and 30-50% more than white oak of equivalent construction.",
+      },
+      {
+        question: "How much do walnut kitchen cabinets cost in NYC?",
+        answer:
+          "Custom walnut cabinets from a Brooklyn shop typically run $30,000-$45,000 for a 30-linear-foot kitchen depending on door style, finish, and hardware. Lumber alone runs $14-$18 per board foot for FAS-grade walnut. Many clients specify walnut only for the island and vanities, with white oak or maple for the perimeter.",
       },
       {
         question: "Does walnut fade in sunlight?",
         answer:
-          "Yes — walnut lightens with prolonged UV exposure, mellowing toward a warmer golden brown over 5–10 years. A UV-protective topcoat slows but does not stop this natural aging.",
+          "Yes — walnut lightens with prolonged UV exposure, mellowing from deep chocolate toward a warmer golden brown over 5-10 years. A UV-protective topcoat slows but does not stop this natural aging. Most owners come to prefer the mellowed tone over the original near-black depth.",
+      },
+      {
+        question: "What is the difference between walnut and cherry?",
+        answer:
+          "Walnut starts dark and lightens with age. Cherry starts light and darkens with age — they move in opposite directions. Walnut is harder (Janka 1,010 vs cherry's 950), more dimensionally stable, and reads as more contemporary. Cherry is roughly 30-40% cheaper and reads as more traditional. Both are FSC-certified domestic hardwoods.",
+      },
+      {
+        question: "Is walnut durable enough for a busy family kitchen?",
+        answer:
+          "Walnut is moderately durable (Janka 1,010 lbf) — significantly softer than maple, oak, or hickory. For high-impact families with kids and dogs, we recommend specifying walnut on islands and uppers (where impact is rare) and a tougher species like white oak or maple on base cabinets that take daily abuse.",
+      },
+      {
+        question: "How do I care for walnut cabinets?",
+        answer:
+          "Wipe with a damp cloth and mild dish soap; never use abrasive cleaners, vinegar, or ammonia-based products which can dull the topcoat. For hardwax-oil finishes, refresh with a thin coat every 2-3 years to maintain depth. Avoid placing hot pans or wet glasses directly on unsealed walnut surfaces.",
+      },
+      {
+        question: "Should walnut be stained or left natural?",
+        answer:
+          "Almost always natural. Walnut's heartwood color is the entire reason to specify the species — staining it darker obscures the natural depth and grain figure. The standard NYC spec is hardwax oil over raw or steamed walnut. Stained walnut is rarely worth the lumber premium over a stained alternative.",
+      },
+      {
+        question: "What's the lead time for walnut cabinets in NYC?",
+        answer:
+          "Plan on 10-12 weeks for custom walnut cabinets from a Brooklyn shop versus 6-8 weeks for red oak or maple. Walnut supply has stabilized post-pandemic but lead times remain longer than other domestic species due to careful color sorting required to manage sapwood-heartwood contrast.",
       },
     ],
   },
