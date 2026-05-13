@@ -22,7 +22,11 @@ const WoodSpeciesDetail = () => {
   if (!wood) return <Navigate to="/wood-species" replace />;
 
   const url = `https://greencabinetsny.com/wood-species/${wood.slug}`;
-  const related = WOOD_SPECIES.filter((w) => w.slug !== wood.slug).slice(0, 3);
+  const comparisons = getComparisonsFor(wood.slug);
+  const comparisonSlugs = new Set(comparisons.map((c) => c.slug));
+  // Prefer species not already shown in the comparison block, fall back to any other.
+  const relatedPool = WOOD_SPECIES.filter((w) => w.slug !== wood.slug && !comparisonSlugs.has(w.slug));
+  const related = (relatedPool.length >= 3 ? relatedPool : WOOD_SPECIES.filter((w) => w.slug !== wood.slug)).slice(0, 3);
 
   const articleSchema = {
     "@context": "https://schema.org",
