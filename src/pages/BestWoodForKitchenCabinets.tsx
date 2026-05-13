@@ -107,6 +107,27 @@ const itemListSchema = {
   })),
 };
 
+const FAQ = [
+  { q: "What is the best wood for kitchen cabinets overall?", a: "There is no single best wood — there is a best wood per use case. For paint-grade work, hard maple. For stained or natural, white oak. For maximum durability, hickory. For premium, walnut. For modern minimalist, rift-cut white oak. For tight budget, red oak." },
+  { q: "What is the best wood for painted kitchen cabinets?", a: "Hard maple. Tight closed-pore grain stays smooth under multiple paint coats and Janka 1,450 means edges resist denting. Birch is a 15–20% cheaper alternative with similar grain at slightly lower hardness (1,260)." },
+  { q: "What is the best wood for stained or natural kitchen cabinets?", a: "White oak. Cathedral grain takes everything from clear hardwax oil to Belgian smoked stains, and it is the most dimensionally stable common hardwood — doors stay flat in NYC humidity. Walnut is the premium upgrade if budget allows." },
+  { q: "What is the most durable wood for kitchen cabinets?", a: "Hickory at Janka 1,820 — the hardest commercial North American hardwood. Roughly 25% harder than hard maple, 40% harder than red oak. The right pick for households with kids, dogs, or heavy daily cooking." },
+  { q: "What is the cheapest good wood for kitchen cabinets?", a: "Red oak for stained work, knotty alder for rustic, birch for paint-grade. All three run $15–$25 per linear foot below our $350/lf blended baseline. Red oak is hardest of the three (1,290 Janka) and the most versatile." },
+  { q: "What is the best wood for modern kitchen cabinets?", a: "Rift-cut white oak. Dead-straight, flake-free grain reads architectural and minimalist. Same hardness and stability as plain white oak (1,360 Janka) but ~25–35% pricier due to lumber yield." },
+  { q: "What wood looks the most luxurious for kitchen cabinets?", a: "American walnut, by consensus. Deep chocolate tones with no stain required. Cost premium of $100–$200 per linear foot over the baseline. Janka 1,010 means it dents easier than oak — best on islands and uppers, less ideal for hard-use base cabinets." },
+  { q: "Should I choose solid wood or wood veneer for cabinet doors?", a: "Solid wood for shaker, raised-panel, and inset doors — the construction depends on it. Veneer over MDF or ply for slab doors (especially modern, large-format slabs), because solid wood that wide will warp and split with seasonal humidity. A flat-panel center on a shaker door is also typically veneered ply for the same reason." },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 const BestWoodForKitchenCabinets = () => (
   <div className="min-h-screen bg-background">
     <Helmet>
