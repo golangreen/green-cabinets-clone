@@ -135,13 +135,56 @@ if (rRes.status !== 200) {
   if (!hasSitemap) fails.push(`robots.txt missing Sitemap: ${EXPECTED_SITEMAP} (got ${JSON.stringify(sitemaps)})`);
 }
 
-// 2. sitemap.xml
+// 2. sitemap.xml — fetch + structural validation of every <loc>
 console.log("");
 const sRes = await fetch(`${HOST}/sitemap.xml`);
 const sBody = await sRes.text();
 if (sRes.status !== 200) fails.push(`sitemap.xml status ${sRes.status}`);
-const sitemapLocs = new Set([...sBody.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
-log(sRes.status === 200, `sitemap.xml 200 (${sitemapLocs.size} urls)`);
+const rawLocs = [...sBody.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+const sitemapLocs = new Set(rawLocs);
+log(sRes.status === 200, `sitemap.xml 200 (${rawLocs.length} urls)`);
+
+// 2a. Per-loc validation: absolute HTTPS, expected host, no query/fragment,
+//     no `//` in path, no trailing slash (except root), no uppercase, lowercase host.
+const EXPECTED_HOST = new URL(HOST).host;
+const locIssues = [];
+const seen = new Set();
+for (const loc of rawLocs) {
+  const issues = [];
+  let parsed;
+  try { parsed = new URL(loc); }
+  catch { locIssues.push({ loc, issues: ["not a valid absolute URL"] }); continue; }
+
+  if (parsed.protocol !== "https:") issues.push(`protocol=${parsed.protocol} (must be https:)`);
+  if (parsed.host !== EXPECTED_HOST) issues.push(`host=${parsed.host} (expected ${EXPECTED_HOST})`);
+  if (parsed.host !== parsed.host.toLowerCase()) issues.push("host has uppercase chars");
+  if (parsed.search) issues.push(`has query string: ${parsed.search}`);
+  if (parsed.hash) issues.push(`has fragment: ${parsed.hash}`);
+  if (parsed.username || parsed.password) issues.push("has userinfo");
+  if (parsed.port) issues.push(`has explicit port: ${parsed.port}`);
+
+  const path = parsed.pathname;
+  if (path !== path.toLowerCase()) issues.push(`path has uppercase chars: ${path}`);
+  if (path.includes("//")) issues.push(`path has empty segment ("//"): ${path}`);
+  if (!path.startsWith("/")) issues.push(`path not rooted: ${path}`);
+  if (path.length > 1 && path.endsWith("/")) issues.push(`path has trailing slash: ${path}`);
+  if (/\s/.test(path)) issues.push(`path has whitespace: ${path}`);
+  // Reconstruct the canonical absolute URL and compare.
+  const canonical = `${parsed.protocol}//${parsed.host}${path === "/" ? "/" : path}`;
+  if (loc !== canonical) issues.push(`not normalized — got "${loc}", canonical "${canonical}"`);
+
+  if (seen.has(loc)) issues.push("duplicate <loc>");
+  seen.add(loc);
+
+  if (issues.length) locIssues.push({ loc, issues });
+}
+const allLocsValid = locIssues.length === 0;
+log(allLocsValid, `every <loc> is absolute HTTPS + normalized (${rawLocs.length} checked)`);
+for (const { loc, issues } of locIssues) {
+  log(false, `  ${loc}`);
+  for (const i of issues) console.log(`      ${c.red("· " + i)}`);
+  fails.push(`sitemap loc invalid: ${loc} → ${issues.join("; ")}`);
+}
 
 const sitemapPaths = new Set(
   [...sitemapLocs].map((u) => {
@@ -150,7 +193,7 @@ const sitemapPaths = new Set(
   }),
 );
 
-// 2b. Exact guide-set match — no missing, no extras.
+// 2b. Exact guide-set match — no missing, no extras, exact-form match.
 console.log("");
 const expectedSet = new Set(EXPECTED_GUIDES);
 const sitemapGuides = new Set([...sitemapPaths].filter(GUIDE_LIKE));
@@ -165,6 +208,23 @@ log(extraGuides.length === 0, `sitemap has no unexpected guide URLs`);
 for (const p of extraGuides) {
   fails.push(`sitemap has unexpected guide: ${p}`);
   log(false, `  extra:   ${p}`);
+}
+
+// 2c. Each expected guide must appear with the EXACT canonical absolute form.
+const exactGuideMismatches = [];
+for (const p of EXPECTED_GUIDES) {
+  const expected = `${HOST}${p}`;
+  if (!sitemapLocs.has(expected)) {
+    exactGuideMismatches.push({ expected, found: rawLocs.find((l) => {
+      try { return new URL(l).pathname.replace(/\/+$/, "") === p; } catch { return false; }
+    }) ?? null });
+  }
+}
+log(exactGuideMismatches.length === 0, `every expected guide appears with exact canonical form`);
+for (const { expected, found } of exactGuideMismatches) {
+  fails.push(`sitemap guide form mismatch — expected "${expected}", found "${found ?? "<absent>"}"`);
+  log(false, `  expected: ${expected}`);
+  log(false, `  found:    ${found ?? "<absent>"}`);
 }
 
 // 3. Each guide URL: must be in sitemap, return 200, advertise the correct
