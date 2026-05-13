@@ -150,6 +150,7 @@ const WoodSpeciesDetail = () => {
                 <p className="text-xs text-[#999999]">
                   <em>{wood.scientificName}</em> · {wood.origin}
                 </p>
+                <AuthorByline author="golan" label="Reviewed by" className="pt-2" />
               </div>
               <WoodGalleryCarousel
                 speciesName={wood.name}
