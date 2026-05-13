@@ -386,8 +386,41 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       "Best uses include high-traffic family kitchens, mountain modern and farmhouse aesthetics, mudroom and entry built-ins, and any project where damage tolerance is a primary concern. We have specified hickory for Catskills weekend houses, Hamptons farmhouses, brownstone kitchens going for warmth-against-industrial, and homes with multiple large dogs. It is not the right wood for minimalist or contemporary kitchens — for that look, consider rift-cut white oak or maple.",
       "Finishing hickory is straightforward. Hardwax oils (Rubio Monocoat, Osmo) preserve the natural color contrast beautifully. Satin conversion varnish gives durability for heavy-use kitchens. Amber shellac warms the heartwood. Avoid heavy pigment stains, which mute the contrast that makes hickory worth specifying in the first place. Pair with brushed brass, oil-rubbed bronze, matte black, or aged copper hardware.",
     ],
-...
-    faqs: [
+    jankaHardness: 1820,
+    specificGravity: 0.72,
+    costTier: "$$$",
+    color: "Cream sap with warm reddish-brown heart",
+    grain: "Bold, mostly straight, occasional wild figure",
+    workability: "Difficult",
+    stainTake: "Good",
+    stability: 3,
+    uses: ["High-traffic kitchens", "Rustic modern doors", "Mountain house casework", "Mudroom built-ins", "Family kitchens with kids and pets"],
+    pros: [
+      "Hardest common cabinet hardwood (Janka 1,820)",
+      "Unique sap/heart contrast adds character",
+      "Extremely tough and shock-resistant",
+      "Comparable cost to white oak",
+    ],
+    cons: [
+      "Hard on tooling — premium pricing on labor",
+      "Strong color contrast not everyone wants",
+      "Less dimensionally stable than oak or walnut",
+      "Wrong choice for minimalist or modern aesthetics",
+    ],
+    bestFinishes: ["Clear hardwax oil", "Light natural stain", "Distressed/wire-brushed", "Satin conversion varnish", "Amber shellac"],
+    bestDoorStyles: ["Shaker", "Raised panel", "Plank-style", "Beaded inset"],
+    swatch: "#8a5a3b",
+    image: hickoryImg,
+    grainImage: hickoryImg,
+    keywords: [
+      "hickory cabinets",
+      "hickory kitchen cabinets",
+      "hickory cabinets NYC",
+      "hardest cabinet wood",
+      "rustic kitchen wood",
+      "farmhouse hickory cabinets",
+      "hickory vs oak cabinets",
+    ],
       {
         question: "Is hickory good for a busy family kitchen?",
         answer:
