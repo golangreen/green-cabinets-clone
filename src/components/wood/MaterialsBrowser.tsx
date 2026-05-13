@@ -31,6 +31,7 @@ const BRANDS: { key: MaterialBrand; label: string }[] = [
   { key: "Egger", label: "Egger" },
   { key: "Wilsonart", label: "Wilsonart" },
   { key: "AGT", label: "AGT" },
+  { key: "Raphael Stone", label: "Raphael Stone" },
 ];
 
 function PanelCard({
