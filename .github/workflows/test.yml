@@ -33,3 +33,6 @@ jobs:
 
     - name: Deploy check (forbidden strings)
       run: node scripts/deploy-check.mjs dist
+
+    - name: Audit schema (Article/FAQ/Product)
+      run: npm run audit:schema

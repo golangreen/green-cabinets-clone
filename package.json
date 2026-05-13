@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "validate:jsonld": "node scripts/validate-localbusiness-jsonld.mjs",
+    "audit:schema": "node scripts/audit-schema.mjs",
     "indexnow": "node scripts/indexnow-submit.mjs",
     "verify:pillars": "node scripts/verify-pillar-pages.mjs",
     "refresh:gsc-checklist": "node scripts/refresh-gsc-checklist.mjs",
