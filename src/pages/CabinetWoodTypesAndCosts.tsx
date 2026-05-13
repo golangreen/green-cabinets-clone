@@ -14,6 +14,7 @@ import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { authorRef, ORG_ID } from "@/data/authors";
+import AuthorByline from "@/components/AuthorByline";
 
 const URL = "https://greencabinetsny.com/cabinet-wood-types-and-costs";
 const TITLE = "Cabinet Wood Types and Costs — Per-Linear-Foot Guide (2026)";
