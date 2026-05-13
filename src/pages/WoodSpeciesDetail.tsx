@@ -28,13 +28,16 @@ const WoodSpeciesDetail = () => {
   const relatedPool = WOOD_SPECIES.filter((w) => w.slug !== wood.slug && !comparisonSlugs.has(w.slug));
   const related = (relatedPool.length >= 3 ? relatedPool : WOOD_SPECIES.filter((w) => w.slug !== wood.slug)).slice(0, 3);
 
+  const isoToday = new Date().toISOString().slice(0, 10);
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: `${wood.name} Cabinets — Complete Guide`,
     description: wood.shortDescription,
-    image: wood.image,
-    author: { "@type": "Organization", name: "Green Cabinets NY" },
+    image: [wood.image],
+    datePublished: "2024-01-15",
+    dateModified: isoToday,
+    author: { "@type": "Organization", name: "Green Cabinets NY", url: "https://greencabinetsny.com" },
     publisher: {
       "@type": "Organization",
       name: "Green Cabinets NY",
