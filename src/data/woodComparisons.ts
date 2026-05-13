@@ -37,6 +37,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       title: "White Oak vs Red Oak",
       blurb: "Closed-grain neutral white oak vs warm pink red oak — durability, moisture, and modern vs traditional.",
     },
+    {
+      slug: "walnut",
+      title: "White Oak vs Walnut",
+      blurb: "Light, modern, neutral vs dark, dramatic, premium — the two most-specified statement woods in NYC.",
+    },
+    {
+      slug: "maple",
+      title: "White Oak vs Maple",
+      blurb: "Open-grain natural warmth vs closed-grain paint-friendly smoothness — picking the right base for your design.",
+    },
+    {
+      slug: "hickory",
+      title: "White Oak vs Hickory",
+      blurb: "Designer favorite vs America's hardest cabinet wood — when durability outranks design language.",
+    },
   ],
   "rift-cut-white-oak": [
     {
@@ -78,6 +93,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       title: "Red Oak vs Quartersawn Oak",
       blurb: "Affordable cathedral grain vs premium ray-fleck — same family, very different look and price.",
     },
+    {
+      slug: "walnut",
+      title: "Red Oak vs Walnut",
+      blurb: "Affordable warm-pink classic vs premium chocolate hardwood — wildly different price tiers, both stain-grade icons.",
+    },
+    {
+      slug: "maple",
+      title: "Red Oak vs Maple",
+      blurb: "Open cathedral grain vs tight closed grain — and why painted oak almost never works while painted maple always does.",
+    },
+    {
+      slug: "hickory",
+      title: "Red Oak vs Hickory",
+      blurb: "Janka 1290 vs 1820 — when you need maximum dent resistance and don't mind the wilder color variation.",
+    },
   ],
   walnut: [
     {
@@ -89,6 +119,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       slug: "maple",
       title: "Walnut vs Maple",
       blurb: "Rich dark grain vs creamy paint-grade smoothness — when to splurge on walnut vs paint maple.",
+    },
+    {
+      slug: "white-oak",
+      title: "Walnut vs White Oak",
+      blurb: "Premium dark statement wood vs the modern light-and-neutral favorite — both work in modern NYC kitchens.",
+    },
+    {
+      slug: "red-oak",
+      title: "Walnut vs Red Oak",
+      blurb: "When chocolate luxury beats warm-pink classic — and when the cost gap pushes you to the value pick.",
+    },
+    {
+      slug: "hickory",
+      title: "Walnut vs Hickory",
+      blurb: "Refined dark elegance vs rugged farmhouse character — opposite design languages, both all-American hardwoods.",
     },
   ],
   cherry: [
@@ -119,6 +164,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       title: "Maple vs Birch",
       blurb: "Birch is the budget alternative to maple — almost identical paint-grade look at a lower board-foot cost.",
     },
+    {
+      slug: "white-oak",
+      title: "Maple vs White Oak",
+      blurb: "Closed-grain paint perfection vs open-grain natural warmth — picking between NYC's two most-specified woods.",
+    },
+    {
+      slug: "red-oak",
+      title: "Maple vs Red Oak",
+      blurb: "Tight, dent-resistant, paintable vs warm, affordable, grain-forward — for traditional vs contemporary kitchens.",
+    },
+    {
+      slug: "hickory",
+      title: "Maple vs Hickory",
+      blurb: "Uniform Janka-1450 paint-grade benchmark vs Janka-1820 farmhouse character — durability vs design intent.",
+    },
   ],
   hickory: [
     {
@@ -130,6 +190,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       slug: "white-oak",
       title: "Hickory vs White Oak",
       blurb: "America's hardest cabinet hardwood vs the modern designer favorite — durability vs design language.",
+    },
+    {
+      slug: "maple",
+      title: "Hickory vs Maple",
+      blurb: "Janka 1820 farmhouse character vs Janka 1450 paint-grade smoothness — wildly different design intents.",
+    },
+    {
+      slug: "walnut",
+      title: "Hickory vs Walnut",
+      blurb: "Rugged high-contrast country vs refined dark luxury — opposite ends of the stain-grade spectrum.",
+    },
+    {
+      slug: "red-oak",
+      title: "Hickory vs Red Oak",
+      blurb: "Hardest cabinet wood vs the affordable open-grain classic — durability and color variation compared.",
     },
   ],
   "rustic-hickory": [
