@@ -823,8 +823,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Hardwax oil natural", "Fumed/smoked", "Cerused white", "Rubio Monocoat Pure"],
     bestDoorStyles: ["Slab", "Shaker", "Reeded", "Frameless European"],
     swatch: "#c9a877",
-    image: whiteOakImg,
-    grainImage: whiteOakImg,
+    image: riftCutWhiteOakImg,
+    grainImage: riftCutWhiteOakImg,
     keywords: [
       "rift cut white oak",
       "rift cut white oak cabinets",
@@ -905,8 +905,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Fumed (ammonia)", "Hardwax oil natural", "Amber shellac", "Reactive iron-acetate"],
     bestDoorStyles: ["Mission/Craftsman flat panel", "Inset shaker", "Slab (for modern fleck-forward)", "Raised panel"],
     swatch: "#a37a4f",
-    image: whiteOakImg,
-    grainImage: whiteOakImg,
+    image: quartersawnOakImg,
+    grainImage: quartersawnOakImg,
     keywords: [
       "quartersawn oak cabinets",
       "quartersawn white oak NYC",
@@ -988,8 +988,8 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     bestFinishes: ["Clear hardwax oil", "Satin conversion varnish", "Amber shellac", "Light natural stain"],
     bestDoorStyles: ["Shaker", "Raised panel", "Beaded inset", "Plank-style slab"],
     swatch: "#9c6b3f",
-    image: hickoryImg,
-    grainImage: hickoryImg,
+    image: rusticHickoryImg,
+    grainImage: rusticHickoryImg,
     keywords: [
       "rustic hickory cabinets",
       "rustic hickory kitchen cabinets",
