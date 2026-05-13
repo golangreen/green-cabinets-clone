@@ -9,6 +9,18 @@ import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 const Contact = () => {
   const [contactMethod, setContactMethod] = useState<string>("email-golan");
   const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [isNight, setIsNight] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const h = new Date().getHours();
+      const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+      setIsNight(h >= 22 || h < 6 || prefersDark);
+    };
+    check();
+    const id = setInterval(check, 60_000);
+    return () => clearInterval(id);
+  }, []);
 
   const contactOptions = {
     "email-golan": { href: `mailto:${atob('b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=')}`, label: "Email Us" },
