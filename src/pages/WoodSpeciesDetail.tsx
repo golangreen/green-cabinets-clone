@@ -29,6 +29,23 @@ const WoodSpeciesDetail = () => {
   );
   const wood = slug ? getWoodSpecies(slug) : undefined;
 
+  // Slugify FAQ questions for stable anchor IDs (e.g. "How much do maple cabinets cost?" -> "how-much-do-maple-cabinets-cost")
+  const faqSlug = (q: string) =>
+    q.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").slice(0, 80);
+  const faqsWithIds = useMemo(
+    () => (wood?.faqs ?? []).map((f) => ({ ...f, id: faqSlug(f.question) })),
+    [wood]
+  );
+
+  // Client-side FAQ filter — matches against question + answer, case-insensitive.
+  const filteredFaqs = useMemo(() => {
+    const q = faqQuery.trim().toLowerCase();
+    if (!q) return faqsWithIds;
+    return faqsWithIds.filter(
+      (f) => f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q)
+    );
+  }, [faqQuery, faqsWithIds]);
+
   if (!wood) return <Navigate to="/wood-species" replace />;
 
   const isFaqShare = searchParams.get("share") === "faq";
@@ -44,19 +61,6 @@ const WoodSpeciesDetail = () => {
   const relatedPool = WOOD_SPECIES.filter((w) => w.slug !== wood.slug && !comparisonSlugs.has(w.slug));
   const related = (relatedPool.length >= 3 ? relatedPool : WOOD_SPECIES.filter((w) => w.slug !== wood.slug)).slice(0, 3);
 
-  // Slugify FAQ questions for stable anchor IDs (e.g. "How much do maple cabinets cost?" -> "how-much-do-maple-cabinets-cost")
-  const faqSlug = (q: string) =>
-    q.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").slice(0, 80);
-  const faqsWithIds = wood.faqs.map((f) => ({ ...f, id: faqSlug(f.question) }));
-
-  // Client-side FAQ filter — matches against question + answer, case-insensitive.
-  const filteredFaqs = useMemo(() => {
-    const q = faqQuery.trim().toLowerCase();
-    if (!q) return faqsWithIds;
-    return faqsWithIds.filter(
-      (f) => f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q)
-    );
-  }, [faqQuery, faqsWithIds]);
 
   const isoToday = new Date().toISOString().slice(0, 10);
   const articleSchema = {
