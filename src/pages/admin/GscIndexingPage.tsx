@@ -74,8 +74,8 @@ export default function GscIndexingPage() {
       if (error) throw error;
       setResults(data?.results ?? []);
       toast.success(`Inspected ${urls.length} URL${urls.length === 1 ? "" : "s"}`);
-    } catch (e: any) {
-      toast.error(e?.message ?? "Inspection failed");
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Inspection failed");
     } finally {
       setLoading(false);
     }
