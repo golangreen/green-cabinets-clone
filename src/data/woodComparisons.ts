@@ -120,6 +120,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       title: "Walnut vs Maple",
       blurb: "Rich dark grain vs creamy paint-grade smoothness — when to splurge on walnut vs paint maple.",
     },
+    {
+      slug: "white-oak",
+      title: "Walnut vs White Oak",
+      blurb: "Premium dark statement wood vs the modern light-and-neutral favorite — both work in modern NYC kitchens.",
+    },
+    {
+      slug: "red-oak",
+      title: "Walnut vs Red Oak",
+      blurb: "When chocolate luxury beats warm-pink classic — and when the cost gap pushes you to the value pick.",
+    },
+    {
+      slug: "hickory",
+      title: "Walnut vs Hickory",
+      blurb: "Refined dark elegance vs rugged farmhouse character — opposite design languages, both all-American hardwoods.",
+    },
   ],
   cherry: [
     {
