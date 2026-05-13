@@ -37,6 +37,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       title: "White Oak vs Red Oak",
       blurb: "Closed-grain neutral white oak vs warm pink red oak — durability, moisture, and modern vs traditional.",
     },
+    {
+      slug: "walnut",
+      title: "White Oak vs Walnut",
+      blurb: "Light, modern, neutral vs dark, dramatic, premium — the two most-specified statement woods in NYC.",
+    },
+    {
+      slug: "maple",
+      title: "White Oak vs Maple",
+      blurb: "Open-grain natural warmth vs closed-grain paint-friendly smoothness — picking the right base for your design.",
+    },
+    {
+      slug: "hickory",
+      title: "White Oak vs Hickory",
+      blurb: "Designer favorite vs America's hardest cabinet wood — when durability outranks design language.",
+    },
   ],
   "rift-cut-white-oak": [
     {
