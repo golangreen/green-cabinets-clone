@@ -3,14 +3,16 @@
  * Long-form SEO content with multi-paragraph copy, spec table,
  * pros/cons, FAQ, related species, and CTA.
  */
+import { useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams, Link, Navigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, X, ArrowRight, ArrowLeft, Link2 } from "lucide-react";
+import { Check, X, ArrowRight, ArrowLeft, Link2, Search } from "lucide-react";
 import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
 import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
@@ -18,6 +20,7 @@ import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
 const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
+  const [faqQuery, setFaqQuery] = useState("");
   const wood = slug ? getWoodSpecies(slug) : undefined;
 
   if (!wood) return <Navigate to="/wood-species" replace />;
