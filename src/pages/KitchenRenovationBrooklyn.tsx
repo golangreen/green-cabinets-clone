@@ -9,6 +9,7 @@ import Chatbot from "@/components/Chatbot";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { authorRef } from "@/data/authors";
+import AuthorByline from "@/components/AuthorByline";
 
 const URL = "https://greencabinetsny.com/kitchen-renovation-brooklyn";
 const TITLE = "Kitchen Renovation Brooklyn | Costs, Permits & Timeline (2026)";
@@ -210,6 +211,9 @@ const KitchenRenovationBrooklyn = () => (
           kitchen has its own quirks. This page is what we wish every client
           knew before signing a renovation contract.
         </p>
+        <div className="mt-8 flex justify-center">
+          <AuthorByline author="golan" label="Written by" />
+        </div>
       </div>
     </section>
 

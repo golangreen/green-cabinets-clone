@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CASE_STUDIES, getCaseStudy } from "@/data/caseStudies";
 import { authorRef, ORG_ID } from "@/data/authors";
+import AuthorByline from "@/components/AuthorByline";
 
 const BASE = "https://greencabinetsny.com/case-studies";
 
@@ -126,11 +127,8 @@ const CaseStudyDetail = () => {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 leading-tight">
             {study.title}
           </h1>
-          <p className="text-base sm:text-lg text-muted-foreground mb-2">{study.summary}</p>
-          <p className="text-sm text-muted-foreground mb-8">
-            By <Link to="/about#golan-achdary" className="text-[#5C7650] hover:underline">Golan Achdary</Link>{" "}
-            · Published <time dateTime={study.datePublished}>{new Date(study.datePublished).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</time>
-          </p>
+          <p className="text-base sm:text-lg text-muted-foreground mb-4">{study.summary}</p>
+          <AuthorByline author="golan" date={study.datePublished} label="By" className="mb-8" />
 
           <div className="aspect-[16/10] bg-muted rounded-lg overflow-hidden mb-10">
             <img src={image} alt={study.imageAlt} className="w-full h-full object-cover" />

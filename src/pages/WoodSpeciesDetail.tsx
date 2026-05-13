@@ -17,6 +17,7 @@ import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
 import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
 import { authorRef, ORG_ID } from "@/data/authors";
+import AuthorByline from "@/components/AuthorByline";
 
 const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -150,6 +151,7 @@ const WoodSpeciesDetail = () => {
                 <p className="text-xs text-[#999999]">
                   <em>{wood.scientificName}</em> · {wood.origin}
                 </p>
+                <AuthorByline author="golan" label="Reviewed by" className="pt-2" />
               </div>
               <WoodGalleryCarousel
                 speciesName={wood.name}

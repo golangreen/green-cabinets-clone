@@ -12,6 +12,7 @@ import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Trophy } from "lucide-react";
 import { authorRef, ORG_ID } from "@/data/authors";
+import AuthorByline from "@/components/AuthorByline";
 
 const URL = "https://greencabinetsny.com/best-wood-for-kitchen-cabinets";
 const TITLE = "Best Wood for Kitchen Cabinets in 2026 — Honest Picks by Use Case";
@@ -154,17 +155,20 @@ const BestWoodForKitchenCabinets = () => (
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-3">
-            Updated 2026 · By Golan Achdary
+            Updated 2026
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
             Best Wood for Kitchen Cabinets — Honest Picks by Use Case
           </h1>
-          <p className="text-base sm:text-lg text-[#444]">
+          <p className="text-base sm:text-lg text-[#444] mb-6">
             There is no single best wood for kitchen cabinets. There is a best wood for{" "}
             <em>your</em> kitchen — once you know whether you're painting or staining, how hard the
             cabinets will get hit, and where you sit on cost. Here's how a Bushwick cabinet shop
             actually picks.
           </p>
+          <div className="flex justify-center">
+            <AuthorByline author="golan" label="Written by" />
+          </div>
         </div>
       </section>
 
