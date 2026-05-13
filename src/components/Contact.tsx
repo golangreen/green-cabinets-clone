@@ -103,7 +103,7 @@ const Contact = () => {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="Green Cabinets Location - 10 Montieth St, Brooklyn"
-              className="w-full pointer-events-none dark:[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]"
+              className={`w-full pointer-events-none transition-[filter] duration-500 ${isNight ? "[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]" : ""}`}
             />
             <span className="absolute top-3 right-3 text-xs font-semibold bg-background/95 text-foreground px-3 py-1.5 rounded-md shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
               Get Directions ↗
