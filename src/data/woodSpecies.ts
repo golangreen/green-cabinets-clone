@@ -23,6 +23,7 @@ import riftCutWhiteOakImg from "@/assets/wood/rift-cut-white-oak.jpg";
 import quartersawnOakImg from "@/assets/wood/quartersawn-oak.jpg";
 import rusticHickoryImg from "@/assets/wood/rustic-hickory.jpg";
 import mapleOgImg from "@/assets/og/maple-cabinets-og.jpg";
+import mapleFaqOgImg from "@/assets/og/maple-cabinets-faq-og.jpg";
 
 export type CostTier = "$" | "$$" | "$$$" | "$$$$";
 export type Workability = "Excellent" | "Very Good" | "Good" | "Moderate" | "Difficult";
@@ -84,6 +85,12 @@ export interface WoodSpecies {
   ogDescription?: string;
   /** Imported asset path (Vite handles bundling) or absolute URL. */
   ogImage?: string;
+  /** Optional FAQ-focused share image, served when URL contains ?share=faq. */
+  faqOgImage?: string;
+  /** Optional FAQ-focused share title. */
+  faqOgTitle?: string;
+  /** Optional FAQ-focused share description. */
+  faqOgDescription?: string;
 }
 
 export const WOOD_SPECIES: WoodSpecies[] = [
@@ -195,6 +202,10 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     ogDescription:
       "Custom hard maple cabinets, built in Brooklyn. Painted shaker, natural slab, and stained finishes from $350/lf — Janka 1,450 for daily NYC use.",
     ogImage: mapleOgImg,
+    faqOgImage: mapleFaqOgImg,
+    faqOgTitle: "Maple Cabinet FAQs — Paint, Cost, Durability & Care",
+    faqOgDescription:
+      "Quick answers on painting hard maple, pricing per linear foot, daily durability, and finish care — from a Brooklyn custom shop building since 2009.",
   },
   {
     slug: "walnut",
