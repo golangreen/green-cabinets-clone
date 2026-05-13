@@ -15,6 +15,7 @@ import PerformanceMonitor from "./pages/PerformanceMonitor";
 import NotFound from "./pages/NotFound";
 import NeighborhoodGalleryAdmin from "./pages/admin/NeighborhoodGalleryAdmin";
 import SerpPreviewPage from "./pages/admin/SerpPreviewPage";
+import GscIndexingPage from "./pages/admin/GscIndexingPage";
 import Borough from "./pages/Borough";
 import WoodSpecies from "./pages/WoodSpecies";
 import WoodSpeciesDetail from "./pages/WoodSpeciesDetail";
@@ -76,6 +77,11 @@ const App = () => {
             <Route path="/admin/serp-preview" element={
               <AdminRoute>
                 <SerpPreviewPage />
+              </AdminRoute>
+            } />
+            <Route path="/admin/gsc-indexing" element={
+              <AdminRoute>
+                <GscIndexingPage />
               </AdminRoute>
             } />
             {/* Legacy URL redirects → /custom-kitchen-cabinets-{slug} */}
