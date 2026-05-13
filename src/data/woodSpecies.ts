@@ -378,40 +378,50 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     shortDescription:
       "Hickory delivers the most dramatic color contrast and the highest Janka rating of any common cabinet wood. It is the right call for high-traffic kitchens, mountain houses, and rustic-modern aesthetics.",
     longDescription: [
-      "Hickory (Carya ovata, shagbark hickory) is the toughest commercially available American hardwood, with a Janka hardness of 1,820 lbf — about 25% harder than maple. It is the wood used for tool handles, drumsticks, and floors that have to survive everything. In a kitchen it shrugs off pet claws, dropped pans, and decades of family abuse.",
-      "Hickory's defining visual feature is contrast. Sapwood is nearly white, heartwood is a warm reddish brown, and most boards include both. Cabinet doors are usually selected to embrace this contrast — fighting it requires expensive sap-only sorting. The result is a lively, organic look that feels at home in mountain modern, rustic, and industrial-loft kitchens.",
-      "Working hickory is challenging — it dulls blades quickly, splinters under aggressive cuts, and can move during finishing. It is not a beginner wood, but an experienced shop produces stunning results. Expect lead times to be slightly longer due to the careful sorting and the need for sharper-than-usual tooling.",
+      "Hickory (Carya ovata, shagbark hickory) is the toughest commercially available American hardwood, with a Janka hardness of 1,820 lbf — roughly 25% harder than hard maple, 40% harder than red oak, and nearly double the density of black walnut. The wood has been used for tool handles, drumsticks, baseball bats, wagon wheels, and any application where shock resistance matters. In a kitchen, that translates to cabinets that shrug off pet claws, dropped pans, and decades of family abuse without showing meaningful wear.",
+      "Hickory's defining visual feature is contrast. Sapwood is nearly white to pale cream, heartwood is a warm reddish brown to deep tan, and most boards include both. Cabinet doors can be selected to embrace this dramatic contrast (the typical farmhouse and mountain-modern aesthetic) or sap-sorted for a more uniform pale look at a 15-25% material premium. There is no middle ground — hickory commits visually, and the right move is usually to commit with it.",
+      "The grain is bold, mostly straight with occasional waves, and the open pore structure gives surfaces a tactile, hand-finished quality even after machine sanding. Unlike oak's cathedral arches, hickory's character comes from color and knot variation rather than figure. This makes it a strong fit for kitchens that want warmth and personality without the formality of cherry or the prestige price of walnut.",
+      "Working hickory is genuinely challenging. The wood dulls blades quickly (we run carbide tooling at slower feed rates), splinters under aggressive cuts, and resists hand-planing. Pre-drilling for screws is mandatory, and joinery requires tight tolerances because hickory does not forgive sloppy fits. Expect lead times to run 1-2 weeks longer than maple or oak work, and labor costs to run 10-15% higher to account for tool wear and careful sorting.",
+      "Cost-wise, clean-grade hickory in the NYC market runs $11-$14 per board foot — comparable to white oak. Character-grade (rustic) hickory runs $9-$11/bf and is typically the better value because the knots and color contrast that mark it down are exactly what most clients want anyway. For a 30-linear-foot kitchen, expect hickory to cost similar to white oak and roughly 30% less than walnut of equivalent construction.",
+      "Best uses include high-traffic family kitchens, mountain modern and farmhouse aesthetics, mudroom and entry built-ins, and any project where damage tolerance is a primary concern. We have specified hickory for Catskills weekend houses, Hamptons farmhouses, brownstone kitchens going for warmth-against-industrial, and homes with multiple large dogs. It is not the right wood for minimalist or contemporary kitchens — for that look, consider rift-cut white oak or maple.",
+      "Finishing hickory is straightforward. Hardwax oils (Rubio Monocoat, Osmo) preserve the natural color contrast beautifully. Satin conversion varnish gives durability for heavy-use kitchens. Amber shellac warms the heartwood. Avoid heavy pigment stains, which mute the contrast that makes hickory worth specifying in the first place. Pair with brushed brass, oil-rubbed bronze, matte black, or aged copper hardware.",
     ],
-    jankaHardness: 1820,
-    specificGravity: 0.72,
-    costTier: "$$$",
-    color: "Cream sap with warm reddish-brown heart",
-    grain: "Bold, mostly straight, occasional wild figure",
-    workability: "Difficult",
-    stainTake: "Good",
-    stability: 3,
-    uses: ["High-traffic kitchens", "Rustic modern doors", "Mountain house casework"],
-    pros: [
-      "Hardest common cabinet hardwood (Janka 1,820)",
-      "Unique sap/heart contrast adds character",
-      "Extremely tough and shock-resistant",
-    ],
-    cons: [
-      "Hard on tooling — premium pricing on labor",
-      "Strong color contrast not everyone wants",
-      "Less dimensionally stable than oak or walnut",
-    ],
-    bestFinishes: ["Clear hardwax oil", "Light natural stain", "Distressed/wire-brushed"],
-    bestDoorStyles: ["Shaker", "Raised panel", "Plank-style"],
-    swatch: "#8a5a3b",
-    image: hickoryImg,
-    grainImage: hickoryImg,
-    keywords: ["hickory cabinets", "rustic kitchen wood", "hardest cabinet wood"],
+...
     faqs: [
       {
         question: "Is hickory good for a busy family kitchen?",
         answer:
-          "Yes — its 1,820 lbf Janka rating makes it the most dent- and impact-resistant common cabinet hardwood, ideal for households with kids, pets, and heavy daily use.",
+          "Yes — its 1,820 lbf Janka rating makes it the most dent- and impact-resistant common cabinet hardwood. For households with kids, large dogs, or heavy cooking use, hickory will outlast maple, walnut, and even white oak in terms of visible damage. It is the most damage-tolerant cabinet wood you can specify.",
+      },
+      {
+        question: "How much do hickory kitchen cabinets cost in NYC?",
+        answer:
+          "Clean-grade hickory runs $11-$14 per board foot in the NYC market — comparable to white oak. Character-grade (rustic) hickory runs $9-$11/bf. For a typical 30-linear-foot kitchen, expect hickory cabinetry from a custom shop to run $15,000-$25,000 in materials and labor, depending on door style and finish complexity.",
+      },
+      {
+        question: "What is the difference between hickory and rustic hickory?",
+        answer:
+          "Same species, different selection. Standard (clean-grade) hickory minimizes knots and color variation. Rustic (character-grade) hickory celebrates them — visible knots, mineral streaks, and dramatic sapwood-heartwood contrast. Rustic actually costs 10-15% less because more of each log is usable when the variation is a feature, not a defect.",
+      },
+      {
+        question: "Does hickory work in modern kitchens or only farmhouse?",
+        answer:
+          "Hickory is firmly in the farmhouse, mountain modern, and rustic-transitional camp. It can work in transitional designs paired with concrete or quartz counters and matte black hardware, but it is the wrong choice for pure minimalist or contemporary kitchens. For modern, specify rift-cut white oak or maple instead.",
+      },
+      {
+        question: "How does hickory compare to oak for cabinets?",
+        answer:
+          "Hickory is significantly harder (Janka 1,820 vs 1,360 for white oak) and more dramatic visually due to color contrast. Oak is more dimensionally stable, more workable, and reads as more refined. Hickory wins on durability and farmhouse character; oak wins on versatility and modern aesthetics. Cost is roughly equivalent.",
+      },
+      {
+        question: "Will hickory cabinets fade or change color over time?",
+        answer:
+          "Both heartwood and sapwood will mellow slightly with UV exposure over 5-10 years — heartwood softens from reddish-brown toward a warmer amber, sapwood ambers slightly from white toward cream. The dramatic contrast between them is permanent and is part of why hickory is specified.",
+      },
+      {
+        question: "Is hickory hard to maintain in NYC humidity?",
+        answer:
+          "Hickory is less dimensionally stable than oak or maple, so it can move slightly in NYC's seasonal humidity swings (25% RH in winter, 75% in summer). A quality conversion varnish or hardwax oil topcoat plus running HVAC during humidity peaks keeps doors flat and joints tight. Avoid raw hickory near dishwashers or sinks.",
       },
     ],
   },
