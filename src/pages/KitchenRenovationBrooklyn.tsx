@@ -210,6 +210,9 @@ const KitchenRenovationBrooklyn = () => (
           kitchen has its own quirks. This page is what we wish every client
           knew before signing a renovation contract.
         </p>
+        <div className="mt-8 flex justify-center">
+          <AuthorByline author="golan" label="Written by" />
+        </div>
       </div>
     </section>
 
