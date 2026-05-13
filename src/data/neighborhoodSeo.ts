@@ -102,7 +102,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughName: "Brooklyn",
     url: `${BASE}/custom-kitchen-cabinets-williamsburg`,
     title:
-      "Custom Cabinets in Williamsburg, Brooklyn | Green Cabinets NY",
+      "Custom Cabinets in Williamsburg, Brooklyn | Green Cabinets",
     description:
       "Custom kitchen cabinets in Williamsburg — loft conversions, brownstones, new construction. Built in our nearby Bushwick shop. Free consultation. (718) 804-5488.",
     keywords:
@@ -289,7 +289,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughName: "Queens",
     url: `${BASE}/custom-kitchen-cabinets-long-island-city`,
     title:
-      "Custom Cabinets in Long Island City, Queens | Green Cabinets NY",
+      "LIC Custom Cabinets, Queens | Green Cabinets NY",
     description:
       "Custom kitchen cabinets for Long Island City condos and lofts. Built in our nearby Brooklyn shop. New construction and resale upgrades. (718) 804-5488.",
     keywords:
@@ -538,7 +538,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughName: "Manhattan",
     url: `${BASE}/custom-kitchen-cabinets-upper-east-side`,
     title:
-      "Custom Cabinets in the Upper East Side, NYC | Green Cabinets NY",
+      "Custom Cabinets, Upper East Side NYC | Green Cabinets",
     description:
       "Custom kitchen cabinets for Upper East Side pre-war co-ops and townhouses. Inset painted cabinetry, board-approved installs. (718) 804-5488.",
     keywords:
