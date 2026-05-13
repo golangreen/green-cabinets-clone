@@ -26,6 +26,8 @@ const entries: SitemapEntry[] = [
   { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9", lastmod: today },
   { path: "/about", changefreq: "monthly", priority: "0.7", lastmod: today },
   { path: "/case-studies", changefreq: "monthly", priority: "0.8", lastmod: today },
+  { path: "/best-wood-for-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
+  { path: "/cabinet-wood-types-and-costs", changefreq: "monthly", priority: "0.85", lastmod: today },
 
   // Hash-anchored homepage sections (kept for legacy parity)
   { path: "/#about", changefreq: "monthly", priority: "0.7", lastmod: today },

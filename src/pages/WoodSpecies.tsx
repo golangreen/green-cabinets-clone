@@ -201,6 +201,21 @@ const WoodSpecies = () => {
               cabinets in Brooklyn — every species we work with, head-to-head, with the tradeoffs
               spelled out plainly.
             </p>
+            <div className="flex flex-wrap gap-3 justify-center pt-2">
+              <Link
+                to="/best-wood-for-kitchen-cabinets"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-[#5C7650] hover:text-[#445339] underline underline-offset-4"
+              >
+                Best wood for kitchen cabinets — picks by use case
+              </Link>
+              <span className="text-[#999] hidden sm:inline">·</span>
+              <Link
+                to="/cabinet-wood-types-and-costs"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-[#5C7650] hover:text-[#445339] underline underline-offset-4"
+              >
+                All wood types and costs (per lf)
+              </Link>
+            </div>
           </div>
         </section>
 
