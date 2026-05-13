@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { MapPin, Images, MessageSquare, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
@@ -22,6 +23,18 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
   const dedicatedPage = neighborhood
     ? NEIGHBORHOOD_LIST.find((n) => n.name === neighborhood)
     : undefined;
+  const [isNight, setIsNight] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      const h = new Date().getHours();
+      const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+      setIsNight(h >= 22 || h < 6 || prefersDark);
+    };
+    check();
+    const id = setInterval(check, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -42,7 +55,7 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
                 src={`https://www.google.com/maps?q=${encodeURIComponent(
                   info.mapQuery,
                 )}&z=14&output=embed`}
-                className="w-full h-full border-0 pointer-events-none dark:[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]"
+                className={`w-full h-full border-0 pointer-events-none transition-[filter] duration-500 ${isNight ? "[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]" : ""}`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />

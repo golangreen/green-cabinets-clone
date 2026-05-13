@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,6 +9,18 @@ import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 const Contact = () => {
   const [contactMethod, setContactMethod] = useState<string>("email-golan");
   const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [isNight, setIsNight] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const h = new Date().getHours();
+      const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+      setIsNight(h >= 22 || h < 6 || prefersDark);
+    };
+    check();
+    const id = setInterval(check, 60_000);
+    return () => clearInterval(id);
+  }, []);
 
   const contactOptions = {
     "email-golan": { href: `mailto:${atob('b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=')}`, label: "Email Us" },
@@ -91,7 +103,7 @@ const Contact = () => {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="Green Cabinets Location - 10 Montieth St, Brooklyn"
-              className="w-full pointer-events-none dark:[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]"
+              className={`w-full pointer-events-none transition-[filter] duration-500 ${isNight ? "[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]" : ""}`}
             />
             <span className="absolute top-3 right-3 text-xs font-semibold bg-background/95 text-foreground px-3 py-1.5 rounded-md shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
               Get Directions ↗
