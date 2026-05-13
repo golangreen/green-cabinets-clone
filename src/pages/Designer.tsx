@@ -161,6 +161,10 @@ export default function Designer() {
         <title>Room Designer | Green Cabinets - Plan Your Kitchen Layout</title>
         <meta name="description" content="Design your dream kitchen layout with our interactive room designer. Draw walls, add doors and windows, and visualize your custom cabinet project." />
         <link rel="canonical" href="https://greencabinetsny.com/designer" />
+        <meta property="og:title" content="Free Kitchen Room Designer | Green Cabinets NY" />
+        <meta property="og:description" content="Sketch your kitchen layout in the browser — walls, doors, windows, and cabinets. Get a custom quote from our Brooklyn shop." />
+        <meta property="og:url" content="https://greencabinetsny.com/designer" />
+        <meta property="og:type" content="website" />
       </Helmet>
       <BreadcrumbSchema items={[{ name: "Home", url: "/" }, { name: "Room Designer", url: "/designer" }]} />
       {/* Top Navigation Bar */}
