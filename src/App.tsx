@@ -24,6 +24,8 @@ import KitchenRenovationBrooklyn from "./pages/KitchenRenovationBrooklyn";
 import About from "./pages/About";
 import CaseStudies from "./pages/CaseStudies";
 import CaseStudyDetail from "./pages/CaseStudyDetail";
+import BestWoodForKitchenCabinets from "./pages/BestWoodForKitchenCabinets";
+import CabinetWoodTypesAndCosts from "./pages/CabinetWoodTypesAndCosts";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
