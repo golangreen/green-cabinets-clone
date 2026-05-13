@@ -169,11 +169,35 @@ if (sRes.status !== 200) fails.push(`sitemap.xml status ${sRes.status}`);
 const sitemapLocs = new Set([...sBody.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
 log(sRes.status === 200, `sitemap.xml 200 (${sitemapLocs.size} urls)`);
 
+const sitemapPaths = new Set(
+  [...sitemapLocs].map((u) => {
+    try { return new URL(u).pathname.replace(/\/+$/, "") || "/"; }
+    catch { return u; }
+  }),
+);
+
+// 2b. Exact guide-set match — no missing, no extras.
+console.log("");
+const expectedSet = new Set(EXPECTED_GUIDES);
+const sitemapGuides = new Set([...sitemapPaths].filter(GUIDE_LIKE));
+const missingGuides = [...expectedSet].filter((p) => !sitemapGuides.has(p));
+const extraGuides = [...sitemapGuides].filter((p) => !expectedSet.has(p));
+log(missingGuides.length === 0, `sitemap contains all ${EXPECTED_GUIDES.length} expected guide URLs`);
+for (const p of missingGuides) {
+  fails.push(`sitemap missing guide: ${p}`);
+  log(false, `  missing: ${p}`);
+}
+log(extraGuides.length === 0, `sitemap has no unexpected guide URLs`);
+for (const p of extraGuides) {
+  fails.push(`sitemap has unexpected guide: ${p}`);
+  log(false, `  extra:   ${p}`);
+}
+
 // 3. Each guide URL: must be in sitemap, return 200, no noindex
 console.log("");
 for (const path of MUST_BE_INDEXED) {
   const url = `${HOST}${path}`;
-  const inSitemap = sitemapLocs.has(url) || sitemapLocs.has(url.replace(/\/$/, ""));
+  const inSitemap = sitemapLocs.has(url) || sitemapLocs.has(url.replace(/\/$/, "")) || sitemapPaths.has(path);
   const r = await fetch(url, { method: "HEAD", redirect: "follow" });
   const noindex = /noindex/i.test(r.headers.get("x-robots-tag") || "");
   const ok = r.status === 200 && inSitemap && !noindex;
