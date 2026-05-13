@@ -196,16 +196,43 @@ for (const p of extraGuides) {
   log(false, `  extra:   ${p}`);
 }
 
-// 3. Each guide URL: must be in sitemap, return 200, no noindex
+// 3. Each guide URL: must be in sitemap, return 200, advertise the correct
+//    canonical, and not declare meta-robots `noindex` (header or HTML).
 console.log("");
+const CANONICAL_RE = /<link[^>]+rel=["']canonical["'][^>]*>/i;
+const HREF_RE = /href=["']([^"']+)["']/i;
+const META_ROBOTS_RE = /<meta[^>]+name=["']robots["'][^>]*>/i;
+const CONTENT_RE = /content=["']([^"']+)["']/i;
+
 for (const path of MUST_BE_INDEXED) {
   const url = `${HOST}${path}`;
+  const expectedCanonical = `${HOST}${path}`;
   const inSitemap = sitemapLocs.has(url) || sitemapLocs.has(url.replace(/\/$/, "")) || sitemapPaths.has(path);
-  const r = await fetch(url, { method: "HEAD", redirect: "follow" });
-  const noindex = /noindex/i.test(r.headers.get("x-robots-tag") || "");
-  const ok = r.status === 200 && inSitemap && !noindex;
-  if (!ok) fails.push(`${path} → status=${r.status} sitemap=${inSitemap} noindex=${noindex}`);
-  log(ok, `${path}${ok ? "" : c.dim(`  status=${r.status} sitemap=${inSitemap} noindex=${noindex}`)}`);
+  const r = await fetch(url, { redirect: "follow" });
+  const html = await r.text();
+  const headerNoindex = /noindex/i.test(r.headers.get("x-robots-tag") || "");
+
+  const canonTag = html.match(CANONICAL_RE)?.[0] ?? "";
+  const canonHref = canonTag.match(HREF_RE)?.[1] ?? "";
+  const canonNorm = canonHref.replace(/\/$/, "") || "/";
+  const expectNorm = expectedCanonical.replace(/\/$/, "") || "/";
+  const canonicalOk = canonNorm === expectNorm;
+
+  const metaTag = html.match(META_ROBOTS_RE)?.[0] ?? "";
+  const metaContent = metaTag.match(CONTENT_RE)?.[1] ?? "";
+  const metaNoindex = /noindex/i.test(metaContent);
+
+  const ok =
+    r.status === 200 && inSitemap && !headerNoindex && !metaNoindex && canonicalOk;
+  if (!ok) {
+    fails.push(
+      `${path} → status=${r.status} sitemap=${inSitemap} headerNoindex=${headerNoindex} metaNoindex=${metaNoindex} canonical=${canonHref || "<none>"} (expected ${expectedCanonical})`,
+    );
+  }
+  log(
+    ok,
+    `${path}${ok ? c.dim(`  canonical=${canonHref}`) : c.dim(`  status=${r.status} sitemap=${inSitemap} headerNoindex=${headerNoindex} metaNoindex=${metaNoindex} canonical=${canonHref || "<none>"}`)}`,
+  );
 }
 
 console.log("");
