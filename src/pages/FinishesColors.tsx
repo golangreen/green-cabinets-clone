@@ -23,6 +23,53 @@ const FinishesColors = () => {
           content="Browse real laminate, melamine, veneer, and stone panels from Tafisa, Shinnoki, Egger, Wilsonart, AGT & Raphael Stone. Save your favorites, share, and request a quote."
         />
         <link rel="canonical" href="https://greencabinetsny.com/finishes-colors" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          name: "How to Choose Cabinet Finishes and Colors",
+          description:
+            "A 5-step process for picking laminate, melamine, veneer, or painted finishes for custom kitchen and vanity cabinets — using real partner panels from Tafisa, Shinnoki, Egger, Wilsonart, AGT, and Raphael Stone.",
+          totalTime: "PT45M",
+          tool: [
+            { "@type": "HowToTool", name: "Real partner-brand sample panels" },
+            { "@type": "HowToTool", name: "Selection drawer (save, share, send for quote)" },
+          ],
+          step: [
+            {
+              "@type": "HowToStep",
+              position: 1,
+              name: "Decide on the finish category",
+              text: "Laminate (TFL/HPL) is the most durable and budget-friendly. Veneer gives real wood grain over a stable substrate. Painted maple is classic for shaker kitchens. Stone-look panels (Raphael Stone, AGT) work for modern slab fronts.",
+            },
+            {
+              "@type": "HowToStep",
+              position: 2,
+              name: "Pick a color temperature that matches your light",
+              text: "North-facing NYC apartments read cooler — warm whites, oak, and walnut compensate. South-facing rooms can handle cool greys, true whites, and high-contrast palettes. View samples in your actual kitchen at morning and evening.",
+              url: "https://greencabinetsny.com/finishes-colors",
+            },
+            {
+              "@type": "HowToStep",
+              position: 3,
+              name: "Limit yourself to 2–3 finishes per kitchen",
+              text: "Most successful kitchens use one dominant finish (perimeter), one accent (island or tall pantry), and an optional third for open shelving or interiors. More than three reads busy fast.",
+            },
+            {
+              "@type": "HowToStep",
+              position: 4,
+              name: "Save favorites and compare side-by-side",
+              text: "Tap the + on any panel to add it to your selection drawer, then open the drawer to compare picks side by side. You can share the link with a partner or designer before committing.",
+              url: "https://greencabinetsny.com/finishes-colors",
+            },
+            {
+              "@type": "HowToStep",
+              position: 5,
+              name: "Send your shortlist for pricing and physical samples",
+              text: "Email your saved selection to Green Cabinets NY for accurate per-linear-foot pricing and to request physical sample panels shipped to your address before final approval.",
+              url: "https://greencabinetsny.com/",
+            },
+          ],
+        })}</script>
       </Helmet>
 
       <Header />
