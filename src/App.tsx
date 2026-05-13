@@ -14,6 +14,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import PerformanceMonitor from "./pages/PerformanceMonitor";
 import NotFound from "./pages/NotFound";
 import NeighborhoodGalleryAdmin from "./pages/admin/NeighborhoodGalleryAdmin";
+import SerpPreviewPage from "./pages/admin/SerpPreviewPage";
 import Borough from "./pages/Borough";
 import WoodSpecies from "./pages/WoodSpecies";
 import WoodSpeciesDetail from "./pages/WoodSpeciesDetail";
@@ -60,6 +61,11 @@ const App = () => {
             <Route path="/admin/gallery" element={
               <AdminRoute>
                 <NeighborhoodGalleryAdmin />
+              </AdminRoute>
+            } />
+            <Route path="/admin/serp-preview" element={
+              <AdminRoute>
+                <SerpPreviewPage />
               </AdminRoute>
             } />
             {/* Legacy URL redirects → /custom-kitchen-cabinets-{slug} */}
