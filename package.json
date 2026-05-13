@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "predev": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-wood-links.ts",
+    "predev": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-wood-links.ts && bun run scripts/validate-faq-slugs.ts",
     "dev": "vite",
-    "prebuild": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-wood-links.ts",
+    "prebuild": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-wood-links.ts && bun run scripts/validate-faq-slugs.ts",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
