@@ -185,9 +185,13 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     shortDescription:
       "White oak combines visible cathedral grain, exceptional hardness, and a cool tan tone that takes everything from rift-cut natural finishes to Belgian-inspired smoked stains.",
     longDescription: [
-      "White oak (Quercus alba) has dominated high-end American kitchen design for the last decade — and for good reason. The wood is significantly harder than red oak (Janka 1,360 lbf), more dimensionally stable, and its closed pore structure makes it watertight enough to have built ships and whiskey barrels for centuries. In a kitchen, that translates to rock-solid drawer fronts and panels that stay flat through New York's humid summers and dry winters.",
-      "Cut matters with white oak. Plain-sawn lumber shows the dramatic cathedral arches you see in farmhouse kitchens; rift-sawn produces tight, ruler-straight lines for modern slab fronts; quartersawn reveals the iridescent ray fleck favored in Mission and Greene & Greene work. We typically specify rift-and-quartered for contemporary projects so adjacent doors look consistent.",
-      "White oak's slightly olive base tone makes it the chameleon of the stain world. It is the foundation for the fumed and smoked finishes popularized by Belgian and Scandinavian designers, the reactive iron-acetate finishes that turn it dark gray, and the natural hardwax-oil look that has defined post-2018 American kitchens. It also paints beautifully when grain texture is desired beneath the color.",
+      "White oak (Quercus alba) has dominated high-end American kitchen design for the past decade — and the trend shows no sign of slowing. The wood is significantly harder than red oak (Janka 1,360 lbf), more dimensionally stable, and its closed pore structure (sealed by tyloses, the same anatomical feature that lets it hold whiskey and wine) makes it watertight enough to have built ships, barrels, and outdoor furniture for centuries. In a kitchen, that translates to rock-solid drawer fronts and panels that stay flat through New York's humid summers and dry winters.",
+      "Cut matters more with white oak than with any other species. Plain-sawn lumber shows the dramatic cathedral arches you see in farmhouse kitchens; rift-sawn produces tight, ruler-straight vertical lines for modern slab fronts; quartersawn reveals the iridescent ray fleck favored in Mission, Stickley, and Greene & Greene work. We typically specify rift-and-quartered for contemporary projects so adjacent doors look consistent — see our dedicated rift-cut white oak and quartersawn oak pages for full detail on those cuts.",
+      "White oak's slightly olive base tone makes it the chameleon of the stain world. It is the foundation for the fumed and smoked finishes popularized by Belgian and Scandinavian designers (Liesbeth van der Pol, Vincent Van Duysen), the reactive iron-acetate finishes that turn it dark gray, the cerused white finishes that lime the open grain, and the natural hardwax-oil look that has defined post-2018 American kitchens. It also paints beautifully when you want grain texture visible beneath the color.",
+      "Janka hardness of 1,360 lbf puts white oak well above black walnut (1,010) and slightly below hard maple (1,450) — plenty hard for daily kitchen abuse, with the bonus of being the most stable common hardwood in North America. Doors stay flat, joints stay tight, and panels resist seasonal cupping that would warp lesser woods in NYC's humidity swings.",
+      "Cost in the NYC market currently runs $10-$12 per board foot for plain-sawn white oak, $14-$18/bf for rift-cut, and $18-$24/bf for quartersawn. For a typical 30-linear-foot custom kitchen, expect plain-sawn white oak cabinetry to cost $20,000-$30,000, rift-cut to add $2,500-$4,000, and quartersawn to add $5,000-$8,000 over plain-sawn. White oak is mid-tier pricing — significantly more than maple or red oak, significantly less than walnut.",
+      "Best uses span almost every kitchen aesthetic. For modern slab and frameless European: rift-cut with hardwax oil. For transitional shaker: plain-sawn or rift with a soft pigment or fumed finish. For Mission and Craftsman: quartersawn with traditional fuming. For Belgian-influenced minimalism: rift-cut with smoked or reactive iron-acetate finishes. The species is unusually flexible in a way that walnut, cherry, and hickory are not.",
+      "Pair white oak with brushed brass, blackened steel, antique bronze, warm nickel, or polished chrome — the olive base tone reads beautifully against almost every metal finish. Avoid bright yellow brass on darker stained white oak; the contrast can look dated. Stone counters in honed marble, soapstone, or quartzite all complement white oak's tonal range.",
     ],
     jankaHardness: 1360,
     specificGravity: 0.68,
@@ -197,34 +201,75 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     workability: "Good",
     stainTake: "Excellent",
     stability: 4,
-    uses: ["Rift-cut slab fronts", "Shaker bases", "Open shelving", "Floors and ceilings to match"],
+    uses: ["Rift-cut slab fronts", "Shaker bases", "Open shelving", "Floors and ceilings to match", "Range hoods", "Mission/Craftsman cabinetry"],
     pros: [
-      "Exceptional hardness and stability",
+      "Exceptional hardness and dimensional stability",
       "Takes reactive, fumed, and pigment stains beautifully",
       "Highly weather-resistant (closed tyloses)",
       "On-trend for modern, transitional, and traditional kitchens",
+      "Most flexible aesthetic range of any hardwood",
     ],
     cons: [
       "Open grain shows under paint without filling",
-      "Rift-and-quartered cuts cost ~30% more than plain-sawn",
+      "Rift-and-quartered cuts cost 30-100% more than plain-sawn",
       "Tannins can react with metal fasteners and some finishes",
+      "Lead times longer than red oak or maple",
     ],
-    bestFinishes: ["Hardwax oil natural", "Fumed/smoked", "Cerused white", "Reactive iron-acetate"],
-    bestDoorStyles: ["Slab (rift-cut)", "Shaker", "Reeded", "Beaded inset"],
+    bestFinishes: ["Hardwax oil natural", "Fumed/smoked", "Cerused white", "Reactive iron-acetate", "Soft pigment stain", "Rubio Monocoat Pure"],
+    bestDoorStyles: ["Slab (rift-cut)", "Shaker", "Reeded", "Beaded inset", "Mission/Craftsman"],
     swatch: "#c9a877",
     image: whiteOakImg,
     grainImage: whiteOakImg,
-    keywords: ["white oak kitchen cabinets", "rift cut white oak NYC", "fumed oak cabinets"],
+    keywords: [
+      "white oak cabinets",
+      "white oak kitchen cabinets",
+      "white oak kitchen",
+      "white oak cabinets NYC",
+      "rift cut white oak",
+      "fumed oak cabinets",
+      "white oak vs red oak",
+      "modern white oak kitchen",
+    ],
     faqs: [
+      {
+        question: "Why is white oak so popular for kitchen cabinets right now?",
+        answer:
+          "White oak combines exceptional durability, dimensional stability, and an olive-tan base tone that takes virtually any finish — from natural hardwax oil to smoked, fumed, cerused, or reactive iron-acetate. It works in modern, transitional, and traditional kitchens, which makes it the most flexible premium hardwood available. The trend started around 2015 with Belgian and Scandinavian designers and shows no sign of fading.",
+      },
       {
         question: "What is the difference between rift, quarter, and plain-sawn white oak?",
         answer:
-          "Plain-sawn shows wide cathedral arches, rift-sawn shows narrow vertical lines, and quartersawn reveals the medullary ray fleck. Rift is the most consistent for door-to-door matching on modern cabinets.",
+          "Plain-sawn shows wide cathedral arches, varies dramatically board-to-board, and costs the least (~60% log yield). Rift-sawn shows narrow vertical lines, reads consistent door-to-door, and costs 30-40% more (~25% yield). Quartersawn reveals the iridescent medullary ray fleck of Mission and Stickley furniture, costs nearly double plain-sawn (~15-20% yield). Rift is the most consistent for door-to-door matching on modern cabinets.",
+      },
+      {
+        question: "How much do white oak kitchen cabinets cost in NYC?",
+        answer:
+          "Custom plain-sawn white oak cabinets from a Brooklyn shop typically run $20,000-$30,000 for a 30-linear-foot kitchen. Rift-cut adds roughly $2,500-$4,000, quartersawn adds $5,000-$8,000. Lumber alone runs $10-$12 per board foot for plain-sawn, $14-$18 for rift, $18-$24 for quartersawn.",
+      },
+      {
+        question: "What is the difference between white oak and red oak?",
+        answer:
+          "White oak has tan-olive heartwood, tighter grain, is harder (Janka 1,360 vs 1,290), more dimensionally stable, and watertight (closed tyloses). Red oak has pinkish-red heartwood, more open grain, is not watertight, and costs 25-30% less. White oak is the current trend; red oak is the value play.",
       },
       {
         question: "Can white oak be painted?",
         answer:
-          "Yes, but its open pores telegraph through paint unless filled with a grain filler. Many designers leave the grain visible under paint as a feature rather than fighting it.",
+          "Yes, but its open pores telegraph through paint unless filled with a grain filler first. Many designers leave the grain visible under paint as a feature rather than fighting it. If you want a perfectly smooth painted finish, specify maple or birch. If you want grain texture under a soft color, white oak is ideal.",
+      },
+      {
+        question: "Does white oak work with marble counters?",
+        answer:
+          "Beautifully. White oak's olive-tan tone provides warmth against the cool gray-white of Carrara, Calacatta, or honed soapstone. The combination has become the defining look of post-2018 high-end American kitchens. Pair with brushed brass or warm nickel hardware for the full effect.",
+      },
+      {
+        question: "What's the lead time on white oak cabinets in NYC?",
+        answer:
+          "Plan on 8-10 weeks for plain-sawn white oak custom cabinets, 10-12 weeks for rift-cut, and 12-14 weeks for quartersawn. Lead times have stabilized post-pandemic but remain longer than red oak or maple due to high demand for the species at the high end of the market.",
+      },
+      {
+        question: "Will white oak cabinets fade or change color?",
+        answer:
+          "White oak ambers slightly with UV exposure over 5-10 years, deepening the olive-tan tone toward a warmer honey-brown. The change is subtle and generally improves the appearance. A UV-protective topcoat slows but does not eliminate this natural aging.",
       },
     ],
   },
