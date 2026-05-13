@@ -164,6 +164,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       title: "Maple vs Birch",
       blurb: "Birch is the budget alternative to maple — almost identical paint-grade look at a lower board-foot cost.",
     },
+    {
+      slug: "white-oak",
+      title: "Maple vs White Oak",
+      blurb: "Closed-grain paint perfection vs open-grain natural warmth — picking between NYC's two most-specified woods.",
+    },
+    {
+      slug: "red-oak",
+      title: "Maple vs Red Oak",
+      blurb: "Tight, dent-resistant, paintable vs warm, affordable, grain-forward — for traditional vs contemporary kitchens.",
+    },
+    {
+      slug: "hickory",
+      title: "Maple vs Hickory",
+      blurb: "Uniform Janka-1450 paint-grade benchmark vs Janka-1820 farmhouse character — durability vs design intent.",
+    },
   ],
   hickory: [
     {
