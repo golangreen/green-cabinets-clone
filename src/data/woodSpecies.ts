@@ -72,6 +72,11 @@ export interface WoodSpecies {
   keywords: string[];
   /** FAQ entries shown on detail page (also used for FAQPage schema). */
   faqs: { question: string; answer: string }[];
+  /** Optional per-species SEO overrides. Fall back to generic template when omitted. */
+  metaTitle?: string;
+  metaDescription?: string;
+  h1?: string;
+  aboutHeading?: string;
 }
 
 export const WOOD_SPECIES: WoodSpecies[] = [
@@ -173,6 +178,11 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Shaker and slim-shaker dominate because maple's tight grain shows the crisp 90° rail-and-stile joints beautifully. Slab fronts in natural or dye-stained maple read very Scandinavian, and beaded inset shaker is our most-requested traditional style for brownstone kitchens.",
       },
     ],
+    metaTitle: "Maple Cabinets NYC — Painted, Natural & Shaker | Green Cabinets",
+    metaDescription:
+      "Custom maple kitchen cabinets in NYC — painted shaker, natural slab, and stained finishes. Hard maple Janka 1,450, built in Brooklyn from $350/lf.",
+    h1: "Maple Kitchen Cabinets",
+    aboutHeading: "Hard Maple Cabinets — Painted, Natural & Stained",
   },
   {
     slug: "walnut",
