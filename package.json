@@ -16,6 +16,7 @@
     "indexnow": "node scripts/indexnow-submit.mjs",
     "ping:search-engines": "node scripts/ping-search-engines.mjs",
     "verify:pillars": "node scripts/verify-pillar-pages.mjs",
+    "verify:crawlability": "node scripts/verify-crawlability.mjs",
     "refresh:gsc-checklist": "node scripts/refresh-gsc-checklist.mjs",
     "prepare": "husky",
     "test": "vitest run",
