@@ -152,6 +152,7 @@ const BestWoodForKitchenCabinets = () => (
       <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
       <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
       <script type="application/ld+json">{JSON.stringify(itemListSchema)}</script>
+      <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
     </Helmet>
 
     <BreadcrumbSchema
