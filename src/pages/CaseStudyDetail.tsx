@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CASE_STUDIES, getCaseStudy } from "@/data/caseStudies";
 import { authorRef, ORG_ID } from "@/data/authors";
+import AuthorByline from "@/components/AuthorByline";
 
 const BASE = "https://greencabinetsny.com/case-studies";
 
