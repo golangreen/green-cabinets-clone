@@ -91,6 +91,7 @@ const Footer = () => {
               <li><a href="#solutions" className="hover:text-white transition-colors">Our Solutions</a></li>
               <li><a href="#gallery" className="hover:text-white transition-colors">Portfolio</a></li>
               <li><a href="/wood-species" className="hover:text-white transition-colors">Wood Species Guide</a></li>
+              <li><a href="/case-studies" className="hover:text-white transition-colors">Case Studies</a></li>
               <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>

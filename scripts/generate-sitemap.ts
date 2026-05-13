@@ -5,6 +5,7 @@ import { resolve } from "path";
 import { NEIGHBORHOODS } from "../src/data/neighborhoodSeo";
 import { BOROUGHS } from "../src/data/boroughSeo";
 import { WOOD_SPECIES } from "../src/data/woodSpecies";
+import { CASE_STUDIES } from "../src/data/caseStudies";
 
 const BASE_URL = "https://greencabinetsny.com";
 const today = new Date().toISOString().slice(0, 10);
@@ -24,6 +25,7 @@ const entries: SitemapEntry[] = [
   { path: "/wood-species", changefreq: "monthly", priority: "0.8", lastmod: today },
   { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9", lastmod: today },
   { path: "/about", changefreq: "monthly", priority: "0.7", lastmod: today },
+  { path: "/case-studies", changefreq: "monthly", priority: "0.8", lastmod: today },
 
   // Hash-anchored homepage sections (kept for legacy parity)
   { path: "/#about", changefreq: "monthly", priority: "0.7", lastmod: today },
@@ -60,6 +62,16 @@ for (const w of WOOD_SPECIES) {
     changefreq: "monthly",
     priority: "0.7",
     lastmod: today,
+  });
+}
+
+// Case study detail pages
+for (const c of CASE_STUDIES) {
+  entries.push({
+    path: `/case-studies/${c.slug}`,
+    changefreq: "yearly",
+    priority: "0.75",
+    lastmod: c.datePublished,
   });
 }
 
