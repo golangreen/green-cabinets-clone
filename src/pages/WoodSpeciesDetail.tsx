@@ -104,7 +104,7 @@ const WoodSpeciesDetail = () => {
                     aria-hidden="true"
                   />
                   <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a]">
-                    {wood.name}
+                    {wood.h1 ?? wood.name}
                   </h1>
                 </div>
                 <p className="text-lg text-[#5C7650] italic">{wood.tagline}</p>
