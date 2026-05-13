@@ -1,30 +1,72 @@
-// Proxies Google Search Console URL Inspection API to bypass CORS.
-// Caller passes their own OAuth access token; we never store it.
+// GSC URL Inspection proxy.
+// Defaults to inspecting https://greencabinetsny.com/designer so it can be
+// invoked from chat with no body. Auth precedence:
+//   1. `token` field in the body (one-shot, e.g. OAuth Playground access token)
+//   2. Stored refresh token (GSC_OAUTH_REFRESH_TOKEN + GSC_OAUTH_CLIENT_ID +
+//      GSC_OAUTH_CLIENT_SECRET) -> exchanged for a short-lived access token.
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 
+const DEFAULT_SITE = 'https://greencabinetsny.com/';
+const DEFAULT_URLS = ['https://greencabinetsny.com/designer'];
+
 interface Body {
-  token: string;
-  siteUrl: string;
-  urls: string[];
+  token?: string;
+  siteUrl?: string;
+  urls?: string[];
+}
+
+async function getAccessTokenFromRefresh(): Promise<string | null> {
+  const refresh = Deno.env.get('GSC_OAUTH_REFRESH_TOKEN');
+  const clientId = Deno.env.get('GSC_OAUTH_CLIENT_ID');
+  const clientSecret = Deno.env.get('GSC_OAUTH_CLIENT_SECRET');
+  if (!refresh || !clientId || !clientSecret) return null;
+
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refresh,
+      grant_type: 'refresh_token',
+    }),
+  });
+  const json = await res.json();
+  if (!res.ok) {
+    throw new Error(`Refresh token exchange failed [${res.status}]: ${JSON.stringify(json)}`);
+  }
+  return json.access_token as string;
 }
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
-    const { token, siteUrl, urls } = (await req.json()) as Body;
-
-    if (!token || !siteUrl || !Array.isArray(urls) || urls.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'token, siteUrl, and urls[] are required' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      );
+    let body: Body = {};
+    if (req.method !== 'GET') {
+      try { body = (await req.json()) as Body; } catch { body = {}; }
     }
+
+    const siteUrl = body.siteUrl ?? DEFAULT_SITE;
+    const urls = body.urls && body.urls.length > 0 ? body.urls : DEFAULT_URLS;
+
     if (urls.length > 50) {
       return new Response(JSON.stringify({ error: 'Max 50 URLs per request' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+
+    let token = body.token;
+    if (!token) token = (await getAccessTokenFromRefresh()) ?? undefined;
+    if (!token) {
+      return new Response(
+        JSON.stringify({
+          error:
+            'No OAuth token. Pass `token` in the body, or set GSC_OAUTH_REFRESH_TOKEN + GSC_OAUTH_CLIENT_ID + GSC_OAUTH_CLIENT_SECRET secrets.',
+        }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
     }
 
     const results = await Promise.all(
@@ -50,8 +92,8 @@ Deno.serve(async (req) => {
           return {
             url: inspectionUrl,
             ok: true,
-            verdict: idx.verdict,                       // PASS | PARTIAL | FAIL | NEUTRAL
-            coverageState: idx.coverageState,           // e.g. "Submitted and indexed"
+            verdict: idx.verdict,
+            coverageState: idx.coverageState,
             indexingState: idx.indexingState,
             lastCrawlTime: idx.lastCrawlTime,
             googleCanonical: idx.googleCanonical,
@@ -68,7 +110,7 @@ Deno.serve(async (req) => {
       }),
     );
 
-    return new Response(JSON.stringify({ results }), {
+    return new Response(JSON.stringify({ siteUrl, results }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (e) {
