@@ -117,17 +117,60 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     swatch: "#efe1c6",
     image: mapleImg,
     grainImage: mapleImg,
-    keywords: ["maple kitchen cabinets", "painted maple cabinets NYC", "hard maple shaker"],
+    keywords: [
+      "maple cabinets",
+      "maple kitchen cabinets",
+      "painted maple cabinets",
+      "painted maple cabinets NYC",
+      "white maple shaker cabinets",
+      "hard maple shaker",
+      "natural maple cabinets",
+      "maple vs oak cabinets",
+      "maple vs birch cabinets",
+      "maple vs cherry cabinets",
+      "custom maple cabinets Brooklyn",
+      "maple slab cabinets",
+    ],
     faqs: [
       {
         question: "Is maple good for painted kitchen cabinets?",
         answer:
-          "Yes — maple is the industry-standard substrate for painted cabinets because its tight, closed grain stays smooth under paint and does not telegraph through the topcoat the way oak or ash does.",
+          "Yes — maple is the industry-standard substrate for painted cabinets because its tight, closed grain stays smooth under paint and does not telegraph through the topcoat the way oak or ash does. Brilliant whites, soft greens, and deep navies all read crisp on a maple shaker, and chip touch-ups blend cleanly because there is no contrasting open grain to fight.",
       },
       {
         question: "How does maple compare to oak for durability?",
         answer:
-          "Hard maple is denser than red oak (Janka 1,450 vs 1,290 lbf), so it resists dents slightly better, but oak's open grain hides scratches more forgivingly over time.",
+          "Hard maple is denser than red oak (Janka 1,450 vs 1,290 lbf), so it resists dents slightly better. Oak's open grain hides scratches more forgivingly over time, but maple wins on paint finish quality, easier cleaning, and a more uniform contemporary look.",
+      },
+      {
+        question: "How much do painted maple cabinets cost in NYC?",
+        answer:
+          "From Green Cabinets NY, painted hard maple shaker kitchens run roughly $350 per linear foot fully built and installed. That includes solid maple frames and doors, dovetailed solid-maple drawer boxes, and a sprayed conversion-varnish finish in your color choice.",
+      },
+      {
+        question: "Will white maple cabinets yellow over time?",
+        answer:
+          "Clear-coated natural maple yellows slightly with UV exposure over 5–10 years. Painted white maple does not yellow because the pigmented topcoat blocks UV — but a low-quality oil-based white can amber. We spec a UV-resistant water-based or 2K conversion varnish to keep whites looking white for decades.",
+      },
+      {
+        question: "Maple vs birch cabinets — which should I pick?",
+        answer:
+          "For paint-grade work in pre-war NYC apartments where alignment is unforgiving, hard maple is worth the 15–20% premium over birch. Maple holds an edge crisper at door rails, dents less, and ages better. Birch is a fine budget alternative for low-traffic kitchens or rental flips.",
+      },
+      {
+        question: "Can maple cabinets be stained dark?",
+        answer:
+          "Yes, but maple is famously blotch-prone under oil-based stains because of its tight grain. We always pre-condition with a sanding sealer and use dye stains rather than pigment stains for medium-to-dark tones. For very dark looks, walnut is a more honest choice — staining maple to look like walnut rarely fools anyone up close.",
+      },
+      {
+        question: "Are maple cabinets a sustainable choice?",
+        answer:
+          "Hard maple (Acer saccharum) is one of the most sustainable cabinet hardwoods in North America. U.S. and Canadian hardwood forests are net-growing — annual growth exceeds harvest by roughly 2 to 1 — and FSC-certified maple is widely available. We source from northeastern mills to keep transport emissions low.",
+      },
+      {
+        question: "What door styles work best in maple?",
+        answer:
+          "Shaker and slim-shaker dominate because maple's tight grain shows the crisp 90° rail-and-stile joints beautifully. Slab fronts in natural or dye-stained maple read very Scandinavian, and beaded inset shaker is our most-requested traditional style for brownstone kitchens.",
       },
     ],
   },
