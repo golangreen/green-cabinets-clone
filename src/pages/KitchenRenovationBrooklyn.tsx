@@ -176,6 +176,7 @@ const KitchenRenovationBrooklyn = () => (
       <meta name="twitter:title" content={TITLE} />
       <meta name="twitter:description" content={DESC} />
       <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
+      <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
       <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       <script type="application/ld+json">{JSON.stringify(serviceJsonLd)}</script>
       <script type="application/ld+json">{JSON.stringify(howToJsonLd)}</script>
