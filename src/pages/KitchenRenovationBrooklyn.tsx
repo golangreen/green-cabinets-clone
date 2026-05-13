@@ -9,6 +9,7 @@ import Chatbot from "@/components/Chatbot";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { authorRef } from "@/data/authors";
+import AuthorByline from "@/components/AuthorByline";
 
 const URL = "https://greencabinetsny.com/kitchen-renovation-brooklyn";
 const TITLE = "Kitchen Renovation Brooklyn | Costs, Permits & Timeline (2026)";
