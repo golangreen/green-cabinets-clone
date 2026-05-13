@@ -24,6 +24,7 @@ const entries: SitemapEntry[] = [
   { path: "/wood-species", changefreq: "monthly", priority: "0.8", lastmod: today },
   { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9", lastmod: today },
   { path: "/about", changefreq: "monthly", priority: "0.7", lastmod: today },
+  { path: "/case-studies", changefreq: "monthly", priority: "0.8", lastmod: today },
 
   // Hash-anchored homepage sections (kept for legacy parity)
   { path: "/#about", changefreq: "monthly", priority: "0.7", lastmod: today },

@@ -22,6 +22,8 @@ import FinishesColors from "./pages/FinishesColors";
 import GalleryPage from "./pages/Gallery";
 import KitchenRenovationBrooklyn from "./pages/KitchenRenovationBrooklyn";
 import About from "./pages/About";
+import CaseStudies from "./pages/CaseStudies";
+import CaseStudyDetail from "./pages/CaseStudyDetail";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
@@ -81,6 +83,8 @@ const App = () => {
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/kitchen-renovation-brooklyn" element={<KitchenRenovationBrooklyn />} />
             <Route path="/about" element={<About />} />
+            <Route path="/case-studies" element={<CaseStudies />} />
+            <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/:boroughPath" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
