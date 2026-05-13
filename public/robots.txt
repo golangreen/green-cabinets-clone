@@ -68,10 +68,12 @@ Allow: /
 User-agent: *
 Allow: /
 
-# Disallow checkout and auth pages from search engines
+# Disallow checkout, auth, and internal admin pages from search engines
 Disallow: /checkout
 Disallow: /auth
 Disallow: /payment-success
+Disallow: /admin/
+Disallow: /performance
 
 # Sitemap
 Sitemap: https://greencabinetsny.com/sitemap.xml
