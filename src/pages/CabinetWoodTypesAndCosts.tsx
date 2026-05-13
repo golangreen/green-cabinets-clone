@@ -82,15 +82,7 @@ const FAQ = [
   { q: "Does the wood species affect cabinet durability or just look?", a: "Both. Janka hardness predicts dent resistance — under 1,000 (alder, walnut, cherry) wants a careful household; 1,200–1,500 (red oak, birch, maple) is the sweet spot; 1,800+ (hickory) handles anything. Color and grain are the other axis — open-pore species (oak, ash, walnut) hide wear better than closed-pore species (maple, cherry, birch) where every dent shows." },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const faqSchema = buildFaqSchema(FAQ);
 
 const tierBadge: Record<Row["tier"], string> = {
   Budget: "bg-emerald-100 text-emerald-900 dark:bg-emerald-900/30 dark:text-emerald-200",
