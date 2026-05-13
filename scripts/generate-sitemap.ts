@@ -75,7 +75,7 @@ for (const c of CASE_STUDIES) {
   });
 }
 
-
+function generateSitemap(entries: SitemapEntry[]) {
   const urls = entries.map((e) =>
     [
       `  <url>`,
