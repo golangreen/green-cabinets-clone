@@ -72,35 +72,37 @@ const Index = () => {
       </Helmet>
       <Header />
       <SpringPromotion />
-      <Hero />
-      <Services />
-      <LuxuryMillwork />
-      <FinishesColorsSection />
-      <LuxuryMillworkGallery />
-      <QualityCraftsmanship />
-      <Features />
-      <About />
-      <Suspense fallback={
-        <div className="py-20 flex justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      }>
-        <Gallery />
-      </Suspense>
-      <Suppliers />
-      <WoodSpeciesTeaser />
-      <NeighborhoodsServed />
-      <Testimonials />
-      <Suspense fallback={
-        <div className="py-20 flex justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      }>
-        <ShopProducts />
-      </Suspense>
-      <FAQ />
-      <Contact />
-      <CTA />
+      <main>
+        <Hero />
+        <Services />
+        <LuxuryMillwork />
+        <FinishesColorsSection />
+        <LuxuryMillworkGallery />
+        <QualityCraftsmanship />
+        <Features />
+        <About />
+        <Suspense fallback={
+          <div className="py-20 flex justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <Gallery />
+        </Suspense>
+        <Suppliers />
+        <WoodSpeciesTeaser />
+        <NeighborhoodsServed />
+        <Testimonials />
+        <Suspense fallback={
+          <div className="py-20 flex justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <ShopProducts />
+        </Suspense>
+        <FAQ />
+        <Contact />
+        <CTA />
+      </main>
       <Footer />
       
     </div>
