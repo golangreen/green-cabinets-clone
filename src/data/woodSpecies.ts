@@ -84,9 +84,13 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     shortDescription:
       "Hard maple offers a creamy, almost uniform grain that takes paint and light stains beautifully. It is the workhorse of modern shaker and slab cabinetry across Brooklyn and Manhattan.",
     longDescription: [
-      "Hard maple (Acer saccharum) is a dense, closed-pore North American hardwood with a fine, uniform texture and very subtle grain. Sapwood ranges from nearly white to a pale cream, while the heartwood pulls slightly darker with reddish or golden brown tones. Because it lacks dramatic figure, maple reads as clean and contemporary — exactly what most NYC homeowners want from a painted shaker kitchen.",
-      "In the shop, maple's tight grain is a double-edged sword: it sands to a glassy surface and accepts conversion varnish or 2K urethane without grain telegraphing, but it can blotch under oil-based stains. We mitigate this with a sanding sealer or a dye-stain base coat before topcoats. For painted cabinets, maple is unmatched — joints stay crisp and the finish remains smooth even after years of use.",
-      "Maple's Janka hardness of 1,450 lbf makes it harder than red oak, so doors and drawer fronts resist dents from daily use. It is a smart choice for families, rental units, and any project where the cabinetry will be opened thousands of times a year. It is also one of the more sustainable choices on this list: U.S. hard maple is FSC-certified and harvested in expanding northeastern forests.",
+      "Hard maple (Acer saccharum) is a dense, closed-pore North American hardwood with a fine, uniform texture and very subtle grain. Sapwood ranges from nearly white to a pale cream, while the heartwood pulls slightly darker with reddish or golden brown tones. Because it lacks dramatic figure, maple reads as clean and contemporary — exactly what most NYC homeowners want from a painted shaker kitchen or a tight, modern slab front. It is by far the most-specified wood in our Brooklyn shop for white, off-white, and soft-color cabinetry.",
+      "In the shop, maple's tight grain is a double-edged sword: it sands to a glassy surface and accepts conversion varnish or 2K urethane without grain telegraphing, but it can blotch under oil-based stains. We mitigate this with a sanding sealer or a dye-stain base coat before topcoats. For painted cabinets, maple is unmatched — joints stay crisp, the finish remains smooth even after years of use, and chip repairs touch up cleanly because there is no contrasting open grain to fight.",
+      "Maple's Janka hardness of 1,450 lbf makes it harder than red oak (1,290) and slightly softer than hickory (1,820), so doors and drawer fronts resist dents from daily use without being brittle. It is a smart choice for families, rental units in Williamsburg or Astoria, and any project where the cabinetry will be opened thousands of times a year. The closed pore structure also means painted maple cabinets are easier to wipe down — grease and tomato sauce do not sink into open grain the way they do on oak.",
+      "**Cost in NYC.** Painted maple shaker cabinets from Green Cabinets NY run roughly $350 per linear foot for a kitchen, which makes maple one of the best price-to-quality plays in the city. Compared to a paint-grade hybrid (poplar frames + MDF panels) maple costs 10–15% more but delivers a true all-hardwood door that resists denting from kid backpacks, dog tails, and dropped pans. Compared to walnut at the high end, maple lands at roughly half the cost for a similarly built door — most of the savings come from raw lumber yield, not workmanship.",
+      "**Care and maintenance.** Painted maple cabinets need almost nothing: a microfiber cloth with mild dish soap and warm water handles daily cleaning, and a quarterly wipe-down with a non-ammonia cleaner like Method wood cleaner keeps the conversion varnish from dulling. Avoid Magic Eraser pads on painted surfaces — the micro-abrasive will burnish the sheen unevenly. Clear-coated natural maple will yellow slightly with UV over 5–10 years, which most owners actually like; if you want it to stay pure-white, specify a UV-inhibiting topcoat or a white-pigmented conversion varnish.",
+      "**Maple vs the alternatives.** Versus walnut, maple is the cool, restrained, paint-friendly choice — walnut is the dark, grain-forward, stain-grade statement. Versus cherry, maple stays uniform while cherry will dramatically darken with sunlight over the first 6–12 months. Versus birch, maple is denser and holds an edge crisper at the door rails, which is why we always recommend hard maple over birch for any inset shaker work in pre-war Manhattan apartments where alignment is unforgiving.",
+      "**Where it shines in NYC kitchens.** Brownstone galley kitchens with limited light benefit from maple's reflective pale tone — a Brilliant White or Sherwin-Williams Alabaster painted maple shaker brightens the room without feeling sterile. Loft kitchens in DUMBO and Long Island City lean into natural maple slab fronts for a warm Scandinavian read. And in compact studios across the Lower East Side, painted maple drawer boxes (we use solid maple with dovetailed corners) outlast the engineered birch ply boxes most builders default to.",
     ],
     jankaHardness: 1450,
     specificGravity: 0.63,
@@ -113,17 +117,60 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     swatch: "#efe1c6",
     image: mapleImg,
     grainImage: mapleImg,
-    keywords: ["maple kitchen cabinets", "painted maple cabinets NYC", "hard maple shaker"],
+    keywords: [
+      "maple cabinets",
+      "maple kitchen cabinets",
+      "painted maple cabinets",
+      "painted maple cabinets NYC",
+      "white maple shaker cabinets",
+      "hard maple shaker",
+      "natural maple cabinets",
+      "maple vs oak cabinets",
+      "maple vs birch cabinets",
+      "maple vs cherry cabinets",
+      "custom maple cabinets Brooklyn",
+      "maple slab cabinets",
+    ],
     faqs: [
       {
         question: "Is maple good for painted kitchen cabinets?",
         answer:
-          "Yes — maple is the industry-standard substrate for painted cabinets because its tight, closed grain stays smooth under paint and does not telegraph through the topcoat the way oak or ash does.",
+          "Yes — maple is the industry-standard substrate for painted cabinets because its tight, closed grain stays smooth under paint and does not telegraph through the topcoat the way oak or ash does. Brilliant whites, soft greens, and deep navies all read crisp on a maple shaker, and chip touch-ups blend cleanly because there is no contrasting open grain to fight.",
       },
       {
         question: "How does maple compare to oak for durability?",
         answer:
-          "Hard maple is denser than red oak (Janka 1,450 vs 1,290 lbf), so it resists dents slightly better, but oak's open grain hides scratches more forgivingly over time.",
+          "Hard maple is denser than red oak (Janka 1,450 vs 1,290 lbf), so it resists dents slightly better. Oak's open grain hides scratches more forgivingly over time, but maple wins on paint finish quality, easier cleaning, and a more uniform contemporary look.",
+      },
+      {
+        question: "How much do painted maple cabinets cost in NYC?",
+        answer:
+          "From Green Cabinets NY, painted hard maple shaker kitchens run roughly $350 per linear foot fully built and installed. That includes solid maple frames and doors, dovetailed solid-maple drawer boxes, and a sprayed conversion-varnish finish in your color choice.",
+      },
+      {
+        question: "Will white maple cabinets yellow over time?",
+        answer:
+          "Clear-coated natural maple yellows slightly with UV exposure over 5–10 years. Painted white maple does not yellow because the pigmented topcoat blocks UV — but a low-quality oil-based white can amber. We spec a UV-resistant water-based or 2K conversion varnish to keep whites looking white for decades.",
+      },
+      {
+        question: "Maple vs birch cabinets — which should I pick?",
+        answer:
+          "For paint-grade work in pre-war NYC apartments where alignment is unforgiving, hard maple is worth the 15–20% premium over birch. Maple holds an edge crisper at door rails, dents less, and ages better. Birch is a fine budget alternative for low-traffic kitchens or rental flips.",
+      },
+      {
+        question: "Can maple cabinets be stained dark?",
+        answer:
+          "Yes, but maple is famously blotch-prone under oil-based stains because of its tight grain. We always pre-condition with a sanding sealer and use dye stains rather than pigment stains for medium-to-dark tones. For very dark looks, walnut is a more honest choice — staining maple to look like walnut rarely fools anyone up close.",
+      },
+      {
+        question: "Are maple cabinets a sustainable choice?",
+        answer:
+          "Hard maple (Acer saccharum) is one of the most sustainable cabinet hardwoods in North America. U.S. and Canadian hardwood forests are net-growing — annual growth exceeds harvest by roughly 2 to 1 — and FSC-certified maple is widely available. We source from northeastern mills to keep transport emissions low.",
+      },
+      {
+        question: "What door styles work best in maple?",
+        answer:
+          "Shaker and slim-shaker dominate because maple's tight grain shows the crisp 90° rail-and-stile joints beautifully. Slab fronts in natural or dye-stained maple read very Scandinavian, and beaded inset shaker is our most-requested traditional style for brownstone kitchens.",
       },
     ],
   },
