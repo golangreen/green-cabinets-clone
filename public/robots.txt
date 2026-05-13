@@ -68,12 +68,33 @@ Allow: /
 User-agent: *
 Allow: /
 
-# Disallow checkout, auth, and internal admin pages from search engines
-Disallow: /checkout
-Disallow: /auth
-Disallow: /payment-success
+# Internal/admin routes — never index
 Disallow: /admin/
+Disallow: /admin
 Disallow: /performance
+Disallow: /auth
+Disallow: /checkout
+Disallow: /payment-success
+
+# Explicitly allow assets so blocked-route rules never starve the renderer
+Allow: /assets/
+Allow: /icons/
+Allow: /images/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.mjs$
+Allow: /*.woff2$
+Allow: /*.woff$
+Allow: /*.svg$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.webp$
+Allow: /*.avif$
+Allow: /*.ico$
+Allow: /*.json$
+Allow: /*.xml$
 
 # Sitemap
 Sitemap: https://greencabinetsny.com/sitemap.xml
+
