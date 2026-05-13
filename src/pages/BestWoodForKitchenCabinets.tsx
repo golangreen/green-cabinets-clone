@@ -78,22 +78,15 @@ const PICKS = [
   },
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${URL}#article`,
+const articleSchema = buildArticleSchema({
+  url: URL,
   headline: TITLE,
   description: DESC,
-  author: authorRef("golan"),
-  publisher: { "@id": ORG_ID },
   datePublished: "2026-05-13",
-  dateModified: new Date().toISOString().slice(0, 10),
-  image: ["https://greencabinetsny.com/og-image.jpg"],
-  mainEntityOfPage: { "@type": "WebPage", "@id": URL },
   about: PICKS.map((p) => `${p.title}: ${p.winner}`).join(" | "),
   keywords:
     "best wood for kitchen cabinets, best wood for cabinets, cabinet wood, paint-grade cabinets, stain-grade cabinets, hardwood kitchen cabinets",
-};
+});
 
 const itemListSchema = {
   "@context": "https://schema.org",
