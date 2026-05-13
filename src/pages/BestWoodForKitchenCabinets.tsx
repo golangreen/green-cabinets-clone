@@ -111,15 +111,7 @@ const FAQ = [
   { q: "Should I choose solid wood or wood veneer for cabinet doors?", a: "Solid wood for shaker, raised-panel, and inset doors — the construction depends on it. Veneer over MDF or ply for slab doors (especially modern, large-format slabs), because solid wood that wide will warp and split with seasonal humidity. A flat-panel center on a shaker door is also typically veneered ply for the same reason." },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const faqSchema = buildFaqSchema(FAQ);
 
 const BestWoodForKitchenCabinets = () => (
   <div className="min-h-screen bg-background">
