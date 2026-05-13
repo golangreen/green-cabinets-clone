@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { MapPin, Images, MessageSquare, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
