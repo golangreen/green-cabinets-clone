@@ -11,8 +11,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Trophy } from "lucide-react";
-import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema, buildFaqSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/best-wood-for-kitchen-cabinets";
 const TITLE = "Best Wood for Kitchen Cabinets in 2026 — Honest Picks by Use Case";
