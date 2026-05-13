@@ -78,6 +78,7 @@ export interface WoodSpecies {
   metaDescription?: string;
   h1?: string;
   aboutHeading?: string;
+  faqHeading?: string;
   /** Open Graph / social-share overrides. Fall back to metaTitle/metaDescription/image. */
   ogTitle?: string;
   ogDescription?: string;
@@ -189,6 +190,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       "Custom maple kitchen cabinets in NYC — painted shaker, natural slab, and stained finishes. Hard maple Janka 1,450, built in Brooklyn from $350/lf.",
     h1: "Maple Kitchen Cabinets",
     aboutHeading: "Hard Maple Cabinets — Painted, Natural & Stained",
+    faqHeading: "Maple Cabinet FAQs — Paint, Cost, Durability & Care",
     ogTitle: "Maple Kitchen Cabinets — Painted Shaker & Natural Slab in NYC",
     ogDescription:
       "Custom hard maple cabinets, built in Brooklyn. Painted shaker, natural slab, and stained finishes from $350/lf — Janka 1,450 for daily NYC use.",
