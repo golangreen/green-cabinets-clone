@@ -68,10 +68,13 @@ const EXPECTED_GUIDES = [
 
 const MUST_BE_INDEXED = [...CORE_PAGES, ...EXPECTED_GUIDES];
 
-// Heuristic for "looks like a guide": multi-word kebab slug at root
-// (2+ hyphens, single path segment, not a core page).
+// Heuristic for "looks like a migrated guide": multi-word kebab slug at root,
+// not a core page, and not part of the location landing-page namespace
+// (`/custom-kitchen-cabinets-*`) which is its own category.
 const GUIDE_LIKE = (path) =>
-  /^\/[a-z0-9]+(?:-[a-z0-9]+){2,}$/.test(path) && !CORE_PAGES.includes(path);
+  /^\/[a-z0-9]+(?:-[a-z0-9]+){2,}$/.test(path) &&
+  !CORE_PAGES.includes(path) &&
+  !path.startsWith("/custom-kitchen-cabinets-");
 
 // --- robots.txt parser ---------------------------------------------------
 /**
