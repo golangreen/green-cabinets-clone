@@ -43,7 +43,7 @@ const EXPECTED_ALLOW = [
 
 const EXPECTED_SITEMAP = `${HOST}/sitemap.xml`;
 
-const MUST_BE_INDEXED = [
+const CORE_PAGES = [
   "/",
   "/about",
   "/shop",
@@ -51,6 +51,11 @@ const MUST_BE_INDEXED = [
   "/wood-species",
   "/finishes-colors",
   "/case-studies",
+];
+
+// Canonical guide URLs migrated from jeton.com. Sitemap must contain
+// EXACTLY these guide entries — no missing, no extras.
+const EXPECTED_GUIDES = [
   "/best-wood-for-kitchen-cabinets",
   "/cabinet-wood-types-and-costs",
   "/natural-wood-kitchen-cabinets",
@@ -60,6 +65,13 @@ const MUST_BE_INDEXED = [
   "/reach-in-closet-systems-nyc",
   "/kitchen-renovation-brooklyn",
 ];
+
+const MUST_BE_INDEXED = [...CORE_PAGES, ...EXPECTED_GUIDES];
+
+// Heuristic for "looks like a guide": multi-word kebab slug at root
+// (2+ hyphens, single path segment, not a core page).
+const GUIDE_LIKE = (path) =>
+  /^\/[a-z0-9]+(?:-[a-z0-9]+){2,}$/.test(path) && !CORE_PAGES.includes(path);
 
 // --- robots.txt parser ---------------------------------------------------
 /**
