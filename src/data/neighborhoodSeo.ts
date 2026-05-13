@@ -168,7 +168,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     title:
       "Custom Cabinets in Park Slope, Brooklyn | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets for Park Slope brownstones and co-ops. Built in our Bushwick shop, installed with care for historic homes. Free consultation. (718) 804-5488.",
+      "Custom kitchen cabinets for Park Slope brownstones and co-ops. Built in our Bushwick shop with care for historic homes. (718) 804-5488.",
     keywords:
       "custom kitchen cabinets Park Slope, Park Slope brownstone kitchen, Park Slope cabinet maker, custom cabinetry Park Slope, Park Slope kitchen renovation, kitchen cabinets 11215 11217",
     heroTagline:
