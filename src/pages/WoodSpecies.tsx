@@ -83,6 +83,59 @@ const WoodSpecies = () => {
     })),
   };
 
+  const howToJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How to Choose the Right Wood Species for Custom Kitchen Cabinets",
+    description:
+      "A 6-step framework for picking the right hardwood for custom kitchen or vanity cabinets — balancing grain, hardness, finish behavior, sustainability, and budget.",
+    totalTime: "PT30M",
+    step: [
+      {
+        "@type": "HowToStep",
+        position: 1,
+        name: "Decide on a finish direction (paint, stain, or natural)",
+        text: "If you want a painted finish, pick a tight, even-grained wood like maple or birch — open-grained woods like oak telegraph through paint. For stain or natural clear coats, white oak, walnut, cherry, and rift-cut white oak shine.",
+        url: "https://greencabinetsny.com/finishes-colors",
+      },
+      {
+        "@type": "HowToStep",
+        position: 2,
+        name: "Match grain pattern to your design style",
+        text: "Modern and minimalist: rift-cut white oak or quartersawn oak for straight, uniform grain. Traditional or transitional: maple, cherry, or red oak. Rustic or farmhouse: rustic hickory, knotty alder, or reclaimed-look oak.",
+        url: "https://greencabinetsny.com/wood-species",
+      },
+      {
+        "@type": "HowToStep",
+        position: 3,
+        name: "Check Janka hardness for daily durability",
+        text: "Hickory (1820) and hard maple (1450) are the most dent-resistant. Walnut (1010), cherry (950), and alder (590) are softer — beautiful but more prone to dings on cabinet edges. For a busy family kitchen, lean harder.",
+        url: "https://greencabinetsny.com/wood-species",
+      },
+      {
+        "@type": "HowToStep",
+        position: 4,
+        name: "Confirm the budget tier",
+        text: "Budget-friendly: maple, birch, red oak, alder. Mid-tier: white oak, hickory, ash, cherry. Premium: walnut, mahogany, rift-cut and quartersawn white oak. Species can shift a 20-linear-foot kitchen by $1,500–$5,000.",
+        url: "https://greencabinetsny.com/shop",
+      },
+      {
+        "@type": "HowToStep",
+        position: 5,
+        name: "Verify sustainability and sourcing",
+        text: "Ask for FSC-certified stock when sustainability matters. Domestic species (maple, oak, walnut, cherry, hickory, ash) have shorter supply chains than tropical hardwoods like mahogany. We can source FSC for any species on request.",
+        url: "https://greencabinetsny.com/wood-species",
+      },
+      {
+        "@type": "HowToStep",
+        position: 6,
+        name: "Order physical samples before committing",
+        text: "Photos lie — grain, color, and how light hits a finish are wildly different in person. Request 3–5 sample doors in your top species and finishes, view them in your kitchen at different times of day, then commit.",
+        url: "https://greencabinetsny.com/finishes-colors",
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
@@ -105,6 +158,7 @@ const WoodSpecies = () => {
         />
         <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
         <script type="application/ld+json">{JSON.stringify(itemListSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(howToJsonLd)}</script>
       </Helmet>
 
       <Header />
