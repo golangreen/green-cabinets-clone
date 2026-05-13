@@ -219,7 +219,7 @@ const WoodSpecies = () => {
                   </div>
                   <div className="p-5 space-y-2">
                     <div className="flex items-baseline justify-between gap-2">
-                      <h3 className="text-lg font-bold text-[#1a1a1a]">{w.name}</h3>
+                      <h3 className="text-lg font-bold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
                       <span className="font-mono text-sm text-[#5C7650]">{w.costTier}</span>
                     </div>
                     <p className="text-sm text-[#5C7650] italic">{w.tagline}</p>

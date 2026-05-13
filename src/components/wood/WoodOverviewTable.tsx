@@ -43,9 +43,10 @@ const WoodOverviewTable = () => {
                 <td className="px-4 py-3 text-right">
                   <Link
                     to={`/wood-species/${w.slug}`}
+                    aria-label={`Read the ${w.h1 ?? `${w.name} Cabinets`} guide`}
                     className="inline-flex items-center gap-1 text-[#5C7650] hover:text-[#445339] font-medium"
                   >
-                    Details <ArrowRight className="w-4 h-4" />
+                    {w.h1 ?? `${w.name} Cabinets`} <ArrowRight className="w-4 h-4" />
                   </Link>
                 </td>
               </tr>
@@ -69,7 +70,7 @@ const WoodOverviewTable = () => {
                 aria-hidden="true"
               />
               <div className="flex-1">
-                <h3 className="font-semibold text-[#1a1a1a]">{w.name}</h3>
+                <h3 className="font-semibold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
                 <p className="text-xs text-[#999999]">{w.tagline}</p>
               </div>
               <span className="font-mono text-sm text-[#5C7650]">{w.costTier}</span>
