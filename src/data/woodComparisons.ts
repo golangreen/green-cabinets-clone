@@ -191,6 +191,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       title: "Hickory vs White Oak",
       blurb: "America's hardest cabinet hardwood vs the modern designer favorite — durability vs design language.",
     },
+    {
+      slug: "maple",
+      title: "Hickory vs Maple",
+      blurb: "Janka 1820 farmhouse character vs Janka 1450 paint-grade smoothness — wildly different design intents.",
+    },
+    {
+      slug: "walnut",
+      title: "Hickory vs Walnut",
+      blurb: "Rugged high-contrast country vs refined dark luxury — opposite ends of the stain-grade spectrum.",
+    },
+    {
+      slug: "red-oak",
+      title: "Hickory vs Red Oak",
+      blurb: "Hardest cabinet wood vs the affordable open-grain classic — durability and color variation compared.",
+    },
   ],
   "rustic-hickory": [
     {
