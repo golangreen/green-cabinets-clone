@@ -49,8 +49,9 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Get a Free Quote | Green Cabinets - Custom Millwork Brooklyn</title>
-        <meta name="description" content="Request a free quote for custom kitchen cabinets and bathroom vanities from Green Cabinets in Bushwick, Brooklyn. Quality craftsmanship with sustainable materials." />
+        <title>Get a Free Quote | Green Cabinets NY</title>
+        <meta name="description" content="Request a free quote for custom kitchen cabinets and bathroom vanities from Green Cabinets in Bushwick, Brooklyn." />
+        <meta name="robots" content="noindex, nofollow" />
         <meta property="og:title" content="Get a Free Quote | Green Cabinets" />
         <meta property="og:description" content="Request a free quote for custom kitchen cabinets and bathroom vanities in Brooklyn." />
         <meta property="og:type" content="website" />

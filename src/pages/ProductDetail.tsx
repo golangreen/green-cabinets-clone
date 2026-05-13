@@ -63,16 +63,42 @@ export default function ProductDetail() {
     );
   }
 
+  const url = `https://greencabinetsny.com/product/${handle}`;
+  const desc = product.node.description?.substring(0, 160) || `Shop ${product.node.title} from Green Cabinets.`;
+  const image = product.node.images?.edges?.[0]?.node?.url;
+  const price = product.node.priceRange?.minVariantPrice;
+  const anyAvailable = product.node.variants?.edges?.some((v) => v.node.availableForSale);
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.node.title,
+    description: desc,
+    ...(image ? { image: [image] } : {}),
+    sku: product.node.handle,
+    brand: { "@type": "Brand", name: "Green Cabinets NY" },
+    offers: {
+      "@type": "Offer",
+      url,
+      priceCurrency: price?.currencyCode || "USD",
+      price: price?.amount || "0",
+      availability: anyAvailable
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+    },
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Helmet>
         <title>{product.node.title} | Green Cabinets Shop</title>
-        <meta name="description" content={product.node.description?.substring(0, 160) || `Shop ${product.node.title} from Green Cabinets.`} />
-        <link rel="canonical" href={`https://greencabinetsny.com/product/${handle}`} />
+        <meta name="description" content={desc} />
+        <link rel="canonical" href={url} />
         <meta property="og:title" content={`${product.node.title} | Green Cabinets`} />
-        <meta property="og:description" content={product.node.description?.substring(0, 160) || `Shop ${product.node.title} from Green Cabinets.`} />
+        <meta property="og:description" content={desc} />
         <meta property="og:type" content="product" />
-        <meta property="og:url" content={`https://greencabinetsny.com/product/${handle}`} />
+        <meta property="og:url" content={url} />
+        {image && <meta property="og:image" content={image} />}
+        <script type="application/ld+json">{JSON.stringify(productSchema)}</script>
       </Helmet>
       <BreadcrumbSchema
         items={[

@@ -17,7 +17,7 @@ import { PEOPLE, ORG_ID, AUTHOR_IDS } from "@/data/authors";
 const URL = "https://greencabinetsny.com/about";
 const TITLE = "About Green Cabinets NY — Bushwick Cabinet Shop Since 2009";
 const DESC =
-  "Meet the team behind Green Cabinets NY — founder Golan Achdary and project lead Andy Lopez. Custom kitchen cabinets, vanities, and millwork built in our Bushwick, Brooklyn shop since 2009.";
+  "Meet the team behind Green Cabinets NY — custom kitchens, vanities & millwork built in our Bushwick, Brooklyn shop since 2009.";
 
 const aboutSchema = {
   "@context": "https://schema.org",

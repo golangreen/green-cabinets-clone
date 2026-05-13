@@ -39,9 +39,9 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughSlug: "brooklyn",
     boroughName: "Brooklyn",
     url: `${BASE}/custom-kitchen-cabinets-bushwick`,
-    title: "Custom Kitchen Cabinets in Bushwick, Brooklyn | Green Cabinets NY",
+    title: "Custom Cabinets in Bushwick, Brooklyn | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets handcrafted in our Bushwick shop. Local Brooklyn cabinetmaker since 2009 — FSC-certified hardwoods, low-VOC finishes, free in-home consultation. (718) 804-5488.",
+      "Custom kitchen cabinets handcrafted in our Bushwick shop since 2009. FSC-certified hardwoods, low-VOC finishes, free in-home consultation. (718) 804-5488.",
     keywords:
       "custom kitchen cabinets Bushwick, Bushwick cabinet maker, Bushwick kitchen renovation, custom cabinetry Bushwick Brooklyn, Bushwick cabinet shop, kitchen cabinets 11206 11207 11221",
     heroTagline:
@@ -102,7 +102,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughName: "Brooklyn",
     url: `${BASE}/custom-kitchen-cabinets-williamsburg`,
     title:
-      "Custom Kitchen Cabinets in Williamsburg, Brooklyn | Green Cabinets NY",
+      "Custom Cabinets in Williamsburg, Brooklyn | Green Cabinets",
     description:
       "Custom kitchen cabinets in Williamsburg — loft conversions, brownstones, new construction. Built in our nearby Bushwick shop. Free consultation. (718) 804-5488.",
     keywords:
@@ -166,9 +166,9 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughName: "Brooklyn",
     url: `${BASE}/custom-kitchen-cabinets-park-slope`,
     title:
-      "Custom Kitchen Cabinets in Park Slope, Brooklyn | Green Cabinets NY",
+      "Custom Cabinets in Park Slope, Brooklyn | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets for Park Slope brownstones and co-ops. Built in our Bushwick shop, installed with care for historic homes. Free consultation. (718) 804-5488.",
+      "Custom kitchen cabinets for Park Slope brownstones and co-ops. Built in our Bushwick shop with care for historic homes. (718) 804-5488.",
     keywords:
       "custom kitchen cabinets Park Slope, Park Slope brownstone kitchen, Park Slope cabinet maker, custom cabinetry Park Slope, Park Slope kitchen renovation, kitchen cabinets 11215 11217",
     heroTagline:
@@ -227,7 +227,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughSlug: "manhattan",
     boroughName: "Manhattan",
     url: `${BASE}/custom-kitchen-cabinets-soho`,
-    title: "Custom Kitchen Cabinets in SoHo, Manhattan | Green Cabinets NY",
+    title: "Custom Cabinets in SoHo, Manhattan | Green Cabinets NY",
     description:
       "Custom kitchen cabinets for SoHo cast-iron lofts. Built in Brooklyn, installed with white-glove care. Co-op and condo board experience. (718) 804-5488.",
     keywords:
@@ -289,7 +289,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughName: "Queens",
     url: `${BASE}/custom-kitchen-cabinets-long-island-city`,
     title:
-      "Custom Kitchen Cabinets in Long Island City, Queens | Green Cabinets NY",
+      "LIC Custom Cabinets, Queens | Green Cabinets NY",
     description:
       "Custom kitchen cabinets for Long Island City condos and lofts. Built in our nearby Brooklyn shop. New construction and resale upgrades. (718) 804-5488.",
     keywords:
@@ -351,7 +351,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughSlug: "brooklyn",
     boroughName: "Brooklyn",
     url: `${BASE}/custom-kitchen-cabinets-dumbo`,
-    title: "Custom Kitchen Cabinets in DUMBO, Brooklyn | Green Cabinets NY",
+    title: "Custom Cabinets in DUMBO, Brooklyn | Green Cabinets NY",
     description:
       "Custom kitchen cabinets for DUMBO loft conversions and waterfront condos. Built in our Bushwick shop. Co-op and condo board experience. (718) 804-5488.",
     keywords:
@@ -414,7 +414,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughName: "Brooklyn",
     url: `${BASE}/custom-kitchen-cabinets-brooklyn-heights`,
     title:
-      "Custom Kitchen Cabinets in Brooklyn Heights | Green Cabinets NY",
+      "Custom Cabinets in Brooklyn Heights | Green Cabinets NY",
     description:
       "Custom kitchen cabinets for Brooklyn Heights brownstones, co-ops, and townhouses. Historic-district experience, white-glove install. (718) 804-5488.",
     keywords:
@@ -475,7 +475,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughSlug: "manhattan",
     boroughName: "Manhattan",
     url: `${BASE}/custom-kitchen-cabinets-tribeca`,
-    title: "Custom Kitchen Cabinets in Tribeca, Manhattan | Green Cabinets NY",
+    title: "Custom Cabinets in Tribeca, Manhattan | Green Cabinets NY",
     description:
       "Custom kitchen cabinets for Tribeca lofts and luxury condos. Cast-iron and column-aware design, white-glove install, board approval experience. (718) 804-5488.",
     keywords:
@@ -538,7 +538,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughName: "Manhattan",
     url: `${BASE}/custom-kitchen-cabinets-upper-east-side`,
     title:
-      "Custom Kitchen Cabinets in the Upper East Side, NYC | Green Cabinets NY",
+      "Custom Cabinets, Upper East Side NYC | Green Cabinets",
     description:
       "Custom kitchen cabinets for Upper East Side pre-war co-ops and townhouses. Inset painted cabinetry, board-approved installs. (718) 804-5488.",
     keywords:
@@ -599,7 +599,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     boroughSlug: "queens",
     boroughName: "Queens",
     url: `${BASE}/custom-kitchen-cabinets-astoria`,
-    title: "Custom Kitchen Cabinets in Astoria, Queens | Green Cabinets NY",
+    title: "Custom Cabinets in Astoria, Queens | Green Cabinets NY",
     description:
       "Custom kitchen cabinets for Astoria rowhouses, co-ops, and condos. Built in our nearby Brooklyn shop. Free in-home consultation. (718) 804-5488.",
     keywords:
