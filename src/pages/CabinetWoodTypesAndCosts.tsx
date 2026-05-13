@@ -243,6 +243,16 @@ const CabinetWoodTypesAndCosts = () => (
             <li><strong>Install</strong> — Brooklyn brownstone parlor floor is cheap; 5th-floor walk-up is not.</li>
           </ul>
 
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Frequently asked questions</h2>
+          <div className="space-y-5 mb-10">
+            {FAQ.map((f) => (
+              <div key={f.q} className="border-l-2 border-[#5C7650] pl-4 py-1">
+                <h3 className="font-bold text-foreground mb-1">{f.q}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.a}</p>
+              </div>
+            ))}
+          </div>
+
           <div className="p-6 border border-border rounded-lg bg-muted/30 mb-10">
             <h2 className="text-xl font-bold mb-2">Want a real number for your kitchen?</h2>
             <p className="text-sm text-muted-foreground mb-4">
