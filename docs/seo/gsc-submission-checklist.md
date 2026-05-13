@@ -2,7 +2,7 @@
 
 **Property:** `greencabinetsny.com` (Domain property recommended)
 **Sitemap:** `https://greencabinetsny.com/sitemap.xml`
-**Last updated:** 2026-05-13
+**Last updated:** 2026-05-13 (2026-05-13 16:34 UTC)
 
 ---
 
@@ -24,15 +24,15 @@ URL Inspection has a daily quota (~10/day, ~50/wk). Do all 7 in one sitting.
 
 The 7 new pages:
 
-| # | URL | Intent |
-|---|-----|--------|
-| 1 | `https://greencabinetsny.com/best-wood-for-kitchen-cabinets` | "best wood" pillar |
-| 2 | `https://greencabinetsny.com/cabinet-wood-types-and-costs` | "wood types and costs" pillar |
-| 3 | `https://greencabinetsny.com/natural-wood-kitchen-cabinets` | natural wood pillar |
-| 4 | `https://greencabinetsny.com/double-sink-vanity-guide` | double-sink vanity |
-| 5 | `https://greencabinetsny.com/floating-bathroom-vanity` | floating vanity |
-| 6 | `https://greencabinetsny.com/small-bathroom-vanity-ideas` | small-bath vanity |
-| 7 | `https://greencabinetsny.com/reach-in-closet-systems-nyc` | reach-in closet |
+| #   | URL                                                          | Intent                        |
+| --- | ---                                                          | ---                           |
+| 1   | `https://greencabinetsny.com/best-wood-for-kitchen-cabinets` | "best wood" pillar            |
+| 2   | `https://greencabinetsny.com/cabinet-wood-types-and-costs`   | "wood types and costs" pillar |
+| 3   | `https://greencabinetsny.com/natural-wood-kitchen-cabinets`  | natural wood pillar           |
+| 4   | `https://greencabinetsny.com/double-sink-vanity-guide`       | double-sink vanity            |
+| 5   | `https://greencabinetsny.com/floating-bathroom-vanity`       | floating vanity               |
+| 6   | `https://greencabinetsny.com/small-bathroom-vanity-ideas`    | small-bath vanity             |
+| 7   | `https://greencabinetsny.com/reach-in-closet-systems-nyc`    | reach-in closet               |
 
 **For each URL:**
 
@@ -47,15 +47,15 @@ The 7 new pages:
 
 ### Submission log
 
-| URL | Date submitted | Verdict before | Verdict after | Indexed? |
-|-----|---------------|----------------|---------------|----------|
-| /best-wood-for-kitchen-cabinets       |  |  |  |  |
-| /cabinet-wood-types-and-costs         |  |  |  |  |
-| /natural-wood-kitchen-cabinets        |  |  |  |  |
-| /double-sink-vanity-guide             |  |  |  |  |
-| /floating-bathroom-vanity             |  |  |  |  |
-| /small-bathroom-vanity-ideas          |  |  |  |  |
-| /reach-in-closet-systems-nyc          |  |  |  |  |
+| URL                             | Date submitted | Verdict before | Verdict after | Indexed? |
+| ---                             | ---            | ---            | ---           | ---      |
+| /best-wood-for-kitchen-cabinets |                |                |               |          |
+| /cabinet-wood-types-and-costs   |                |                |               |          |
+| /natural-wood-kitchen-cabinets  |                |                |               |          |
+| /double-sink-vanity-guide       |                |                |               |          |
+| /floating-bathroom-vanity       |                |                |               |          |
+| /small-bathroom-vanity-ideas    |                |                |               |          |
+| /reach-in-closet-systems-nyc    |                |                |               |          |
 
 ---
 
