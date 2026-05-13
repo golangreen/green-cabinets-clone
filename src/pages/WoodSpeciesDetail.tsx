@@ -313,7 +313,7 @@ const WoodSpeciesDetail = () => {
                           href={`#faq-${f.id}`}
                           className="text-sm text-[#5C7650] hover:text-[#445339] hover:underline leading-snug"
                         >
-                          <Highlight text={f.question} query={faqQuery} />
+                          <HighlightedText text={f.question} query={faqQuery} />
                         </a>
                       </li>
                     ))}
@@ -336,7 +336,7 @@ const WoodSpeciesDetail = () => {
                     <div key={f.id} id={`faq-${f.id}`} className="scroll-mt-24 group">
                       <dt className="font-semibold text-[#1a1a1a] mb-2 flex items-start gap-2">
                         <span className="flex-1">
-                          <Highlight text={f.question} query={faqQuery} />
+                          <HighlightedText text={f.question} query={faqQuery} />
                         </span>
                         <a
                           href={`#faq-${f.id}`}
@@ -347,7 +347,7 @@ const WoodSpeciesDetail = () => {
                         </a>
                       </dt>
                       <dd className="text-[#555555] leading-relaxed">
-                        <Highlight text={f.answer} query={faqQuery} />
+                        <HighlightedText text={f.answer} query={faqQuery} />
                       </dd>
                     </div>
                   ))}
@@ -486,5 +486,24 @@ const DetailList = ({ title, items }: { title: string; items: string[] }) => (
     </ul>
   </div>
 );
+
+const HighlightedText = ({ text, query }: { text: string; query: string }) => {
+  const q = query.trim();
+  if (!q) return <>{text}</>;
+  const parts = text.split(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "ig"));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === q.toLowerCase() ? (
+          <mark key={i} className="bg-[#5C7650]/20 text-[#1a1a1a] rounded px-0.5">
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+};
 
 export default WoodSpeciesDetail;
