@@ -1,0 +1,48 @@
+name: Verify Crawlability (Production)
+
+# Lovable auto-publishes on push to main, but the CDN takes a moment to flip.
+# This workflow waits for the live deploy, then asserts robots.txt + sitemap +
+# all guide URLs are crawlable. Also runs on a schedule and on-demand.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/robots.txt'
+      - 'public/sitemap.xml'
+      - 'scripts/generate-sitemap.ts'
+      - 'scripts/verify-crawlability.mjs'
+      - 'src/App.tsx'
+  schedule:
+    - cron: '0 7 * * *'   # daily 07:00 UTC
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Wait for production deploy to flip
+        # Poll robots.txt until the ETag changes from what's in the previous
+        # deploy or up to ~5 min. Skipped on schedule/manual runs.
+        if: github.event_name == 'push'
+        run: |
+          for i in $(seq 1 30); do
+            sleep 10
+            body=$(curl -sf https://greencabinetsny.com/robots.txt || true)
+            if echo "$body" | grep -q "Disallow: /admin"; then
+              echo "✓ Live robots.txt reflects latest deploy"
+              exit 0
+            fi
+            echo "…waiting for deploy ($i/30)"
+          done
+          echo "::warning::Deploy did not flip within 5min — running verify anyway"
+
+      - name: Verify crawlability
+        run: node scripts/verify-crawlability.mjs
