@@ -19,6 +19,9 @@ import ashImg from "@/assets/wood/ash.jpg";
 import mahoganyImg from "@/assets/wood/mahogany.jpg";
 import alderImg from "@/assets/wood/alder.jpg";
 import beechImg from "@/assets/wood/beech.jpg";
+import riftCutWhiteOakImg from "@/assets/wood/rift-cut-white-oak.jpg";
+import quartersawnOakImg from "@/assets/wood/quartersawn-oak.jpg";
+import rusticHickoryImg from "@/assets/wood/rustic-hickory.jpg";
 
 export type CostTier = "$" | "$$" | "$$$" | "$$$$";
 export type Workability = "Excellent" | "Very Good" | "Good" | "Moderate" | "Difficult";
