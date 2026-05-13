@@ -137,11 +137,14 @@ const CabinetWoodTypesAndCosts = () => (
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
             Cabinet Wood Types and Costs
           </h1>
-          <p className="text-base sm:text-lg text-[#444]">
+          <p className="text-base sm:text-lg text-[#444] mb-6">
             Every hardwood we mill at our Bushwick shop, with real cost premiums over our $350 per
             linear foot blended baseline. Use this to triage species before reading the
             individual deep-dives.
           </p>
+          <div className="flex justify-center">
+            <AuthorByline author="golan" label="Compiled by" />
+          </div>
         </div>
       </section>
 
