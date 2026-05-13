@@ -22,6 +22,7 @@ import beechImg from "@/assets/wood/beech.jpg";
 import riftCutWhiteOakImg from "@/assets/wood/rift-cut-white-oak.jpg";
 import quartersawnOakImg from "@/assets/wood/quartersawn-oak.jpg";
 import rusticHickoryImg from "@/assets/wood/rustic-hickory.jpg";
+import mapleOgImg from "@/assets/og/maple-cabinets-og.jpg";
 
 export type CostTier = "$" | "$$" | "$$$" | "$$$$";
 export type Workability = "Excellent" | "Very Good" | "Good" | "Moderate" | "Difficult";
@@ -188,6 +189,10 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       "Custom maple kitchen cabinets in NYC — painted shaker, natural slab, and stained finishes. Hard maple Janka 1,450, built in Brooklyn from $350/lf.",
     h1: "Maple Kitchen Cabinets",
     aboutHeading: "Hard Maple Cabinets — Painted, Natural & Stained",
+    ogTitle: "Maple Kitchen Cabinets — Painted Shaker & Natural Slab in NYC",
+    ogDescription:
+      "Custom hard maple cabinets, built in Brooklyn. Painted shaker, natural slab, and stained finishes from $350/lf — Janka 1,450 for daily NYC use.",
+    ogImage: mapleOgImg,
   },
   {
     slug: "walnut",

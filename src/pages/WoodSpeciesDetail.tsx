@@ -68,9 +68,21 @@ const WoodSpeciesDetail = () => {
         <link rel="canonical" href={url} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={url} />
-        <meta property="og:title" content={`${wood.name} Cabinets — Complete Guide`} />
-        <meta property="og:description" content={wood.shortDescription} />
-        <meta property="og:image" content={wood.image.startsWith("http") ? wood.image : `https://greencabinetsny.com${wood.image}`} />
+        <meta property="og:title" content={wood.ogTitle ?? wood.metaTitle ?? `${wood.name} Cabinets — Complete Guide`} />
+        <meta property="og:description" content={wood.ogDescription ?? wood.metaDescription ?? wood.shortDescription} />
+        <meta property="og:image" content={(() => {
+          const img = wood.ogImage ?? wood.image;
+          return img.startsWith("http") ? img : `https://greencabinetsny.com${img}`;
+        })()} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={wood.ogTitle ?? wood.metaTitle ?? `${wood.name} Cabinets`} />
+        <meta name="twitter:description" content={wood.ogDescription ?? wood.metaDescription ?? wood.shortDescription} />
+        <meta name="twitter:image" content={(() => {
+          const img = wood.ogImage ?? wood.image;
+          return img.startsWith("http") ? img : `https://greencabinetsny.com${img}`;
+        })()} />
         <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
