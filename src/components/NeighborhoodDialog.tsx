@@ -23,6 +23,18 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
   const dedicatedPage = neighborhood
     ? NEIGHBORHOOD_LIST.find((n) => n.name === neighborhood)
     : undefined;
+  const [isNight, setIsNight] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      const h = new Date().getHours();
+      const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+      setIsNight(h >= 22 || h < 6 || prefersDark);
+    };
+    check();
+    const id = setInterval(check, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
