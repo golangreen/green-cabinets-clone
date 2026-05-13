@@ -141,7 +141,7 @@ const WoodSpeciesDetail = () => {
         <section className="py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-3xl prose prose-neutral max-w-none">
             <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-6">
-              About {wood.name}
+              {wood.aboutHeading ?? `About ${wood.name}`}
             </h2>
             <div className="space-y-5 text-[#1a1a1a] leading-relaxed">
               {wood.longDescription.map((p, i) => (
