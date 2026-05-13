@@ -49,21 +49,14 @@ const ROWS: Row[] = [
   { slug: "mahogany", name: "Mahogany (Khaya)", janka: 1070, grain: "Open, ribboned", tier: "Luxury", premiumLf: "+$125 to +$250", bestFor: "High-gloss French polish, traditional libraries" },
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${URL}#article`,
+const articleSchema = buildArticleSchema({
+  url: URL,
   headline: TITLE,
   description: DESC,
-  author: authorRef("golan"),
-  publisher: { "@id": ORG_ID },
   datePublished: "2026-05-13",
-  dateModified: new Date().toISOString().slice(0, 10),
-  image: ["https://greencabinetsny.com/og-image.jpg"],
-  mainEntityOfPage: { "@type": "WebPage", "@id": URL },
   keywords:
     "cabinet wood types and costs, types of wood cabinets, cabinet wood, hardwood cabinet costs, kitchen cabinet wood prices, wood cabinet comparison",
-};
+});
 
 const itemListSchema = {
   "@context": "https://schema.org",
