@@ -1,0 +1,14 @@
+# Google Search Console disavow file for greencabinetsny.com
+# Upload at: https://search.google.com/search-console/disavow-links
+# Select property: greencabinetsny.com
+#
+# Generated 2026-05-13 — based on Semrush backlink audit
+# These domains contain spammy / paid / manipulative links
+# (anchor text patterns like "fiverr helped my greencabinetsny.com rank")
+
+domain:anchorurl.cloud
+domain:atomizelink.icu
+domain:quero.party
+domain:toplikevideo.com
+domain:8coint.com
+domain:simplyawesome232.blogspot.com
