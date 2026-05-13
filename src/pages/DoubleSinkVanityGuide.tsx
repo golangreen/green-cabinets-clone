@@ -10,8 +10,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Ruler, Droplets, DollarSign } from "lucide-react";
-import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/double-sink-vanity-guide";
 const TITLE = "Double Sink Vanity — Sizes, Layouts & NYC Cost Guide (2026)";
