@@ -55,7 +55,7 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
                 src={`https://www.google.com/maps?q=${encodeURIComponent(
                   info.mapQuery,
                 )}&z=14&output=embed`}
-                className="w-full h-full border-0 pointer-events-none dark:[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]"
+                className={`w-full h-full border-0 pointer-events-none transition-[filter] duration-500 ${isNight ? "[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]" : ""}`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
