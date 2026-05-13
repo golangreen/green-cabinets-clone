@@ -292,6 +292,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Plan on 10-12 weeks for custom walnut cabinets from a Brooklyn shop versus 6-8 weeks for red oak or maple. Walnut supply has stabilized post-pandemic but lead times remain longer than other domestic species due to careful color sorting required to manage sapwood-heartwood contrast.",
       },
     ],
+    faqHeading: "Walnut Cabinet FAQs — Sapwood, Cost, Lead Time & Aging",
   },
   {
     slug: "white-oak",
@@ -389,6 +390,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "White oak ambers slightly with UV exposure over 5-10 years, deepening the olive-tan tone toward a warmer honey-brown. The change is subtle and generally improves the appearance. A UV-protective topcoat slows but does not eliminate this natural aging.",
       },
     ],
+    faqHeading: "White Oak Cabinet FAQs — Rift, Quartersawn, Finishes & Care",
   },
   {
     slug: "red-oak",
@@ -480,6 +482,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Red oak ambers gently with UV exposure over 5-10 years, deepening from pinkish-red toward a warmer amber-brown. The change is subtle and generally improves the color, mellowing the pink undertone that can read as cold when new. A UV-protective topcoat slows but does not stop this aging.",
       },
     ],
+    faqHeading: "Red Oak Cabinet FAQs — Grain, Stain, Cost & Durability",
   },
   {
     slug: "birch",
@@ -527,6 +530,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Baltic birch is multi-ply European birch with no internal voids and consistent thin laminations. It is stiffer, screw-holds better, and finishes more cleanly than typical domestic plywood — the standard for premium cabinet boxes and drawer construction.",
       },
     ],
+    faqHeading: "Birch Cabinet FAQs — Paint Grade, Plywood & Value",
   },
   {
     slug: "cherry",
@@ -574,6 +578,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Most of the color shift happens in the first 6 months of normal indoor light exposure, then continues to deepen gradually for another year or two before stabilizing.",
       },
     ],
+    faqHeading: "Cherry Cabinet FAQs — Patina, Light Sensitivity & Care",
   },
   {
     slug: "hickory",
@@ -664,6 +669,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Hickory is less dimensionally stable than oak or maple, so it can move slightly in NYC's seasonal humidity swings (25% RH in winter, 75% in summer). A quality conversion varnish or hardwax oil topcoat plus running HVAC during humidity peaks keeps doors flat and joints tight. Avoid raw hickory near dishwashers or sinks.",
       },
     ],
+    faqHeading: "Hickory Cabinet FAQs — Hardness, Color Variation & Movement",
   },
   {
     slug: "ash",
@@ -711,6 +717,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "For many modern kitchens, yes — ash offers similar grain texture and density at a lower price, with a more neutral color base that suits cerused and limed finishes especially well.",
       },
     ],
+    faqHeading: "White Ash Cabinet FAQs — Cerused Finishes, Grain & Cost",
   },
   {
     slug: "mahogany",
@@ -758,6 +765,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Botanically they are different genera (Khaya vs Swietenia) but they share visual character and workability. African mahogany is more sustainable and widely available, so we recommend it for nearly all new projects.",
       },
     ],
+    faqHeading: "Mahogany Cabinet FAQs — Sustainability, Color & Sourcing",
   },
   {
     slug: "alder",
@@ -805,6 +813,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "For residential use, yes — alder has been a mainstream cabinet wood for decades. For high-traffic commercial use or households that are hard on furniture, harder options like maple, oak, or hickory are a better fit.",
       },
     ],
+    faqHeading: "Knotty Alder Cabinet FAQs — Hardness, Stain & Rustic Looks",
   },
   {
     slug: "beech",
@@ -852,6 +861,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "They are very similar in density and grain — beech runs slightly pinker, is a touch less dimensionally stable, and is more common in European cabinetry while maple dominates American shops.",
       },
     ],
+    faqHeading: "European Beech Cabinet FAQs — Color, Stability & Use",
   },
   {
     slug: "rift-cut-white-oak",
@@ -933,6 +943,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "It works beautifully for both. Rift-cut shaker is becoming as common as rift-cut slab in NYC kitchens — the straight grain on the rails and stiles plus the calm panel reads as a refined, slightly traditional take on the modern oak look.",
       },
     ],
+    faqHeading: "Rift-Cut White Oak FAQs — Grain, Slab vs Shaker & Cost",
   },
   {
     slug: "quartersawn-oak",
@@ -1016,6 +1027,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Hardwax oils and clear conversion varnishes preserve the fleck's natural iridescence. Fumed finishes (the traditional Mission look) deepen the background while leaving the fleck visible. Avoid heavy pigment stains, which obscure the ray fleck entirely.",
       },
     ],
+    faqHeading: "Quartersawn Oak Cabinet FAQs — Ray Fleck, Mission Style & Finishes",
   },
   {
     slug: "rustic-hickory",
@@ -1099,6 +1111,7 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Reasonably well — better than walnut, not as well as white oak. Hickory is dense and strong but not exceptionally dimensionally stable. For NYC kitchens we recommend a quality conversion varnish or hardwax oil topcoat and running the HVAC during humidity peaks. Avoid raw hickory next to dishwashers or sinks without splash guards.",
       },
     ],
+    faqHeading: "Rustic Hickory Cabinet FAQs — Knots, Color Range & Care",
   },
 ];
 
