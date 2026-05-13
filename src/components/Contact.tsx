@@ -97,6 +97,23 @@ const Contact = () => {
               Get Directions ↗
             </span>
           </a>
+
+          {/* Neighborhood + Landmarks */}
+          <div className="mt-4 p-4 sm:p-5 rounded-xl bg-[#5C7650]/5 border border-[#5C7650]/10">
+            <div className="flex items-start gap-3">
+              <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+              <div className="text-sm md:text-base text-[#666666]">
+                <p className="font-semibold text-[#1a1a1a] mb-1">
+                  Bushwick, Brooklyn
+                </p>
+                <p>
+                  Near the Morgan Ave L train, Maria Hernandez Park, and the
+                  East Williamsburg industrial corridor — a short ride from
+                  Williamsburg, Bed-Stuy, and Ridgewood.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* CTA Buttons */}
