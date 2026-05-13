@@ -237,7 +237,7 @@ const WoodSpeciesDetail = () => {
           <section className="py-12 sm:py-16 bg-muted/40">
             <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
               <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-8 text-center">
-                Frequently Asked Questions
+                {wood.faqHeading ?? "Frequently Asked Questions"}
               </h2>
               <dl className="space-y-6">
                 {wood.faqs.map((f) => (
