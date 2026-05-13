@@ -232,6 +232,7 @@ const DoubleSinkVanityGuide = () => (
             <li><Link to="/floating-bathroom-vanity" className="text-[#5C7650] hover:underline">Floating vs. legs vs. furniture-style vanities</Link></li>
             <li><Link to="/small-bathroom-vanity-ideas" className="text-[#5C7650] hover:underline">Small bathroom vanity ideas under 36"</Link></li>
             <li><Link to="/best-wood-for-kitchen-cabinets" className="text-[#5C7650] hover:underline">Best wood for cabinetry — also applies to vanities</Link></li>
+            <li><Link to="/reach-in-closet-systems-nyc" className="text-[#5C7650] hover:underline">Reach-in closet systems for NYC apartments</Link></li>
           </ul>
         </div>
       </section>
