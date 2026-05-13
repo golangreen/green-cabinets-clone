@@ -77,6 +77,11 @@ export interface WoodSpecies {
   metaDescription?: string;
   h1?: string;
   aboutHeading?: string;
+  /** Open Graph / social-share overrides. Fall back to metaTitle/metaDescription/image. */
+  ogTitle?: string;
+  ogDescription?: string;
+  /** Imported asset path (Vite handles bundling) or absolute URL. */
+  ogImage?: string;
 }
 
 export const WOOD_SPECIES: WoodSpecies[] = [
