@@ -603,6 +603,253 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       },
     ],
   },
+  {
+    slug: "rift-cut-white-oak",
+    name: "Rift-Cut White Oak",
+    scientificName: "Quercus alba (rift sawn)",
+    origin: "Eastern U.S.",
+    tagline: "The defining cut of modern luxury kitchens.",
+    shortDescription:
+      "Rift-cut white oak shows tight, ruler-straight vertical grain with no cathedral arches. It's the most consistent door-to-door look in cabinetry and the signature of post-2018 high-end design.",
+    longDescription: [
+      "Rift-cut white oak (Quercus alba, rift sawn) is the same species as standard white oak — but the cut transforms its visual character. Rift sawing slices the log at a 30-to-60 degree angle to the growth rings, producing boards with tight, parallel grain lines that run dead straight from end to end. There are no cathedral arches, no wild figure, and almost no ray fleck. The result is the calmest, most modern-looking face grain in commercial cabinetry.",
+      "Designers love rift-cut for one specific reason: door-to-door consistency. On a 14-foot wall of slab fronts, plain-sawn lumber gives you visible variation between every door — some show full arches, some show partial figure, some show almost nothing. Rift-cut eliminates that visual noise. Every door reads identical, which is exactly what minimalist and modern kitchens demand. This is why every shelter magazine kitchen since roughly 2018 specifies rift-cut white oak.",
+      "The trade-off is yield. A log sawn for rift produces only 25-30% rift-quality boards versus 60-70% plain-sawn yield. That cuts log value sharply, which is why rift-cut white oak runs roughly 30-40% more per board foot than plain-sawn — currently $14-$18/bf in the NYC market versus $10-$12 for plain. For a typical 30-linear-foot kitchen, expect a $2,500-$4,000 lumber premium over plain-sawn white oak.",
+      "Rift-cut takes the same finishing palette as standard white oak: hardwax oils for natural warmth, fumed and smoked finishes for cool gray tones, cerused white for textural contrast, and reactive iron-acetate for blackened looks. Pair with brass, blackened steel, or warm nickel hardware. We do not recommend painting rift-cut — paying the rift premium and then covering the grain defeats the purpose.",
+      "In Brooklyn and Manhattan brownstones we typically specify rift-cut for slab fronts on contemporary kitchens, and pair with plain-sawn white oak floors below. The two cuts of the same species play together beautifully without matching exactly. For Park Slope and Williamsburg lofts, rift-cut shaker doors with a hardwax oil finish have become the de facto signature look.",
+    ],
+    jankaHardness: 1360,
+    specificGravity: 0.68,
+    costTier: "$$$$",
+    color: "Light to medium tan with olive undertones",
+    grain: "Tight, vertical, ruler-straight",
+    workability: "Good",
+    stainTake: "Excellent",
+    stability: 5,
+    uses: ["Modern slab fronts", "Minimalist shaker", "Floor-to-ceiling pantries", "Custom range hoods"],
+    pros: [
+      "Most consistent door-to-door grain match available",
+      "Reads as calm and modern — no cathedral noise",
+      "More dimensionally stable than plain-sawn (cuts perpendicular to rings)",
+      "Same hardness and water resistance as plain white oak",
+    ],
+    cons: [
+      "30-40% more expensive per board foot than plain-sawn",
+      "Lower yield = longer lead times for custom widths",
+      "Wastes the cut's beauty if you plan to paint it",
+      "Less character than plain-sawn for traditional kitchens",
+    ],
+    bestFinishes: ["Hardwax oil natural", "Fumed/smoked", "Cerused white", "Rubio Monocoat Pure"],
+    bestDoorStyles: ["Slab", "Shaker", "Reeded", "Frameless European"],
+    swatch: "#c9a877",
+    image: whiteOakImg,
+    grainImage: whiteOakImg,
+    keywords: [
+      "rift cut white oak",
+      "rift cut white oak cabinets",
+      "rift sawn white oak NYC",
+      "modern white oak kitchen",
+      "white oak slab cabinets",
+    ],
+    faqs: [
+      {
+        question: "What is the difference between rift-cut and plain-sawn white oak?",
+        answer:
+          "Plain-sawn shows wide cathedral arches and varies dramatically board-to-board. Rift-cut shows tight, parallel vertical lines and reads almost identical from one door to the next. Rift is preferred for modern minimalist kitchens; plain-sawn for traditional or farmhouse looks.",
+      },
+      {
+        question: "How much more does rift-cut cost than plain-sawn?",
+        answer:
+          "Roughly 30-40% more per board foot. In the NYC market, plain-sawn white oak runs $10-$12/bf while rift-cut runs $14-$18/bf. On a typical 30-linear-foot kitchen, that's a $2,500-$4,000 lumber premium.",
+      },
+      {
+        question: "Is rift-cut white oak worth the premium?",
+        answer:
+          "If you're doing a contemporary slab or minimalist shaker kitchen with long uninterrupted runs of cabinetry, yes — the door-to-door consistency is impossible to replicate any other way. For shorter runs, traditional styles, or painted finishes, plain-sawn is the smarter spend.",
+      },
+      {
+        question: "Can rift-cut white oak be stained dark?",
+        answer:
+          "Yes, but think twice. Rift-cut's value is its calm grain — staining it dark obscures the very thing you paid extra for. Most designers pair rift-cut with hardwax oil natural, fumed, or reactive finishes that preserve grain visibility.",
+      },
+      {
+        question: "What's the lead time on rift-cut white oak in NYC?",
+        answer:
+          "Plan on 8-10 weeks for a full custom kitchen versus 6-8 weeks for plain-sawn, due to lower yield from each log and tighter sourcing on consistent widths. We hold inventory of common widths to compress this when possible.",
+      },
+      {
+        question: "Does rift-cut work for shaker cabinets or only slab?",
+        answer:
+          "It works beautifully for both. Rift-cut shaker is becoming as common as rift-cut slab in NYC kitchens — the straight grain on the rails and stiles plus the calm panel reads as a refined, slightly traditional take on the modern oak look.",
+      },
+    ],
+  },
+  {
+    slug: "quartersawn-oak",
+    name: "Quartersawn Oak",
+    scientificName: "Quercus alba / Quercus rubra (quartersawn)",
+    origin: "Eastern U.S.",
+    tagline: "Iridescent ray fleck and the soul of Mission and Greene & Greene.",
+    shortDescription:
+      "Quartersawn oak is sliced perpendicular to the growth rings, exposing the medullary rays as shimmering silver-gold ribbons. It is the defining wood of Arts & Crafts, Mission, and Stickley furniture.",
+    longDescription: [
+      "Quartersawn oak is produced by cutting the log into quarters and then sawing each quarter into boards perpendicular to the growth rings. The cut exposes the wood's medullary rays — radial structures that move nutrients horizontally through the trunk — as iridescent silver-gold or copper ribbons that shimmer when light hits the surface. This 'ray fleck' is the visual signature of Mission furniture, Stickley pieces, Greene & Greene millwork, and the entire American Arts & Crafts movement of 1900-1920.",
+      "Both white oak and red oak can be quartersawn, but white oak produces dramatically more visible ray fleck because its medullary rays are larger and more numerous. When designers say 'quartersawn oak' without qualification, they almost always mean quartersawn white oak. Red oak quartersawn shows subtler fleck and reads more like rift-cut — less collectible, but more affordable.",
+      "Quartersawn lumber is the most dimensionally stable cut available from any species. Because the growth rings run perpendicular to the board face, the wood expands and contracts much less across its width with humidity changes. For NYC kitchens that swing from 25% relative humidity in February to 75% in July, this stability is genuinely useful — quartersawn doors and panels stay flatter, and joints stay tighter, than the same species cut plain or rift.",
+      "The cost is significant. Quartersawn yield from a log is the lowest of any cut — typically 15-20% versus 60% plain-sawn. Expect quartersawn white oak in the NYC market to run $18-$24/board foot, roughly double plain-sawn and 30-40% above rift-cut. For a 30-linear-foot kitchen, that's a $5,000-$8,000 lumber premium over plain-sawn.",
+      "Finish quartersawn oak to celebrate the ray fleck, not hide it. Traditional Mission finishes used fuming with ammonia (a chemical reaction with white oak's tannins that produced the deep brown of original Stickley pieces) followed by a thin shellac or oil topcoat. Modern equivalents include hardwax oils, conversion varnishes in clear or amber, and reactive iron-acetate finishes. Avoid heavy pigment stains that obscure the fleck.",
+      "Best uses in cabinetry: feature islands, libraries and built-ins, range hoods, statement pantries, and bathroom vanities where the fleck becomes a design moment. For a full kitchen of cabinets, the cost can become prohibitive — many of our Brooklyn and Manhattan clients specify quartersawn for the island and a few key pieces, and rift-cut or plain-sawn for the perimeter cabinets, blending cuts of the same species.",
+    ],
+    jankaHardness: 1360,
+    specificGravity: 0.68,
+    costTier: "$$$$",
+    color: "Tan to medium brown with shimmering ray fleck",
+    grain: "Straight grain face with prominent medullary ray fleck",
+    workability: "Good",
+    stainTake: "Excellent",
+    stability: 5,
+    uses: ["Mission/Craftsman cabinetry", "Feature islands", "Library millwork", "Custom range hoods", "Statement vanities"],
+    pros: [
+      "Most dimensionally stable cut available — minimal seasonal movement",
+      "Iridescent ray fleck is impossible to replicate any other way",
+      "Defining wood of American Arts & Crafts and Mission style",
+      "Holds tight joinery in NYC's humidity swings",
+    ],
+    cons: [
+      "Most expensive cut of oak — roughly 2× plain-sawn cost",
+      "Lowest yield per log = longest lead times (10-14 weeks)",
+      "Strong visual character can overwhelm minimalist designs",
+      "Ray fleck makes inconsistent panel matching harder to manage",
+    ],
+    bestFinishes: ["Fumed (ammonia)", "Hardwax oil natural", "Amber shellac", "Reactive iron-acetate"],
+    bestDoorStyles: ["Mission/Craftsman flat panel", "Inset shaker", "Slab (for modern fleck-forward)", "Raised panel"],
+    swatch: "#a37a4f",
+    image: whiteOakImg,
+    grainImage: whiteOakImg,
+    keywords: [
+      "quartersawn oak cabinets",
+      "quartersawn white oak NYC",
+      "mission style cabinets",
+      "stickley style oak",
+      "ray fleck oak",
+      "craftsman kitchen cabinets",
+    ],
+    faqs: [
+      {
+        question: "What is the difference between quartersawn, rift-cut, and plain-sawn oak?",
+        answer:
+          "It's all about how the log is sliced. Plain-sawn cuts parallel to one face (cathedral grain, cheapest, ~60% yield). Rift-cut slices at a 30-60° angle to the rings (straight vertical grain, no fleck, ~25% yield). Quartersawn cuts perpendicular to the rings (straight grain plus shimmering ray fleck, ~15-20% yield, most expensive).",
+      },
+      {
+        question: "Why is quartersawn oak associated with Mission furniture?",
+        answer:
+          "Gustav Stickley and the early-1900s Arts & Crafts movement chose quartersawn white oak specifically for its ray fleck — they viewed it as honest expression of the wood's structure, in contrast to ornate Victorian veneers. The fumed finish on original Stickley pieces is what produces that signature dark brown.",
+      },
+      {
+        question: "How much more does quartersawn cost than plain-sawn?",
+        answer:
+          "In the NYC market, quartersawn white oak runs $18-$24/board foot versus $10-$12 for plain-sawn — roughly double. On a typical 30-linear-foot kitchen, expect a $5,000-$8,000 lumber premium. Many clients specify quartersawn only for the island and feature pieces to manage cost.",
+      },
+      {
+        question: "Is quartersawn red oak the same thing?",
+        answer:
+          "Both species can be quartersawn, but red oak shows much subtler ray fleck because its medullary rays are smaller. When designers say 'quartersawn oak' without qualifying, they nearly always mean white oak. Quartersawn red oak is roughly 25% cheaper and reads more like rift-cut.",
+      },
+      {
+        question: "Can quartersawn oak be used in modern kitchens?",
+        answer:
+          "Yes, but selectively. The ray fleck reads as strong character — beautiful in transitional and maximalist designs, potentially overwhelming in pure minimalist kitchens. A common solution is quartersawn on a single feature element (island, range hood, or pantry wall) with rift-cut elsewhere.",
+      },
+      {
+        question: "What finish best showcases ray fleck?",
+        answer:
+          "Hardwax oils and clear conversion varnishes preserve the fleck's natural iridescence. Fumed finishes (the traditional Mission look) deepen the background while leaving the fleck visible. Avoid heavy pigment stains, which obscure the ray fleck entirely.",
+      },
+    ],
+  },
+  {
+    slug: "rustic-hickory",
+    name: "Rustic Hickory",
+    scientificName: "Carya ovata (with character grade)",
+    origin: "Eastern & Central U.S.",
+    tagline: "The hardest domestic hardwood — with knots, color swings, and farmhouse soul.",
+    shortDescription:
+      "Rustic hickory is character-grade hickory selected for visible knots, mineral streaks, and dramatic heartwood-sapwood contrast. It is the signature wood of mountain modern, farmhouse, and lodge-style kitchens.",
+    longDescription: [
+      "Rustic hickory (Carya ovata, character grade) is the same species as standard hickory — but instead of selecting clean, uniform boards, the rustic grade celebrates the wood's natural variation. Expect dramatic contrast between creamy white sapwood and deep reddish-brown heartwood, prominent knots (sound and tight), mineral streaks, and occasional bark inclusions. Every door tells a different story, which is exactly the point.",
+      "Hickory in any grade is the hardest commercial domestic hardwood, with a Janka hardness of 1,820 lbf — roughly 25% harder than hard maple and 40% harder than red oak. That makes it functionally bulletproof for kitchen cabinets. Doors and drawer fronts shrug off impacts that would visibly dent maple or oak. For families with kids, dogs, or active cooking households, hickory is the most damage-tolerant wood you can specify.",
+      "The aesthetic is unmistakable: warm, rustic, and unapologetically Americana. Rustic hickory is the defining wood of Aspen ski lodges, Tahoe mountain houses, Texas hill-country ranches, and the contemporary farmhouse trend that swept American interiors after 2015. In NYC it works particularly well in Catskills weekend houses, Hamptons farmhouses, and Brooklyn brownstones aiming for warmth against industrial counters.",
+      "Working with rustic hickory requires planning. The wood is dense, hard on tooling, and prone to splitting if pre-drilled inadequately — our shop runs sharper bits at slower feed rates than for maple work. Color sorting takes longer because the goal is intentional variation, not consistency. Expect 10-15% more shop time than for clean-grade material, which we factor into pricing.",
+      "Cost-wise, rustic hickory typically runs 10-15% less than clean-grade hickory because more of the log is usable when knots and color variation are features, not defects. In the NYC market, rustic hickory runs roughly $9-$11/board foot — comparable to red oak. That makes it the most cost-effective way to get a true farmhouse-character wood without the price tag of walnut or cherry.",
+      "Finish to enhance the natural variation: hardwax oils, satin conversion varnishes, and amber shellacs all let the heartwood-sapwood contrast and grain figure read clearly. Avoid heavy pigment stains that flatten the variation — if you wanted uniform color you should have specified clean-grade. For a more refined take, a thin clear coat over raw hickory delivers maximum character with minimal sheen.",
+    ],
+    jankaHardness: 1820,
+    specificGravity: 0.72,
+    costTier: "$$",
+    color: "Dramatic creamy white sap to reddish-brown heart with knots",
+    grain: "Bold, open, often wavy, with mineral streaks and tight knots",
+    workability: "Moderate",
+    stainTake: "Good",
+    stability: 3,
+    uses: ["Farmhouse kitchens", "Mountain modern", "Lodge-style cabinetry", "Heavy-use family kitchens", "Mudroom built-ins"],
+    pros: [
+      "Hardest domestic cabinet wood — Janka 1,820 lbf",
+      "Distinctive farmhouse and mountain-modern character",
+      "More affordable than clean-grade hickory (10-15% less)",
+      "Hides dents, scratches, and dings exceptionally well",
+    ],
+    cons: [
+      "Strong visual character not for minimalist kitchens",
+      "Hard on tooling — slightly higher labor cost",
+      "Less dimensionally stable than oak or maple in humidity swings",
+      "Requires intentional color sorting to balance panels",
+    ],
+    bestFinishes: ["Clear hardwax oil", "Satin conversion varnish", "Amber shellac", "Light natural stain"],
+    bestDoorStyles: ["Shaker", "Raised panel", "Beaded inset", "Plank-style slab"],
+    swatch: "#9c6b3f",
+    image: hickoryImg,
+    grainImage: hickoryImg,
+    keywords: [
+      "rustic hickory cabinets",
+      "rustic hickory kitchen cabinets",
+      "character grade hickory",
+      "farmhouse kitchen cabinets",
+      "mountain modern cabinets",
+      "knotty hickory cabinets",
+    ],
+    faqs: [
+      {
+        question: "What's the difference between rustic and clean-grade hickory?",
+        answer:
+          "Same species, different selection. Clean-grade hickory is sorted to minimize knots and color variation for a more uniform look. Rustic (or character) grade celebrates knots, mineral streaks, and dramatic heartwood-sapwood contrast. Rustic actually costs 10-15% less because more of the log is usable.",
+      },
+      {
+        question: "Is hickory really the hardest domestic cabinet wood?",
+        answer:
+          "Yes. Hickory's Janka hardness of 1,820 lbf is the highest of any commercially harvested North American hardwood used in cabinetry — roughly 25% harder than hard maple, 40% harder than red oak, and 80% harder than walnut. For high-impact use, nothing else comes close.",
+      },
+      {
+        question: "Does rustic hickory work outside of farmhouse style?",
+        answer:
+          "Yes — it's increasingly popular in mountain modern and transitional kitchens that want warmth and character without going full farmhouse. Pair with concrete or quartz counters and matte black hardware to dial back the rustic feel. It's a tougher sell for pure minimalist or contemporary kitchens.",
+      },
+      {
+        question: "How much do rustic hickory cabinets cost in NYC?",
+        answer:
+          "Rustic hickory runs roughly $9-$11/board foot in the NYC market, which is comparable to red oak and about 30% less than walnut. For a typical 30-linear-foot kitchen, expect rustic hickory to cost $2,000-$3,000 less than clean-grade hickory and roughly $4,000-$6,000 less than walnut of equivalent construction.",
+      },
+      {
+        question: "Will the heartwood-sapwood contrast bother me over time?",
+        answer:
+          "If contrast is a concern, rustic hickory is the wrong choice — that contrast is the entire aesthetic. Both heartwood and sapwood will mellow slightly with UV exposure, but the dramatic difference between them is permanent. Clients who love rustic hickory after install almost always cite the contrast as their favorite feature.",
+      },
+      {
+        question: "Does rustic hickory hold up in humid kitchens?",
+        answer:
+          "Reasonably well — better than walnut, not as well as white oak. Hickory is dense and strong but not exceptionally dimensionally stable. For NYC kitchens we recommend a quality conversion varnish or hardwax oil topcoat and running the HVAC during humidity peaks. Avoid raw hickory next to dishwashers or sinks without splash guards.",
+      },
+    ],
+  },
 ];
 
 export const getWoodSpecies = (slug: string): WoodSpecies | undefined =>
