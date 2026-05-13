@@ -210,6 +210,30 @@ for (const p of extraGuides) {
   log(false, `  extra:   ${p}`);
 }
 
+// 2b.1 Hard count safeguard — total guide-like URLs must equal expected count.
+//      Catches accidental new pages slipping into the indexable guide namespace
+//      even if they happen to satisfy individual checks.
+const expectedCount = EXPECTED_GUIDES.length;
+const actualCount = sitemapGuides.size;
+const countOk = actualCount === expectedCount;
+log(
+  countOk,
+  `guide-like URL count = ${actualCount} (expected exactly ${expectedCount})`,
+);
+if (!countOk) {
+  const delta = actualCount - expectedCount;
+  const sign = delta > 0 ? "+" : "";
+  fails.push(
+    `sitemap guide count mismatch: expected ${expectedCount}, got ${actualCount} (${sign}${delta}). ` +
+      `Update EXPECTED_GUIDES in scripts/verify-crawlability.mjs if this is intentional.`,
+  );
+  console.log(c.dim(`    all guide-like URLs in sitemap (${actualCount}):`));
+  for (const p of [...sitemapGuides].sort()) {
+    const marker = expectedSet.has(p) ? c.green("✓") : c.yellow("?");
+    console.log(`      ${marker} ${p}`);
+  }
+}
+
 // 2c. Each expected guide must appear with the EXACT canonical absolute form.
 const exactGuideMismatches = [];
 for (const p of EXPECTED_GUIDES) {
