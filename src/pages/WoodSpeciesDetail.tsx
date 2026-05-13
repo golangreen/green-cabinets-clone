@@ -34,7 +34,7 @@ const WoodSpeciesDetail = () => {
     "@type": "Article",
     headline: `${wood.name} Cabinets — Complete Guide`,
     description: wood.shortDescription,
-    image: [wood.image],
+    image: [wood.image.startsWith("http") ? wood.image : `https://greencabinetsny.com${wood.image}`],
     datePublished: "2024-01-15",
     dateModified: isoToday,
     author: { "@type": "Organization", name: "Green Cabinets NY", url: "https://greencabinetsny.com" },
