@@ -93,6 +93,21 @@ export const WOOD_COMPARISONS: Record<string, WoodComparison[]> = {
       title: "Red Oak vs Quartersawn Oak",
       blurb: "Affordable cathedral grain vs premium ray-fleck — same family, very different look and price.",
     },
+    {
+      slug: "walnut",
+      title: "Red Oak vs Walnut",
+      blurb: "Affordable warm-pink classic vs premium chocolate hardwood — wildly different price tiers, both stain-grade icons.",
+    },
+    {
+      slug: "maple",
+      title: "Red Oak vs Maple",
+      blurb: "Open cathedral grain vs tight closed grain — and why painted oak almost never works while painted maple always does.",
+    },
+    {
+      slug: "hickory",
+      title: "Red Oak vs Hickory",
+      blurb: "Janka 1290 vs 1820 — when you need maximum dent resistance and don't mind the wilder color variation.",
+    },
   ],
   walnut: [
     {
