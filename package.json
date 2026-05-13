@@ -14,6 +14,7 @@
     "validate:jsonld": "node scripts/validate-localbusiness-jsonld.mjs",
     "indexnow": "node scripts/indexnow-submit.mjs",
     "verify:pillars": "node scripts/verify-pillar-pages.mjs",
+    "refresh:gsc-checklist": "node scripts/refresh-gsc-checklist.mjs",
     "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest",
