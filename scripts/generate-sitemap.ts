@@ -5,6 +5,7 @@ import { resolve } from "path";
 import { NEIGHBORHOODS } from "../src/data/neighborhoodSeo";
 import { BOROUGHS } from "../src/data/boroughSeo";
 import { WOOD_SPECIES } from "../src/data/woodSpecies";
+import { CASE_STUDIES } from "../src/data/caseStudies";
 
 const BASE_URL = "https://greencabinetsny.com";
 const today = new Date().toISOString().slice(0, 10);
