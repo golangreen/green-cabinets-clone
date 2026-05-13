@@ -3,14 +3,16 @@
  * Long-form SEO content with multi-paragraph copy, spec table,
  * pros/cons, FAQ, related species, and CTA.
  */
+import { useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams, Link, Navigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, X, ArrowRight, ArrowLeft, Link2 } from "lucide-react";
+import { Check, X, ArrowRight, ArrowLeft, Link2, Search } from "lucide-react";
 import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
 import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
@@ -18,6 +20,7 @@ import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
 const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
+  const [faqQuery, setFaqQuery] = useState("");
   const wood = slug ? getWoodSpecies(slug) : undefined;
 
   if (!wood) return <Navigate to="/wood-species" replace />;
@@ -39,6 +42,15 @@ const WoodSpeciesDetail = () => {
   const faqSlug = (q: string) =>
     q.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").slice(0, 80);
   const faqsWithIds = wood.faqs.map((f) => ({ ...f, id: faqSlug(f.question) }));
+
+  // Client-side FAQ filter — matches against question + answer, case-insensitive.
+  const filteredFaqs = useMemo(() => {
+    const q = faqQuery.trim().toLowerCase();
+    if (!q) return faqsWithIds;
+    return faqsWithIds.filter(
+      (f) => f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q)
+    );
+  }, [faqQuery, faqsWithIds]);
 
   const isoToday = new Date().toISOString().slice(0, 10);
   const articleSchema = {
@@ -248,40 +260,99 @@ const WoodSpeciesDetail = () => {
                 {wood.faqHeading ?? "Frequently Asked Questions"}
               </h2>
 
-              {/* Jump-to TOC */}
-              <nav aria-label="FAQ contents" className="mb-10 rounded-lg border border-border bg-background p-5">
-                <p className="text-sm font-semibold text-[#1a1a1a] mb-3">Jump to a question</p>
-                <ul className="space-y-2">
-                  {faqsWithIds.map((f) => (
-                    <li key={`toc-${f.id}`}>
-                      <a
-                        href={`#faq-${f.id}`}
-                        className="text-sm text-[#5C7650] hover:text-[#445339] hover:underline leading-snug"
-                      >
-                        {f.question}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+              {/* Search filter */}
+              <form
+                role="search"
+                aria-label="Search FAQs"
+                className="relative mb-6"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (filteredFaqs.length > 0) {
+                    const el = document.getElementById(`faq-${filteredFaqs[0].id}`);
+                    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    history.replaceState(null, "", `#faq-${filteredFaqs[0].id}`);
+                  }
+                }}
+              >
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                <Input
+                  type="search"
+                  value={faqQuery}
+                  onChange={(e) => setFaqQuery(e.target.value)}
+                  placeholder={`Search ${wood.name} FAQs (e.g. "paint", "cost", "warp")…`}
+                  aria-label={`Search ${wood.name} FAQs`}
+                  className="pl-9 pr-24 h-11 bg-background"
+                />
+                {faqQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setFaqQuery("")}
+                    aria-label="Clear search"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-[#1a1a1a]"
+                  >
+                    Clear
+                  </button>
+                )}
+              </form>
+              <p className="text-xs text-muted-foreground mb-8 text-center" aria-live="polite">
+                {faqQuery
+                  ? `${filteredFaqs.length} of ${faqsWithIds.length} matching${filteredFaqs.length === 1 ? " — press Enter to jump" : ""}`
+                  : `${faqsWithIds.length} questions`}
+              </p>
 
-              <dl className="space-y-6">
-                {faqsWithIds.map((f) => (
-                  <div key={f.id} id={`faq-${f.id}`} className="scroll-mt-24 group">
-                    <dt className="font-semibold text-[#1a1a1a] mb-2 flex items-start gap-2">
-                      <span className="flex-1">{f.question}</span>
-                      <a
-                        href={`#faq-${f.id}`}
-                        aria-label={`Link to: ${f.question}`}
-                        className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#5C7650] hover:text-[#445339] transition-opacity mt-1 shrink-0"
-                      >
-                        <Link2 className="w-4 h-4" />
-                      </a>
-                    </dt>
-                    <dd className="text-[#555555] leading-relaxed">{f.answer}</dd>
-                  </div>
-                ))}
-              </dl>
+              {/* Jump-to TOC (filtered) */}
+              {filteredFaqs.length > 0 && (
+                <nav aria-label="FAQ contents" className="mb-10 rounded-lg border border-border bg-background p-5">
+                  <p className="text-sm font-semibold text-[#1a1a1a] mb-3">
+                    {faqQuery ? "Matching questions" : "Jump to a question"}
+                  </p>
+                  <ul className="space-y-2">
+                    {filteredFaqs.map((f) => (
+                      <li key={`toc-${f.id}`}>
+                        <a
+                          href={`#faq-${f.id}`}
+                          className="text-sm text-[#5C7650] hover:text-[#445339] hover:underline leading-snug"
+                        >
+                          <HighlightedText text={f.question} query={faqQuery} />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
+
+              {filteredFaqs.length === 0 ? (
+                <div className="text-center py-12 rounded-lg border border-dashed border-border bg-background">
+                  <p className="text-[#555555] mb-3">
+                    No FAQs match <span className="font-semibold">"{faqQuery}"</span>.
+                  </p>
+                  <Button variant="outline" size="sm" onClick={() => setFaqQuery("")}>
+                    Clear search
+                  </Button>
+                </div>
+              ) : (
+                <dl className="space-y-6">
+                  {filteredFaqs.map((f) => (
+                    <div key={f.id} id={`faq-${f.id}`} className="scroll-mt-24 group">
+                      <dt className="font-semibold text-[#1a1a1a] mb-2 flex items-start gap-2">
+                        <span className="flex-1">
+                          <HighlightedText text={f.question} query={faqQuery} />
+                        </span>
+                        <a
+                          href={`#faq-${f.id}`}
+                          aria-label={`Link to: ${f.question}`}
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#5C7650] hover:text-[#445339] transition-opacity mt-1 shrink-0"
+                        >
+                          <Link2 className="w-4 h-4" />
+                        </a>
+                      </dt>
+                      <dd className="text-[#555555] leading-relaxed">
+                        <HighlightedText text={f.answer} query={faqQuery} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
             </div>
           </section>
         )}
@@ -415,5 +486,24 @@ const DetailList = ({ title, items }: { title: string; items: string[] }) => (
     </ul>
   </div>
 );
+
+const HighlightedText = ({ text, query }: { text: string; query: string }) => {
+  const q = query.trim();
+  if (!q) return <>{text}</>;
+  const parts = text.split(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "ig"));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === q.toLowerCase() ? (
+          <mark key={i} className="bg-[#5C7650]/20 text-[#1a1a1a] rounded px-0.5">
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+};
 
 export default WoodSpeciesDetail;
