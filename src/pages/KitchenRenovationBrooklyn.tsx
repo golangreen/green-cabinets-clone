@@ -66,6 +66,8 @@ const howToJsonLd = {
   name: "How to Plan a Kitchen Renovation in Brooklyn",
   description:
     "Step-by-step guide to planning a Brooklyn kitchen renovation: budget, board approval, design, custom cabinet build, demo, install, and punch list.",
+  author: authorRef("golan"),
+  publisher: { "@id": "https://greencabinetsny.com/#organization" },
   totalTime: "P10W",
   estimatedCost: { "@type": "MonetaryAmount", currency: "USD", value: "45000" },
   supply: [
