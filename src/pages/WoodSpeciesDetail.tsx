@@ -12,7 +12,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, X, ArrowRight, ArrowLeft, Link2, Search } from "lucide-react";
+import { Check, X, ArrowRight, ArrowLeft, Link2, Search, ChevronDown } from "lucide-react";
 import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
 import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
@@ -21,6 +21,10 @@ const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const [faqQuery, setFaqQuery] = useState("");
+  // Default-open on md+ screens, collapsed on mobile to save space.
+  const [tocOpen, setTocOpen] = useState(() =>
+    typeof window === "undefined" ? true : window.matchMedia("(min-width: 768px)").matches
+  );
   const wood = slug ? getWoodSpecies(slug) : undefined;
 
   if (!wood) return <Navigate to="/wood-species" replace />;
