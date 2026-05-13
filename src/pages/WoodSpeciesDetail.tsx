@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check, X, ArrowRight, ArrowLeft } from "lucide-react";
 import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
+import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
 
 const WoodSpeciesDetail = () => {
