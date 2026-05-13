@@ -175,12 +175,33 @@ const HREF_RE = /href=["']([^"']+)["']/i;
 const META_ROBOTS_RE = /<meta[^>]+name=["']robots["'][^>]*>/i;
 const CONTENT_RE = /content=["']([^"']+)["']/i;
 
+const normPath = (u) => {
+  try {
+    const x = new URL(u);
+    const p = x.pathname.replace(/\/+$/, "") || "/";
+    return `${x.origin}${p}`;
+  } catch {
+    return u.replace(/\/+$/, "");
+  }
+};
+
 for (const path of MUST_BE_INDEXED) {
   const url = `${HOST}${path}`;
   const expectedCanonical = `${HOST}${path}`;
   const inSitemap = sitemapLocs.has(url) || sitemapLocs.has(url.replace(/\/$/, "")) || sitemapPaths.has(path);
+
+  // First, manual mode catches a single-hop redirect cleanly (3xx Location).
+  const headRes = await fetch(url, { redirect: "manual" });
+  const isRedirect = headRes.status >= 300 && headRes.status < 400;
+  const redirectTo = isRedirect ? headRes.headers.get("location") : null;
+  const redirectedAway =
+    isRedirect && !!redirectTo && normPath(new URL(redirectTo, url).href) !== normPath(url);
+
+  // Then follow to inspect the final landed page (canonical, noindex, etc.).
   const r = await fetch(url, { redirect: "follow" });
   const html = await r.text();
+  const finalUrl = r.url || url;
+  const finalDifferent = normPath(finalUrl) !== normPath(url);
   const headerNoindex = /noindex/i.test(r.headers.get("x-robots-tag") || "");
 
   const canonTag = html.match(CANONICAL_RE)?.[0] ?? "";
@@ -193,16 +214,25 @@ for (const path of MUST_BE_INDEXED) {
   const metaContent = metaTag.match(CONTENT_RE)?.[1] ?? "";
   const metaNoindex = /noindex/i.test(metaContent);
 
+  const status200 = r.status === 200;
+  const noRedirect = !redirectedAway && !finalDifferent;
   const ok =
-    r.status === 200 && inSitemap && !headerNoindex && !metaNoindex && canonicalOk;
+    status200 && inSitemap && noRedirect && !headerNoindex && !metaNoindex && canonicalOk;
+
   if (!ok) {
-    fails.push(
-      `${path} → status=${r.status} sitemap=${inSitemap} headerNoindex=${headerNoindex} metaNoindex=${metaNoindex} canonical=${canonHref || "<none>"} (expected ${expectedCanonical})`,
-    );
+    const reasons = [];
+    if (!status200) reasons.push(`status=${r.status}`);
+    if (!inSitemap) reasons.push(`not in sitemap`);
+    if (redirectedAway) reasons.push(`redirected ${headRes.status} → ${redirectTo}`);
+    else if (finalDifferent) reasons.push(`final URL ${finalUrl} ≠ requested`);
+    if (headerNoindex) reasons.push(`X-Robots-Tag: noindex`);
+    if (metaNoindex) reasons.push(`<meta robots> noindex`);
+    if (!canonicalOk) reasons.push(`canonical=${canonHref || "<none>"} (expected ${expectedCanonical})`);
+    fails.push(`${path} → ${reasons.join("; ")}`);
   }
   log(
     ok,
-    `${path}${ok ? c.dim(`  canonical=${canonHref}`) : c.dim(`  status=${r.status} sitemap=${inSitemap} headerNoindex=${headerNoindex} metaNoindex=${metaNoindex} canonical=${canonHref || "<none>"}`)}`,
+    `${path}${ok ? c.dim(`  200, no-redirect, canonical=${canonHref}`) : c.dim(`  status=${r.status}${redirectedAway ? ` redirect→${redirectTo}` : finalDifferent ? ` finalUrl=${finalUrl}` : ""} canonical=${canonHref || "<none>"}`)}`,
   );
 }
 
