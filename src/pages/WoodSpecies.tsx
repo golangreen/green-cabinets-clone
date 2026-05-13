@@ -135,6 +135,8 @@ const WoodSpecies = () => {
       },
     ],
   };
+
+  return (
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>Cabinet Wood Species Guide: Maple, Oak, Walnut & More | Green Cabinets NY</title>
