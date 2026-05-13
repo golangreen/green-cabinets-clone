@@ -134,8 +134,12 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       "Black walnut is the prestige hardwood of American cabinetmaking — deep brown heartwood, gentle figure, and a soft, hand-finished feel that elevates any kitchen, library, or vanity.",
     longDescription: [
       "American black walnut (Juglans nigra) is the only commercially harvested dark hardwood native to North America. Heartwood is a deep chocolate brown often streaked with purple, gray, or violet undertones, while the sapwood is creamy yellow. Most premium millwork specifies steamed walnut, which evens out the contrast between heart and sap so doors and panels read as a single warm tone.",
-      "Walnut works beautifully — it cuts cleanly, glues well, and finishes to a soft luster with minimal effort. Its medium density (Janka 1,010 lbf) makes it kind on tooling and on the wallet of a custom shop, but it is not the toughest hardwood here. We recommend walnut for upper cabinets, vanities, libraries, and feature islands rather than heavily-used base runs in busy households.",
-      "Walnut darkens slightly with age and then mellows toward a golden brown after years of UV exposure — the opposite of cherry's reddening patina. For NYC clients we typically specify a hardwax oil or matte conversion varnish to preserve that natural depth without adding plastic-looking sheen. Pair walnut with brushed brass, antique bronze, or matte black hardware.",
+      "Walnut works beautifully — it cuts cleanly, glues well, and finishes to a soft luster with minimal effort. Its medium density (Janka 1,010 lbf) makes it kind on tooling and on the wallet of a custom shop, but it is not the toughest hardwood here. We recommend walnut for upper cabinets, vanities, libraries, feature islands, and master suite millwork rather than heavily-used base runs in busy households with kids and dogs.",
+      "Walnut darkens slightly with age and then mellows toward a golden brown after years of UV exposure — the opposite of cherry's reddening patina. For NYC clients we typically specify a hardwax oil (Rubio Monocoat Pure, Osmo Polyx) or matte conversion varnish to preserve that natural depth without adding plastic-looking sheen. Pair walnut with brushed brass, antique bronze, polished nickel, or matte black hardware. Avoid bright chrome — the contrast reads cold.",
+      "Cost in the NYC market currently runs $14-$18 per board foot for FAS-grade walnut, making it the most expensive common domestic cabinet hardwood — roughly 2-3× the cost of maple and 30-50% more than white oak. For a typical 30-linear-foot custom kitchen, expect walnut cabinetry to run $30,000-$45,000 from a Brooklyn shop, depending on door style, finish, and hardware selection.",
+      "Walnut's prestige status is partly historical and partly supply-driven. The trees grow slowly (60-80 years to commercial size), yields are limited per log because of significant sapwood content, and demand for dark domestic hardwoods has stayed strong since the post-2010 mid-century revival. Unlike imported tropical hardwoods, walnut has no ethical sourcing concerns — it is FSC-certified, harvested in expanding eastern US forests, and entirely traceable.",
+      "Best uses include feature islands (where it earns its premium against perimeter cabinets in a less expensive species), library and home office millwork, master bath vanities, primary bedroom built-ins, and any project where the client wants quiet luxury rather than statement contrast. We have specified walnut for prewar Manhattan apartments, Brooklyn brownstones, and several Hamptons projects where the goal was warmth without ostentation.",
+      "Care is straightforward but not zero-effort. Wipe with damp cloth and mild soap, never use abrasive cleaners or ammonia-based products (which can dull the topcoat and oxidize the wood). Refresh hardwax-oil finishes every 2-3 years with a thin coat to maintain depth. UV exposure will gradually lighten walnut over decades — this is a feature, not a defect, and most owners come to prefer the mellowed tone.",
     ],
     jankaHardness: 1010,
     specificGravity: 0.55,
@@ -145,34 +149,75 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     workability: "Excellent",
     stainTake: "Excellent",
     stability: 5,
-    uses: ["Feature islands", "Library and office millwork", "Vanities", "Slab and shaker doors"],
+    uses: ["Feature islands", "Library and office millwork", "Vanities", "Slab and shaker doors", "Master bedroom built-ins", "Statement range hoods"],
     pros: [
       "Naturally rich color — no stain required",
       "One of the most dimensionally stable hardwoods",
       "Easy to machine and hand-finish",
       "Reads as luxury without dramatic figure",
+      "FSC-certified and ethically sourced",
     ],
     cons: [
-      "Premium price tier (~3-4× maple)",
+      "Premium price tier (2-3× maple, 30-50% over white oak)",
       "Sapwood-heartwood color contrast must be sorted carefully",
       "Softer than maple or oak — more prone to denting",
+      "Lightens with UV exposure over decades",
     ],
-    bestFinishes: ["Hardwax oil (natural)", "Matte conversion varnish", "Rubio Monocoat Pure", "Soft satin lacquer"],
-    bestDoorStyles: ["Slab", "Shaker", "Reeded", "Frameless European"],
+    bestFinishes: ["Hardwax oil (natural)", "Matte conversion varnish", "Rubio Monocoat Pure", "Soft satin lacquer", "Osmo Polyx"],
+    bestDoorStyles: ["Slab", "Shaker", "Reeded", "Frameless European", "Inset shaker"],
     swatch: "#5b3a29",
     image: walnutImg,
     grainImage: walnutImg,
-    keywords: ["walnut kitchen cabinets NYC", "custom walnut cabinetry", "black walnut vanity"],
+    keywords: [
+      "walnut cabinets",
+      "walnut kitchen cabinets",
+      "walnut cabinets NYC",
+      "custom walnut cabinetry",
+      "black walnut vanity",
+      "walnut vs cherry",
+      "walnut island cabinets",
+      "modern walnut kitchen",
+    ],
     faqs: [
       {
         question: "Why is walnut more expensive than other woods?",
         answer:
-          "Walnut grows slowly, yields are limited per log because of sapwood, and demand for dark domestic hardwoods has stayed strong. Expect walnut cabinetry to run 2–3× the cost of maple of equivalent construction.",
+          "Walnut grows slowly (60-80 years to commercial size), yields are limited per log because of significant sapwood content, and demand for dark domestic hardwoods has stayed strong since the post-2010 mid-century revival. Expect walnut cabinetry to run 2-3× the cost of maple and 30-50% more than white oak of equivalent construction.",
+      },
+      {
+        question: "How much do walnut kitchen cabinets cost in NYC?",
+        answer:
+          "Custom walnut cabinets from a Brooklyn shop typically run $30,000-$45,000 for a 30-linear-foot kitchen depending on door style, finish, and hardware. Lumber alone runs $14-$18 per board foot for FAS-grade walnut. Many clients specify walnut only for the island and vanities, with white oak or maple for the perimeter.",
       },
       {
         question: "Does walnut fade in sunlight?",
         answer:
-          "Yes — walnut lightens with prolonged UV exposure, mellowing toward a warmer golden brown over 5–10 years. A UV-protective topcoat slows but does not stop this natural aging.",
+          "Yes — walnut lightens with prolonged UV exposure, mellowing from deep chocolate toward a warmer golden brown over 5-10 years. A UV-protective topcoat slows but does not stop this natural aging. Most owners come to prefer the mellowed tone over the original near-black depth.",
+      },
+      {
+        question: "What is the difference between walnut and cherry?",
+        answer:
+          "Walnut starts dark and lightens with age. Cherry starts light and darkens with age — they move in opposite directions. Walnut is harder (Janka 1,010 vs cherry's 950), more dimensionally stable, and reads as more contemporary. Cherry is roughly 30-40% cheaper and reads as more traditional. Both are FSC-certified domestic hardwoods.",
+      },
+      {
+        question: "Is walnut durable enough for a busy family kitchen?",
+        answer:
+          "Walnut is moderately durable (Janka 1,010 lbf) — significantly softer than maple, oak, or hickory. For high-impact families with kids and dogs, we recommend specifying walnut on islands and uppers (where impact is rare) and a tougher species like white oak or maple on base cabinets that take daily abuse.",
+      },
+      {
+        question: "How do I care for walnut cabinets?",
+        answer:
+          "Wipe with a damp cloth and mild dish soap; never use abrasive cleaners, vinegar, or ammonia-based products which can dull the topcoat. For hardwax-oil finishes, refresh with a thin coat every 2-3 years to maintain depth. Avoid placing hot pans or wet glasses directly on unsealed walnut surfaces.",
+      },
+      {
+        question: "Should walnut be stained or left natural?",
+        answer:
+          "Almost always natural. Walnut's heartwood color is the entire reason to specify the species — staining it darker obscures the natural depth and grain figure. The standard NYC spec is hardwax oil over raw or steamed walnut. Stained walnut is rarely worth the lumber premium over a stained alternative.",
+      },
+      {
+        question: "What's the lead time for walnut cabinets in NYC?",
+        answer:
+          "Plan on 10-12 weeks for custom walnut cabinets from a Brooklyn shop versus 6-8 weeks for red oak or maple. Walnut supply has stabilized post-pandemic but lead times remain longer than other domestic species due to careful color sorting required to manage sapwood-heartwood contrast.",
       },
     ],
   },
@@ -185,9 +230,13 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     shortDescription:
       "White oak combines visible cathedral grain, exceptional hardness, and a cool tan tone that takes everything from rift-cut natural finishes to Belgian-inspired smoked stains.",
     longDescription: [
-      "White oak (Quercus alba) has dominated high-end American kitchen design for the last decade — and for good reason. The wood is significantly harder than red oak (Janka 1,360 lbf), more dimensionally stable, and its closed pore structure makes it watertight enough to have built ships and whiskey barrels for centuries. In a kitchen, that translates to rock-solid drawer fronts and panels that stay flat through New York's humid summers and dry winters.",
-      "Cut matters with white oak. Plain-sawn lumber shows the dramatic cathedral arches you see in farmhouse kitchens; rift-sawn produces tight, ruler-straight lines for modern slab fronts; quartersawn reveals the iridescent ray fleck favored in Mission and Greene & Greene work. We typically specify rift-and-quartered for contemporary projects so adjacent doors look consistent.",
-      "White oak's slightly olive base tone makes it the chameleon of the stain world. It is the foundation for the fumed and smoked finishes popularized by Belgian and Scandinavian designers, the reactive iron-acetate finishes that turn it dark gray, and the natural hardwax-oil look that has defined post-2018 American kitchens. It also paints beautifully when grain texture is desired beneath the color.",
+      "White oak (Quercus alba) has dominated high-end American kitchen design for the past decade — and the trend shows no sign of slowing. The wood is significantly harder than red oak (Janka 1,360 lbf), more dimensionally stable, and its closed pore structure (sealed by tyloses, the same anatomical feature that lets it hold whiskey and wine) makes it watertight enough to have built ships, barrels, and outdoor furniture for centuries. In a kitchen, that translates to rock-solid drawer fronts and panels that stay flat through New York's humid summers and dry winters.",
+      "Cut matters more with white oak than with any other species. Plain-sawn lumber shows the dramatic cathedral arches you see in farmhouse kitchens; rift-sawn produces tight, ruler-straight vertical lines for modern slab fronts; quartersawn reveals the iridescent ray fleck favored in Mission, Stickley, and Greene & Greene work. We typically specify rift-and-quartered for contemporary projects so adjacent doors look consistent — see our dedicated rift-cut white oak and quartersawn oak pages for full detail on those cuts.",
+      "White oak's slightly olive base tone makes it the chameleon of the stain world. It is the foundation for the fumed and smoked finishes popularized by Belgian and Scandinavian designers (Liesbeth van der Pol, Vincent Van Duysen), the reactive iron-acetate finishes that turn it dark gray, the cerused white finishes that lime the open grain, and the natural hardwax-oil look that has defined post-2018 American kitchens. It also paints beautifully when you want grain texture visible beneath the color.",
+      "Janka hardness of 1,360 lbf puts white oak well above black walnut (1,010) and slightly below hard maple (1,450) — plenty hard for daily kitchen abuse, with the bonus of being the most stable common hardwood in North America. Doors stay flat, joints stay tight, and panels resist seasonal cupping that would warp lesser woods in NYC's humidity swings.",
+      "Cost in the NYC market currently runs $10-$12 per board foot for plain-sawn white oak, $14-$18/bf for rift-cut, and $18-$24/bf for quartersawn. For a typical 30-linear-foot custom kitchen, expect plain-sawn white oak cabinetry to cost $20,000-$30,000, rift-cut to add $2,500-$4,000, and quartersawn to add $5,000-$8,000 over plain-sawn. White oak is mid-tier pricing — significantly more than maple or red oak, significantly less than walnut.",
+      "Best uses span almost every kitchen aesthetic. For modern slab and frameless European: rift-cut with hardwax oil. For transitional shaker: plain-sawn or rift with a soft pigment or fumed finish. For Mission and Craftsman: quartersawn with traditional fuming. For Belgian-influenced minimalism: rift-cut with smoked or reactive iron-acetate finishes. The species is unusually flexible in a way that walnut, cherry, and hickory are not.",
+      "Pair white oak with brushed brass, blackened steel, antique bronze, warm nickel, or polished chrome — the olive base tone reads beautifully against almost every metal finish. Avoid bright yellow brass on darker stained white oak; the contrast can look dated. Stone counters in honed marble, soapstone, or quartzite all complement white oak's tonal range.",
     ],
     jankaHardness: 1360,
     specificGravity: 0.68,
@@ -197,34 +246,75 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     workability: "Good",
     stainTake: "Excellent",
     stability: 4,
-    uses: ["Rift-cut slab fronts", "Shaker bases", "Open shelving", "Floors and ceilings to match"],
+    uses: ["Rift-cut slab fronts", "Shaker bases", "Open shelving", "Floors and ceilings to match", "Range hoods", "Mission/Craftsman cabinetry"],
     pros: [
-      "Exceptional hardness and stability",
+      "Exceptional hardness and dimensional stability",
       "Takes reactive, fumed, and pigment stains beautifully",
       "Highly weather-resistant (closed tyloses)",
       "On-trend for modern, transitional, and traditional kitchens",
+      "Most flexible aesthetic range of any hardwood",
     ],
     cons: [
       "Open grain shows under paint without filling",
-      "Rift-and-quartered cuts cost ~30% more than plain-sawn",
+      "Rift-and-quartered cuts cost 30-100% more than plain-sawn",
       "Tannins can react with metal fasteners and some finishes",
+      "Lead times longer than red oak or maple",
     ],
-    bestFinishes: ["Hardwax oil natural", "Fumed/smoked", "Cerused white", "Reactive iron-acetate"],
-    bestDoorStyles: ["Slab (rift-cut)", "Shaker", "Reeded", "Beaded inset"],
+    bestFinishes: ["Hardwax oil natural", "Fumed/smoked", "Cerused white", "Reactive iron-acetate", "Soft pigment stain", "Rubio Monocoat Pure"],
+    bestDoorStyles: ["Slab (rift-cut)", "Shaker", "Reeded", "Beaded inset", "Mission/Craftsman"],
     swatch: "#c9a877",
     image: whiteOakImg,
     grainImage: whiteOakImg,
-    keywords: ["white oak kitchen cabinets", "rift cut white oak NYC", "fumed oak cabinets"],
+    keywords: [
+      "white oak cabinets",
+      "white oak kitchen cabinets",
+      "white oak kitchen",
+      "white oak cabinets NYC",
+      "rift cut white oak",
+      "fumed oak cabinets",
+      "white oak vs red oak",
+      "modern white oak kitchen",
+    ],
     faqs: [
+      {
+        question: "Why is white oak so popular for kitchen cabinets right now?",
+        answer:
+          "White oak combines exceptional durability, dimensional stability, and an olive-tan base tone that takes virtually any finish — from natural hardwax oil to smoked, fumed, cerused, or reactive iron-acetate. It works in modern, transitional, and traditional kitchens, which makes it the most flexible premium hardwood available. The trend started around 2015 with Belgian and Scandinavian designers and shows no sign of fading.",
+      },
       {
         question: "What is the difference between rift, quarter, and plain-sawn white oak?",
         answer:
-          "Plain-sawn shows wide cathedral arches, rift-sawn shows narrow vertical lines, and quartersawn reveals the medullary ray fleck. Rift is the most consistent for door-to-door matching on modern cabinets.",
+          "Plain-sawn shows wide cathedral arches, varies dramatically board-to-board, and costs the least (~60% log yield). Rift-sawn shows narrow vertical lines, reads consistent door-to-door, and costs 30-40% more (~25% yield). Quartersawn reveals the iridescent medullary ray fleck of Mission and Stickley furniture, costs nearly double plain-sawn (~15-20% yield). Rift is the most consistent for door-to-door matching on modern cabinets.",
+      },
+      {
+        question: "How much do white oak kitchen cabinets cost in NYC?",
+        answer:
+          "Custom plain-sawn white oak cabinets from a Brooklyn shop typically run $20,000-$30,000 for a 30-linear-foot kitchen. Rift-cut adds roughly $2,500-$4,000, quartersawn adds $5,000-$8,000. Lumber alone runs $10-$12 per board foot for plain-sawn, $14-$18 for rift, $18-$24 for quartersawn.",
+      },
+      {
+        question: "What is the difference between white oak and red oak?",
+        answer:
+          "White oak has tan-olive heartwood, tighter grain, is harder (Janka 1,360 vs 1,290), more dimensionally stable, and watertight (closed tyloses). Red oak has pinkish-red heartwood, more open grain, is not watertight, and costs 25-30% less. White oak is the current trend; red oak is the value play.",
       },
       {
         question: "Can white oak be painted?",
         answer:
-          "Yes, but its open pores telegraph through paint unless filled with a grain filler. Many designers leave the grain visible under paint as a feature rather than fighting it.",
+          "Yes, but its open pores telegraph through paint unless filled with a grain filler first. Many designers leave the grain visible under paint as a feature rather than fighting it. If you want a perfectly smooth painted finish, specify maple or birch. If you want grain texture under a soft color, white oak is ideal.",
+      },
+      {
+        question: "Does white oak work with marble counters?",
+        answer:
+          "Beautifully. White oak's olive-tan tone provides warmth against the cool gray-white of Carrara, Calacatta, or honed soapstone. The combination has become the defining look of post-2018 high-end American kitchens. Pair with brushed brass or warm nickel hardware for the full effect.",
+      },
+      {
+        question: "What's the lead time on white oak cabinets in NYC?",
+        answer:
+          "Plan on 8-10 weeks for plain-sawn white oak custom cabinets, 10-12 weeks for rift-cut, and 12-14 weeks for quartersawn. Lead times have stabilized post-pandemic but remain longer than red oak or maple due to high demand for the species at the high end of the market.",
+      },
+      {
+        question: "Will white oak cabinets fade or change color?",
+        answer:
+          "White oak ambers slightly with UV exposure over 5-10 years, deepening the olive-tan tone toward a warmer honey-brown. The change is subtle and generally improves the appearance. A UV-protective topcoat slows but does not eliminate this natural aging.",
       },
     ],
   },
@@ -237,9 +327,13 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     shortDescription:
       "Red oak's pinkish heartwood and pronounced cathedral grain defined American kitchens for half a century. Modern stains and rift cuts have brought it roaring back as a budget-friendly white oak alternative.",
     longDescription: [
-      "Red oak (Quercus rubra) is the most widely harvested hardwood in North America and was the default cabinet wood from the 1970s through the early 2000s. Its grain is bolder and more open than white oak, with a pinkish-red cast in the heartwood. After a long fall from fashion it has returned, partly because it costs roughly 25–30% less than white oak and partly because designers are revisiting honey-toned mid-century kitchens.",
-      "Workability is excellent — red oak machines, glues, and stains predictably. Its open grain accepts pigment stains so deeply that you can shift it to nearly any tone, from limed bone-white to espresso. The same open structure means it should not be used for wine racks or anything that holds liquid (white oak's closed pores are watertight, red oak's are not).",
-      "For modern projects we recommend rift-cut red oak with a clear hardwax oil — the look is closer to vintage Scandinavian than to 1990s builder-grade kitchens. For traditional jobs, a pigment stain plus glaze gives that classic warm farmhouse feel.",
+      "Red oak (Quercus rubra) is the most widely harvested hardwood in North America and was the default cabinet wood from the 1970s through the early 2000s. Its grain is bolder and more open than white oak, with a distinct pinkish-red cast in the heartwood and a creamier sapwood. After roughly 15 years of being out of fashion, red oak has returned to favor — partly because it costs 25-30% less than white oak, partly because designers are revisiting honey-toned mid-century kitchens, and partly because supply chain stability has made it the reliable choice for tight project timelines.",
+      "Workability is excellent. Red oak machines, glues, and stains predictably, holds screws tightly, and forgives small errors that hickory or hard maple punish. Its open grain accepts pigment stains so deeply that you can shift it to nearly any tone — from limed bone-white to espresso to gray, and everything between. The same open structure means red oak should never be used for wine racks, anything that holds liquid, or surfaces that touch standing water (white oak's closed pores are watertight; red oak's are not).",
+      "For modern projects we typically specify rift-cut red oak with a clear hardwax oil. The look is closer to vintage Scandinavian than to 1990s builder-grade kitchens — straight grain, no cathedral arches, warm amber tone. For traditional and farmhouse jobs, plain-sawn red oak with a pigment stain plus optional glaze gives the classic warm look that defined American kitchens for two generations.",
+      "Janka hardness of 1,290 lbf puts red oak slightly below white oak (1,360) and well above black walnut (1,010), making it more than tough enough for daily kitchen use. Dimensional stability is moderate — red oak moves more than white oak in NYC's humidity swings, but a quality conversion varnish or hardwax oil topcoat keeps doors flat and joints tight year-round.",
+      "Cost in the NYC market currently runs $7-$10 per board foot for plain-sawn red oak — the most affordable premium domestic hardwood available. Rift-cut red oak runs $10-$13/bf, still well below plain-sawn white oak. For a typical 30-linear-foot kitchen, expect red oak cabinetry to cost roughly $4,000-$8,000 less than equivalent white oak construction, with no compromise on durability or finish quality.",
+      "Best uses include traditional shaker, mid-century modern slab, painted bases where you want grain texture visible, transitional kitchens on a budget, and any project that needs to ship in 6 weeks instead of 10. We have specified red oak for prewar Brooklyn brownstones, Queens family kitchens, and several flip projects in Bushwick and Bed-Stuy where the budget mattered more than the trend.",
+      "The honest knock on red oak is the pinkish undertone. It clashes with cool color palettes (gray, blue, true white) and reads dated when paired with the wrong stain. Done well — limed white over rift-cut, or a warm honey stain over plain-sawn — red oak looks current and intentional. Done badly with a generic medium stain it can read as a 1995 builder-grade kitchen. Cut and finish matter more for red oak than for any other species on this list.",
     ],
     jankaHardness: 1290,
     specificGravity: 0.63,
@@ -249,29 +343,69 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     workability: "Very Good",
     stainTake: "Excellent",
     stability: 3,
-    uses: ["Traditional shaker", "Mid-century modern slab", "Painted bases with grain texture"],
+    uses: ["Traditional shaker", "Mid-century modern slab", "Painted bases with grain texture", "Budget-conscious renovations", "Quick-turn projects"],
     pros: [
-      "Most affordable premium domestic hardwood",
+      "Most affordable premium domestic hardwood ($7-$10/bf)",
       "Takes any stain color predictably",
       "Strong, hard, and easy to repair",
       "Abundant supply, stable lead times",
+      "Rift-cut version reads as modern Scandinavian",
     ],
     cons: [
       "Open grain is not watertight — avoid for wet zones",
       "Pinkish undertone can clash with cool palettes",
       "Less dimensionally stable than white oak",
+      "Wrong stain choice can read as dated builder-grade",
     ],
-    bestFinishes: ["Honey stain + matte topcoat", "Limed white", "Espresso pigment", "Cerused gray"],
-    bestDoorStyles: ["Shaker", "Raised panel", "Slab (rift-cut)"],
+    bestFinishes: ["Honey stain + matte topcoat", "Limed white", "Espresso pigment", "Cerused gray", "Clear hardwax oil (rift-cut)"],
+    bestDoorStyles: ["Shaker", "Raised panel", "Slab (rift-cut)", "Beaded inset"],
     swatch: "#b07555",
     image: redOakImg,
     grainImage: redOakImg,
-    keywords: ["red oak cabinets NYC", "affordable oak kitchen", "rift red oak"],
+    keywords: [
+      "red oak cabinets",
+      "red oak kitchen cabinets",
+      "red oak cabinets NYC",
+      "affordable oak kitchen",
+      "rift cut red oak",
+      "red oak vs white oak",
+      "honey oak cabinets",
+    ],
     faqs: [
       {
         question: "Is red oak cheaper than white oak?",
         answer:
-          "Yes — red oak typically runs 20–30% less per board foot than white oak in the NYC market and has better availability for tight lead times.",
+          "Yes — red oak typically runs 25-30% less per board foot than white oak in the NYC market. Plain-sawn red oak is currently $7-$10/bf vs $10-$12 for white oak. For a 30-linear-foot kitchen, that's a $4,000-$8,000 lumber savings with no compromise on durability.",
+      },
+      {
+        question: "How much do red oak kitchen cabinets cost in NYC?",
+        answer:
+          "Custom red oak cabinets from a Brooklyn shop typically run $12,000-$20,000 for a 30-linear-foot kitchen depending on door style, finish, and hardware. That makes red oak the best value in custom solid-wood cabinetry — significantly less than walnut, white oak, or rift-cut alternatives.",
+      },
+      {
+        question: "What is the difference between red oak and white oak?",
+        answer:
+          "Red oak has a pinkish-red heartwood, more open grain, and is not watertight. White oak has a tan-olive heartwood, tighter grain, is harder (1,360 vs 1,290 Janka), more dimensionally stable, and watertight enough to build whiskey barrels. White oak costs 25-30% more and is currently more on-trend for high-end design.",
+      },
+      {
+        question: "Does red oak still look dated?",
+        answer:
+          "Only with the wrong cut and finish. Plain-sawn red oak with a generic medium stain reads as 1990s builder-grade. Rift-cut red oak with a clear hardwax oil reads as modern Scandinavian. Limed white or honey stain over plain-sawn reads as intentional mid-century. The species itself is not the problem — execution matters.",
+      },
+      {
+        question: "Can red oak be painted?",
+        answer:
+          "Yes, but the open grain telegraphs through paint unless filled with a grain filler first. Many designers leave the texture visible under paint as a feature. If you want a perfectly smooth painted finish, specify maple or birch instead — both paint better than red oak.",
+      },
+      {
+        question: "What's the lead time for red oak cabinets?",
+        answer:
+          "Red oak has the most stable supply of any premium hardwood in the NYC market. Expect 6-8 weeks for custom cabinets versus 8-10 weeks for white oak and 10-14 weeks for rift-cut or quartersawn. For tight project timelines, red oak is often the only premium hardwood available without delay.",
+      },
+      {
+        question: "Will red oak cabinets fade or change color?",
+        answer:
+          "Red oak ambers gently with UV exposure over 5-10 years, deepening from pinkish-red toward a warmer amber-brown. The change is subtle and generally improves the color, mellowing the pink undertone that can read as cold when new. A UV-protective topcoat slows but does not stop this aging.",
       },
     ],
   },
@@ -378,9 +512,13 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     shortDescription:
       "Hickory delivers the most dramatic color contrast and the highest Janka rating of any common cabinet wood. It is the right call for high-traffic kitchens, mountain houses, and rustic-modern aesthetics.",
     longDescription: [
-      "Hickory (Carya ovata, shagbark hickory) is the toughest commercially available American hardwood, with a Janka hardness of 1,820 lbf — about 25% harder than maple. It is the wood used for tool handles, drumsticks, and floors that have to survive everything. In a kitchen it shrugs off pet claws, dropped pans, and decades of family abuse.",
-      "Hickory's defining visual feature is contrast. Sapwood is nearly white, heartwood is a warm reddish brown, and most boards include both. Cabinet doors are usually selected to embrace this contrast — fighting it requires expensive sap-only sorting. The result is a lively, organic look that feels at home in mountain modern, rustic, and industrial-loft kitchens.",
-      "Working hickory is challenging — it dulls blades quickly, splinters under aggressive cuts, and can move during finishing. It is not a beginner wood, but an experienced shop produces stunning results. Expect lead times to be slightly longer due to the careful sorting and the need for sharper-than-usual tooling.",
+      "Hickory (Carya ovata, shagbark hickory) is the toughest commercially available American hardwood, with a Janka hardness of 1,820 lbf — roughly 25% harder than hard maple, 40% harder than red oak, and nearly double the density of black walnut. The wood has been used for tool handles, drumsticks, baseball bats, wagon wheels, and any application where shock resistance matters. In a kitchen, that translates to cabinets that shrug off pet claws, dropped pans, and decades of family abuse without showing meaningful wear.",
+      "Hickory's defining visual feature is contrast. Sapwood is nearly white to pale cream, heartwood is a warm reddish brown to deep tan, and most boards include both. Cabinet doors can be selected to embrace this dramatic contrast (the typical farmhouse and mountain-modern aesthetic) or sap-sorted for a more uniform pale look at a 15-25% material premium. There is no middle ground — hickory commits visually, and the right move is usually to commit with it.",
+      "The grain is bold, mostly straight with occasional waves, and the open pore structure gives surfaces a tactile, hand-finished quality even after machine sanding. Unlike oak's cathedral arches, hickory's character comes from color and knot variation rather than figure. This makes it a strong fit for kitchens that want warmth and personality without the formality of cherry or the prestige price of walnut.",
+      "Working hickory is genuinely challenging. The wood dulls blades quickly (we run carbide tooling at slower feed rates), splinters under aggressive cuts, and resists hand-planing. Pre-drilling for screws is mandatory, and joinery requires tight tolerances because hickory does not forgive sloppy fits. Expect lead times to run 1-2 weeks longer than maple or oak work, and labor costs to run 10-15% higher to account for tool wear and careful sorting.",
+      "Cost-wise, clean-grade hickory in the NYC market runs $11-$14 per board foot — comparable to white oak. Character-grade (rustic) hickory runs $9-$11/bf and is typically the better value because the knots and color contrast that mark it down are exactly what most clients want anyway. For a 30-linear-foot kitchen, expect hickory to cost similar to white oak and roughly 30% less than walnut of equivalent construction.",
+      "Best uses include high-traffic family kitchens, mountain modern and farmhouse aesthetics, mudroom and entry built-ins, and any project where damage tolerance is a primary concern. We have specified hickory for Catskills weekend houses, Hamptons farmhouses, brownstone kitchens going for warmth-against-industrial, and homes with multiple large dogs. It is not the right wood for minimalist or contemporary kitchens — for that look, consider rift-cut white oak or maple.",
+      "Finishing hickory is straightforward. Hardwax oils (Rubio Monocoat, Osmo) preserve the natural color contrast beautifully. Satin conversion varnish gives durability for heavy-use kitchens. Amber shellac warms the heartwood. Avoid heavy pigment stains, which mute the contrast that makes hickory worth specifying in the first place. Pair with brushed brass, oil-rubbed bronze, matte black, or aged copper hardware.",
     ],
     jankaHardness: 1820,
     specificGravity: 0.72,
@@ -390,28 +528,68 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     workability: "Difficult",
     stainTake: "Good",
     stability: 3,
-    uses: ["High-traffic kitchens", "Rustic modern doors", "Mountain house casework"],
+    uses: ["High-traffic kitchens", "Rustic modern doors", "Mountain house casework", "Mudroom built-ins", "Family kitchens with kids and pets"],
     pros: [
       "Hardest common cabinet hardwood (Janka 1,820)",
       "Unique sap/heart contrast adds character",
       "Extremely tough and shock-resistant",
+      "Comparable cost to white oak",
     ],
     cons: [
       "Hard on tooling — premium pricing on labor",
       "Strong color contrast not everyone wants",
       "Less dimensionally stable than oak or walnut",
+      "Wrong choice for minimalist or modern aesthetics",
     ],
-    bestFinishes: ["Clear hardwax oil", "Light natural stain", "Distressed/wire-brushed"],
-    bestDoorStyles: ["Shaker", "Raised panel", "Plank-style"],
+    bestFinishes: ["Clear hardwax oil", "Light natural stain", "Distressed/wire-brushed", "Satin conversion varnish", "Amber shellac"],
+    bestDoorStyles: ["Shaker", "Raised panel", "Plank-style", "Beaded inset"],
     swatch: "#8a5a3b",
     image: hickoryImg,
     grainImage: hickoryImg,
-    keywords: ["hickory cabinets", "rustic kitchen wood", "hardest cabinet wood"],
+    keywords: [
+      "hickory cabinets",
+      "hickory kitchen cabinets",
+      "hickory cabinets NYC",
+      "hardest cabinet wood",
+      "rustic kitchen wood",
+      "farmhouse hickory cabinets",
+      "hickory vs oak cabinets",
+    ],
     faqs: [
       {
         question: "Is hickory good for a busy family kitchen?",
         answer:
-          "Yes — its 1,820 lbf Janka rating makes it the most dent- and impact-resistant common cabinet hardwood, ideal for households with kids, pets, and heavy daily use.",
+          "Yes — its 1,820 lbf Janka rating makes it the most dent- and impact-resistant common cabinet hardwood. For households with kids, large dogs, or heavy cooking use, hickory will outlast maple, walnut, and even white oak in terms of visible damage. It is the most damage-tolerant cabinet wood you can specify.",
+      },
+      {
+        question: "How much do hickory kitchen cabinets cost in NYC?",
+        answer:
+          "Clean-grade hickory runs $11-$14 per board foot in the NYC market — comparable to white oak. Character-grade (rustic) hickory runs $9-$11/bf. For a typical 30-linear-foot kitchen, expect hickory cabinetry from a custom shop to run $15,000-$25,000 in materials and labor, depending on door style and finish complexity.",
+      },
+      {
+        question: "What is the difference between hickory and rustic hickory?",
+        answer:
+          "Same species, different selection. Standard (clean-grade) hickory minimizes knots and color variation. Rustic (character-grade) hickory celebrates them — visible knots, mineral streaks, and dramatic sapwood-heartwood contrast. Rustic actually costs 10-15% less because more of each log is usable when the variation is a feature, not a defect.",
+      },
+      {
+        question: "Does hickory work in modern kitchens or only farmhouse?",
+        answer:
+          "Hickory is firmly in the farmhouse, mountain modern, and rustic-transitional camp. It can work in transitional designs paired with concrete or quartz counters and matte black hardware, but it is the wrong choice for pure minimalist or contemporary kitchens. For modern, specify rift-cut white oak or maple instead.",
+      },
+      {
+        question: "How does hickory compare to oak for cabinets?",
+        answer:
+          "Hickory is significantly harder (Janka 1,820 vs 1,360 for white oak) and more dramatic visually due to color contrast. Oak is more dimensionally stable, more workable, and reads as more refined. Hickory wins on durability and farmhouse character; oak wins on versatility and modern aesthetics. Cost is roughly equivalent.",
+      },
+      {
+        question: "Will hickory cabinets fade or change color over time?",
+        answer:
+          "Both heartwood and sapwood will mellow slightly with UV exposure over 5-10 years — heartwood softens from reddish-brown toward a warmer amber, sapwood ambers slightly from white toward cream. The dramatic contrast between them is permanent and is part of why hickory is specified.",
+      },
+      {
+        question: "Is hickory hard to maintain in NYC humidity?",
+        answer:
+          "Hickory is less dimensionally stable than oak or maple, so it can move slightly in NYC's seasonal humidity swings (25% RH in winter, 75% in summer). A quality conversion varnish or hardwax oil topcoat plus running HVAC during humidity peaks keeps doors flat and joints tight. Avoid raw hickory near dishwashers or sinks.",
       },
     ],
   },
