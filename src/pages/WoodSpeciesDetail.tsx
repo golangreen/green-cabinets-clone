@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, X, ArrowRight, ArrowLeft } from "lucide-react";
+import { Check, X, ArrowRight, ArrowLeft, Link2 } from "lucide-react";
 import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
 import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
@@ -27,6 +27,11 @@ const WoodSpeciesDetail = () => {
   // Prefer species not already shown in the comparison block, fall back to any other.
   const relatedPool = WOOD_SPECIES.filter((w) => w.slug !== wood.slug && !comparisonSlugs.has(w.slug));
   const related = (relatedPool.length >= 3 ? relatedPool : WOOD_SPECIES.filter((w) => w.slug !== wood.slug)).slice(0, 3);
+
+  // Slugify FAQ questions for stable anchor IDs (e.g. "How much do maple cabinets cost?" -> "how-much-do-maple-cabinets-cost")
+  const faqSlug = (q: string) =>
+    q.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").slice(0, 80);
+  const faqsWithIds = wood.faqs.map((f) => ({ ...f, id: faqSlug(f.question) }));
 
   const isoToday = new Date().toISOString().slice(0, 10);
   const articleSchema = {
@@ -49,8 +54,10 @@ const WoodSpeciesDetail = () => {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: wood.faqs.map((f) => ({
+    mainEntity: faqsWithIds.map((f) => ({
       "@type": "Question",
+      "@id": `${url}#faq-${f.id}`,
+      url: `${url}#faq-${f.id}`,
       name: f.question,
       acceptedAnswer: { "@type": "Answer", text: f.answer },
     })),
@@ -233,16 +240,43 @@ const WoodSpeciesDetail = () => {
         </section>
 
         {/* FAQ */}
-        {wood.faqs.length > 0 && (
-          <section className="py-12 sm:py-16 bg-muted/40">
+        {faqsWithIds.length > 0 && (
+          <section id="faq" className="py-12 sm:py-16 bg-muted/40 scroll-mt-24">
             <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-8 text-center">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-6 text-center">
                 {wood.faqHeading ?? "Frequently Asked Questions"}
               </h2>
+
+              {/* Jump-to TOC */}
+              <nav aria-label="FAQ contents" className="mb-10 rounded-lg border border-border bg-background p-5">
+                <p className="text-sm font-semibold text-[#1a1a1a] mb-3">Jump to a question</p>
+                <ul className="space-y-2">
+                  {faqsWithIds.map((f) => (
+                    <li key={`toc-${f.id}`}>
+                      <a
+                        href={`#faq-${f.id}`}
+                        className="text-sm text-[#5C7650] hover:text-[#445339] hover:underline leading-snug"
+                      >
+                        {f.question}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
               <dl className="space-y-6">
-                {wood.faqs.map((f) => (
-                  <div key={f.question}>
-                    <dt className="font-semibold text-[#1a1a1a] mb-2">{f.question}</dt>
+                {faqsWithIds.map((f) => (
+                  <div key={f.id} id={`faq-${f.id}`} className="scroll-mt-24 group">
+                    <dt className="font-semibold text-[#1a1a1a] mb-2 flex items-start gap-2">
+                      <span className="flex-1">{f.question}</span>
+                      <a
+                        href={`#faq-${f.id}`}
+                        aria-label={`Link to: ${f.question}`}
+                        className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#5C7650] hover:text-[#445339] transition-opacity mt-1 shrink-0"
+                      >
+                        <Link2 className="w-4 h-4" />
+                      </a>
+                    </dt>
                     <dd className="text-[#555555] leading-relaxed">{f.answer}</dd>
                   </div>
                 ))}
