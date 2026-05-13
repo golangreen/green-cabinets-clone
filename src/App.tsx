@@ -26,6 +26,10 @@ import CaseStudies from "./pages/CaseStudies";
 import CaseStudyDetail from "./pages/CaseStudyDetail";
 import BestWoodForKitchenCabinets from "./pages/BestWoodForKitchenCabinets";
 import CabinetWoodTypesAndCosts from "./pages/CabinetWoodTypesAndCosts";
+import DoubleSinkVanityGuide from "./pages/DoubleSinkVanityGuide";
+import FloatingBathroomVanity from "./pages/FloatingBathroomVanity";
+import SmallBathroomVanityIdeas from "./pages/SmallBathroomVanityIdeas";
+import ReachInClosetSystemsNYC from "./pages/ReachInClosetSystemsNYC";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
@@ -89,6 +93,10 @@ const App = () => {
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/best-wood-for-kitchen-cabinets" element={<BestWoodForKitchenCabinets />} />
             <Route path="/cabinet-wood-types-and-costs" element={<CabinetWoodTypesAndCosts />} />
+            <Route path="/double-sink-vanity-guide" element={<DoubleSinkVanityGuide />} />
+            <Route path="/floating-bathroom-vanity" element={<FloatingBathroomVanity />} />
+            <Route path="/small-bathroom-vanity-ideas" element={<SmallBathroomVanityIdeas />} />
+            <Route path="/reach-in-closet-systems-nyc" element={<ReachInClosetSystemsNYC />} />
             <Route path="/:boroughPath" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
