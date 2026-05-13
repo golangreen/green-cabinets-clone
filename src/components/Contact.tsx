@@ -76,19 +76,27 @@ const Contact = () => {
 
         {/* Google Map Embed */}
         <div className="max-w-5xl mx-auto mb-12 px-4">
-          <div className="rounded-2xl overflow-hidden shadow-lg">
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=10+Montieth+St+Brooklyn+NY+11206"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open 10 Montieth St in Google Maps"
+            className="block rounded-2xl overflow-hidden shadow-lg relative group"
+          >
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3024.2!2d-73.9352!3d40.7128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25c0e1a15d2e1%3A0x1234567890abcdef!2sBushwick%2C%20Brooklyn%2C%20NY%2011206!5e0!3m2!1sen!2sus!4v1704931200000!5m2!1sen!2sus"
+              src="https://www.google.com/maps?q=10+Montieth+St+Brooklyn+NY+11206&z=16&output=embed"
               width="100%"
-              height="300"
+              height="320"
               style={{ border: 0 }}
-              allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Green Cabinets Location - Bushwick, Brooklyn"
-              className="w-full"
+              title="Green Cabinets Location - 10 Montieth St, Brooklyn"
+              className="w-full pointer-events-none dark:[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]"
             />
-          </div>
+            <span className="absolute top-3 right-3 text-xs font-semibold bg-background/95 text-foreground px-3 py-1.5 rounded-md shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
+              Get Directions ↗
+            </span>
+          </a>
         </div>
 
         {/* CTA Buttons */}
