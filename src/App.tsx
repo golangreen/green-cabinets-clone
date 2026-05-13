@@ -26,6 +26,7 @@ import CaseStudies from "./pages/CaseStudies";
 import CaseStudyDetail from "./pages/CaseStudyDetail";
 import BestWoodForKitchenCabinets from "./pages/BestWoodForKitchenCabinets";
 import CabinetWoodTypesAndCosts from "./pages/CabinetWoodTypesAndCosts";
+import NaturalWoodKitchenCabinets from "./pages/NaturalWoodKitchenCabinets";
 import DoubleSinkVanityGuide from "./pages/DoubleSinkVanityGuide";
 import FloatingBathroomVanity from "./pages/FloatingBathroomVanity";
 import SmallBathroomVanityIdeas from "./pages/SmallBathroomVanityIdeas";
