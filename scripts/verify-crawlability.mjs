@@ -102,16 +102,33 @@ if (rRes.status !== 200) {
     log(false, "User-agent: * group present");
   } else {
     log(true, `User-agent: * group parsed (${star.allow.size} allow, ${star.disallow.size} disallow)`);
-    for (const rule of EXPECTED_DISALLOW) {
-      const ok = star.disallow.has(rule);
-      log(ok, `  Disallow: ${rule}`);
-      if (!ok) fails.push(`* group missing Disallow: ${rule}`);
-    }
-    for (const rule of EXPECTED_ALLOW) {
-      const ok = star.allow.has(rule);
-      log(ok, `  Allow: ${rule}`);
-      if (!ok) fails.push(`* group missing Allow: ${rule}`);
-    }
+
+    const diffSet = (label, expected, actual) => {
+      const exp = new Set(expected);
+      const act = new Set(actual);
+      const missing = [...exp].filter((r) => !act.has(r));
+      const extra = [...act].filter((r) => !exp.has(r));
+      const ok = missing.length === 0 && extra.length === 0;
+      log(ok, `* group ${label} rules ${ok ? "match" : "DIFFER"} (expected ${exp.size}, got ${act.size})`);
+      if (ok) return;
+
+      // Pretty diff: -missing (red), +unexpected (yellow)
+      const rows = [
+        ...missing.map((r) => ({ sign: "-", rule: r, color: c.red })),
+        ...extra.map((r) => ({ sign: "+", rule: r, color: c.yellow })),
+      ].sort((a, b) => a.rule.localeCompare(b.rule));
+      for (const { sign, rule, color } of rows) {
+        console.log(`    ${color(`${sign} ${label}: ${rule}`)}`);
+      }
+      console.log(
+        c.dim(`    legend: ${c.red("- missing (expected, not in robots.txt)")} ${c.dim("|")} ${c.yellow("+ unexpected (in robots.txt, not expected)")}`),
+      );
+      if (missing.length) fails.push(`* group missing ${missing.length} ${label} rule(s): ${missing.join(", ")}`);
+      if (extra.length) fails.push(`* group has ${extra.length} unexpected ${label} rule(s): ${extra.join(", ")}`);
+    };
+
+    diffSet("Disallow", EXPECTED_DISALLOW, star.disallow);
+    diffSet("Allow", EXPECTED_ALLOW, star.allow);
   }
   const hasSitemap = sitemaps.includes(EXPECTED_SITEMAP);
   log(hasSitemap, `Sitemap: ${EXPECTED_SITEMAP}`);
