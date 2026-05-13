@@ -59,6 +59,73 @@ const faqJsonLd = {
   })),
 };
 
+const howToJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to Plan a Kitchen Renovation in Brooklyn",
+  description:
+    "Step-by-step guide to planning a Brooklyn kitchen renovation: budget, board approval, design, custom cabinet build, demo, install, and punch list.",
+  totalTime: "P10W",
+  estimatedCost: { "@type": "MonetaryAmount", currency: "USD", value: "45000" },
+  supply: [
+    { "@type": "HowToSupply", name: "Custom cabinetry (15–25 linear feet)" },
+    { "@type": "HowToSupply", name: "Quartz or stone countertop" },
+    { "@type": "HowToSupply", name: "Appliances (range, fridge, dishwasher, hood)" },
+    { "@type": "HowToSupply", name: "Backsplash tile and grout" },
+    { "@type": "HowToSupply", name: "Plumbing fixtures and cabinet hardware" },
+  ],
+  tool: [
+    { "@type": "HowToTool", name: "Licensed NYC general contractor" },
+    { "@type": "HowToTool", name: "Cabinet shop (millwork)" },
+    { "@type": "HowToTool", name: "Countertop fabricator" },
+    { "@type": "HowToTool", name: "Licensed plumber and electrician" },
+  ],
+  step: [
+    {
+      "@type": "HowToStep",
+      position: 1,
+      name: "Set a realistic Brooklyn budget",
+      text: "Plan $25,000–$75,000 for a typical Brooklyn kitchen in 2026. Cabinets are 30–40% of the budget. Brownstone gut renos average $45K–$60K; high-end Park Slope or Cobble Hill kitchens run $80K–$150K.",
+      url: "https://greencabinetsny.com/kitchen-renovation-brooklyn#budget",
+    },
+    {
+      "@type": "HowToStep",
+      position: 2,
+      name: "Confirm permits and board approval",
+      text: "If plumbing, gas, electrical, or walls move, file with NYC DOB through a licensed contractor. Co-ops and condos almost always require board approval and an alteration agreement — start this 4–8 weeks before any work.",
+      url: "https://greencabinetsny.com/kitchen-renovation-brooklyn#permits",
+    },
+    {
+      "@type": "HowToStep",
+      position: 3,
+      name: "Design the layout and cabinetry",
+      text: "Measure the existing space, decide whether to keep plumbing and gas in place (the single biggest cost lever), and design custom cabinets sized to the actual walls — no wasted fillers, full-extension hardware, floor-to-ceiling pantries.",
+      url: "https://greencabinetsny.com/designer",
+    },
+    {
+      "@type": "HowToStep",
+      position: 4,
+      name: "Build the cabinets (4–6 weeks)",
+      text: "Custom cabinets are milled, sanded, and sprayed at our Bushwick shop in 4–6 weeks. While cabinets build, demo and rough-in plumbing/electrical happen on site (1–2 weeks).",
+      url: "https://greencabinetsny.com/wood-species",
+    },
+    {
+      "@type": "HowToStep",
+      position: 5,
+      name: "Install cabinets and template countertops",
+      text: "Cabinet install takes about a week. Countertops are templated after install, then fabricated and installed (adds 2–3 weeks). Backsplash tile follows.",
+      url: "https://greencabinetsny.com/finishes-colors",
+    },
+    {
+      "@type": "HowToStep",
+      position: 6,
+      name: "Punch list and final walkthrough",
+      text: "Final week: hardware, trim, touch-ups, appliance hookup, and a punch-list walkthrough. Total project from contract to functional kitchen: 8–14 weeks (plus board approval).",
+      url: "https://greencabinetsny.com/kitchen-renovation-brooklyn",
+    },
+  ],
+};
+
 const serviceJsonLd = {
   "@context": "https://schema.org",
   "@type": "Service",
@@ -97,6 +164,7 @@ const KitchenRenovationBrooklyn = () => (
       <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
       <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       <script type="application/ld+json">{JSON.stringify(serviceJsonLd)}</script>
+      <script type="application/ld+json">{JSON.stringify(howToJsonLd)}</script>
     </Helmet>
 
     <BreadcrumbSchema
