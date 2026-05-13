@@ -50,6 +50,10 @@ const Shop = () => {
         <title>Shop | Green Cabinets - Cabinet Hardware & Accessories</title>
         <meta name="description" content="Shop premium cabinet hardware, handles, and accessories from Green Cabinets. Quality products for your custom kitchen and bathroom projects." />
         <link rel="canonical" href="https://greencabinetsny.com/shop" />
+        <meta property="og:title" content="Shop Cabinet Hardware & Accessories | Green Cabinets NY" />
+        <meta property="og:description" content="Premium cabinet handles, hardware, and accessories shipped from our Brooklyn shop. Built to match Green Cabinets custom builds." />
+        <meta property="og:url" content="https://greencabinetsny.com/shop" />
+        <meta property="og:type" content="website" />
       </Helmet>
       <BreadcrumbSchema items={[{ name: "Home", url: "/" }, { name: "Shop", url: "/shop" }]} />
       <Header />
