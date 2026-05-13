@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "validate:jsonld": "node scripts/validate-localbusiness-jsonld.mjs",
+    "indexnow": "node scripts/indexnow-submit.mjs",
     "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest",
