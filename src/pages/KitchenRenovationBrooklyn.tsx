@@ -52,6 +52,15 @@ const FAQS = [
   },
 ];
 
+const articleSchema = buildArticleSchema({
+  url: URL,
+  headline: TITLE,
+  description: DESC,
+  datePublished: "2026-01-15",
+  keywords:
+    "kitchen renovation brooklyn, brooklyn kitchen remodel, brownstone kitchen renovation, brooklyn kitchen cost, nyc kitchen renovation",
+});
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
