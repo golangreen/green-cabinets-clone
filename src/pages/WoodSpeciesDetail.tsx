@@ -4,7 +4,7 @@
  * pros/cons, FAQ, related species, and CTA.
  */
 import { Helmet } from "react-helmet-async";
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link, Navigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -17,11 +17,18 @@ import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
 
 const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
   const wood = slug ? getWoodSpecies(slug) : undefined;
 
   if (!wood) return <Navigate to="/wood-species" replace />;
 
-  const url = `https://greencabinetsny.com/wood-species/${wood.slug}`;
+  const isFaqShare = searchParams.get("share") === "faq";
+  const canonicalUrl = `https://greencabinetsny.com/wood-species/${wood.slug}`;
+  const url = `${canonicalUrl}${isFaqShare ? "?share=faq" : ""}`;
+  const shareTitle = (isFaqShare && wood.faqOgTitle) || wood.ogTitle || wood.metaTitle || `${wood.name} Cabinets — Complete Guide`;
+  const shareDescription = (isFaqShare && wood.faqOgDescription) || wood.ogDescription || wood.metaDescription || wood.shortDescription;
+  const shareImageRaw = (isFaqShare && wood.faqOgImage) || wood.ogImage || wood.image;
+  const shareImage = shareImageRaw.startsWith("http") ? shareImageRaw : `https://greencabinetsny.com${shareImageRaw}`;
   const comparisons = getComparisonsFor(wood.slug);
   const comparisonSlugs = new Set(comparisons.map((c) => c.slug));
   // Prefer species not already shown in the comparison block, fall back to any other.
@@ -72,24 +79,18 @@ const WoodSpeciesDetail = () => {
           content={wood.metaDescription ?? `${wood.shortDescription} Janka hardness ${wood.jankaHardness} lbf. Built in Brooklyn since 2009.`}
         />
         <meta name="keywords" content={wood.keywords.join(", ")} />
-        <link rel="canonical" href={url} />
+        <link rel="canonical" href={canonicalUrl} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={url} />
-        <meta property="og:title" content={wood.ogTitle ?? wood.metaTitle ?? `${wood.name} Cabinets — Complete Guide`} />
-        <meta property="og:description" content={wood.ogDescription ?? wood.metaDescription ?? wood.shortDescription} />
-        <meta property="og:image" content={(() => {
-          const img = wood.ogImage ?? wood.image;
-          return img.startsWith("http") ? img : `https://greencabinetsny.com${img}`;
-        })()} />
+        <meta property="og:title" content={shareTitle} />
+        <meta property="og:description" content={shareDescription} />
+        <meta property="og:image" content={shareImage} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={wood.ogTitle ?? wood.metaTitle ?? `${wood.name} Cabinets`} />
-        <meta name="twitter:description" content={wood.ogDescription ?? wood.metaDescription ?? wood.shortDescription} />
-        <meta name="twitter:image" content={(() => {
-          const img = wood.ogImage ?? wood.image;
-          return img.startsWith("http") ? img : `https://greencabinetsny.com${img}`;
-        })()} />
+        <meta name="twitter:title" content={shareTitle} />
+        <meta name="twitter:description" content={shareDescription} />
+        <meta name="twitter:image" content={shareImage} />
         <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
