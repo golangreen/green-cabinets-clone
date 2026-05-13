@@ -65,7 +65,17 @@ for (const w of WOOD_SPECIES) {
   });
 }
 
-function generateSitemap(entries: SitemapEntry[]) {
+// Case study detail pages
+for (const c of CASE_STUDIES) {
+  entries.push({
+    path: `/case-studies/${c.slug}`,
+    changefreq: "yearly",
+    priority: "0.75",
+    lastmod: c.datePublished,
+  });
+}
+
+
   const urls = entries.map((e) =>
     [
       `  <url>`,
