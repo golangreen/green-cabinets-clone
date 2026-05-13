@@ -16,6 +16,7 @@ import { Check, X, ArrowRight, ArrowLeft, Link2, Search, ChevronDown } from "luc
 import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
 import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
+import { authorRef, ORG_ID } from "@/data/authors";
 
 const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -65,9 +66,10 @@ const WoodSpeciesDetail = () => {
     image: [wood.image.startsWith("http") ? wood.image : `https://greencabinetsny.com${wood.image}`],
     datePublished: "2024-01-15",
     dateModified: isoToday,
-    author: { "@type": "Organization", name: "Green Cabinets NY", url: "https://greencabinetsny.com" },
+    author: authorRef("golan"),
     publisher: {
       "@type": "Organization",
+      "@id": ORG_ID,
       name: "Green Cabinets NY",
       logo: { "@type": "ImageObject", url: "https://greencabinetsny.com/og-image.jpg" },
     },
