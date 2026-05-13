@@ -10,8 +10,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Lightbulb } from "lucide-react";
-import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/small-bathroom-vanity-ideas";
 const TITLE = "Small Bathroom Vanity Ideas — 18\" to 36\" That Actually Work";
@@ -54,20 +54,13 @@ const TRICKS = [
   { title: "Pick light wood, not white", body: "Rift white oak or natural maple keeps a tiny bath from feeling clinical the way pure white can." },
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${URL}#article`,
+const articleSchema = buildArticleSchema({
+  url: URL,
   headline: TITLE,
   description: DESC,
-  author: authorRef("golan"),
-  publisher: { "@id": ORG_ID },
   datePublished: "2026-05-13",
-  dateModified: new Date().toISOString().slice(0, 10),
-  image: ["https://greencabinetsny.com/og-image.jpg"],
-  mainEntityOfPage: { "@type": "WebPage", "@id": URL },
   keywords: "small bathroom vanity, small vanity ideas, 24 inch vanity, 30 inch vanity, powder room vanity, narrow bathroom vanity",
-};
+});
 
 const itemListSchema = {
   "@context": "https://schema.org",

@@ -13,8 +13,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema, buildFaqSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/cabinet-wood-types-and-costs";
 const TITLE = "Cabinet Wood Types and Costs — Per-Linear-Foot Guide (2026)";
@@ -49,21 +49,14 @@ const ROWS: Row[] = [
   { slug: "mahogany", name: "Mahogany (Khaya)", janka: 1070, grain: "Open, ribboned", tier: "Luxury", premiumLf: "+$125 to +$250", bestFor: "High-gloss French polish, traditional libraries" },
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${URL}#article`,
+const articleSchema = buildArticleSchema({
+  url: URL,
   headline: TITLE,
   description: DESC,
-  author: authorRef("golan"),
-  publisher: { "@id": ORG_ID },
   datePublished: "2026-05-13",
-  dateModified: new Date().toISOString().slice(0, 10),
-  image: ["https://greencabinetsny.com/og-image.jpg"],
-  mainEntityOfPage: { "@type": "WebPage", "@id": URL },
   keywords:
     "cabinet wood types and costs, types of wood cabinets, cabinet wood, hardwood cabinet costs, kitchen cabinet wood prices, wood cabinet comparison",
-};
+});
 
 const itemListSchema = {
   "@context": "https://schema.org",
@@ -89,15 +82,7 @@ const FAQ = [
   { q: "Does the wood species affect cabinet durability or just look?", a: "Both. Janka hardness predicts dent resistance — under 1,000 (alder, walnut, cherry) wants a careful household; 1,200–1,500 (red oak, birch, maple) is the sweet spot; 1,800+ (hickory) handles anything. Color and grain are the other axis — open-pore species (oak, ash, walnut) hide wear better than closed-pore species (maple, cherry, birch) where every dent shows." },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const faqSchema = buildFaqSchema(FAQ);
 
 const tierBadge: Record<Row["tier"], string> = {
   Budget: "bg-emerald-100 text-emerald-900 dark:bg-emerald-900/30 dark:text-emerald-200",

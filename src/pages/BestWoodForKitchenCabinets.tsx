@@ -11,8 +11,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Trophy } from "lucide-react";
-import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema, buildFaqSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/best-wood-for-kitchen-cabinets";
 const TITLE = "Best Wood for Kitchen Cabinets in 2026 — Honest Picks by Use Case";
@@ -78,22 +78,15 @@ const PICKS = [
   },
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${URL}#article`,
+const articleSchema = buildArticleSchema({
+  url: URL,
   headline: TITLE,
   description: DESC,
-  author: authorRef("golan"),
-  publisher: { "@id": ORG_ID },
   datePublished: "2026-05-13",
-  dateModified: new Date().toISOString().slice(0, 10),
-  image: ["https://greencabinetsny.com/og-image.jpg"],
-  mainEntityOfPage: { "@type": "WebPage", "@id": URL },
   about: PICKS.map((p) => `${p.title}: ${p.winner}`).join(" | "),
   keywords:
     "best wood for kitchen cabinets, best wood for cabinets, cabinet wood, paint-grade cabinets, stain-grade cabinets, hardwood kitchen cabinets",
-};
+});
 
 const itemListSchema = {
   "@context": "https://schema.org",
@@ -118,15 +111,7 @@ const FAQ = [
   { q: "Should I choose solid wood or wood veneer for cabinet doors?", a: "Solid wood for shaker, raised-panel, and inset doors — the construction depends on it. Veneer over MDF or ply for slab doors (especially modern, large-format slabs), because solid wood that wide will warp and split with seasonal humidity. A flat-panel center on a shaker door is also typically veneered ply for the same reason." },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const faqSchema = buildFaqSchema(FAQ);
 
 const BestWoodForKitchenCabinets = () => (
   <div className="min-h-screen bg-background">

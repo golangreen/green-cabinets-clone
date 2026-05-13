@@ -10,8 +10,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, X } from "lucide-react";
-import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/floating-bathroom-vanity";
 const TITLE = "Floating Bathroom Vanity — NYC Install Guide & Cost (2026)";
@@ -34,20 +34,13 @@ const CONS = [
   "Co-op buildings sometimes require structural sign-off for wall-mount loads",
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${URL}#article`,
+const articleSchema = buildArticleSchema({
+  url: URL,
   headline: TITLE,
   description: DESC,
-  author: authorRef("golan"),
-  publisher: { "@id": ORG_ID },
   datePublished: "2026-05-13",
-  dateModified: new Date().toISOString().slice(0, 10),
-  image: ["https://greencabinetsny.com/og-image.jpg"],
-  mainEntityOfPage: { "@type": "WebPage", "@id": URL },
   keywords: "floating bathroom vanity, wall mounted vanity, floating vanity nyc, custom floating vanity, wall hung vanity",
-};
+});
 
 const faqSchema = {
   "@context": "https://schema.org",

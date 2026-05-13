@@ -10,6 +10,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { authorRef } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/kitchen-renovation-brooklyn";
 const TITLE = "Kitchen Renovation Brooklyn | Costs, Permits & Timeline (2026)";
@@ -50,6 +51,15 @@ const FAQS = [
     a: "Yes. Our shop has been in Bushwick (10 Montieth St) since 2009. Every cabinet we ship is milled, sanded, sprayed, and crated in Brooklyn before installation. You're welcome to visit while your cabinets are in raw wood.",
   },
 ];
+
+const articleSchema = buildArticleSchema({
+  url: URL,
+  headline: TITLE,
+  description: DESC,
+  datePublished: "2026-01-15",
+  keywords:
+    "kitchen renovation brooklyn, brooklyn kitchen remodel, brownstone kitchen renovation, brooklyn kitchen cost, nyc kitchen renovation",
+});
 
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -166,6 +176,7 @@ const KitchenRenovationBrooklyn = () => (
       <meta name="twitter:title" content={TITLE} />
       <meta name="twitter:description" content={DESC} />
       <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
+      <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
       <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       <script type="application/ld+json">{JSON.stringify(serviceJsonLd)}</script>
       <script type="application/ld+json">{JSON.stringify(howToJsonLd)}</script>

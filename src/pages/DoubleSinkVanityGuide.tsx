@@ -10,8 +10,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Ruler, Droplets, DollarSign } from "lucide-react";
-import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/double-sink-vanity-guide";
 const TITLE = "Double Sink Vanity — Sizes, Layouts & NYC Cost Guide (2026)";
@@ -33,20 +33,13 @@ const LAYOUTS = [
   { name: "Offset basins toward outside walls", best: "Galley baths where you need a shared makeup landing in the middle" },
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${URL}#article`,
+const articleSchema = buildArticleSchema({
+  url: URL,
   headline: TITLE,
   description: DESC,
-  author: authorRef("golan"),
-  publisher: { "@id": ORG_ID },
   datePublished: "2026-05-13",
-  dateModified: new Date().toISOString().slice(0, 10),
-  image: ["https://greencabinetsny.com/og-image.jpg"],
-  mainEntityOfPage: { "@type": "WebPage", "@id": URL },
   keywords: "double sink vanity, double vanity, 60 inch double vanity, 72 inch double vanity, custom double vanity nyc",
-};
+});
 
 const faqSchema = {
   "@context": "https://schema.org",

@@ -11,8 +11,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Leaf, Droplets, Sun, ShieldCheck } from "lucide-react";
-import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/AuthorByline";
+import { buildArticleSchema, buildFaqSchema } from "@/lib/articleSchema";
 import { WOOD_SPECIES } from "@/data/woodSpecies";
 
 const URL = "https://greencabinetsny.com/natural-wood-kitchen-cabinets";
@@ -131,22 +131,15 @@ const FAQ = [
   },
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${URL}#article`,
+const articleSchema = buildArticleSchema({
+  url: URL,
   headline: TITLE,
   description: DESC,
-  author: authorRef("golan"),
-  publisher: { "@id": ORG_ID },
   datePublished: "2026-05-13",
-  dateModified: new Date().toISOString().slice(0, 10),
-  image: ["https://greencabinetsny.com/og-image.jpg"],
-  mainEntityOfPage: { "@type": "WebPage", "@id": URL },
   about: NATURAL_PICKS.map((p) => p.name).join(", "),
   keywords:
     "natural wood kitchen cabinets, natural wood cabinets, unstained kitchen cabinets, white oak kitchen cabinets, walnut kitchen cabinets, hardwax oil cabinets",
-};
+});
 
 const itemListSchema = {
   "@context": "https://schema.org",
@@ -160,15 +153,7 @@ const itemListSchema = {
   })),
 };
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const faqSchema = buildFaqSchema(FAQ);
 
 const NaturalWoodKitchenCabinets = () => (
   <div className="min-h-screen bg-background">
