@@ -237,9 +237,13 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     shortDescription:
       "Red oak's pinkish heartwood and pronounced cathedral grain defined American kitchens for half a century. Modern stains and rift cuts have brought it roaring back as a budget-friendly white oak alternative.",
     longDescription: [
-      "Red oak (Quercus rubra) is the most widely harvested hardwood in North America and was the default cabinet wood from the 1970s through the early 2000s. Its grain is bolder and more open than white oak, with a pinkish-red cast in the heartwood. After a long fall from fashion it has returned, partly because it costs roughly 25–30% less than white oak and partly because designers are revisiting honey-toned mid-century kitchens.",
-      "Workability is excellent — red oak machines, glues, and stains predictably. Its open grain accepts pigment stains so deeply that you can shift it to nearly any tone, from limed bone-white to espresso. The same open structure means it should not be used for wine racks or anything that holds liquid (white oak's closed pores are watertight, red oak's are not).",
-      "For modern projects we recommend rift-cut red oak with a clear hardwax oil — the look is closer to vintage Scandinavian than to 1990s builder-grade kitchens. For traditional jobs, a pigment stain plus glaze gives that classic warm farmhouse feel.",
+      "Red oak (Quercus rubra) is the most widely harvested hardwood in North America and was the default cabinet wood from the 1970s through the early 2000s. Its grain is bolder and more open than white oak, with a distinct pinkish-red cast in the heartwood and a creamier sapwood. After roughly 15 years of being out of fashion, red oak has returned to favor — partly because it costs 25-30% less than white oak, partly because designers are revisiting honey-toned mid-century kitchens, and partly because supply chain stability has made it the reliable choice for tight project timelines.",
+      "Workability is excellent. Red oak machines, glues, and stains predictably, holds screws tightly, and forgives small errors that hickory or hard maple punish. Its open grain accepts pigment stains so deeply that you can shift it to nearly any tone — from limed bone-white to espresso to gray, and everything between. The same open structure means red oak should never be used for wine racks, anything that holds liquid, or surfaces that touch standing water (white oak's closed pores are watertight; red oak's are not).",
+      "For modern projects we typically specify rift-cut red oak with a clear hardwax oil. The look is closer to vintage Scandinavian than to 1990s builder-grade kitchens — straight grain, no cathedral arches, warm amber tone. For traditional and farmhouse jobs, plain-sawn red oak with a pigment stain plus optional glaze gives the classic warm look that defined American kitchens for two generations.",
+      "Janka hardness of 1,290 lbf puts red oak slightly below white oak (1,360) and well above black walnut (1,010), making it more than tough enough for daily kitchen use. Dimensional stability is moderate — red oak moves more than white oak in NYC's humidity swings, but a quality conversion varnish or hardwax oil topcoat keeps doors flat and joints tight year-round.",
+      "Cost in the NYC market currently runs $7-$10 per board foot for plain-sawn red oak — the most affordable premium domestic hardwood available. Rift-cut red oak runs $10-$13/bf, still well below plain-sawn white oak. For a typical 30-linear-foot kitchen, expect red oak cabinetry to cost roughly $4,000-$8,000 less than equivalent white oak construction, with no compromise on durability or finish quality.",
+      "Best uses include traditional shaker, mid-century modern slab, painted bases where you want grain texture visible, transitional kitchens on a budget, and any project that needs to ship in 6 weeks instead of 10. We have specified red oak for prewar Brooklyn brownstones, Queens family kitchens, and several flip projects in Bushwick and Bed-Stuy where the budget mattered more than the trend.",
+      "The honest knock on red oak is the pinkish undertone. It clashes with cool color palettes (gray, blue, true white) and reads dated when paired with the wrong stain. Done well — limed white over rift-cut, or a warm honey stain over plain-sawn — red oak looks current and intentional. Done badly with a generic medium stain it can read as a 1995 builder-grade kitchen. Cut and finish matter more for red oak than for any other species on this list.",
     ],
     jankaHardness: 1290,
     specificGravity: 0.63,
@@ -249,29 +253,69 @@ export const WOOD_SPECIES: WoodSpecies[] = [
     workability: "Very Good",
     stainTake: "Excellent",
     stability: 3,
-    uses: ["Traditional shaker", "Mid-century modern slab", "Painted bases with grain texture"],
+    uses: ["Traditional shaker", "Mid-century modern slab", "Painted bases with grain texture", "Budget-conscious renovations", "Quick-turn projects"],
     pros: [
-      "Most affordable premium domestic hardwood",
+      "Most affordable premium domestic hardwood ($7-$10/bf)",
       "Takes any stain color predictably",
       "Strong, hard, and easy to repair",
       "Abundant supply, stable lead times",
+      "Rift-cut version reads as modern Scandinavian",
     ],
     cons: [
       "Open grain is not watertight — avoid for wet zones",
       "Pinkish undertone can clash with cool palettes",
       "Less dimensionally stable than white oak",
+      "Wrong stain choice can read as dated builder-grade",
     ],
-    bestFinishes: ["Honey stain + matte topcoat", "Limed white", "Espresso pigment", "Cerused gray"],
-    bestDoorStyles: ["Shaker", "Raised panel", "Slab (rift-cut)"],
+    bestFinishes: ["Honey stain + matte topcoat", "Limed white", "Espresso pigment", "Cerused gray", "Clear hardwax oil (rift-cut)"],
+    bestDoorStyles: ["Shaker", "Raised panel", "Slab (rift-cut)", "Beaded inset"],
     swatch: "#b07555",
     image: redOakImg,
     grainImage: redOakImg,
-    keywords: ["red oak cabinets NYC", "affordable oak kitchen", "rift red oak"],
+    keywords: [
+      "red oak cabinets",
+      "red oak kitchen cabinets",
+      "red oak cabinets NYC",
+      "affordable oak kitchen",
+      "rift cut red oak",
+      "red oak vs white oak",
+      "honey oak cabinets",
+    ],
     faqs: [
       {
         question: "Is red oak cheaper than white oak?",
         answer:
-          "Yes — red oak typically runs 20–30% less per board foot than white oak in the NYC market and has better availability for tight lead times.",
+          "Yes — red oak typically runs 25-30% less per board foot than white oak in the NYC market. Plain-sawn red oak is currently $7-$10/bf vs $10-$12 for white oak. For a 30-linear-foot kitchen, that's a $4,000-$8,000 lumber savings with no compromise on durability.",
+      },
+      {
+        question: "How much do red oak kitchen cabinets cost in NYC?",
+        answer:
+          "Custom red oak cabinets from a Brooklyn shop typically run $12,000-$20,000 for a 30-linear-foot kitchen depending on door style, finish, and hardware. That makes red oak the best value in custom solid-wood cabinetry — significantly less than walnut, white oak, or rift-cut alternatives.",
+      },
+      {
+        question: "What is the difference between red oak and white oak?",
+        answer:
+          "Red oak has a pinkish-red heartwood, more open grain, and is not watertight. White oak has a tan-olive heartwood, tighter grain, is harder (1,360 vs 1,290 Janka), more dimensionally stable, and watertight enough to build whiskey barrels. White oak costs 25-30% more and is currently more on-trend for high-end design.",
+      },
+      {
+        question: "Does red oak still look dated?",
+        answer:
+          "Only with the wrong cut and finish. Plain-sawn red oak with a generic medium stain reads as 1990s builder-grade. Rift-cut red oak with a clear hardwax oil reads as modern Scandinavian. Limed white or honey stain over plain-sawn reads as intentional mid-century. The species itself is not the problem — execution matters.",
+      },
+      {
+        question: "Can red oak be painted?",
+        answer:
+          "Yes, but the open grain telegraphs through paint unless filled with a grain filler first. Many designers leave the texture visible under paint as a feature. If you want a perfectly smooth painted finish, specify maple or birch instead — both paint better than red oak.",
+      },
+      {
+        question: "What's the lead time for red oak cabinets?",
+        answer:
+          "Red oak has the most stable supply of any premium hardwood in the NYC market. Expect 6-8 weeks for custom cabinets versus 8-10 weeks for white oak and 10-14 weeks for rift-cut or quartersawn. For tight project timelines, red oak is often the only premium hardwood available without delay.",
+      },
+      {
+        question: "Will red oak cabinets fade or change color?",
+        answer:
+          "Red oak ambers gently with UV exposure over 5-10 years, deepening from pinkish-red toward a warmer amber-brown. The change is subtle and generally improves the color, mellowing the pink undertone that can read as cold when new. A UV-protective topcoat slows but does not stop this aging.",
       },
     ],
   },
