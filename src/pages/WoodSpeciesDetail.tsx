@@ -23,7 +23,8 @@ const WoodSpeciesDetail = () => {
   if (!wood) return <Navigate to="/wood-species" replace />;
 
   const isFaqShare = searchParams.get("share") === "faq";
-  const url = `https://greencabinetsny.com/wood-species/${wood.slug}${isFaqShare ? "?share=faq" : ""}`;
+  const canonicalUrl = `https://greencabinetsny.com/wood-species/${wood.slug}`;
+  const url = `${canonicalUrl}${isFaqShare ? "?share=faq" : ""}`;
   const shareTitle = (isFaqShare && wood.faqOgTitle) || wood.ogTitle || wood.metaTitle || `${wood.name} Cabinets — Complete Guide`;
   const shareDescription = (isFaqShare && wood.faqOgDescription) || wood.ogDescription || wood.metaDescription || wood.shortDescription;
   const shareImageRaw = (isFaqShare && wood.faqOgImage) || wood.ogImage || wood.image;
@@ -78,7 +79,7 @@ const WoodSpeciesDetail = () => {
           content={wood.metaDescription ?? `${wood.shortDescription} Janka hardness ${wood.jankaHardness} lbf. Built in Brooklyn since 2009.`}
         />
         <meta name="keywords" content={wood.keywords.join(", ")} />
-        <link rel="canonical" href={url} />
+        <link rel="canonical" href={canonicalUrl} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={url} />
         <meta property="og:title" content={shareTitle} />
