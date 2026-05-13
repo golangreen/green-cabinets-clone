@@ -260,40 +260,99 @@ const WoodSpeciesDetail = () => {
                 {wood.faqHeading ?? "Frequently Asked Questions"}
               </h2>
 
-              {/* Jump-to TOC */}
-              <nav aria-label="FAQ contents" className="mb-10 rounded-lg border border-border bg-background p-5">
-                <p className="text-sm font-semibold text-[#1a1a1a] mb-3">Jump to a question</p>
-                <ul className="space-y-2">
-                  {faqsWithIds.map((f) => (
-                    <li key={`toc-${f.id}`}>
-                      <a
-                        href={`#faq-${f.id}`}
-                        className="text-sm text-[#5C7650] hover:text-[#445339] hover:underline leading-snug"
-                      >
-                        {f.question}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+              {/* Search filter */}
+              <form
+                role="search"
+                aria-label="Search FAQs"
+                className="relative mb-6"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (filteredFaqs.length > 0) {
+                    const el = document.getElementById(`faq-${filteredFaqs[0].id}`);
+                    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    history.replaceState(null, "", `#faq-${filteredFaqs[0].id}`);
+                  }
+                }}
+              >
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                <Input
+                  type="search"
+                  value={faqQuery}
+                  onChange={(e) => setFaqQuery(e.target.value)}
+                  placeholder={`Search ${wood.name} FAQs (e.g. "paint", "cost", "warp")…`}
+                  aria-label={`Search ${wood.name} FAQs`}
+                  className="pl-9 pr-24 h-11 bg-background"
+                />
+                {faqQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setFaqQuery("")}
+                    aria-label="Clear search"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-[#1a1a1a]"
+                  >
+                    Clear
+                  </button>
+                )}
+              </form>
+              <p className="text-xs text-muted-foreground mb-8 text-center" aria-live="polite">
+                {faqQuery
+                  ? `${filteredFaqs.length} of ${faqsWithIds.length} matching${filteredFaqs.length === 1 ? " — press Enter to jump" : ""}`
+                  : `${faqsWithIds.length} questions`}
+              </p>
 
-              <dl className="space-y-6">
-                {faqsWithIds.map((f) => (
-                  <div key={f.id} id={`faq-${f.id}`} className="scroll-mt-24 group">
-                    <dt className="font-semibold text-[#1a1a1a] mb-2 flex items-start gap-2">
-                      <span className="flex-1">{f.question}</span>
-                      <a
-                        href={`#faq-${f.id}`}
-                        aria-label={`Link to: ${f.question}`}
-                        className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#5C7650] hover:text-[#445339] transition-opacity mt-1 shrink-0"
-                      >
-                        <Link2 className="w-4 h-4" />
-                      </a>
-                    </dt>
-                    <dd className="text-[#555555] leading-relaxed">{f.answer}</dd>
-                  </div>
-                ))}
-              </dl>
+              {/* Jump-to TOC (filtered) */}
+              {filteredFaqs.length > 0 && (
+                <nav aria-label="FAQ contents" className="mb-10 rounded-lg border border-border bg-background p-5">
+                  <p className="text-sm font-semibold text-[#1a1a1a] mb-3">
+                    {faqQuery ? "Matching questions" : "Jump to a question"}
+                  </p>
+                  <ul className="space-y-2">
+                    {filteredFaqs.map((f) => (
+                      <li key={`toc-${f.id}`}>
+                        <a
+                          href={`#faq-${f.id}`}
+                          className="text-sm text-[#5C7650] hover:text-[#445339] hover:underline leading-snug"
+                        >
+                          <Highlight text={f.question} query={faqQuery} />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
+
+              {filteredFaqs.length === 0 ? (
+                <div className="text-center py-12 rounded-lg border border-dashed border-border bg-background">
+                  <p className="text-[#555555] mb-3">
+                    No FAQs match <span className="font-semibold">"{faqQuery}"</span>.
+                  </p>
+                  <Button variant="outline" size="sm" onClick={() => setFaqQuery("")}>
+                    Clear search
+                  </Button>
+                </div>
+              ) : (
+                <dl className="space-y-6">
+                  {filteredFaqs.map((f) => (
+                    <div key={f.id} id={`faq-${f.id}`} className="scroll-mt-24 group">
+                      <dt className="font-semibold text-[#1a1a1a] mb-2 flex items-start gap-2">
+                        <span className="flex-1">
+                          <Highlight text={f.question} query={faqQuery} />
+                        </span>
+                        <a
+                          href={`#faq-${f.id}`}
+                          aria-label={`Link to: ${f.question}`}
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#5C7650] hover:text-[#445339] transition-opacity mt-1 shrink-0"
+                        >
+                          <Link2 className="w-4 h-4" />
+                        </a>
+                      </dt>
+                      <dd className="text-[#555555] leading-relaxed">
+                        <Highlight text={f.answer} query={faqQuery} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
             </div>
           </section>
         )}
