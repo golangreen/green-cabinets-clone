@@ -83,12 +83,8 @@ const entries: SitemapEntry[] = [
   { path: "/reach-in-closet-systems-nyc", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/landing", changefreq: "monthly", priority: "0.7", lastmod: today },
 
-  // Hash-anchored homepage sections (kept for legacy parity)
-  { path: "/#about", changefreq: "monthly", priority: "0.7", lastmod: today },
-  { path: "/#services", changefreq: "monthly", priority: "0.7", lastmod: today },
-  { path: "/#gallery", changefreq: "weekly", priority: "0.8", lastmod: today },
-  { path: "/#contact", changefreq: "monthly", priority: "0.7", lastmod: today },
-  { path: "/#suppliers", changefreq: "monthly", priority: "0.6", lastmod: today },
+  // Homepage section anchors intentionally excluded — the / entry already covers them,
+  // and fragment URLs are invalid inside sitemaps per sitemaps.org spec.
 ];
 
 // Borough pages
