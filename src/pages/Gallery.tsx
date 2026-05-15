@@ -52,6 +52,24 @@ const GalleryPage = () => {
         <meta property="og:description" content="Real Brooklyn and NYC projects: custom kitchens, bathroom vanities, and closet systems built in our Bushwick shop." />
         <meta property="og:url" content="https://greencabinetsny.com/gallery" />
         <meta property="og:type" content="website" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Project Gallery — Custom Kitchens, Vanities & Closets",
+          description: "Browse our full gallery of custom kitchens, bathroom vanities, and closets built in Brooklyn for homes across NYC.",
+          url: "https://greencabinetsny.com/gallery",
+          isPartOf: { "@type": "WebSite", name: "Green Cabinets NY", url: "https://greencabinetsny.com" },
+          mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: filtered.length,
+            itemListElement: filtered.slice(0, 30).map((img, i) => ({
+              "@type": "ImageObject",
+              position: i + 1,
+              contentUrl: img.src,
+              name: img.alt,
+            })),
+          },
+        })}</script>
       </Helmet>
 
       <Header />
