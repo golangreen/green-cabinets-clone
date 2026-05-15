@@ -12,6 +12,7 @@ import { getPerformanceMetrics, getAverageMetrics, getMetricsByUrl } from '@/ser
 import { estimateBundleSize, formatBytes, PERFORMANCE_THRESHOLDS } from '@/lib/performance';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar } from 'recharts';
 import { Activity, Zap, TrendingUp, HardDrive } from 'lucide-react';
+import SeoDeepTestPanel from './SeoDeepTestPanel';
 
 const PerformanceDashboard = () => {
   const [bundleSize, setBundleSize] = useState({ js: 0, css: 0, total: 0 });
@@ -111,6 +112,8 @@ const PerformanceDashboard = () => {
           Monitor Core Web Vitals, bundle sizes, and performance metrics over time
         </p>
       </div>
+
+      <SeoDeepTestPanel />
 
       {/* Time Range Selector */}
       <div className="flex gap-2">
