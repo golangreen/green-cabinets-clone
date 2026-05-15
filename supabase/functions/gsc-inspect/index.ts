@@ -15,6 +15,31 @@ interface InspectBody {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
+  // Require admin authentication
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return json({ error: "Unauthorized" }, 401);
+  }
+
+  const supabaseClient = createClient(
+    Deno.env.get("SUPABASE_URL") ?? "",
+    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+    { global: { headers: { Authorization: authHeader } } }
+  );
+
+  const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+  if (authError || !user) {
+    return json({ error: "Unauthorized" }, 401);
+  }
+
+  const { data: isAdmin } = await supabaseClient.rpc("has_role", {
+    _user_id: user.id,
+    _role: "admin",
+  });
+  if (!isAdmin) {
+    return json({ error: "Admin access required" }, 403);
+  }
+
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
   const GSC_KEY = Deno.env.get("GOOGLE_SEARCH_CONSOLE_API_KEY");
   if (!LOVABLE_API_KEY) return json({ error: "LOVABLE_API_KEY not configured" }, 500);
