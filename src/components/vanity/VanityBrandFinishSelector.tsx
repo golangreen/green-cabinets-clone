@@ -22,8 +22,8 @@ interface VanityBrandFinishSelectorProps {
   selectedBrand: string;
   selectedFinish: string;
   availableFinishes: string[];
-  brandError: boolean;
-  finishError: boolean;
+  brandError: string | null;
+  finishError: string | null;
   onBrandChange: (brand: string) => void;
   onFinishChange: (finish: string) => void;
 }
@@ -49,6 +49,8 @@ export const VanityBrandFinishSelector = ({
       <Select value={selectedBrand} onValueChange={onBrandChange}>
         <SelectTrigger
           id="brand"
+          aria-invalid={!!brandError}
+          aria-describedby={brandError ? "brand-error" : undefined}
           className={brandError ? "bg-background border-destructive focus:ring-destructive" : "bg-background"}
         >
           <SelectValue placeholder="Select brand" />
@@ -61,10 +63,16 @@ export const VanityBrandFinishSelector = ({
           ))}
         </SelectContent>
       </Select>
-      {selectedBrand && (
-        <p className="text-xs text-muted-foreground">
-          {BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.description}
+      {brandError ? (
+        <p id="brand-error" role="alert" className="text-xs font-medium text-destructive">
+          {brandError}
         </p>
+      ) : (
+        selectedBrand && (
+          <p className="text-xs text-muted-foreground">
+            {BRAND_INFO[selectedBrand as keyof typeof BRAND_INFO]?.description}
+          </p>
+        )
       )}
     </div>
 
@@ -77,6 +85,8 @@ export const VanityBrandFinishSelector = ({
       <Select value={selectedFinish} onValueChange={onFinishChange} disabled={!selectedBrand}>
         <SelectTrigger
           id="finish"
+          aria-invalid={!!finishError}
+          aria-describedby={finishError ? "finish-error" : undefined}
           className={finishError ? "bg-background border-destructive focus:ring-destructive" : "bg-background"}
         >
           <SelectValue placeholder={selectedBrand ? "Select finish" : "Select brand first"} />
@@ -117,12 +127,18 @@ export const VanityBrandFinishSelector = ({
           )}
         </SelectContent>
       </Select>
-      {selectedBrand && (
-        <p className="text-xs text-muted-foreground">
-          {availableFinishes.length} finishes available for {selectedBrand}
-          {selectedBrand === "Tafisa" && ` across ${TAFISA_CATEGORIES.length} categories`}
-          {selectedBrand === "Egger" && ` across ${EGGER_CATEGORIES.length} categories`}
+      {finishError ? (
+        <p id="finish-error" role="alert" className="text-xs font-medium text-destructive">
+          {finishError}
         </p>
+      ) : (
+        selectedBrand && (
+          <p className="text-xs text-muted-foreground">
+            {availableFinishes.length} finishes available for {selectedBrand}
+            {selectedBrand === "Tafisa" && ` across ${TAFISA_CATEGORIES.length} categories`}
+            {selectedBrand === "Egger" && ` across ${EGGER_CATEGORIES.length} categories`}
+          </p>
+        )
       )}
     </div>
 
