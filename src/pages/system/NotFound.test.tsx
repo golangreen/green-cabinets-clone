@@ -14,8 +14,11 @@ describe("NotFound", () => {
   it("emits noindex,nofollow meta tag", () => {
     render(<NotFound />, { wrapper: Wrapper });
 
-    const meta = document.querySelector('meta[name="robots"]');
-    expect(meta).toBeInTheDocument();
+    const meta = await waitFor(() => {
+      const el = document.querySelector('meta[name="robots"]');
+      expect(el).toBeInTheDocument();
+      return el;
+    });
     expect(meta).toHaveAttribute("content", "noindex, nofollow");
   });
 });
