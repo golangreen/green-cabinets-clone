@@ -41,14 +41,14 @@ import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 
 
-const queryClient = new QueryClient();
+
 
 const App = () => {
   // Initialize performance monitoring
   usePerformanceMonitor();
   
   return (
-    <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
