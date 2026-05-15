@@ -124,7 +124,7 @@ Deno.serve(async (req) => {
     });
   } catch (err) {
     console.error("suggest-gallery-caption error", err);
-    return json({ error: err instanceof Error ? err.message : "Unknown error" }, 500);
+    return json({ error: "An internal error occurred. Please try again." }, 500);
   }
 });
 
