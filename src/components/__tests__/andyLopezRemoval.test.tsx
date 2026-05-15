@@ -5,11 +5,11 @@
  */
 import { describe, it, expect, vi } from "vitest";
 import { renderWithProviders } from "@/test/utils";
-import Footer from "@/components/Footer";
-import Contact from "@/components/Contact";
+import Footer from "@/components/layout/Footer";
+import Contact from "@/components/home/Contact";
 
 // Quote form pulls in Supabase + react-hook-form; stub it for isolation.
-vi.mock("@/components/QuoteForm", () => ({
+vi.mock("@/components/marketing/QuoteForm", () => ({
   default: () => null,
 }));
 

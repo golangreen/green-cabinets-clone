@@ -1,0 +1,534 @@
+/**
+ * Per-species deep page — /wood-species/:slug
+ * Long-form SEO content with multi-paragraph copy, spec table,
+ * pros/cons, FAQ, related species, and CTA.
+ */
+import { useMemo, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { useParams, Link, Navigate, useSearchParams } from "react-router-dom";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Check, X, ArrowRight, ArrowLeft, Link2, Search, ChevronDown } from "lucide-react";
+import { WOOD_SPECIES, getWoodSpecies } from "@/data/woodSpecies";
+import { getComparisonsFor } from "@/data/woodComparisons";
+import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
+import { authorRef, ORG_ID } from "@/data/authors";
+import AuthorByline from "@/components/marketing/AuthorByline";
+
+const WoodSpeciesDetail = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const [faqQuery, setFaqQuery] = useState("");
+  // Default-open on md+ screens, collapsed on mobile to save space.
+  const [tocOpen, setTocOpen] = useState(() =>
+    typeof window === "undefined" ? true : window.matchMedia("(min-width: 768px)").matches
+  );
+  const wood = slug ? getWoodSpecies(slug) : undefined;
+
+  // Slugify FAQ questions for stable anchor IDs (e.g. "How much do maple cabinets cost?" -> "how-much-do-maple-cabinets-cost")
+  const faqSlug = (q: string) =>
+    q.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").slice(0, 80);
+  const faqsWithIds = useMemo(
+    () => (wood?.faqs ?? []).map((f) => ({ ...f, id: faqSlug(f.question) })),
+    [wood]
+  );
+
+  // Client-side FAQ filter — matches against question + answer, case-insensitive.
+  const filteredFaqs = useMemo(() => {
+    const q = faqQuery.trim().toLowerCase();
+    if (!q) return faqsWithIds;
+    return faqsWithIds.filter(
+      (f) => f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q)
+    );
+  }, [faqQuery, faqsWithIds]);
+
+  if (!wood) return <Navigate to="/wood-species" replace />;
+
+  const isFaqShare = searchParams.get("share") === "faq";
+  const canonicalUrl = `https://greencabinetsny.com/wood-species/${wood.slug}`;
+  const url = `${canonicalUrl}${isFaqShare ? "?share=faq" : ""}`;
+  const shareTitle = (isFaqShare && wood.faqOgTitle) || wood.ogTitle || wood.metaTitle || `${wood.name} Cabinets — Complete Guide`;
+  const shareDescription = (isFaqShare && wood.faqOgDescription) || wood.ogDescription || wood.metaDescription || wood.shortDescription;
+  const shareImageRaw = (isFaqShare && wood.faqOgImage) || wood.ogImage || wood.image;
+  const shareImage = shareImageRaw.startsWith("http") ? shareImageRaw : `https://greencabinetsny.com${shareImageRaw}`;
+  const comparisons = getComparisonsFor(wood.slug);
+  const comparisonSlugs = new Set(comparisons.map((c) => c.slug));
+  // Prefer species not already shown in the comparison block, fall back to any other.
+  const relatedPool = WOOD_SPECIES.filter((w) => w.slug !== wood.slug && !comparisonSlugs.has(w.slug));
+  const related = (relatedPool.length >= 3 ? relatedPool : WOOD_SPECIES.filter((w) => w.slug !== wood.slug)).slice(0, 3);
+
+
+  const isoToday = new Date().toISOString().slice(0, 10);
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `${wood.name} Cabinets — Complete Guide`,
+    description: wood.shortDescription,
+    image: [wood.image.startsWith("http") ? wood.image : `https://greencabinetsny.com${wood.image}`],
+    datePublished: "2024-01-15",
+    dateModified: isoToday,
+    author: authorRef("golan"),
+    publisher: {
+      "@type": "Organization",
+      "@id": ORG_ID,
+      name: "Green Cabinets NY",
+      logo: { "@type": "ImageObject", url: "https://greencabinetsny.com/og-image.jpg" },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqsWithIds.map((f) => ({
+      "@type": "Question",
+      "@id": `${url}#faq-${f.id}`,
+      url: `${url}#faq-${f.id}`,
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>{wood.metaTitle ?? `${wood.name} Kitchen Cabinets — Grain, Hardness, Cost & Finishes | Green Cabinets NY`}</title>
+        <meta
+          name="description"
+          content={wood.metaDescription ?? `${wood.shortDescription} Janka hardness ${wood.jankaHardness} lbf. Built in Brooklyn since 2009.`}
+        />
+        <meta name="keywords" content={wood.keywords.join(", ")} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={url} />
+        <meta property="og:title" content={shareTitle} />
+        <meta property="og:description" content={shareDescription} />
+        <meta property="og:image" content={shareImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={shareTitle} />
+        <meta name="twitter:description" content={shareDescription} />
+        <meta name="twitter:image" content={shareImage} />
+        <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
+      </Helmet>
+
+      <Header />
+
+      <Breadcrumbs
+        items={[
+          { label: "Home", to: "/" },
+          { label: "Wood Species", to: "/wood-species" },
+          { label: wood.name },
+        ]}
+      />
+
+      <main className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+        {/* Hero */}
+        <section className="py-12 sm:py-16 md:py-20">
+          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              <div className="space-y-4">
+                <Link
+                  to="/wood-species"
+                  className="inline-flex items-center gap-1 text-sm text-[#5C7650] hover:text-[#445339]"
+                >
+                  <ArrowLeft className="w-4 h-4" /> All wood species
+                </Link>
+                <div className="flex items-center gap-3">
+                  <span
+                    className="inline-block w-10 h-10 rounded-full border-2 border-border shrink-0"
+                    style={{ backgroundColor: wood.swatch }}
+                    aria-hidden="true"
+                  />
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a]">
+                    {wood.h1 ?? wood.name}
+                  </h1>
+                </div>
+                <p className="text-lg text-[#5C7650] italic">{wood.tagline}</p>
+                <p className="text-base text-[#555555] leading-relaxed">{wood.shortDescription}</p>
+                <p className="text-xs text-[#999999]">
+                  <em>{wood.scientificName}</em> · {wood.origin}
+                </p>
+                <AuthorByline author="golan" label="Reviewed by" className="pt-2" />
+              </div>
+              <WoodGalleryCarousel
+                speciesName={wood.name}
+                images={[wood.image, wood.grainImage, ...(wood.gallery ?? [])]}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Spec table */}
+        <section className="py-10 bg-muted/40 border-y border-border">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <Spec label="Janka Hardness" value={`${wood.jankaHardness.toLocaleString()} lbf`} />
+              <Spec label="Cost Tier" value={wood.costTier} />
+              <Spec label="Workability" value={wood.workability} />
+              <Spec label="Stain Take" value={wood.stainTake} />
+              <Spec label="Stability (1–5)" value={String(wood.stability)} />
+              <Spec label="Specific Gravity" value={wood.specificGravity.toFixed(2)} />
+              <Spec label="Color" value={wood.color} small />
+              <Spec label="Grain" value={wood.grain} small />
+            </div>
+          </div>
+        </section>
+
+        {/* Long-form */}
+        <section className="py-12 sm:py-16 md:py-20">
+          <div className="container mx-auto px-4 sm:px-6 max-w-3xl prose prose-neutral max-w-none">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-6">
+              {wood.aboutHeading ?? `About ${wood.name}`}
+            </h2>
+            <div className="space-y-5 text-[#1a1a1a] leading-relaxed">
+              {wood.longDescription.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Grain image */}
+        <section className="pb-12 sm:pb-16">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+            <div className="rounded-xl overflow-hidden shadow-lg">
+              <img
+                src={wood.grainImage}
+                alt={`Close-up of ${wood.name} grain pattern`}
+                loading="lazy"
+                className="w-full aspect-[16/7] object-cover"
+              />
+            </div>
+            <p className="text-xs text-[#999999] text-center mt-2">
+              Close-up of {wood.name.toLowerCase()} grain — {wood.grain.toLowerCase()}.
+            </p>
+          </div>
+        </section>
+
+        {/* Pros & Cons */}
+        <section className="py-12 sm:py-16 bg-muted/40">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-8 text-center">
+              The Honest Tradeoffs
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold text-[#5C7650] mb-3 flex items-center gap-2">
+                    <Check className="w-5 h-5" /> What we love
+                  </h3>
+                  <ul className="space-y-2">
+                    {wood.pros.map((p) => (
+                      <li key={p} className="flex gap-2 text-sm text-[#1a1a1a]">
+                        <Check className="w-4 h-4 text-[#5C7650] shrink-0 mt-0.5" />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold text-destructive mb-3 flex items-center gap-2">
+                    <X className="w-5 h-5" /> What to watch for
+                  </h3>
+                  <ul className="space-y-2">
+                    {wood.cons.map((c) => (
+                      <li key={c} className="flex gap-2 text-sm text-[#1a1a1a]">
+                        <X className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+                        <span>{c}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Best uses / finishes / styles */}
+        <section className="py-12 sm:py-16">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+            <div className="grid md:grid-cols-3 gap-6">
+              <DetailList title="Common Uses" items={wood.uses} />
+              <DetailList title="Best Finishes" items={wood.bestFinishes} />
+              <DetailList title="Door Styles That Suit It" items={wood.bestDoorStyles} />
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        {faqsWithIds.length > 0 && (
+          <section id="faq" className="py-12 sm:py-16 bg-muted/40 scroll-mt-24">
+            <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-6 text-center">
+                {wood.faqHeading ?? "Frequently Asked Questions"}
+              </h2>
+
+              {/* Search filter */}
+              <form
+                role="search"
+                aria-label="Search FAQs"
+                className="relative mb-6"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (filteredFaqs.length > 0) {
+                    const el = document.getElementById(`faq-${filteredFaqs[0].id}`);
+                    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    history.replaceState(null, "", `#faq-${filteredFaqs[0].id}`);
+                  }
+                }}
+              >
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                <Input
+                  type="search"
+                  value={faqQuery}
+                  onChange={(e) => setFaqQuery(e.target.value)}
+                  placeholder={`Search ${wood.name} FAQs (e.g. "paint", "cost", "warp")…`}
+                  aria-label={`Search ${wood.name} FAQs`}
+                  className="pl-9 pr-24 h-11 bg-background"
+                />
+                {faqQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setFaqQuery("")}
+                    aria-label="Clear search"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-[#1a1a1a]"
+                  >
+                    Clear
+                  </button>
+                )}
+              </form>
+              <p className="text-xs text-muted-foreground mb-8 text-center" aria-live="polite">
+                {faqQuery
+                  ? `${filteredFaqs.length} of ${faqsWithIds.length} matching${filteredFaqs.length === 1 ? " — press Enter to jump" : ""}`
+                  : `${faqsWithIds.length} questions`}
+              </p>
+
+              {/* Jump-to TOC (filtered) */}
+              {filteredFaqs.length > 0 && (
+                <nav aria-label="FAQ contents" className="mb-10 rounded-lg border border-border bg-background overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setTocOpen((v) => !v)}
+                    aria-expanded={tocOpen}
+                    aria-controls="faq-toc-list"
+                    className="w-full flex items-center justify-between gap-3 p-5 text-left hover:bg-muted/30 transition-colors"
+                  >
+                    <span className="text-sm font-semibold text-[#1a1a1a]">
+                      {faqQuery ? `Matching questions (${filteredFaqs.length})` : `Jump to a question (${filteredFaqs.length})`}
+                    </span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-[#5C7650] shrink-0 transition-transform duration-200 ${tocOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {tocOpen && (
+                    <ul id="faq-toc-list" className="space-y-2 px-5 pb-5">
+                      {filteredFaqs.map((f) => (
+                        <li key={`toc-${f.id}`}>
+                          <a
+                            href={`#faq-${f.id}`}
+                            className="text-sm text-[#5C7650] hover:text-[#445339] hover:underline leading-snug"
+                          >
+                            <HighlightedText text={f.question} query={faqQuery} />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </nav>
+              )}
+
+              {filteredFaqs.length === 0 ? (
+                <div className="text-center py-12 rounded-lg border border-dashed border-border bg-background">
+                  <p className="text-[#555555] mb-3">
+                    No FAQs match <span className="font-semibold">"{faqQuery}"</span>.
+                  </p>
+                  <Button variant="outline" size="sm" onClick={() => setFaqQuery("")}>
+                    Clear search
+                  </Button>
+                </div>
+              ) : (
+                <dl className="space-y-6">
+                  {filteredFaqs.map((f) => (
+                    <div key={f.id} id={`faq-${f.id}`} className="scroll-mt-24 group">
+                      <dt className="font-semibold text-[#1a1a1a] mb-2 flex items-start gap-2">
+                        <span className="flex-1">
+                          <HighlightedText text={f.question} query={faqQuery} />
+                        </span>
+                        <a
+                          href={`#faq-${f.id}`}
+                          aria-label={`Link to: ${f.question}`}
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#5C7650] hover:text-[#445339] transition-opacity mt-1 shrink-0"
+                        >
+                          <Link2 className="w-4 h-4" />
+                        </a>
+                      </dt>
+                      <dd className="text-[#555555] leading-relaxed">
+                        <HighlightedText text={f.answer} query={faqQuery} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Direct head-to-head comparisons (internal linking for topical authority) */}
+        {comparisons.length > 0 && (
+          <section className="py-12 sm:py-16 bg-[#f7f7f5]">
+            <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-3 text-center">
+                {wood.name} Comparisons
+              </h2>
+              <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
+                Choosing between species or cuts? These head-to-head guides break down grain, cost, durability, and best use.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {comparisons.map((c) => {
+                  const target = getWoodSpecies(c.slug)!;
+                  return (
+                    <Link
+                      key={c.slug}
+                      to={`/wood-species/${c.slug}`}
+                      className="group flex flex-col rounded-lg border border-border bg-background p-5 hover:border-[#5C7650] hover:shadow-lg transition-all"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <span
+                          aria-hidden="true"
+                          className="inline-block w-6 h-6 rounded border border-border"
+                          style={{ backgroundColor: wood.swatch }}
+                        />
+                        <span className="text-[#999] text-sm">vs</span>
+                        <span
+                          aria-hidden="true"
+                          className="inline-block w-6 h-6 rounded border border-border"
+                          style={{ backgroundColor: target.swatch }}
+                        />
+                      </div>
+                      <h3 className="font-semibold text-[#1a1a1a] group-hover:text-[#5C7650] transition-colors">
+                        {c.title}
+                      </h3>
+                      <p className="text-sm text-[#555555] mt-2 leading-relaxed flex-1">{c.blurb}</p>
+                      <span className="inline-flex items-center text-[#5C7650] text-sm font-medium mt-4">
+                        Read the comparison <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Related */}
+        <section className="py-12 sm:py-16">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-8 text-center">
+              Compare with Other Species
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {related.map((w) => (
+                <Link
+                  key={w.slug}
+                  to={`/wood-species/${w.slug}`}
+                  className="group block rounded-lg border border-border overflow-hidden hover:border-[#5C7650] hover:shadow-lg transition-all"
+                >
+                  <img
+                    src={w.image}
+                    alt={`${w.name} cabinet wood`}
+                    loading="lazy"
+                    className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="p-4">
+                    <h3 className="font-semibold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
+                    <p className="text-xs text-[#555555] mt-1 line-clamp-2">{w.tagline}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <Button asChild variant="outline" className="border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white">
+                <Link to="/wood-species">
+                  See all wood species <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-12 sm:py-16 bg-[#5C7650] text-white">
+          <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center space-y-5">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+              Want a real {wood.name.toLowerCase()} sample in your hand?
+            </h2>
+            <p className="text-base sm:text-lg text-white/90">
+              Visit our Bushwick showroom or have us bring samples to your home anywhere in NYC.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3 pt-2">
+              <Button asChild size="lg" className="bg-white text-[#5C7650] hover:bg-white/90 hover:scale-105 transition-all">
+                <Link to="/#contact">Book a free consultation</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#5C7650] hover:scale-105 transition-all">
+                <Link to="/designer">Launch the designer</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+const Spec = ({ label, value, small }: { label: string; value: string; small?: boolean }) => (
+  <div className="bg-background rounded-lg p-3 border border-border">
+    <p className="text-xs text-[#999999] uppercase tracking-wider">{label}</p>
+    <p className={`font-semibold text-[#1a1a1a] mt-1 ${small ? "text-xs" : "text-base"}`}>{value}</p>
+  </div>
+);
+
+const DetailList = ({ title, items }: { title: string; items: string[] }) => (
+  <div className="bg-muted/40 rounded-lg p-5 border border-border">
+    <h3 className="font-semibold text-[#5C7650] mb-3">{title}</h3>
+    <ul className="space-y-1.5">
+      {items.map((it) => (
+        <li key={it} className="text-sm text-[#1a1a1a] flex gap-2">
+          <span className="text-[#5C7650]">•</span>
+          <span>{it}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const HighlightedText = ({ text, query }: { text: string; query: string }) => {
+  const q = query.trim();
+  if (!q) return <>{text}</>;
+  const parts = text.split(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "ig"));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === q.toLowerCase() ? (
+          <mark key={i} className="bg-[#5C7650]/20 text-[#1a1a1a] rounded px-0.5">
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+};
+
+export default WoodSpeciesDetail;

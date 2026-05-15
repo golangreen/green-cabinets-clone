@@ -1,0 +1,102 @@
+import { useRef } from "react";
+import { Card } from "@/components/ui/card";
+import VideoMuteToggle from "@/components/marketing/VideoMuteToggle";
+import customSolutionsVideo from "@/assets/custom-solutions.mp4";
+import kitchenImage1 from "@/assets/gallery/modern-kitchen-dining-wood-marble-windows.webp";
+import kitchenImage2 from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
+import kitchenImage3 from "@/assets/gallery/modern-kitchen-marble-waterfall-wood-base.webp";
+
+interface Feature {
+  media: string;
+  isVideo?: boolean;
+  title: string;
+  description: string;
+  stats: string;
+}
+
+const features: Feature[] = [
+  {
+    media: customSolutionsVideo,
+    isVideo: true,
+    title: "Custom Solutions",
+    description: "Every space is unique. Our designers work with you to create cabinets that maximize functionality and beauty.",
+    stats: "500+ Custom Designs",
+  },
+  {
+    media: kitchenImage1,
+    title: "Sustainable Choice",
+    description: "We source responsibly and build to last. Quality materials that stand the test of time.",
+    stats: "100% Eco-Friendly",
+  },
+  {
+    media: kitchenImage2,
+    title: "Professional Service",
+    description: "From consultation to installation, our team ensures every detail is perfect.",
+    stats: "15+ Years Experience",
+  },
+];
+
+const Features = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  return (
+    <section id="solutions" className="py-16 sm:py-20 md:py-24 bg-[#f8f8f8]">
+      <div className="container mx-auto px-6">
+        {/* Section Title */}
+        <div className="text-center mb-16">
+          <h2 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-4">
+            Why Choose Green Cabinets
+          </h2>
+        </div>
+
+        <div className="max-w-7xl mx-auto space-y-20">
+          {features.map((feature, index) => (
+            <div
+              key={feature.title}
+              className={`flex flex-col ${
+                index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+              } gap-12 items-center`}
+            >
+              <div className="md:w-1/2 relative overflow-hidden rounded-2xl">
+                {feature.isVideo ? (
+                  <>
+                    <video
+                      ref={videoRef}
+                      src={feature.media}
+                      className="w-full h-[400px] object-cover"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    />
+                    <VideoMuteToggle videoRef={videoRef} />
+                  </>
+                ) : (
+                  <img
+                    src={feature.media}
+                    alt={feature.title}
+                    className="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-700"
+                    loading="lazy"
+                  />
+                )}
+              </div>
+              <div className="md:w-1/2 space-y-6">
+                <div className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold">
+                  {feature.stats}
+                </div>
+                <h3 className="font-display text-4xl font-bold text-[#1a1a1a]">
+                  {feature.title}
+                </h3>
+                <p className="text-lg text-[#666666] leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Features;

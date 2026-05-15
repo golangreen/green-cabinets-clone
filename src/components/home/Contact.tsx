@@ -1,0 +1,168 @@
+import { useState, useEffect } from "react";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import QuoteForm from "@/components/marketing/QuoteForm";
+import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
+import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
+
+const Contact = () => {
+  const [contactMethod, setContactMethod] = useState<string>("email-golan");
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [isNight, setIsNight] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const h = new Date().getHours();
+      const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+      setIsNight(h >= 22 || h < 6 || prefersDark);
+    };
+    check();
+    const id = setInterval(check, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const contactOptions = {
+    "email-golan": { href: `mailto:${atob('b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=')}`, label: "Email Us" },
+    "text-golan": { href: `sms:+1${atob('NzE4ODA0NTQ4OA==')}`, label: "Text Golan" },
+  };
+
+  const handleContact = () => {
+    const option = contactOptions[contactMethod as keyof typeof contactOptions];
+    if (option) {
+      window.location.href = option.href;
+    }
+  };
+
+  return (
+    <section id="contact" className="py-16 sm:py-20 md:py-24 bg-background">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-6">Get in Touch</h2>
+          <p className="text-base sm:text-lg text-[#666666] max-w-2xl mx-auto px-4">
+            Ready to transform your space? Contact us today for a free consultation.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mb-12 px-4">
+          {/* Email */}
+          <div className="p-6 md:p-8 rounded-2xl bg-[#5C7650]/10">
+            <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
+              <Mail className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Email Us</h3>
+            <ObfuscatedEmail 
+              encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
+              className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors break-words block"
+            />
+          </div>
+
+          {/* Phone */}
+          <div className="p-6 md:p-8 rounded-2xl bg-[#5C7650]/10">
+            <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
+              <Phone className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Call Us</h3>
+            <div className="flex gap-1 items-center">
+              <span className="text-sm md:text-base text-[#666666]">Golan Achdary:</span>
+              <ObfuscatedPhone 
+                encoded="NzE4ODA0NTQ4OA=="
+                className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors"
+                type="tel"
+              />
+            </div>
+          </div>
+
+          {/* Address */}
+          <div className="p-6 md:p-8 rounded-2xl bg-[#5C7650]/10">
+            <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
+              <MapPin className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Visit Us</h3>
+            <address className="text-sm md:text-base text-[#666666] not-italic">
+              10 Montieth St<br />
+              Bushwick, Brooklyn, NY 11206
+            </address>
+          </div>
+        </div>
+
+        {/* Google Map Embed */}
+        <div className="max-w-5xl mx-auto mb-12 px-4">
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=10+Montieth+St+Brooklyn+NY+11206"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open 10 Montieth St in Google Maps"
+            className="block rounded-2xl overflow-hidden shadow-lg relative group"
+          >
+            <iframe
+              src="https://www.google.com/maps?q=10+Montieth+St+Brooklyn+NY+11206&z=16&output=embed"
+              width="100%"
+              height="320"
+              style={{ border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Green Cabinets Location - 10 Montieth St, Brooklyn"
+              className={`w-full pointer-events-none transition-[filter] duration-500 ${isNight ? "[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]" : ""}`}
+            />
+            <span className="absolute top-3 right-3 text-xs font-semibold bg-background/95 text-foreground px-3 py-1.5 rounded-md shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
+              Get Directions ↗
+            </span>
+          </a>
+
+          {/* Neighborhood + Landmarks */}
+          <div className="mt-4 p-4 sm:p-5 rounded-xl bg-[#5C7650]/5 border border-[#5C7650]/10">
+            <div className="flex items-start gap-3">
+              <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+              <div className="text-sm md:text-base text-[#666666]">
+                <p className="font-semibold text-[#1a1a1a] mb-1">
+                  Bushwick, Brooklyn
+                </p>
+                <p>
+                  Near the Morgan Ave L train, Maria Hernandez Park, and the
+                  East Williamsburg industrial corridor — a short ride from
+                  Williamsburg, Bed-Stuy, and Ridgewood.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="flex flex-col items-center justify-center gap-4 max-w-md mx-auto">
+          <Button 
+            size="lg"
+            className="w-full bg-primary hover:bg-primary/90 text-white"
+            onClick={() => setShowQuoteForm(true)}
+          >
+            Get Detailed Quote
+          </Button>
+          
+          <div className="text-center text-[#999999]">or</div>
+          
+          <Select value={contactMethod} onValueChange={(value: string) => setContactMethod(value)}>
+            <SelectTrigger className="w-full bg-[#1a1a1a] text-white border-0">
+              <SelectValue placeholder="Choose contact method" />
+            </SelectTrigger>
+            <SelectContent className="bg-white z-50">
+              <SelectItem value="email-golan">Email Us</SelectItem>
+              <SelectItem value="text-golan">Text Golan</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Button 
+            size="lg"
+            className="w-full bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white"
+            onClick={handleContact}
+          >
+            {contactOptions[contactMethod as keyof typeof contactOptions]?.label || "Contact Us"}
+          </Button>
+        </div>
+      </div>
+
+      <QuoteForm isOpen={showQuoteForm} onClose={() => setShowQuoteForm(false)} />
+    </section>
+  );
+};
+
+export default Contact;
