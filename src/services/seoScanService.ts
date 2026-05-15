@@ -39,7 +39,7 @@ export type DeepTestStatus = "idle" | "running" | "pass" | "warn" | "fail";
 export interface DeepTestResponse {
   status?: DeepTestStatus;
   message?: string;
-  details?: unknown;
+  details?: string;
 }
 
 export const seoScanService = {
