@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { HelmetProvider } from "react-helmet-async";
 import NotFound from "./NotFound";
 import { MemoryRouter } from "react-router-dom";
