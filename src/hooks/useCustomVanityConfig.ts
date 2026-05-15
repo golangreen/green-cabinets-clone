@@ -7,6 +7,13 @@ import { vanityRequestService } from "@/services/vanityRequestService";
 import {
   customVanityService,
   dimensionSchema,
+  brandSchema,
+  finishSchema,
+  widthSchema,
+  heightSchema,
+  depthSchema,
+  zipCodeSchema,
+  validateField,
   type VanityBrand,
 } from "@/services/customVanityService";
 
