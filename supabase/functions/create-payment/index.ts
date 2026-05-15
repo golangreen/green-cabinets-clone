@@ -51,9 +51,20 @@ serve(async (req) => {
       }
     }
 
+    const MIN_CUSTOM_AMOUNT_CENTS = 5000; // $50 minimum
+
     // If customProduct is provided, create a dynamic product
     let priceId: string;
     if (customProduct) {
+      const amount = Number(customProduct.amount);
+      if (!Number.isFinite(amount) || amount < MIN_CUSTOM_AMOUNT_CENTS) {
+        console.warn("create-payment: rejected suspicious custom amount:", customProduct.amount);
+        return new Response(
+          JSON.stringify({ error: "Invalid product price." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
       const product = await stripe.products.create({
         name: customProduct.name,
         description: customProduct.description,
@@ -62,7 +73,7 @@ serve(async (req) => {
 
       const price = await stripe.prices.create({
         product: product.id,
-        unit_amount: customProduct.amount,
+        unit_amount: amount,
         currency: 'usd',
       });
 
