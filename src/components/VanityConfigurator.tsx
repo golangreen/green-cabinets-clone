@@ -27,7 +27,8 @@ import { FinishComparison } from "./FinishComparison";
 import { getTafisaColorNames, getTafisaCategories, getTafisaColorsByCategory } from "@/lib/tafisaColors";
 import { getEggerColorNames, getEggerCategories, getEggerColorsByCategory } from "@/lib/eggerColors";
 import { useCartStore } from "@/stores/cartStore";
-import { supabase } from "@/integrations/supabase/client";
+import { paymentService } from "@/services/paymentService";
+import { vanityRequestService } from "@/services/vanityRequestService";
 import { z } from "zod";
 
 const dimensionSchema = z.object({
@@ -340,29 +341,25 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       const widthInches = parseFloat(width) + (parseInt(widthFraction) / 16);
       const linearFeet = widthInches / 12;
       
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: {
-          customProduct: {
-            name: `Custom Vanity - ${selectedBrand} ${selectedFinish}`,
-            description: `Width: ${widthInches.toFixed(2)}" (${linearFeet.toFixed(2)} linear feet) | Brand: ${selectedBrand} | Finish: ${selectedFinish} | ZIP: ${zipCode}`,
-            amount: Math.round(totalPrice * 100), // Convert to cents
-            metadata: {
-              brand: selectedBrand,
-              finish: selectedFinish,
-              width: widthInches.toFixed(2),
-              zipCode,
-              state: state || "Unknown",
-              basePrice: basePrice.toFixed(2),
-              tax: tax.toFixed(2),
-              shipping: shipping.toFixed(2),
-            }
-          }
-        }
+      const { url, error } = await paymentService.createCustomProductPayment({
+        name: `Custom Vanity - ${selectedBrand} ${selectedFinish}`,
+        description: `Width: ${widthInches.toFixed(2)}" (${linearFeet.toFixed(2)} linear feet) | Brand: ${selectedBrand} | Finish: ${selectedFinish} | ZIP: ${zipCode}`,
+        amount: Math.round(totalPrice * 100),
+        metadata: {
+          brand: selectedBrand,
+          finish: selectedFinish,
+          width: widthInches.toFixed(2),
+          zipCode,
+          state: state || "Unknown",
+          basePrice: basePrice.toFixed(2),
+          tax: tax.toFixed(2),
+          shipping: shipping.toFixed(2),
+        },
       });
-      
+
       if (error) throw error;
-      if (data?.url) {
-        window.open(data.url, '_blank');
+      if (url) {
+        window.open(url, '_blank');
       }
     } catch (error) {
       console.error('Payment error:', error);
@@ -407,27 +404,23 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
       const heightInches = height ? parseFloat(height) + (parseInt(heightFraction) / 16) : undefined;
       const depthInches = depth ? parseFloat(depth) + (parseInt(depthFraction) / 16) : undefined;
 
-      const { error } = await supabase.functions.invoke('send-vanity-quote', {
-        body: {
-          customerName,
-          customerEmail,
-          customerPhone: customerPhone || undefined,
-          brand: selectedBrand,
-          finish: selectedFinish,
-          width: widthInches,
-          height: heightInches,
-          depth: depthInches,
-          zipCode,
-          state: state || "Unknown",
-          basePrice,
-          tax,
-          shipping,
-          totalPrice,
-          additionalNotes: additionalNotes || undefined,
-        }
+      await vanityRequestService.sendQuote({
+        customerName,
+        customerEmail,
+        customerPhone: customerPhone || undefined,
+        brand: selectedBrand,
+        finish: selectedFinish,
+        width: widthInches,
+        height: heightInches,
+        depth: depthInches,
+        zipCode,
+        state: state || "Unknown",
+        basePrice,
+        tax,
+        shipping,
+        totalPrice,
+        additionalNotes: additionalNotes || undefined,
       });
-
-      if (error) throw error;
 
       toast.success("Quote request sent!", {
         description: "We'll get back to you within 24 hours with a detailed quote.",

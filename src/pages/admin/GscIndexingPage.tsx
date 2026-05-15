@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { supabase } from "@/integrations/supabase/client";
+import { seoScanService, type GscInspectionResult } from "@/services/seoScanService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,21 +22,7 @@ const PILLAR_URLS = [
   "https://greencabinetsny.com/reach-in-closet-systems-nyc",
 ];
 
-interface InspectionResult {
-  url: string;
-  ok: boolean;
-  verdict?: string;
-  coverageState?: string;
-  indexingState?: string;
-  lastCrawlTime?: string;
-  googleCanonical?: string;
-  userCanonical?: string;
-  pageFetchState?: string;
-  robotsTxtState?: string;
-  inspectionResultLink?: string;
-  status?: number;
-  error?: unknown;
-}
+type InspectionResult = GscInspectionResult;
 
 const verdictColor = (v?: string) => {
   switch (v) {
@@ -68,11 +54,8 @@ export default function GscIndexingPage() {
     setLoading(true);
     setResults(null);
     try {
-      const { data, error } = await supabase.functions.invoke("gsc-inspect", {
-        body: { token: token.trim(), siteUrl: siteUrl.trim(), urls },
-      });
-      if (error) throw error;
-      setResults(data?.results ?? []);
+      const results = await seoScanService.gscInspect(token.trim(), siteUrl.trim(), urls);
+      setResults(results);
       toast.success(`Inspected ${urls.length} URL${urls.length === 1 ? "" : "s"}`);
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Inspection failed");
