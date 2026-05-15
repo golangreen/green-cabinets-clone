@@ -1,59 +1,59 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Landing from "./pages/Landing";
-import Shop from "./pages/Shop";
-import Auth from "./pages/Auth";
-import Designer from "./pages/Designer";
-import ProductDetail from "./pages/ProductDetail";
-import Checkout from "./pages/Checkout";
-import PaymentSuccess from "./pages/PaymentSuccess";
-import PerformanceMonitor from "./pages/PerformanceMonitor";
-import NotFound from "./pages/NotFound";
-import NeighborhoodGalleryAdmin from "./pages/admin/NeighborhoodGalleryAdmin";
-import SerpPreviewPage from "./pages/admin/SerpPreviewPage";
-import GscIndexingPage from "./pages/admin/GscIndexingPage";
-import SeoDashboard from "./pages/admin/SeoDashboard";
-import Borough from "./pages/Borough";
-import WoodSpecies from "./pages/WoodSpecies";
-import WoodSpeciesDetail from "./pages/WoodSpeciesDetail";
-import FinishesColors from "./pages/FinishesColors";
-import GalleryPage from "./pages/Gallery";
-import KitchenRenovationBrooklyn from "./pages/KitchenRenovationBrooklyn";
-import About from "./pages/About";
-import CaseStudies from "./pages/CaseStudies";
-import CaseStudyDetail from "./pages/CaseStudyDetail";
-import BestWoodForKitchenCabinets from "./pages/BestWoodForKitchenCabinets";
-import CabinetWoodTypesAndCosts from "./pages/CabinetWoodTypesAndCosts";
-import NaturalWoodKitchenCabinets from "./pages/NaturalWoodKitchenCabinets";
-import DoubleSinkVanityGuide from "./pages/DoubleSinkVanityGuide";
-import FloatingBathroomVanity from "./pages/FloatingBathroomVanity";
-import SmallBathroomVanityIdeas from "./pages/SmallBathroomVanityIdeas";
-import ReachInClosetSystemsNYC from "./pages/ReachInClosetSystemsNYC";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/HashScrollHandler";
 import LegacyRedirect from "@/components/LegacyRedirect";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 
+const Index = lazy(() => import("./pages/Index"));
+const Landing = lazy(() => import("./pages/Landing"));
+const Shop = lazy(() => import("./pages/Shop"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Designer = lazy(() => import("./pages/Designer"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const PerformanceMonitor = lazy(() => import("./pages/PerformanceMonitor"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const NeighborhoodGalleryAdmin = lazy(() => import("./pages/admin/NeighborhoodGalleryAdmin"));
+const SerpPreviewPage = lazy(() => import("./pages/admin/SerpPreviewPage"));
+const GscIndexingPage = lazy(() => import("./pages/admin/GscIndexingPage"));
+const SeoDashboard = lazy(() => import("./pages/admin/SeoDashboard"));
+const Borough = lazy(() => import("./pages/Borough"));
+const WoodSpecies = lazy(() => import("./pages/WoodSpecies"));
+const WoodSpeciesDetail = lazy(() => import("./pages/WoodSpeciesDetail"));
+const FinishesColors = lazy(() => import("./pages/FinishesColors"));
+const GalleryPage = lazy(() => import("./pages/Gallery"));
+const KitchenRenovationBrooklyn = lazy(() => import("./pages/KitchenRenovationBrooklyn"));
+const About = lazy(() => import("./pages/About"));
+const CaseStudies = lazy(() => import("./pages/CaseStudies"));
+const CaseStudyDetail = lazy(() => import("./pages/CaseStudyDetail"));
+const BestWoodForKitchenCabinets = lazy(() => import("./pages/BestWoodForKitchenCabinets"));
+const CabinetWoodTypesAndCosts = lazy(() => import("./pages/CabinetWoodTypesAndCosts"));
+const NaturalWoodKitchenCabinets = lazy(() => import("./pages/NaturalWoodKitchenCabinets"));
+const DoubleSinkVanityGuide = lazy(() => import("./pages/DoubleSinkVanityGuide"));
+const FloatingBathroomVanity = lazy(() => import("./pages/FloatingBathroomVanity"));
+const SmallBathroomVanityIdeas = lazy(() => import("./pages/SmallBathroomVanityIdeas"));
+const ReachInClosetSystemsNYC = lazy(() => import("./pages/ReachInClosetSystemsNYC"));
 
-
-
-
+const RouteFallback = () => (
+  <div className="min-h-screen flex items-center justify-center" aria-busy="true" />
+);
 
 const App = () => {
-  // Initialize performance monitoring
   usePerformanceMonitor();
-  
+
   return (
     <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <HashScrollHandler />
-          
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <HashScrollHandler />
+        <Suspense fallback={<RouteFallback />}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/landing" element={<Landing />} />
@@ -113,11 +113,10 @@ const App = () => {
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <ScrollToTopButton />
-          
-        </BrowserRouter>
-      </TooltipProvider>
-    
+        </Suspense>
+        <ScrollToTopButton />
+      </BrowserRouter>
+    </TooltipProvider>
   );
 };
 
