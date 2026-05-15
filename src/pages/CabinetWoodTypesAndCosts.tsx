@@ -19,7 +19,7 @@ import { buildArticleSchema, buildFaqSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/cabinet-wood-types-and-costs";
 const TITLE = "Cabinet Wood Types and Costs — Per-Linear-Foot Guide (2026)";
 const DESC =
-  "All 14 cabinet wood types we mill, with Janka hardness, grain pattern, and real per-linear-foot cost premiums. Maple, oak, walnut, hickory, cherry, ash, mahogany, alder, beech, rift-cut and quartersawn oak.";
+  "All 14 cabinet wood types we mill — Janka hardness, grain, and per-linear-foot cost premiums. Maple, oak, walnut, hickory, cherry, ash, mahogany.";
 
 interface Row {
   slug: string;
