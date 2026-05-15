@@ -1,6 +1,7 @@
 // GSC URL Inspection via Lovable connector gateway.
 // No OAuth setup required — uses the linked Google Search Console connector.
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const GATEWAY = "https://connector-gateway.lovable.dev/google_search_console";
 const DEFAULT_SITE = "sc-domain:greencabinetsny.com";
