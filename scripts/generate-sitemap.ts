@@ -152,5 +152,19 @@ function generateSitemap(entries: SitemapEntry[]) {
   ].join("\n");
 }
 
-writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
-console.log(`sitemap.xml written (${entries.length} entries)`);
+async function main() {
+  const shopifyProducts = await fetchShopifyProductHandles();
+  for (const p of shopifyProducts) {
+    entries.push({
+      path: `/product/${p.handle}`,
+      changefreq: "weekly",
+      priority: "0.8",
+      lastmod: p.updatedAt.slice(0, 10),
+    });
+  }
+
+  writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
+  console.log(`sitemap.xml written (${entries.length} entries)`);
+}
+
+main();
