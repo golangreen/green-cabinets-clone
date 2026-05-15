@@ -9,7 +9,7 @@ import { createTestQueryClient } from "@/test/utils";
 
 vi.mock("@/services/neighborhoodGalleryService", () => ({
   neighborhoodGalleryService: {
-    listPublishedBySlug: vi.fn().mockResolvedValue([]),
+    listPublishedBySlug: () => Promise.resolve([]),
   },
 }));
 
