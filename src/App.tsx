@@ -85,6 +85,11 @@ const App = () => {
                 <GscIndexingPage />
               </AdminRoute>
             } />
+            <Route path="/admin/seo" element={
+              <AdminRoute>
+                <SeoDashboard />
+              </AdminRoute>
+            } />
             {/* Legacy URL redirects → /custom-kitchen-cabinets-{slug} */}
             <Route path="/neighborhoods/:slug" element={<LegacyRedirect />} />
             <Route path="/neighborhood/:slug" element={<LegacyRedirect />} />
