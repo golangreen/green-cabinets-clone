@@ -34,6 +34,7 @@ const entries: SitemapEntry[] = [
   { path: "/floating-bathroom-vanity", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/small-bathroom-vanity-ideas", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/reach-in-closet-systems-nyc", changefreq: "monthly", priority: "0.85", lastmod: today },
+  { path: "/landing", changefreq: "monthly", priority: "0.7", lastmod: today },
 
   // Hash-anchored homepage sections (kept for legacy parity)
   { path: "/#about", changefreq: "monthly", priority: "0.7", lastmod: today },
