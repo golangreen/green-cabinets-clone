@@ -49,7 +49,6 @@ const App = () => {
   
   return (
     <TooltipProvider>
-      <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
