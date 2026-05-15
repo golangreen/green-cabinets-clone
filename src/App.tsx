@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import NeighborhoodGalleryAdmin from "./pages/admin/NeighborhoodGalleryAdmin";
 import SerpPreviewPage from "./pages/admin/SerpPreviewPage";
 import GscIndexingPage from "./pages/admin/GscIndexingPage";
+import SeoDashboard from "./pages/admin/SeoDashboard";
 import Borough from "./pages/Borough";
 import WoodSpecies from "./pages/WoodSpecies";
 import WoodSpeciesDetail from "./pages/WoodSpeciesDetail";
