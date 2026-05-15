@@ -155,10 +155,12 @@ export function useCustomVanityConfig({ product }: UseCustomVanityConfigOptions)
   };
 
   const handleCheckout = async () => {
-    resetCheckoutErrors();
-    if (validateRequired({})) {
-      toast.error("Please complete all fields", {
-        description: "Brand, finish, width, and zip code are required",
+    const { next, hasError } = validateAll({});
+    setErrors(next);
+    if (hasError) {
+      const firstMsg = (Object.values(next) as (string | null)[]).find(Boolean);
+      toast.error("Please fix the highlighted fields", {
+        description: firstMsg ?? "Brand, finish, width, and ZIP code are required",
       });
       return;
     }
@@ -190,10 +192,12 @@ export function useCustomVanityConfig({ product }: UseCustomVanityConfigOptions)
   };
 
   const handleRequestQuote = () => {
-    resetCheckoutErrors();
-    if (validateRequired({})) {
-      toast.error("Please complete all fields", {
-        description: "Brand, finish, width, and zip code are required",
+    const { next, hasError } = validateAll({});
+    setErrors(next);
+    if (hasError) {
+      const firstMsg = (Object.values(next) as (string | null)[]).find(Boolean);
+      toast.error("Please fix the highlighted fields", {
+        description: firstMsg ?? "Brand, finish, width, and ZIP code are required",
       });
       return;
     }
