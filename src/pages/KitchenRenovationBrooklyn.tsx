@@ -15,7 +15,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/kitchen-renovation-brooklyn";
 const TITLE = "Kitchen Renovation Brooklyn | Costs, Permits & Timeline (2026)";
 const DESC =
-  "Brooklyn kitchen renovation guide from a local Bushwick cabinet shop: real 2026 costs, NYC permit rules, realistic timelines, and what makes a Brooklyn kitchen remodel different. Free quote.";
+  "Brooklyn kitchen renovation guide from a local Bushwick cabinet shop: 2026 costs, NYC permit rules, timelines, and what makes Brooklyn different.";
 
 const FAQS = [
   {

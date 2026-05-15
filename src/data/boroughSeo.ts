@@ -30,7 +30,7 @@ export const BOROUGHS: Record<BoroughSlug, BoroughSeo> = {
     title:
       "Custom Kitchen Cabinets in Brooklyn, NY | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets in Brooklyn handcrafted in our Bushwick shop since 2009. FSC-certified hardwoods, low-VOC finishes, free in-home consultation. (718) 804-5488.",
+      "Custom kitchen cabinets in Brooklyn, handcrafted in our Bushwick shop since 2009. FSC hardwoods, free in-home consultation.",
     keywords:
       "custom kitchen cabinets Brooklyn, Brooklyn cabinet maker, kitchen cabinetry Brooklyn NY, Bushwick cabinet shop, sustainable cabinets Brooklyn, bathroom vanities Brooklyn",
     heroTagline:
@@ -158,7 +158,7 @@ export const BOROUGHS: Record<BoroughSlug, BoroughSeo> = {
     title:
       "Custom Kitchen Cabinets in Queens, NY | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets in Queens — LIC, Astoria, Forest Hills and beyond. Sustainable hardwoods, free consultation, install in 4–6 weeks. (718) 804-5488.",
+      "Custom kitchen cabinets in Queens. Sustainable hardwoods, free consultation, install in 4–6 weeks. Call (718) 804-5488.",
     keywords:
       "custom kitchen cabinets Queens, Queens cabinet maker, custom cabinets Astoria, custom cabinets Long Island City, Forest Hills kitchen cabinets, LIC kitchen renovation",
     heroTagline:
