@@ -16,7 +16,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/double-sink-vanity-guide";
 const TITLE = "Double Sink Vanity — Sizes, Layouts & NYC Cost Guide (2026)";
 const DESC =
-  "What size double sink vanity you actually need, the four working layouts, plumbing rough-in dimensions, and what a custom double vanity costs in NYC. From a Bushwick cabinetmaker.";
+  "Double sink vanity sizes, four working layouts, plumbing rough-ins, and what a custom double vanity costs in NYC. From a Bushwick cabinetmaker.";
 
 const SIZES = [
   { width: '60"', verdict: "Absolute minimum", note: "Two 18\" basins centered 36\" apart, 12\" of usable counter between. Tight but workable." },
