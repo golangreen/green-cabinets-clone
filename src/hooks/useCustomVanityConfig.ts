@@ -7,6 +7,13 @@ import { vanityRequestService } from "@/services/vanityRequestService";
 import {
   customVanityService,
   dimensionSchema,
+  brandSchema,
+  finishSchema,
+  widthSchema,
+  heightSchema,
+  depthSchema,
+  zipCodeSchema,
+  validateField,
   type VanityBrand,
 } from "@/services/customVanityService";
 
@@ -37,16 +44,14 @@ export function useCustomVanityConfig({ product }: UseCustomVanityConfigOptions)
   const [customerPhone, setCustomerPhone] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
 
-  const [errors, setErrors] = useState({
-    brand: false,
-    finish: false,
-    width: false,
-    height: false,
-    depth: false,
-    zipCode: false,
-  });
+  type FieldKey = "brand" | "finish" | "width" | "height" | "depth" | "zipCode";
+  type ErrorMap = Record<FieldKey, string | null>;
+  const EMPTY_ERRORS: ErrorMap = {
+    brand: null, finish: null, width: null, height: null, depth: null, zipCode: null,
+  };
+  const [errors, setErrors] = useState<ErrorMap>(EMPTY_ERRORS);
 
-  const setError = (key: keyof typeof errors, value: boolean) =>
+  const setError = (key: FieldKey, value: string | null) =>
     setErrors((e) => ({ ...e, [key]: value }));
 
   const availableFinishes = useMemo(
@@ -76,47 +81,39 @@ export function useCustomVanityConfig({ product }: UseCustomVanityConfigOptions)
   const shipping = customVanityService.calculateShipping(state);
   const totalPrice = basePrice + tax + shipping;
 
-  const resetCheckoutErrors = () => setErrors({
-    brand: false, finish: false, width: false, height: false, depth: false, zipCode: false,
-  });
+  const resetCheckoutErrors = () => setErrors(EMPTY_ERRORS);
 
-  const validateRequired = (require: { width?: boolean; height?: boolean; depth?: boolean }) => {
-    let hasError = false;
-    const next = { ...errors, brand: false, finish: false, width: false, height: false, depth: false, zipCode: false };
-    if (!selectedBrand) { next.brand = true; hasError = true; }
-    if (!selectedFinish) { next.finish = true; hasError = true; }
-    if (require.width !== false && !width) { next.width = true; hasError = true; }
-    if (require.height && !height) { next.height = true; hasError = true; }
-    if (require.depth && !depth) { next.depth = true; hasError = true; }
-    if (!zipCode) { next.zipCode = true; hasError = true; }
-    setErrors(next);
-    return hasError;
+  /** Validate all relevant fields with zod and return error map + any-errors flag. */
+  const validateAll = (require: { height?: boolean; depth?: boolean }): { next: ErrorMap; hasError: boolean } => {
+    const next: ErrorMap = { ...EMPTY_ERRORS };
+    next.brand = validateField(brandSchema, selectedBrand);
+    next.finish = validateField(finishSchema, selectedFinish);
+    next.width = !width
+      ? "Width is required"
+      : validateField(widthSchema, widthInches);
+    if (require.height) {
+      next.height = !height
+        ? "Height is required"
+        : validateField(heightSchema, heightInches);
+    }
+    if (require.depth) {
+      next.depth = !depth
+        ? "Depth is required"
+        : validateField(depthSchema, depthInches);
+    }
+    next.zipCode = validateField(zipCodeSchema, zipCode);
+    const hasError = (Object.values(next) as (string | null)[]).some(Boolean);
+    return { next, hasError };
   };
 
   const handleAddToCart = () => {
-    resetCheckoutErrors();
-    if (validateRequired({ height: true, depth: true })) {
-      toast.error("Please complete all fields", {
-        description: "Brand, finish, measurements, and zip code are required",
+    const { next, hasError } = validateAll({ height: true, depth: true });
+    setErrors(next);
+    if (hasError) {
+      const firstMsg = (Object.values(next) as (string | null)[]).find(Boolean);
+      toast.error("Please fix the highlighted fields", {
+        description: firstMsg ?? "Some fields need attention",
       });
-      return;
-    }
-    const validation = dimensionSchema.safeParse({
-      width: parseFloat(width),
-      height: parseFloat(height),
-      depth: parseFloat(depth),
-      zipCode,
-    });
-    if (!validation.success) {
-      const next = { ...errors };
-      validation.error.errors.forEach((err) => {
-        if (err.path.includes("width")) next.width = true;
-        if (err.path.includes("height")) next.height = true;
-        if (err.path.includes("depth")) next.depth = true;
-        if (err.path.includes("zipCode")) next.zipCode = true;
-      });
-      setErrors(next);
-      toast.error(validation.error.errors[0].message);
       return;
     }
 
@@ -158,10 +155,12 @@ export function useCustomVanityConfig({ product }: UseCustomVanityConfigOptions)
   };
 
   const handleCheckout = async () => {
-    resetCheckoutErrors();
-    if (validateRequired({})) {
-      toast.error("Please complete all fields", {
-        description: "Brand, finish, width, and zip code are required",
+    const { next, hasError } = validateAll({});
+    setErrors(next);
+    if (hasError) {
+      const firstMsg = (Object.values(next) as (string | null)[]).find(Boolean);
+      toast.error("Please fix the highlighted fields", {
+        description: firstMsg ?? "Brand, finish, width, and ZIP code are required",
       });
       return;
     }
@@ -193,10 +192,12 @@ export function useCustomVanityConfig({ product }: UseCustomVanityConfigOptions)
   };
 
   const handleRequestQuote = () => {
-    resetCheckoutErrors();
-    if (validateRequired({})) {
-      toast.error("Please complete all fields", {
-        description: "Brand, finish, width, and zip code are required",
+    const { next, hasError } = validateAll({});
+    setErrors(next);
+    if (hasError) {
+      const firstMsg = (Object.values(next) as (string | null)[]).find(Boolean);
+      toast.error("Please fix the highlighted fields", {
+        description: firstMsg ?? "Brand, finish, width, and ZIP code are required",
       });
       return;
     }
@@ -247,20 +248,43 @@ export function useCustomVanityConfig({ product }: UseCustomVanityConfigOptions)
 
   return {
     // selections
-    selectedBrand, setSelectedBrand: (b: string) => { setSelectedBrand(b as VanityBrand); setError("brand", false); },
-    selectedFinish, setSelectedFinish: (v: string) => { setSelectedFinish(v); setError("finish", false); },
+    selectedBrand, setSelectedBrand: (b: string) => { setSelectedBrand(b as VanityBrand); setError("brand", null); },
+    selectedFinish, setSelectedFinish: (v: string) => { setSelectedFinish(v); setError("finish", null); },
     availableFinishes,
 
-    // dimensions
-    width, setWidth: (v: string) => { setWidth(v); setError("width", false); },
+    // dimensions — live-validate on change
+    width,
+    setWidth: (v: string) => {
+      setWidth(v);
+      if (!v) return setError("width", null);
+      const inches = customVanityService.inchesFromParts(v, widthFraction);
+      setError("width", validateField(widthSchema, inches));
+    },
     widthFraction, setWidthFraction,
-    height, setHeight: (v: string) => { setHeight(v); setError("height", false); },
+    height,
+    setHeight: (v: string) => {
+      setHeight(v);
+      if (!v) return setError("height", null);
+      const inches = customVanityService.inchesFromParts(v, heightFraction);
+      setError("height", validateField(heightSchema, inches));
+    },
     heightFraction, setHeightFraction,
-    depth, setDepth: (v: string) => { setDepth(v); setError("depth", false); },
+    depth,
+    setDepth: (v: string) => {
+      setDepth(v);
+      if (!v) return setError("depth", null);
+      const inches = customVanityService.inchesFromParts(v, depthFraction);
+      setError("depth", validateField(depthSchema, inches));
+    },
     depthFraction, setDepthFraction,
 
-    // zip / state
-    zipCode, setZipCode: (v: string) => { setZipCode(v.slice(0, 5)); setError("zipCode", false); },
+    // zip / state — live-validate
+    zipCode,
+    setZipCode: (v: string) => {
+      const trimmed = v.replace(/\D/g, "").slice(0, 5);
+      setZipCode(trimmed);
+      setError("zipCode", trimmed.length === 0 ? null : validateField(zipCodeSchema, trimmed));
+    },
     state,
 
     // errors

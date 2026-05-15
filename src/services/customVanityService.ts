@@ -42,12 +42,51 @@ export const BRANDS = Object.keys(BRAND_INFO) as VanityBrand[];
 
 const PRICE_PER_LINEAR_FOOT = 350;
 
+export const widthSchema = z
+  .number({ invalid_type_error: "Enter a width in inches" })
+  .min(12, "Width must be at least 12\"")
+  .max(120, "Width cannot exceed 120\"");
+
+export const heightSchema = z
+  .number({ invalid_type_error: "Enter a height in inches" })
+  .min(12, "Height must be at least 12\"")
+  .max(60, "Height cannot exceed 60\"");
+
+export const depthSchema = z
+  .number({ invalid_type_error: "Enter a depth in inches" })
+  .min(12, "Depth must be at least 12\"")
+  .max(36, "Depth cannot exceed 36\"");
+
+export const zipCodeSchema = z
+  .string()
+  .regex(/^\d{5}$/, "Enter a valid 5-digit ZIP code");
+
+export const brandSchema = z
+  .string()
+  .min(1, "Please select a brand");
+
+export const finishSchema = z
+  .string()
+  .min(1, "Please select a finish");
+
 export const dimensionSchema = z.object({
-  width: z.number().min(12, "Width must be at least 12 inches").max(120, "Width cannot exceed 120 inches"),
-  height: z.number().min(12, "Height must be at least 12 inches").max(60, "Height cannot exceed 60 inches"),
-  depth: z.number().min(12, "Depth must be at least 12 inches").max(36, "Depth cannot exceed 36 inches"),
-  zipCode: z.string().regex(/^\d{5}$/, "ZIP code must be exactly 5 digits"),
+  width: widthSchema,
+  height: heightSchema,
+  depth: depthSchema,
+  zipCode: zipCodeSchema,
 });
+
+export const DIMENSION_SCHEMAS = {
+  Width: widthSchema,
+  Height: heightSchema,
+  Depth: depthSchema,
+} as const;
+
+/** Returns first issue message for a value against a schema, or null if valid. */
+export function validateField<T>(schema: z.ZodType<T>, value: unknown): string | null {
+  const r = schema.safeParse(value);
+  return r.success ? null : r.error.errors[0]?.message ?? "Invalid value";
+}
 
 const FRACTIONS_BY_SIXTEENTHS: Record<string, string> = {
   "0": "", "1": "1/16", "2": "1/8", "3": "3/16", "4": "1/4",

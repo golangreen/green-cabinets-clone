@@ -33,7 +33,7 @@ interface VanityDimensionInputProps {
   label: string;
   value: string;
   fraction: string;
-  error: boolean;
+  error: string | null;
   onValueChange: (value: string) => void;
   onFractionChange: (fraction: string) => void;
 }
@@ -47,11 +47,12 @@ export const VanityDimensionInput = ({
   onFractionChange,
 }: VanityDimensionInputProps) => {
   const totalSixteenths = parseFloat(value || "0") * 16 + parseInt(fraction || "0");
+  const errorId = `${label.toLowerCase()}-error`;
 
   return (
     <div className="space-y-3">
       <Label className={error ? "text-destructive" : ""}>
-        {label} (inches) {error && <span className="text-destructive">*</span>}
+        {label} (inches){error && <span className="text-destructive"> *</span>}
       </Label>
       <div className="flex gap-2">
         <Input
@@ -61,6 +62,8 @@ export const VanityDimensionInput = ({
           onChange={(e) => onValueChange(e.target.value)}
           min="0"
           max="120"
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           className={error ? "flex-1 border-destructive focus-visible:ring-destructive" : "flex-1"}
         />
         <Select value={fraction} onValueChange={onFractionChange}>
@@ -74,6 +77,11 @@ export const VanityDimensionInput = ({
           </SelectContent>
         </Select>
       </div>
+      {error && (
+        <p id={errorId} role="alert" className="text-xs font-medium text-destructive">
+          {error}
+        </p>
+      )}
       <div className="space-y-2">
         <Slider
           value={[totalSixteenths]}
