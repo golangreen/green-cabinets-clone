@@ -10,6 +10,53 @@ import { CASE_STUDIES } from "../src/data/caseStudies";
 const BASE_URL = "https://greencabinetsny.com";
 const today = new Date().toISOString().slice(0, 10);
 
+const SHOPIFY_STORE = "green-cabinets-clone-5eeb3.myshopify.com";
+const SHOPIFY_API_VERSION = "2025-07";
+const SHOPIFY_STOREFRONT_TOKEN = "585dda31c3bbc355eb6f937d3307f76b";
+
+async function fetchShopifyProductHandles(): Promise<{ handle: string; updatedAt: string }[]> {
+  try {
+    const response = await fetch(
+      `https://${SHOPIFY_STORE}/api/${SHOPIFY_API_VERSION}/graphql.json`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
+        },
+        body: JSON.stringify({
+          query: `
+            query GetProductHandles($first: Int!) {
+              products(first: $first) {
+                edges {
+                  node {
+                    handle
+                    updatedAt
+                  }
+                }
+              }
+            }
+          `,
+          variables: { first: 250 },
+        }),
+      }
+    );
+    if (!response.ok) {
+      console.warn(`Shopify API returned ${response.status}; skipping product sitemap entries.`);
+      return [];
+    }
+    const data = await response.json();
+    const edges = data?.data?.products?.edges || [];
+    return edges.map((e: { node: { handle: string; updatedAt: string } }) => ({
+      handle: e.node.handle,
+      updatedAt: e.node.updatedAt,
+    }));
+  } catch (err) {
+    console.warn("Failed to fetch Shopify products for sitemap:", err);
+    return [];
+  }
+}
+
 interface SitemapEntry {
   path: string;
   lastmod?: string;
@@ -105,5 +152,19 @@ function generateSitemap(entries: SitemapEntry[]) {
   ].join("\n");
 }
 
-writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
-console.log(`sitemap.xml written (${entries.length} entries)`);
+async function main() {
+  const shopifyProducts = await fetchShopifyProductHandles();
+  for (const p of shopifyProducts) {
+    entries.push({
+      path: `/product/${p.handle}`,
+      changefreq: "weekly",
+      priority: "0.8",
+      lastmod: p.updatedAt.slice(0, 10),
+    });
+  }
+
+  writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
+  console.log(`sitemap.xml written (${entries.length} entries)`);
+}
+
+main();
