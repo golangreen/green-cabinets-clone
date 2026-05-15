@@ -154,17 +154,7 @@ serve(async (req) => {
     console.log("Email sent successfully:", emailResponse);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        emailId: emailResponse.data?.id,
-        orderDetails: {
-          amount,
-          currency,
-          customerEmail,
-          customerName,
-          sessionId: session.id,
-        }
-      }),
+      JSON.stringify({ success: true }),
       {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -173,7 +163,7 @@ serve(async (req) => {
   } catch (error: unknown) {
     console.error("Error in send-order-confirmation:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
+      JSON.stringify({ error: "Failed to send confirmation. Please contact support." }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
