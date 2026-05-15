@@ -31,7 +31,11 @@ describe("Neighborhood navigation integration", () => {
   it("clicks a neighborhood link from a borough page and renders correct breadcrumbs", async () => {
     const user = userEvent.setup();
 
-    render(<Borough />, {
+    render(
+      <Routes>
+        <Route path=":boroughPath" element={<Borough />} />
+      </Routes>,
+      {
       wrapper: ({ children }) => (
         <Wrapper initialEntries={["/custom-kitchen-cabinets-brooklyn"]}>
           {children}
