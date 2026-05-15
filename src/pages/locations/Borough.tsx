@@ -12,8 +12,8 @@ import NeighborhoodDialog from "@/components/home/NeighborhoodDialog";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
 import { NEIGHBORHOODS } from "@/data/neighborhoodSeo";
-import Neighborhood from "@/pages/Neighborhood";
-import NotFound from "@/pages/NotFound";
+import Neighborhood from "@/pages/locations/Neighborhood";
+import NotFound from "@/pages/system/NotFound";
 
 const PREFIX = "custom-kitchen-cabinets-";
 
