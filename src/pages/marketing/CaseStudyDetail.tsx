@@ -6,15 +6,15 @@
  */
 import { Helmet } from "react-helmet-async";
 import { useParams, Link, Navigate } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CASE_STUDIES, getCaseStudy } from "@/data/caseStudies";
 import { authorRef, ORG_ID } from "@/data/authors";
-import AuthorByline from "@/components/AuthorByline";
+import AuthorByline from "@/components/marketing/AuthorByline";
 
 const BASE = "https://greencabinetsny.com/case-studies";
 

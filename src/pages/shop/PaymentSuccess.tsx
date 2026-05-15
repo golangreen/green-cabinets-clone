@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Mail, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { orderEmailService } from "@/services/orderEmailService";
 import { toast } from "sonner";
-import ObfuscatedEmail from "@/components/ObfuscatedEmail";
-import ObfuscatedPhone from "@/components/ObfuscatedPhone";
+import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
+import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();

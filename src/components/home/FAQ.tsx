@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import QuoteForm from "@/components/QuoteForm";
+import QuoteForm from "@/components/marketing/QuoteForm";
 
 const faqs = [
   {

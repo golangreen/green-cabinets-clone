@@ -6,8 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FinishPreview } from "@/components/FinishPreview";
-import { FinishComparison } from "@/components/FinishComparison";
+import { FinishPreview } from "@/components/vanity/FinishPreview";
+import { FinishComparison } from "@/components/vanity/FinishComparison";
 import {
   getTafisaCategories,
   getTafisaColorsByCategory,

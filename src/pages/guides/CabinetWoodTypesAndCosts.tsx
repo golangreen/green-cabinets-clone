@@ -7,13 +7,13 @@
  */
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import AuthorByline from "@/components/AuthorByline";
+import AuthorByline from "@/components/marketing/AuthorByline";
 import { buildArticleSchema, buildFaqSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/cabinet-wood-types-and-costs";

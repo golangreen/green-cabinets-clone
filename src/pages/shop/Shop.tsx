@@ -1,8 +1,8 @@
 import { Helmet } from "react-helmet-async";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { ShopProducts } from "@/components/ShopProducts";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import { ShopProducts } from "@/components/shop/ShopProducts";
 import { PromoBanner } from "@/components/shop/PromoBanner";
 import { Button } from "@/components/ui/button";
 import { paymentService } from "@/services/paymentService";

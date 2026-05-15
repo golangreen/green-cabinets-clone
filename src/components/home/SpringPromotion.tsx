@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import VideoMuteToggle from "@/components/VideoMuteToggle";
+import VideoMuteToggle from "@/components/marketing/VideoMuteToggle";
 
 const STORAGE_KEY = "spring-promo-dismissed";
 

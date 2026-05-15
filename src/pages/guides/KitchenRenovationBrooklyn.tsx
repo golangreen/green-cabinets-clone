@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { MapPin, Check, Clock, DollarSign, Hammer, FileCheck } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import CTA from "@/components/CTA";
-import Contact from "@/components/Contact";
-import Chatbot from "@/components/Chatbot";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import CTA from "@/components/home/CTA";
+import Contact from "@/components/home/Contact";
+import Chatbot from "@/components/marketing/Chatbot";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { authorRef } from "@/data/authors";
-import AuthorByline from "@/components/AuthorByline";
+import AuthorByline from "@/components/marketing/AuthorByline";
 import { buildArticleSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/kitchen-renovation-brooklyn";

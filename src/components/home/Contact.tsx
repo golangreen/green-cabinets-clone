@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import QuoteForm from "@/components/QuoteForm";
-import ObfuscatedPhone from "@/components/ObfuscatedPhone";
-import ObfuscatedEmail from "@/components/ObfuscatedEmail";
+import QuoteForm from "@/components/marketing/QuoteForm";
+import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
+import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
 
 const Contact = () => {
   const [contactMethod, setContactMethod] = useState<string>("email-golan");

@@ -5,9 +5,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import AdminRoute from "@/components/auth/AdminRoute";
-import HashScrollHandler from "@/components/HashScrollHandler";
-import LegacyRedirect from "@/components/LegacyRedirect";
-import ScrollToTopButton from "@/components/ScrollToTopButton";
+import HashScrollHandler from "@/components/layout/HashScrollHandler";
+import LegacyRedirect from "@/components/layout/LegacyRedirect";
+import ScrollToTopButton from "@/components/layout/ScrollToTopButton";
 
 const Index = lazy(() => import("./pages/Index"));
 const Landing = lazy(() => import("./pages/Landing"));

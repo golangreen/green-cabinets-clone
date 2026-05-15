@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { useParams, Link } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { shopifyService } from "@/services";
 import type { ShopifyProduct } from "@/types";
-import { VanityConfigurator } from "@/components/VanityConfigurator";
+import { VanityConfigurator } from "@/components/vanity/VanityConfigurator";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

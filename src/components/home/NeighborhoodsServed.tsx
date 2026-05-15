@@ -2,7 +2,7 @@ import { MapPin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { BOROUGH_LIST } from "@/data/boroughSeo";
-import NeighborhoodDialog from "@/components/NeighborhoodDialog";
+import NeighborhoodDialog from "@/components/home/NeighborhoodDialog";
 
 const scrollToId = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });

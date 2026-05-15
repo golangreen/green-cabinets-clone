@@ -1,7 +1,7 @@
 import logo from "@/assets/logo-new.png";
 import { Instagram } from "lucide-react";
-import ObfuscatedPhone from "@/components/ObfuscatedPhone";
-import ObfuscatedEmail from "@/components/ObfuscatedEmail";
+import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
+import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
 
 const Footer = () => {
   const scrollToGallery = (category: string, event: React.MouseEvent) => {

@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import logoColor from "@/assets/logos/logo-color.svg";
 import logoBlack from "@/assets/logos/logo-black.svg";
-import { CartDrawer } from "@/components/CartDrawer";
+import { CartDrawer } from "@/components/shop/CartDrawer";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
