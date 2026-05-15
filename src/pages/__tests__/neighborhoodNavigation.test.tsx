@@ -61,13 +61,14 @@ describe("Neighborhood navigation integration", () => {
     await user.click(neighborhoodLink);
 
     // Assert breadcrumb renders correctly on the neighborhood page
-    expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
+    const breadcrumb = screen.getByLabelText("Breadcrumb");
+    expect(within(breadcrumb).getByRole("link", { name: "Home" })).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Neighborhoods" }),
+      within(breadcrumb).getByRole("link", { name: "Neighborhoods" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Brooklyn" })).toBeInTheDocument();
+    expect(within(breadcrumb).getByRole("link", { name: "Brooklyn" })).toBeInTheDocument();
     expect(
-      screen.getByText("Williamsburg", {
+      within(breadcrumb).getByText("Williamsburg", {
         selector: '[aria-current="page"]',
       }),
     ).toBeInTheDocument();
