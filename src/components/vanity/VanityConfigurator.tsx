@@ -1,13 +1,13 @@
 import type { ShopifyProduct } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCustomVanityConfig } from "@/hooks/useCustomVanityConfig";
-import { VanityImageGallery } from "./vanity/VanityImageGallery";
-import { VanityBrandFinishSelector } from "./vanity/VanityBrandFinishSelector";
-import { VanityDimensionInput } from "./vanity/VanityDimensionInput";
-import { VanityZipInput } from "./vanity/VanityZipInput";
-import { VanityPriceSummary } from "./vanity/VanityPriceSummary";
-import { VanityActions } from "./vanity/VanityActions";
-import { VanityQuoteDialog } from "./vanity/VanityQuoteDialog";
+import { VanityImageGallery } from "./VanityImageGallery";
+import { VanityBrandFinishSelector } from "./VanityBrandFinishSelector";
+import { VanityDimensionInput } from "./VanityDimensionInput";
+import { VanityZipInput } from "./VanityZipInput";
+import { VanityPriceSummary } from "./VanityPriceSummary";
+import { VanityActions } from "./VanityActions";
+import { VanityQuoteDialog } from "./VanityQuoteDialog";
 
 interface VanityConfiguratorProps {
   product: ShopifyProduct;
