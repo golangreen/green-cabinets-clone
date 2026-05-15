@@ -1,6 +1,8 @@
-// Runs before `vite dev` and `vite build` (predev/prebuild hooks); writes public/sitemap.xml.
-// Auto-discovers entries from src/data so the sitemap stays in sync with the codebase.
-import { writeFileSync } from "fs";
+// Runs before `vite dev` and `vite build` (predev/prebuild hooks).
+// Writes a sitemap index at public/sitemap.xml plus per-section sitemaps in
+// public/sitemaps/. Splitting by section keeps each file well under the
+// 50k URL / 50MB limit and lets crawlers ingest sections independently.
+import { writeFileSync, mkdirSync } from "fs";
 import { resolve } from "path";
 import { NEIGHBORHOODS } from "../src/data/neighborhoodSeo";
 import { BOROUGHS } from "../src/data/boroughSeo";
@@ -13,6 +15,13 @@ const today = new Date().toISOString().slice(0, 10);
 const SHOPIFY_STORE = "green-cabinets-clone-5eeb3.myshopify.com";
 const SHOPIFY_API_VERSION = "2025-07";
 const SHOPIFY_STOREFRONT_TOKEN = "585dda31c3bbc355eb6f937d3307f76b";
+
+interface SitemapEntry {
+  path: string;
+  lastmod?: string;
+  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+  priority?: string;
+}
 
 async function fetchShopifyProductHandles(): Promise<{ handle: string; updatedAt: string }[]> {
   try {
@@ -28,12 +37,7 @@ async function fetchShopifyProductHandles(): Promise<{ handle: string; updatedAt
           query: `
             query GetProductHandles($first: Int!) {
               products(first: $first) {
-                edges {
-                  node {
-                    handle
-                    updatedAt
-                  }
-                }
+                edges { node { handle updatedAt } }
               }
             }
           `,
@@ -57,23 +61,20 @@ async function fetchShopifyProductHandles(): Promise<{ handle: string; updatedAt
   }
 }
 
-interface SitemapEntry {
-  path: string;
-  lastmod?: string;
-  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-  priority?: string;
-}
-
-const entries: SitemapEntry[] = [
+const core: SitemapEntry[] = [
   { path: "/", changefreq: "weekly", priority: "1.0", lastmod: today },
   { path: "/shop", changefreq: "weekly", priority: "0.9", lastmod: today },
   { path: "/designer", changefreq: "monthly", priority: "0.7", lastmod: today },
   { path: "/gallery", changefreq: "weekly", priority: "0.8", lastmod: today },
   { path: "/finishes-colors", changefreq: "monthly", priority: "0.8", lastmod: today },
   { path: "/wood-species", changefreq: "monthly", priority: "0.8", lastmod: today },
-  { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9", lastmod: today },
   { path: "/about", changefreq: "monthly", priority: "0.7", lastmod: today },
   { path: "/case-studies", changefreq: "monthly", priority: "0.8", lastmod: today },
+  { path: "/landing", changefreq: "monthly", priority: "0.7", lastmod: today },
+];
+
+const guides: SitemapEntry[] = [
+  { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9", lastmod: today },
   { path: "/best-wood-for-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/cabinet-wood-types-and-costs", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/natural-wood-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
@@ -81,53 +82,38 @@ const entries: SitemapEntry[] = [
   { path: "/floating-bathroom-vanity", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/small-bathroom-vanity-ideas", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/reach-in-closet-systems-nyc", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/landing", changefreq: "monthly", priority: "0.7", lastmod: today },
-
-  // Homepage section anchors intentionally excluded — the / entry already covers them,
-  // and fragment URLs are invalid inside sitemaps per sitemaps.org spec.
 ];
 
-// Borough pages
-for (const b of Object.values(BOROUGHS)) {
-  entries.push({
+const locations: SitemapEntry[] = [
+  ...Object.values(BOROUGHS).map((b) => ({
     path: `/custom-kitchen-cabinets-${b.slug}`,
-    changefreq: "monthly",
+    changefreq: "monthly" as const,
     priority: "0.9",
     lastmod: today,
-  });
-}
-
-// Neighborhood pages
-for (const n of Object.values(NEIGHBORHOODS)) {
-  entries.push({
+  })),
+  ...Object.values(NEIGHBORHOODS).map((n) => ({
     path: `/custom-kitchen-cabinets-${n.slug}`,
-    changefreq: "monthly",
+    changefreq: "monthly" as const,
     priority: "0.85",
     lastmod: today,
-  });
-}
+  })),
+];
 
-// Wood species detail pages
-for (const w of WOOD_SPECIES) {
-  entries.push({
-    path: `/wood-species/${w.slug}`,
-    changefreq: "monthly",
-    priority: "0.7",
-    lastmod: today,
-  });
-}
+const woodSpecies: SitemapEntry[] = WOOD_SPECIES.map((w) => ({
+  path: `/wood-species/${w.slug}`,
+  changefreq: "monthly",
+  priority: "0.7",
+  lastmod: today,
+}));
 
-// Case study detail pages
-for (const c of CASE_STUDIES) {
-  entries.push({
-    path: `/case-studies/${c.slug}`,
-    changefreq: "yearly",
-    priority: "0.75",
-    lastmod: c.datePublished,
-  });
-}
+const caseStudies: SitemapEntry[] = CASE_STUDIES.map((c) => ({
+  path: `/case-studies/${c.slug}`,
+  changefreq: "yearly",
+  priority: "0.75",
+  lastmod: c.datePublished,
+}));
 
-function generateSitemap(entries: SitemapEntry[]) {
+function renderUrlset(entries: SitemapEntry[]) {
   const urls = entries.map((e) =>
     [
       `  <url>`,
@@ -148,19 +134,60 @@ function generateSitemap(entries: SitemapEntry[]) {
   ].join("\n");
 }
 
+function renderIndex(sitemaps: { loc: string; lastmod: string }[]) {
+  const items = sitemaps.map(
+    (s) =>
+      `  <sitemap>\n    <loc>${s.loc}</loc>\n    <lastmod>${s.lastmod}</lastmod>\n  </sitemap>`,
+  );
+  return [
+    `<?xml version="1.0" encoding="UTF-8"?>`,
+    `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
+    ...items,
+    `</sitemapindex>`,
+  ].join("\n");
+}
+
+// Latest entry lastmod for the index — falls back to today.
+function maxLastmod(entries: SitemapEntry[]): string {
+  const dates = entries.map((e) => e.lastmod).filter((x): x is string => Boolean(x));
+  return dates.length ? dates.sort().slice(-1)[0] : today;
+}
+
 async function main() {
   const shopifyProducts = await fetchShopifyProductHandles();
-  for (const p of shopifyProducts) {
-    entries.push({
-      path: `/product/${p.handle}`,
-      changefreq: "weekly",
-      priority: "0.8",
-      lastmod: p.updatedAt.slice(0, 10),
+  const products: SitemapEntry[] = shopifyProducts.map((p) => ({
+    path: `/product/${p.handle}`,
+    changefreq: "weekly",
+    priority: "0.8",
+    lastmod: p.updatedAt.slice(0, 10),
+  }));
+
+  const sections: { name: string; entries: SitemapEntry[] }[] = [
+    { name: "core", entries: core },
+    { name: "guides", entries: guides },
+    { name: "locations", entries: locations },
+    { name: "wood-species", entries: woodSpecies },
+    { name: "case-studies", entries: caseStudies },
+    { name: "products", entries: products },
+  ].filter((s) => s.entries.length > 0);
+
+  mkdirSync(resolve("public/sitemaps"), { recursive: true });
+
+  const indexEntries: { loc: string; lastmod: string }[] = [];
+  let total = 0;
+  for (const s of sections) {
+    const path = `public/sitemaps/sitemap-${s.name}.xml`;
+    writeFileSync(resolve(path), renderUrlset(s.entries));
+    indexEntries.push({
+      loc: `${BASE_URL}/sitemaps/sitemap-${s.name}.xml`,
+      lastmod: maxLastmod(s.entries),
     });
+    total += s.entries.length;
+    console.log(`  ${path} (${s.entries.length} urls)`);
   }
 
-  writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
-  console.log(`sitemap.xml written (${entries.length} entries)`);
+  writeFileSync(resolve("public/sitemap.xml"), renderIndex(indexEntries));
+  console.log(`sitemap.xml index written (${sections.length} sitemaps, ${total} urls)`);
 }
 
 main();
