@@ -515,6 +515,66 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_scans: {
+        Row: {
+          accessibility_score: number | null
+          best_practices_score: number | null
+          cls: number | null
+          created_at: string
+          error: string | null
+          failing_audits: Json | null
+          fcp_ms: number | null
+          id: string
+          inp_ms: number | null
+          lcp_ms: number | null
+          performance_score: number | null
+          raw: Json | null
+          seo_score: number | null
+          strategy: string
+          tbt_ms: number | null
+          triggered_by: string | null
+          url: string
+        }
+        Insert: {
+          accessibility_score?: number | null
+          best_practices_score?: number | null
+          cls?: number | null
+          created_at?: string
+          error?: string | null
+          failing_audits?: Json | null
+          fcp_ms?: number | null
+          id?: string
+          inp_ms?: number | null
+          lcp_ms?: number | null
+          performance_score?: number | null
+          raw?: Json | null
+          seo_score?: number | null
+          strategy: string
+          tbt_ms?: number | null
+          triggered_by?: string | null
+          url: string
+        }
+        Update: {
+          accessibility_score?: number | null
+          best_practices_score?: number | null
+          cls?: number | null
+          created_at?: string
+          error?: string | null
+          failing_audits?: Json | null
+          fcp_ms?: number | null
+          id?: string
+          inp_ms?: number | null
+          lcp_ms?: number | null
+          performance_score?: number | null
+          raw?: Json | null
+          seo_score?: number | null
+          strategy?: string
+          tbt_ms?: number | null
+          triggered_by?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
