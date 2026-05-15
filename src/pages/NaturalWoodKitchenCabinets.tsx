@@ -16,9 +16,9 @@ import { buildArticleSchema, buildFaqSchema } from "@/lib/articleSchema";
 import { WOOD_SPECIES } from "@/data/woodSpecies";
 
 const URL = "https://greencabinetsny.com/natural-wood-kitchen-cabinets";
-const TITLE = "Natural Wood Kitchen Cabinets — Species, Finishes & 2026 Cost Guide";
+const TITLE = "Natural Wood Kitchen Cabinets — Species & 2026 NYC Costs";
 const DESC =
-  "A cabinetmaker's deep-dive on natural wood kitchen cabinets: which species look best unstained, the four finish systems that protect natural wood, grain patterns that age well, and what custom natural wood kitchens cost in NYC.";
+  "Cabinetmaker's deep-dive on natural wood kitchen cabinets: best unstained species, four protective finishes, grain that ages well, and NYC custom costs.";
 
 const link = (slug: string) => `/wood-species/${slug}`;
 
