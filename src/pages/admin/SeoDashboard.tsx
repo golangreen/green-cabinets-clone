@@ -56,7 +56,7 @@ const SeoDashboard = () => {
       .order("created_at", { ascending: false })
       .limit(40);
     if (error) toast({ title: "Failed to load scans", description: error.message, variant: "destructive" });
-    setScans((data as Scan[]) ?? []);
+    setScans(((data ?? []) as unknown) as Scan[]);
     setLoading(false);
   };
 
