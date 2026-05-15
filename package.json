@@ -20,6 +20,7 @@
     "refresh:gsc-checklist": "node scripts/refresh-gsc-checklist.mjs",
     "prepare": "husky",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "test:e2e": "playwright test"
   },
