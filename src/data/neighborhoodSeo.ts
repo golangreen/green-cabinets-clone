@@ -41,7 +41,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     url: `${BASE}/custom-kitchen-cabinets-bushwick`,
     title: "Custom Cabinets in Bushwick, Brooklyn | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets handcrafted in our Bushwick shop since 2009. FSC-certified hardwoods, low-VOC finishes, free in-home consultation. (718) 804-5488.",
+      "Custom kitchen cabinets handcrafted in our Bushwick shop since 2009. FSC hardwoods, low-VOC finishes, free consultation.",
     keywords:
       "custom kitchen cabinets Bushwick, Bushwick cabinet maker, Bushwick kitchen renovation, custom cabinetry Bushwick Brooklyn, Bushwick cabinet shop, kitchen cabinets 11206 11207 11221",
     heroTagline:
@@ -104,7 +104,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     title:
       "Custom Cabinets in Williamsburg, Brooklyn | Green Cabinets",
     description:
-      "Custom kitchen cabinets in Williamsburg — loft conversions, brownstones, new construction. Built in our nearby Bushwick shop. Free consultation. (718) 804-5488.",
+      "Custom kitchen cabinets in Williamsburg — lofts, brownstones, new construction. Built in our Bushwick shop. Free consultation.",
     keywords:
       "custom kitchen cabinets Williamsburg, Williamsburg Brooklyn cabinet maker, loft kitchen Williamsburg, custom cabinetry Williamsburg, Williamsburg condo kitchen renovation, kitchen cabinets 11211 11249",
     heroTagline:

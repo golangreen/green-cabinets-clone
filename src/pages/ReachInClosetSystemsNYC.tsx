@@ -16,7 +16,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/reach-in-closet-systems-nyc";
 const TITLE = "Reach-In Closet Systems for NYC Apartments — Custom Build Guide";
 const DESC =
-  "How a Brooklyn cabinet shop builds reach-in closet systems for NYC apartments: standard depths, the four-zone layout, double-hang vs single-hang math, and what it actually costs.";
+  "How a Brooklyn cabinet shop builds reach-in closet systems for NYC apartments: standard depths, the four-zone layout, and what it costs.";
 
 const ZONES = [
   { name: "Long-hang (dresses, coats, robes)", depth: "Full hanging, ~70\" tall", width: "12\"–24\" of rod", note: "Allocate only what you actually own — most clients overestimate by 2x." },
