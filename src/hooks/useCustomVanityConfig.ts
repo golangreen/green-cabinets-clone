@@ -248,20 +248,43 @@ export function useCustomVanityConfig({ product }: UseCustomVanityConfigOptions)
 
   return {
     // selections
-    selectedBrand, setSelectedBrand: (b: string) => { setSelectedBrand(b as VanityBrand); setError("brand", false); },
-    selectedFinish, setSelectedFinish: (v: string) => { setSelectedFinish(v); setError("finish", false); },
+    selectedBrand, setSelectedBrand: (b: string) => { setSelectedBrand(b as VanityBrand); setError("brand", null); },
+    selectedFinish, setSelectedFinish: (v: string) => { setSelectedFinish(v); setError("finish", null); },
     availableFinishes,
 
-    // dimensions
-    width, setWidth: (v: string) => { setWidth(v); setError("width", false); },
+    // dimensions — live-validate on change
+    width,
+    setWidth: (v: string) => {
+      setWidth(v);
+      if (!v) return setError("width", null);
+      const inches = customVanityService.inchesFromParts(v, widthFraction);
+      setError("width", validateField(widthSchema, inches));
+    },
     widthFraction, setWidthFraction,
-    height, setHeight: (v: string) => { setHeight(v); setError("height", false); },
+    height,
+    setHeight: (v: string) => {
+      setHeight(v);
+      if (!v) return setError("height", null);
+      const inches = customVanityService.inchesFromParts(v, heightFraction);
+      setError("height", validateField(heightSchema, inches));
+    },
     heightFraction, setHeightFraction,
-    depth, setDepth: (v: string) => { setDepth(v); setError("depth", false); },
+    depth,
+    setDepth: (v: string) => {
+      setDepth(v);
+      if (!v) return setError("depth", null);
+      const inches = customVanityService.inchesFromParts(v, depthFraction);
+      setError("depth", validateField(depthSchema, inches));
+    },
     depthFraction, setDepthFraction,
 
-    // zip / state
-    zipCode, setZipCode: (v: string) => { setZipCode(v.slice(0, 5)); setError("zipCode", false); },
+    // zip / state — live-validate
+    zipCode,
+    setZipCode: (v: string) => {
+      const trimmed = v.replace(/\D/g, "").slice(0, 5);
+      setZipCode(trimmed);
+      setError("zipCode", trimmed.length === 0 ? null : validateField(zipCodeSchema, trimmed));
+    },
     state,
 
     // errors
