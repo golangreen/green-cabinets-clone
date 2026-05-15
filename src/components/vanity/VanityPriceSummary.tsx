@@ -11,6 +11,17 @@ interface VanityPriceSummaryProps {
   state: string;
 }
 
+const STATE_LABELS: Record<string, string> = {
+  NY: "New York",
+  NJ: "New Jersey",
+  CT: "Connecticut",
+  PA: "Pennsylvania",
+  other: "Outside NY/NJ/CT/PA",
+};
+
+const formatStateLabel = (state: string) =>
+  state ? STATE_LABELS[state] ?? state : "your area";
+
 export const VanityPriceSummary = ({
   width,
   widthFraction,
@@ -21,7 +32,11 @@ export const VanityPriceSummary = ({
   state,
 }: VanityPriceSummaryProps) => {
   if (basePrice <= 0) return null;
+
   const widthInches = customVanityService.inchesFromParts(width, widthFraction);
+  const taxRate = state ? TAX_RATES[state] ?? 0 : 0;
+  const stateLabel = formatStateLabel(state);
+  const hasState = Boolean(state);
 
   return (
     <Card>
@@ -39,24 +54,33 @@ export const VanityPriceSummary = ({
           <span>Base Price (${customVanityService.pricePerLinearFoot}/linear foot):</span>
           <span className="font-medium">${basePrice.toFixed(2)}</span>
         </div>
-        {tax > 0 && (
+
+        {hasState && (
           <div className="flex justify-between text-sm">
-            <span>Sales Tax ({state} - {(TAX_RATES[state] * 100).toFixed(3)}%):</span>
+            <span>
+              Sales Tax ({stateLabel} – {(taxRate * 100).toFixed(3)}%):
+            </span>
             <span className="font-medium">${tax.toFixed(2)}</span>
           </div>
         )}
-        {shipping > 0 && (
+
+        {hasState && shipping > 0 && (
           <div className="flex justify-between text-sm">
-            <span>Shipping to {state}:</span>
+            <span>Shipping to {stateLabel}:</span>
             <span className="font-medium">${shipping.toFixed(2)}</span>
           </div>
         )}
+
         <div className="flex justify-between text-lg font-bold border-t pt-2">
           <span>Total:</span>
           <span>${totalPrice.toFixed(2)}</span>
         </div>
-        <div className="text-xs text-muted-foreground mt-4">
+
+        <div className="text-xs text-muted-foreground mt-4 space-y-1">
           <p>* This is an estimate based on ${customVanityService.pricePerLinearFoot} per linear foot</p>
+          {state === "other" && (
+            <p>* Out-of-region orders use a flat ${shipping.toFixed(0)} shipping fee and no sales tax is collected</p>
+          )}
           <p>* Final pricing will be confirmed by our team before shipping</p>
         </div>
       </CardContent>
