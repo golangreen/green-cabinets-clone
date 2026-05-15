@@ -119,7 +119,7 @@ const Hero = () => {
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
               isTransitioning ? 'opacity-100' : 'opacity-0'
             }`}
-            loading="eager"
+            loading="lazy"
             decoding="async"
           />
         </div>
