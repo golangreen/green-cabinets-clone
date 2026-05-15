@@ -14,9 +14,9 @@ import { CASE_STUDIES } from "@/data/caseStudies";
 import { authorRef, ORG_ID } from "@/data/authors";
 
 const URL = "https://greencabinetsny.com/case-studies";
-const TITLE = "Case Studies — Real NYC Kitchen & Cabinet Projects | Green Cabinets NY";
+const TITLE = "Case Studies — NYC Kitchen Projects | Green Cabinets NY";
 const DESC =
-  "Detailed write-ups of real Green Cabinets NY projects across NYC: budgets, timelines, materials, and lessons learned. Park Slope brownstones, Upper East Side co-ops, LIC lofts.";
+  "Real Green Cabinets NY projects across NYC: budgets, timelines, materials, lessons. Park Slope brownstones, UES co-ops, LIC lofts.";
 
 const itemListSchema = {
   "@context": "https://schema.org",

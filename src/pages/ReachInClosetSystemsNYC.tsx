@@ -14,7 +14,7 @@ import AuthorByline from "@/components/AuthorByline";
 import { buildArticleSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/reach-in-closet-systems-nyc";
-const TITLE = "Reach-In Closet Systems for NYC Apartments — Custom Build Guide";
+const TITLE = "Reach-In Closet Systems for NYC Apartments — Build Guide";
 const DESC =
   "How a Brooklyn cabinet shop builds reach-in closet systems for NYC apartments: standard depths, the four-zone layout, and what it costs.";
 

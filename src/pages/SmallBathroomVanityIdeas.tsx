@@ -16,7 +16,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/small-bathroom-vanity-ideas";
 const TITLE = "Small Bathroom Vanity Ideas — 18\" to 36\" That Actually Work";
 const DESC =
-  "Smart small bathroom vanity ideas from a NYC cabinet shop: 18\", 24\", 30\", and 36\" layouts that maximize storage in tight powder rooms, brownstones, and pre-war apartments.";
+  "Small bathroom vanity ideas from a NYC cabinet shop: 18\", 24\", 30\", and 36\" layouts that maximize storage in powder rooms and pre-war baths.";
 
 const IDEAS = [
   {

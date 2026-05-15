@@ -15,9 +15,9 @@ import AuthorByline from "@/components/AuthorByline";
 import { buildArticleSchema, buildFaqSchema } from "@/lib/articleSchema";
 
 const URL = "https://greencabinetsny.com/best-wood-for-kitchen-cabinets";
-const TITLE = "Best Wood for Kitchen Cabinets in 2026 — Honest Picks by Use Case";
+const TITLE = "Best Wood for Kitchen Cabinets 2026 — Honest Picks";
 const DESC =
-  "A cabinetmaker's opinionated guide to the best wood for kitchen cabinets — best for paint, best for stain, best for durability, best on a budget, best for modern, best for traditional. With Janka hardness, cost ranges, and finish behavior.";
+  "Cabinetmaker's opinionated guide to the best wood for kitchen cabinets — paint, stain, durability, modern, traditional. Janka, costs, finish notes.";
 
 const PICKS = [
   {
