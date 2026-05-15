@@ -1,6 +1,7 @@
 // GSC URL Inspection via Lovable connector gateway.
 // No OAuth setup required — uses the linked Google Search Console connector.
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const GATEWAY = "https://connector-gateway.lovable.dev/google_search_console";
 const DEFAULT_SITE = "sc-domain:greencabinetsny.com";
@@ -13,6 +14,31 @@ interface InspectBody {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  // Require admin authentication
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return json({ error: "Unauthorized" }, 401);
+  }
+
+  const supabaseClient = createClient(
+    Deno.env.get("SUPABASE_URL") ?? "",
+    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+    { global: { headers: { Authorization: authHeader } } }
+  );
+
+  const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+  if (authError || !user) {
+    return json({ error: "Unauthorized" }, 401);
+  }
+
+  const { data: isAdmin } = await supabaseClient.rpc("has_role", {
+    _user_id: user.id,
+    _role: "admin",
+  });
+  if (!isAdmin) {
+    return json({ error: "Admin access required" }, 403);
+  }
 
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
   const GSC_KEY = Deno.env.get("GOOGLE_SEARCH_CONSOLE_API_KEY");

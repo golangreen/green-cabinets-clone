@@ -66,6 +66,8 @@ serve(async (req) => {
     }
 
     // Build line items with custom pricing from cart
+    const MIN_UNIT_AMOUNT_CENTS = 5000; // $50 minimum per item
+
     const lineItems = (items as CartItem[]).map((item) => {
       // Extract total from custom attributes if available (for vanity configurator)
       const customTotal = item.customAttributes?.find((attr) =>
@@ -81,6 +83,11 @@ serve(async (req) => {
       } else if (item.price?.amount) {
         // Use price from cart item (for shop products with $350/linear foot)
         unitAmount = Math.round(parseFloat(item.price.amount) * 100);
+      }
+
+      if (unitAmount < MIN_UNIT_AMOUNT_CENTS) {
+        console.warn("create-checkout: rejected suspicious unit amount:", unitAmount, "for item:", item.product.node.title);
+        throw new Error(`Invalid price for item: ${item.product.node.title}. Please refresh and try again.`);
       }
 
       // Build product description from custom attributes

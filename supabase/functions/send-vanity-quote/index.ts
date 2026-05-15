@@ -208,7 +208,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
     
     return new Response(
-      JSON.stringify({ error: error.message || "Failed to send quote request" }),
+      JSON.stringify({ error: "Failed to send quote. Please try again or contact support." }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
