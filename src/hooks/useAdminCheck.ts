@@ -3,7 +3,7 @@
  * Uses Supabase RPC function to verify role without exposing service logic
  */
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { roleService } from '@/services/roleService';
 import { useAuth } from './useAuth';
 
 export function useAdminCheck() {
@@ -20,17 +20,7 @@ export function useAdminCheck() {
       }
 
       try {
-        const { data, error } = await supabase.rpc('has_role', {
-          _user_id: user.id,
-          _role: 'admin'
-        });
-
-        if (error) {
-          console.error('Error checking admin role:', error);
-          setIsAdmin(false);
-        } else {
-          setIsAdmin(data ?? false);
-        }
+        setIsAdmin(await roleService.hasRole(user.id, 'admin'));
       } catch (error) {
         console.error('Error checking admin role:', error);
         setIsAdmin(false);
