@@ -9,36 +9,42 @@ import HashScrollHandler from "@/components/layout/HashScrollHandler";
 import LegacyRedirect from "@/components/layout/LegacyRedirect";
 import ScrollToTopButton from "@/components/layout/ScrollToTopButton";
 
-const Index = lazy(() => import("./pages/Index"));
-const Landing = lazy(() => import("./pages/Landing"));
-const Shop = lazy(() => import("./pages/Shop"));
-const Auth = lazy(() => import("./pages/Auth"));
-const Designer = lazy(() => import("./pages/Designer"));
-const ProductDetail = lazy(() => import("./pages/ProductDetail"));
-const Checkout = lazy(() => import("./pages/Checkout"));
-const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
-const PerformanceMonitor = lazy(() => import("./pages/PerformanceMonitor"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+const Index = lazy(() => import("./pages/marketing/Index"));
+const Landing = lazy(() => import("./pages/marketing/Landing"));
+const About = lazy(() => import("./pages/marketing/About"));
+const GalleryPage = lazy(() => import("./pages/marketing/Gallery"));
+const CaseStudies = lazy(() => import("./pages/marketing/CaseStudies"));
+const CaseStudyDetail = lazy(() => import("./pages/marketing/CaseStudyDetail"));
+
+const Shop = lazy(() => import("./pages/shop/Shop"));
+const ProductDetail = lazy(() => import("./pages/shop/ProductDetail"));
+const Checkout = lazy(() => import("./pages/shop/Checkout"));
+const PaymentSuccess = lazy(() => import("./pages/shop/PaymentSuccess"));
+
+const Auth = lazy(() => import("./pages/auth/Auth"));
+const Designer = lazy(() => import("./pages/designer/Designer"));
+const NotFound = lazy(() => import("./pages/system/NotFound"));
+
+const PerformanceMonitor = lazy(() => import("./pages/admin/PerformanceMonitor"));
 const NeighborhoodGalleryAdmin = lazy(() => import("./pages/admin/NeighborhoodGalleryAdmin"));
 const SerpPreviewPage = lazy(() => import("./pages/admin/SerpPreviewPage"));
 const GscIndexingPage = lazy(() => import("./pages/admin/GscIndexingPage"));
 const SeoDashboard = lazy(() => import("./pages/admin/SeoDashboard"));
-const Borough = lazy(() => import("./pages/Borough"));
-const WoodSpecies = lazy(() => import("./pages/WoodSpecies"));
-const WoodSpeciesDetail = lazy(() => import("./pages/WoodSpeciesDetail"));
-const FinishesColors = lazy(() => import("./pages/FinishesColors"));
-const GalleryPage = lazy(() => import("./pages/Gallery"));
-const KitchenRenovationBrooklyn = lazy(() => import("./pages/KitchenRenovationBrooklyn"));
-const About = lazy(() => import("./pages/About"));
-const CaseStudies = lazy(() => import("./pages/CaseStudies"));
-const CaseStudyDetail = lazy(() => import("./pages/CaseStudyDetail"));
-const BestWoodForKitchenCabinets = lazy(() => import("./pages/BestWoodForKitchenCabinets"));
-const CabinetWoodTypesAndCosts = lazy(() => import("./pages/CabinetWoodTypesAndCosts"));
-const NaturalWoodKitchenCabinets = lazy(() => import("./pages/NaturalWoodKitchenCabinets"));
-const DoubleSinkVanityGuide = lazy(() => import("./pages/DoubleSinkVanityGuide"));
-const FloatingBathroomVanity = lazy(() => import("./pages/FloatingBathroomVanity"));
-const SmallBathroomVanityIdeas = lazy(() => import("./pages/SmallBathroomVanityIdeas"));
-const ReachInClosetSystemsNYC = lazy(() => import("./pages/ReachInClosetSystemsNYC"));
+
+const Borough = lazy(() => import("./pages/locations/Borough"));
+
+const WoodSpecies = lazy(() => import("./pages/wood/WoodSpecies"));
+const WoodSpeciesDetail = lazy(() => import("./pages/wood/WoodSpeciesDetail"));
+const FinishesColors = lazy(() => import("./pages/wood/FinishesColors"));
+
+const KitchenRenovationBrooklyn = lazy(() => import("./pages/guides/KitchenRenovationBrooklyn"));
+const BestWoodForKitchenCabinets = lazy(() => import("./pages/guides/BestWoodForKitchenCabinets"));
+const CabinetWoodTypesAndCosts = lazy(() => import("./pages/guides/CabinetWoodTypesAndCosts"));
+const NaturalWoodKitchenCabinets = lazy(() => import("./pages/guides/NaturalWoodKitchenCabinets"));
+const DoubleSinkVanityGuide = lazy(() => import("./pages/guides/DoubleSinkVanityGuide"));
+const FloatingBathroomVanity = lazy(() => import("./pages/guides/FloatingBathroomVanity"));
+const SmallBathroomVanityIdeas = lazy(() => import("./pages/guides/SmallBathroomVanityIdeas"));
+const ReachInClosetSystemsNYC = lazy(() => import("./pages/guides/ReachInClosetSystemsNYC"));
 
 const RouteFallback = () => (
   <div className="min-h-screen flex items-center justify-center" aria-busy="true" />
