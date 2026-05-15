@@ -204,7 +204,7 @@ serve(async (req) => {
     });
   } catch (err) {
     console.error("send-finish-selection error:", err);
-    return new Response(JSON.stringify({ error: (err as Error).message || "Send failed" }), {
+    return new Response(JSON.stringify({ error: "Failed to send selection. Please try again or contact support." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
