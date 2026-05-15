@@ -54,6 +54,14 @@ const Shop = () => {
         <meta property="og:description" content="Premium cabinet handles, hardware, and accessories shipped from our Brooklyn shop. Built to match Green Cabinets custom builds." />
         <meta property="og:url" content="https://greencabinetsny.com/shop" />
         <meta property="og:type" content="website" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Shop — Cabinet Hardware & Accessories",
+          description: "Premium cabinet handles, hardware, and accessories shipped from our Brooklyn shop.",
+          url: "https://greencabinetsny.com/shop",
+          isPartOf: { "@type": "WebSite", name: "Green Cabinets NY", url: "https://greencabinetsny.com" },
+        })}</script>
       </Helmet>
       <BreadcrumbSchema items={[{ name: "Home", url: "/" }, { name: "Shop", url: "/shop" }]} />
       <Header />
