@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Play, ExternalLink, CheckCircle2, AlertTriangle, XCircle, Loader2 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { seoScanService } from '@/services/seoScanService';
 
 type Status = 'idle' | 'running' | 'pass' | 'warn' | 'fail';
 type Check = { id: string; label: string; status: Status; message?: string; details?: string };
@@ -45,10 +45,7 @@ const SeoDeepTestPanel = () => {
       const c = CHECKS[i];
       setChecks((prev) => prev.map((x) => (x.id === c.id ? { ...x, status: 'running' } : x)));
       try {
-        const { data, error } = await supabase.functions.invoke('seo-deep-test', {
-          body: { check: c.id, origin },
-        });
-        if (error) throw error;
+        const data = await seoScanService.deepTest(c.id, origin);
         setChecks((prev) =>
           prev.map((x) =>
             x.id === c.id

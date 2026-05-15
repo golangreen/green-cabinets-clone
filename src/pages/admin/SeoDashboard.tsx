@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { supabase } from "@/integrations/supabase/client";
+import { seoScanService, type SeoScan } from "@/services/seoScanService";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,23 +10,7 @@ import { Loader2, RefreshCw, ExternalLink } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-type Scan = {
-  id: string;
-  url: string;
-  strategy: "mobile" | "desktop";
-  performance_score: number | null;
-  accessibility_score: number | null;
-  best_practices_score: number | null;
-  seo_score: number | null;
-  lcp_ms: number | null;
-  cls: number | null;
-  inp_ms: number | null;
-  fcp_ms: number | null;
-  tbt_ms: number | null;
-  failing_audits: Array<{ id: string; title: string; score: number; displayValue?: string | null }> | null;
-  error: string | null;
-  created_at: string;
-};
+type Scan = SeoScan;
 
 const scoreColor = (s: number | null) => {
   if (s == null) return "bg-muted text-muted-foreground";
@@ -50,13 +34,9 @@ const SeoDashboard = () => {
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("seo_scans")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(40);
+    const { scans: data, error } = await seoScanService.listScans(40);
     if (error) toast({ title: "Failed to load scans", description: error.message, variant: "destructive" });
-    setScans(((data ?? []) as unknown) as Scan[]);
+    setScans(data);
     setLoading(false);
   };
 
@@ -67,9 +47,8 @@ const SeoDashboard = () => {
   const runScan = async () => {
     setRunning(true);
     try {
-      const { data, error } = await supabase.functions.invoke("run-seo-scan", { body: { url } });
-      if (error) throw error;
-      toast({ title: "Scan complete", description: `${(data as any)?.results?.length ?? 0} results saved` });
+      const { resultsCount } = await seoScanService.runScan(url);
+      toast({ title: "Scan complete", description: `${resultsCount} results saved` });
       await load();
     } catch (e) {
       toast({ title: "Scan failed", description: (e as Error).message, variant: "destructive" });

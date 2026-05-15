@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Mail, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
-import { supabase } from "@/integrations/supabase/client";
+import { orderEmailService } from "@/services/orderEmailService";
 import { toast } from "sonner";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 import ObfuscatedPhone from "@/components/ObfuscatedPhone";
@@ -35,12 +35,7 @@ export default function PaymentSuccess() {
     
     setSendingEmail(true);
     try {
-      const { data, error } = await supabase.functions.invoke('send-order-confirmation', {
-        body: { sessionId }
-      });
-
-      if (error) throw error;
-      
+      const data = await orderEmailService.sendOrderConfirmation(sessionId);
       setEmailSent(true);
       toast.success("Order confirmation sent to your email!");
       console.log("Email sent:", data);

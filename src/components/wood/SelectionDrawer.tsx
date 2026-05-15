@@ -23,7 +23,7 @@ import { Heart, X, Copy, Check, Mail, Send, Columns3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useFinishSelection, buildShareUrl } from "@/hooks/useFinishSelection";
 import { ALL_PANELS } from "@/data/finishes";
-import { supabase } from "@/integrations/supabase/client";
+import { finishSelectionService } from "@/services/finishSelectionService";
 import CompareDialog from "./CompareDialog";
 
 export const SelectionDrawer = () => {
@@ -83,25 +83,22 @@ export const SelectionDrawer = () => {
     }
     setSending(kind);
     try {
-      const { error } = await supabase.functions.invoke("send-finish-selection", {
-        body: {
-          kind,
-          name: name.trim() || null,
-          email: email.trim(),
-          phone: phone.trim() || null,
-          note: note.trim() || null,
-          shareUrl,
-          picks: picks.map((p) => ({
-            id: p!.id,
-            brand: p!.brand,
-            name: p!.name,
-            codes: p!.codes,
-            thumb: p!.thumb,
-            detailUrl: p!.detailUrl,
-          })),
-        },
+      await finishSelectionService.send({
+        kind,
+        name: name.trim() || null,
+        email: email.trim(),
+        phone: phone.trim() || null,
+        note: note.trim() || null,
+        shareUrl,
+        picks: picks.map((p) => ({
+          id: p!.id,
+          brand: p!.brand,
+          name: p!.name,
+          codes: p!.codes,
+          thumb: p!.thumb,
+          detailUrl: p!.detailUrl,
+        })),
       });
-      if (error) throw error;
       toast({
         title: kind === "self" ? "Sent to your inbox" : "Sent to Green Cabinets",
         description:

@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { ShopProducts } from "@/components/ShopProducts";
 import { PromoBanner } from "@/components/shop/PromoBanner";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { paymentService } from "@/services/paymentService";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -16,24 +16,20 @@ const Shop = () => {
     setIsProcessing(true);
     try {
       console.log('Invoking payment function...');
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: {}
-      });
-      
-      console.log('Payment response:', { data, error });
-      
+      const { url, error } = await paymentService.createTestPayment();
+
+      console.log('Payment response:', { url, error });
+
       if (error) {
-        console.error('Payment error:', error);
         toast.error(`Payment error: ${error.message}`);
         throw error;
       }
-      
-      if (data?.url) {
-        console.log('Redirecting to checkout URL:', data.url);
+
+      if (url) {
+        console.log('Redirecting to checkout URL:', url);
         toast.success('Redirecting to payment...');
-        window.location.href = data.url;
+        window.location.href = url;
       } else {
-        console.error('No URL in response:', data);
         toast.error('No payment URL received');
       }
     } catch (error) {
