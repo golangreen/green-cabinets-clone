@@ -11,7 +11,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 describe("NotFound", () => {
-  it("emits noindex,nofollow meta tag", () => {
+  it("emits noindex,nofollow meta tag", async () => {
     render(<NotFound />, { wrapper: Wrapper });
 
     const meta = await waitFor(() => {
