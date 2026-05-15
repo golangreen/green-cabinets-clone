@@ -16,7 +16,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/floating-bathroom-vanity";
 const TITLE = "Floating Bathroom Vanity — NYC Install Guide & Cost (2026)";
 const DESC =
-  "Everything we tell NYC clients before building a wall-hung floating vanity: wall requirements, weight limits, mounting hardware, ideal heights, and what custom floating vanities actually cost.";
+  "What NYC clients should know before building a wall-hung floating vanity: wall requirements, weight limits, hardware, heights, and real custom costs.";
 
 const PROS = [
   "Visually expands small NYC bathrooms — exposed floor reads larger",
