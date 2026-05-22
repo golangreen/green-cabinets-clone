@@ -139,10 +139,10 @@ const WoodSpecies = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Cabinet Wood Species Guide: Maple, Oak, Walnut & More | Green Cabinets NY</title>
+        <title>Cabinet Wood Species Guide | Green Cabinets NY</title>
         <meta
           name="description"
-          content="In-depth guide to the 11 hardwoods we use for custom kitchen cabinets — maple, walnut, white oak, red oak, birch, cherry, hickory, ash, mahogany, alder, beech. Compare grain, hardness, cost, and finish behavior side-by-side."
+          content="Compare 11 cabinet hardwoods — maple, walnut, oak, birch, cherry, hickory, ash, mahogany, alder, beech. Grain, hardness, cost, and finishes."
         />
         <meta
           name="keywords"
