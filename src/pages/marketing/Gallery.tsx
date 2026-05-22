@@ -42,7 +42,7 @@ const GalleryPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Project Gallery — Kitchens, Vanities & Closets | Green Cabinets</title>
+        <title>Project Gallery — Kitchens & Vanities | Green Cabinets</title>
         <meta
           name="description"
           content="Browse our full gallery of custom kitchens, bathroom vanities, and closets built in Brooklyn for homes across NYC."

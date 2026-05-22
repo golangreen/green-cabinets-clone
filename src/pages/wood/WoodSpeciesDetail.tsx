@@ -96,7 +96,7 @@ const WoodSpeciesDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>{wood.metaTitle ?? `${wood.name} Kitchen Cabinets — Grain, Hardness, Cost & Finishes | Green Cabinets NY`}</title>
+        <title>{wood.metaTitle ?? `${wood.name} Cabinets — Grain, Cost & Finishes | Green Cabinets NY`}</title>
         <meta
           name="description"
           content={wood.metaDescription ?? `${wood.shortDescription} Janka hardness ${wood.jankaHardness} lbf. Built in Brooklyn since 2009.`}
