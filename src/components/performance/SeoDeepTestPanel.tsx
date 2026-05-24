@@ -113,7 +113,7 @@ const SeoDeepTestPanel = () => {
               <div className="flex-1 min-w-0">
                 <div className="font-medium text-sm">{c.label}</div>
                 {c.message && <div className="text-xs text-muted-foreground mt-0.5">{c.message}</div>}
-                {c.details && <div className="text-xs text-muted-foreground/70 mt-0.5 truncate">{c.details}</div>}
+                {c.details && <div className="text-xs text-muted-foreground mt-0.5 truncate">{c.details}</div>}
               </div>
             </li>
           ))}

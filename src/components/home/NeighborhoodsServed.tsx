@@ -44,7 +44,7 @@ const NeighborhoodsServed = () => {
               </span>
             ))}
           </p>
-          <p className="md:hidden text-xs text-[#666] mt-3">Swipe through {BOROUGH_LIST.length} boroughs →</p>
+          <p className="md:hidden text-xs text-muted-foreground mt-3">Swipe through {BOROUGH_LIST.length} boroughs →</p>
         </div>
       </div>
 

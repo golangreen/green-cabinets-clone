@@ -72,7 +72,7 @@ const Breadcrumbs = ({ items }: Props) => {
                 )}
                 {!isLast && (
                   <ChevronRight
-                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#999999] shrink-0"
+                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0"
                     aria-hidden="true"
                   />
                 )}

@@ -63,7 +63,7 @@ const About = () => (
 
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
             Bushwick · Since 2009
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
@@ -80,7 +80,7 @@ const About = () => (
         <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
           <div className="grid md:grid-cols-3 gap-6 mb-16">
             <div className="p-6 border border-border rounded-lg">
-              <Hammer className="h-6 w-6 text-[#5C7650] mb-3" />
+              <Hammer className="h-6 w-6 text-accent mb-3" />
               <h3 className="font-semibold text-lg mb-1">Built in Brooklyn</h3>
               <p className="text-sm text-muted-foreground">
                 Every cabinet is milled, sanded, and sprayed in our Bushwick shop. You're welcome
@@ -88,7 +88,7 @@ const About = () => (
               </p>
             </div>
             <div className="p-6 border border-border rounded-lg">
-              <Award className="h-6 w-6 text-[#5C7650] mb-3" />
+              <Award className="h-6 w-6 text-accent mb-3" />
               <h3 className="font-semibold text-lg mb-1">15+ years</h3>
               <p className="text-sm text-muted-foreground">
                 Founded in 2009. Hundreds of NYC kitchens, vanities, and built-ins shipped across
@@ -96,7 +96,7 @@ const About = () => (
               </p>
             </div>
             <div className="p-6 border border-border rounded-lg">
-              <MapPin className="h-6 w-6 text-[#5C7650] mb-3" />
+              <MapPin className="h-6 w-6 text-accent mb-3" />
               <h3 className="font-semibold text-lg mb-1">All five boroughs</h3>
               <p className="text-sm text-muted-foreground">
                 Brooklyn, Manhattan, Queens, the Bronx, and Staten Island — brownstones, lofts,
@@ -109,7 +109,7 @@ const About = () => (
 
           <article id="golan-achdary" className="mb-12 scroll-mt-32">
             <h3 className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-1">Golan Achdary</h3>
-            <p className="text-[#5C7650] font-semibold mb-3">Founder & Master Cabinetmaker</p>
+            <p className="text-accent font-semibold mb-3">Founder & Master Cabinetmaker</p>
             <p className="text-base text-[#444] leading-relaxed mb-3">
               Golan founded Green Cabinets NY in 2009 after years on NYC job sites. He runs design,
               millwork, and finish QC personally — every door, drawer, and panel gets eyes on
@@ -124,7 +124,7 @@ const About = () => (
 
           <article id="andy-lopez" className="mb-12 scroll-mt-32">
             <h3 className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-1">Andy Lopez</h3>
-            <p className="text-[#5C7650] font-semibold mb-3">Project Manager & Installation Lead</p>
+            <p className="text-accent font-semibold mb-3">Project Manager & Installation Lead</p>
             <p className="text-base text-[#444] leading-relaxed mb-3">
               Andy schedules installs, coordinates GCs and trades, and runs walkthroughs. If your
               kitchen lands clean and on schedule in a 4th-floor Bushwick walk-up, that's Andy.

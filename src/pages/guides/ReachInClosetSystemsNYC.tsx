@@ -110,7 +110,7 @@ const ReachInClosetSystemsNYC = () => (
 
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
             Updated 2026 · NYC apartment closets
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
@@ -130,7 +130,7 @@ const ReachInClosetSystemsNYC = () => (
       <section className="py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
           <h2 className="text-2xl sm:text-3xl font-bold mb-3 flex items-center gap-2">
-            <Ruler className="h-6 w-6 text-[#5C7650]" /> Standard NYC reach-in dimensions
+            <Ruler className="h-6 w-6 text-accent" /> Standard NYC reach-in dimensions
           </h2>
           <ul className="list-disc pl-5 space-y-2 text-base text-muted-foreground mb-12">
             <li><strong>Depth:</strong> 24" wall-to-wall (pre-war: 22"–26")</li>
@@ -194,8 +194,8 @@ const ReachInClosetSystemsNYC = () => (
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Related reading</h2>
           <ul className="list-disc pl-5 space-y-2 text-base text-muted-foreground">
-            <li><Link to="/double-sink-vanity-guide" className="text-[#5C7650] hover:underline">Double sink vanity guide</Link></li>
-            <li><Link to="/floating-bathroom-vanity" className="text-[#5C7650] hover:underline">Floating bathroom vanity install guide</Link></li>
+            <li><Link to="/double-sink-vanity-guide" className="text-accent hover:underline">Double sink vanity guide</Link></li>
+            <li><Link to="/floating-bathroom-vanity" className="text-accent hover:underline">Floating bathroom vanity install guide</Link></li>
           </ul>
         </div>
       </section>

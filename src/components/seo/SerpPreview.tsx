@@ -53,7 +53,7 @@ export const SerpPreview = ({ url, title, description }: SerpPreviewProps) => {
         >
           {title}
         </h3>
-        <p className="text-sm text-[#4d5156] dark:text-gray-300 leading-snug mt-1 line-clamp-2">
+        <p className="text-sm text-[#4d5156] dark:text-muted-foreground leading-snug mt-1 line-clamp-2">
           {description}
         </p>
       </div>

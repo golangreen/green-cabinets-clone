@@ -39,7 +39,7 @@ const Contact = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-6">Get in Touch</h2>
-          <p className="text-base sm:text-lg text-[#666666] max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
             Ready to transform your space? Contact us today for a free consultation.
           </p>
         </div>
@@ -53,7 +53,7 @@ const Contact = () => {
             <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Email Us</h3>
             <ObfuscatedEmail 
               encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
-              className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors break-words block"
+              className="text-sm md:text-base text-muted-foreground hover:text-[#1a1a1a] transition-colors break-words block"
             />
           </div>
 
@@ -64,10 +64,10 @@ const Contact = () => {
             </div>
             <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Call Us</h3>
             <div className="flex gap-1 items-center">
-              <span className="text-sm md:text-base text-[#666666]">Golan Achdary:</span>
+              <span className="text-sm md:text-base text-muted-foreground">Golan Achdary:</span>
               <ObfuscatedPhone 
                 encoded="NzE4ODA0NTQ4OA=="
-                className="text-sm md:text-base text-[#666666] hover:text-[#1a1a1a] transition-colors"
+                className="text-sm md:text-base text-muted-foreground hover:text-[#1a1a1a] transition-colors"
                 type="tel"
               />
             </div>
@@ -79,7 +79,7 @@ const Contact = () => {
               <MapPin className="w-8 h-8 text-white" />
             </div>
             <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Visit Us</h3>
-            <address className="text-sm md:text-base text-[#666666] not-italic">
+            <address className="text-sm md:text-base text-muted-foreground not-italic">
               10 Montieth St<br />
               Bushwick, Brooklyn, NY 11206
             </address>
@@ -114,7 +114,7 @@ const Contact = () => {
           <div className="mt-4 p-4 sm:p-5 rounded-xl bg-[#5C7650]/5 border border-[#5C7650]/10">
             <div className="flex items-start gap-3">
               <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-              <div className="text-sm md:text-base text-[#666666]">
+              <div className="text-sm md:text-base text-muted-foreground">
                 <p className="font-semibold text-[#1a1a1a] mb-1">
                   Bushwick, Brooklyn
                 </p>
@@ -138,7 +138,7 @@ const Contact = () => {
             Get Detailed Quote
           </Button>
           
-          <div className="text-center text-[#999999]">or</div>
+          <div className="text-center text-muted-foreground">or</div>
           
           <Select value={contactMethod} onValueChange={(value: string) => setContactMethod(value)}>
             <SelectTrigger className="w-full bg-[#1a1a1a] text-white border-0">

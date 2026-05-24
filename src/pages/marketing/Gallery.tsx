@@ -40,7 +40,7 @@ const GalleryPage = () => {
   const activeLabel = CATEGORIES.find((c) => c.key === active)?.label ?? "All";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <Helmet>
         <title>Project Gallery — Kitchens & Vanities | Green Cabinets</title>
         <meta
@@ -81,7 +81,7 @@ const GalleryPage = () => {
             <button
               type="button"
               onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")}
-              className="inline-flex items-center gap-2 text-sm text-[#5C7650] hover:text-[#445339] font-medium transition-colors active:scale-95"
+              className="inline-flex items-center gap-2 text-sm text-accent hover:text-[#445339] font-medium transition-colors active:scale-95"
             >
               <ArrowLeft className="h-4 w-4" />
               Back
@@ -91,7 +91,7 @@ const GalleryPage = () => {
 
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
           <header className="text-center mb-10">
-            <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-3">
+            <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
               Real Projects · Real Craftsmanship
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -115,7 +115,7 @@ const GalleryPage = () => {
                 return (
                   <div key={c.key} className="flex items-center gap-2 shrink-0">
                     {idx > 0 && (
-                      <ChevronRight className="h-4 w-4 text-muted-foreground/60 shrink-0" aria-hidden />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" aria-hidden />
                     )}
                     <button
                       type="button"

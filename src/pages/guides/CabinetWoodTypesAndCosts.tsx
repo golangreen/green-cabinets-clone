@@ -139,7 +139,7 @@ const CabinetWoodTypesAndCosts = () => (
 
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
             14 species · Janka hardness · Per-lf premiums · 2026
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
@@ -174,7 +174,7 @@ const CabinetWoodTypesAndCosts = () => (
                 {ROWS.map((r) => (
                   <tr key={r.slug} className="hover:bg-muted/40">
                     <td className="px-3 py-3 font-medium">
-                      <Link to={`/wood-species/${r.slug}`} className="text-[#5C7650] hover:underline">
+                      <Link to={`/wood-species/${r.slug}`} className="text-accent hover:underline">
                         {r.name}
                       </Link>
                     </td>

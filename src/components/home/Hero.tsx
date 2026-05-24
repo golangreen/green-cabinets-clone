@@ -1,8 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.jpg";
-import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
 import modernBathroomWoodMarble from "@/assets/gallery/modern-bathroom-wood-marble.jpeg";
 import contemporaryPowderRoomWood from "@/assets/gallery/contemporary-powder-room-wood.jpeg";
@@ -13,7 +9,7 @@ import naturalWoodOpenConceptKitchen from "@/assets/gallery/natural-wood-open-co
 import woodKitchenOutdoorAccess from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
 
 const heroImages = [
-  { src: modernKitchenIslandBarStools, alt: "Modern kitchen island with wood bar stools and marble waterfall edge" },
+  { src: "/hero-lcp.webp", alt: "Modern kitchen island with wood bar stools and marble waterfall edge" },
   { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration" },
   { src: modernBathroomWoodMarble, alt: "Modern bathroom with floating wood cabinets and marble vanity" },
   { src: contemporaryPowderRoomWood, alt: "Contemporary powder room with wood vanity and marble countertop" },
@@ -35,10 +31,9 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 };
 
 const Hero = () => {
-  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [shuffledImages] = useState(() => shuffleArray(heroImages));
+  const [shuffledImages] = useState(() => [heroImages[0], ...shuffleArray(heroImages.slice(1))]);
   const [recentIndices, setRecentIndices] = useState<number[]>([0]);
   const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
 
@@ -79,8 +74,6 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, [shuffledImages.length, currentImageIndex, recentIndices]);
 
-  const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
-
   return (
     <>
       {/* Hero Text Section - min-heights reserve space to prevent CLS during font swap */}
@@ -96,7 +89,7 @@ const Hero = () => {
       </section>
 
       {/* Hero Image Carousel */}
-      <section data-testid="hero-carousel" className="relative h-screen w-full overflow-hidden">
+      <section data-testid="hero-carousel" className="relative h-dvh min-h-[560px] w-full overflow-hidden">
         {/* Background images with crossfade */}
         <div className="absolute inset-0 bg-muted">
           <img
@@ -111,17 +104,19 @@ const Hero = () => {
             fetchPriority="high"
             decoding="async"
           />
-          <img
-            src={shuffledImages[getNextIndex()].src}
-            alt={shuffledImages[getNextIndex()].alt}
-            width={1920}
-            height={1080}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
-              isTransitioning ? 'opacity-100' : 'opacity-0'
-            }`}
-            loading="lazy"
-            decoding="async"
-          />
+          {nextImageIndex !== null && (
+            <img
+              src={shuffledImages[nextImageIndex].src}
+              alt={shuffledImages[nextImageIndex].alt}
+              width={1920}
+              height={1080}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
+                isTransitioning ? 'opacity-100' : 'opacity-0'
+              }`}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
         </div>
       </section>
     </>

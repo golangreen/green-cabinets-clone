@@ -177,7 +177,7 @@ const WoodSpecies = () => {
             <button
               type="button"
               onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")}
-              className="inline-flex items-center gap-2 text-sm text-[#5C7650] hover:text-[#445339] font-medium transition-colors active:scale-95"
+              className="inline-flex items-center gap-2 text-sm text-accent hover:text-[#445339] font-medium transition-colors active:scale-95"
             >
               <ArrowLeft className="h-4 w-4" />
               Back
@@ -188,7 +188,7 @@ const WoodSpecies = () => {
         {/* Hero / intro */}
         <section className="bg-[#d5d5d5]/40 py-16 sm:py-20 md:py-24">
           <div className="container mx-auto px-4 sm:px-6 max-w-5xl text-center space-y-4">
-            <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold">
+            <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold">
               The Material Library
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a]">
@@ -200,23 +200,23 @@ const WoodSpecies = () => {
               what it costs. Below is everything we have learned in 15 years of building custom
               cabinets in Brooklyn — every species we work with, head-to-head, with the tradeoffs
               spelled out plainly. Need help narrowing it down? Start with our{" "}
-              <Link to="/best-wood-for-kitchen-cabinets" className="text-[#5C7650] underline underline-offset-2 hover:text-[#445339] font-medium">best wood for kitchen cabinets</Link>{" "}
+              <Link to="/best-wood-for-kitchen-cabinets" className="text-accent underline underline-offset-2 hover:text-[#445339] font-medium">best wood for kitchen cabinets</Link>{" "}
               picks, see full{" "}
-              <Link to="/cabinet-wood-types-and-costs" className="text-[#5C7650] underline underline-offset-2 hover:text-[#445339] font-medium">wood types and costs per linear foot</Link>, or
+              <Link to="/cabinet-wood-types-and-costs" className="text-accent underline underline-offset-2 hover:text-[#445339] font-medium">wood types and costs per linear foot</Link>, or
               browse{" "}
-              <Link to="/natural-wood-kitchen-cabinets" className="text-[#5C7650] underline underline-offset-2 hover:text-[#445339] font-medium">natural wood kitchen cabinets</Link>.
+              <Link to="/natural-wood-kitchen-cabinets" className="text-accent underline underline-offset-2 hover:text-[#445339] font-medium">natural wood kitchen cabinets</Link>.
             </p>
             <div className="flex flex-wrap gap-3 justify-center pt-2">
               <Link
                 to="/best-wood-for-kitchen-cabinets"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-[#5C7650] hover:text-[#445339] underline underline-offset-4"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-accent hover:text-[#445339] underline underline-offset-4"
               >
                 Best wood for kitchen cabinets — picks by use case
               </Link>
-              <span className="text-[#999] hidden sm:inline">·</span>
+              <span className="text-muted-foreground hidden sm:inline">·</span>
               <Link
                 to="/cabinet-wood-types-and-costs"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-[#5C7650] hover:text-[#445339] underline underline-offset-4"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-accent hover:text-[#445339] underline underline-offset-4"
               >
                 All wood types and costs (per lf)
               </Link>
@@ -261,7 +261,7 @@ const WoodSpecies = () => {
                       className={`text-xs sm:text-sm px-3 py-1.5 rounded-full border transition-colors ${
                         isActive
                           ? "bg-[#5C7650] text-white border-[#5C7650] shadow-sm"
-                          : "border-[#5C7650]/40 text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
+                          : "border-[#5C7650]/40 text-accent hover:bg-[#5C7650] hover:text-white"
                       }`}
                     >
                       {w.name}
@@ -294,13 +294,13 @@ const WoodSpecies = () => {
                   <div className="p-5 space-y-2">
                     <div className="flex items-baseline justify-between gap-2">
                       <h3 className="text-lg font-bold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
-                      <span className="font-mono text-sm text-[#5C7650]">{w.costTier}</span>
+                      <span className="font-mono text-sm text-accent">{w.costTier}</span>
                     </div>
-                    <p className="text-sm text-[#5C7650] italic">{w.tagline}</p>
+                    <p className="text-sm text-accent italic">{w.tagline}</p>
                     <p className="text-sm text-[#555555] line-clamp-3">{w.shortDescription}</p>
-                    <div className="flex items-center justify-between pt-2 text-xs text-[#999999]">
+                    <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
                       <span>Janka {w.jankaHardness.toLocaleString()} lbf</span>
-                      <span className="inline-flex items-center gap-1 text-[#5C7650] font-medium group-hover:gap-2 transition-all">
+                      <span className="inline-flex items-center gap-1 text-accent font-medium group-hover:gap-2 transition-all">
                         Read guide <ArrowRight className="w-3.5 h-3.5" />
                       </span>
                     </div>
@@ -315,7 +315,7 @@ const WoodSpecies = () => {
         <section className="py-12 sm:py-16 md:py-20 bg-[#d5d5d5]/30 border-y border-[#5C7650]/10">
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
             <div className="text-center mb-10">
-              <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-2">
+              <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-2">
                 Go Deeper
               </p>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a]">
@@ -331,13 +331,13 @@ const WoodSpecies = () => {
                 to="/best-wood-for-kitchen-cabinets"
                 className="group block rounded-xl border border-border bg-background p-6 hover:border-[#5C7650] hover:shadow-lg transition-all"
               >
-                <p className="text-xs uppercase tracking-wider text-[#5C7650] font-semibold mb-2">Pillar guide</p>
+                <p className="text-xs uppercase tracking-wider text-accent font-semibold mb-2">Pillar guide</p>
                 <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Best Wood for Kitchen Cabinets</h3>
                 <p className="text-sm text-[#555555] mb-4">
                   Recommendations by use case — busy family kitchen, modern minimalist,
                   paint-grade, luxury, and more.
                 </p>
-                <span className="inline-flex items-center gap-1 text-sm text-[#5C7650] font-medium group-hover:gap-2 transition-all">
+                <span className="inline-flex items-center gap-1 text-sm text-accent font-medium group-hover:gap-2 transition-all">
                   Read guide <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </Link>
@@ -345,13 +345,13 @@ const WoodSpecies = () => {
                 to="/cabinet-wood-types-and-costs"
                 className="group block rounded-xl border border-border bg-background p-6 hover:border-[#5C7650] hover:shadow-lg transition-all"
               >
-                <p className="text-xs uppercase tracking-wider text-[#5C7650] font-semibold mb-2">Pillar guide</p>
+                <p className="text-xs uppercase tracking-wider text-accent font-semibold mb-2">Pillar guide</p>
                 <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Cabinet Wood Types & Costs</h3>
                 <p className="text-sm text-[#555555] mb-4">
                   Side-by-side cost comparison of every species we offer — budget, mid-tier,
                   and premium, with $/linear-foot ranges for NYC.
                 </p>
-                <span className="inline-flex items-center gap-1 text-sm text-[#5C7650] font-medium group-hover:gap-2 transition-all">
+                <span className="inline-flex items-center gap-1 text-sm text-accent font-medium group-hover:gap-2 transition-all">
                   See pricing <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </Link>
@@ -359,13 +359,13 @@ const WoodSpecies = () => {
                 to="/natural-wood-kitchen-cabinets"
                 className="group block rounded-xl border border-border bg-background p-6 hover:border-[#5C7650] hover:shadow-lg transition-all"
               >
-                <p className="text-xs uppercase tracking-wider text-[#5C7650] font-semibold mb-2">Pillar guide</p>
+                <p className="text-xs uppercase tracking-wider text-accent font-semibold mb-2">Pillar guide</p>
                 <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Natural Wood Kitchen Cabinets</h3>
                 <p className="text-sm text-[#555555] mb-4">
                   Which species look best with a clear or hardwax-oil finish, plus cuts
                   (rift, quartersawn) and finish systems.
                 </p>
-                <span className="inline-flex items-center gap-1 text-sm text-[#5C7650] font-medium group-hover:gap-2 transition-all">
+                <span className="inline-flex items-center gap-1 text-sm text-accent font-medium group-hover:gap-2 transition-all">
                   Explore naturals <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </Link>
@@ -379,15 +379,15 @@ const WoodSpecies = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
               Still not sure which wood is right for your kitchen?
             </h2>
-            <p className="text-base sm:text-lg text-white/90">
+            <p className="text-base sm:text-lg text-primary-foreground">
               Bring your inspiration photos and we will hand you actual wood samples in our
               Bushwick showroom. Most clients find their wood within 15 minutes of touching them.
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <Button asChild size="lg" className="bg-white text-[#5C7650] hover:bg-white/90 hover:scale-105 transition-all">
+              <Button asChild size="lg" className="bg-white text-accent hover:bg-white/90 hover:scale-105 transition-all">
                 <Link to="/#contact">Book a free consultation</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#5C7650] hover:scale-105 transition-all">
+              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-accent hover:scale-105 transition-all">
                 <Link to="/designer">Launch the designer</Link>
               </Button>
             </div>

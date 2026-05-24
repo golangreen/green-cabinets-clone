@@ -38,7 +38,7 @@ const Gallery = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         <div className="text-center mb-8 sm:mb-10">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
             Real Projects · Real Craftsmanship
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -64,7 +64,7 @@ const Gallery = () => {
                   <div key={c.key} className="flex items-center gap-2 shrink-0">
                     {idx > 0 && (
                       <ChevronRight
-                        className="h-4 w-4 text-muted-foreground/60 shrink-0"
+                        className="h-4 w-4 text-muted-foreground shrink-0"
                         aria-hidden
                       />
                     )}
@@ -128,7 +128,7 @@ const Gallery = () => {
           <Button
             asChild
             variant="outline"
-            className="border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
+            className="border-[#5C7650] text-accent hover:bg-[#5C7650] hover:text-white"
           >
             <Link to={seeAllHref}>
               See all {activeLabel} projects

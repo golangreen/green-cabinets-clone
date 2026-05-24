@@ -50,7 +50,7 @@ const LuxuryMillwork = () => {
           <h2 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
             Luxury Custom Cabinets &amp; Millwork in NYC
           </h2>
-          <p className="text-xl text-[#666666] leading-relaxed">
+          <p className="text-xl text-muted-foreground leading-relaxed">
             From shaker and slim shaker kitchens to full commercial millwork
             packages, Green Cabinets delivers premium craftsmanship across
             Brooklyn, Manhattan, and Queens.
@@ -69,7 +69,7 @@ const LuxuryMillwork = () => {
               <h3 className="font-display text-2xl font-bold text-[#1a1a1a] mb-3">
                 {item.title}
               </h3>
-              <p className="text-[#666666] leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed">
                 {item.description}
               </p>
             </div>

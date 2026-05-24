@@ -248,7 +248,7 @@ export const VanityQuoteDialog = ({
             <p>Brand: {selectedBrand}</p>
             <p>Finish: {selectedFinish}</p>
             <p>Width: {widthInches.toFixed(2)}"</p>
-            <p className="text-[#5C7650] font-semibold">Estimated Total: ${totalPrice.toFixed(2)}</p>
+            <p className="text-accent font-semibold">Estimated Total: ${totalPrice.toFixed(2)}</p>
           </div>
 
           <div className="flex gap-2">

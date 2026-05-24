@@ -32,7 +32,7 @@ const CTA = () => {
             in one place.
           </h2>
           
-          <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-lg md:text-xl text-primary-foreground max-w-2xl mx-auto px-4">
             Join thousands of happy homeowners who transformed their spaces with Green Cabinets.
           </p>
           

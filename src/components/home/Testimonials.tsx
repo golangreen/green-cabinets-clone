@@ -97,7 +97,7 @@ const Testimonials = () => {
           <p className="text-base sm:text-lg text-[#555555] leading-relaxed">
             Hear from clients across Brooklyn, Manhattan, and Queens about our condo/co-op expertise and installation precision.
           </p>
-          <p className="md:hidden text-xs text-[#666] mt-3">Swipe to read all {testimonials.length} reviews →</p>
+          <p className="md:hidden text-xs text-muted-foreground mt-3">Swipe to read all {testimonials.length} reviews →</p>
         </div>
       </div>
 
@@ -122,7 +122,7 @@ const Testimonials = () => {
             </blockquote>
             <figcaption>
               <div className="font-semibold text-[#1a1a1a]">{t.name}</div>
-              <div className="text-sm text-[#666666]">{t.location}</div>
+              <div className="text-sm text-muted-foreground">{t.location}</div>
             </figcaption>
           </figure>
         ))}

@@ -28,7 +28,7 @@ const WoodCompare = () => {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
-          <Filter className="h-5 w-5 text-[#5C7650]" />
+          <Filter className="h-5 w-5 text-accent" />
           Compare Wood Species
         </CardTitle>
         <p className="text-sm text-muted-foreground">
@@ -111,34 +111,34 @@ const WoodCompare = () => {
 
                 <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
                   <div>
-                    <dt className="text-[#999999]">Hardness</dt>
+                    <dt className="text-muted-foreground">Hardness</dt>
                     <dd className="font-medium text-[#1a1a1a]">{w.jankaHardness.toLocaleString()} lbf</dd>
                   </div>
                   <div>
-                    <dt className="text-[#999999]">Cost</dt>
-                    <dd className="font-mono text-[#5C7650]">{w.costTier}</dd>
+                    <dt className="text-muted-foreground">Cost</dt>
+                    <dd className="font-mono text-accent">{w.costTier}</dd>
                   </div>
                   <div>
-                    <dt className="text-[#999999]">Workability</dt>
+                    <dt className="text-muted-foreground">Workability</dt>
                     <dd className="text-[#1a1a1a]">{w.workability}</dd>
                   </div>
                   <div>
-                    <dt className="text-[#999999]">Stain take</dt>
+                    <dt className="text-muted-foreground">Stain take</dt>
                     <dd className="text-[#1a1a1a]">{w.stainTake}</dd>
                   </div>
                   <div className="col-span-2">
-                    <dt className="text-[#999999]">Color</dt>
+                    <dt className="text-muted-foreground">Color</dt>
                     <dd className="text-[#1a1a1a]">{w.color}</dd>
                   </div>
                   <div className="col-span-2">
-                    <dt className="text-[#999999]">Grain</dt>
+                    <dt className="text-muted-foreground">Grain</dt>
                     <dd className="text-[#1a1a1a]">{w.grain}</dd>
                   </div>
                 </dl>
 
                 <div className="pt-2 border-t border-border space-y-2">
                   <div>
-                    <p className="text-xs font-semibold text-[#5C7650] mb-1">Pros</p>
+                    <p className="text-xs font-semibold text-accent mb-1">Pros</p>
                     <ul className="text-xs text-[#555555] list-disc list-inside space-y-0.5">
                       {w.pros.slice(0, 3).map((p) => (
                         <li key={p}>{p}</li>

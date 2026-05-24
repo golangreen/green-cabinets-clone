@@ -34,7 +34,7 @@ const FinishesColorsSection = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         <div className="text-center mb-8 sm:mb-10">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
             Real Panels · Real Codes · Real Samples
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
@@ -61,7 +61,7 @@ const FinishesColorsSection = () => {
                   <div key={b.key} className="flex items-center gap-2 shrink-0">
                     {idx > 0 && (
                       <ChevronRight
-                        className="h-4 w-4 text-[#888888] shrink-0"
+                        className="h-4 w-4 text-muted-foreground shrink-0"
                         aria-hidden
                       />
                     )}
@@ -73,7 +73,7 @@ const FinishesColorsSection = () => {
                       className={`shrink-0 text-base md:text-lg transition-all active:scale-95 ${
                         isActive
                           ? "text-[#1a1a1a] font-semibold"
-                          : "text-[#888888] font-normal hover:text-[#1a1a1a]"
+                          : "text-muted-foreground font-normal hover:text-[#1a1a1a]"
                       }`}
                     >
                       {b.label}
@@ -87,7 +87,7 @@ const FinishesColorsSection = () => {
 
         {/* Horizontal preview rail — 4 panels per brand */}
         {panels.length === 0 ? (
-          <div className="text-center py-12 text-[#666] text-sm">
+          <div className="text-center py-12 text-muted-foreground text-sm">
             {active} catalog coming soon.
           </div>
         ) : (
@@ -126,7 +126,7 @@ const FinishesColorsSection = () => {
                       <h4 className="text-sm font-semibold text-[#1a1a1a] line-clamp-1">
                         {panel.name}
                       </h4>
-                      <p className="text-[11px] font-mono text-[#5C7650] line-clamp-1">
+                      <p className="text-[11px] font-mono text-accent line-clamp-1">
                         {panel.codes[0] ?? panel.brand}
                       </p>
                     </div>
@@ -141,7 +141,7 @@ const FinishesColorsSection = () => {
           <Button
             asChild
             variant="outline"
-            className="border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
+            className="border-[#5C7650] text-accent hover:bg-[#5C7650] hover:text-white"
           >
             <Link to="/finishes-colors">
               See all {active} finishes

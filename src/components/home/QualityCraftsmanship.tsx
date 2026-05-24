@@ -88,7 +88,7 @@ const QualityCraftsmanship = () => {
               <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-2">
                 {p.title}
               </h3>
-              <p className="text-[#666666] text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 {p.description}
               </p>
             </div>
