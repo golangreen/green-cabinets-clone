@@ -112,7 +112,7 @@ export const ShopProducts = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-4">Our Products</h2>
-          <p className="text-lg text-[#666666] max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Browse our collection of premium custom cabinetry
           </p>
         </div>
@@ -143,7 +143,7 @@ export const ShopProducts = () => {
               onClick={() => navigate(`/product/${product.node.handle}`)}
             >
               {product.node.images.edges[0] && (
-                <div className="aspect-square overflow-hidden bg-gray-100">
+                <div className="aspect-square overflow-hidden bg-muted">
                   <img
                     src={product.node.images.edges[0].node.url}
                     alt={product.node.images.edges[0].node.altText || product.node.title}
@@ -153,7 +153,7 @@ export const ShopProducts = () => {
               )}
               <CardHeader className="pb-3">
                 <CardTitle data-testid="product-title" className="text-lg sm:text-xl text-[#1a1a1a]">{product.node.title}</CardTitle>
-                <CardDescription className="line-clamp-2 text-sm text-[#666666]">
+                <CardDescription className="line-clamp-2 text-sm text-muted-foreground">
                   {product.node.description}
                 </CardDescription>
               </CardHeader>

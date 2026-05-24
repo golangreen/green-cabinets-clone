@@ -27,7 +27,7 @@ const Services = () => {
           <h2 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
             Sustainable Cabinetry Solutions
           </h2>
-          <p className="text-xl text-[#666666] max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Custom Cabinets NYC - Professional millwork tailored to your needs
           </p>
         </div>
@@ -51,7 +51,7 @@ const Services = () => {
                 <h3 className="font-display text-2xl font-bold text-[#1a1a1a] mb-3">
                   {service.title}
                 </h3>
-                <p className="text-[#666666] leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   {service.description}
                 </p>
               </div>

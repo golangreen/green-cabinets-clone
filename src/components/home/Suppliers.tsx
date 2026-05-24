@@ -197,10 +197,10 @@ const Suppliers = () => {
           <h2 className="font-display text-4xl sm:text-5xl font-bold text-[#1a1a1a] mb-4">
             Our Trusted Partners
           </h2>
-          <p className="text-base sm:text-lg text-[#666666] max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
             We work with industry-leading suppliers to ensure the highest quality materials and hardware for your custom cabinetry.
           </p>
-          <p className="md:hidden text-xs text-[#888] mt-3">Swipe to browse {suppliers.length} partners →</p>
+          <p className="md:hidden text-xs text-muted-foreground mt-3">Swipe to browse {suppliers.length} partners →</p>
         </div>
       </div>
 
@@ -232,7 +232,7 @@ const Suppliers = () => {
                   e.preventDefault();
                 }
               }}
-              className="absolute top-3 right-3 text-[#666666] hover:text-[#1a1a1a] transition-colors z-10"
+              className="absolute top-3 right-3 text-muted-foreground hover:text-[#1a1a1a] transition-colors z-10"
               aria-label={`Visit ${supplier.name} website`}
             >
               {supplier.website === "catalog" ? (
@@ -254,7 +254,7 @@ const Suppliers = () => {
               )}
             </div>
 
-            <p className="text-sm text-[#666666] leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               {supplier.description}
             </p>
           </div>

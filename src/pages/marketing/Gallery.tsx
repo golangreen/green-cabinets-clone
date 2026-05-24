@@ -40,7 +40,7 @@ const GalleryPage = () => {
   const activeLabel = CATEGORIES.find((c) => c.key === active)?.label ?? "All";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <Helmet>
         <title>Project Gallery — Kitchens & Vanities | Green Cabinets</title>
         <meta
@@ -115,7 +115,7 @@ const GalleryPage = () => {
                 return (
                   <div key={c.key} className="flex items-center gap-2 shrink-0">
                     {idx > 0 && (
-                      <ChevronRight className="h-4 w-4 text-muted-foreground/60 shrink-0" aria-hidden />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" aria-hidden />
                     )}
                     <button
                       type="button"

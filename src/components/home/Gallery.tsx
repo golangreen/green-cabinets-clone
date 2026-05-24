@@ -64,7 +64,7 @@ const Gallery = () => {
                   <div key={c.key} className="flex items-center gap-2 shrink-0">
                     {idx > 0 && (
                       <ChevronRight
-                        className="h-4 w-4 text-muted-foreground/60 shrink-0"
+                        className="h-4 w-4 text-muted-foreground shrink-0"
                         aria-hidden
                       />
                     )}

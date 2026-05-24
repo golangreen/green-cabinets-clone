@@ -156,7 +156,7 @@ export default function Designer() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#1a1a1a] text-white">
+    <div className="flex flex-col h-dvh bg-[#1a1a1a] text-white">
       <Helmet>
         <title>Room Designer | Green Cabinets - Plan Your Kitchen Layout</title>
         <meta name="description" content="Design your dream kitchen layout with our interactive room designer. Draw walls, add doors and windows, and visualize your custom cabinet project." />
@@ -369,7 +369,7 @@ export default function Designer() {
                   </div>
                 </div>
 
-                <div className="mt-6 text-xs text-gray-400 space-y-2">
+                <div className="mt-6 text-xs text-primary-foreground/90 space-y-2">
                   <p className="font-semibold">Tips:</p>
                   <ul className="space-y-1 pl-4">
                     <li>• Click twice to draw a wall</li>
@@ -380,7 +380,7 @@ export default function Designer() {
               </TabsContent>
 
               <TabsContent value="properties">
-                <div className="text-sm text-gray-400">
+                <div className="text-sm text-primary-foreground/90">
                   <p>Select a room element to view properties</p>
                 </div>
               </TabsContent>

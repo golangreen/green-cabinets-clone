@@ -6,7 +6,7 @@ const About = () => {
           <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-6">
             Brooklyn, Manhattan & Queens Custom Cabinet Makers
           </h2>
-          <div className="space-y-6 text-lg text-[#666666] leading-relaxed">
+          <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
             <p className="text-xl">
               Based in the heart of <span className="text-[#1a1a1a] font-semibold">New York City since 2009</span>, 
               Green Cabinets has been crafting exceptional cabinetry solutions that transform spaces into works of art.
