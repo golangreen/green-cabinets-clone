@@ -8,6 +8,7 @@ const STORAGE_KEY = "spring-promo-dismissed";
 const SpringPromotion = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [videoReady, setVideoReady] = useState(false);
   const [isDismissed, setIsDismissed] = useState(() => {
     return sessionStorage.getItem(STORAGE_KEY) === "true";
   });
@@ -51,7 +52,7 @@ const SpringPromotion = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-2 right-2 z-[60] bg-black/50 hover:bg-black/70 text-white rounded-full h-8 w-8"
+        className="absolute top-2 right-2 z-[60] h-11 w-11 rounded-full bg-foreground/70 text-background hover:bg-foreground/85"
         onClick={handleDismiss}
         aria-label="Dismiss promotion"
       >
@@ -59,17 +60,33 @@ const SpringPromotion = () => {
       </Button>
 
       {/* Video */}
-      <div className="relative w-full">
+      <div className="relative w-full aspect-[9/16] max-h-[80dvh] bg-muted">
+        <img
+          src="/spring-promotion-poster.webp"
+          alt="Green Cabinets spring promotion kitchen and cabinet installation preview"
+          width={720}
+          height={1280}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+            videoReady ? "opacity-0" : "opacity-100"
+          }`}
+        />
         <video
           ref={videoRef}
-          className="w-full h-auto max-h-[80vh] object-cover"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+            videoReady ? "opacity-100" : "opacity-0"
+          }`}
           autoPlay
           muted
           loop
           playsInline
+          poster="/spring-promotion-poster.webp"
           preload="metadata"
+          onLoadedData={() => setVideoReady(true)}
         >
-          <source src="/spring-promotion.mp4" type="video/mp4" />
+          <source src="/spring-promotion-optimized.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <VideoMuteToggle videoRef={videoRef} />
