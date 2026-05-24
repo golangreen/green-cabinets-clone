@@ -84,7 +84,7 @@ const LuxuryMillworkGallery = () => {
                 return (
                   <div key={c} className="flex items-center gap-3 md:gap-4 shrink-0">
                     {idx > 0 && (
-                      <ChevronRight className="w-4 h-4 text-[#888888]" aria-hidden="true" />
+                      <ChevronRight className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
                     )}
                     <button
                       role="tab"
@@ -94,7 +94,7 @@ const LuxuryMillworkGallery = () => {
                         "shrink-0 whitespace-nowrap text-base md:text-lg tracking-wide transition-colors duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm",
                         isActive
                           ? "text-[#1a1a1a] font-semibold"
-                          : "text-[#888888] font-normal hover:text-[#1a1a1a]",
+                          : "text-muted-foreground font-normal hover:text-[#1a1a1a]",
                       ].join(" ")}
                     >
                       {c}

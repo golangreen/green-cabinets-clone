@@ -61,7 +61,7 @@ const FinishesColorsSection = () => {
                   <div key={b.key} className="flex items-center gap-2 shrink-0">
                     {idx > 0 && (
                       <ChevronRight
-                        className="h-4 w-4 text-[#888888] shrink-0"
+                        className="h-4 w-4 text-muted-foreground shrink-0"
                         aria-hidden
                       />
                     )}
@@ -73,7 +73,7 @@ const FinishesColorsSection = () => {
                       className={`shrink-0 text-base md:text-lg transition-all active:scale-95 ${
                         isActive
                           ? "text-[#1a1a1a] font-semibold"
-                          : "text-[#888888] font-normal hover:text-[#1a1a1a]"
+                          : "text-muted-foreground font-normal hover:text-[#1a1a1a]"
                       }`}
                     >
                       {b.label}
