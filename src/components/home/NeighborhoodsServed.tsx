@@ -32,7 +32,7 @@ const NeighborhoodsServed = () => {
               <span key={b.slug}>
                 <Link
                   to={`/custom-kitchen-cabinets-${b.slug}`}
-                  className="text-primary font-semibold hover:underline"
+                  className="text-accent font-semibold hover:underline"
                 >
                   custom kitchen cabinets in {b.name}
                 </Link>
@@ -62,11 +62,11 @@ const NeighborhoodsServed = () => {
               className="snap-start shrink-0 w-[82vw] sm:w-[55vw] md:w-[42vw] lg:w-[32vw] max-w-[440px] scroll-mt-24 bg-[#d5d5d5] rounded-xl p-6 sm:p-7 flex flex-col transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl"
             >
               <div className="flex items-center gap-3 mb-3">
-                <MapPin className="w-6 h-6 text-primary" />
+                <MapPin className="w-6 h-6 text-accent" />
                 <h3 className="font-display text-2xl font-bold text-[#1a1a1a]">
                   <Link
                     to={boroughHref}
-                    className="hover:text-primary transition-colors"
+                    className="hover:text-accent transition-colors"
                   >
                     {borough.name}
                   </Link>
@@ -88,7 +88,7 @@ const NeighborhoodsServed = () => {
                     <button
                       type="button"
                       onClick={() => setActive({ name: n, boroughSlug: borough.slug })}
-                      className="w-full text-left text-[#1a1a1a] text-sm hover:text-primary transition-colors"
+                      className="w-full text-left text-[#1a1a1a] text-sm hover:text-accent transition-colors"
                     >
                       {n}
                     </button>
@@ -105,7 +105,7 @@ const NeighborhoodsServed = () => {
                       [borough.slug]: !prev[borough.slug],
                     }))
                   }
-                  className="self-start mb-4 text-xs font-semibold text-primary hover:text-[#445339] transition-colors"
+                  className="self-start mb-4 text-xs font-semibold text-accent hover:text-accent transition-colors"
                 >
                   {expanded[borough.slug]
                     ? "Show fewer"
@@ -116,14 +116,14 @@ const NeighborhoodsServed = () => {
               <div className="mt-auto flex flex-col gap-2">
                 <Link
                   to={boroughHref}
-                  className="inline-flex items-center justify-center gap-1 text-sm font-semibold text-primary hover:text-[#445339] transition-colors"
+                  className="inline-flex items-center justify-center gap-1 text-sm font-semibold text-accent hover:text-accent transition-colors"
                 >
                   Explore {borough.name} cabinetry
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <button
                   onClick={scrollToContact}
-                  className="inline-flex items-center justify-center text-sm font-semibold text-[#1a1a1a] hover:text-primary transition-colors"
+                  className="inline-flex items-center justify-center text-sm font-semibold text-[#1a1a1a] hover:text-accent transition-colors"
                 >
                   Get a free quote
                 </button>
