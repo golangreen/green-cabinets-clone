@@ -28,7 +28,7 @@ const WoodCompare = () => {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
-          <Filter className="h-5 w-5 text-[#5C7650]" />
+          <Filter className="h-5 w-5 text-accent" />
           Compare Wood Species
         </CardTitle>
         <p className="text-sm text-muted-foreground">
@@ -116,7 +116,7 @@ const WoodCompare = () => {
                   </div>
                   <div>
                     <dt className="text-muted-foreground">Cost</dt>
-                    <dd className="font-mono text-[#5C7650]">{w.costTier}</dd>
+                    <dd className="font-mono text-accent">{w.costTier}</dd>
                   </div>
                   <div>
                     <dt className="text-muted-foreground">Workability</dt>
@@ -138,7 +138,7 @@ const WoodCompare = () => {
 
                 <div className="pt-2 border-t border-border space-y-2">
                   <div>
-                    <p className="text-xs font-semibold text-[#5C7650] mb-1">Pros</p>
+                    <p className="text-xs font-semibold text-accent mb-1">Pros</p>
                     <ul className="text-xs text-[#555555] list-disc list-inside space-y-0.5">
                       {w.pros.slice(0, 3).map((p) => (
                         <li key={p}>{p}</li>

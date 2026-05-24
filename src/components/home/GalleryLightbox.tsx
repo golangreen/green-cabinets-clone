@@ -58,7 +58,7 @@ const GalleryLightbox = ({ images, index, onClose, onChange }: Props) => {
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className="absolute top-4 right-4 text-white/90 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+        className="absolute top-4 right-4 text-primary-foreground hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
       >
         <X className="w-6 h-6" />
       </button>
@@ -72,7 +72,7 @@ const GalleryLightbox = ({ images, index, onClose, onChange }: Props) => {
               e.stopPropagation();
               prev();
             }}
-            className="absolute left-3 sm:left-6 text-white/90 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+            className="absolute left-3 sm:left-6 text-primary-foreground hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
           >
             <ChevronLeft className="w-8 h-8" />
           </button>
@@ -83,7 +83,7 @@ const GalleryLightbox = ({ images, index, onClose, onChange }: Props) => {
               e.stopPropagation();
               next();
             }}
-            className="absolute right-3 sm:right-6 text-white/90 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+            className="absolute right-3 sm:right-6 text-primary-foreground hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
           >
             <ChevronRight className="w-8 h-8" />
           </button>
@@ -100,7 +100,7 @@ const GalleryLightbox = ({ images, index, onClose, onChange }: Props) => {
           className="max-w-[92vw] max-h-[78vh] object-contain rounded-lg shadow-2xl"
         />
         {current.caption && (
-          <figcaption className="mt-4 text-center text-white/90 text-sm sm:text-base px-4">
+          <figcaption className="mt-4 text-center text-primary-foreground text-sm sm:text-base px-4">
             {current.caption}
             {images.length > 1 && (
               <span className="ml-2 text-white/60">

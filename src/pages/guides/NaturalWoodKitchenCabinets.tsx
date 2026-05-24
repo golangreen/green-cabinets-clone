@@ -199,7 +199,7 @@ const NaturalWoodKitchenCabinets = () => (
 
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
             Updated 2026 · Species, finishes, costs
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
@@ -221,15 +221,15 @@ const NaturalWoodKitchenCabinets = () => (
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">TL;DR</h2>
           <p className="text-base text-muted-foreground mb-12 leading-relaxed">
             For most natural wood kitchens, pick{" "}
-            <Link to={link("white-oak")} className="text-[#5C7650] font-semibold hover:underline">white oak</Link>{" "}
+            <Link to={link("white-oak")} className="text-accent font-semibold hover:underline">white oak</Link>{" "}
             in plain or{" "}
-            <Link to={link("rift-cut-white-oak")} className="text-[#5C7650] font-semibold hover:underline">rift-cut</Link>,
+            <Link to={link("rift-cut-white-oak")} className="text-accent font-semibold hover:underline">rift-cut</Link>,
             finished in hardwax oil. Want premium?{" "}
-            <Link to={link("walnut")} className="text-[#5C7650] font-semibold hover:underline">walnut</Link>.
+            <Link to={link("walnut")} className="text-accent font-semibold hover:underline">walnut</Link>.
             Want cheap?{" "}
-            <Link to={link("ash")} className="text-[#5C7650] font-semibold hover:underline">white ash</Link>.
+            <Link to={link("ash")} className="text-accent font-semibold hover:underline">white ash</Link>.
             Want maximum durability?{" "}
-            <Link to={link("hickory")} className="text-[#5C7650] font-semibold hover:underline">hickory</Link>.
+            <Link to={link("hickory")} className="text-accent font-semibold hover:underline">hickory</Link>.
             Skip red oak and birch — they don't read well unstained.
           </p>
 
@@ -247,7 +247,7 @@ const NaturalWoodKitchenCabinets = () => (
               >
                 <div className="flex items-start justify-between gap-4 mb-2">
                   <h3 className="text-xl sm:text-2xl font-bold text-foreground">
-                    <Link to={link(p.slug)} className="hover:text-[#5C7650] transition-colors">
+                    <Link to={link(p.slug)} className="hover:text-accent transition-colors">
                       {p.name} <ArrowRight className="inline h-4 w-4" />
                     </Link>
                   </h3>
@@ -255,11 +255,11 @@ const NaturalWoodKitchenCabinets = () => (
                     Janka {p.janka.toLocaleString()}
                   </span>
                 </div>
-                <p className="text-sm italic text-[#5C7650] mb-2">{p.look}</p>
+                <p className="text-sm italic text-accent mb-2">{p.look}</p>
                 <p className="text-base text-muted-foreground leading-relaxed mb-3">{p.why}</p>
                 <p className="text-sm text-muted-foreground">
                   <strong className="text-foreground">Best for:</strong> {p.bestFor} ·{" "}
-                  <Link to={link(p.slug)} className="text-[#5C7650] hover:underline">Full {p.name} spec sheet →</Link>
+                  <Link to={link(p.slug)} className="text-accent hover:underline">Full {p.name} spec sheet →</Link>
                 </p>
               </article>
             ))}
@@ -271,16 +271,16 @@ const NaturalWoodKitchenCabinets = () => (
           </p>
           <ul className="list-disc pl-5 space-y-2 text-base text-muted-foreground mb-12 leading-relaxed">
             <li>
-              <Link to={link("red-oak")} className="text-[#5C7650] hover:underline">Red oak</Link> — pink-orange undertone reads dated unstained. Stain it and it's a budget hero.
+              <Link to={link("red-oak")} className="text-accent hover:underline">Red oak</Link> — pink-orange undertone reads dated unstained. Stain it and it's a budget hero.
             </li>
             <li>
-              <Link to={link("birch")} className="text-[#5C7650] hover:underline">Birch</Link> — color varies wildly door to door, looks restless without a unifying stain.
+              <Link to={link("birch")} className="text-accent hover:underline">Birch</Link> — color varies wildly door to door, looks restless without a unifying stain.
             </li>
             <li>
-              <Link to={link("alder")} className="text-[#5C7650] hover:underline">Knotty alder</Link> — too soft for natural; the knots crack and the surface dents. Great for distressed-rustic stained doors.
+              <Link to={link("alder")} className="text-accent hover:underline">Knotty alder</Link> — too soft for natural; the knots crack and the surface dents. Great for distressed-rustic stained doors.
             </li>
             <li>
-              <Link to={link("beech")} className="text-[#5C7650] hover:underline">European beech</Link> — has a pinkish cast that fights with most stones and backsplashes when left clear.
+              <Link to={link("beech")} className="text-accent hover:underline">European beech</Link> — has a pinkish cast that fights with most stones and backsplashes when left clear.
             </li>
           </ul>
 
@@ -295,7 +295,7 @@ const NaturalWoodKitchenCabinets = () => (
               return (
                 <div key={f.name} className="border border-border rounded-lg p-5">
                   <h3 className="font-bold text-foreground mb-2 flex items-center gap-2">
-                    <Icon className="h-5 w-5 text-[#5C7650]" /> {f.name}
+                    <Icon className="h-5 w-5 text-accent" /> {f.name}
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{f.body}</p>
                 </div>
@@ -310,15 +310,15 @@ const NaturalWoodKitchenCabinets = () => (
           <ul className="list-disc pl-5 space-y-3 text-base text-muted-foreground mb-12 leading-relaxed">
             <li>
               <strong>Plain-sawn:</strong> Cathedral arches and waves. Most affordable yield, most traditional read. Default for{" "}
-              <Link to={link("white-oak")} className="text-[#5C7650] hover:underline">plain white oak</Link>.
+              <Link to={link("white-oak")} className="text-accent hover:underline">plain white oak</Link>.
             </li>
             <li>
               <strong>Rift-sawn:</strong> Straight, parallel grain lines. ~25–35% pricier. The most modern read — see{" "}
-              <Link to={link("rift-cut-white-oak")} className="text-[#5C7650] hover:underline">rift-cut white oak</Link>.
+              <Link to={link("rift-cut-white-oak")} className="text-accent hover:underline">rift-cut white oak</Link>.
             </li>
             <li>
               <strong>Quartersawn:</strong> Straight grain with visible medullary ray flecks. Mission/Craftsman classic — see{" "}
-              <Link to={link("quartersawn-oak")} className="text-[#5C7650] hover:underline">quartersawn oak</Link>.
+              <Link to={link("quartersawn-oak")} className="text-accent hover:underline">quartersawn oak</Link>.
             </li>
           </ul>
 
@@ -357,9 +357,9 @@ const NaturalWoodKitchenCabinets = () => (
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Related reading</h2>
           <ul className="list-disc pl-5 space-y-2 text-base text-muted-foreground">
-            <li><Link to="/best-wood-for-kitchen-cabinets" className="text-[#5C7650] hover:underline">Best wood for kitchen cabinets — picks by use case</Link></li>
-            <li><Link to="/cabinet-wood-types-and-costs" className="text-[#5C7650] hover:underline">Cabinet wood types and costs — all 14 species compared</Link></li>
-            <li><Link to="/finishes-colors" className="text-[#5C7650] hover:underline">Finishes & colors — see natural-wood swatches in person</Link></li>
+            <li><Link to="/best-wood-for-kitchen-cabinets" className="text-accent hover:underline">Best wood for kitchen cabinets — picks by use case</Link></li>
+            <li><Link to="/cabinet-wood-types-and-costs" className="text-accent hover:underline">Cabinet wood types and costs — all 14 species compared</Link></li>
+            <li><Link to="/finishes-colors" className="text-accent hover:underline">Finishes & colors — see natural-wood swatches in person</Link></li>
           </ul>
         </div>
       </section>

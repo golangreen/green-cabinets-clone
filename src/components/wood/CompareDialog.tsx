@@ -158,7 +158,7 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
 
                 <div className="p-3 space-y-2 flex-1 flex flex-col">
                   <div>
-                    <p className="text-[10px] uppercase tracking-wider text-[#5C7650] font-semibold">
+                    <p className="text-[10px] uppercase tracking-wider text-accent font-semibold">
                       {p.brand}
                     </p>
                     <h3 className="text-sm font-bold text-[#1a1a1a] leading-tight line-clamp-2">
@@ -227,7 +227,7 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
                   size="sm"
                   variant="outline"
                   onClick={handleCopy}
-                  className="border-[#5C7650] text-[#5C7650] hover:bg-[#5C7650] hover:text-white"
+                  className="border-[#5C7650] text-accent hover:bg-[#5C7650] hover:text-white"
                 >
                   {copied ? (
                     <>

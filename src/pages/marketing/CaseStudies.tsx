@@ -82,7 +82,7 @@ const CaseStudies = () => (
 
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-[#5C7650] font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
             Real numbers · Real timelines · Real NYC projects
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
@@ -114,14 +114,14 @@ const CaseStudies = () => (
                   />
                 </div>
                 <div className="p-6">
-                  <p className="text-xs uppercase tracking-wider text-[#5C7650] font-semibold mb-2">
+                  <p className="text-xs uppercase tracking-wider text-accent font-semibold mb-2">
                     {c.neighborhood}, {c.borough} · {c.year}
                   </p>
-                  <h2 className="text-xl font-bold text-foreground mb-2 group-hover:text-[#5C7650] transition-colors">
+                  <h2 className="text-xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
                     {c.title}
                   </h2>
                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{c.summary}</p>
-                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-[#5C7650]">
+                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-accent">
                     Read case study <ArrowRight className="h-4 w-4" />
                   </span>
                 </div>
