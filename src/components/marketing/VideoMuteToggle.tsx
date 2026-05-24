@@ -75,8 +75,8 @@ const VideoMuteToggle = ({
       aria-label={isMuted ? "Unmute video" : "Mute video"}
       aria-pressed={!isMuted}
       className={cn(
-        "absolute z-20 inline-flex items-center justify-center h-10 w-10 rounded-full",
-        "bg-black/55 text-white hover:bg-black/75 backdrop-blur-sm",
+        "absolute z-20 inline-flex h-11 w-11 items-center justify-center rounded-full",
+        "bg-foreground/70 text-background hover:bg-foreground/85 backdrop-blur-sm",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
         "transition-colors",
         positionClasses[position],
