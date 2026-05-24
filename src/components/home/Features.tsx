@@ -81,7 +81,7 @@ const Features = () => {
                 )}
               </div>
               <div className="md:w-1/2 space-y-6">
-                <div className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold">
+                <div className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-semibold">
                   {feature.stats}
                 </div>
                 <h3 className="font-display text-4xl font-bold text-[#1a1a1a]">
