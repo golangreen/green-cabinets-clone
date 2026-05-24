@@ -74,8 +74,6 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, [shuffledImages.length, currentImageIndex, recentIndices]);
 
-  const getNextIndex = () => nextImageIndex !== null ? nextImageIndex : (currentImageIndex + 1) % shuffledImages.length;
-
   return (
     <>
       {/* Hero Text Section - min-heights reserve space to prevent CLS during font swap */}
@@ -106,17 +104,19 @@ const Hero = () => {
             fetchPriority="high"
             decoding="async"
           />
-          <img
-            src={shuffledImages[getNextIndex()].src}
-            alt={shuffledImages[getNextIndex()].alt}
-            width={1920}
-            height={1080}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
-              isTransitioning ? 'opacity-100' : 'opacity-0'
-            }`}
-            loading="lazy"
-            decoding="async"
-          />
+          {nextImageIndex !== null && (
+            <img
+              src={shuffledImages[nextImageIndex].src}
+              alt={shuffledImages[nextImageIndex].alt}
+              width={1920}
+              height={1080}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
+                isTransitioning ? 'opacity-100' : 'opacity-0'
+              }`}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
         </div>
       </section>
     </>
