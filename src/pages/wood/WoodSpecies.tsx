@@ -213,7 +213,7 @@ const WoodSpecies = () => {
               >
                 Best wood for kitchen cabinets — picks by use case
               </Link>
-              <span className="text-[#999] hidden sm:inline">·</span>
+              <span className="text-muted-foreground hidden sm:inline">·</span>
               <Link
                 to="/cabinet-wood-types-and-costs"
                 className="inline-flex items-center gap-1 text-sm font-semibold text-[#5C7650] hover:text-[#445339] underline underline-offset-4"
@@ -298,7 +298,7 @@ const WoodSpecies = () => {
                     </div>
                     <p className="text-sm text-[#5C7650] italic">{w.tagline}</p>
                     <p className="text-sm text-[#555555] line-clamp-3">{w.shortDescription}</p>
-                    <div className="flex items-center justify-between pt-2 text-xs text-[#999999]">
+                    <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
                       <span>Janka {w.jankaHardness.toLocaleString()} lbf</span>
                       <span className="inline-flex items-center gap-1 text-[#5C7650] font-medium group-hover:gap-2 transition-all">
                         Read guide <ArrowRight className="w-3.5 h-3.5" />

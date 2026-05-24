@@ -71,13 +71,13 @@ const WoodOverviewTable = () => {
               />
               <div className="flex-1">
                 <h3 className="font-semibold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
-                <p className="text-xs text-[#999999]">{w.tagline}</p>
+                <p className="text-xs text-muted-foreground">{w.tagline}</p>
               </div>
               <span className="font-mono text-sm text-[#5C7650]">{w.costTier}</span>
             </div>
             <dl className="grid grid-cols-2 gap-2 text-xs text-[#555555]">
-              <div><dt className="text-[#999999]">Hardness</dt><dd>{w.jankaHardness.toLocaleString()} lbf</dd></div>
-              <div><dt className="text-[#999999]">Best for</dt><dd>{w.uses[0]}</dd></div>
+              <div><dt className="text-muted-foreground">Hardness</dt><dd>{w.jankaHardness.toLocaleString()} lbf</dd></div>
+              <div><dt className="text-muted-foreground">Best for</dt><dd>{w.uses[0]}</dd></div>
             </dl>
           </Link>
         ))}

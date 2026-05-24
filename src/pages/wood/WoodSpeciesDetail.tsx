@@ -152,7 +152,7 @@ const WoodSpeciesDetail = () => {
                 </div>
                 <p className="text-lg text-[#5C7650] italic">{wood.tagline}</p>
                 <p className="text-base text-[#555555] leading-relaxed">{wood.shortDescription}</p>
-                <p className="text-xs text-[#999999]">
+                <p className="text-xs text-muted-foreground">
                   <em>{wood.scientificName}</em> · {wood.origin}
                 </p>
                 <AuthorByline author="golan" label="Reviewed by" className="pt-2" />
@@ -206,7 +206,7 @@ const WoodSpeciesDetail = () => {
                 className="w-full aspect-[16/7] object-cover"
               />
             </div>
-            <p className="text-xs text-[#999999] text-center mt-2">
+            <p className="text-xs text-muted-foreground text-center mt-2">
               Close-up of {wood.name.toLowerCase()} grain — {wood.grain.toLowerCase()}.
             </p>
           </div>
@@ -407,7 +407,7 @@ const WoodSpeciesDetail = () => {
                           className="inline-block w-6 h-6 rounded border border-border"
                           style={{ backgroundColor: wood.swatch }}
                         />
-                        <span className="text-[#999] text-sm">vs</span>
+                        <span className="text-muted-foreground text-sm">vs</span>
                         <span
                           aria-hidden="true"
                           className="inline-block w-6 h-6 rounded border border-border"
@@ -493,7 +493,7 @@ const WoodSpeciesDetail = () => {
 
 const Spec = ({ label, value, small }: { label: string; value: string; small?: boolean }) => (
   <div className="bg-background rounded-lg p-3 border border-border">
-    <p className="text-xs text-[#999999] uppercase tracking-wider">{label}</p>
+    <p className="text-xs text-muted-foreground uppercase tracking-wider">{label}</p>
     <p className={`font-semibold text-[#1a1a1a] mt-1 ${small ? "text-xs" : "text-base"}`}>{value}</p>
   </div>
 );

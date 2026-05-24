@@ -111,27 +111,27 @@ const WoodCompare = () => {
 
                 <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
                   <div>
-                    <dt className="text-[#999999]">Hardness</dt>
+                    <dt className="text-muted-foreground">Hardness</dt>
                     <dd className="font-medium text-[#1a1a1a]">{w.jankaHardness.toLocaleString()} lbf</dd>
                   </div>
                   <div>
-                    <dt className="text-[#999999]">Cost</dt>
+                    <dt className="text-muted-foreground">Cost</dt>
                     <dd className="font-mono text-[#5C7650]">{w.costTier}</dd>
                   </div>
                   <div>
-                    <dt className="text-[#999999]">Workability</dt>
+                    <dt className="text-muted-foreground">Workability</dt>
                     <dd className="text-[#1a1a1a]">{w.workability}</dd>
                   </div>
                   <div>
-                    <dt className="text-[#999999]">Stain take</dt>
+                    <dt className="text-muted-foreground">Stain take</dt>
                     <dd className="text-[#1a1a1a]">{w.stainTake}</dd>
                   </div>
                   <div className="col-span-2">
-                    <dt className="text-[#999999]">Color</dt>
+                    <dt className="text-muted-foreground">Color</dt>
                     <dd className="text-[#1a1a1a]">{w.color}</dd>
                   </div>
                   <div className="col-span-2">
-                    <dt className="text-[#999999]">Grain</dt>
+                    <dt className="text-muted-foreground">Grain</dt>
                     <dd className="text-[#1a1a1a]">{w.grain}</dd>
                   </div>
                 </dl>
