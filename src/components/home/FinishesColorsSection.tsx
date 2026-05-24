@@ -87,7 +87,7 @@ const FinishesColorsSection = () => {
 
         {/* Horizontal preview rail — 4 panels per brand */}
         {panels.length === 0 ? (
-          <div className="text-center py-12 text-[#666] text-sm">
+          <div className="text-center py-12 text-muted-foreground text-sm">
             {active} catalog coming soon.
           </div>
         ) : (
