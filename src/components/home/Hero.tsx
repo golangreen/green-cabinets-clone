@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.jpg";
 import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
 import modernBathroomWoodMarble from "@/assets/gallery/modern-bathroom-wood-marble.jpeg";
 import contemporaryPowderRoomWood from "@/assets/gallery/contemporary-powder-room-wood.jpeg";
@@ -34,7 +31,6 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 };
 
 const Hero = () => {
-  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [shuffledImages] = useState(() => [heroImages[0], ...shuffleArray(heroImages.slice(1))]);
