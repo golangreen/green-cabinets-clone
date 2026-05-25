@@ -131,10 +131,10 @@ function PanelModal({
               />
             ) : (
               <div
-                className="w-full h-full flex items-center justify-center text-xs text-white/80"
+                className="w-full h-full flex items-center justify-center text-xs text-primary-foreground"
                 style={{ background: panel.swatchHex ?? "#ddd" }}
               >
-                <span className="bg-black/30 px-2 py-1 rounded">
+                <span className="bg-foreground/85 px-2 py-1 rounded">
                   Approx. color — see live photo on {panel.brand}
                 </span>
               </div>
