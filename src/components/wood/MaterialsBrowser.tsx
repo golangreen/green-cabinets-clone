@@ -155,7 +155,7 @@ function PanelModal({
             </div>
             <div className="rounded-lg bg-[#5C7650]/10 border border-[#5C7650]/30 p-3 text-[#1a1a1a]">
               <p className="font-semibold mb-1">In our Bushwick showroom</p>
-              <p className="text-xs text-[#555]">
+              <p className="text-xs text-muted-foreground">
                 Bring this code to see the actual sample, or mention it when
                 you book a consultation and we will pull it for you.
               </p>
@@ -279,7 +279,7 @@ export function BrandPanel({ brand }: { brand: MaterialBrand }) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-lg border border-[#5C7650]/30 bg-[#5C7650]/5 px-4 py-3">
           <p className="text-sm text-[#1a1a1a]">
             <span className="font-semibold">Curated picks below.</span>{" "}
-            <span className="text-[#555]">
+            <span className="text-muted-foreground">
               These are the {brand} decors we order most for NYC kitchens — the brand offers many more.
             </span>
           </p>

@@ -217,7 +217,7 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
             <div className="flex items-start justify-between gap-3 flex-wrap">
               <div>
                 <h3 className="text-sm font-bold text-[#1a1a1a]">Comparison summary</h3>
-                <p className="text-xs text-[#555]">
+                <p className="text-xs text-muted-foreground">
                   One-page recap of your {panels.length} pick{panels.length === 1 ? "" : "s"} — copy as text or download as PDF to share.
                 </p>
               </div>
