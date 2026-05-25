@@ -9,6 +9,7 @@ const SpringPromotion = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [videoReady, setVideoReady] = useState(false);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isDismissed, setIsDismissed] = useState(() => {
     return sessionStorage.getItem(STORAGE_KEY) === "true";
   });
@@ -18,12 +19,19 @@ const SpringPromotion = () => {
     setIsDismissed(true);
   };
 
+  useEffect(() => {
+    if (isDismissed) return;
+    const loadVideo = () => setShouldLoadVideo(true);
+    const timeout = window.setTimeout(loadVideo, 2500);
+    return () => window.clearTimeout(timeout);
+  }, [isDismissed]);
+
   // Pause the video when it scrolls out of view. On iOS, an off-screen
   // playing video keeps decoding on the main thread and stalls scroll
   // events / rAF, which makes the thin progress bar lurch. Pausing it
   // restores smooth scroll tracking once the user moves past the hero.
   useEffect(() => {
-    if (isDismissed) return;
+    if (isDismissed || !shouldLoadVideo) return;
     const video = videoRef.current;
     const container = containerRef.current;
     if (!video || !container) return;
@@ -42,7 +50,7 @@ const SpringPromotion = () => {
     );
     observer.observe(container);
     return () => observer.disconnect();
-  }, [isDismissed]);
+  }, [isDismissed, shouldLoadVideo]);
 
   if (isDismissed) return null;
 
@@ -73,22 +81,24 @@ const SpringPromotion = () => {
             videoReady ? "opacity-0" : "opacity-100"
           }`}
         />
-        <video
-          ref={videoRef}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-            videoReady ? "opacity-100" : "opacity-0"
-          }`}
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/spring-promotion-poster.webp"
-          preload="metadata"
-          onLoadedData={() => setVideoReady(true)}
-        >
-          <source src="/spring-promotion-optimized.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        {shouldLoadVideo && (
+          <video
+            ref={videoRef}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+              videoReady ? "opacity-100" : "opacity-0"
+            }`}
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/spring-promotion-poster.webp"
+            preload="metadata"
+            onLoadedData={() => setVideoReady(true)}
+          >
+            <source src="/spring-promotion-optimized.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )}
         <VideoMuteToggle videoRef={videoRef} />
       </div>
     </section>
