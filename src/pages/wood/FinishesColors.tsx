@@ -119,7 +119,7 @@ const FinishesColors = () => {
             <h2 className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-3">
               Looking for solid hardwood?
             </h2>
-            <p className="text-[#555] mb-5">
+            <p className="text-muted-foreground mb-5">
               See our full guide to oak, maple, walnut and other solid wood species.
             </p>
             <Button asChild className="bg-[#5C7650] hover:bg-[#445339]">
