@@ -61,7 +61,8 @@ function interpolateByWidth(width: number, anchors: [number, number, number][]):
     return { L: last[1], Z: last[2] };
   }
 
-  const lo = sorted.filter(a => a[0] <= width).at(-1)!;
+  const loArr = sorted.filter(a => a[0] <= width);
+  const lo = loArr[loArr.length - 1]!;
   const hi = sorted.find(a => a[0] > width)!;
   const t = (width - lo[0]) / (hi[0] - lo[0]);
 
@@ -88,7 +89,8 @@ function clamp(val: number, arr: number[]): number {
 
 function nearestBelow(val: number, arr: number[]): number {
   const sorted = [...arr].sort((a, b) => a - b);
-  return sorted.filter(v => v <= val).at(-1) ?? sorted[0];
+  const filtered = sorted.filter(v => v <= val);
+  return filtered[filtered.length - 1] ?? sorted[0];
 }
 function nearestAbove(val: number, arr: number[]): number {
   const sorted = [...arr].sort((a, b) => a - b);
