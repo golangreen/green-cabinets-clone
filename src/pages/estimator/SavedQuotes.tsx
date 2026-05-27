@@ -10,7 +10,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import CompareView, { type FullQuote } from '@/components/quotes/CompareView';
+import CompareView, { type FullQuote } from '@/components/estimator-quotes/CompareView';
 import Seo from '@/components/Seo';
 
 interface SavedQuote {
