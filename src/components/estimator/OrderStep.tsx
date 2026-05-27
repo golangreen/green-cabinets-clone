@@ -284,8 +284,12 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
             selectedDoorStyle={form.doorStyle}
             selectedFinish={form.finish}
             onDoorStyleChange={id => {
-              setForm(prev => ({ ...prev, doorStyle: id }));
-              if (errors.doorStyle) setErrors(prev => ({ ...prev, doorStyle: undefined }));
+              setForm(prev => {
+                const finishObj = prev.finish ? getFinishById(prev.finish) : undefined;
+                const keepFinish = !finishObj || isFinishAllowedForDoor(finishObj, id);
+                return { ...prev, doorStyle: id, finish: keepFinish ? prev.finish : '' };
+              });
+              setErrors(prev => ({ ...prev, doorStyle: undefined, finish: undefined }));
             }}
             onFinishChange={id => {
               setForm(prev => ({ ...prev, finish: id }));
