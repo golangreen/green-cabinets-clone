@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { X, Download, ChevronDown, ChevronUp } from 'lucide-react';
-import { generateComparisonPDF } from '@/lib/generate-comparison-pdf';
-import { pricingData, calculateCosts } from '@/lib/pricing';
-import { fmtOpt as fmt } from '@/lib/utils';
+import { generateComparisonPDF } from '@/lib/estimator/generate-comparison-pdf';
+import { pricingData, calculateCosts } from '@/lib/estimator/pricing';
+import { fmtOpt as fmt } from '@/lib/estimator/utils';
 
 export interface FullQuote {
   id: string;

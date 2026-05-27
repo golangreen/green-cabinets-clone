@@ -4,8 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { Loader2, Trash2, FileText, Plus, ArrowLeft, Copy, GitCompare, X } from 'lucide-react';
-import { pricingData } from '@/lib/pricing';
-import { fmtOpt as fmt } from '@/lib/utils';
+import { pricingData } from '@/lib/estimator/pricing';
+import { fmtOpt as fmt } from '@/lib/estimator/utils';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,

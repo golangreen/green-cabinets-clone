@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import type { Analysis, SelectedCabinet, CustomLineItem, DeliveryConfig, InstallationConfig, DiscountConfig, HardwareConfig, AddOnsConfig, Collection } from '@/lib/types';
-import { calculateCosts } from '@/lib/pricing';
+import type { Analysis, SelectedCabinet, CustomLineItem, DeliveryConfig, InstallationConfig, DiscountConfig, HardwareConfig, AddOnsConfig, Collection } from '@/lib/estimator/types';
+import { calculateCosts } from '@/lib/estimator/pricing';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useFileAnalyzer } from '@/hooks/useFileAnalyzer';
-import { fileToBase64 } from '@/lib/utils';
+import { fileToBase64 } from '@/lib/estimator/utils';
 
 export function useEstimator() {
   const { user, signOut } = useAuth();

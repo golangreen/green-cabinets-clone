@@ -1,8 +1,8 @@
 import React from 'react';
 import { Ruler } from 'lucide-react';
-import type { AddOnsConfig, AddOnId } from '@/lib/types';
-import { ADD_ON_OPTIONS } from '@/lib/pricing';
-import { fmt } from '@/lib/utils';
+import type { AddOnsConfig, AddOnId } from '@/lib/estimator/types';
+import { ADD_ON_OPTIONS } from '@/lib/estimator/pricing';
+import { fmt } from '@/lib/estimator/utils';
 
 interface AddOnsSectionProps {
   addOns: AddOnsConfig;

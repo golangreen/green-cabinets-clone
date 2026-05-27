@@ -1,7 +1,7 @@
 import React from 'react';
 import { Truck } from 'lucide-react';
-import type { DeliveryConfig, DeliveryOptionId } from '@/lib/types';
-import { DELIVERY_OPTIONS } from '@/lib/pricing';
+import type { DeliveryConfig, DeliveryOptionId } from '@/lib/estimator/types';
+import { DELIVERY_OPTIONS } from '@/lib/estimator/pricing';
 
 interface DeliverySectionProps {
   delivery: DeliveryConfig;

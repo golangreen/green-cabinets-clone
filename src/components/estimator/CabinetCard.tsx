@@ -1,9 +1,9 @@
 import React from 'react';
 import { Plus, Minus, Trash2, PanelLeft, GlassWater, Layers } from 'lucide-react';
-import { cabinetLookup } from '@/lib/catalog-data';
-import { FINISH_SIDE_COST, GLASS_DOOR_COST, PULL_OUT_SHELF_COST } from '@/lib/pricing';
-import type { SelectedCabinet, FinishSide, Collection } from '@/lib/types';
-import { fmt } from '@/lib/utils';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
+import { FINISH_SIDE_COST, GLASS_DOOR_COST, PULL_OUT_SHELF_COST } from '@/lib/estimator/pricing';
+import type { SelectedCabinet, FinishSide, Collection } from '@/lib/estimator/types';
+import { fmt } from '@/lib/estimator/utils';
 import CabinetIcon from './CabinetIcon';
 
 interface CabinetCardProps {

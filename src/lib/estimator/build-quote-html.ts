@@ -1,6 +1,6 @@
-import type { CostBreakdown, SelectedCabinet } from '@/lib/types';
-import { getCategoryGroup } from '@/lib/pricing';
-import { cabinetLookup } from '@/lib/catalog-data';
+import type { CostBreakdown, SelectedCabinet } from '@/lib/estimator/types';
+import { getCategoryGroup } from '@/lib/estimator/pricing';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
 
 export interface BuildQuoteHtmlParams {
   costs: CostBreakdown;

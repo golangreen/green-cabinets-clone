@@ -1,7 +1,7 @@
 import React from 'react';
 import { Percent, DollarSign, Tag } from 'lucide-react';
-import type { DiscountConfig, CostBreakdown } from '@/lib/types';
-import { fmt } from '@/lib/utils';
+import type { DiscountConfig, CostBreakdown } from '@/lib/estimator/types';
+import { fmt } from '@/lib/estimator/utils';
 
 interface DiscountSectionProps {
   discount: DiscountConfig;

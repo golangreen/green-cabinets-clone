@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { cabinetLookup } from '@/lib/catalog-data';
-import type { ReconciliationData } from '@/lib/types';
-import type { SelectedCabinet } from '@/lib/types';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
+import type { ReconciliationData } from '@/lib/estimator/types';
+import type { SelectedCabinet } from '@/lib/estimator/types';
 import { Check, AlertTriangle, ArrowRight } from 'lucide-react';
 
 interface ReconciliationPanelProps {

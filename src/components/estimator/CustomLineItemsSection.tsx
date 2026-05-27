@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { PackagePlus, Plus, Minus, Trash2, Copy, DollarSign, X, GripVertical } from 'lucide-react';
-import type { CustomLineItem } from '@/lib/types';
+import type { CustomLineItem } from '@/lib/estimator/types';
 
 const CUSTOM_PRESETS = [
   { label: 'Fridge Panel 24×84', description: 'Fridge Panel FP2484 (24" × 84")', unitPrice: 195 },

@@ -6,7 +6,7 @@ import {
   FINISH_CATEGORIES,
   FINISH_CATEGORY_LABELS,
   type FinishCategory,
-} from '@/lib/finishes-data';
+} from '@/lib/estimator/finishes-data';
 
 interface FinishPickerProps {
   selectedDoorStyle: string;

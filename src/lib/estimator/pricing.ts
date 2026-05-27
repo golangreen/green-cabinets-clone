@@ -1,6 +1,6 @@
 // Location multipliers and cost calculation
-import { cabinetLookup, getCategoryGroup, sortCostItems } from '@/lib/catalog-data';
-import type { SelectedCabinet, CustomLineItem, DeliveryConfig, InstallationConfig, DiscountConfig, CostBreakdown, FinishSide, HardwareType, HardwareConfig, AddOnsConfig, AddOnId, Collection } from '@/lib/types';
+import { cabinetLookup, getCategoryGroup, sortCostItems } from '@/lib/estimator/catalog-data';
+import type { SelectedCabinet, CustomLineItem, DeliveryConfig, InstallationConfig, DiscountConfig, CostBreakdown, FinishSide, HardwareType, HardwareConfig, AddOnsConfig, AddOnId, Collection } from '@/lib/estimator/types';
 
 // Re-export for backward compatibility
 export { getCategoryGroup, sortCostItems };

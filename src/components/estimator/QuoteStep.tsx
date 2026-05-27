@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Download, Send, AlertTriangle, Loader2, ShoppingBag } from 'lucide-react';
-import type { Analysis, SelectedCabinet, CostBreakdown, DiscountConfig } from '@/lib/types';
-import { pricingData } from '@/lib/pricing';
-import { fmt } from '@/lib/utils';
-import { buildQuoteHtml } from '@/lib/build-quote-html';
-import { generateQuotePDF } from '@/lib/generate-pdf';
+import type { Analysis, SelectedCabinet, CostBreakdown, DiscountConfig } from '@/lib/estimator/types';
+import { pricingData } from '@/lib/estimator/pricing';
+import { fmt } from '@/lib/estimator/utils';
+import { buildQuoteHtml } from '@/lib/estimator/build-quote-html';
+import { generateQuotePDF } from '@/lib/estimator/generate-pdf';
 import { toast } from 'sonner';
-import { callEdgeFunction } from '@/lib/call-edge-function';
+import { callEdgeFunction } from '@/lib/estimator/call-edge-function';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,

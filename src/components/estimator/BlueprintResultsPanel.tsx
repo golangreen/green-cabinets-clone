@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, ChevronDown, ChevronRight, ImageIcon } from 'lucide-react';
-import type { ReconciliationData, CabinetPosition, SourceResult } from '@/lib/types';
-import { cabinetLookup } from '@/lib/catalog-data';
+import type { ReconciliationData, CabinetPosition, SourceResult } from '@/lib/estimator/types';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
 import { Image as ImageLucide } from 'lucide-react';
 import WallTally from './WallTally';
 

@@ -1,10 +1,10 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
-import { enhanceImageForOCR } from '@/lib/utils';
-import { cabinetLookup } from '@/lib/catalog-data';
-import { applyFuzzyMatching, buildReconciliation, classifyFile } from '@/lib/file-analysis';
-import { callEdgeFunction } from '@/lib/call-edge-function';
-import type { SelectedCabinet, Analysis, FileCategory, CabinetPosition, SourceResult, ReconciliationData, WallCheckRow } from '@/lib/types';
+import { enhanceImageForOCR } from '@/lib/estimator/utils';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
+import { applyFuzzyMatching, buildReconciliation, classifyFile } from '@/lib/estimator/file-analysis';
+import { callEdgeFunction } from '@/lib/estimator/call-edge-function';
+import type { SelectedCabinet, Analysis, FileCategory, CabinetPosition, SourceResult, ReconciliationData, WallCheckRow } from '@/lib/estimator/types';
 
 // Re-export types and functions for backward compatibility during migration
 export type { FileCategory, CabinetPosition, SourceResult, ReconciliationData };

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { CheckCircle2, Loader2, Package, Phone, Mail, MapPin, CalendarDays, MessageSquare, User, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
-import type { CostBreakdown, Collection } from '@/lib/types';
-import { fmt } from '@/lib/utils';
-import { callEdgeFunction } from '@/lib/call-edge-function';
+import type { CostBreakdown, Collection } from '@/lib/estimator/types';
+import { fmt } from '@/lib/estimator/utils';
+import { callEdgeFunction } from '@/lib/estimator/call-edge-function';
 import FinishPicker from './FinishPicker';
-import { getFinishById, getDoorStyleById } from '@/lib/finishes-data';
+import { getFinishById, getDoorStyleById } from '@/lib/estimator/finishes-data';
 
 interface OrderForm {
   name: string;

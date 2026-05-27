@@ -1,8 +1,8 @@
 import React from 'react';
 import { DoorClosed } from 'lucide-react';
-import type { SelectedCabinet, HardwareConfig, HardwareType } from '@/lib/types';
-import { HARDWARE_COST } from '@/lib/pricing';
-import { cabinetLookup } from '@/lib/catalog-data';
+import type { SelectedCabinet, HardwareConfig, HardwareType } from '@/lib/estimator/types';
+import { HARDWARE_COST } from '@/lib/estimator/pricing';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
 
 interface HardwareSectionProps {
   hardware: HardwareConfig;

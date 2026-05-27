@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
-import { pricingData, calculateCosts } from '@/lib/pricing';
-import { fmtOpt as fmt } from '@/lib/utils';
+import { pricingData, calculateCosts } from '@/lib/estimator/pricing';
+import { fmtOpt as fmt } from '@/lib/estimator/utils';
 
 const GREEN = [75, 108, 92] as const;
 const DARK = [30, 35, 32] as const;

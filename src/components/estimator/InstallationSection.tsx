@@ -1,7 +1,7 @@
 import React from 'react';
 import { Wrench, BarChart3 } from 'lucide-react';
-import type { InstallationConfig } from '@/lib/types';
-import { INSTALLATION_COMPLEXITY } from '@/lib/pricing';
+import type { InstallationConfig } from '@/lib/estimator/types';
+import { INSTALLATION_COMPLEXITY } from '@/lib/estimator/pricing';
 
 interface InstallationSectionProps {
   installation: InstallationConfig;

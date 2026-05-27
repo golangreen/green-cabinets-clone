@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Plus, Trash2, UtensilsCrossed, Bath, DoorOpen, Waves, ChevronDown, ChevronUp } from 'lucide-react';
-import type { LinearFootRoom, LinearFootRoomType, Collection } from '@/lib/types';
-import { fmt } from '@/lib/utils';
+import type { LinearFootRoom, LinearFootRoomType, Collection } from '@/lib/estimator/types';
+import { fmt } from '@/lib/estimator/utils';
 
 // Per-linear-foot rates (upper + lower combined) by room type and collection
 const LF_RATES: Record<LinearFootRoomType, Record<Collection, { uppers: number; lowers: number }>> = {

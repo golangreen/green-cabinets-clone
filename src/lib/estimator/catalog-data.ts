@@ -1,7 +1,7 @@
 // Green Cabinets NY — Price List (Luxor L / Zuma Z tiers)
 // price = Luxor (L column); priceZ = Zuma (Z column)
 // doors/drawers = hardware attachment point counts per unit
-import type { CabinetItem } from '@/lib/types';
+import type { CabinetItem } from '@/lib/estimator/types';
 
 // Helper: wall cabinets ≤21" wide = 1 door, ≥24" = 2 doors, 0 drawers
 // Base cabinets = 1 door + 1 drawer (narrow ≤15" = 1 door only)

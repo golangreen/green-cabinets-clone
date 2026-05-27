@@ -8,7 +8,7 @@
 //   • Corner kitchens (≥16 lf) get blind/corner cabs; L-shape starts at ~20 lf
 //   • Island sizing: parse "WxD" from islandSize, fill with base cabs (24" wide each)
 
-import type { Analysis, SelectedCabinet, SuggestionResult, RoomSuggestion } from '@/lib/types';
+import type { Analysis, SelectedCabinet, SuggestionResult, RoomSuggestion } from '@/lib/estimator/types';
 
 const FRIDGE_WIDTH = 36; // inches
 const RANGE_WIDTH = 30;

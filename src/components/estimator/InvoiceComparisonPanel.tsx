@@ -1,10 +1,10 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { Upload, FileText, ClipboardPaste, Loader2, X, CheckCircle2, AlertTriangle, ArrowLeftRight, Minus, Plus, Merge, Check, Info } from 'lucide-react';
 import { toast } from 'sonner';
-import type { SelectedCabinet } from '@/lib/types';
-import { cabinetLookup } from '@/lib/catalog-data';
+import type { SelectedCabinet } from '@/lib/estimator/types';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
 import { supabase } from '@/integrations/supabase/client';
-import { fileToBase64 } from '@/lib/utils';
+import { fileToBase64 } from '@/lib/estimator/utils';
 
 interface InvoiceComparisonPanelProps {
   selectedCabinets: SelectedCabinet[];

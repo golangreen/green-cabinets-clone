@@ -1,7 +1,7 @@
 import React from 'react';
-import type { CostBreakdown } from '@/lib/types';
-import { getCategoryGroup } from '@/lib/catalog-data';
-import { fmt } from '@/lib/utils';
+import type { CostBreakdown } from '@/lib/estimator/types';
+import { getCategoryGroup } from '@/lib/estimator/catalog-data';
+import { fmt } from '@/lib/estimator/utils';
 
 interface QuoteLineItemsProps {
   costs: CostBreakdown;

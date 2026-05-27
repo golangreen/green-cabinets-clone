@@ -1,5 +1,5 @@
 // Simplified annotated blueprint renderer — draws colored dots for flagged cabinets only
-import type { ReconciliationData } from '@/lib/types';
+import type { ReconciliationData } from '@/lib/estimator/types';
 
 const MAX_EXPORT_WIDTH = 1600;
 const FUZZY_COLOR = '#d97706';

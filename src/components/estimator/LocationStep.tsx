@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layers, Check, AlertCircle } from 'lucide-react';
-import { pricingData } from '@/lib/pricing';
+import { pricingData } from '@/lib/estimator/pricing';
 
 interface LocationStepProps {
   location: string;

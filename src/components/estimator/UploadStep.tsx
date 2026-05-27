@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Upload, FileText, X, Loader2, Eye, Camera, Image as ImageIcon } from 'lucide-react';
-import type { SelectedCabinet, Analysis, FileCategory } from '@/lib/types';
-import { renderAnnotatedBlueprintDataUrls } from '@/lib/render-annotated-blueprints';
+import type { SelectedCabinet, Analysis, FileCategory } from '@/lib/estimator/types';
+import { renderAnnotatedBlueprintDataUrls } from '@/lib/estimator/render-annotated-blueprints';
 import ReconciliationPanel from './ReconciliationPanel';
 import CabinetListPanel from './CabinetListPanel';
 import BlueprintResultsPanel from './BlueprintResultsPanel';

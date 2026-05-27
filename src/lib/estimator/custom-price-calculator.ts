@@ -5,8 +5,8 @@
  * with a depth surcharge for cabinets deeper than the catalog standard.
  * Items priced this way are marked with ✦ in the UI.
  */
-import { cabinetLookup } from '@/lib/catalog-data';
-import type { Collection } from '@/lib/types';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
+import type { Collection } from '@/lib/estimator/types';
 
 const WALL_HEIGHTS = [12, 15, 18, 24, 30, 36, 42];
 const WALL_WIDTHS = [6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39];

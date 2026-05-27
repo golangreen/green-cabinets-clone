@@ -2,8 +2,8 @@
  * Fuzzy cabinet matching — when a model code isn't found in the catalog,
  * parse its dimensions and find the next size up for pricing.
  */
-import { cabinetLookup } from '@/lib/catalog-data';
-import type { CabinetItem } from '@/lib/types';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
+import type { CabinetItem } from '@/lib/estimator/types';
 
 export interface FuzzyMatch {
   originalModel: string;

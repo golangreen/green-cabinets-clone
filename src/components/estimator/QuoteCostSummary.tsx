@@ -1,6 +1,6 @@
 import React from 'react';
-import type { CostBreakdown } from '@/lib/types';
-import { fmt } from '@/lib/utils';
+import type { CostBreakdown } from '@/lib/estimator/types';
+import { fmt } from '@/lib/estimator/utils';
 
 interface QuoteCostSummaryProps {
   costs: CostBreakdown;

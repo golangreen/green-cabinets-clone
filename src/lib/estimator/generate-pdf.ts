@@ -1,8 +1,8 @@
 import jsPDF from 'jspdf';
-import type { CostBreakdown, SelectedCabinet } from '@/lib/types';
-import { pricingData, getCategoryGroup } from '@/lib/pricing';
-import { fmt } from '@/lib/utils';
-import { cabinetLookup } from '@/lib/catalog-data';
+import type { CostBreakdown, SelectedCabinet } from '@/lib/estimator/types';
+import { pricingData, getCategoryGroup } from '@/lib/estimator/pricing';
+import { fmt } from '@/lib/estimator/utils';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
 
 const GREEN = [75, 108, 92] as const;
 const DARK = [30, 35, 32] as const;

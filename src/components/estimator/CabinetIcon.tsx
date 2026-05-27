@@ -1,5 +1,5 @@
 import React from 'react';
-import type { CabinetImageType } from '@/lib/types';
+import type { CabinetImageType } from '@/lib/estimator/types';
 
 interface CabinetIconProps {
   type?: CabinetImageType;

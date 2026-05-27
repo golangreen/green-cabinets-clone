@@ -3,10 +3,10 @@ import { Plus, Minus, Trash2, Package, Upload, FileText, ClipboardPaste, Loader2
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { toast } from 'sonner';
-import type { SelectedCabinet } from '@/lib/types';
-import { cabinetCatalog, cabinetLookup } from '@/lib/catalog-data';
+import type { SelectedCabinet } from '@/lib/estimator/types';
+import { cabinetCatalog, cabinetLookup } from '@/lib/estimator/catalog-data';
 import { supabase } from '@/integrations/supabase/client';
-import { fileToBase64 } from '@/lib/utils';
+import { fileToBase64 } from '@/lib/estimator/utils';
 
 interface CabinetListPanelProps {
   selectedCabinets: SelectedCabinet[];

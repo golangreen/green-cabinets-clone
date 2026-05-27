@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Ruler } from 'lucide-react';
-import type { WallCheckRow } from '@/lib/types';
+import type { WallCheckRow } from '@/lib/estimator/types';
 
 const STATUS = {
   ok:      { icon: '✅', label: 'Match',   color: 'text-emerald-600' },

@@ -1,8 +1,8 @@
 // ── Pure functions for file analysis (no React dependencies) ────────────
-import { cabinetLookup } from '@/lib/catalog-data';
-import { fuzzyMatchCabinet } from '@/lib/fuzzy-cabinet-match';
-import { calculateCustomCabinetPrice } from '@/lib/custom-price-calculator';
-import type { FileCategory, CabinetPosition, SourceResult, ReconciliationData } from '@/lib/types';
+import { cabinetLookup } from '@/lib/estimator/catalog-data';
+import { fuzzyMatchCabinet } from '@/lib/estimator/fuzzy-cabinet-match';
+import { calculateCustomCabinetPrice } from '@/lib/estimator/custom-price-calculator';
+import type { FileCategory, CabinetPosition, SourceResult, ReconciliationData } from '@/lib/estimator/types';
 
 /**
  * Classify a file by name/type into blueprint, elevation, or cabinet-list.
