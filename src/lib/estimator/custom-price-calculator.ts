@@ -89,7 +89,8 @@ function clamp(val: number, arr: number[]): number {
 
 function nearestBelow(val: number, arr: number[]): number {
   const sorted = [...arr].sort((a, b) => a - b);
-  return sorted.filter(v => v <= val).at(-1) ?? sorted[0];
+  const filtered = sorted.filter(v => v <= val);
+  return filtered[filtered.length - 1] ?? sorted[0];
 }
 function nearestAbove(val: number, arr: number[]): number {
   const sorted = [...arr].sort((a, b) => a - b);
