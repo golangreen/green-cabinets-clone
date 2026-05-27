@@ -61,7 +61,8 @@ function interpolateByWidth(width: number, anchors: [number, number, number][]):
     return { L: last[1], Z: last[2] };
   }
 
-  const lo = sorted.filter(a => a[0] <= width).at(-1)!;
+  const loArr = sorted.filter(a => a[0] <= width);
+  const lo = loArr[loArr.length - 1]!;
   const hi = sorted.find(a => a[0] > width)!;
   const t = (width - lo[0]) / (hi[0] - lo[0]);
 
