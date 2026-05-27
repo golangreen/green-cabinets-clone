@@ -27,6 +27,8 @@ export function useEstimator() {
   const [hardware, setHardware] = useState<HardwareConfig>({ type: 'none', applyAll: true, perCabinet: {} });
   const [addOns, setAddOns] = useState<AddOnsConfig>([]);
   const [collection, setCollection] = useState<Collection>('luxor');
+  const [selectedFinish, setSelectedFinish] = useState<string>('');
+
   const [loadedQuoteId, setLoadedQuoteId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [quoteName, setQuoteName] = useState('');
