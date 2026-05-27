@@ -284,8 +284,10 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
             }}
             onFinishChange={id => {
               setForm(prev => ({ ...prev, finish: id }));
+              onFinishChange?.(id);
               if (errors.finish) setErrors(prev => ({ ...prev, finish: undefined }));
             }}
+
             errorDoorStyle={errors.doorStyle}
             errorFinish={errors.finish}
           />
