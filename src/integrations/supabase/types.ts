@@ -571,6 +571,7 @@ export type Database = {
           name: string
           project_notes: string | null
           selected_cabinets: Json
+          selected_finish: Json | null
           updated_at: string
           user_id: string
         }
@@ -593,6 +594,7 @@ export type Database = {
           name?: string
           project_notes?: string | null
           selected_cabinets?: Json
+          selected_finish?: Json | null
           updated_at?: string
           user_id: string
         }
@@ -615,6 +617,7 @@ export type Database = {
           name?: string
           project_notes?: string | null
           selected_cabinets?: Json
+          selected_finish?: Json | null
           updated_at?: string
           user_id?: string
         }

@@ -1,0 +1,1 @@
+ALTER TABLE public.saved_quotes ADD COLUMN IF NOT EXISTS selected_finish jsonb;
