@@ -104,8 +104,10 @@ export function useEstimator() {
     setDiscount((data as any).discount || { enabled: false, type: 'percentage', value: 0, label: '' });
     setHardware((data as any).hardware || { type: 'none', applyAll: true, perCabinet: {} });
     setAddOns((data as any).add_ons || []);
+    setSelectedFinish((data as any).selected_finish?.id || '');
     setQuoteName(data.name || '');
     setLoadedQuoteId(id);
+
 
     if ((data.selected_cabinets as any[])?.length > 0) {
       setStep(3);
