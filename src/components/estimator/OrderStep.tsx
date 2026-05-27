@@ -62,6 +62,10 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
     if (!form.address.trim())   errs.address   = 'Delivery address is required';
     if (!form.doorStyle)        errs.doorStyle = 'Please select a door style';
     if (!form.finish)           errs.finish    = 'Please select a finish';
+    if (form.doorStyle && form.finish) {
+      const compat = checkCompatibility(form.doorStyle, form.finish);
+      if (!compat.ok) errs.finish = compat.reason;
+    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
