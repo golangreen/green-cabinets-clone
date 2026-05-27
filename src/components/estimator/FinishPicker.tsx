@@ -140,15 +140,23 @@ export default function FinishPicker({
           {visibleFinishes.map(finish => {
             const isSelected = selectedFinish === finish.id;
             const isLight = isLightColor(finish.hex);
+            const allowed = isFinishAllowedForDoor(finish, selectedDoorStyle);
 
             return (
               <button
                 key={finish.id}
                 type="button"
-                onClick={() => onFinishChange(finish.id)}
-                title={[finish.brand, finish.name, ...(finish.codes ?? [])].filter(Boolean).join(' — ')}
-                className={`group flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all active:scale-95 ${
-                  isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'hover:bg-accent/50'
+                onClick={() => allowed && onFinishChange(finish.id)}
+                disabled={!allowed}
+                title={
+                  allowed
+                    ? [finish.brand, finish.name, ...(finish.codes ?? [])].filter(Boolean).join(' — ')
+                    : `Not available with selected door style — ${finish.brand ?? finish.name} requires a different door.`
+                }
+                className={`group flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all ${
+                  !allowed
+                    ? 'opacity-40 cursor-not-allowed'
+                    : `active:scale-95 ${isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'hover:bg-accent/50'}`
                 }`}
               >
                 <div
@@ -172,8 +180,13 @@ export default function FinishPicker({
                       </div>
                     </div>
                   )}
-                  {finish.popular && !isSelected && (
+                  {finish.popular && !isSelected && allowed && (
                     <div className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background" />
+                  )}
+                  {!allowed && (
+                    <div className="absolute inset-0 bg-background/40 flex items-center justify-center">
+                      <div className="w-0.5 h-12 bg-destructive/70 rotate-45 rounded-full" />
+                    </div>
                   )}
                 </div>
                 <span className="text-[10px] text-center leading-tight text-muted-foreground group-hover:text-foreground transition-colors line-clamp-2 w-full">
