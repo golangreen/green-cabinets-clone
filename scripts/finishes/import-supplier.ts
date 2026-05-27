@@ -189,7 +189,7 @@ function scanBrands(): BrandFile[] {
       const src = readFileSync(join(FINISHES_DIR, f), 'utf8');
       const panelsMatch = src.match(/export const (\w+_PANELS)\s*:/);
       const catalogMatch = src.match(/export const (\w+_CATALOG_URL)\s*=/);
-      const brandMatch = src.match(/brand:\s*["']([^"']+)["']/);
+      const brandMatch = src.match(/["']?brand["']?\s*:\s*["']([^"']+)["']/);
       if (!panelsMatch || !brandMatch) return null;
       return {
         brand: brandMatch[1],
