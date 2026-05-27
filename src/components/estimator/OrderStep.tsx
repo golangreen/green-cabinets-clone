@@ -37,11 +37,12 @@ function FieldLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
   );
 }
 
-const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, onBack }) => {
+const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, selectedFinish, onFinishChange, onBack }) => {
   const [form, setForm] = useState<OrderForm>({
     name: '', phone: '', email: '', address: '', installDate: '', notes: '',
-    doorStyle: '', finish: '',
+    doorStyle: '', finish: selectedFinish ?? '',
   });
+
   const [errors, setErrors] = useState<Partial<OrderForm>>({});
   const [submitting, setSubmitting] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
