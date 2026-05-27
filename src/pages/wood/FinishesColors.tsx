@@ -23,6 +23,11 @@ const FinishesColors = () => {
           content="Browse real laminate, veneer & stone panels from Tafisa, Shinnoki, Egger, Wilsonart, AGT & Raphael Stone. Save favorites and request a quote."
         />
         <link rel="canonical" href="https://greencabinetsny.com/finishes-colors" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://greencabinetsny.com/finishes-colors" />
+        <meta property="og:title" content="Cabinet Finishes & Colors — Real Panels | Green Cabinets NY" />
+        <meta property="og:description" content="Browse real laminate, veneer & stone panels from Tafisa, Shinnoki, Egger, Wilsonart, AGT & Raphael Stone. Save favorites and request a quote." />
+        <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "HowTo",

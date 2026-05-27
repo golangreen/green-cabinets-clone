@@ -50,6 +50,7 @@ const Shop = () => {
         <meta property="og:description" content="Premium cabinet handles, hardware, and accessories shipped from our Brooklyn shop. Built to match Green Cabinets custom builds." />
         <meta property="og:url" content="https://greencabinetsny.com/shop" />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "CollectionPage",
