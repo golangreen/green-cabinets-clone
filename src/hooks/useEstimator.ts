@@ -195,7 +195,7 @@ export function useEstimator() {
   };
 
   const costs = selectedCabinets.length > 0 || customLineItems.length > 0
-    ? calculateCosts(selectedCabinets, location, customLineItems, delivery, installation, discount, hardware, addOns, collection)
+    ? calculateCosts(selectedCabinets, location, customLineItems, delivery, installation, discount, hardware, addOns, collection, selectedFinish)
     : null;
 
   const canSave = step >= 3;
