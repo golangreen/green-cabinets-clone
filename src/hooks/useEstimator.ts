@@ -216,6 +216,8 @@ export function useEstimator() {
     hardware, setHardware,
     addOns, setAddOns,
     collection, setCollection,
+    selectedFinish, setSelectedFinish,
+
     loadedQuoteId, saving,
     quoteName, setQuoteName,
     costs, canSave,
