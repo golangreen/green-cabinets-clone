@@ -137,10 +137,12 @@ export function calculateCosts(
   discount: DiscountConfig = { enabled: false, type: 'percentage', value: 0, label: '' },
   hardware: HardwareConfig = { type: 'none', applyAll: true, perCabinet: {} },
   addOns: AddOnsConfig = [],
-  collection: Collection = 'luxor'
+  collection: Collection = 'luxor',
+  selectedFinishId?: string,
 ): CostBreakdown {
-  const loc = pricingData[location];
-  const locationMultiplier = loc?.multiplier || 1.0;
+  const resolved = resolveStyleMultiplier(location, selectedFinishId);
+  const locationMultiplier = resolved.multiplier;
+
 
   const items = selectedCabinets
     .filter((sc) => sc.qty > 0)
