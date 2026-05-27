@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Check, Search } from 'lucide-react';
+import { Check, Search, AlertTriangle } from 'lucide-react';
 import {
   DOOR_STYLES,
   FINISHES,
@@ -7,6 +7,7 @@ import {
   FINISH_CATEGORY_LABELS,
   type FinishCategory,
 } from '@/lib/estimator/finishes-data';
+import { isFinishAllowedForDoor, checkCompatibility } from '@/lib/estimator/compatibility';
 
 interface FinishPickerProps {
   selectedDoorStyle: string;
@@ -139,15 +140,23 @@ export default function FinishPicker({
           {visibleFinishes.map(finish => {
             const isSelected = selectedFinish === finish.id;
             const isLight = isLightColor(finish.hex);
+            const allowed = isFinishAllowedForDoor(finish, selectedDoorStyle);
 
             return (
               <button
                 key={finish.id}
                 type="button"
-                onClick={() => onFinishChange(finish.id)}
-                title={[finish.brand, finish.name, ...(finish.codes ?? [])].filter(Boolean).join(' — ')}
-                className={`group flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all active:scale-95 ${
-                  isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'hover:bg-accent/50'
+                onClick={() => allowed && onFinishChange(finish.id)}
+                disabled={!allowed}
+                title={
+                  allowed
+                    ? [finish.brand, finish.name, ...(finish.codes ?? [])].filter(Boolean).join(' — ')
+                    : `Not available with selected door style — ${finish.brand ?? finish.name} requires a different door.`
+                }
+                className={`group flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all ${
+                  !allowed
+                    ? 'opacity-40 cursor-not-allowed'
+                    : `active:scale-95 ${isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'hover:bg-accent/50'}`
                 }`}
               >
                 <div
@@ -171,8 +180,13 @@ export default function FinishPicker({
                       </div>
                     </div>
                   )}
-                  {finish.popular && !isSelected && (
+                  {finish.popular && !isSelected && allowed && (
                     <div className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background" />
+                  )}
+                  {!allowed && (
+                    <div className="absolute inset-0 bg-background/40 flex items-center justify-center">
+                      <div className="w-0.5 h-12 bg-destructive/70 rotate-45 rounded-full" />
+                    </div>
                   )}
                 </div>
                 <span className="text-[10px] text-center leading-tight text-muted-foreground group-hover:text-foreground transition-colors line-clamp-2 w-full">
@@ -198,6 +212,17 @@ export default function FinishPicker({
             {selectedFinishObj.note && <p>{selectedFinishObj.note}</p>}
           </div>
         )}
+
+        {(() => {
+          const compat = checkCompatibility(selectedDoorStyle, selectedFinish);
+          if (compat.ok || !compat.reason) return null;
+          return (
+            <div className="mt-2 flex items-start gap-2 text-xs bg-destructive/10 border border-destructive/30 text-destructive rounded-lg px-3 py-2">
+              <AlertTriangle size={14} className="shrink-0 mt-0.5" />
+              <span>{compat.reason}</span>
+            </div>
+          );
+        })()}
 
         {errorFinish && <p className="text-xs text-destructive mt-2">{errorFinish}</p>}
 

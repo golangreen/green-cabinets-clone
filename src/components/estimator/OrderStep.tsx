@@ -6,6 +6,7 @@ import { fmt } from '@/lib/estimator/utils';
 import { callEdgeFunction } from '@/lib/estimator/call-edge-function';
 import FinishPicker from './FinishPicker';
 import { getFinishById, getDoorStyleById } from '@/lib/estimator/finishes-data';
+import { checkCompatibility, isFinishAllowedForDoor } from '@/lib/estimator/compatibility';
 
 interface OrderForm {
   name: string;
@@ -61,6 +62,10 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
     if (!form.address.trim())   errs.address   = 'Delivery address is required';
     if (!form.doorStyle)        errs.doorStyle = 'Please select a door style';
     if (!form.finish)           errs.finish    = 'Please select a finish';
+    if (form.doorStyle && form.finish) {
+      const compat = checkCompatibility(form.doorStyle, form.finish);
+      if (!compat.ok) errs.finish = compat.reason;
+    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -279,8 +284,12 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
             selectedDoorStyle={form.doorStyle}
             selectedFinish={form.finish}
             onDoorStyleChange={id => {
-              setForm(prev => ({ ...prev, doorStyle: id }));
-              if (errors.doorStyle) setErrors(prev => ({ ...prev, doorStyle: undefined }));
+              setForm(prev => {
+                const finishObj = prev.finish ? getFinishById(prev.finish) : undefined;
+                const keepFinish = !finishObj || isFinishAllowedForDoor(finishObj, id);
+                return { ...prev, doorStyle: id, finish: keepFinish ? prev.finish : '' };
+              });
+              setErrors(prev => ({ ...prev, doorStyle: undefined, finish: undefined }));
             }}
             onFinishChange={id => {
               setForm(prev => ({ ...prev, finish: id }));
