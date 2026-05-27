@@ -22,8 +22,11 @@ interface OrderStepProps {
   costs: CostBreakdown;
   collection: Collection;
   location: string;
+  selectedFinish?: string;
+  onFinishChange?: (id: string) => void;
   onBack: () => void;
 }
+
 
 function FieldLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
