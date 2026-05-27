@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useFileAnalyzer } from '@/hooks/useFileAnalyzer';
 import { fileToBase64 } from '@/lib/estimator/utils';
+import { getFinishById } from '@/lib/estimator/finishes-data';
+
 
 export function useEstimator() {
   const { user, signOut } = useAuth();
@@ -104,8 +106,10 @@ export function useEstimator() {
     setDiscount((data as any).discount || { enabled: false, type: 'percentage', value: 0, label: '' });
     setHardware((data as any).hardware || { type: 'none', applyAll: true, perCabinet: {} });
     setAddOns((data as any).add_ons || []);
+    setSelectedFinish((data as any).selected_finish?.id || '');
     setQuoteName(data.name || '');
     setLoadedQuoteId(id);
+
 
     if ((data.selected_cabinets as any[])?.length > 0) {
       setStep(3);
@@ -142,9 +146,21 @@ export function useEstimator() {
       discount: discount as any,
       hardware: hardware as any,
       add_ons: addOns as any,
+      selected_finish: (() => {
+        const f = selectedFinish ? getFinishById(selectedFinish) : undefined;
+        return f ? {
+          id: f.id,
+          name: f.name,
+          brand: f.brand ?? null,
+          category: f.category,
+          codes: f.codes ?? [],
+          finishTexture: f.finishTexture ?? null,
+        } : null;
+      })() as any,
       grand_total: costs?.grandTotal ?? null,
       updated_at: new Date().toISOString(),
     };
+
 
     try {
       if (loadedQuoteId) {
