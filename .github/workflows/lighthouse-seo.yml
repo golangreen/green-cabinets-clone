@@ -1,0 +1,57 @@
+name: SEO Regression (Lighthouse)
+
+# Re-scans key public pages on each push to main (after the Lovable CDN flips)
+# and on PRs. Fails the run if Lighthouse SEO/Accessibility/Performance fall
+# below thresholds or if LCP / color-contrast regress past their budgets.
+#
+# Configure thresholds in .lighthouserc.json. Pages list lives there too.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 8 * * *'   # daily 08:00 UTC
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Wait for production deploy to flip
+        # Lovable auto-publishes on push to main; give the CDN time before scanning.
+        if: github.event_name == 'push'
+        run: |
+          for i in $(seq 1 30); do
+            sleep 10
+            if curl -sf https://greencabinetsny.com/robots.txt | grep -q "Disallow: /admin"; then
+              echo "✓ Live deploy detected"
+              exit 0
+            fi
+            echo "…waiting for deploy ($i/30)"
+          done
+          echo "::warning::Deploy did not flip within 5min — scanning anyway"
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.14.x
+
+      - name: Run Lighthouse CI
+        run: lhci autorun --config=.lighthouserc.json
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          retention-days: 14

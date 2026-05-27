@@ -1,0 +1,47 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "https://greencabinetsny.com/",
+        "https://greencabinetsny.com/gallery",
+        "https://greencabinetsny.com/shop",
+        "https://greencabinetsny.com/finishes-colors",
+        "https://greencabinetsny.com/wood-species",
+        "https://greencabinetsny.com/about",
+        "https://greencabinetsny.com/case-studies",
+        "https://greencabinetsny.com/best-wood-for-kitchen-cabinets"
+      ],
+      "numberOfRuns": 2,
+      "settings": {
+        "preset": "desktop",
+        "onlyCategories": ["performance", "accessibility", "seo", "best-practices"],
+        "skipAudits": ["uses-http2", "canonical"]
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:seo": ["error", { "minScore": 0.95 }],
+        "categories:accessibility": ["error", { "minScore": 0.9 }],
+        "categories:performance": ["warn", { "minScore": 0.7 }],
+        "categories:best-practices": ["warn", { "minScore": 0.85 }],
+
+        "largest-contentful-paint": ["error", { "maxNumericValue": 4000, "aggregationMethod": "median" }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1, "aggregationMethod": "median" }],
+        "total-blocking-time": ["warn", { "maxNumericValue": 500, "aggregationMethod": "median" }],
+
+        "color-contrast": ["error", { "minScore": 1 }],
+        "image-alt": ["error", { "minScore": 1 }],
+        "link-name": ["error", { "minScore": 1 }],
+        "button-name": ["error", { "minScore": 1 }],
+        "html-has-lang": ["error", { "minScore": 1 }],
+        "meta-description": ["error", { "minScore": 1 }],
+        "document-title": ["error", { "minScore": 1 }],
+        "hreflang": ["warn", { "minScore": 1 }],
+        "robots-txt": ["error", { "minScore": 1 }]
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}
