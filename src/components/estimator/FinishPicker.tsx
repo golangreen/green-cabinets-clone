@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Check, Search } from 'lucide-react';
+import { Check, Search, AlertTriangle } from 'lucide-react';
 import {
   DOOR_STYLES,
   FINISHES,
@@ -7,6 +7,7 @@ import {
   FINISH_CATEGORY_LABELS,
   type FinishCategory,
 } from '@/lib/estimator/finishes-data';
+import { isFinishAllowedForDoor, checkCompatibility } from '@/lib/estimator/compatibility';
 
 interface FinishPickerProps {
   selectedDoorStyle: string;
