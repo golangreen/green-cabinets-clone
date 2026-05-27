@@ -165,6 +165,7 @@ export default function Designer() {
         <meta property="og:description" content="Sketch your kitchen layout in the browser — walls, doors, windows, and cabinets. Get a custom quote from our Brooklyn shop." />
         <meta property="og:url" content="https://greencabinetsny.com/designer" />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
       </Helmet>
       <BreadcrumbSchema items={[{ name: "Home", url: "/" }, { name: "Room Designer", url: "/designer" }]} />
       {/* Top Navigation Bar */}
