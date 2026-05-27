@@ -213,6 +213,17 @@ export default function FinishPicker({
           </div>
         )}
 
+        {(() => {
+          const compat = checkCompatibility(selectedDoorStyle, selectedFinish);
+          if (compat.ok || !compat.reason) return null;
+          return (
+            <div className="mt-2 flex items-start gap-2 text-xs bg-destructive/10 border border-destructive/30 text-destructive rounded-lg px-3 py-2">
+              <AlertTriangle size={14} className="shrink-0 mt-0.5" />
+              <span>{compat.reason}</span>
+            </div>
+          );
+        })()}
+
         {errorFinish && <p className="text-xs text-destructive mt-2">{errorFinish}</p>}
 
         <p className="text-xs text-muted-foreground mt-2">
