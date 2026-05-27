@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useFileAnalyzer } from '@/hooks/useFileAnalyzer';
 import { fileToBase64 } from '@/lib/estimator/utils';
+import { getFinishById } from '@/lib/estimator/finishes-data';
+
 
 export function useEstimator() {
   const { user, signOut } = useAuth();
