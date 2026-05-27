@@ -407,6 +407,54 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          collection: string
+          created_at: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          delivery_address: string
+          grand_total: number
+          id: string
+          notes: string | null
+          order_number: string
+          preferred_install_date: string | null
+          quote_snapshot: Json
+          status: string
+        }
+        Insert: {
+          collection?: string
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          delivery_address: string
+          grand_total: number
+          id?: string
+          notes?: string | null
+          order_number: string
+          preferred_install_date?: string | null
+          quote_snapshot?: Json
+          status?: string
+        }
+        Update: {
+          collection?: string
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string
+          delivery_address?: string
+          grand_total?: number
+          id?: string
+          notes?: string | null
+          order_number?: string
+          preferred_install_date?: string | null
+          quote_snapshot?: Json
+          status?: string
+        }
+        Relationships: []
+      }
       performance_metrics: {
         Row: {
           connection_type: string | null
@@ -449,6 +497,24 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
       role_change_audit: {
         Row: {
           action: string
@@ -482,6 +548,75 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
           target_user_email?: string
           target_user_id?: string
+        }
+        Relationships: []
+      }
+      saved_quotes: {
+        Row: {
+          add_ons: Json
+          analysis: Json | null
+          created_at: string
+          custom_line_items: Json
+          customer_email: string | null
+          customer_name: string | null
+          delivery: Json
+          discount: Json
+          file_name: string
+          grand_total: number | null
+          hardware: Json
+          id: string
+          installation: Json
+          location: string
+          material_tier: string
+          name: string
+          project_notes: string | null
+          selected_cabinets: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          add_ons?: Json
+          analysis?: Json | null
+          created_at?: string
+          custom_line_items?: Json
+          customer_email?: string | null
+          customer_name?: string | null
+          delivery?: Json
+          discount?: Json
+          file_name?: string
+          grand_total?: number | null
+          hardware?: Json
+          id?: string
+          installation?: Json
+          location?: string
+          material_tier?: string
+          name?: string
+          project_notes?: string | null
+          selected_cabinets?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          add_ons?: Json
+          analysis?: Json | null
+          created_at?: string
+          custom_line_items?: Json
+          customer_email?: string | null
+          customer_name?: string | null
+          delivery?: Json
+          discount?: Json
+          file_name?: string
+          grand_total?: number | null
+          hardware?: Json
+          id?: string
+          installation?: Json
+          location?: string
+          material_tier?: string
+          name?: string
+          project_notes?: string | null
+          selected_cabinets?: Json
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
