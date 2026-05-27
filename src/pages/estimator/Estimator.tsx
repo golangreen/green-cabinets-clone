@@ -25,6 +25,8 @@ const Estimator = () => {
     hardware, setHardware,
     addOns, setAddOns,
     collection, setCollection,
+    selectedFinish, setSelectedFinish,
+
     loadedQuoteId, saving,
     quoteName, setQuoteName,
     costs, canSave,
@@ -172,9 +174,12 @@ const Estimator = () => {
               costs={costs}
               collection={collection}
               location={location}
+              selectedFinish={selectedFinish}
+              onFinishChange={setSelectedFinish}
               onBack={() => setStep(4)}
             />
           )}
+
         </div>
 
         <div className="mt-6 sm:mt-10 text-center text-xs sm:text-sm text-muted-foreground">

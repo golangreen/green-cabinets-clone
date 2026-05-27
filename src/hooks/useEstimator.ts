@@ -27,6 +27,8 @@ export function useEstimator() {
   const [hardware, setHardware] = useState<HardwareConfig>({ type: 'none', applyAll: true, perCabinet: {} });
   const [addOns, setAddOns] = useState<AddOnsConfig>([]);
   const [collection, setCollection] = useState<Collection>('luxor');
+  const [selectedFinish, setSelectedFinish] = useState<string>('');
+
   const [loadedQuoteId, setLoadedQuoteId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [quoteName, setQuoteName] = useState('');
@@ -122,7 +124,8 @@ export function useEstimator() {
 
     setSaving(true);
     const costs = selectedCabinets.length > 0 || customLineItems.length > 0
-      ? calculateCosts(selectedCabinets, location, customLineItems, delivery, installation, discount, hardware, addOns, collection)
+      ? calculateCosts(selectedCabinets, location, customLineItems, delivery, installation, discount, hardware, addOns, collection, selectedFinish)
+
       : null;
 
     const payload = {
@@ -192,7 +195,7 @@ export function useEstimator() {
   };
 
   const costs = selectedCabinets.length > 0 || customLineItems.length > 0
-    ? calculateCosts(selectedCabinets, location, customLineItems, delivery, installation, discount, hardware, addOns, collection)
+    ? calculateCosts(selectedCabinets, location, customLineItems, delivery, installation, discount, hardware, addOns, collection, selectedFinish)
     : null;
 
   const canSave = step >= 3;
@@ -213,6 +216,8 @@ export function useEstimator() {
     hardware, setHardware,
     addOns, setAddOns,
     collection, setCollection,
+    selectedFinish, setSelectedFinish,
+
     loadedQuoteId, saving,
     quoteName, setQuoteName,
     costs, canSave,

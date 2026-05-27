@@ -1,6 +1,9 @@
 // Location multipliers and cost calculation
 import { cabinetLookup, getCategoryGroup, sortCostItems } from '@/lib/estimator/catalog-data';
 import type { SelectedCabinet, CustomLineItem, DeliveryConfig, InstallationConfig, DiscountConfig, CostBreakdown, FinishSide, HardwareType, HardwareConfig, AddOnsConfig, AddOnId, Collection } from '@/lib/estimator/types';
+import { PANELS_BY_BRAND } from '@/data/finishes';
+import type { MaterialBrand } from '@/types/materials';
+import { getFinishById, type FinishOption } from '@/lib/estimator/finishes-data';
 
 // Re-export for backward compatibility
 export { getCategoryGroup, sortCostItems };
@@ -33,13 +36,85 @@ export const ADD_ON_OPTIONS: { id: AddOnId; name: string; description: string; p
   { id: 'led', name: 'LED Lighting', description: 'Under-cabinet LED strip lighting', pricePerFoot: 10 },
 ];
 
-export const pricingData: Record<string, { multiplier: number; name: string; description: string }> = {
-  shaker: { multiplier: 1.5, name: 'Shaker', description: 'Classic shaker-style doors — +50%' },
+// ── Brand → markup multiplier ────────────────────────────────────────
+// Markup applied on top of base cabinet pricing when the customer picks
+// a finish from a given supplier. Tune per supplier cost & margin.
+// Adding a new brand to PANELS_BY_BRAND with an entry here auto-wires it
+// into both LocationStep (style picker) and the cost calculator.
+export const BRAND_MULTIPLIERS: Record<MaterialBrand, number> = {
+  Tafisa: 2.0,
+  Shinnoki: 2.5,
+  Egger: 2.2,
+  Wilsonart: 1.9,
+  AGT: 2.1,
+  'Raphael Stone': 3.2,
+};
+
+const BRAND_DESCRIPTIONS: Record<MaterialBrand, string> = {
+  Tafisa: 'TFL laminate panels — Canadian-made, 100+ decors',
+  Shinnoki: 'Premium real-wood veneer panels (Belgium)',
+  Egger: 'European decorative surfaces — wood & stone looks',
+  Wilsonart: 'High-pressure laminate — durable & color-rich',
+  AGT: 'High-gloss & matte acrylic panels (Turkey)',
+  'Raphael Stone': 'Engineered stone slabs — fronts & countertops',
+};
+
+// Auto-build brand entries from the central panel registry, so every
+// supplier shows up in LocationStep with the correct markup.
+const BRAND_PRICING: Record<string, { multiplier: number; name: string; description: string; brand?: MaterialBrand }> =
+  Object.fromEntries(
+    (Object.keys(PANELS_BY_BRAND) as MaterialBrand[])
+      .filter(b => PANELS_BY_BRAND[b].length > 0)
+      .map(b => {
+        const m = BRAND_MULTIPLIERS[b] ?? 2.0;
+        const pct = Math.round((m - 1) * 100);
+        return [
+          b.toLowerCase().replace(/\s+/g, '-'),
+          {
+            multiplier: m,
+            name: b,
+            description: `${BRAND_DESCRIPTIONS[b]} — +${pct}%`,
+            brand: b,
+          },
+        ];
+      })
+  );
+
+export const pricingData: Record<string, { multiplier: number; name: string; description: string; brand?: MaterialBrand }> = {
+  shaker: { multiplier: 1.5, name: 'Shaker (Painted)', description: 'Classic shaker doors, in-house paint — +50%' },
   'slim-shaker': { multiplier: 2.25, name: 'Slim Shaker', description: 'Narrow-rail shaker doors — +125%' },
-  tafisa: { multiplier: 2.0, name: 'Tafisa', description: 'Tafisa laminate finish — +100%' },
-  shinnoki: { multiplier: 2.5, name: 'Shinnoki', description: 'Premium Shinnoki veneer — +150%' },
+  ...BRAND_PRICING,
   custom: { multiplier: 3.0, name: 'Custom', description: 'Fully custom build — +200%' },
 };
+
+/** Look up the pricing key matching a finish's brand, if any. */
+export function pricingKeyForBrand(brand?: string): string | undefined {
+  if (!brand) return undefined;
+  const key = brand.toLowerCase().replace(/\s+/g, '-');
+  return pricingData[key] ? key : undefined;
+}
+
+/**
+ * Resolve the effective style multiplier. If the user has picked a
+ * supplier finish, that brand's markup wins; otherwise fall back to the
+ * door-style selection.
+ */
+export function resolveStyleMultiplier(locationKey: string, selectedFinishId?: string): {
+  multiplier: number;
+  name: string;
+  key: string;
+} {
+  if (selectedFinishId) {
+    const finish: FinishOption | undefined = getFinishById(selectedFinishId);
+    const key = pricingKeyForBrand(finish?.brand);
+    if (key) {
+      const e = pricingData[key];
+      return { multiplier: e.multiplier, name: `${e.name} — ${finish!.name}`, key };
+    }
+  }
+  const e = pricingData[locationKey];
+  return { multiplier: e?.multiplier ?? 1.0, name: e?.name ?? locationKey, key: locationKey };
+}
 
 export const DELIVERY_OPTIONS: Record<DeliveryConfig['option'], { name: string; description: string }> = {
   none: { name: 'No Delivery', description: 'Customer pickup from warehouse' },
@@ -62,10 +137,12 @@ export function calculateCosts(
   discount: DiscountConfig = { enabled: false, type: 'percentage', value: 0, label: '' },
   hardware: HardwareConfig = { type: 'none', applyAll: true, perCabinet: {} },
   addOns: AddOnsConfig = [],
-  collection: Collection = 'luxor'
+  collection: Collection = 'luxor',
+  selectedFinishId?: string,
 ): CostBreakdown {
-  const loc = pricingData[location];
-  const locationMultiplier = loc?.multiplier || 1.0;
+  const resolved = resolveStyleMultiplier(location, selectedFinishId);
+  const locationMultiplier = resolved.multiplier;
+
 
   const items = selectedCabinets
     .filter((sc) => sc.qty > 0)
@@ -190,6 +267,6 @@ export function calculateCosts(
     discountLabel: discount.enabled && discount.value > 0 ? discount.label || 'Discount' : '',
     grandTotal: preDiscountTotal - discountAmount,
     locationMultiplier,
-    locationName: loc?.name || location,
+    locationName: resolved.name,
   };
 }

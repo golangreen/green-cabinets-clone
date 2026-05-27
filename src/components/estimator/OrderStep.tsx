@@ -22,8 +22,11 @@ interface OrderStepProps {
   costs: CostBreakdown;
   collection: Collection;
   location: string;
+  selectedFinish?: string;
+  onFinishChange?: (id: string) => void;
   onBack: () => void;
 }
+
 
 function FieldLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
@@ -34,11 +37,12 @@ function FieldLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
   );
 }
 
-const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, onBack }) => {
+const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, selectedFinish, onFinishChange, onBack }) => {
   const [form, setForm] = useState<OrderForm>({
     name: '', phone: '', email: '', address: '', installDate: '', notes: '',
-    doorStyle: '', finish: '',
+    doorStyle: '', finish: selectedFinish ?? '',
   });
+
   const [errors, setErrors] = useState<Partial<OrderForm>>({});
   const [submitting, setSubmitting] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
@@ -280,8 +284,10 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, onBa
             }}
             onFinishChange={id => {
               setForm(prev => ({ ...prev, finish: id }));
+              onFinishChange?.(id);
               if (errors.finish) setErrors(prev => ({ ...prev, finish: undefined }));
             }}
+
             errorDoorStyle={errors.doorStyle}
             errorFinish={errors.finish}
           />
