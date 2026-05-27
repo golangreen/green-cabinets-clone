@@ -144,9 +144,21 @@ export function useEstimator() {
       discount: discount as any,
       hardware: hardware as any,
       add_ons: addOns as any,
+      selected_finish: (() => {
+        const f = selectedFinish ? getFinishById(selectedFinish) : undefined;
+        return f ? {
+          id: f.id,
+          name: f.name,
+          brand: f.brand ?? null,
+          category: f.category,
+          codes: f.codes ?? [],
+          finishTexture: f.finishTexture ?? null,
+        } : null;
+      })() as any,
       grand_total: costs?.grandTotal ?? null,
       updated_at: new Date().toISOString(),
     };
+
 
     try {
       if (loadedQuoteId) {
