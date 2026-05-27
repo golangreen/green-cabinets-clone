@@ -6,6 +6,7 @@ import { fmt } from '@/lib/estimator/utils';
 import { callEdgeFunction } from '@/lib/estimator/call-edge-function';
 import FinishPicker from './FinishPicker';
 import { getFinishById, getDoorStyleById } from '@/lib/estimator/finishes-data';
+import { checkCompatibility, isFinishAllowedForDoor } from '@/lib/estimator/compatibility';
 
 interface OrderForm {
   name: string;
