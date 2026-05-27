@@ -267,6 +267,6 @@ export function calculateCosts(
     discountLabel: discount.enabled && discount.value > 0 ? discount.label || 'Discount' : '',
     grandTotal: preDiscountTotal - discountAmount,
     locationMultiplier,
-    locationName: loc?.name || location,
+    locationName: resolved.name,
   };
 }
