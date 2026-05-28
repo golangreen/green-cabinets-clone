@@ -1,13 +1,20 @@
 import React, { useState, useMemo } from 'react';
-import { Check, Search, AlertTriangle } from 'lucide-react';
+import { Check, Search, AlertTriangle, Wand2 } from 'lucide-react';
 import {
   DOOR_STYLES,
   FINISHES,
   FINISH_CATEGORIES,
   FINISH_CATEGORY_LABELS,
+  getDoorStyleById,
   type FinishCategory,
 } from '@/lib/estimator/finishes-data';
-import { isFinishAllowedForDoor, checkCompatibility } from '@/lib/estimator/compatibility';
+import {
+  isFinishAllowedForDoor,
+  checkCompatibility,
+  allowedDoorStylesForFinish,
+  getFinishTier,
+  getTierLabel,
+} from '@/lib/estimator/compatibility';
 
 interface FinishPickerProps {
   selectedDoorStyle: string;
