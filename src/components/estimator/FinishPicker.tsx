@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Check, Search, AlertTriangle, Wand2 } from 'lucide-react';
 import {
   DOOR_STYLES,
@@ -15,6 +15,8 @@ import {
   getFinishTier,
   getTierLabel,
 } from '@/lib/estimator/compatibility';
+import { logValidationFailure } from '@/services/validationFailuresService';
+
 
 interface FinishPickerProps {
   selectedDoorStyle: string;
@@ -37,6 +39,14 @@ export default function FinishPicker({
   const [query, setQuery] = useState('');
 
   const selectedFinishObj = useMemo(() => FINISHES.find(f => f.id === selectedFinish), [selectedFinish]);
+
+  // Log incompatible combinations the user actually lands on (dedup per session).
+  useEffect(() => {
+    if (selectedDoorStyle && selectedFinish) {
+      void logValidationFailure(selectedDoorStyle, selectedFinish);
+    }
+  }, [selectedDoorStyle, selectedFinish]);
+
 
   const visibleFinishes = useMemo(() => {
     const base = FINISHES.filter(f => f.category === activeCategory);

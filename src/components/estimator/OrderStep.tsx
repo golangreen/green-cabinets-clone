@@ -7,6 +7,7 @@ import { callEdgeFunction } from '@/lib/estimator/call-edge-function';
 import FinishPicker from './FinishPicker';
 import { getFinishById, getDoorStyleById } from '@/lib/estimator/finishes-data';
 import { checkCompatibility, isFinishAllowedForDoor } from '@/lib/estimator/compatibility';
+import { logValidationFailure } from '@/services/validationFailuresService';
 
 interface OrderForm {
   name: string;
@@ -64,7 +65,10 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
     if (!form.finish)           errs.finish    = 'Please select a finish';
     if (form.doorStyle && form.finish) {
       const compat = checkCompatibility(form.doorStyle, form.finish);
-      if (!compat.ok) errs.finish = compat.reason;
+      if (!compat.ok) {
+        errs.finish = compat.reason;
+        void logValidationFailure(form.doorStyle, form.finish);
+      }
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
