@@ -137,12 +137,18 @@ export function getTierIncompatibilityReason(tier: MaterialTier): string {
 
 
 function allowedDoorsFor(finish: FinishOption): DoorStyleId[] {
+  // 1. Per-finish override wins
+  const finishOverride = FINISH_DOOR_RULES[finish.id];
+  if (finishOverride) return finishOverride;
+  // 2. Then brand override
   if (finish.brand) {
     const override = BRAND_DOOR_RULES[finish.brand as MaterialBrand];
     if (override) return override;
   }
+  // 3. Fall back to tier rule
   return TIER_DOOR_RULES[getFinishTier(finish)];
 }
+
 
 // ── Public API ────────────────────────────────────────────────────────
 export interface CompatResult {
