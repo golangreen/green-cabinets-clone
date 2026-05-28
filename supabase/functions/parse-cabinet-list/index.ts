@@ -68,8 +68,8 @@ serve(async (req) => {
       throw new Error("Provide either textContent or images");
     }
 
-    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
     const systemPrompt = `You are a cabinet order list parser for Green Cabinets NY. Your job is to extract every cabinet model number and quantity from the input — whether it is a typed list, a scanned document, a 2020 Design export, or a supplier quote. Accuracy is critical: every model and quantity must be correct.
 
