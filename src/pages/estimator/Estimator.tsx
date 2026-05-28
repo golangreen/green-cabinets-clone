@@ -128,6 +128,8 @@ const Estimator = () => {
             <LocationStep
               location={location}
               setLocation={setLocation}
+              selectedFinish={selectedFinish}
+              setSelectedFinish={setSelectedFinish}
               onBack={() => setStep(1)}
               onNext={analysis ? () => setStep(3) : (async () => { await analyzeBlueprint(); setStep(3); })}
               onSkipToManual={() => {
