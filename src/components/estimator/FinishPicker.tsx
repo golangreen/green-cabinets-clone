@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Check, Search, AlertTriangle, Wand2 } from 'lucide-react';
 import {
   DOOR_STYLES,
@@ -15,6 +15,8 @@ import {
   getFinishTier,
   getTierLabel,
 } from '@/lib/estimator/compatibility';
+import { logValidationFailure } from '@/services/validationFailuresService';
+
 
 interface FinishPickerProps {
   selectedDoorStyle: string;
