@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { DoorStyleId, MaterialTier } from '@/lib/estimator/compatibility';
 import type { MaterialBrand } from '@/types/materials';
 
-export type RuleScope = 'brand' | 'tier';
+export type RuleScope = 'brand' | 'tier' | 'finish';
 
 export interface CompatibilityRuleRow {
   id: string;
