@@ -184,6 +184,17 @@ export default function CompatibilityRulesAdmin() {
               resetting={removeMutation.isPending}
               inheritedHint
             />
+
+            <FinishOverridesSection
+              state={state}
+              setState={setState}
+              onToggle={toggleDoor}
+              onNotes={setNotes}
+              onSave={handleSave}
+              onReset={handleReset}
+              saving={saveMutation.isPending}
+              resetting={removeMutation.isPending}
+            />
           </div>
         )}
       </div>
