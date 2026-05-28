@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import { useCompatibilityRulesSync } from "@/hooks/useCompatibilityRulesSync";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/layout/HashScrollHandler";
 import LegacyRedirect from "@/components/layout/LegacyRedirect";
