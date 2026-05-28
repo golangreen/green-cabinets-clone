@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import { useCompatibilityRulesSync } from "@/hooks/useCompatibilityRulesSync";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/layout/HashScrollHandler";
 import LegacyRedirect from "@/components/layout/LegacyRedirect";
@@ -32,6 +33,7 @@ const NeighborhoodGalleryAdmin = lazy(() => import("./pages/admin/NeighborhoodGa
 const SerpPreviewPage = lazy(() => import("./pages/admin/SerpPreviewPage"));
 const GscIndexingPage = lazy(() => import("./pages/admin/GscIndexingPage"));
 const SeoDashboard = lazy(() => import("./pages/admin/SeoDashboard"));
+const CompatibilityRulesAdmin = lazy(() => import("./pages/admin/CompatibilityRulesAdmin"));
 
 const Borough = lazy(() => import("./pages/locations/Borough"));
 
@@ -54,6 +56,8 @@ const RouteFallback = () => (
 
 const App = () => {
   usePerformanceMonitor();
+  useCompatibilityRulesSync();
+
 
   return (
     <TooltipProvider>
@@ -96,6 +100,11 @@ const App = () => {
             <Route path="/admin/seo" element={
               <AdminRoute>
                 <SeoDashboard />
+              </AdminRoute>
+            } />
+            <Route path="/admin/compatibility" element={
+              <AdminRoute>
+                <CompatibilityRulesAdmin />
               </AdminRoute>
             } />
             {/* Legacy URL redirects → /custom-kitchen-cabinets-{slug} */}
