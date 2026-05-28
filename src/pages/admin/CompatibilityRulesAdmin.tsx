@@ -15,7 +15,7 @@ import {
   type DoorStyleId,
   type MaterialTier,
 } from '@/lib/estimator/compatibility';
-import { DOOR_STYLES } from '@/lib/estimator/finishes-data';
+import { DOOR_STYLES, FINISHES } from '@/lib/estimator/finishes-data';
 import { PANELS_BY_BRAND } from '@/data/finishes';
 import type { MaterialBrand } from '@/types/materials';
 
