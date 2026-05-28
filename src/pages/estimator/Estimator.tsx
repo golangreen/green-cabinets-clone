@@ -1,4 +1,5 @@
-import { Save, FolderOpen, LogIn, LogOut, User } from 'lucide-react';
+import { Save, FolderOpen, LogIn, LogOut, User, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Seo from '@/components/Seo';
 import StepIndicator from '@/components/estimator/StepIndicator';
 import UploadStep from '@/components/estimator/UploadStep';
@@ -41,6 +42,14 @@ const Estimator = () => {
         path="/estimator"
       />
       <div className="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
+        <div className="mb-4">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft size={16} /> Back to site
+          </Link>
+        </div>
         <div className="text-center mb-4 sm:mb-6">
           <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
             Blueprint Cost Estimator
