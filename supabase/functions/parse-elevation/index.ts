@@ -621,7 +621,8 @@ Use the extract_cabinets tool to return your findings. Fill every field carefull
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Lovable-API-Key": LOVABLE_API_KEY,
+        "X-Lovable-AIG-SDK": "direct-fetch",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -718,22 +719,29 @@ Use the extract_cabinets tool to return your findings. Fill every field carefull
       throw new Error(`AI request failed (${response.status}): ${errText}`);
     }
 
-    const aiData = await response.json();
-    const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-
-    if (!toolCall?.function?.arguments) {
-      console.error("No tool_call in response:", JSON.stringify(aiData));
-      return new Response(
-        JSON.stringify({ error: "AI could not extract cabinets from this image. Try a clearer blueprint scan." }),
-        { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
     let parsed: any;
+    const aiData = await response.json();
+    const message = aiData.choices?.[0]?.message;
+    const toolCall = message?.tool_calls?.[0];
+    const rawArgs = toolCall?.function?.arguments;
+
     try {
-      parsed = JSON.parse(toolCall.function.arguments);
+      if (rawArgs) {
+        parsed = JSON.parse(rawArgs);
+      } else {
+        const rawContent = typeof message?.content === "string" ? message.content : "";
+        const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          console.error("No tool_call or JSON content in response:", JSON.stringify(aiData));
+          return new Response(
+            JSON.stringify({ error: "AI could not extract cabinets from this image. Try a clearer blueprint scan." }),
+            { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+        parsed = JSON.parse(jsonMatch[0]);
+      }
     } catch (e) {
-      console.error("Failed to parse tool arguments:", toolCall.function.arguments);
+      console.error("Failed to parse AI extraction response:", rawArgs || message?.content);
       throw new Error("Invalid tool response from AI");
     }
 

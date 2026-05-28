@@ -17,7 +17,7 @@ interface ClassifiedFile {
 
 // ── Elevation result cache ────────────────────────────────────────────────────
 // Same file → same Claude result every time. Keyed by name+size+lastModified.
-const ELEV_CACHE_PREFIX = 'bp2b-elev-v2-';
+const ELEV_CACHE_PREFIX = 'bp2b-elev-v3-';
 const ELEV_CACHE_TTL = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 function elevFingerprint(file: File): string {
