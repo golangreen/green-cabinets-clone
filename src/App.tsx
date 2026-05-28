@@ -34,6 +34,7 @@ const SerpPreviewPage = lazy(() => import("./pages/admin/SerpPreviewPage"));
 const GscIndexingPage = lazy(() => import("./pages/admin/GscIndexingPage"));
 const SeoDashboard = lazy(() => import("./pages/admin/SeoDashboard"));
 const CompatibilityRulesAdmin = lazy(() => import("./pages/admin/CompatibilityRulesAdmin"));
+const EstimatorFailuresAdmin = lazy(() => import("./pages/admin/EstimatorFailuresAdmin"));
 
 const Borough = lazy(() => import("./pages/locations/Borough"));
 
