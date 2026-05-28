@@ -59,11 +59,40 @@ const TIER_LABELS: Record<MaterialTier, string> = {
 };
 
 /**
- * Per-brand door-style overrides. Empty by default — only fill in when a
- * brand deviates from its tier's standard rule (e.g. a supplier that offers
- * shaker-millable melamine doors).
+ * Per-brand door-style overrides. Patched at runtime from the
+ * `compatibility_rules` DB table via `applyCompatibilityOverrides`.
  */
 const BRAND_DOOR_RULES: Partial<Record<MaterialBrand, DoorStyleId[]>> = {};
+
+// ── Runtime override API (DB → in-memory) ─────────────────────────────
+export interface CompatibilityOverrides {
+  tiers?: Partial<Record<MaterialTier, DoorStyleId[]>>;
+  brands?: Partial<Record<MaterialBrand, DoorStyleId[]>>;
+}
+
+/** Replace overrides with DB-sourced rules. Pass empty object to reset. */
+export function applyCompatibilityOverrides(overrides: CompatibilityOverrides): void {
+  // Reset tier rules to defaults, then apply
+  (Object.keys(DEFAULT_TIER_DOOR_RULES) as MaterialTier[]).forEach(t => {
+    TIER_DOOR_RULES[t] = overrides.tiers?.[t] ?? DEFAULT_TIER_DOOR_RULES[t];
+  });
+  // Reset brand overrides, then apply
+  (Object.keys(BRAND_DOOR_RULES) as MaterialBrand[]).forEach(b => delete BRAND_DOOR_RULES[b]);
+  if (overrides.brands) {
+    for (const [brand, doors] of Object.entries(overrides.brands)) {
+      if (doors && doors.length) BRAND_DOOR_RULES[brand as MaterialBrand] = doors;
+    }
+  }
+}
+
+/** Current effective rules (for admin UI display). */
+export function getEffectiveCompatibilityRules() {
+  return {
+    tiers: { ...TIER_DOOR_RULES } as Record<MaterialTier, DoorStyleId[]>,
+    brands: { ...BRAND_DOOR_RULES } as Partial<Record<MaterialBrand, DoorStyleId[]>>,
+    defaults: DEFAULT_TIER_DOOR_RULES,
+  };
+}
 
 // ── Tier resolution ───────────────────────────────────────────────────
 export function getFinishTier(finish: FinishOption): MaterialTier {
