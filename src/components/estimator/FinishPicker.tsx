@@ -238,20 +238,36 @@ export default function FinishPicker({
           const allowedNames = allowed.map(id => getDoorStyleById(id)?.name ?? id);
           const currentDoorName = getDoorStyleById(selectedDoorStyle)?.name ?? selectedDoorStyle;
           const finishObj = FINISHES.find(f => f.id === selectedFinish);
-          const tierLabel = finishObj ? getTierLabel(getFinishTier(finishObj)) : compat.tier;
+          const tier = finishObj ? getFinishTier(finishObj) : compat.tier;
+          const tierLabel = tier ? getTierLabel(tier) : '';
+          const whyCopy = tier ? getTierIncompatibilityReason(tier) : compat.reason;
           const finishLabel = finishObj
             ? (finishObj.brand ? `${finishObj.brand} — ${finishObj.name}` : finishObj.name)
             : 'This finish';
 
+          // Suggest a closely-related compatible finish (same category, current door allowed).
+          const alt = FINISHES.find(f =>
+            f.id !== selectedFinish &&
+            f.category === finishObj?.category &&
+            isFinishAllowedForDoor(f, selectedDoorStyle),
+          ) ?? FINISHES.find(f =>
+            f.category === 'painted' && isFinishAllowedForDoor(f, selectedDoorStyle),
+          );
+
           return (
-            <div className="mt-3 flex gap-2.5 text-xs bg-destructive/10 border border-destructive/30 text-destructive rounded-lg px-3 py-2.5">
-              <AlertTriangle size={15} className="shrink-0 mt-0.5" />
+            <div
+              role="alert"
+              aria-live="polite"
+              className="mt-3 flex gap-2.5 text-xs bg-destructive/10 border border-destructive/30 text-destructive rounded-lg px-3 py-2.5"
+            >
+              <AlertTriangle size={15} className="shrink-0 mt-0.5" aria-hidden />
               <div className="space-y-1.5 min-w-0 flex-1">
                 <p className="font-semibold leading-snug">
                   {finishLabel} isn't compatible with {currentDoorName} doors.
                 </p>
                 <p className="text-destructive/90 leading-snug">
-                  <span className="font-medium">Why:</span> {tierLabel} panels can only be fabricated as a slab — they can't be milled into shaker rails or raised profiles.
+                  <span className="font-medium">Why:</span> {whyCopy}
+                  {tierLabel && <span className="opacity-70"> ({tierLabel})</span>}
                 </p>
                 <p className="text-destructive/90 leading-snug">
                   <span className="font-medium">Fix:</span> switch the door style to{' '}
@@ -263,16 +279,30 @@ export default function FinishPicker({
                         onClick={() => onDoorStyleChange(allowed[i])}
                         className="inline-flex items-center gap-1 font-semibold underline underline-offset-2 hover:no-underline"
                       >
-                        <Wand2 size={11} /> {name}
+                        <Wand2 size={11} aria-hidden /> {name}
                       </button>
                     </React.Fragment>
                   ))}
-                  {' '}— or pick a painted/wood finish to keep {currentDoorName}.
+                  {alt && (
+                    <>
+                      {' '}— or keep {currentDoorName} and use{' '}
+                      <button
+                        type="button"
+                        onClick={() => onFinishChange(alt.id)}
+                        className="inline-flex items-center gap-1 font-semibold underline underline-offset-2 hover:no-underline"
+                      >
+                        <Wand2 size={11} aria-hidden />
+                        {alt.brand ? `${alt.brand} — ${alt.name}` : alt.name}
+                      </button>
+                      .
+                    </>
+                  )}
                 </p>
               </div>
             </div>
           );
         })()}
+
 
         {errorFinish && <p className="text-xs text-destructive mt-2">{errorFinish}</p>}
 
