@@ -55,6 +55,8 @@ const RouteFallback = () => (
 
 const App = () => {
   usePerformanceMonitor();
+  useCompatibilityRulesSync();
+
 
   return (
     <TooltipProvider>
