@@ -65,7 +65,10 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
     if (!form.finish)           errs.finish    = 'Please select a finish';
     if (form.doorStyle && form.finish) {
       const compat = checkCompatibility(form.doorStyle, form.finish);
-      if (!compat.ok) errs.finish = compat.reason;
+      if (!compat.ok) {
+        errs.finish = compat.reason;
+        void logValidationFailure(form.doorStyle, form.finish);
+      }
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
