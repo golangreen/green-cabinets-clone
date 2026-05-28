@@ -105,6 +105,27 @@ export function getTierLabel(tier: MaterialTier): string {
   return TIER_LABELS[tier];
 }
 
+/** Plain-English "why" copy per tier — used in the estimator error UI. */
+const TIER_WHY: Record<MaterialTier, string> = {
+  painted:
+    "This finish has been restricted to specific door profiles for the current configuration.",
+  'solid-wood':
+    "This wood species has been restricted to specific door profiles for the current configuration.",
+  melamine:
+    "Melamine / TFL panels are pressed sheets — they can't be milled into shaker rails or raised profiles, only cut as a flat slab.",
+  hpl:
+    "High-pressure laminate is bonded to a flat substrate; the surface would crack if milled into rails or raised profiles.",
+  veneer:
+    "Real-wood veneer is a thin layer applied to a flat panel — milling shaker rails or raised profiles would tear the grain.",
+  stone:
+    "Engineered stone fronts are cut from a rigid slab and can't be milled into door profiles.",
+};
+
+export function getTierIncompatibilityReason(tier: MaterialTier): string {
+  return TIER_WHY[tier];
+}
+
+
 function allowedDoorsFor(finish: FinishOption): DoorStyleId[] {
   if (finish.brand) {
     const override = BRAND_DOOR_RULES[finish.brand as MaterialBrand];
