@@ -372,8 +372,8 @@ serve(async (req) => {
 
     if (images.length === 0) throw new Error("No elevation images provided");
 
-    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
     const systemPrompt = `You are a precision cabinet code extraction specialist for Green Cabinets NY, a professional kitchen and bath cabinet company in Brooklyn. Your job is to read every single cabinet model code from architectural drawings with 100% accuracy. EVERY ERROR costs real money — wrong model = wrong cabinet ordered. Read slowly, carefully, and verify.
 
