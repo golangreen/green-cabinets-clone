@@ -134,6 +134,39 @@ export type Database = {
         }
         Relationships: []
       }
+      compatibility_rules: {
+        Row: {
+          allowed_door_styles: string[]
+          created_at: string
+          id: string
+          key: string
+          notes: string | null
+          scope: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          allowed_door_styles?: string[]
+          created_at?: string
+          id?: string
+          key: string
+          notes?: string | null
+          scope: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          allowed_door_styles?: string[]
+          created_at?: string
+          id?: string
+          key?: string
+          notes?: string | null
+          scope?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       config_change_audit: {
         Row: {
           change_type: string
