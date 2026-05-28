@@ -158,7 +158,7 @@ export default function FinishPicker({
                 title={
                   allowed
                     ? [finish.brand, finish.name, ...(finish.codes ?? [])].filter(Boolean).join(' — ')
-                    : `Not available with selected door style — ${finish.brand ?? finish.name} requires a different door.`
+                    : `${getTierLabel(getFinishTier(finish))} — only available as ${allowedDoorStylesForFinish(finish.id).map(d => getDoorStyleById(d)?.name ?? d).join(', ')}. Change door style to enable.`
                 }
                 className={`group flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all ${
                   !allowed
