@@ -272,6 +272,39 @@ export type Database = {
         }
         Relationships: []
       }
+      estimator_validation_failures: {
+        Row: {
+          created_at: string
+          door_style: string
+          finish_brand: string | null
+          finish_id: string
+          id: string
+          material_tier: string | null
+          reason: string | null
+          session_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          door_style: string
+          finish_brand?: string | null
+          finish_id: string
+          id?: string
+          material_tier?: string | null
+          reason?: string | null
+          session_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          door_style?: string
+          finish_brand?: string | null
+          finish_id?: string
+          id?: string
+          material_tier?: string | null
+          reason?: string | null
+          session_id?: string | null
+        }
+        Relationships: []
+      }
       failed_login_attempts: {
         Row: {
           attempt_count: number
