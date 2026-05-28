@@ -102,6 +102,11 @@ const App = () => {
                 <SeoDashboard />
               </AdminRoute>
             } />
+            <Route path="/admin/compatibility" element={
+              <AdminRoute>
+                <CompatibilityRulesAdmin />
+              </AdminRoute>
+            } />
             {/* Legacy URL redirects → /custom-kitchen-cabinets-{slug} */}
             <Route path="/neighborhoods/:slug" element={<LegacyRedirect />} />
             <Route path="/neighborhood/:slug" element={<LegacyRedirect />} />
