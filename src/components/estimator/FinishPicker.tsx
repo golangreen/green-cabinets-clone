@@ -40,6 +40,14 @@ export default function FinishPicker({
 
   const selectedFinishObj = useMemo(() => FINISHES.find(f => f.id === selectedFinish), [selectedFinish]);
 
+  // Log incompatible combinations the user actually lands on (dedup per session).
+  useEffect(() => {
+    if (selectedDoorStyle && selectedFinish) {
+      void logValidationFailure(selectedDoorStyle, selectedFinish);
+    }
+  }, [selectedDoorStyle, selectedFinish]);
+
+
   const visibleFinishes = useMemo(() => {
     const base = FINISHES.filter(f => f.category === activeCategory);
     if (!query.trim()) return base;
