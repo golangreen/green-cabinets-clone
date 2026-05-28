@@ -14,6 +14,7 @@ import {
   allowedDoorStylesForFinish,
   getFinishTier,
   getTierLabel,
+  getTierIncompatibilityReason,
 } from '@/lib/estimator/compatibility';
 import { logValidationFailure } from '@/services/validationFailuresService';
 
