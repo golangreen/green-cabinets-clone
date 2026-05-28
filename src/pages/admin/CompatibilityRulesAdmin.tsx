@@ -62,6 +62,15 @@ export default function CompatibilityRulesAdmin() {
         dirty: false,
       };
     }
+    // Seed entries for every saved per-finish rule so they always render.
+    for (const r of rows.filter(r => r.scope === 'finish')) {
+      m[makeKey('finish', r.key)] = {
+        rowId: r.id,
+        allowed: new Set(r.allowed_door_styles as DoorStyleId[]),
+        notes: r.notes ?? '',
+        dirty: false,
+      };
+    }
     return m;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows]);
