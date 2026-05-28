@@ -64,23 +64,31 @@ const TIER_LABELS: Record<MaterialTier, string> = {
  */
 const BRAND_DOOR_RULES: Partial<Record<MaterialBrand, DoorStyleId[]>> = {};
 
+/** Per-finish-id door-style overrides — highest priority (finish > brand > tier). */
+const FINISH_DOOR_RULES: Record<string, DoorStyleId[]> = {};
+
 // ── Runtime override API (DB → in-memory) ─────────────────────────────
 export interface CompatibilityOverrides {
   tiers?: Partial<Record<MaterialTier, DoorStyleId[]>>;
   brands?: Partial<Record<MaterialBrand, DoorStyleId[]>>;
+  finishes?: Record<string, DoorStyleId[]>;
 }
 
 /** Replace overrides with DB-sourced rules. Pass empty object to reset. */
 export function applyCompatibilityOverrides(overrides: CompatibilityOverrides): void {
-  // Reset tier rules to defaults, then apply
   (Object.keys(DEFAULT_TIER_DOOR_RULES) as MaterialTier[]).forEach(t => {
     TIER_DOOR_RULES[t] = overrides.tiers?.[t] ?? DEFAULT_TIER_DOOR_RULES[t];
   });
-  // Reset brand overrides, then apply
   (Object.keys(BRAND_DOOR_RULES) as MaterialBrand[]).forEach(b => delete BRAND_DOOR_RULES[b]);
   if (overrides.brands) {
     for (const [brand, doors] of Object.entries(overrides.brands)) {
       if (doors && doors.length) BRAND_DOOR_RULES[brand as MaterialBrand] = doors;
+    }
+  }
+  Object.keys(FINISH_DOOR_RULES).forEach(k => delete FINISH_DOOR_RULES[k]);
+  if (overrides.finishes) {
+    for (const [id, doors] of Object.entries(overrides.finishes)) {
+      if (doors && doors.length) FINISH_DOOR_RULES[id] = doors;
     }
   }
 }
@@ -90,9 +98,11 @@ export function getEffectiveCompatibilityRules() {
   return {
     tiers: { ...TIER_DOOR_RULES } as Record<MaterialTier, DoorStyleId[]>,
     brands: { ...BRAND_DOOR_RULES } as Partial<Record<MaterialBrand, DoorStyleId[]>>,
+    finishes: { ...FINISH_DOOR_RULES } as Record<string, DoorStyleId[]>,
     defaults: DEFAULT_TIER_DOOR_RULES,
   };
 }
+
 
 // ── Tier resolution ───────────────────────────────────────────────────
 export function getFinishTier(finish: FinishOption): MaterialTier {
@@ -127,12 +137,18 @@ export function getTierIncompatibilityReason(tier: MaterialTier): string {
 
 
 function allowedDoorsFor(finish: FinishOption): DoorStyleId[] {
+  // 1. Per-finish override wins
+  const finishOverride = FINISH_DOOR_RULES[finish.id];
+  if (finishOverride) return finishOverride;
+  // 2. Then brand override
   if (finish.brand) {
     const override = BRAND_DOOR_RULES[finish.brand as MaterialBrand];
     if (override) return override;
   }
+  // 3. Fall back to tier rule
   return TIER_DOOR_RULES[getFinishTier(finish)];
 }
+
 
 // ── Public API ────────────────────────────────────────────────────────
 export interface CompatResult {

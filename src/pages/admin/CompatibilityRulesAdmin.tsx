@@ -15,7 +15,7 @@ import {
   type DoorStyleId,
   type MaterialTier,
 } from '@/lib/estimator/compatibility';
-import { DOOR_STYLES } from '@/lib/estimator/finishes-data';
+import { DOOR_STYLES, FINISHES } from '@/lib/estimator/finishes-data';
 import { PANELS_BY_BRAND } from '@/data/finishes';
 import type { MaterialBrand } from '@/types/materials';
 
@@ -59,6 +59,15 @@ export default function CompatibilityRulesAdmin() {
         rowId: r?.id,
         allowed: new Set((r?.allowed_door_styles ?? []) as DoorStyleId[]),
         notes: r?.notes ?? '',
+        dirty: false,
+      };
+    }
+    // Seed entries for every saved per-finish rule so they always render.
+    for (const r of rows.filter(r => r.scope === 'finish')) {
+      m[makeKey('finish', r.key)] = {
+        rowId: r.id,
+        allowed: new Set(r.allowed_door_styles as DoorStyleId[]),
+        notes: r.notes ?? '',
         dirty: false,
       };
     }
@@ -174,6 +183,17 @@ export default function CompatibilityRulesAdmin() {
               saving={saveMutation.isPending}
               resetting={removeMutation.isPending}
               inheritedHint
+            />
+
+            <FinishOverridesSection
+              state={state}
+              setState={setState}
+              onToggle={toggleDoor}
+              onNotes={setNotes}
+              onSave={handleSave}
+              onReset={handleReset}
+              saving={saveMutation.isPending}
+              resetting={removeMutation.isPending}
             />
           </div>
         )}
@@ -291,3 +311,163 @@ function RulesSection({
     </section>
   );
 }
+
+// ── Per-finish overrides — searchable; only shows configured + matches ────
+interface FinishSectionProps {
+  state: Record<string, RowState>;
+  setState: React.Dispatch<React.SetStateAction<Record<string, RowState>>>;
+  onToggle: (k: string, d: DoorStyleId) => void;
+  onNotes: (k: string, n: string) => void;
+  onSave: (scope: RuleScope, key: string) => void;
+  onReset: (scope: RuleScope, key: string) => void;
+  saving: boolean;
+  resetting: boolean;
+}
+
+function FinishOverridesSection({
+  state, setState, onToggle, onNotes, onSave, onReset, saving, resetting,
+}: FinishSectionProps) {
+  const [query, setQuery] = useState('');
+
+  const configured = Object.keys(state)
+    .filter(k => k.startsWith('finish:'))
+    .map(k => k.slice('finish:'.length));
+
+  const q = query.trim().toLowerCase();
+  const matches = q
+    ? FINISHES.filter(f =>
+        f.name.toLowerCase().includes(q) ||
+        f.id.toLowerCase().includes(q) ||
+        (f.brand?.toLowerCase().includes(q) ?? false),
+      ).slice(0, 25)
+    : [];
+
+  const visibleIds = Array.from(new Set([...configured, ...matches.map(f => f.id)]));
+
+  const ensureRow = (id: string) => {
+    const key = makeKey('finish', id);
+    if (state[key]) return;
+    const finish = FINISHES.find(f => f.id === id);
+    setState(prev => ({
+      ...prev,
+      [key]: {
+        rowId: undefined,
+        allowed: new Set<DoorStyleId>([]),
+        notes: finish ? (finish.brand ? `${finish.brand} — ${finish.name}` : finish.name) : '',
+        dirty: false,
+      },
+    }));
+  };
+
+  return (
+    <section>
+      <h2 className="text-xl font-semibold mb-1">Per-Finish Overrides</h2>
+      <p className="text-sm text-muted-foreground mb-3">
+        Highest priority — overrides both brand and tier rules. Use sparingly for
+        one-off exceptions (e.g. a specific colorway you fabricate in-house).
+        Search to add new ones; empty rules inherit from brand/tier.
+      </p>
+
+      <input
+        type="text"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+        placeholder="Search finishes by name, brand or id…"
+        className="w-full max-w-md bg-background border border-border rounded-md px-3 py-2 text-sm mb-4 focus:outline-none focus:ring-1 focus:ring-primary"
+      />
+
+      {visibleIds.length === 0 ? (
+        <p className="text-xs text-muted-foreground italic">
+          No finish-level overrides configured. Search above to add one.
+        </p>
+      ) : (
+        <div className="border border-border rounded-xl overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
+              <tr>
+                <th className="text-left px-4 py-2.5 w-72">Finish</th>
+                {DOORS.map(d => (
+                  <th key={d} className="px-2 py-2.5 text-center">
+                    {DOOR_STYLES.find(s => s.id === d)?.name}
+                  </th>
+                ))}
+                <th className="text-left px-4 py-2.5 w-56">Notes</th>
+                <th className="px-4 py-2.5 w-44"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {visibleIds.map(id => {
+                const key = makeKey('finish', id);
+                const row = state[key];
+                const finish = FINISHES.find(f => f.id === id);
+                const isNew = !row;
+                const allowed = row?.allowed ?? new Set<DoorStyleId>();
+                const label = finish
+                  ? (finish.brand ? `${finish.brand} — ${finish.name}` : finish.name)
+                  : id;
+
+                return (
+                  <tr key={id} className="border-t border-border hover:bg-muted/20">
+                    <td className="px-4 py-2.5">
+                      <div className="font-medium">{label}</div>
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
+                        id: {id}{isNew && ' · not yet configured'}
+                      </div>
+                    </td>
+                    {DOORS.map(d => (
+                      <td key={d} className="px-2 py-2.5 text-center">
+                        <input
+                          type="checkbox"
+                          checked={allowed.has(d)}
+                          onChange={() => {
+                            if (isNew) ensureRow(id);
+                            setTimeout(() => onToggle(key, d), 0);
+                          }}
+                          className="w-4 h-4 accent-primary cursor-pointer"
+                        />
+                      </td>
+                    ))}
+                    <td className="px-4 py-2">
+                      <input
+                        type="text"
+                        value={row?.notes ?? ''}
+                        onChange={e => {
+                          if (isNew) ensureRow(id);
+                          setTimeout(() => onNotes(key, e.target.value), 0);
+                        }}
+                        placeholder="Optional"
+                        className="w-full bg-background border border-border rounded-md px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                      />
+                    </td>
+                    <td className="px-4 py-2 text-right whitespace-nowrap">
+                      <button
+                        type="button"
+                        onClick={() => onSave('finish', id)}
+                        disabled={!row?.dirty || saving}
+                        className="inline-flex items-center gap-1 text-xs font-medium bg-primary text-primary-foreground px-2.5 py-1.5 rounded-md hover:opacity-90 disabled:opacity-40"
+                      >
+                        <Save size={12} /> Save
+                      </button>
+                      {row?.rowId && (
+                        <button
+                          type="button"
+                          onClick={() => onReset('finish', id)}
+                          disabled={resetting}
+                          title="Delete override"
+                          className="ml-1 inline-flex items-center gap-1 text-xs font-medium bg-muted text-foreground px-2 py-1.5 rounded-md hover:bg-muted/70 disabled:opacity-40"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  );
+}
+

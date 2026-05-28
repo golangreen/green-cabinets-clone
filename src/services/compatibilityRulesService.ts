@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { DoorStyleId, MaterialTier } from '@/lib/estimator/compatibility';
 import type { MaterialBrand } from '@/types/materials';
 
-export type RuleScope = 'brand' | 'tier';
+export type RuleScope = 'brand' | 'tier' | 'finish';
 
 export interface CompatibilityRuleRow {
   id: string;
@@ -60,11 +60,14 @@ export const compatibilityRulesService = {
   toOverrides(rows: CompatibilityRuleRow[]) {
     const tiers: Partial<Record<MaterialTier, DoorStyleId[]>> = {};
     const brands: Partial<Record<MaterialBrand, DoorStyleId[]>> = {};
+    const finishes: Record<string, DoorStyleId[]> = {};
     for (const r of rows) {
       const doors = r.allowed_door_styles as DoorStyleId[];
       if (r.scope === 'tier') tiers[r.key as MaterialTier] = doors;
-      else brands[r.key as MaterialBrand] = doors;
+      else if (r.scope === 'brand') brands[r.key as MaterialBrand] = doors;
+      else if (r.scope === 'finish') finishes[r.key] = doors;
     }
-    return { tiers, brands };
+    return { tiers, brands, finishes };
   },
 };
+
