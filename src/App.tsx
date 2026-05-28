@@ -108,6 +108,11 @@ const App = () => {
                 <CompatibilityRulesAdmin />
               </AdminRoute>
             } />
+            <Route path="/admin/estimator-failures" element={
+              <AdminRoute>
+                <EstimatorFailuresAdmin />
+              </AdminRoute>
+            } />
             {/* Legacy URL redirects → /custom-kitchen-cabinets-{slug} */}
             <Route path="/neighborhoods/:slug" element={<LegacyRedirect />} />
             <Route path="/neighborhood/:slug" element={<LegacyRedirect />} />
