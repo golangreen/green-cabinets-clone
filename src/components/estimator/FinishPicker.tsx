@@ -1,13 +1,20 @@
 import React, { useState, useMemo } from 'react';
-import { Check, Search, AlertTriangle } from 'lucide-react';
+import { Check, Search, AlertTriangle, Wand2 } from 'lucide-react';
 import {
   DOOR_STYLES,
   FINISHES,
   FINISH_CATEGORIES,
   FINISH_CATEGORY_LABELS,
+  getDoorStyleById,
   type FinishCategory,
 } from '@/lib/estimator/finishes-data';
-import { isFinishAllowedForDoor, checkCompatibility } from '@/lib/estimator/compatibility';
+import {
+  isFinishAllowedForDoor,
+  checkCompatibility,
+  allowedDoorStylesForFinish,
+  getFinishTier,
+  getTierLabel,
+} from '@/lib/estimator/compatibility';
 
 interface FinishPickerProps {
   selectedDoorStyle: string;
@@ -151,7 +158,7 @@ export default function FinishPicker({
                 title={
                   allowed
                     ? [finish.brand, finish.name, ...(finish.codes ?? [])].filter(Boolean).join(' — ')
-                    : `Not available with selected door style — ${finish.brand ?? finish.name} requires a different door.`
+                    : `${getTierLabel(getFinishTier(finish))} — only available as ${allowedDoorStylesForFinish(finish.id).map(d => getDoorStyleById(d)?.name ?? d).join(', ')}. Change door style to enable.`
                 }
                 className={`group flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all ${
                   !allowed
@@ -216,10 +223,42 @@ export default function FinishPicker({
         {(() => {
           const compat = checkCompatibility(selectedDoorStyle, selectedFinish);
           if (compat.ok || !compat.reason) return null;
+          const allowed = allowedDoorStylesForFinish(selectedFinish);
+          const allowedNames = allowed.map(id => getDoorStyleById(id)?.name ?? id);
+          const currentDoorName = getDoorStyleById(selectedDoorStyle)?.name ?? selectedDoorStyle;
+          const finishObj = FINISHES.find(f => f.id === selectedFinish);
+          const tierLabel = finishObj ? getTierLabel(getFinishTier(finishObj)) : compat.tier;
+          const finishLabel = finishObj
+            ? (finishObj.brand ? `${finishObj.brand} — ${finishObj.name}` : finishObj.name)
+            : 'This finish';
+
           return (
-            <div className="mt-2 flex items-start gap-2 text-xs bg-destructive/10 border border-destructive/30 text-destructive rounded-lg px-3 py-2">
-              <AlertTriangle size={14} className="shrink-0 mt-0.5" />
-              <span>{compat.reason}</span>
+            <div className="mt-3 flex gap-2.5 text-xs bg-destructive/10 border border-destructive/30 text-destructive rounded-lg px-3 py-2.5">
+              <AlertTriangle size={15} className="shrink-0 mt-0.5" />
+              <div className="space-y-1.5 min-w-0 flex-1">
+                <p className="font-semibold leading-snug">
+                  {finishLabel} isn't compatible with {currentDoorName} doors.
+                </p>
+                <p className="text-destructive/90 leading-snug">
+                  <span className="font-medium">Why:</span> {tierLabel} panels can only be fabricated as a slab — they can't be milled into shaker rails or raised profiles.
+                </p>
+                <p className="text-destructive/90 leading-snug">
+                  <span className="font-medium">Fix:</span> switch the door style to{' '}
+                  {allowedNames.map((name, i) => (
+                    <React.Fragment key={allowed[i]}>
+                      {i > 0 && (i === allowedNames.length - 1 ? ' or ' : ', ')}
+                      <button
+                        type="button"
+                        onClick={() => onDoorStyleChange(allowed[i])}
+                        className="inline-flex items-center gap-1 font-semibold underline underline-offset-2 hover:no-underline"
+                      >
+                        <Wand2 size={11} /> {name}
+                      </button>
+                    </React.Fragment>
+                  ))}
+                  {' '}— or pick a painted/wood finish to keep {currentDoorName}.
+                </p>
+              </div>
             </div>
           );
         })()}
