@@ -26,8 +26,8 @@ export type MaterialTier =
 
 const ALL_DOORS: DoorStyleId[] = ['shaker', 'slim-shaker', 'flat-panel', 'raised-panel'];
 
-/** Which door styles each material tier supports. */
-const TIER_DOOR_RULES: Record<MaterialTier, DoorStyleId[]> = {
+/** Which door styles each material tier supports — code defaults. */
+const DEFAULT_TIER_DOOR_RULES: Record<MaterialTier, DoorStyleId[]> = {
   painted:      ALL_DOORS,
   'solid-wood': ALL_DOORS,
   melamine:     ['flat-panel'],
@@ -35,6 +35,9 @@ const TIER_DOOR_RULES: Record<MaterialTier, DoorStyleId[]> = {
   veneer:       ['flat-panel'],
   stone:        ['flat-panel'],
 };
+
+/** Mutable runtime view — admin DB overrides patch this in-place. */
+const TIER_DOOR_RULES: Record<MaterialTier, DoorStyleId[]> = { ...DEFAULT_TIER_DOOR_RULES };
 
 /** Brand → tier classification. */
 const BRAND_TIERS: Record<MaterialBrand, MaterialTier> = {
