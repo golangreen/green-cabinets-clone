@@ -372,8 +372,8 @@ serve(async (req) => {
 
     if (images.length === 0) throw new Error("No elevation images provided");
 
-    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
     const systemPrompt = `You are a precision cabinet code extraction specialist for Green Cabinets NY, a professional kitchen and bath cabinet company in Brooklyn. Your job is to read every single cabinet model code from architectural drawings with 100% accuracy. EVERY ERROR costs real money — wrong model = wrong cabinet ordered. Read slowly, carefully, and verify.
 
@@ -607,132 +607,136 @@ Use the extract_cabinets tool to return your findings. Fill every field carefull
   non_cabinet_items → appliances and non-cabinet items only`;
 
     const userContent: any[] = images.map((img) => ({
-      type: "image",
-      source: {
-        type: "base64",
-        media_type: img.mimeType as "image/jpeg" | "image/png" | "image/webp" | "image/gif",
-        data: img.base64,
-      },
+      type: "image_url",
+      image_url: { url: `data:${img.mimeType};base64,${img.base64}` },
     }));
 
     userContent.push({
       type: "text",
       text: images.length > 1
-        ? `Scan all ${images.length} pages. For every labeled cabinet box or rectangle: read the text label, record the model code and its location on the drawing. Use the extract_cabinets tool. One entry per physical cabinet, qty:1 each. Do not infer codes from dimension numbers.`
-        : "Scan every cabinet box and rectangle in this drawing. Read the text label inside or adjacent to each box — that is the model code. Use the extract_cabinets tool. One entry per physical cabinet location, qty:1 each. Do not infer codes from dimension numbers.",
+        ? `Scan all ${images.length} pages. For every labeled cabinet box or rectangle: read the text label, record the model code and its location on the drawing. Call the extract_cabinets tool. One entry per physical cabinet, qty:1 each. Do not infer codes from dimension numbers.`
+        : "Scan every cabinet box and rectangle in this drawing. Read the text label inside or adjacent to each box — that is the model code. Call the extract_cabinets tool. One entry per physical cabinet location, qty:1 each. Do not infer codes from dimension numbers.",
     });
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 8192,
-        temperature: 0,
-        system: systemPrompt,
+        model: "google/gemini-2.5-pro",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userContent },
+        ],
         tools: [
           {
-            name: "extract_cabinets",
-            description: "Extract all cabinet model codes and quantities from the blueprint drawing",
-            input_schema: {
-              type: "object",
-              properties: {
-                items: {
-                  type: "array",
-                  description: "Every cabinet found. One entry per physical cabinet box on the drawing, qty:1.",
+            type: "function",
+            function: {
+              name: "extract_cabinets",
+              description: "Extract all cabinet model codes and quantities from the blueprint drawing",
+              parameters: {
+                type: "object",
+                properties: {
                   items: {
-                    type: "object",
-                    properties: {
-                      model: { type: "string", description: "Cabinet model code exactly as labeled on the drawing, e.g. 'W3030', 'DB363-3', 'FDB273409', 'QMW3096024'" },
-                      qty: { type: "integer", minimum: 1, description: "1 for each physical location. Do not sum across locations." },
-                      location: { type: "string", description: "Where on the drawing, e.g. 'top wall left of fridge', 'island right face', 'right column 2nd from top'" },
-                    },
-                    required: ["model", "qty", "location"],
-                  },
-                },
-                review_items: {
-                  type: "array",
-                  description: "Codes that were partially obscured or ambiguous — include best read with reasoning",
-                  items: {
-                    type: "object",
-                    properties: {
-                      model: { type: "string" },
-                      qty: { type: "integer", minimum: 1 },
-                      location: { type: "string" },
-                      confidence: { type: "string", enum: ["low", "medium"] },
-                      reason: { type: "string", description: "Why this code is uncertain" },
-                    },
-                    required: ["model", "qty", "confidence", "reason"],
-                  },
-                },
-                non_cabinet_items: {
-                  type: "array",
-                  description: "Appliances and non-cabinet items (RANGE, DW, HOOD, REF, etc.)",
-                  items: {
-                    type: "object",
-                    properties: {
-                      model: { type: "string" },
-                      qty: { type: "integer" },
-                      reason: { type: "string" },
-                    },
-                    required: ["model", "reason"],
-                  },
-                },
-                walls: {
-                  type: "array",
-                  description: "Each wall or run grouped for dimension verification. Fill from the dimension arrows on the drawing.",
-                  items: {
-                    type: "object",
-                    properties: {
-                      name: { type: "string", description: "Wall name, e.g. 'top wall', 'bottom wall', 'island left face'" },
-                      total_width_inches: { type: "number", description: "Total run width in inches from the dimension arrow label on the drawing" },
-                      cabinet_codes: {
-                        type: "array",
-                        items: { type: "string" },
-                        description: "Cabinet model codes on this wall, left to right, exactly as in items[]",
+                    type: "array",
+                    description: "Every cabinet found. One entry per physical cabinet box on the drawing, qty:1.",
+                    items: {
+                      type: "object",
+                      properties: {
+                        model: { type: "string", description: "Cabinet model code exactly as labeled, e.g. 'W3030', 'DB363-3', 'FDB273409'" },
+                        qty: { type: "integer", minimum: 1 },
+                        location: { type: "string" },
                       },
+                      required: ["model", "qty", "location"],
                     },
-                    required: ["name", "total_width_inches", "cabinet_codes"],
+                  },
+                  review_items: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        model: { type: "string" },
+                        qty: { type: "integer", minimum: 1 },
+                        location: { type: "string" },
+                        confidence: { type: "string", enum: ["low", "medium"] },
+                        reason: { type: "string" },
+                      },
+                      required: ["model", "qty", "confidence", "reason"],
+                    },
+                  },
+                  non_cabinet_items: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        model: { type: "string" },
+                        qty: { type: "integer" },
+                        reason: { type: "string" },
+                      },
+                      required: ["model", "reason"],
+                    },
+                  },
+                  walls: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        name: { type: "string" },
+                        total_width_inches: { type: "number" },
+                        cabinet_codes: { type: "array", items: { type: "string" } },
+                      },
+                      required: ["name", "total_width_inches", "cabinet_codes"],
+                    },
                   },
                 },
+                required: ["items", "review_items", "non_cabinet_items"],
               },
-              required: ["items", "review_items", "non_cabinet_items"],
             },
           },
         ],
-        tool_choice: { type: "tool", name: "extract_cabinets" },
-        messages: [{ role: "user", content: userContent }],
+        tool_choice: { type: "function", function: { name: "extract_cabinets" } },
       }),
     });
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("Anthropic API error:", response.status, errText);
+      console.error("Lovable AI error:", response.status, errText);
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "Rate limit — please try again in a moment." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      throw new Error(`Anthropic request failed (${response.status}): ${errText}`);
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: "AI credits exhausted. Add credits in Lovable Cloud settings." }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      throw new Error(`AI request failed (${response.status}): ${errText}`);
     }
 
     const aiData = await response.json();
-    const toolUse = aiData.content?.find((c: any) => c.type === "tool_use" && c.name === "extract_cabinets");
+    const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
 
-    if (!toolUse?.input) {
-      console.error("No tool_use in response:", JSON.stringify(aiData));
+    if (!toolCall?.function?.arguments) {
+      console.error("No tool_call in response:", JSON.stringify(aiData));
       return new Response(
         JSON.stringify({ error: "AI could not extract cabinets from this image. Try a clearer blueprint scan." }),
         { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const parsed = toolUse.input;
+    let parsed: any;
+    try {
+      parsed = JSON.parse(toolCall.function.arguments);
+    } catch (e) {
+      console.error("Failed to parse tool arguments:", toolCall.function.arguments);
+      throw new Error("Invalid tool response from AI");
+    }
+
     const allNormalized = Array.isArray(parsed.items) ? parsed.items.map(normalizeResultItem).filter(Boolean) : [];
     const reviewItems = Array.isArray(parsed.review_items) ? parsed.review_items.map(normalizeResultItem).filter(Boolean) : [];
 

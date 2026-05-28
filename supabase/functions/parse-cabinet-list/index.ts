@@ -68,8 +68,8 @@ serve(async (req) => {
       throw new Error("Provide either textContent or images");
     }
 
-    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
     const systemPrompt = `You are a cabinet order list parser for Green Cabinets NY. Your job is to extract every cabinet model number and quantity from the input — whether it is a typed list, a scanned document, a 2020 Design export, or a supplier quote. Accuracy is critical: every model and quantity must be correct.
 
@@ -188,12 +188,8 @@ Do NOT include appliances, fillers, labor, or non-cabinet items.`;
     if (images.length > 0) {
       for (const img of images) {
         userContent.push({
-          type: "image",
-          source: {
-            type: "base64",
-            media_type: img.mimeType as "image/jpeg" | "image/png" | "image/webp" | "image/gif",
-            data: img.base64,
-          },
+          type: "image_url",
+          image_url: { url: `data:${img.mimeType};base64,${img.base64}` },
         });
       }
       userContent.push({
@@ -209,30 +205,39 @@ Do NOT include appliances, fillers, labor, or non-cabinet items.`;
       });
     }
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 4096,
-        system: systemPrompt,
-        messages: [{ role: "user", content: userContent }],
+        model: "google/gemini-2.5-pro",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userContent },
+        ],
         temperature: 0,
       }),
     });
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("Anthropic API error:", response.status, errText);
-      throw new Error(`Anthropic request failed (${response.status})`);
+      console.error("Lovable AI error:", response.status, errText);
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ error: "Rate limit — try again shortly." }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: "AI credits exhausted." }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      throw new Error(`AI request failed (${response.status})`);
     }
 
     const aiData = await response.json();
-    const raw = aiData.content?.[0]?.text || "";
+    const raw = aiData.choices?.[0]?.message?.content || "";
+
 
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error("Could not parse AI response");
