@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { Resend } from "https://esm.sh/resend@2.0.0";
+import { sendResendEmail } from "../_shared/resendGateway.ts";
 
 const orderItemSchema = z.object({
   variantId: z.string().min(1),
