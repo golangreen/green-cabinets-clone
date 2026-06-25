@@ -293,7 +293,7 @@ serve(async (req) => {
             </html>
           `;
 
-          await resend.emails.send({
+          await sendResendEmail({
             from: "Green Cabinets <onboarding@resend.dev>",
             to: [customerEmail],
             subject: "Order Confirmation - Your Custom Vanity Order",
