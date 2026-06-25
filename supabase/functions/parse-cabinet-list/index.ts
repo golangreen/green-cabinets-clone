@@ -55,6 +55,9 @@ serve(async (req) => {
   }
 
   try {
+    const guard = await guardAiRequest(req, { corsHeaders, requireAuth: true });
+    if (guard) return guard;
+
     const body = await req.json();
     const { textContent } = body;
 
@@ -68,6 +71,8 @@ serve(async (req) => {
     if (!textContent && images.length === 0) {
       throw new Error("Provide either textContent or images");
     }
+    const sizeGuard = validateImagesInput(images);
+    if (sizeGuard) return new Response(await sizeGuard.text(), { status: sizeGuard.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
