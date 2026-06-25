@@ -76,6 +76,7 @@ const App = () => {
             <Route path="/designer" element={<Designer />} />
             <Route path="/estimator" element={<Estimator />} />
             <Route path="/estimator/quotes" element={<EstimatorSavedQuotes />} />
+            <Route path="/vanity-configurator" element={<VanityConfiguratorPage />} />
             <Route path="/product/:handle" element={<ProductDetail />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
