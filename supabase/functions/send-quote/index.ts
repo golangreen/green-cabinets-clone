@@ -93,10 +93,12 @@ serve(async (req) => {
       .slice(0, 200) || "New Quote Request — Green Cabinets Estimator";
 
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY is not configured");
 
     const headers = {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
+      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      "X-Connection-Api-Key": RESEND_API_KEY,
       "Content-Type": "application/json",
     };
 
