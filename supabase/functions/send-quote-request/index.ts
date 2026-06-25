@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
 const quoteRequestSchema = z.object({
   customerName: z.string().trim().min(1).max(100),
@@ -114,11 +115,12 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Processing quote request from IP: ${clientIp}, Email: ${quoteData.customerEmail}`);
 
     // Send email to business owner using Resend API
-    const ownerEmailResponse = await fetch("https://api.resend.com/emails", {
+    const ownerEmailResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
+        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+        "X-Connection-Api-Key": RESEND_API_KEY,
       },
       body: JSON.stringify({
       from: "Green Cabinets Quote <onboarding@resend.dev>",
@@ -158,11 +160,12 @@ const handler = async (req: Request): Promise<Response> => {
     const ownerEmail = await ownerEmailResponse.json();
 
     // Send confirmation email to customer
-    const customerEmailResponse = await fetch("https://api.resend.com/emails", {
+    const customerEmailResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
+        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+        "X-Connection-Api-Key": RESEND_API_KEY,
       },
       body: JSON.stringify({
       from: "Green Cabinets <onboarding@resend.dev>",

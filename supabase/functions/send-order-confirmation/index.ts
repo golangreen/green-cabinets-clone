@@ -1,8 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "https://esm.sh/resend@2.0.0";
+import { sendResendEmail } from "../_shared/resendGateway.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
   apiVersion: "2025-08-27.basil",
 });
@@ -59,10 +58,11 @@ serve(async (req) => {
     }
 
     // Send confirmation email
-    const emailResponse = await resend.emails.send({
+    const emailRes = await sendResendEmail({
       from: "Green Cabinets <orders@greencabinetsny.com>",
       to: [customerEmail],
       subject: "Order Confirmation - Green Cabinets NY",
+
       html: `
         <!DOCTYPE html>
         <html>
@@ -151,7 +151,7 @@ serve(async (req) => {
       `,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Email sent status:", emailRes.status);
 
     return new Response(
       JSON.stringify({ success: true }),

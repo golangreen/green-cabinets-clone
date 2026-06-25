@@ -203,6 +203,7 @@ serve(async (req: Request) => {
     }
 
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY is not configured");
 
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
@@ -244,13 +245,14 @@ serve(async (req: Request) => {
     }
 
     const resendHeaders = {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
+      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      "X-Connection-Api-Key": RESEND_API_KEY,
       "Content-Type": "application/json",
     };
 
     // Email to Green Cabinets
     const gcHtml = buildOrderEmailHtml(orderNumber, order, quoteSnapshot || {}, false);
-    const gcRes = await fetch("https://api.resend.com/emails", {
+    const gcRes = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: resendHeaders,
       body: JSON.stringify({
@@ -266,7 +268,7 @@ serve(async (req: Request) => {
 
     // Confirmation email to customer
     const custHtml = buildOrderEmailHtml(orderNumber, order, quoteSnapshot || {}, true);
-    const custRes = await fetch("https://api.resend.com/emails", {
+    const custRes = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: resendHeaders,
       body: JSON.stringify({

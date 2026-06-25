@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 const ORDERS_EMAIL = "orders@greencabinetsny.com";
 const FROM = "Green Cabinets NY <orders@greencabinetsny.com>";
 
@@ -95,10 +96,11 @@ function renderHtml(opts: {
 }
 
 async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
-  const res = await fetch("https://api.resend.com/emails", {
+  const res = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
+      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      "X-Connection-Api-Key": RESEND_API_KEY,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({

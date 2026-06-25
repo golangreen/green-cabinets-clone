@@ -93,15 +93,17 @@ serve(async (req) => {
       .slice(0, 200) || "New Quote Request — Green Cabinets Estimator";
 
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY is not configured");
 
     const headers = {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
+      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      "X-Connection-Api-Key": RESEND_API_KEY,
       "Content-Type": "application/json",
     };
 
     // Always send to the business address — never accept arbitrary recipients
-    const gcResponse = await fetch("https://api.resend.com/emails", {
+    const gcResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -129,7 +131,7 @@ serve(async (req) => {
       if (!requested || !isEmail(requested) || requested !== userEmail) {
         console.warn("send-quote: blocked customer copy to non-self recipient");
       } else {
-        const custResponse = await fetch("https://api.resend.com/emails", {
+        const custResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
           method: "POST",
           headers,
           body: JSON.stringify({

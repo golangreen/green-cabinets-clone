@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { Resend } from "https://esm.sh/resend@2.0.0";
+import { sendResendEmail } from "../_shared/resendGateway.ts";
 
 const orderItemSchema = z.object({
   variantId: z.string().min(1),
@@ -32,7 +32,7 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
   apiVersion: "2025-08-27.basil",
 });
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY") as string);
+
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -293,7 +293,7 @@ serve(async (req) => {
             </html>
           `;
 
-          await resend.emails.send({
+          await sendResendEmail({
             from: "Green Cabinets <onboarding@resend.dev>",
             to: [customerEmail],
             subject: "Order Confirmation - Your Custom Vanity Order",
