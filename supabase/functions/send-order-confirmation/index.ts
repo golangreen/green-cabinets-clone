@@ -151,7 +151,7 @@ serve(async (req) => {
       `,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Email sent status:", emailRes.status);
 
     return new Response(
       JSON.stringify({ success: true }),
