@@ -29,3 +29,19 @@ verify_jwt = false
 
 [functions.gsc-inspect]
 verify_jwt = false
+
+[functions.analyze-blueprint]
+verify_jwt = false
+
+[functions.parse-cabinet-list]
+verify_jwt = false
+
+[functions.parse-elevation]
+verify_jwt = false
+
+[functions.send-quote]
+verify_jwt = false
+
+[functions.send-order]
+verify_jwt = false
+
