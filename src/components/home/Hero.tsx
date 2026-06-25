@@ -85,6 +85,14 @@ const Hero = () => {
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
             Premier sustainable custom kitchen cabinets in Brooklyn, Manhattan, and Queens. Designed and built in Bushwick for homeowners and developers across NYC.
           </p>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
+            <a
+              href="/vanity-configurator"
+              className="inline-flex items-center justify-center bg-[#5C7650] hover:bg-[#445339] text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-full shadow-2xl transition-all hover:scale-105"
+            >
+              Vanity Configurator
+            </a>
+          </div>
           <div className="flex justify-center">
             <a
               href="/estimator"
