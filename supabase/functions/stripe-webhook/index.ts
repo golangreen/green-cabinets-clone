@@ -32,7 +32,7 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
   apiVersion: "2025-08-27.basil",
 });
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY") as string);
+
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
