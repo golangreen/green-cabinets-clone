@@ -58,10 +58,11 @@ serve(async (req) => {
     }
 
     // Send confirmation email
-    const emailResponse = await resend.emails.send({
+    const emailRes = await sendResendEmail({
       from: "Green Cabinets <orders@greencabinetsny.com>",
       to: [customerEmail],
       subject: "Order Confirmation - Green Cabinets NY",
+
       html: `
         <!DOCTYPE html>
         <html>
