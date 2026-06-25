@@ -40,6 +40,28 @@ const VanityDesignerEmbed = () => (
       <ArrowLeft size={14} strokeWidth={2.5} />
       Back to site
     </Link>
+    <Link
+      to="/"
+      aria-label="Green Cabinets NY home"
+      style={{
+        position: "fixed",
+        top: "max(12px, env(safe-area-inset-top))",
+        right: "max(12px, env(safe-area-inset-right))",
+        zIndex: 2147483647,
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        padding: "8px 12px",
+        borderRadius: 999,
+        background: "rgba(30,27,22,0.78)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        border: "1px solid rgba(168,133,79,0.45)",
+        boxShadow: "0 6px 20px rgba(20,17,12,0.35)",
+      }}
+    >
+      <img src={logo} alt="Green Cabinets NY" style={{ height: 22, width: "auto", display: "block" }} />
+    </Link>
     <iframe
       src="/vanity-designer.html"
       title="Vanity Designer"
