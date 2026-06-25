@@ -150,7 +150,7 @@ serve(async (req) => {
         );
       }
       return new Response(
-        JSON.stringify({ error: `AI request failed (${response.status}): ${errText}` }),
+        JSON.stringify({ error: "AI request failed. Please try again." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -188,7 +188,7 @@ serve(async (req) => {
   } catch (e) {
     console.error("analyze-blueprint error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "An internal error occurred. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

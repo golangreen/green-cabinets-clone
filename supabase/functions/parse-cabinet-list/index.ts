@@ -261,7 +261,7 @@ Do NOT include appliances, fillers, labor, or non-cabinet items.`;
   } catch (e) {
     console.error("parse-cabinet-list error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "An internal error occurred. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
