@@ -118,6 +118,9 @@ const Header = () => {
                   </div>
 
                   <div className="border-t pt-4 space-y-3">
+                    <a href="/designer" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                      Design Your Vanity
+                    </a>
                     <a href="/estimator" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                       Cost Estimator
                     </a>
