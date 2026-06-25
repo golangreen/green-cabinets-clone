@@ -101,7 +101,7 @@ serve(async (req) => {
     };
 
     // Always send to the business address — never accept arbitrary recipients
-    const gcResponse = await fetch("https://api.resend.com/emails", {
+    const gcResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -129,7 +129,7 @@ serve(async (req) => {
       if (!requested || !isEmail(requested) || requested !== userEmail) {
         console.warn("send-quote: blocked customer copy to non-self recipient");
       } else {
-        const custResponse = await fetch("https://api.resend.com/emails", {
+        const custResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
           method: "POST",
           headers,
           body: JSON.stringify({

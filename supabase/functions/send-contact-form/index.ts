@@ -122,7 +122,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Processing contact form from IP: ${clientIp}, Email: ${formData.email}`);
 
     // Send email to business owner
-    const ownerEmailResponse = await fetch("https://api.resend.com/emails", {
+    const ownerEmailResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

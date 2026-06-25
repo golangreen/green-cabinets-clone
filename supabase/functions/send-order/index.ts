@@ -250,7 +250,7 @@ serve(async (req: Request) => {
 
     // Email to Green Cabinets
     const gcHtml = buildOrderEmailHtml(orderNumber, order, quoteSnapshot || {}, false);
-    const gcRes = await fetch("https://api.resend.com/emails", {
+    const gcRes = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: resendHeaders,
       body: JSON.stringify({
@@ -266,7 +266,7 @@ serve(async (req: Request) => {
 
     // Confirmation email to customer
     const custHtml = buildOrderEmailHtml(orderNumber, order, quoteSnapshot || {}, true);
-    const custRes = await fetch("https://api.resend.com/emails", {
+    const custRes = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: resendHeaders,
       body: JSON.stringify({

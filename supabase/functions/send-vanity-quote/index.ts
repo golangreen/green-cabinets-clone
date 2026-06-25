@@ -40,7 +40,7 @@ const handler = async (req: Request): Promise<Response> => {
     const linearFeet = (validatedData.width / 12).toFixed(2);
     
     // Send email to business using Resend API
-    const businessEmailResponse = await fetch("https://api.resend.com/emails", {
+    const businessEmailResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${RESEND_API_KEY}`,
@@ -122,7 +122,7 @@ const handler = async (req: Request): Promise<Response> => {
     const businessEmailData = await businessEmailResponse.json();
 
     // Send confirmation email to customer
-    const customerEmailResponse = await fetch("https://api.resend.com/emails", {
+    const customerEmailResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${RESEND_API_KEY}`,

@@ -114,7 +114,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Processing quote request from IP: ${clientIp}, Email: ${quoteData.customerEmail}`);
 
     // Send email to business owner using Resend API
-    const ownerEmailResponse = await fetch("https://api.resend.com/emails", {
+    const ownerEmailResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -158,7 +158,7 @@ const handler = async (req: Request): Promise<Response> => {
     const ownerEmail = await ownerEmailResponse.json();
 
     // Send confirmation email to customer
-    const customerEmailResponse = await fetch("https://api.resend.com/emails", {
+    const customerEmailResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

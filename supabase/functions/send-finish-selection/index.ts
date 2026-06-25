@@ -95,7 +95,7 @@ function renderHtml(opts: {
 }
 
 async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
-  const res = await fetch("https://api.resend.com/emails", {
+  const res = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${RESEND_API_KEY}`,
