@@ -6,13 +6,50 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// Rate limit (per-IP)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const WINDOW_MS = 60 * 60 * 1000;
+const MAX_PER_WINDOW = 10;
+function ipOf(req: Request) {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
+}
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const rec = rateLimitMap.get(ip);
+  if (!rec || now > rec.resetTime) { rateLimitMap.set(ip, { count: 1, resetTime: now + WINDOW_MS }); return true; }
+  if (rec.count >= MAX_PER_WINDOW) return false;
+  rec.count++;
+  return true;
+}
+
+// HTML-escape every user-controlled value before interpolating into the email body.
+function escape(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function clip(value: unknown, max: number): string {
+  const s = value == null ? "" : String(value);
+  return s.length > max ? s.slice(0, max) : s;
+}
+
+function isEmail(s: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) && s.length <= 255;
+}
+
 function fmt(n: number) {
   return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function buildOrderEmailHtml(orderNumber: string, order: Record<string, string>, snapshot: Record<string, any>, forCustomer = false): string {
   const total = fmt(snapshot.grandTotal ?? 0);
-  const collection = (snapshot.collection ?? "luxor").charAt(0).toUpperCase() + (snapshot.collection ?? "luxor").slice(1);
+  const collectionRaw = (snapshot.collection ?? "luxor");
+  const collection = escape(collectionRaw.charAt(0).toUpperCase() + collectionRaw.slice(1));
   const stdItems = snapshot.items ?? [];
   const customItems = snapshot.customItems ?? [];
   const addOnItems = snapshot.addOnItems ?? [];
@@ -21,29 +58,29 @@ function buildOrderEmailHtml(orderNumber: string, order: Record<string, string>,
   const itemRows = [
     ...stdItems.map((item: any) => `
     <tr>
-      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-family:monospace;font-size:12px;color:#6b7280">${item.model}</td>
-      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-size:13px">${item.description}</td>
-      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:13px">${item.qty}</td>
-      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-size:13px">${fmt(item.lineTotal)}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-family:monospace;font-size:12px;color:#6b7280">${escape(item.model)}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-size:13px">${escape(item.description)}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:13px">${escape(item.qty)}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-size:13px">${fmt(Number(item.lineTotal) || 0)}</td>
     </tr>`),
     ...customItems.map((item: any) => `
     <tr>
       <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#6b7280;font-style:italic">custom</td>
-      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-size:13px">${item.description}</td>
-      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:13px">${item.qty}</td>
-      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-size:13px">${fmt(item.lineTotal)}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-size:13px">${escape(item.description)}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:13px">${escape(item.qty)}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-size:13px">${fmt(Number(item.lineTotal) || 0)}</td>
     </tr>`),
     ...addOnItems.map((item: any) => `
     <tr>
       <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#6b7280;font-style:italic">add-on</td>
-      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-size:13px">${item.name} (${item.linearFeet} lf)</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;font-size:13px">${escape(item.name)} (${escape(item.linearFeet)} lf)</td>
       <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:13px">—</td>
-      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-size:13px">${fmt(item.lineTotal)}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-size:13px">${fmt(Number(item.lineTotal) || 0)}</td>
     </tr>`),
   ].join("");
 
   const greeting = forCustomer
-    ? `<p>Hi ${order.name},</p><p>Thank you for your order! Here's a summary of what you submitted. Our team at Green Cabinets NY will contact you within 24 hours to confirm the details and schedule your installation.</p>`
+    ? `<p>Hi ${escape(order.name)},</p><p>Thank you for your order! Here's a summary of what you submitted. Our team at Green Cabinets NY will contact you within 24 hours to confirm the details and schedule your installation.</p>`
     : `<p><strong>New Order Received</strong> — a customer has placed an order through the estimator app.</p>`;
 
   return `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
@@ -52,7 +89,7 @@ function buildOrderEmailHtml(orderNumber: string, order: Record<string, string>,
   <!-- Header -->
   <div style="background:#1eae53;padding:32px 32px 24px">
     <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700">Green Cabinets NY</h1>
-    <p style="margin:6px 0 0;color:rgba(255,255,255,0.85);font-size:14px">Order Confirmation · ${orderNumber}</p>
+    <p style="margin:6px 0 0;color:rgba(255,255,255,0.85);font-size:14px">Order Confirmation · ${escape(orderNumber)}</p>
   </div>
 
   <!-- Body -->
@@ -63,10 +100,10 @@ function buildOrderEmailHtml(orderNumber: string, order: Record<string, string>,
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px;margin:24px 0">
       <h2 style="margin:0 0 12px;font-size:15px;font-weight:600;color:#166534">Order Details</h2>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
-        <tr><td style="padding:4px 0;color:#6b7280;width:140px">Order #</td><td style="padding:4px 0;font-weight:600">${orderNumber}</td></tr>
+        <tr><td style="padding:4px 0;color:#6b7280;width:140px">Order #</td><td style="padding:4px 0;font-weight:600">${escape(orderNumber)}</td></tr>
         <tr><td style="padding:4px 0;color:#6b7280">Collection</td><td style="padding:4px 0">${collection}</td></tr>
-        ${order.doorStyle ? `<tr><td style="padding:4px 0;color:#6b7280">Door Style</td><td style="padding:4px 0">${order.doorStyle}</td></tr>` : ""}
-        ${order.finish ? `<tr><td style="padding:4px 0;color:#6b7280">Finish & Color</td><td style="padding:4px 0">${order.finish}</td></tr>` : ""}
+        ${order.doorStyle ? `<tr><td style="padding:4px 0;color:#6b7280">Door Style</td><td style="padding:4px 0">${escape(order.doorStyle)}</td></tr>` : ""}
+        ${order.finish ? `<tr><td style="padding:4px 0;color:#6b7280">Finish & Color</td><td style="padding:4px 0">${escape(order.finish)}</td></tr>` : ""}
         <tr><td style="padding:4px 0;color:#6b7280">Grand Total</td><td style="padding:4px 0;font-size:18px;font-weight:700;color:#1eae53">${total}</td></tr>
       </table>
     </div>
@@ -75,12 +112,12 @@ function buildOrderEmailHtml(orderNumber: string, order: Record<string, string>,
     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin:16px 0">
       <h2 style="margin:0 0 12px;font-size:15px;font-weight:600">Customer Information</h2>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
-        <tr><td style="padding:4px 0;color:#6b7280;width:140px">Name</td><td style="padding:4px 0">${order.name}</td></tr>
-        <tr><td style="padding:4px 0;color:#6b7280">Phone</td><td style="padding:4px 0"><a href="tel:${order.phone}" style="color:#1eae53">${order.phone}</a></td></tr>
-        <tr><td style="padding:4px 0;color:#6b7280">Email</td><td style="padding:4px 0"><a href="mailto:${order.email}" style="color:#1eae53">${order.email}</a></td></tr>
-        <tr><td style="padding:4px 0;color:#6b7280">Delivery address</td><td style="padding:4px 0">${order.address}</td></tr>
-        ${order.installDate ? `<tr><td style="padding:4px 0;color:#6b7280">Preferred install</td><td style="padding:4px 0">${order.installDate}</td></tr>` : ""}
-        ${order.notes ? `<tr><td style="padding:4px 0;color:#6b7280;vertical-align:top">Notes</td><td style="padding:4px 0">${order.notes}</td></tr>` : ""}
+        <tr><td style="padding:4px 0;color:#6b7280;width:140px">Name</td><td style="padding:4px 0">${escape(order.name)}</td></tr>
+        <tr><td style="padding:4px 0;color:#6b7280">Phone</td><td style="padding:4px 0"><a href="tel:${escape(order.phone)}" style="color:#1eae53">${escape(order.phone)}</a></td></tr>
+        <tr><td style="padding:4px 0;color:#6b7280">Email</td><td style="padding:4px 0"><a href="mailto:${escape(order.email)}" style="color:#1eae53">${escape(order.email)}</a></td></tr>
+        <tr><td style="padding:4px 0;color:#6b7280">Delivery address</td><td style="padding:4px 0">${escape(order.address)}</td></tr>
+        ${order.installDate ? `<tr><td style="padding:4px 0;color:#6b7280">Preferred install</td><td style="padding:4px 0">${escape(order.installDate)}</td></tr>` : ""}
+        ${order.notes ? `<tr><td style="padding:4px 0;color:#6b7280;vertical-align:top">Notes</td><td style="padding:4px 0">${escape(order.notes).replace(/\n/g, "<br>")}</td></tr>` : ""}
       </table>
     </div>
 
@@ -111,7 +148,7 @@ function buildOrderEmailHtml(orderNumber: string, order: Record<string, string>,
     </div>
 
     <p style="font-size:14px;margin-top:24px">Questions? Call us at <a href="tel:+17188045488" style="color:#1eae53;font-weight:600">(718) 804-5488</a> or reply to this email.</p>` : `
-    <p style="font-size:14px;color:#6b7280;margin-top:24px">Reply to this email to contact the customer directly at ${order.email}.</p>`}
+    <p style="font-size:14px;color:#6b7280;margin-top:24px">Reply to this email to contact the customer directly at ${escape(order.email)}.</p>`}
   </div>
 
   <!-- Footer -->
@@ -128,11 +165,39 @@ serve(async (req: Request) => {
   }
 
   try {
-    const { order, quoteSnapshot } = await req.json();
+    const ip = ipOf(req);
+    if (!checkRateLimit(ip)) {
+      return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
 
-    if (!order?.name || !order?.phone || !order?.email || !order?.address) {
+    const { order: rawOrder, quoteSnapshot } = await req.json();
+    if (!rawOrder || typeof rawOrder !== "object") {
+      return new Response(JSON.stringify({ error: "Invalid request body." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Enforce max lengths on every string field before building the email
+    const order: Record<string, string> = {
+      name: clip(rawOrder.name, 100),
+      phone: clip(rawOrder.phone, 30),
+      email: clip(rawOrder.email, 255),
+      address: clip(rawOrder.address, 300),
+      installDate: clip(rawOrder.installDate, 50),
+      notes: clip(rawOrder.notes, 1000),
+      doorStyle: clip(rawOrder.doorStyle, 100),
+      finish: clip(rawOrder.finish, 100),
+    };
+
+    if (!order.name || !order.phone || !order.email || !order.address) {
       return new Response(
         JSON.stringify({ error: "name, phone, email, and address are required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    if (!isEmail(order.email)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email address." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -163,8 +228,8 @@ serve(async (req: Request) => {
           delivery_address: order.address,
           preferred_install_date: order.installDate || null,
           notes: order.notes || null,
-          collection: quoteSnapshot.collection || "luxor",
-          grand_total: quoteSnapshot.grandTotal ?? 0,
+          collection: quoteSnapshot?.collection || "luxor",
+          grand_total: quoteSnapshot?.grandTotal ?? 0,
           quote_snapshot: quoteSnapshot,
           status: "pending",
         }),
@@ -184,7 +249,7 @@ serve(async (req: Request) => {
     };
 
     // Email to Green Cabinets
-    const gcHtml = buildOrderEmailHtml(orderNumber, order, quoteSnapshot, false);
+    const gcHtml = buildOrderEmailHtml(orderNumber, order, quoteSnapshot || {}, false);
     const gcRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: resendHeaders,
@@ -192,7 +257,7 @@ serve(async (req: Request) => {
         from: "Green Cabinets Estimator <orders@greencabinetsny.com>",
         to: ["greencabinets@gmail.com"],
         reply_to: order.email,
-        subject: `New Order ${orderNumber} — ${order.name} — $${(quoteSnapshot.grandTotal ?? 0).toLocaleString()}`,
+        subject: `New Order ${orderNumber} — ${order.name} — $${(quoteSnapshot?.grandTotal ?? 0).toLocaleString()}`,
         html: gcHtml,
       }),
     });
@@ -200,7 +265,7 @@ serve(async (req: Request) => {
     console.log("Resend GC email status:", gcRes.status, JSON.stringify(gcResBody));
 
     // Confirmation email to customer
-    const custHtml = buildOrderEmailHtml(orderNumber, order, quoteSnapshot, true);
+    const custHtml = buildOrderEmailHtml(orderNumber, order, quoteSnapshot || {}, true);
     const custRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: resendHeaders,
@@ -221,7 +286,7 @@ serve(async (req: Request) => {
   } catch (e) {
     console.error("send-order error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "An internal error occurred. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
