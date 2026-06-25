@@ -24,6 +24,7 @@ const PaymentSuccess = lazy(() => import("./pages/shop/PaymentSuccess"));
 
 const Auth = lazy(() => import("./pages/auth/Auth"));
 const Designer = lazy(() => import("./pages/designer/Designer"));
+const VanityDesignerEmbed = lazy(() => import("./pages/designer/VanityDesignerEmbed"));
 const Estimator = lazy(() => import("./pages/estimator/Estimator"));
 const EstimatorSavedQuotes = lazy(() => import("./pages/estimator/SavedQuotes"));
 const VanityConfiguratorPage = lazy(() => import("./pages/vanity/VanityConfiguratorPage"));
@@ -73,7 +74,8 @@ const App = () => {
             <Route path="/landing" element={<Landing />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/designer" element={<Designer />} />
+            <Route path="/designer" element={<VanityDesignerEmbed />} />
+            <Route path="/room-designer" element={<Designer />} />
             <Route path="/estimator" element={<Estimator />} />
             <Route path="/estimator/quotes" element={<EstimatorSavedQuotes />} />
             <Route path="/vanity-configurator" element={<VanityConfiguratorPage />} />
