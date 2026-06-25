@@ -1,6 +1,8 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import logo from "@/assets/logo-new.png";
+
 
 const VanityDesignerEmbed = () => (
   <>
