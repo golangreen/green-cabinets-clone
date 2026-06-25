@@ -2,29 +2,11 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function isEmail(s: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) && s.length <= 255;
-}
-
-function sanitizeHeader(s: string): string {
-  return s.replace(/[\r\n]+/g, " ").slice(0, 200);
-}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -39,6 +21,8 @@ serve(async (req) => {
   }
 
   try {
+    const { quoteHtml, customerEmail, customerName, subject, sendToCustomer } = await req.json();
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!LOVABLE_API_KEY || !RESEND_API_KEY) {
@@ -49,83 +33,74 @@ serve(async (req) => {
       });
     }
 
-    const form = await req.formData();
-    const name = sanitizeHeader(String(form.get("name") ?? "")).trim();
-    const emailRaw = String(form.get("email") ?? "").trim();
-    const subject =
-      sanitizeHeader(String(form.get("_subject") ?? "")).trim() ||
-      "New Quote from Green Cabinets";
-    const quote = String(form.get("quote") ?? "");
-    const image = form.get("design_image");
-
-    const email = emailRaw && isEmail(emailRaw) ? emailRaw : "";
-
-    const attachments: Array<{ filename: string; content: string }> = [];
-    if (image instanceof File && image.size > 0) {
-      const buf = new Uint8Array(await image.arrayBuffer());
-      let binary = "";
-      const chunk = 0x8000;
-      for (let i = 0; i < buf.length; i += chunk) {
-        binary += String.fromCharCode.apply(
-          null,
-          Array.from(buf.subarray(i, i + chunk)),
-        );
-      }
-      attachments.push({
-        filename: "green-cabinets-design.png",
-        content: btoa(binary),
-      });
-    }
-
-    const html = `
-      <div style="font-family:Arial,sans-serif;color:#222;line-height:1.5">
-        ${name ? `<p><strong>From:</strong> ${escapeHtml(name)}</p>` : ""}
-        ${email ? `<p><strong>Email:</strong> ${escapeHtml(email)}</p>` : ""}
-        <h3>Quote</h3>
-        <pre style="white-space:pre-wrap;font-family:inherit;background:#f6f6f6;padding:12px;border-radius:6px">${escapeHtml(quote)}</pre>
-      </div>
-    `;
-
-    const payload: Record<string, unknown> = {
-      from: "Green Cabinets <quotes@greencabinetsny.com>",
-      to: ["orders@greencabinetsny.com"],
-      subject,
-      html,
-    };
-    if (email) {
-      payload.cc = [email];
-      payload.reply_to = email;
-    }
-    if (attachments.length) payload.attachments = attachments;
-
-    const resp = await fetch(`${GATEWAY_URL}/emails`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "X-Connection-Api-Key": RESEND_API_KEY,
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!resp.ok) {
-      const text = await resp.text();
-      console.error("Resend error:", resp.status, text);
-      return new Response(JSON.stringify({ error: "Failed to send" }), {
-        status: 502,
+    if (!quoteHtml || typeof quoteHtml !== "string") {
+      return new Response(JSON.stringify({ error: "Quote HTML content is required" }), {
+        status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    return new Response(JSON.stringify({ ok: true }), {
+    const gatewayHeaders = {
+      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      "X-Connection-Api-Key": RESEND_API_KEY,
+      "Content-Type": "application/json",
+    };
+
+    // Always send to Green Cabinets
+    const gcResponse = await fetch(`${GATEWAY_URL}/emails`, {
+      method: "POST",
+      headers: gatewayHeaders,
+      body: JSON.stringify({
+        from: "Green Cabinets Estimator <orders@greencabinetsny.com>",
+        to: ["orders@greencabinetsny.com"],
+        reply_to: customerEmail || undefined,
+        subject: subject || "New Quote Request — Green Cabinets Estimator",
+        html: quoteHtml,
+      }),
+    });
+
+    const gcData = await gcResponse.json().catch(() => ({}));
+
+    if (!gcResponse.ok) {
+      console.error("Resend gateway error (GC):", gcResponse.status, JSON.stringify(gcData));
+      return new Response(
+        JSON.stringify({ error: "Failed to send quote" }),
+        { status: gcResponse.status || 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Optionally send copy to customer
+    let customerSent = false;
+    if (sendToCustomer && customerEmail) {
+      const custResponse = await fetch(`${GATEWAY_URL}/emails`, {
+        method: "POST",
+        headers: gatewayHeaders,
+        body: JSON.stringify({
+          from: "Green Cabinets Estimator <orders@greencabinetsny.com>",
+          to: [customerEmail],
+          subject: `Your Quote from Green Cabinets — ${subject?.replace(/^Quote Request: /, '') || ''}`.trim(),
+          html: quoteHtml,
+        }),
+      });
+      const custData = await custResponse.json().catch(() => ({}));
+      if (custResponse.ok) {
+        customerSent = true;
+        console.log("Customer copy sent:", custData.id);
+      } else {
+        console.error("Customer copy failed:", custResponse.status, JSON.stringify(custData));
+      }
+    }
+
+    console.log("Email sent:", gcData.id);
+    return new Response(JSON.stringify({ success: true, id: gcData.id, customerSent }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("send-quote error:", e);
-    return new Response(JSON.stringify({ error: "Internal error" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Internal error" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 });
