@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { guardAiRequest, validateImagesInput } from "../_shared/aiGuard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -26,6 +27,9 @@ serve(async (req) => {
   }
 
   try {
+    const guard = await guardAiRequest(req, { corsHeaders, requireAuth: true });
+    if (guard) return guard;
+
     const body = await req.json();
 
     let images: { base64: string; mimeType: string }[] = [];
@@ -36,6 +40,8 @@ serve(async (req) => {
     }
 
     if (images.length === 0) throw new Error("No image data provided");
+    const sizeGuard = validateImagesInput(images);
+    if (sizeGuard) return new Response(await sizeGuard.text(), { status: sizeGuard.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -150,7 +156,7 @@ serve(async (req) => {
         );
       }
       return new Response(
-        JSON.stringify({ error: `AI request failed (${response.status}): ${errText}` }),
+        JSON.stringify({ error: "AI request failed. Please try again." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -188,7 +194,7 @@ serve(async (req) => {
   } catch (e) {
     console.error("analyze-blueprint error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "An internal error occurred. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
