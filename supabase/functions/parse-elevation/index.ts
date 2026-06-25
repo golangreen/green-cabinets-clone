@@ -828,7 +828,7 @@ Use the extract_cabinets tool to return your findings. Fill every field carefull
   } catch (e) {
     console.error("parse-elevation error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "An internal error occurred. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
