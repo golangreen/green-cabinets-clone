@@ -3663,12 +3663,14 @@
             R.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             R.shadowMap.enabled = true;
             R.shadowMap.type = THREE.PCFSoftShadowMap;
+            R.physicallyCorrectLights = true;
             if (THREE.ACESFilmicToneMapping !== undefined) {
                 R.toneMapping = THREE.ACESFilmicToneMapping;
-                R.toneMappingExposure = 1.05;
+                R.toneMappingExposure = 1.12;
             }
             if (THREE.sRGBEncoding !== undefined)
                 R.outputEncoding = THREE.sRGBEncoding;
+
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xE7E1D5);
             ENV = makeEnv();
