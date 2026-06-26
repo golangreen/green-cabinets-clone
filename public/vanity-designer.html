@@ -48,7 +48,10 @@
 
         /* ---------- layout ---------- */
         .gc-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:28px;align-items:start}
-        @media (max-width:900px){.gc-grid{grid-template-columns:1fr}}
+        .gc-grid > *{min-width:0}
+        .gc-preview,.gc-stage{min-width:0;max-width:100%}
+        #gl{max-width:100%}
+        @media (max-width:900px){.gc-grid{grid-template-columns:minmax(0,1fr)}}
 
         /* ---------- preview ---------- */
         .gc-preview{position:sticky;top:20px;background:linear-gradient(180deg,#FBF8F2 0%,#EFEAE0 100%);border:1px solid var(--line);border-radius:30px;padding:16px;box-shadow:var(--shadow-lift);overflow:hidden}
@@ -277,7 +280,7 @@
         @media (max-width:640px){
           body{font-size:15px}
           .gc-wrap{padding:0 12px 140px}
-          .gc-head{padding:18px 0 22px}
+          .gc-head{padding:64px 0 22px}
           .gc-head p{font-size:14px;padding:0 8px}
           .gc-eyebrow{font-size:10px;letter-spacing:.2em}
           .gc-eyebrow:before,.gc-eyebrow:after{width:20px}
