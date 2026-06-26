@@ -14,6 +14,7 @@
         
         <script> below in one PRICING block.
            ============================================================ */
+        html,body{margin:0;padding:0;min-height:100%;overflow-x:hidden;-webkit-text-size-adjust:100%}
         :root{
           --sage:#54704B; --sage-dark:#3E5437; --sage-tint:#ECF1E8;
           --brass:#A8854F; --brass-dark:#8C6C3C; --brass-tint:#F4ECDD;
@@ -25,7 +26,7 @@
           --ease:cubic-bezier(.22,.8,.26,1);
         }
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-        html{scroll-behavior:smooth;overflow-x:hidden}
+        html{scroll-behavior:smooth}
         body{
           font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
           background:
@@ -33,15 +34,6 @@
             var(--paper);
           color:var(--ink);
           -webkit-font-smoothing:antialiased; line-height:1.55;
-          overflow-x:hidden;
-          max-width:100vw;
-        }
-        *,*::before,*::after{max-width:100%}
-        .gc-stage,.gc-preview,.gc-panel,.gc-barin{max-width:100%;box-sizing:border-box}
-        @media (max-width:640px){
-          .gc-head{padding-top:64px !important}
-          .gc-bar{left:0;right:0}
-          .gc-barin{max-width:calc(100vw - 24px)}
         }
         .gc-wrap{max-width:1180px;margin:0 auto;padding:28px 20px 140px}
 
@@ -63,6 +55,9 @@
         @media (max-width:900px){.gc-preview{position:relative;top:0}}
         .gc-finalbtn{position:absolute;bottom:14px;right:14px;z-index:5;border:1px solid rgba(168,133,79,.55);background:linear-gradient(135deg,#C2A269,#8C6C3C);color:#FFFDF8;font-size:11.5px;font-weight:700;letter-spacing:.03em;padding:8px 14px;border-radius:99px;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 14px rgba(140,108,60,.4);white-space:nowrap;max-width:54%;overflow:hidden;text-overflow:ellipsis}
         .gc-finalbtn:hover{filter:brightness(1.07);transform:translateY(-1px);box-shadow:0 6px 20px rgba(140,108,60,.5)}
+        @media (max-width:900px){
+          .gc-preview{position:static!important;top:auto!important}   /* unpin 3D so page scrolls */
+        }
         @media (max-width:640px){.gc-finalbtn{bottom:10px;right:10px;font-size:11px;padding:7px 12px}}
         .gc-openbtn{position:absolute;bottom:14px;left:14px;z-index:5;border:1px solid rgba(168,133,79,.4);background:rgba(30,27,22,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#EDE6D8;font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:7px 12px;border-radius:99px;cursor:pointer;font-family:inherit;transition:all .2s;max-width:46%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .gc-openbtn:hover{background:rgba(30,27,22,.78);border-color:rgba(168,133,79,.7)}
@@ -98,7 +93,7 @@
         .gc-laybtn:hover{border-color:var(--brass)}
         .gc-laybtn.ghost{color:var(--ink-soft)}
         .gc-step .num{}
-        .gc-stage{border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#F1EDE5 0%,#E2DCD0 100%);position:relative;height:440px;touch-action:none;box-shadow:inset 0 0 0 1px rgba(33,30,24,.05), inset 0 -40px 60px rgba(33,30,24,.05)}
+        .gc-stage{border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#F1EDE5 0%,#E2DCD0 100%);position:relative;height:440px;touch-action:pan-y;box-shadow:inset 0 0 0 1px rgba(33,30,24,.05), inset 0 -40px 60px rgba(33,30,24,.05)}
         .gc-stage canvas{display:block;width:100%;height:100%;cursor:grab}
         .gc-stage canvas:active{cursor:grabbing}
         .gc-3dhint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11.5px;color:#7C766A;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);border-radius:99px;padding:4px 12px;pointer-events:none;white-space:nowrap}
@@ -290,9 +285,10 @@
           .gc-step h2{font-size:17px}
           .gc-step .hint{display:none}
           .gc-preview{padding:10px;border-radius:22px}
-          .gc-stage{height:300px;border-radius:16px}
+          .gc-stage{height:46vh;max-height:340px;min-height:240px;border-radius:16px}
           .gc-viewseg{top:18px;right:18px}
-          .gc-openbtn{bottom:10px;left:10px;font-size:11px;padding:6px 11px}
+          .gc-openbtn{bottom:10px;left:10px;font-size:10.5px;padding:6px 10px;max-width:42%}
+          .gc-finalbtn{bottom:10px;right:10px;font-size:10.5px;padding:6px 10px;max-width:50%}
           .gc-dims{padding:10px 4px 0;flex-wrap:wrap;gap:6px}
           .gc-dims .val{font-size:17px}
           .gc-dims .lbl{font-size:9px;letter-spacing:.14em}
@@ -550,7 +546,6 @@
            Until set, the tool falls back to opening the client's email app.
            ============================================================ */
         const QUOTE_ENDPOINT = "https://mczagaaiyzbhjvtrojia.supabase.co/functions/v1/send-quote-form";
-        const QUOTE_ANON_KEY = "";
         /* Supabase Edge Functions usually require the project's PUBLIC anon key.
            Paste it here (safe to expose — it's the public key, not a secret).
            Find it: Lovable Cloud/Supabase panel → Project Settings → API → "anon public".
@@ -3724,18 +3719,17 @@
                     R.render(scene, camera);
             };
 
-            /* drag to orbit + wheel/pinch zoom */
+            /* ----- Desktop: mouse drag rotates, wheel zooms ----- */
             let drag = false,
                 px = 0,
                 py = 0,
                 pinch = 0;
-            canvas.addEventListener("pointerdown", e => {
+            canvas.addEventListener("mousedown", e => {
                 drag = true;
                 px = e.clientX;
                 py = e.clientY;
-                canvas.setPointerCapture(e.pointerId);
             });
-            canvas.addEventListener("pointermove", e => {
+            window.addEventListener("mousemove", e => {
                 if (!drag)
                     return;
                 theta -= (e.clientX - px) * 0.008;
@@ -3744,7 +3738,7 @@
                 px = e.clientX;
                 py = e.clientY;
             });
-            canvas.addEventListener("pointerup", () => drag = false);
+            window.addEventListener("mouseup", () => drag = false);
             canvas.addEventListener("wheel", e => {
                 e.preventDefault();
                 dist *= 1 + Math.sign(e.deltaY) * 0.07;
@@ -3752,21 +3746,62 @@
             }, {
                 passive: false
             });
+
+            /* ----- Touch: distinguish a horizontal rotate-swipe from a vertical page-scroll.
+                 Until we know the intent, we DON'T preventDefault, so the page can scroll.
+                 Once a clearly-horizontal drag is detected, we take over and rotate. ----- */
+            let tStartX = 0,
+                tStartY = 0,
+                tMode = null; /* null=undecided, "rotate", "scroll" */
             canvas.addEventListener("touchstart", e => {
                 if (e.touches.length === 2) {
+                    tMode = "pinch";
                     drag = false;
                     pinch = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                } else if (e.touches.length === 1) {
+                    tMode = null;
+                    tStartX = px = e.touches[0].clientX;
+                    tStartY = py = e.touches[0].clientY;
                 }
             }, {
                 passive: true
             });
             canvas.addEventListener("touchmove", e => {
-                if (e.touches.length === 2) {
+                if (tMode === "pinch" && e.touches.length === 2) {
                     const d2 = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
                     dist *= pinch / d2;
                     dist = Math.min(Math.max(dist, 40), 500);
                     pinch = d2;
+                    e.preventDefault();
+                    return;
                 }
+                if (e.touches.length !== 1)
+                    return;
+                const x = e.touches[0].clientX,
+                    y = e.touches[0].clientY;
+                if (tMode === null) {
+                    const dx = Math.abs(x - tStartX),
+                        dy = Math.abs(y - tStartY);
+                    if (dx < 6 && dy < 6)
+                        return; /* not enough movement to decide */
+                    /* horizontal-ish -> rotate the model; vertical-ish -> let the page scroll */
+                    tMode = (dx > dy * 1.2) ? "rotate" : "scroll";
+                }
+                if (tMode === "rotate") {
+                    e.preventDefault(); /* we own this gesture now */
+                    theta -= (x - px) * 0.01;
+                    phi -= (y - py) * 0.008;
+                    phi = Math.min(Math.max(phi, .5), 1.55);
+                    px = x;
+                    py = y;
+                }
+
+            }, /* tMode==="scroll": do nothing, browser scrolls the page normally */
+            {
+                passive: false
+            });
+            canvas.addEventListener("touchend", () => {
+                tMode = null;
             }, {
                 passive: true
             });
