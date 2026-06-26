@@ -123,6 +123,12 @@ const Footer = () => {
           </div>
         </div>
         
+        <div className="pt-4 sm:pt-6 text-center text-xs sm:text-sm text-primary-foreground/90">
+          <a href="/estimator" className="hover:text-white transition-colors underline underline-offset-2">
+            Estimate Your Project
+          </a>
+        </div>
+        
         <div className="pt-6 sm:pt-8 border-t border-gray-800 text-center text-xs sm:text-sm text-primary-foreground/90">
           <p>&copy; 2025 Green Cabinets. All rights reserved.</p>
         </div>
