@@ -2443,10 +2443,12 @@
         function texFrom(cv) {
             const t = new THREE.CanvasTexture(cv);
             t.wrapS = t.wrapT = THREE.RepeatWrapping;
+            t.anisotropy = 16;
             if (THREE.sRGBEncoding !== undefined)
                 t.encoding = THREE.sRGBEncoding;
             return t;
         }
+
         /* ===== REAL PANEL SCANS (same-origin, no CORS, no proxy) =====
            Map finish id -> a real swatch image URL. Data URIs are embedded now;
            replace each with https://greencabinetsny.com/swatches/<name>.jpg when hosted.
