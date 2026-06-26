@@ -2544,22 +2544,25 @@
                     const tex = new THREE.Texture(im);
                     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
                     tex.needsUpdate = true;
-                    tex.anisotropy = 8;
+                    tex.anisotropy = 16;
                     if (THREE.sRGBEncoding !== undefined)
                         tex.encoding = THREE.sRGBEncoding;
                     pair.a.map = tex;
+                    pair.a.bumpMap = tex;
                     pair.a.needsUpdate = true;
                     pair.a.realScan = true;
                     const t2 = tex.clone();
                     t2.image = im;
                     t2.needsUpdate = true;
-                    t2.anisotropy = 8;
+                    t2.anisotropy = 16;
                     t2.wrapS = t2.wrapT = THREE.RepeatWrapping;
                     if (THREE.sRGBEncoding !== undefined)
                         t2.encoding = THREE.sRGBEncoding;
                     pair.b.map = t2;
+                    pair.b.bumpMap = t2;
                     pair.b.needsUpdate = true;
                     pair.b.realScan = true;
+
                     if (window.__gcTouch)
                         window.__gcTouch();
                 };
