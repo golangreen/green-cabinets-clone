@@ -2403,20 +2403,32 @@
         function stoneMaterial(st) {
             if (stoneCache[st.id])
                 return stoneCache[st.id];
-            const tex = new THREE.CanvasTexture(makeStoneCanvas(st));
+            const cv = makeStoneCanvas(st);
+            const tex = new THREE.CanvasTexture(cv);
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+            tex.anisotropy = 16;
+            tex.repeat.set(1.4, 1);
             if (THREE.sRGBEncoding !== undefined)
                 tex.encoding = THREE.sRGBEncoding;
-            const mat = new THREE.MeshStandardMaterial({
+            const bump = new THREE.CanvasTexture(cv);
+            bump.wrapS = bump.wrapT = THREE.RepeatWrapping;
+            bump.repeat.set(1.4, 1);
+            const Mat = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
+            const mat = new Mat({
                 map: tex,
-                roughness: .08,
-                metalness: .06,
+                bumpMap: bump,
+                bumpScale: 0.015,
+                roughness: .12,
+                metalness: .02,
                 envMap: ENV,
-                envMapIntensity: .9
+                envMapIntensity: 1.1,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.06
             });
             stoneCache[st.id] = mat;
             return mat;
         }
+
 
         function flipCanvas(cv) {
             const out = document.createElement("canvas");
