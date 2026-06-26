@@ -3698,7 +3698,7 @@
             R.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             R.shadowMap.enabled = true;
             R.shadowMap.type = THREE.PCFSoftShadowMap;
-            R.physicallyCorrectLights = true;
+            /* keep physicallyCorrectLights OFF so the existing scene-light intensities still balance */
             if (THREE.ACESFilmicToneMapping !== undefined) {
                 R.toneMapping = THREE.ACESFilmicToneMapping;
                 R.toneMappingExposure = 1.12;
