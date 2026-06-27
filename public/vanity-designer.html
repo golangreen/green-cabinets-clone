@@ -3956,6 +3956,10 @@
             }
             if (THREE.sRGBEncoding !== undefined)
                 R.outputEncoding = THREE.sRGBEncoding;
+            if (THREE.PMREMGenerator) {
+                PMREM = new THREE.PMREMGenerator(R);
+                PMREM.compileCubemapShader && PMREM.compileCubemapShader();
+            }
 
             scene = new THREE.Scene();
             scene.background = new THREE.Color(_lp0.bg);
