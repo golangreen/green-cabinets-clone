@@ -2399,6 +2399,34 @@
             return cv;
         }
 
+        /* ================== SHOWROOM MATERIAL PRESETS ==================
+           Map countertop + panel categories -> physically-tuned PBR params
+           so each option reads like the real slab/door under showroom light.
+           Tweak ONE table here, every surface in the scene updates. */
+        const STONE_PRESETS = {
+            /* polished engineered quartz - mirror-like clearcoat over diffuse */
+            quartz_polished:  { roughness: .10, clearcoat: 1.00, clearcoatRoughness: 0.05, bumpScale: 0.012, envMapIntensity: 1.20, metalness: .02 },
+            /* polished natural marble - slightly softer top coat, deeper veining relief */
+            marble_polished:  { roughness: .14, clearcoat: 0.85, clearcoatRoughness: 0.09, bumpScale: 0.022, envMapIntensity: 1.10, metalness: .01 },
+            /* honed / matte stone - no clearcoat, broad diffuse */
+            stone_honed:      { roughness: .55, clearcoat: 0.10, clearcoatRoughness: 0.50, bumpScale: 0.030, envMapIntensity: 0.55, metalness: .01 },
+            /* leathered finish - low gloss, pronounced micro-relief */
+            stone_leathered:  { roughness: .72, clearcoat: 0.05, clearcoatRoughness: 0.70, bumpScale: 0.055, envMapIntensity: 0.45, metalness: .01 },
+            /* granite - polished but more crystalline scatter */
+            granite_polished: { roughness: .18, clearcoat: 0.90, clearcoatRoughness: 0.08, bumpScale: 0.020, envMapIntensity: 1.05, metalness: .03 },
+            /* concrete / porcelain matte */
+            concrete:         { roughness: .80, clearcoat: 0.00, clearcoatRoughness: 1.00, bumpScale: 0.040, envMapIntensity: 0.40, metalness: .00 }
+        };
+        function stonePresetFor(st) {
+            const n = ((st.name || "") + " " + (st.id || "")).toLowerCase();
+            if (/leather/.test(n))               return STONE_PRESETS.stone_leathered;
+            if (/honed|matte/.test(n))           return STONE_PRESETS.stone_honed;
+            if (/concrete|porcelain/.test(n))    return STONE_PRESETS.concrete;
+            if (/granite/.test(n))               return STONE_PRESETS.granite_polished;
+            if (/marble|calacatta|carrara|statuario/.test(n)) return STONE_PRESETS.marble_polished;
+            return STONE_PRESETS.quartz_polished;
+        }
+
         const stoneCache = {};
         function stoneMaterial(st) {
             if (stoneCache[st.id])
@@ -2414,17 +2442,19 @@
             bump.wrapS = bump.wrapT = THREE.RepeatWrapping;
             bump.repeat.set(1.4, 1);
             const Mat = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
+            const p = stonePresetFor(st);
             const mat = new Mat({
                 map: tex,
                 bumpMap: bump,
-                bumpScale: 0.015,
-                roughness: .12,
-                metalness: .02,
+                bumpScale: p.bumpScale,
+                roughness: p.roughness,
+                metalness: p.metalness,
                 envMap: ENV,
-                envMapIntensity: 1.1,
-                clearcoat: 1.0,
-                clearcoatRoughness: 0.06
+                envMapIntensity: p.envMapIntensity,
+                clearcoat: p.clearcoat,
+                clearcoatRoughness: p.clearcoatRoughness
             });
+            mat.userData.preset = p;
             stoneCache[st.id] = mat;
             return mat;
         }
@@ -2504,27 +2534,57 @@
             return "#" + h(r) + h(g) + h(b);
         }
 
+        /* ----- PANEL / DOOR-FRONT SHOWROOM PRESETS -----
+           Categories cover every panel style we stock. Resolved from
+           finish.finish > finish.category > name keywords > brand default. */
+        const PANEL_PRESETS = {
+            high_gloss:    { roughness: .12, clearcoat: 1.00, clearcoatRoughness: 0.05, bumpScale: 0.002, envMapIntensity: 1.15, metalness: .04 },
+            gloss_lacquer: { roughness: .18, clearcoat: 0.95, clearcoatRoughness: 0.10, bumpScale: 0.003, envMapIntensity: 1.00, metalness: .04 },
+            satin_lacquer: { roughness: .32, clearcoat: 0.75, clearcoatRoughness: 0.22, bumpScale: 0.004, envMapIntensity: 0.85, metalness: .03 },
+            super_matte:   { roughness: .68, clearcoat: 0.20, clearcoatRoughness: 0.55, bumpScale: 0.006, envMapIntensity: 0.45, metalness: .02 },
+            matte_lam:     { roughness: .55, clearcoat: 0.30, clearcoatRoughness: 0.45, bumpScale: 0.008, envMapIntensity: 0.55, metalness: .02 },
+            wood_satin:    { roughness: .42, clearcoat: 0.55, clearcoatRoughness: 0.32, bumpScale: 0.012, envMapIntensity: 0.85, metalness: .03 },
+            wood_oiled:    { roughness: .62, clearcoat: 0.15, clearcoatRoughness: 0.50, bumpScale: 0.018, envMapIntensity: 0.55, metalness: .02 },
+            textured_syn:  { roughness: .58, clearcoat: 0.40, clearcoatRoughness: 0.40, bumpScale: 0.022, envMapIntensity: 0.70, metalness: .03 },
+            metallic:      { roughness: .35, clearcoat: 0.85, clearcoatRoughness: 0.15, bumpScale: 0.004, envMapIntensity: 1.30, metalness: .55 },
+            stone_look:    { roughness: .50, clearcoat: 0.45, clearcoatRoughness: 0.30, bumpScale: 0.020, envMapIntensity: 0.80, metalness: .02 }
+        };
+        function panelPresetFor(f) {
+            if (f.finish && PANEL_PRESETS[f.finish]) return PANEL_PRESETS[f.finish];
+            if (f.category && PANEL_PRESETS[f.category]) return PANEL_PRESETS[f.category];
+            const n = ((f.name || "") + " " + (f.code || "") + " " + (f.id || "")).toLowerCase();
+            if (/metal|brass|copper|bronze|steel|aluminum/.test(n)) return PANEL_PRESETS.metallic;
+            if (/high\s*gloss|hi-?gloss|gloss\b/.test(n))           return PANEL_PRESETS.high_gloss;
+            if (/super\s*matte|supermat|fenix|nanotech/.test(n))    return PANEL_PRESETS.super_matte;
+            if (/matte|matt\b/.test(n))                              return PANEL_PRESETS.matte_lam;
+            if (/textur|emboss|relief|stucco|woven/.test(n))         return PANEL_PRESETS.textured_syn;
+            if (/stone|concrete|marble|terrazzo/.test(n))            return PANEL_PRESETS.stone_look;
+            if (/oak|walnut|ash|oiled|raw|natural\s*wood/.test(n) && !f.solid) return PANEL_PRESETS.wood_oiled;
+            if (!f.solid)                                            return PANEL_PRESETS.wood_satin;
+            return PANEL_PRESETS.satin_lacquer;
+        }
+
         function finishMats(f) {
             if (texCache[f.id])
                 return texCache[f.id];
             const cv = makeWoodCanvas(f);
             const Mat = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
+            const p = panelPresetFor(f);
             const mk = t => {
                 const m = new Mat({
                     map: t,
-                    roughness: f.solid ? .32 : .42,
-                    metalness: .03,
+                    roughness: p.roughness,
+                    metalness: p.metalness,
                     envMap: ENV,
-                    envMapIntensity: .85
+                    envMapIntensity: p.envMapIntensity
                 });
-                /* satin lacquer clearcoat — what makes real laminate/painted MDF read true */
                 if ('clearcoat' in m) {
-                    m.clearcoat = f.solid ? 0.85 : 0.55;
-                    m.clearcoatRoughness = f.solid ? 0.18 : 0.32;
+                    m.clearcoat = p.clearcoat;
+                    m.clearcoatRoughness = p.clearcoatRoughness;
                 }
-                /* micro surface relief from the same canvas, very subtle */
                 m.bumpMap = t;
-                m.bumpScale = f.solid ? 0.004 : 0.012;
+                m.bumpScale = p.bumpScale;
+                m.userData.preset = p;
                 return m;
             };
 
