@@ -2298,6 +2298,7 @@
             if (PMREM) {
                 const target = PMREM.fromCubemap(cube);
                 cube.dispose && cube.dispose();
+                target.texture.userData = target.texture.userData || {};
                 target.texture.userData.pmremTarget = target;
                 return target.texture;
             }
