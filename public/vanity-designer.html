@@ -67,6 +67,11 @@
         .gc-viewseg{position:absolute;top:26px;right:26px;z-index:5;display:flex;background:rgba(30,27,22,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(168,133,79,.35);border-radius:12px;padding:3px;gap:3px}
         .gc-viewseg button{border:0;background:transparent;color:#D8D0C0;font-size:12.5px;font-weight:600;letter-spacing:.04em;padding:7px 14px;border-radius:9px;cursor:pointer;font-family:inherit;transition:all .2s}
         .gc-viewseg button.on{background:rgba(255,253,248,.92);color:#211E18}
+        .gc-lightseg{position:absolute;top:26px;left:26px;z-index:5;display:flex;background:rgba(30,27,22,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(168,133,79,.35);border-radius:12px;padding:3px;gap:2px}
+        .gc-lightseg button{border:0;background:transparent;color:#D8D0C0;font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:6px 11px;border-radius:9px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:5px}
+        .gc-lightseg button.on{background:rgba(255,253,248,.92);color:#211E18}
+        .gc-lightseg .dot{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+        @media (max-width:640px){.gc-lightseg{top:18px;left:auto;right:18px;font-size:11px}.gc-viewseg{display:none}.gc-lightseg button{padding:6px 9px;font-size:11px}.gc-lightseg button .lbl{display:none}}
         .gc-borrowed{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:var(--ink-soft);font-size:13px;letter-spacing:.02em;background:linear-gradient(180deg,#F1EDE5,#E2DCD0)}
         .gc-borrowed.show{display:flex}
         #gl{display:block;width:100%;height:100%}
@@ -349,6 +354,11 @@
             <!-- ===== LIVE PREVIEW ===== -->
             <div class="gc-preview" style="position:sticky;top:20px">
               <div class="gc-stage" id="stage">
+                <div class="gc-lightseg" id="lightSeg" role="tablist" aria-label="Showroom lighting">
+                  <button data-light="morning" title="Morning daylight"><span class="dot" style="background:#FFE9C2"></span><span class="lbl">Morning</span></button>
+                  <button data-light="overhead" class="on" title="Overhead showroom"><span class="dot" style="background:#FFFFFF"></span><span class="lbl">Overhead</span></button>
+                  <button data-light="warm" title="Warm showroom"><span class="dot" style="background:#FFC98A"></span><span class="lbl">Warm</span></button>
+                </div>
                 <button class="gc-openbtn" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
                 <button class="gc-finalbtn" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
                 <canvas id="gl"></canvas><div class="gc-borrowed" id="glBorrowed">Viewing in full screen…</div>
@@ -2228,20 +2238,103 @@
             }
             return cv;
         }
-        function makeEnv() {
-            /* px,nx,py,ny,pz,nz — a warm showroom: bright ceiling, greige floor, ivory walls */
+        /* ================== SHOWROOM LIGHTING PRESETS ==================
+           Each preset drives env cubemap colours + three.js lights + tone
+           exposure + envMapIntensity multiplier. Switching presets re-veneers
+           every PBR material so roughness/clearcoat read correctly. */
+        const LIGHTING_PRESETS = {
+            morning: {
+                label: "Morning",
+                bg: 0xEFE6D2, exposure: 1.18, envMul: 1.10,
+                env: {
+                    px:["#FFE9C2","#E8C594", true], nx:["#F3DDB8","#C8AC7E", false],
+                    py:["#FFF6E1","#FFE2B6", true], ny:["#8A7E68","#6A5F4E", false],
+                    pz:["#FFEAC2","#E2C292", true], nz:["#E8D6B0","#C2A77C", false]
+                },
+                hemi:  { sky:0xFFE7BC, ground:0x8E7F62, i:0.55 },
+                key:   { color:0xFFD79A, i:1.55, pos:[110, 90, 70] },
+                fill:  { color:0xE8D4B6, i:0.32, pos:[-70, 50, 60] },
+                rim:   { color:0xFFF0D2, i:0.30, pos:[0, 60, -90] }
+            },
+            overhead: {
+                label: "Overhead",
+                bg: 0xE7E1D5, exposure: 1.12, envMul: 1.00,
+                env: {
+                    px:["#EFE9DE","#C9C1B2", true], nx:["#E4DDD0","#BDB5A6", false],
+                    py:["#FFFFFF","#F2ECDE", true], ny:["#8A8276","#6E675C", false],
+                    pz:["#F0EADD","#CFC7B7", true], nz:["#E8E1D3","#C7BEAE", false]
+                },
+                hemi:  { sky:0xFFFBF2, ground:0x9A9486, i:0.42 },
+                key:   { color:0xFFF1DA, i:1.25, pos:[70, 130, 90] },
+                fill:  { color:0xDCE6F0, i:0.28, pos:[-80, 50, 70] },
+                rim:   { color:0xFFFFFF, i:0.25, pos:[0, 60, -90] }
+            },
+            warm: {
+                label: "Warm",
+                bg: 0xE6D8C0, exposure: 1.05, envMul: 0.95,
+                env: {
+                    px:["#F4E2C2","#C9A874", true], nx:["#E8D2AC","#B8966A", false],
+                    py:["#FFE8C0","#F0CE96", true], ny:["#6E5F48","#52442F", false],
+                    pz:["#F2DDB6","#C9A06A", true], nz:["#E2C898","#A8825A", false]
+                },
+                hemi:  { sky:0xFFE0AE, ground:0x6E5A40, i:0.40 },
+                key:   { color:0xFFC98A, i:1.35, pos:[60, 110, 80] },
+                fill:  { color:0xF0C68A, i:0.30, pos:[-70, 50, 60] },
+                rim:   { color:0xFFD7A0, i:0.32, pos:[0, 60, -90] }
+            }
+        };
+        let CURRENT_LIGHTING = "overhead";
+
+        function makeEnv(presetId) {
+            const p = LIGHTING_PRESETS[presetId || CURRENT_LIGHTING].env;
             const faces = [
-            envFace("#EFE9DE", "#C9C1B2", true), /* +x wall w/ softbox */
-            envFace("#E4DDD0", "#BDB5A6"), /* -x wall */
-            envFace("#FFFFFF", "#F2ECDE", true), /* ceiling: bright, the key reflection */
-            envFace("#8A8276", "#6E675C"), /* floor: darker for contrast */
-            envFace("#F0EADD", "#CFC7B7", true), /* +z front softbox */
-            envFace("#E8E1D3", "#C7BEAE") /* -z back */
+                envFace(...p.px), envFace(...p.nx),
+                envFace(...p.py), envFace(...p.ny),
+                envFace(...p.pz), envFace(...p.nz)
             ];
             const tex = new THREE.CubeTexture(faces);
             tex.needsUpdate = true;
             return tex;
         }
+
+        function applyLighting(id) {
+            const lp = LIGHTING_PRESETS[id];
+            if (!lp || !R || !scene) return;
+            CURRENT_LIGHTING = id;
+            R.toneMappingExposure = lp.exposure;
+            scene.background = new THREE.Color(lp.bg);
+            ENV = makeEnv(id);
+            scene.environment = ENV;
+            const L = scene.userData.lights;
+            if (L) {
+                L.hemi.color.setHex(lp.hemi.sky);
+                L.hemi.groundColor.setHex(lp.hemi.ground);
+                L.hemi.intensity = lp.hemi.i;
+                L.sun.color.setHex(lp.key.color);
+                L.sun.intensity = lp.key.i;
+                L.sun.position.set(...lp.key.pos);
+                L.fill.color.setHex(lp.fill.color);
+                L.fill.intensity = lp.fill.i;
+                L.fill.position.set(...lp.fill.pos);
+                L.rim.color.setHex(lp.rim.color);
+                L.rim.intensity = lp.rim.i;
+                L.rim.position.set(...lp.rim.pos);
+            }
+            /* refresh PBR mats: swap env reference + scale envMapIntensity from preset */
+            scene.traverse(o => {
+                const mats = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : null;
+                if (!mats) return;
+                mats.forEach(m => {
+                    if (!m || !('envMapIntensity' in m)) return;
+                    const base = (m.userData && m.userData.preset && m.userData.preset.envMapIntensity) || 1;
+                    m.envMap = ENV;
+                    m.envMapIntensity = base * lp.envMul;
+                    m.needsUpdate = true;
+                });
+            });
+            if (window.__gcTouch) window.__gcTouch();
+        }
+        window.applyLighting = applyLighting;
         let theta = 0.42,
             phi = 1.36,
             dist = 120;
@@ -3524,9 +3617,11 @@
         }
 
         function initRoom() {
-            scene.add(new THREE.HemisphereLight(0xFFFBF2, 0x9A9486, 0.42)); /* lower ambient = deeper natural shadows */
-            const sun = new THREE.DirectionalLight(0xFFF1DA, 1.25);
-            sun.position.set(70, 130, 90);
+            const lp = LIGHTING_PRESETS[CURRENT_LIGHTING];
+            const hemi = new THREE.HemisphereLight(lp.hemi.sky, lp.hemi.ground, lp.hemi.i);
+            scene.add(hemi);
+            const sun = new THREE.DirectionalLight(lp.key.color, lp.key.i);
+            sun.position.set(...lp.key.pos);
             sun.castShadow = true;
             sun.shadow.mapSize.set(2048, 2048);
             sun.shadow.camera.left = -120;
@@ -3535,14 +3630,15 @@
             sun.shadow.camera.bottom = -20;
             sun.shadow.bias = -0.0004;
             if ("radius" in sun.shadow)
-                sun.shadow.radius = 4; /* soft penumbra */
+                sun.shadow.radius = 4;
             scene.add(sun);
-            const fill = new THREE.DirectionalLight(0xDCE6F0, 0.28);
-            fill.position.set(-80, 50, 70);
+            const fill = new THREE.DirectionalLight(lp.fill.color, lp.fill.i);
+            fill.position.set(...lp.fill.pos);
             scene.add(fill);
-            const rim = new THREE.DirectionalLight(0xFFFFFF, 0.25);
-            rim.position.set(0, 60, -90);
+            const rim = new THREE.DirectionalLight(lp.rim.color, lp.rim.i);
+            rim.position.set(...lp.rim.pos);
             scene.add(rim);
+            scene.userData.lights = { hemi, sun, fill, rim };
 
             /* polished large-format tile floor */
             const ft = document.createElement("canvas");
@@ -3759,16 +3855,18 @@
             R.shadowMap.enabled = true;
             R.shadowMap.type = THREE.PCFSoftShadowMap;
             /* keep physicallyCorrectLights OFF so the existing scene-light intensities still balance */
+            const _lp0 = LIGHTING_PRESETS[CURRENT_LIGHTING];
             if (THREE.ACESFilmicToneMapping !== undefined) {
                 R.toneMapping = THREE.ACESFilmicToneMapping;
-                R.toneMappingExposure = 1.12;
+                R.toneMappingExposure = _lp0.exposure;
             }
             if (THREE.sRGBEncoding !== undefined)
                 R.outputEncoding = THREE.sRGBEncoding;
 
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xE7E1D5);
+            scene.background = new THREE.Color(_lp0.bg);
             ENV = makeEnv();
+            scene.environment = ENV;
             camera = new THREE.PerspectiveCamera(38, 1, 1, 2000);
             root = new THREE.Group();
             scene.add(root);
@@ -4731,6 +4829,18 @@
                     window.__gcSize3d();
             });
         }
+
+        /* showroom lighting chip group */
+        (function wireLightSeg(){
+            const seg = document.getElementById("lightSeg");
+            if (!seg) return;
+            seg.addEventListener("click", e => {
+                const b = e.target.closest("button[data-light]");
+                if (!b) return;
+                seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+                applyLighting(b.dataset.light);
+            });
+        })();
         </script>
         </div>
         </body>
