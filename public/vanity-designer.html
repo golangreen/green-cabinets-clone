@@ -2296,6 +2296,45 @@
             tex.needsUpdate = true;
             return tex;
         }
+
+        function applyLighting(id) {
+            const lp = LIGHTING_PRESETS[id];
+            if (!lp || !R || !scene) return;
+            CURRENT_LIGHTING = id;
+            R.toneMappingExposure = lp.exposure;
+            scene.background = new THREE.Color(lp.bg);
+            ENV = makeEnv(id);
+            scene.environment = ENV;
+            const L = scene.userData.lights;
+            if (L) {
+                L.hemi.color.setHex(lp.hemi.sky);
+                L.hemi.groundColor.setHex(lp.hemi.ground);
+                L.hemi.intensity = lp.hemi.i;
+                L.sun.color.setHex(lp.key.color);
+                L.sun.intensity = lp.key.i;
+                L.sun.position.set(...lp.key.pos);
+                L.fill.color.setHex(lp.fill.color);
+                L.fill.intensity = lp.fill.i;
+                L.fill.position.set(...lp.fill.pos);
+                L.rim.color.setHex(lp.rim.color);
+                L.rim.intensity = lp.rim.i;
+                L.rim.position.set(...lp.rim.pos);
+            }
+            /* refresh PBR mats: swap env reference + scale envMapIntensity from preset */
+            scene.traverse(o => {
+                const mats = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : null;
+                if (!mats) return;
+                mats.forEach(m => {
+                    if (!m || !('envMapIntensity' in m)) return;
+                    const base = (m.userData && m.userData.preset && m.userData.preset.envMapIntensity) || 1;
+                    m.envMap = ENV;
+                    m.envMapIntensity = base * lp.envMul;
+                    m.needsUpdate = true;
+                });
+            });
+            if (window.__gcTouch) window.__gcTouch();
+        }
+        window.applyLighting = applyLighting;
         let theta = 0.42,
             phi = 1.36,
             dist = 120;
