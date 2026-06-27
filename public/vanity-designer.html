@@ -2238,15 +2238,59 @@
             }
             return cv;
         }
-        function makeEnv() {
-            /* px,nx,py,ny,pz,nz — a warm showroom: bright ceiling, greige floor, ivory walls */
+        /* ================== SHOWROOM LIGHTING PRESETS ==================
+           Each preset drives env cubemap colours + three.js lights + tone
+           exposure + envMapIntensity multiplier. Switching presets re-veneers
+           every PBR material so roughness/clearcoat read correctly. */
+        const LIGHTING_PRESETS = {
+            morning: {
+                label: "Morning",
+                bg: 0xEFE6D2, exposure: 1.18, envMul: 1.10,
+                env: {
+                    px:["#FFE9C2","#E8C594", true], nx:["#F3DDB8","#C8AC7E", false],
+                    py:["#FFF6E1","#FFE2B6", true], ny:["#8A7E68","#6A5F4E", false],
+                    pz:["#FFEAC2","#E2C292", true], nz:["#E8D6B0","#C2A77C", false]
+                },
+                hemi:  { sky:0xFFE7BC, ground:0x8E7F62, i:0.55 },
+                key:   { color:0xFFD79A, i:1.55, pos:[110, 90, 70] },
+                fill:  { color:0xE8D4B6, i:0.32, pos:[-70, 50, 60] },
+                rim:   { color:0xFFF0D2, i:0.30, pos:[0, 60, -90] }
+            },
+            overhead: {
+                label: "Overhead",
+                bg: 0xE7E1D5, exposure: 1.12, envMul: 1.00,
+                env: {
+                    px:["#EFE9DE","#C9C1B2", true], nx:["#E4DDD0","#BDB5A6", false],
+                    py:["#FFFFFF","#F2ECDE", true], ny:["#8A8276","#6E675C", false],
+                    pz:["#F0EADD","#CFC7B7", true], nz:["#E8E1D3","#C7BEAE", false]
+                },
+                hemi:  { sky:0xFFFBF2, ground:0x9A9486, i:0.42 },
+                key:   { color:0xFFF1DA, i:1.25, pos:[70, 130, 90] },
+                fill:  { color:0xDCE6F0, i:0.28, pos:[-80, 50, 70] },
+                rim:   { color:0xFFFFFF, i:0.25, pos:[0, 60, -90] }
+            },
+            warm: {
+                label: "Warm",
+                bg: 0xE6D8C0, exposure: 1.05, envMul: 0.95,
+                env: {
+                    px:["#F4E2C2","#C9A874", true], nx:["#E8D2AC","#B8966A", false],
+                    py:["#FFE8C0","#F0CE96", true], ny:["#6E5F48","#52442F", false],
+                    pz:["#F2DDB6","#C9A06A", true], nz:["#E2C898","#A8825A", false]
+                },
+                hemi:  { sky:0xFFE0AE, ground:0x6E5A40, i:0.40 },
+                key:   { color:0xFFC98A, i:1.35, pos:[60, 110, 80] },
+                fill:  { color:0xF0C68A, i:0.30, pos:[-70, 50, 60] },
+                rim:   { color:0xFFD7A0, i:0.32, pos:[0, 60, -90] }
+            }
+        };
+        let CURRENT_LIGHTING = "overhead";
+
+        function makeEnv(presetId) {
+            const p = LIGHTING_PRESETS[presetId || CURRENT_LIGHTING].env;
             const faces = [
-            envFace("#EFE9DE", "#C9C1B2", true), /* +x wall w/ softbox */
-            envFace("#E4DDD0", "#BDB5A6"), /* -x wall */
-            envFace("#FFFFFF", "#F2ECDE", true), /* ceiling: bright, the key reflection */
-            envFace("#8A8276", "#6E675C"), /* floor: darker for contrast */
-            envFace("#F0EADD", "#CFC7B7", true), /* +z front softbox */
-            envFace("#E8E1D3", "#C7BEAE") /* -z back */
+                envFace(...p.px), envFace(...p.nx),
+                envFace(...p.py), envFace(...p.ny),
+                envFace(...p.pz), envFace(...p.nz)
             ];
             const tex = new THREE.CubeTexture(faces);
             tex.needsUpdate = true;
