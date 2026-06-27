@@ -356,8 +356,8 @@
               <div class="gc-stage" id="stage">
                 <div class="gc-lightseg" id="lightSeg" role="tablist" aria-label="Showroom lighting">
                   <button data-light="morning" title="Morning daylight"><span class="dot" style="background:#FFE9C2"></span><span class="lbl">Morning</span></button>
-                  <button data-light="overhead" class="on" title="Overhead showroom"><span class="dot" style="background:#FFFFFF"></span><span class="lbl">Overhead</span></button>
-                  <button data-light="warm" title="Warm showroom"><span class="dot" style="background:#FFC98A"></span><span class="lbl">Warm</span></button>
+                  <button data-light="overhead" title="Overhead showroom"><span class="dot" style="background:#FFFFFF"></span><span class="lbl">Overhead</span></button>
+                  <button data-light="warm" class="on" title="Warm showroom"><span class="dot" style="background:#FFC98A"></span><span class="lbl">Warm</span></button>
                 </div>
                 <button class="gc-openbtn" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
                 <button class="gc-finalbtn" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
@@ -2214,7 +2214,8 @@
             camera,
             root,
             raf,
-            ENV = null;
+            ENV = null,
+            PMREM = null;
 
         function envFace(top, bottom, softbox) {
             const S = 128,
@@ -2283,7 +2284,7 @@
                 rim:   { color:0xFFD7A0, i:0.32, pos:[0, 60, -90] }
             }
         };
-        let CURRENT_LIGHTING = "overhead";
+        let CURRENT_LIGHTING = "warm";
 
         function makeEnv(presetId) {
             const p = LIGHTING_PRESETS[presetId || CURRENT_LIGHTING].env;
@@ -2292,9 +2293,16 @@
                 envFace(...p.py), envFace(...p.ny),
                 envFace(...p.pz), envFace(...p.nz)
             ];
-            const tex = new THREE.CubeTexture(faces);
-            tex.needsUpdate = true;
-            return tex;
+            const cube = new THREE.CubeTexture(faces);
+            cube.needsUpdate = true;
+            if (PMREM) {
+                const target = PMREM.fromCubemap(cube);
+                cube.dispose && cube.dispose();
+                target.texture.userData = target.texture.userData || {};
+                target.texture.userData.pmremTarget = target;
+                return target.texture;
+            }
+            return cube;
         }
 
         function applyLighting(id) {
@@ -2303,6 +2311,9 @@
             CURRENT_LIGHTING = id;
             R.toneMappingExposure = lp.exposure;
             scene.background = new THREE.Color(lp.bg);
+            if (ENV && ENV.userData && ENV.userData.pmremTarget) {
+                ENV.userData.pmremTarget.dispose();
+            }
             ENV = makeEnv(id);
             scene.environment = ENV;
             const L = scene.userData.lights;
@@ -2498,17 +2509,17 @@
            Tweak ONE table here, every surface in the scene updates. */
         const STONE_PRESETS = {
             /* polished engineered quartz - mirror-like clearcoat over diffuse */
-            quartz_polished:  { roughness: .10, clearcoat: 1.00, clearcoatRoughness: 0.05, bumpScale: 0.012, envMapIntensity: 1.20, metalness: .02 },
+            quartz_polished:  { roughness: .075, clearcoat: 1.00, clearcoatRoughness: 0.035, bumpScale: 0.010, normalScale: .16, normalStrength: 1.9, envMapIntensity: 1.45, metalness: .015, reflectivity: .72 },
             /* polished natural marble - slightly softer top coat, deeper veining relief */
-            marble_polished:  { roughness: .14, clearcoat: 0.85, clearcoatRoughness: 0.09, bumpScale: 0.022, envMapIntensity: 1.10, metalness: .01 },
+            marble_polished:  { roughness: .11, clearcoat: 0.92, clearcoatRoughness: 0.07, bumpScale: 0.020, normalScale: .22, normalStrength: 2.35, envMapIntensity: 1.34, metalness: .01, reflectivity: .68 },
             /* honed / matte stone - no clearcoat, broad diffuse */
-            stone_honed:      { roughness: .55, clearcoat: 0.10, clearcoatRoughness: 0.50, bumpScale: 0.030, envMapIntensity: 0.55, metalness: .01 },
+            stone_honed:      { roughness: .58, clearcoat: 0.12, clearcoatRoughness: 0.52, bumpScale: 0.030, normalScale: .28, normalStrength: 2.0, envMapIntensity: 0.66, metalness: .01, reflectivity: .42 },
             /* leathered finish - low gloss, pronounced micro-relief */
-            stone_leathered:  { roughness: .72, clearcoat: 0.05, clearcoatRoughness: 0.70, bumpScale: 0.055, envMapIntensity: 0.45, metalness: .01 },
+            stone_leathered:  { roughness: .76, clearcoat: 0.06, clearcoatRoughness: 0.72, bumpScale: 0.060, normalScale: .42, normalStrength: 2.8, envMapIntensity: 0.56, metalness: .01, reflectivity: .32 },
             /* granite - polished but more crystalline scatter */
-            granite_polished: { roughness: .18, clearcoat: 0.90, clearcoatRoughness: 0.08, bumpScale: 0.020, envMapIntensity: 1.05, metalness: .03 },
+            granite_polished: { roughness: .14, clearcoat: 0.95, clearcoatRoughness: 0.065, bumpScale: 0.022, normalScale: .24, normalStrength: 2.5, envMapIntensity: 1.28, metalness: .025, reflectivity: .66 },
             /* concrete / porcelain matte */
-            concrete:         { roughness: .80, clearcoat: 0.00, clearcoatRoughness: 1.00, bumpScale: 0.040, envMapIntensity: 0.40, metalness: .00 }
+            concrete:         { roughness: .82, clearcoat: 0.00, clearcoatRoughness: 1.00, bumpScale: 0.045, normalScale: .34, normalStrength: 2.1, envMapIntensity: 0.46, metalness: .00, reflectivity: .25 }
         };
         function stonePresetFor(st) {
             const n = ((st.name || "") + " " + (st.id || "")).toLowerCase();
@@ -2525,21 +2536,17 @@
             if (stoneCache[st.id])
                 return stoneCache[st.id];
             const cv = makeStoneCanvas(st);
-            const tex = new THREE.CanvasTexture(cv);
-            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-            tex.anisotropy = 16;
-            tex.repeat.set(1.4, 1);
-            if (THREE.sRGBEncoding !== undefined)
-                tex.encoding = THREE.sRGBEncoding;
-            const bump = new THREE.CanvasTexture(cv);
-            bump.wrapS = bump.wrapT = THREE.RepeatWrapping;
-            bump.repeat.set(1.4, 1);
             const Mat = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
             const p = stonePresetFor(st);
+            const tex = materialTex(cv, { color: true, repeat: [1.4, 1] });
+            const bump = materialTex(cv, { repeat: [1.4, 1] });
+            const normal = materialTex(reliefCanvasFrom(cv, p.normalStrength || 2.0), { repeat: [1.4, 1] });
             const mat = new Mat({
                 map: tex,
                 bumpMap: bump,
                 bumpScale: p.bumpScale,
+                normalMap: normal,
+                normalScale: new THREE.Vector2(p.normalScale || .2, p.normalScale || .2),
                 roughness: p.roughness,
                 metalness: p.metalness,
                 envMap: ENV,
@@ -2547,7 +2554,7 @@
                 clearcoat: p.clearcoat,
                 clearcoatRoughness: p.clearcoatRoughness
             });
-            mat.userData.preset = p;
+            tunePhysical(mat, p);
             stoneCache[st.id] = mat;
             return mat;
         }
@@ -2570,6 +2577,68 @@
             if (THREE.sRGBEncoding !== undefined)
                 t.encoding = THREE.sRGBEncoding;
             return t;
+        }
+
+        function reliefCanvasFrom(src, strength=1, invert=false) {
+            const S = 512;
+            const cv = document.createElement("canvas");
+            cv.width = cv.height = S;
+            const x = cv.getContext("2d", { willReadFrequently: true });
+            try {
+                x.drawImage(src, 0, 0, S, S);
+                const img = x.getImageData(0, 0, S, S);
+                const d = img.data;
+                const lum = new Float32Array(S * S);
+                for (let i = 0, j = 0; i < d.length; i += 4, j++) {
+                    lum[j] = (d[i] * .299 + d[i + 1] * .587 + d[i + 2] * .114) / 255;
+                }
+                for (let y = 0; y < S; y++) {
+                    for (let xx = 0; xx < S; xx++) {
+                        const l = lum[y * S + Math.max(0, xx - 1)];
+                        const r = lum[y * S + Math.min(S - 1, xx + 1)];
+                        const u = lum[Math.max(0, y - 1) * S + xx];
+                        const dn = lum[Math.min(S - 1, y + 1) * S + xx];
+                        const sx = (l - r) * strength * (invert ? -1 : 1);
+                        const sy = (u - dn) * strength * (invert ? -1 : 1);
+                        const nx = sx, ny = sy, nz = 1;
+                        const len = Math.hypot(nx, ny, nz) || 1;
+                        const idx = (y * S + xx) * 4;
+                        d[idx] = (nx / len * .5 + .5) * 255;
+                        d[idx + 1] = (ny / len * .5 + .5) * 255;
+                        d[idx + 2] = (nz / len * .5 + .5) * 255;
+                        d[idx + 3] = 255;
+                    }
+                }
+                x.putImageData(img, 0, 0);
+            } catch (e) {
+                x.fillStyle = "#8080ff";
+                x.fillRect(0, 0, S, S);
+            }
+            return cv;
+        }
+
+        function materialTex(src, { color=false, repeat=[1, 1], offset=[0, 0], mirrorX=false }={}) {
+            const t = src instanceof THREE.Texture ? src.clone() : new THREE.CanvasTexture(src);
+            t.wrapS = t.wrapT = THREE.RepeatWrapping;
+            t.repeat.set((mirrorX ? -1 : 1) * repeat[0], repeat[1]);
+            t.offset.set(mirrorX ? 1 + offset[0] : offset[0], offset[1]);
+            t.anisotropy = 16;
+            t.needsUpdate = true;
+            if (color && THREE.sRGBEncoding !== undefined)
+                t.encoding = THREE.sRGBEncoding;
+            return t;
+        }
+
+        function tunePhysical(m, p) {
+            m.roughness = p.roughness;
+            m.metalness = p.metalness || 0;
+            if ('clearcoat' in m) m.clearcoat = p.clearcoat || 0;
+            if ('clearcoatRoughness' in m) m.clearcoatRoughness = p.clearcoatRoughness ?? .25;
+            if ('reflectivity' in m) m.reflectivity = p.reflectivity ?? .55;
+            m.envMap = ENV;
+            m.envMapIntensity = p.envMapIntensity || 1;
+            m.userData.preset = p;
+            return m;
         }
 
         /* ===== REAL PANEL SCANS (same-origin, no CORS, no proxy) =====
@@ -2631,16 +2700,16 @@
            Categories cover every panel style we stock. Resolved from
            finish.finish > finish.category > name keywords > brand default. */
         const PANEL_PRESETS = {
-            high_gloss:    { roughness: .12, clearcoat: 1.00, clearcoatRoughness: 0.05, bumpScale: 0.002, envMapIntensity: 1.15, metalness: .04 },
-            gloss_lacquer: { roughness: .18, clearcoat: 0.95, clearcoatRoughness: 0.10, bumpScale: 0.003, envMapIntensity: 1.00, metalness: .04 },
-            satin_lacquer: { roughness: .32, clearcoat: 0.75, clearcoatRoughness: 0.22, bumpScale: 0.004, envMapIntensity: 0.85, metalness: .03 },
-            super_matte:   { roughness: .68, clearcoat: 0.20, clearcoatRoughness: 0.55, bumpScale: 0.006, envMapIntensity: 0.45, metalness: .02 },
-            matte_lam:     { roughness: .55, clearcoat: 0.30, clearcoatRoughness: 0.45, bumpScale: 0.008, envMapIntensity: 0.55, metalness: .02 },
-            wood_satin:    { roughness: .42, clearcoat: 0.55, clearcoatRoughness: 0.32, bumpScale: 0.012, envMapIntensity: 0.85, metalness: .03 },
-            wood_oiled:    { roughness: .62, clearcoat: 0.15, clearcoatRoughness: 0.50, bumpScale: 0.018, envMapIntensity: 0.55, metalness: .02 },
-            textured_syn:  { roughness: .58, clearcoat: 0.40, clearcoatRoughness: 0.40, bumpScale: 0.022, envMapIntensity: 0.70, metalness: .03 },
-            metallic:      { roughness: .35, clearcoat: 0.85, clearcoatRoughness: 0.15, bumpScale: 0.004, envMapIntensity: 1.30, metalness: .55 },
-            stone_look:    { roughness: .50, clearcoat: 0.45, clearcoatRoughness: 0.30, bumpScale: 0.020, envMapIntensity: 0.80, metalness: .02 }
+            high_gloss:    { roughness: .075, clearcoat: 1.00, clearcoatRoughness: 0.035, bumpScale: 0.0015, normalScale: .045, normalStrength: 1.15, envMapIntensity: 1.48, metalness: .035, reflectivity: .78 },
+            gloss_lacquer: { roughness: .13, clearcoat: 0.98, clearcoatRoughness: 0.075, bumpScale: 0.0025, normalScale: .055, normalStrength: 1.20, envMapIntensity: 1.25, metalness: .035, reflectivity: .68 },
+            satin_lacquer: { roughness: .30, clearcoat: 0.82, clearcoatRoughness: 0.20, bumpScale: 0.0040, normalScale: .070, normalStrength: 1.25, envMapIntensity: 0.98, metalness: .025, reflectivity: .54 },
+            super_matte:   { roughness: .74, clearcoat: 0.18, clearcoatRoughness: 0.62, bumpScale: 0.0065, normalScale: .105, normalStrength: 1.45, envMapIntensity: 0.55, metalness: .015, reflectivity: .28 },
+            matte_lam:     { roughness: .60, clearcoat: 0.30, clearcoatRoughness: 0.48, bumpScale: 0.0090, normalScale: .135, normalStrength: 1.65, envMapIntensity: 0.66, metalness: .015, reflectivity: .34 },
+            wood_satin:    { roughness: .38, clearcoat: 0.60, clearcoatRoughness: 0.28, bumpScale: 0.0140, normalScale: .185, normalStrength: 2.20, envMapIntensity: 1.02, metalness: .02, reflectivity: .50, sheen: .25, sheenRoughness: .72 },
+            wood_oiled:    { roughness: .64, clearcoat: 0.18, clearcoatRoughness: 0.55, bumpScale: 0.0220, normalScale: .255, normalStrength: 2.55, envMapIntensity: 0.68, metalness: .015, reflectivity: .32, sheen: .18, sheenRoughness: .88 },
+            textured_syn:  { roughness: .62, clearcoat: 0.38, clearcoatRoughness: 0.44, bumpScale: 0.0280, normalScale: .300, normalStrength: 2.85, envMapIntensity: 0.78, metalness: .02, reflectivity: .38 },
+            metallic:      { roughness: .30, clearcoat: 0.90, clearcoatRoughness: 0.12, bumpScale: 0.0040, normalScale: .050, normalStrength: 1.30, envMapIntensity: 1.55, metalness: .62, reflectivity: .78 },
+            stone_look:    { roughness: .48, clearcoat: 0.48, clearcoatRoughness: 0.28, bumpScale: 0.0240, normalScale: .240, normalStrength: 2.40, envMapIntensity: 0.92, metalness: .015, reflectivity: .44 }
         };
         function panelPresetFor(f) {
             if (f.finish && PANEL_PRESETS[f.finish]) return PANEL_PRESETS[f.finish];
@@ -2663,27 +2732,25 @@
             const cv = makeWoodCanvas(f);
             const Mat = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
             const p = panelPresetFor(f);
-            const mk = t => {
+            const mk = (t, n) => {
                 const m = new Mat({
                     map: t,
+                    bumpMap: t,
+                    bumpScale: p.bumpScale,
+                    normalMap: n,
+                    normalScale: new THREE.Vector2(p.normalScale || .08, p.normalScale || .08),
                     roughness: p.roughness,
                     metalness: p.metalness,
                     envMap: ENV,
                     envMapIntensity: p.envMapIntensity
                 });
-                if ('clearcoat' in m) {
-                    m.clearcoat = p.clearcoat;
-                    m.clearcoatRoughness = p.clearcoatRoughness;
-                }
-                m.bumpMap = t;
-                m.bumpScale = p.bumpScale;
-                m.userData.preset = p;
-                return m;
+                return tunePhysical(m, p);
             };
 
+            const cvFlip = flipCanvas(cv);
             const pair = {
-                a: mk(texFrom(cv)),
-                b: mk(texFrom(flipCanvas(cv)))
+                a: mk(texFrom(cv), materialTex(reliefCanvasFrom(cv, p.normalStrength || 1.6))),
+                b: mk(texFrom(cvFlip), materialTex(reliefCanvasFrom(cvFlip, p.normalStrength || 1.6)))
             }; /* b = book-matched mirror */
             texCache[f.id] = pair;
             const realURL = REAL_SWATCHES[f.id];
@@ -2702,6 +2769,8 @@
                         tex.encoding = THREE.sRGBEncoding;
                     pair.a.map = tex;
                     pair.a.bumpMap = tex;
+                    pair.a.normalMap = materialTex(reliefCanvasFrom(im, p.normalStrength || 1.6));
+                    pair.a.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.a.needsUpdate = true;
                     pair.a.realScan = true;
                     const t2 = tex.clone();
@@ -2713,6 +2782,8 @@
                         t2.encoding = THREE.sRGBEncoding;
                     pair.b.map = t2;
                     pair.b.bumpMap = t2;
+                    pair.b.normalMap = materialTex(reliefCanvasFrom(im, p.normalStrength || 1.6), { mirrorX: true });
+                    pair.b.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.b.needsUpdate = true;
                     pair.b.realScan = true;
 
@@ -2736,6 +2807,8 @@
                         tex.encoding = THREE.sRGBEncoding;
                     pair.a.map = tex;
                     pair.a.bumpMap = tex;
+                    pair.a.normalMap = materialTex(reliefCanvasFrom(img, p.normalStrength || 1.6));
+                    pair.a.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.a.needsUpdate = true;
                     const t2 = tex.clone();
                     t2.image = img;
@@ -2748,6 +2821,8 @@
                         t2.encoding = THREE.sRGBEncoding;
                     pair.b.map = t2;
                     pair.b.bumpMap = t2;
+                    pair.b.normalMap = materialTex(reliefCanvasFrom(img, p.normalStrength || 1.6), { mirrorX: true });
+                    pair.b.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.b.needsUpdate = true;
 
                 });
@@ -2778,6 +2853,24 @@
             /* random vertical offset per panel so adjacent fronts aren't identical */
             t.offset.set(mirror ? 1 : 0, Math.random() * 0.4);
             m.map = t;
+            if (base.bumpMap) {
+                const b = base.bumpMap.clone();
+                b.needsUpdate = true;
+                b.wrapS = b.wrapT = THREE.RepeatWrapping;
+                b.anisotropy = base.bumpMap.anisotropy || 8;
+                b.repeat.copy(t.repeat);
+                b.offset.copy(t.offset);
+                m.bumpMap = b;
+            }
+            if (base.normalMap) {
+                const n = base.normalMap.clone();
+                n.needsUpdate = true;
+                n.wrapS = n.wrapT = THREE.RepeatWrapping;
+                n.anisotropy = base.normalMap.anisotropy || 8;
+                n.repeat.copy(t.repeat);
+                n.offset.copy(t.offset);
+                m.normalMap = n;
+            }
             m.needsUpdate = true;
             return m;
         }
@@ -3001,11 +3094,31 @@
         }
         const mirrorMat = () => new THREE.MeshStandardMaterial({
             color: 0xE9EEF0,
-            roughness: .025,
+            roughness: .015,
             metalness: .96,
             envMap: ENV,
-            envMapIntensity: 1.35
+            envMapIntensity: 1.75
         });
+
+        function addPanelReveal(group, fw, fh, faceZ) {
+            const reveal = new THREE.MeshBasicMaterial({
+                color: 0x161410,
+                transparent: true,
+                opacity: .32,
+                depthWrite: false
+            });
+            const edge = 0.18;
+            [
+                [fw + edge, edge, 0.035, 0, fh / 2 + edge / 2],
+                [fw + edge, edge, 0.035, 0, -fh / 2 - edge / 2],
+                [edge, fh + edge, 0.035, -fw / 2 - edge / 2, 0],
+                [edge, fh + edge, 0.035, fw / 2 + edge / 2, 0]
+            ].forEach(([w, h, d, x, y]) => {
+                const r = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), reveal);
+                r.position.set(x, y, faceZ + 0.025);
+                group.add(r);
+            });
+        }
 
         function buildVanity(wm, stoneM, withMirror) {
             const f = curFinish();
@@ -3109,6 +3222,7 @@
                     const front = mk(fw, fh, 1, panelMat(f, fw, fh, mirror));
                     front.position.z = D / 2 - 0.5;
                     g.add(front);
+                    addPanelReveal(g, fw, fh, D / 2);
                     addHandle(g, fw, fh, D / 2);
                     const bw = Math.max(fw - 2.4, 4),
                         bd = Math.max(D - 5, 4),
@@ -3862,6 +3976,10 @@
             }
             if (THREE.sRGBEncoding !== undefined)
                 R.outputEncoding = THREE.sRGBEncoding;
+            if (THREE.PMREMGenerator) {
+                PMREM = new THREE.PMREMGenerator(R);
+                PMREM.compileCubemapShader && PMREM.compileCubemapShader();
+            }
 
             scene = new THREE.Scene();
             scene.background = new THREE.Color(_lp0.bg);
