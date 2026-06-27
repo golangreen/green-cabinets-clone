@@ -2635,8 +2635,6 @@
             if ('clearcoat' in m) m.clearcoat = p.clearcoat || 0;
             if ('clearcoatRoughness' in m) m.clearcoatRoughness = p.clearcoatRoughness ?? .25;
             if ('reflectivity' in m) m.reflectivity = p.reflectivity ?? .55;
-            if ('sheen' in m) m.sheen = p.sheen || 0;
-            if ('sheenRoughness' in m) m.sheenRoughness = p.sheenRoughness ?? .6;
             m.envMap = ENV;
             m.envMapIntensity = p.envMapIntensity || 1;
             m.userData.preset = p;
