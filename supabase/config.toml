@@ -40,7 +40,7 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.send-quote]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-order]
 verify_jwt = false
