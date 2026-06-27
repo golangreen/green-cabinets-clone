@@ -3095,11 +3095,31 @@
         }
         const mirrorMat = () => new THREE.MeshStandardMaterial({
             color: 0xE9EEF0,
-            roughness: .025,
+            roughness: .015,
             metalness: .96,
             envMap: ENV,
-            envMapIntensity: 1.35
+            envMapIntensity: 1.75
         });
+
+        function addPanelReveal(group, fw, fh, faceZ) {
+            const reveal = new THREE.MeshBasicMaterial({
+                color: 0x161410,
+                transparent: true,
+                opacity: .32,
+                depthWrite: false
+            });
+            const edge = 0.18;
+            [
+                [fw + edge, edge, 0.035, 0, fh / 2 + edge / 2],
+                [fw + edge, edge, 0.035, 0, -fh / 2 - edge / 2],
+                [edge, fh + edge, 0.035, -fw / 2 - edge / 2, 0],
+                [edge, fh + edge, 0.035, fw / 2 + edge / 2, 0]
+            ].forEach(([w, h, d, x, y]) => {
+                const r = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), reveal);
+                r.position.set(x, y, faceZ + 0.025);
+                group.add(r);
+            });
+        }
 
         function buildVanity(wm, stoneM, withMirror) {
             const f = curFinish();
@@ -3203,6 +3223,7 @@
                     const front = mk(fw, fh, 1, panelMat(f, fw, fh, mirror));
                     front.position.z = D / 2 - 0.5;
                     g.add(front);
+                    addPanelReveal(g, fw, fh, D / 2);
                     addHandle(g, fw, fh, D / 2);
                     const bw = Math.max(fw - 2.4, 4),
                         bd = Math.max(D - 5, 4),
