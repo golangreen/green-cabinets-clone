@@ -3816,16 +3816,18 @@
             R.shadowMap.enabled = true;
             R.shadowMap.type = THREE.PCFSoftShadowMap;
             /* keep physicallyCorrectLights OFF so the existing scene-light intensities still balance */
+            const _lp0 = LIGHTING_PRESETS[CURRENT_LIGHTING];
             if (THREE.ACESFilmicToneMapping !== undefined) {
                 R.toneMapping = THREE.ACESFilmicToneMapping;
-                R.toneMappingExposure = 1.12;
+                R.toneMappingExposure = _lp0.exposure;
             }
             if (THREE.sRGBEncoding !== undefined)
                 R.outputEncoding = THREE.sRGBEncoding;
 
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xE7E1D5);
+            scene.background = new THREE.Color(_lp0.bg);
             ENV = makeEnv();
+            scene.environment = ENV;
             camera = new THREE.PerspectiveCamera(38, 1, 1, 2000);
             root = new THREE.Group();
             scene.add(root);
