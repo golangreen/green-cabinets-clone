@@ -2701,16 +2701,16 @@
            Categories cover every panel style we stock. Resolved from
            finish.finish > finish.category > name keywords > brand default. */
         const PANEL_PRESETS = {
-            high_gloss:    { roughness: .12, clearcoat: 1.00, clearcoatRoughness: 0.05, bumpScale: 0.002, envMapIntensity: 1.15, metalness: .04 },
-            gloss_lacquer: { roughness: .18, clearcoat: 0.95, clearcoatRoughness: 0.10, bumpScale: 0.003, envMapIntensity: 1.00, metalness: .04 },
-            satin_lacquer: { roughness: .32, clearcoat: 0.75, clearcoatRoughness: 0.22, bumpScale: 0.004, envMapIntensity: 0.85, metalness: .03 },
-            super_matte:   { roughness: .68, clearcoat: 0.20, clearcoatRoughness: 0.55, bumpScale: 0.006, envMapIntensity: 0.45, metalness: .02 },
-            matte_lam:     { roughness: .55, clearcoat: 0.30, clearcoatRoughness: 0.45, bumpScale: 0.008, envMapIntensity: 0.55, metalness: .02 },
-            wood_satin:    { roughness: .42, clearcoat: 0.55, clearcoatRoughness: 0.32, bumpScale: 0.012, envMapIntensity: 0.85, metalness: .03 },
-            wood_oiled:    { roughness: .62, clearcoat: 0.15, clearcoatRoughness: 0.50, bumpScale: 0.018, envMapIntensity: 0.55, metalness: .02 },
-            textured_syn:  { roughness: .58, clearcoat: 0.40, clearcoatRoughness: 0.40, bumpScale: 0.022, envMapIntensity: 0.70, metalness: .03 },
-            metallic:      { roughness: .35, clearcoat: 0.85, clearcoatRoughness: 0.15, bumpScale: 0.004, envMapIntensity: 1.30, metalness: .55 },
-            stone_look:    { roughness: .50, clearcoat: 0.45, clearcoatRoughness: 0.30, bumpScale: 0.020, envMapIntensity: 0.80, metalness: .02 }
+            high_gloss:    { roughness: .075, clearcoat: 1.00, clearcoatRoughness: 0.035, bumpScale: 0.0015, normalScale: .045, normalStrength: 1.15, envMapIntensity: 1.48, metalness: .035, reflectivity: .78 },
+            gloss_lacquer: { roughness: .13, clearcoat: 0.98, clearcoatRoughness: 0.075, bumpScale: 0.0025, normalScale: .055, normalStrength: 1.20, envMapIntensity: 1.25, metalness: .035, reflectivity: .68 },
+            satin_lacquer: { roughness: .30, clearcoat: 0.82, clearcoatRoughness: 0.20, bumpScale: 0.0040, normalScale: .070, normalStrength: 1.25, envMapIntensity: 0.98, metalness: .025, reflectivity: .54 },
+            super_matte:   { roughness: .74, clearcoat: 0.18, clearcoatRoughness: 0.62, bumpScale: 0.0065, normalScale: .105, normalStrength: 1.45, envMapIntensity: 0.55, metalness: .015, reflectivity: .28 },
+            matte_lam:     { roughness: .60, clearcoat: 0.30, clearcoatRoughness: 0.48, bumpScale: 0.0090, normalScale: .135, normalStrength: 1.65, envMapIntensity: 0.66, metalness: .015, reflectivity: .34 },
+            wood_satin:    { roughness: .38, clearcoat: 0.60, clearcoatRoughness: 0.28, bumpScale: 0.0140, normalScale: .185, normalStrength: 2.20, envMapIntensity: 1.02, metalness: .02, reflectivity: .50, sheen: .25, sheenRoughness: .72 },
+            wood_oiled:    { roughness: .64, clearcoat: 0.18, clearcoatRoughness: 0.55, bumpScale: 0.0220, normalScale: .255, normalStrength: 2.55, envMapIntensity: 0.68, metalness: .015, reflectivity: .32, sheen: .18, sheenRoughness: .88 },
+            textured_syn:  { roughness: .62, clearcoat: 0.38, clearcoatRoughness: 0.44, bumpScale: 0.0280, normalScale: .300, normalStrength: 2.85, envMapIntensity: 0.78, metalness: .02, reflectivity: .38 },
+            metallic:      { roughness: .30, clearcoat: 0.90, clearcoatRoughness: 0.12, bumpScale: 0.0040, normalScale: .050, normalStrength: 1.30, envMapIntensity: 1.55, metalness: .62, reflectivity: .78 },
+            stone_look:    { roughness: .48, clearcoat: 0.48, clearcoatRoughness: 0.28, bumpScale: 0.0240, normalScale: .240, normalStrength: 2.40, envMapIntensity: 0.92, metalness: .015, reflectivity: .44 }
         };
         function panelPresetFor(f) {
             if (f.finish && PANEL_PRESETS[f.finish]) return PANEL_PRESETS[f.finish];
@@ -2733,27 +2733,25 @@
             const cv = makeWoodCanvas(f);
             const Mat = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
             const p = panelPresetFor(f);
-            const mk = t => {
+            const mk = (t, n) => {
                 const m = new Mat({
                     map: t,
+                    bumpMap: t,
+                    bumpScale: p.bumpScale,
+                    normalMap: n,
+                    normalScale: new THREE.Vector2(p.normalScale || .08, p.normalScale || .08),
                     roughness: p.roughness,
                     metalness: p.metalness,
                     envMap: ENV,
                     envMapIntensity: p.envMapIntensity
                 });
-                if ('clearcoat' in m) {
-                    m.clearcoat = p.clearcoat;
-                    m.clearcoatRoughness = p.clearcoatRoughness;
-                }
-                m.bumpMap = t;
-                m.bumpScale = p.bumpScale;
-                m.userData.preset = p;
-                return m;
+                return tunePhysical(m, p);
             };
 
+            const cvFlip = flipCanvas(cv);
             const pair = {
-                a: mk(texFrom(cv)),
-                b: mk(texFrom(flipCanvas(cv)))
+                a: mk(texFrom(cv), materialTex(reliefCanvasFrom(cv, p.normalStrength || 1.6))),
+                b: mk(texFrom(cvFlip), materialTex(reliefCanvasFrom(cvFlip, p.normalStrength || 1.6)))
             }; /* b = book-matched mirror */
             texCache[f.id] = pair;
             const realURL = REAL_SWATCHES[f.id];
@@ -2772,6 +2770,8 @@
                         tex.encoding = THREE.sRGBEncoding;
                     pair.a.map = tex;
                     pair.a.bumpMap = tex;
+                    pair.a.normalMap = materialTex(reliefCanvasFrom(im, p.normalStrength || 1.6));
+                    pair.a.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.a.needsUpdate = true;
                     pair.a.realScan = true;
                     const t2 = tex.clone();
@@ -2783,6 +2783,8 @@
                         t2.encoding = THREE.sRGBEncoding;
                     pair.b.map = t2;
                     pair.b.bumpMap = t2;
+                    pair.b.normalMap = materialTex(reliefCanvasFrom(im, p.normalStrength || 1.6), { mirrorX: true });
+                    pair.b.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.b.needsUpdate = true;
                     pair.b.realScan = true;
 
@@ -2806,6 +2808,8 @@
                         tex.encoding = THREE.sRGBEncoding;
                     pair.a.map = tex;
                     pair.a.bumpMap = tex;
+                    pair.a.normalMap = materialTex(reliefCanvasFrom(img, p.normalStrength || 1.6));
+                    pair.a.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.a.needsUpdate = true;
                     const t2 = tex.clone();
                     t2.image = img;
@@ -2818,6 +2822,8 @@
                         t2.encoding = THREE.sRGBEncoding;
                     pair.b.map = t2;
                     pair.b.bumpMap = t2;
+                    pair.b.normalMap = materialTex(reliefCanvasFrom(img, p.normalStrength || 1.6), { mirrorX: true });
+                    pair.b.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.b.needsUpdate = true;
 
                 });
