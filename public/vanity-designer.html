@@ -2534,27 +2534,57 @@
             return "#" + h(r) + h(g) + h(b);
         }
 
+        /* ----- PANEL / DOOR-FRONT SHOWROOM PRESETS -----
+           Categories cover every panel style we stock. Resolved from
+           finish.finish > finish.category > name keywords > brand default. */
+        const PANEL_PRESETS = {
+            high_gloss:    { roughness: .12, clearcoat: 1.00, clearcoatRoughness: 0.05, bumpScale: 0.002, envMapIntensity: 1.15, metalness: .04 },
+            gloss_lacquer: { roughness: .18, clearcoat: 0.95, clearcoatRoughness: 0.10, bumpScale: 0.003, envMapIntensity: 1.00, metalness: .04 },
+            satin_lacquer: { roughness: .32, clearcoat: 0.75, clearcoatRoughness: 0.22, bumpScale: 0.004, envMapIntensity: 0.85, metalness: .03 },
+            super_matte:   { roughness: .68, clearcoat: 0.20, clearcoatRoughness: 0.55, bumpScale: 0.006, envMapIntensity: 0.45, metalness: .02 },
+            matte_lam:     { roughness: .55, clearcoat: 0.30, clearcoatRoughness: 0.45, bumpScale: 0.008, envMapIntensity: 0.55, metalness: .02 },
+            wood_satin:    { roughness: .42, clearcoat: 0.55, clearcoatRoughness: 0.32, bumpScale: 0.012, envMapIntensity: 0.85, metalness: .03 },
+            wood_oiled:    { roughness: .62, clearcoat: 0.15, clearcoatRoughness: 0.50, bumpScale: 0.018, envMapIntensity: 0.55, metalness: .02 },
+            textured_syn:  { roughness: .58, clearcoat: 0.40, clearcoatRoughness: 0.40, bumpScale: 0.022, envMapIntensity: 0.70, metalness: .03 },
+            metallic:      { roughness: .35, clearcoat: 0.85, clearcoatRoughness: 0.15, bumpScale: 0.004, envMapIntensity: 1.30, metalness: .55 },
+            stone_look:    { roughness: .50, clearcoat: 0.45, clearcoatRoughness: 0.30, bumpScale: 0.020, envMapIntensity: 0.80, metalness: .02 }
+        };
+        function panelPresetFor(f) {
+            if (f.finish && PANEL_PRESETS[f.finish]) return PANEL_PRESETS[f.finish];
+            if (f.category && PANEL_PRESETS[f.category]) return PANEL_PRESETS[f.category];
+            const n = ((f.name || "") + " " + (f.code || "") + " " + (f.id || "")).toLowerCase();
+            if (/metal|brass|copper|bronze|steel|aluminum/.test(n)) return PANEL_PRESETS.metallic;
+            if (/high\s*gloss|hi-?gloss|gloss\b/.test(n))           return PANEL_PRESETS.high_gloss;
+            if (/super\s*matte|supermat|fenix|nanotech/.test(n))    return PANEL_PRESETS.super_matte;
+            if (/matte|matt\b/.test(n))                              return PANEL_PRESETS.matte_lam;
+            if (/textur|emboss|relief|stucco|woven/.test(n))         return PANEL_PRESETS.textured_syn;
+            if (/stone|concrete|marble|terrazzo/.test(n))            return PANEL_PRESETS.stone_look;
+            if (/oak|walnut|ash|oiled|raw|natural\s*wood/.test(n) && !f.solid) return PANEL_PRESETS.wood_oiled;
+            if (!f.solid)                                            return PANEL_PRESETS.wood_satin;
+            return PANEL_PRESETS.satin_lacquer;
+        }
+
         function finishMats(f) {
             if (texCache[f.id])
                 return texCache[f.id];
             const cv = makeWoodCanvas(f);
             const Mat = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
+            const p = panelPresetFor(f);
             const mk = t => {
                 const m = new Mat({
                     map: t,
-                    roughness: f.solid ? .32 : .42,
-                    metalness: .03,
+                    roughness: p.roughness,
+                    metalness: p.metalness,
                     envMap: ENV,
-                    envMapIntensity: .85
+                    envMapIntensity: p.envMapIntensity
                 });
-                /* satin lacquer clearcoat — what makes real laminate/painted MDF read true */
                 if ('clearcoat' in m) {
-                    m.clearcoat = f.solid ? 0.85 : 0.55;
-                    m.clearcoatRoughness = f.solid ? 0.18 : 0.32;
+                    m.clearcoat = p.clearcoat;
+                    m.clearcoatRoughness = p.clearcoatRoughness;
                 }
-                /* micro surface relief from the same canvas, very subtle */
                 m.bumpMap = t;
-                m.bumpScale = f.solid ? 0.004 : 0.012;
+                m.bumpScale = p.bumpScale;
+                m.userData.preset = p;
                 return m;
             };
 
