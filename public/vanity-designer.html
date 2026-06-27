@@ -3578,9 +3578,11 @@
         }
 
         function initRoom() {
-            scene.add(new THREE.HemisphereLight(0xFFFBF2, 0x9A9486, 0.42)); /* lower ambient = deeper natural shadows */
-            const sun = new THREE.DirectionalLight(0xFFF1DA, 1.25);
-            sun.position.set(70, 130, 90);
+            const lp = LIGHTING_PRESETS[CURRENT_LIGHTING];
+            const hemi = new THREE.HemisphereLight(lp.hemi.sky, lp.hemi.ground, lp.hemi.i);
+            scene.add(hemi);
+            const sun = new THREE.DirectionalLight(lp.key.color, lp.key.i);
+            sun.position.set(...lp.key.pos);
             sun.castShadow = true;
             sun.shadow.mapSize.set(2048, 2048);
             sun.shadow.camera.left = -120;
@@ -3589,14 +3591,15 @@
             sun.shadow.camera.bottom = -20;
             sun.shadow.bias = -0.0004;
             if ("radius" in sun.shadow)
-                sun.shadow.radius = 4; /* soft penumbra */
+                sun.shadow.radius = 4;
             scene.add(sun);
-            const fill = new THREE.DirectionalLight(0xDCE6F0, 0.28);
-            fill.position.set(-80, 50, 70);
+            const fill = new THREE.DirectionalLight(lp.fill.color, lp.fill.i);
+            fill.position.set(...lp.fill.pos);
             scene.add(fill);
-            const rim = new THREE.DirectionalLight(0xFFFFFF, 0.25);
-            rim.position.set(0, 60, -90);
+            const rim = new THREE.DirectionalLight(lp.rim.color, lp.rim.i);
+            rim.position.set(...lp.rim.pos);
             scene.add(rim);
+            scene.userData.lights = { hemi, sun, fill, rim };
 
             /* polished large-format tile floor */
             const ft = document.createElement("canvas");
