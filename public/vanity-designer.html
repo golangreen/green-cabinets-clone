@@ -67,6 +67,11 @@
         .gc-viewseg{position:absolute;top:26px;right:26px;z-index:5;display:flex;background:rgba(30,27,22,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(168,133,79,.35);border-radius:12px;padding:3px;gap:3px}
         .gc-viewseg button{border:0;background:transparent;color:#D8D0C0;font-size:12.5px;font-weight:600;letter-spacing:.04em;padding:7px 14px;border-radius:9px;cursor:pointer;font-family:inherit;transition:all .2s}
         .gc-viewseg button.on{background:rgba(255,253,248,.92);color:#211E18}
+        .gc-lightseg{position:absolute;top:26px;left:26px;z-index:5;display:flex;background:rgba(30,27,22,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(168,133,79,.35);border-radius:12px;padding:3px;gap:2px}
+        .gc-lightseg button{border:0;background:transparent;color:#D8D0C0;font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:6px 11px;border-radius:9px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:5px}
+        .gc-lightseg button.on{background:rgba(255,253,248,.92);color:#211E18}
+        .gc-lightseg .dot{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+        @media (max-width:640px){.gc-lightseg{top:18px;left:auto;right:18px;font-size:11px}.gc-viewseg{display:none}.gc-lightseg button{padding:6px 9px;font-size:11px}.gc-lightseg button .lbl{display:none}}
         .gc-borrowed{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:var(--ink-soft);font-size:13px;letter-spacing:.02em;background:linear-gradient(180deg,#F1EDE5,#E2DCD0)}
         .gc-borrowed.show{display:flex}
         #gl{display:block;width:100%;height:100%}
