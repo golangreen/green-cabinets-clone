@@ -356,8 +356,8 @@
               <div class="gc-stage" id="stage">
                 <div class="gc-lightseg" id="lightSeg" role="tablist" aria-label="Showroom lighting">
                   <button data-light="morning" title="Morning daylight"><span class="dot" style="background:#FFE9C2"></span><span class="lbl">Morning</span></button>
-                  <button data-light="overhead" class="on" title="Overhead showroom"><span class="dot" style="background:#FFFFFF"></span><span class="lbl">Overhead</span></button>
-                  <button data-light="warm" title="Warm showroom"><span class="dot" style="background:#FFC98A"></span><span class="lbl">Warm</span></button>
+                  <button data-light="overhead" title="Overhead showroom"><span class="dot" style="background:#FFFFFF"></span><span class="lbl">Overhead</span></button>
+                  <button data-light="warm" class="on" title="Warm showroom"><span class="dot" style="background:#FFC98A"></span><span class="lbl">Warm</span></button>
                 </div>
                 <button class="gc-openbtn" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
                 <button class="gc-finalbtn" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
@@ -2284,7 +2284,7 @@
                 rim:   { color:0xFFD7A0, i:0.32, pos:[0, 60, -90] }
             }
         };
-        let CURRENT_LIGHTING = "overhead";
+        let CURRENT_LIGHTING = "warm";
 
         function makeEnv(presetId) {
             const p = LIGHTING_PRESETS[presetId || CURRENT_LIGHTING].env;
