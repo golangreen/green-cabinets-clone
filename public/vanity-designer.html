@@ -2214,7 +2214,8 @@
             camera,
             root,
             raf,
-            ENV = null;
+            ENV = null,
+            PMREM = null;
 
         function envFace(top, bottom, softbox) {
             const S = 128,
@@ -2292,9 +2293,15 @@
                 envFace(...p.py), envFace(...p.ny),
                 envFace(...p.pz), envFace(...p.nz)
             ];
-            const tex = new THREE.CubeTexture(faces);
-            tex.needsUpdate = true;
-            return tex;
+            const cube = new THREE.CubeTexture(faces);
+            cube.needsUpdate = true;
+            if (PMREM) {
+                const target = PMREM.fromCubemap(cube);
+                cube.dispose && cube.dispose();
+                target.texture.userData.pmremTarget = target;
+                return target.texture;
+            }
+            return cube;
         }
 
         function applyLighting(id) {
@@ -2303,6 +2310,9 @@
             CURRENT_LIGHTING = id;
             R.toneMappingExposure = lp.exposure;
             scene.background = new THREE.Color(lp.bg);
+            if (ENV && ENV.userData && ENV.userData.pmremTarget) {
+                ENV.userData.pmremTarget.dispose();
+            }
             ENV = makeEnv(id);
             scene.environment = ENV;
             const L = scene.userData.lights;
