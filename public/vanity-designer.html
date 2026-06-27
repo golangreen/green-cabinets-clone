@@ -2582,6 +2582,70 @@
             return t;
         }
 
+        function reliefCanvasFrom(src, strength=1, invert=false) {
+            const S = 512;
+            const cv = document.createElement("canvas");
+            cv.width = cv.height = S;
+            const x = cv.getContext("2d", { willReadFrequently: true });
+            try {
+                x.drawImage(src, 0, 0, S, S);
+                const img = x.getImageData(0, 0, S, S);
+                const d = img.data;
+                const lum = new Float32Array(S * S);
+                for (let i = 0, j = 0; i < d.length; i += 4, j++) {
+                    lum[j] = (d[i] * .299 + d[i + 1] * .587 + d[i + 2] * .114) / 255;
+                }
+                for (let y = 0; y < S; y++) {
+                    for (let xx = 0; xx < S; xx++) {
+                        const l = lum[y * S + Math.max(0, xx - 1)];
+                        const r = lum[y * S + Math.min(S - 1, xx + 1)];
+                        const u = lum[Math.max(0, y - 1) * S + xx];
+                        const dn = lum[Math.min(S - 1, y + 1) * S + xx];
+                        const sx = (l - r) * strength * (invert ? -1 : 1);
+                        const sy = (u - dn) * strength * (invert ? -1 : 1);
+                        const nx = sx, ny = sy, nz = 1;
+                        const len = Math.hypot(nx, ny, nz) || 1;
+                        const idx = (y * S + xx) * 4;
+                        d[idx] = (nx / len * .5 + .5) * 255;
+                        d[idx + 1] = (ny / len * .5 + .5) * 255;
+                        d[idx + 2] = (nz / len * .5 + .5) * 255;
+                        d[idx + 3] = 255;
+                    }
+                }
+                x.putImageData(img, 0, 0);
+            } catch (e) {
+                x.fillStyle = "#8080ff";
+                x.fillRect(0, 0, S, S);
+            }
+            return cv;
+        }
+
+        function materialTex(src, { color=false, repeat=[1, 1], offset=[0, 0], mirrorX=false }={}) {
+            const t = src instanceof THREE.Texture ? src.clone() : new THREE.CanvasTexture(src);
+            t.wrapS = t.wrapT = THREE.RepeatWrapping;
+            t.repeat.set((mirrorX ? -1 : 1) * repeat[0], repeat[1]);
+            t.offset.set(mirrorX ? 1 + offset[0] : offset[0], offset[1]);
+            t.anisotropy = 16;
+            t.needsUpdate = true;
+            if (color && THREE.sRGBEncoding !== undefined)
+                t.encoding = THREE.sRGBEncoding;
+            return t;
+        }
+
+        function tunePhysical(m, p) {
+            m.roughness = p.roughness;
+            m.metalness = p.metalness || 0;
+            if ('clearcoat' in m) m.clearcoat = p.clearcoat || 0;
+            if ('clearcoatRoughness' in m) m.clearcoatRoughness = p.clearcoatRoughness ?? .25;
+            if ('reflectivity' in m) m.reflectivity = p.reflectivity ?? .55;
+            if ('sheen' in m) m.sheen = p.sheen || 0;
+            if ('sheenRoughness' in m) m.sheenRoughness = p.sheenRoughness ?? .6;
+            m.envMap = ENV;
+            m.envMapIntensity = p.envMapIntensity || 1;
+            m.userData.preset = p;
+            return m;
+        }
+
         /* ===== REAL PANEL SCANS (same-origin, no CORS, no proxy) =====
            Map finish id -> a real swatch image URL. Data URIs are embedded now;
            replace each with https://greencabinetsny.com/swatches/<name>.jpg when hosted.
