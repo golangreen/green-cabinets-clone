@@ -2854,6 +2854,24 @@
             /* random vertical offset per panel so adjacent fronts aren't identical */
             t.offset.set(mirror ? 1 : 0, Math.random() * 0.4);
             m.map = t;
+            if (base.bumpMap) {
+                const b = base.bumpMap.clone();
+                b.needsUpdate = true;
+                b.wrapS = b.wrapT = THREE.RepeatWrapping;
+                b.anisotropy = base.bumpMap.anisotropy || 8;
+                b.repeat.copy(t.repeat);
+                b.offset.copy(t.offset);
+                m.bumpMap = b;
+            }
+            if (base.normalMap) {
+                const n = base.normalMap.clone();
+                n.needsUpdate = true;
+                n.wrapS = n.wrapT = THREE.RepeatWrapping;
+                n.anisotropy = base.normalMap.anisotropy || 8;
+                n.repeat.copy(t.repeat);
+                n.offset.copy(t.offset);
+                m.normalMap = n;
+            }
             m.needsUpdate = true;
             return m;
         }
