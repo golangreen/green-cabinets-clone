@@ -4829,6 +4829,18 @@
                     window.__gcSize3d();
             });
         }
+
+        /* showroom lighting chip group */
+        (function wireLightSeg(){
+            const seg = document.getElementById("lightSeg");
+            if (!seg) return;
+            seg.addEventListener("click", e => {
+                const b = e.target.closest("button[data-light]");
+                if (!b) return;
+                seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+                applyLighting(b.dataset.light);
+            });
+        })();
         </script>
         </div>
         </body>
