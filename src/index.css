@@ -27,17 +27,18 @@ All colors MUST be HSL.
     --muted: 0 0% 90%;
     --muted-foreground: 0 0% 30%;
 
-    --accent: 92 13% 30%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 92 18% 94%;
+    --accent-foreground: 92 13% 25%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 75%;
-    --input: 0 0% 90%;
+    --border: 0 0% 80%;
+    --input: 0 0% 96%;
     --ring: 92 13% 40%;
 
     --radius: 0.75rem;
+
     
     /* Custom design tokens */
     --gradient-hero: linear-gradient(135deg, hsl(0 0% 84%), hsl(92 13% 82%));
