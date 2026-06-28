@@ -398,13 +398,13 @@
             <!-- ===== LIVE PREVIEW ===== -->
             <div class="gc-preview" style="position:sticky;top:20px">
               <div class="gc-stage" id="stage">
-                <div class="gc-lightseg" id="lightSeg" role="tablist" aria-label="Showroom lighting">
+                <div class="gc-lightseg gc-overlay gc-overlay-tl" id="lightSeg" role="tablist" aria-label="Showroom lighting">
                   <button data-light="morning" title="Morning daylight"><span class="dot" style="background:#FFE9C2"></span><span class="lbl">Morning</span></button>
                   <button data-light="overhead" title="Overhead showroom"><span class="dot" style="background:#FFFFFF"></span><span class="lbl">Overhead</span></button>
                   <button data-light="warm" class="on" title="Warm showroom"><span class="dot" style="background:#FFC98A"></span><span class="lbl">Warm</span></button>
                 </div>
-                <button class="gc-openbtn" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
-                <button class="gc-finalbtn" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
+                <button class="gc-openbtn gc-overlay gc-overlay-bl" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
+                <button class="gc-finalbtn gc-overlay gc-overlay-br" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
                 <canvas id="gl"></canvas><div class="gc-borrowed" id="glBorrowed">Viewing in full screen…</div>
                 <div class="gc-3dhint">Drag to spin · scroll or pinch to zoom</div>
               </div>
