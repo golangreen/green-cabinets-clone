@@ -315,7 +315,18 @@
           .gc-presets{gap:6px}
           .gc-presets button{padding:9px 12px;font-size:13px}
           .gc-hd{flex-direction:column;gap:10px}
-          .gc-hditem{width:100%;justify-content:space-between}
+          .gc-hditem{width:100%;justify-content:space-between;gap:10px;min-width:0}
+          .gc-hditem .lbl{flex:0 0 auto}
+          .gc-hditem .gc-numwrap{flex:1 1 auto;min-width:0;max-width:100%;box-sizing:border-box;justify-content:space-between}
+          .gc-hditem .gc-numwrap.wide input{min-width:0;width:100%;flex:1 1 auto}
+          .gc-hditem .gc-numwrap button{flex:0 0 auto}
+          .gc-layrow{gap:6px;padding:6px 8px;flex-wrap:nowrap;min-width:0}
+          .gc-layrow .bar{width:54px;min-width:40px;flex-shrink:1}
+          .gc-layrow .rowctl{gap:6px;min-width:0;flex:1 1 auto}
+          .gc-layrow .rslide{min-width:30px;flex:1 1 30px}
+          .gc-layrow .gc-numwrap{padding:2px;flex-shrink:0}
+          .gc-layrow .gc-numwrap button{width:26px;height:26px;font-size:15px}
+          .gc-layrow .rin{width:38px;font-size:12px}
           .gc-opts{grid-template-columns:1fr 1fr;gap:8px}
           .gc-opt{padding:11px 10px}
           .gc-pickbtn{padding:12px}
