@@ -141,7 +141,7 @@ const Contact = () => {
           <div className="text-center text-muted-foreground">or</div>
           
           <Select value={contactMethod} onValueChange={(value: string) => setContactMethod(value)}>
-            <SelectTrigger className="w-full bg-[#1a1a1a] text-white border-0">
+            <SelectTrigger aria-label="Choose contact method" className="w-full bg-[#1a1a1a] text-white border-0">
               <SelectValue placeholder="Choose contact method" />
             </SelectTrigger>
             <SelectContent className="bg-white z-50">
