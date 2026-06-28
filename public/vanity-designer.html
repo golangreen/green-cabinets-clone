@@ -368,11 +368,12 @@
           .gc-seg button{font-size:12px}
           .gc-cta{padding:11px 13px;font-size:13px}
         }
-        /* Landscape phones: stage is short — hide hint, shrink action buttons */
+        /* Landscape phones: stage is short — tighten overlay tokens further */
         @media (max-width:900px) and (orientation:landscape) and (max-height:500px){
           .gc-3dhint{display:none}
-          .gc-openbtn,.gc-finalbtn{font-size:10px;padding:5px 9px;max-width:40%}
-          .gc-stage{height:70vh;min-height:200px}
+          .gc-stage{--stage-pad:8px;--stage-pad-top:10px;--overlay-gap:8px;
+                    height:70vh;min-height:200px}
+          .gc-openbtn,.gc-finalbtn{font-size:10px;padding:5px 9px}
         }
         /* comfortable touch targets on any coarse pointer */
         @media (pointer:coarse){
