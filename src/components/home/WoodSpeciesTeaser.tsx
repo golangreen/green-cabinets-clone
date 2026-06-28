@@ -13,7 +13,7 @@ const WoodSpeciesTeaser = () => {
     <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#d5d5d5]/40">
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         <div className="text-center mb-8 sm:mb-10">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Material Library
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
@@ -54,7 +54,7 @@ const WoodSpeciesTeaser = () => {
                     <h4 className="text-sm font-semibold text-[#1a1a1a] line-clamp-1">
                       {w.name}
                     </h4>
-                    <p className="text-[11px] font-mono text-accent line-clamp-1">
+                    <p className="text-[11px] font-mono text-accent-foreground line-clamp-1">
                       Janka {w.jankaHardness.toLocaleString()}
                     </p>
                   </div>
@@ -68,7 +68,7 @@ const WoodSpeciesTeaser = () => {
           <Button
             asChild
             variant="outline"
-            className="border-[#5C7650] text-accent hover:bg-[#5C7650] hover:text-white"
+            className="border-[#5C7650] text-accent-foreground hover:bg-[#5C7650] hover:text-white"
           >
             <Link to="/wood-species">
               See all wood species

@@ -47,7 +47,7 @@ const CTA = () => {
             
             <div className="w-full space-y-3">
               <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
-                <SelectTrigger className="w-full border-gray-700 text-white bg-[#1a1a1a]">
+                <SelectTrigger aria-label="Choose contact method" className="w-full border-gray-700 text-white bg-[#1a1a1a]">
                   <SelectValue placeholder="Choose contact method" />
                 </SelectTrigger>
                 <SelectContent>

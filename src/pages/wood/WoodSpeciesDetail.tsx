@@ -136,7 +136,7 @@ const WoodSpeciesDetail = () => {
               <div className="space-y-4">
                 <Link
                   to="/wood-species"
-                  className="inline-flex items-center gap-1 text-sm text-accent hover:text-[#445339]"
+                  className="inline-flex items-center gap-1 text-sm text-accent-foreground hover:text-[#445339]"
                 >
                   <ArrowLeft className="w-4 h-4" /> All wood species
                 </Link>
@@ -150,7 +150,7 @@ const WoodSpeciesDetail = () => {
                     {wood.h1 ?? wood.name}
                   </h1>
                 </div>
-                <p className="text-lg text-accent italic">{wood.tagline}</p>
+                <p className="text-lg text-accent-foreground italic">{wood.tagline}</p>
                 <p className="text-base text-[#555555] leading-relaxed">{wood.shortDescription}</p>
                 <p className="text-xs text-muted-foreground">
                   <em>{wood.scientificName}</em> · {wood.origin}
@@ -221,13 +221,13 @@ const WoodSpeciesDetail = () => {
             <div className="grid md:grid-cols-2 gap-6">
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="font-semibold text-accent mb-3 flex items-center gap-2">
+                  <h3 className="font-semibold text-accent-foreground mb-3 flex items-center gap-2">
                     <Check className="w-5 h-5" /> What we love
                   </h3>
                   <ul className="space-y-2">
                     {wood.pros.map((p) => (
                       <li key={p} className="flex gap-2 text-sm text-[#1a1a1a]">
-                        <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                        <Check className="w-4 h-4 text-accent-foreground shrink-0 mt-0.5" />
                         <span>{p}</span>
                       </li>
                     ))}
@@ -326,7 +326,7 @@ const WoodSpeciesDetail = () => {
                       {faqQuery ? `Matching questions (${filteredFaqs.length})` : `Jump to a question (${filteredFaqs.length})`}
                     </span>
                     <ChevronDown
-                      className={`w-4 h-4 text-accent shrink-0 transition-transform duration-200 ${tocOpen ? "rotate-180" : ""}`}
+                      className={`w-4 h-4 text-accent-foreground shrink-0 transition-transform duration-200 ${tocOpen ? "rotate-180" : ""}`}
                     />
                   </button>
                   {tocOpen && (
@@ -335,7 +335,7 @@ const WoodSpeciesDetail = () => {
                         <li key={`toc-${f.id}`}>
                           <a
                             href={`#faq-${f.id}`}
-                            className="text-sm text-accent hover:text-[#445339] hover:underline leading-snug"
+                            className="text-sm text-accent-foreground hover:text-[#445339] hover:underline leading-snug"
                           >
                             <HighlightedText text={f.question} query={faqQuery} />
                           </a>
@@ -366,7 +366,7 @@ const WoodSpeciesDetail = () => {
                         <a
                           href={`#faq-${f.id}`}
                           aria-label={`Link to: ${f.question}`}
-                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-accent hover:text-[#445339] transition-opacity mt-1 shrink-0"
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-accent-foreground hover:text-[#445339] transition-opacity mt-1 shrink-0"
                         >
                           <Link2 className="w-4 h-4" />
                         </a>
@@ -414,11 +414,11 @@ const WoodSpeciesDetail = () => {
                           style={{ backgroundColor: target.swatch }}
                         />
                       </div>
-                      <h3 className="font-semibold text-[#1a1a1a] group-hover:text-accent transition-colors">
+                      <h3 className="font-semibold text-[#1a1a1a] group-hover:text-accent-foreground transition-colors">
                         {c.title}
                       </h3>
                       <p className="text-sm text-[#555555] mt-2 leading-relaxed flex-1">{c.blurb}</p>
-                      <span className="inline-flex items-center text-accent text-sm font-medium mt-4">
+                      <span className="inline-flex items-center text-accent-foreground text-sm font-medium mt-4">
                         Read the comparison <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                       </span>
                     </Link>
@@ -456,7 +456,7 @@ const WoodSpeciesDetail = () => {
               ))}
             </div>
             <div className="text-center mt-8">
-              <Button asChild variant="outline" className="border-[#5C7650] text-accent hover:bg-[#5C7650] hover:text-white">
+              <Button asChild variant="outline" className="border-[#5C7650] text-accent-foreground hover:bg-[#5C7650] hover:text-white">
                 <Link to="/wood-species">
                   See all wood species <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
@@ -475,10 +475,10 @@ const WoodSpeciesDetail = () => {
               Visit our Bushwick showroom or have us bring samples to your home anywhere in NYC.
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <Button asChild size="lg" className="bg-white text-accent hover:bg-white/90 hover:scale-105 transition-all">
+              <Button asChild size="lg" className="bg-white text-accent-foreground hover:bg-white/90 hover:scale-105 transition-all">
                 <Link to="/#contact">Book a free consultation</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-accent hover:scale-105 transition-all">
+              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-accent-foreground hover:scale-105 transition-all">
                 <Link to="/designer">Launch the designer</Link>
               </Button>
             </div>
@@ -500,11 +500,11 @@ const Spec = ({ label, value, small }: { label: string; value: string; small?: b
 
 const DetailList = ({ title, items }: { title: string; items: string[] }) => (
   <div className="bg-muted/40 rounded-lg p-5 border border-border">
-    <h3 className="font-semibold text-accent mb-3">{title}</h3>
+    <h3 className="font-semibold text-accent-foreground mb-3">{title}</h3>
     <ul className="space-y-1.5">
       {items.map((it) => (
         <li key={it} className="text-sm text-[#1a1a1a] flex gap-2">
-          <span className="text-accent">•</span>
+          <span className="text-accent-foreground">•</span>
           <span>{it}</span>
         </li>
       ))}

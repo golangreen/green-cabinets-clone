@@ -160,7 +160,7 @@ export const SelectionDrawer = () => {
               />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold truncate">{p!.name}</p>
-                <p className="text-[11px] font-mono text-accent truncate">
+                <p className="text-[11px] font-mono text-accent-foreground truncate">
                   {p!.brand} · {p!.codes[0]}
                 </p>
               </div>
@@ -187,7 +187,7 @@ export const SelectionDrawer = () => {
               setOpen(false);
               setCompareOpen(true);
             }}
-            className="border-[#5C7650] text-accent hover:bg-[#5C7650] hover:text-white disabled:opacity-50"
+            className="border-[#5C7650] text-accent-foreground hover:bg-[#5C7650] hover:text-white disabled:opacity-50"
           >
             <Columns3 className="h-4 w-4 mr-1.5" />
             Compare {picks.length >= 2 ? `(${Math.min(picks.length, 4)})` : ""}
@@ -214,7 +214,7 @@ export const SelectionDrawer = () => {
             <div className="flex gap-2">
               <Input value={shareUrl} readOnly className="text-xs" />
               <Button onClick={handleCopy} size="icon" variant="outline">
-                {copied ? <Check className="h-4 w-4 text-accent" /> : <Copy className="h-4 w-4" />}
+                {copied ? <Check className="h-4 w-4 text-accent-foreground" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
             <Button onClick={handleNativeShare} className="w-full bg-[#5C7650] hover:bg-[#445339]">

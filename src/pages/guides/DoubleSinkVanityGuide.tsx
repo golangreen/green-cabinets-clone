@@ -119,7 +119,7 @@ const DoubleSinkVanityGuide = () => (
 
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026 · NYC sizing & cost
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
@@ -139,7 +139,7 @@ const DoubleSinkVanityGuide = () => (
       <section className="py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
           <h2 className="text-2xl sm:text-3xl font-bold mb-3 flex items-center gap-2">
-            <Ruler className="h-6 w-6 text-accent" /> What size do you actually need?
+            <Ruler className="h-6 w-6 text-accent-foreground" /> What size do you actually need?
           </h2>
           <p className="text-base text-muted-foreground mb-6 leading-relaxed">
             The honest answer: 60 inches is the bare minimum and 66–72 is where it actually feels
@@ -183,7 +183,7 @@ const DoubleSinkVanityGuide = () => (
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3 flex items-center gap-2">
-            <Droplets className="h-6 w-6 text-accent" /> Plumbing rough-in
+            <Droplets className="h-6 w-6 text-accent-foreground" /> Plumbing rough-in
           </h2>
           <p className="text-base text-muted-foreground mb-3 leading-relaxed">
             If you're roughing in plumbing for a future double vanity, give the plumber these
@@ -197,7 +197,7 @@ const DoubleSinkVanityGuide = () => (
           </ul>
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3 flex items-center gap-2">
-            <DollarSign className="h-6 w-6 text-accent" /> What it costs in NYC
+            <DollarSign className="h-6 w-6 text-accent-foreground" /> What it costs in NYC
           </h2>
           <p className="text-base text-muted-foreground mb-3 leading-relaxed">
             Custom double vanities at our Bushwick shop, painted MDF doors with hardwood drawer
@@ -222,10 +222,10 @@ const DoubleSinkVanityGuide = () => (
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Related reading</h2>
           <ul className="list-disc pl-5 space-y-2 text-base text-muted-foreground">
-            <li><Link to="/floating-bathroom-vanity" className="text-accent hover:underline">Floating vs. legs vs. furniture-style vanities</Link></li>
-            <li><Link to="/small-bathroom-vanity-ideas" className="text-accent hover:underline">Small bathroom vanity ideas under 36"</Link></li>
-            <li><Link to="/best-wood-for-kitchen-cabinets" className="text-accent hover:underline">Best wood for cabinetry — also applies to vanities</Link></li>
-            <li><Link to="/reach-in-closet-systems-nyc" className="text-accent hover:underline">Reach-in closet systems for NYC apartments</Link></li>
+            <li><Link to="/floating-bathroom-vanity" className="text-accent-foreground hover:underline">Floating vs. legs vs. furniture-style vanities</Link></li>
+            <li><Link to="/small-bathroom-vanity-ideas" className="text-accent-foreground hover:underline">Small bathroom vanity ideas under 36"</Link></li>
+            <li><Link to="/best-wood-for-kitchen-cabinets" className="text-accent-foreground hover:underline">Best wood for cabinetry — also applies to vanities</Link></li>
+            <li><Link to="/reach-in-closet-systems-nyc" className="text-accent-foreground hover:underline">Reach-in closet systems for NYC apartments</Link></li>
           </ul>
         </div>
       </section>

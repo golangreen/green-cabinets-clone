@@ -96,19 +96,19 @@ export default function PaymentSuccess() {
               <h3 className="font-semibold text-lg">What Happens Next?</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
-                  <span className="text-accent font-bold">1.</span>
+                  <span className="text-accent-foreground font-bold">1.</span>
                   <span>Our team will review your order within 24 hours</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-accent font-bold">2.</span>
+                  <span className="text-accent-foreground font-bold">2.</span>
                   <span>We'll contact you to confirm specifications and measurements</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-accent font-bold">3.</span>
+                  <span className="text-accent-foreground font-bold">3.</span>
                   <span>Production begins once all details are finalized</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-accent font-bold">4.</span>
+                  <span className="text-accent-foreground font-bold">4.</span>
                   <span>We'll keep you updated throughout the process</span>
                 </li>
               </ul>
@@ -119,7 +119,7 @@ export default function PaymentSuccess() {
               <div className="flex flex-col sm:flex-row gap-2 text-sm">
                 <ObfuscatedEmail 
                   encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
-                  className="text-accent hover:text-[#445339] flex items-center gap-1"
+                  className="text-accent-foreground hover:text-[#445339] flex items-center gap-1"
                 >
                   <Mail className="w-4 h-4" />
                   <span>Email us</span>
@@ -128,7 +128,7 @@ export default function PaymentSuccess() {
                 <ObfuscatedPhone 
                   encoded="NzE4ODA0NTQ4OA=="
                   type="tel"
-                  className="text-accent hover:text-[#445339]"
+                  className="text-accent-foreground hover:text-[#445339]"
                 />
               </div>
             </div>

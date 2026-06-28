@@ -103,8 +103,9 @@ const Testimonials = () => {
 
       <div
         role="region"
+        tabIndex={0}
         aria-label="Customer testimonials carousel"
-        className="flex overflow-x-auto snap-x snap-mandatory gap-5 px-6 pb-4 scrollbar-none [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.5rem]"
+        className="flex overflow-x-auto snap-x snap-mandatory gap-5 px-6 pb-4 scrollbar-none [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.5rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
       >
         {testimonials.map((t) => (
           <figure

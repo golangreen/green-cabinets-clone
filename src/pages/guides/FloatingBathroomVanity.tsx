@@ -120,7 +120,7 @@ const FloatingBathroomVanity = () => (
 
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026 · NYC install notes
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
@@ -142,9 +142,9 @@ const FloatingBathroomVanity = () => (
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">When to choose floating</h2>
           <div className="grid sm:grid-cols-2 gap-6 mb-12">
             <div className="border border-border rounded-lg p-5">
-              <h3 className="font-bold text-foreground mb-3 flex items-center gap-2"><Check className="h-5 w-5 text-accent" /> Pros</h3>
+              <h3 className="font-bold text-foreground mb-3 flex items-center gap-2"><Check className="h-5 w-5 text-accent-foreground" /> Pros</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                {PROS.map((p) => <li key={p} className="flex gap-2"><span className="text-accent">·</span>{p}</li>)}
+                {PROS.map((p) => <li key={p} className="flex gap-2"><span className="text-accent-foreground">·</span>{p}</li>)}
               </ul>
             </div>
             <div className="border border-border rounded-lg p-5">
@@ -199,8 +199,8 @@ const FloatingBathroomVanity = () => (
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Related reading</h2>
           <ul className="list-disc pl-5 space-y-2 text-base text-muted-foreground">
-            <li><Link to="/double-sink-vanity-guide" className="text-accent hover:underline">Double sink vanity sizing & layouts</Link></li>
-            <li><Link to="/small-bathroom-vanity-ideas" className="text-accent hover:underline">Small bathroom vanity ideas under 36"</Link></li>
+            <li><Link to="/double-sink-vanity-guide" className="text-accent-foreground hover:underline">Double sink vanity sizing & layouts</Link></li>
+            <li><Link to="/small-bathroom-vanity-ideas" className="text-accent-foreground hover:underline">Small bathroom vanity ideas under 36"</Link></li>
           </ul>
         </div>
       </section>

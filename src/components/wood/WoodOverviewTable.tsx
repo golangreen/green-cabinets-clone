@@ -38,13 +38,13 @@ const WoodOverviewTable = () => {
                 <td className="px-4 py-3 text-[#555555]">{w.color}</td>
                 <td className="px-4 py-3 text-[#555555]">{w.grain}</td>
                 <td className="px-4 py-3 text-right tabular-nums">{w.jankaHardness.toLocaleString()} lbf</td>
-                <td className="px-4 py-3 text-center font-mono text-accent">{w.costTier}</td>
+                <td className="px-4 py-3 text-center font-mono text-accent-foreground">{w.costTier}</td>
                 <td className="px-4 py-3 text-[#555555]">{w.uses[0]}</td>
                 <td className="px-4 py-3 text-right">
                   <Link
                     to={`/wood-species/${w.slug}`}
                     aria-label={`Read the ${w.h1 ?? `${w.name} Cabinets`} guide`}
-                    className="inline-flex items-center gap-1 text-accent hover:text-[#445339] font-medium"
+                    className="inline-flex items-center gap-1 text-accent-foreground hover:text-[#445339] font-medium"
                   >
                     {w.h1 ?? `${w.name} Cabinets`} <ArrowRight className="w-4 h-4" />
                   </Link>
@@ -73,7 +73,7 @@ const WoodOverviewTable = () => {
                 <h3 className="font-semibold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
                 <p className="text-xs text-muted-foreground">{w.tagline}</p>
               </div>
-              <span className="font-mono text-sm text-accent">{w.costTier}</span>
+              <span className="font-mono text-sm text-accent-foreground">{w.costTier}</span>
             </div>
             <dl className="grid grid-cols-2 gap-2 text-xs text-[#555555]">
               <div><dt className="text-muted-foreground">Hardness</dt><dd>{w.jankaHardness.toLocaleString()} lbf</dd></div>
