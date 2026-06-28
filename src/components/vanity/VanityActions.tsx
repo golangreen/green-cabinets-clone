@@ -27,7 +27,7 @@ export const VanityActions = ({
       <Button
         onClick={onCheckout}
         disabled={isProcessing}
-        className="flex-1 bg-[#B8941F] hover:bg-[#A07F1A] text-white touch-manipulation"
+        className="flex-1 bg-[#D4AF37] hover:bg-[#D4AF37]/80 text-[#1a1a1a] touch-manipulation"
         size="lg"
       >
         <CreditCard className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
