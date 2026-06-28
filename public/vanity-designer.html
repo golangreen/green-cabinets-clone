@@ -316,15 +316,13 @@
           .gc-step h2{font-size:17px}
           .gc-step .hint{display:none}
           .gc-preview{padding:10px;border-radius:22px}
-          .gc-stage{height:46vh;max-height:340px;min-height:240px;border-radius:16px}
-          .gc-viewseg{top:18px;right:18px}
-           .gc-openbtn{bottom:10px;left:10px;font-size:10.5px;padding:6px 10px;max-width:calc(50% - 14px)}
-           .gc-finalbtn{bottom:10px;right:10px;font-size:10.5px;padding:6px 10px;max-width:calc(50% - 14px)}
-           /* Move rotate hint to TOP of stage on mobile so it never collides
-              with the bottom action buttons regardless of scroll/orientation. */
-           /* Hide hint on phones — top is occupied by lightseg, bottom by
-              action buttons, so there's no safe place that won't collide. */
-           .gc-3dhint{display:none}
+          /* Tighten overlay tokens on phones — every overlay control follows */
+          .gc-stage{--stage-pad:10px;--stage-pad-top:18px;--overlay-gap:10px;
+                    height:46vh;max-height:340px;min-height:240px;border-radius:16px}
+          .gc-openbtn,.gc-finalbtn{font-size:10.5px;padding:6px 10px}
+          /* Hide rotate hint on phones — top occupied by lightseg, bottom by
+             action buttons; no safe place inside the stage. */
+          .gc-3dhint{display:none}
           .gc-dims{padding:10px 4px 0;flex-wrap:wrap;gap:6px}
           .gc-dims .val{font-size:17px}
           .gc-dims .lbl{font-size:9px;letter-spacing:.14em}
