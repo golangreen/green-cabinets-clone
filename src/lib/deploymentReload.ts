@@ -41,7 +41,8 @@ function reloadOnce(reason: string) {
 
 export function initDeploymentReload() {
   if (typeof window === "undefined") return;
-  if (import.meta.env.DEV) return;
+
+
 
   // Clear the reload flag after a successful load so future deploys can trigger again.
   window.addEventListener("load", () => {
