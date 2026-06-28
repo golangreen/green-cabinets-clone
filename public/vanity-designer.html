@@ -22,6 +22,12 @@
           --ink:#1a1a1a; --ink-soft:#5a5a5a;
           --paper:#d5d5d5; --card:#ffffff; --line:#c4c4c4;
           --radius:24px;
+          /* Stage overlay spacing tokens. Every absolutely-positioned control
+             inside .gc-stage references these so insets stay symmetrical and
+             new controls can't collide. Override per breakpoint, never per rule. */
+          --stage-pad:14px;     /* edge inset for overlay controls */
+          --stage-pad-top:26px; /* top inset (segmented pills sit higher) */
+          --overlay-gap:12px;   /* min gap between opposite-corner overlays */
           --shadow:0 1px 2px rgba(0,0,0,.04), 0 14px 40px rgba(0,0,0,.08);
           --shadow-lift:0 4px 10px rgba(0,0,0,.06), 0 28px 70px rgba(0,0,0,.16);
           --ease:cubic-bezier(.22,.8,.26,1);
@@ -58,22 +64,37 @@
         /* ---------- preview ---------- */
         .gc-preview{position:sticky;top:20px;background:linear-gradient(180deg,#f5f5f5 0%,#dcdcdc 100%);border:1px solid var(--line);border-radius:30px;padding:16px;box-shadow:var(--shadow-lift);overflow:hidden}
         @media (max-width:900px){.gc-preview{position:relative;top:0}}
-        .gc-finalbtn{position:absolute;bottom:14px;right:14px;z-index:5;border:1px solid rgba(92,118,80,.55);background:linear-gradient(135deg,#6f8c61,#445339);color:#ffffff;font-size:11.5px;font-weight:700;letter-spacing:.03em;padding:8px 14px;border-radius:99px;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 14px rgba(68,83,57,.4);white-space:nowrap;max-width:54%;overflow:hidden;text-overflow:ellipsis}
+        /* Shared overlay base — every absolutely-positioned stage control inherits
+           safe insets and a max-width cap so two bottom (or two top) overlays can
+           never exceed the stage width together. */
+        .gc-overlay{position:absolute;z-index:5;max-width:calc(50% - var(--stage-pad) - var(--overlay-gap)/2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .gc-overlay-tl{top:var(--stage-pad-top);left:var(--stage-pad-top)}
+        .gc-overlay-tr{top:var(--stage-pad-top);right:var(--stage-pad-top)}
+        .gc-overlay-bl{bottom:var(--stage-pad);left:var(--stage-pad)}
+        .gc-overlay-br{bottom:var(--stage-pad);right:var(--stage-pad)}
+
+        .gc-finalbtn{border:1px solid rgba(92,118,80,.55);background:linear-gradient(135deg,#6f8c61,#445339);color:#ffffff;font-size:11.5px;font-weight:700;letter-spacing:.03em;padding:8px 14px;border-radius:99px;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 14px rgba(68,83,57,.4)}
         .gc-finalbtn:hover{filter:brightness(1.07);transform:translateY(-1px);box-shadow:0 6px 20px rgba(68,83,57,.5)}
         @media (max-width:900px){
           .gc-preview{position:static!important;top:auto!important}   /* unpin 3D so page scrolls */
         }
-        @media (max-width:640px){.gc-finalbtn{bottom:10px;right:10px;font-size:11px;padding:7px 12px}}
-        .gc-openbtn{position:absolute;bottom:14px;left:14px;z-index:5;border:1px solid rgba(92,118,80,.4);background:rgba(20,20,20,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#ECF1E8;font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:7px 12px;border-radius:99px;cursor:pointer;font-family:inherit;transition:all .2s;max-width:46%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .gc-openbtn{border:1px solid rgba(92,118,80,.4);background:rgba(20,20,20,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#ECF1E8;font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:7px 12px;border-radius:99px;cursor:pointer;font-family:inherit;transition:all .2s}
         .gc-openbtn:hover{background:rgba(20,20,20,.78);border-color:rgba(92,118,80,.7)}
-        .gc-viewseg{position:absolute;top:26px;right:26px;z-index:5;display:flex;background:rgba(20,20,20,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(92,118,80,.35);border-radius:12px;padding:3px;gap:3px}
+        .gc-viewseg{display:flex;background:rgba(20,20,20,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(92,118,80,.35);border-radius:12px;padding:3px;gap:3px}
         .gc-viewseg button{border:0;background:transparent;color:#d4d4d4;font-size:12.5px;font-weight:600;letter-spacing:.04em;padding:7px 14px;border-radius:9px;cursor:pointer;font-family:inherit;transition:all .2s}
         .gc-viewseg button.on{background:rgba(255,253,248,.92);color:#1a1a1a}
-        .gc-lightseg{position:absolute;top:26px;left:26px;z-index:5;display:flex;background:rgba(20,20,20,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(92,118,80,.35);border-radius:12px;padding:3px;gap:2px}
+        .gc-lightseg{display:flex;background:rgba(20,20,20,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(92,118,80,.35);border-radius:12px;padding:3px;gap:2px}
         .gc-lightseg button{border:0;background:transparent;color:#d4d4d4;font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:6px 11px;border-radius:9px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:5px}
         .gc-lightseg button.on{background:rgba(255,253,248,.92);color:#1a1a1a}
         .gc-lightseg .dot{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
-        @media (max-width:640px){.gc-lightseg{top:18px;left:auto;right:18px;font-size:11px}.gc-viewseg{display:none}.gc-lightseg button{padding:6px 9px;font-size:11px}.gc-lightseg button .lbl{display:none}}
+        /* Phones: lightseg moves to TR corner (viewseg hidden), shares right inset */
+        @media (max-width:640px){
+          .gc-viewseg{display:none}
+          .gc-lightseg.gc-overlay-tl{left:auto;right:var(--stage-pad-top)}
+          .gc-lightseg{font-size:11px}
+          .gc-lightseg button{padding:6px 9px;font-size:11px}
+          .gc-lightseg button .lbl{display:none}
+        }
         .gc-borrowed{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:var(--ink-soft);font-size:13px;letter-spacing:.02em;background:linear-gradient(180deg,#e8e8e8,#cfcfcf)}
         .gc-borrowed.show{display:flex}
         #gl{display:block;width:100%;height:100%}
@@ -295,15 +316,13 @@
           .gc-step h2{font-size:17px}
           .gc-step .hint{display:none}
           .gc-preview{padding:10px;border-radius:22px}
-          .gc-stage{height:46vh;max-height:340px;min-height:240px;border-radius:16px}
-          .gc-viewseg{top:18px;right:18px}
-           .gc-openbtn{bottom:10px;left:10px;font-size:10.5px;padding:6px 10px;max-width:calc(50% - 14px)}
-           .gc-finalbtn{bottom:10px;right:10px;font-size:10.5px;padding:6px 10px;max-width:calc(50% - 14px)}
-           /* Move rotate hint to TOP of stage on mobile so it never collides
-              with the bottom action buttons regardless of scroll/orientation. */
-           /* Hide hint on phones — top is occupied by lightseg, bottom by
-              action buttons, so there's no safe place that won't collide. */
-           .gc-3dhint{display:none}
+          /* Tighten overlay tokens on phones — every overlay control follows */
+          .gc-stage{--stage-pad:10px;--stage-pad-top:18px;--overlay-gap:10px;
+                    height:46vh;max-height:340px;min-height:240px;border-radius:16px}
+          .gc-openbtn,.gc-finalbtn{font-size:10.5px;padding:6px 10px}
+          /* Hide rotate hint on phones — top occupied by lightseg, bottom by
+             action buttons; no safe place inside the stage. */
+          .gc-3dhint{display:none}
           .gc-dims{padding:10px 4px 0;flex-wrap:wrap;gap:6px}
           .gc-dims .val{font-size:17px}
           .gc-dims .lbl{font-size:9px;letter-spacing:.14em}
@@ -349,11 +368,12 @@
           .gc-seg button{font-size:12px}
           .gc-cta{padding:11px 13px;font-size:13px}
         }
-        /* Landscape phones: stage is short — hide hint, shrink action buttons */
+        /* Landscape phones: stage is short — tighten overlay tokens further */
         @media (max-width:900px) and (orientation:landscape) and (max-height:500px){
           .gc-3dhint{display:none}
-          .gc-openbtn,.gc-finalbtn{font-size:10px;padding:5px 9px;max-width:40%}
-          .gc-stage{height:70vh;min-height:200px}
+          .gc-stage{--stage-pad:8px;--stage-pad-top:10px;--overlay-gap:8px;
+                    height:70vh;min-height:200px}
+          .gc-openbtn,.gc-finalbtn{font-size:10px;padding:5px 9px}
         }
         /* comfortable touch targets on any coarse pointer */
         @media (pointer:coarse){
@@ -378,13 +398,13 @@
             <!-- ===== LIVE PREVIEW ===== -->
             <div class="gc-preview" style="position:sticky;top:20px">
               <div class="gc-stage" id="stage">
-                <div class="gc-lightseg" id="lightSeg" role="tablist" aria-label="Showroom lighting">
+                <div class="gc-lightseg gc-overlay gc-overlay-tl" id="lightSeg" role="tablist" aria-label="Showroom lighting">
                   <button data-light="morning" title="Morning daylight"><span class="dot" style="background:#FFE9C2"></span><span class="lbl">Morning</span></button>
                   <button data-light="overhead" title="Overhead showroom"><span class="dot" style="background:#FFFFFF"></span><span class="lbl">Overhead</span></button>
                   <button data-light="warm" class="on" title="Warm showroom"><span class="dot" style="background:#FFC98A"></span><span class="lbl">Warm</span></button>
                 </div>
-                <button class="gc-openbtn" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
-                <button class="gc-finalbtn" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
+                <button class="gc-openbtn gc-overlay gc-overlay-bl" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
+                <button class="gc-finalbtn gc-overlay gc-overlay-br" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
                 <canvas id="gl"></canvas><div class="gc-borrowed" id="glBorrowed">Viewing in full screen…</div>
                 <div class="gc-3dhint">Drag to spin · scroll or pinch to zoom</div>
               </div>
