@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect } from "react";
+import { Suspense, useEffect } from "react";
+import { lazyWithReload as lazy } from "@/lib/lazyWithReload";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/layout/Header";
 import Hero from "@/components/home/Hero";
