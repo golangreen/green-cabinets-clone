@@ -29,7 +29,7 @@
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
         html{scroll-behavior:smooth}
         body{
-          font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+          font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
           background:
             radial-gradient(1100px 480px at 50% -120px, #e8e8e8 0%, transparent 70%),
             var(--paper);
@@ -37,14 +37,14 @@
           -webkit-font-smoothing:antialiased; line-height:1.55;
         }
 
-        .gc-wrap{max-width:1180px;margin:0 auto;padding:28px 20px 140px}
+        .gc-wrap{max-width:1180px;margin:0 auto;padding:48px 20px 160px}
 
         /* ---------- header ---------- */
-        .gc-head{text-align:center;padding:34px 0 44px;position:relative}
+        .gc-head{text-align:center;padding:48px 0 64px;position:relative}
         .gc-eyebrow{display:inline-flex;align-items:center;gap:14px;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--brass);font-weight:600;margin-bottom:16px}
         .gc-eyebrow:before,.gc-eyebrow:after{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--brass));}
         .gc-eyebrow:after{background:linear-gradient(90deg,var(--brass),transparent)}
-        .gc-head h1{font-family:"Fraunces",Georgia,serif;font-weight:480;font-size:clamp(34px,5vw,54px);letter-spacing:-.012em;line-height:1.06}
+        .gc-head h1{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-weight:480;font-size:clamp(34px,5vw,54px);letter-spacing:-.012em;line-height:1.06}
         .gc-head h1 em{font-style:italic;font-weight:430;color:var(--sage-dark)}
         .gc-head p{color:var(--ink-soft);max-width:460px;margin:16px auto 0;font-size:15.5px;line-height:1.65}
 
@@ -112,14 +112,14 @@
         .gc-hditem .lbl{font-size:13px;font-weight:600;color:var(--ink-soft)}
         .gc-dims{display:flex;justify-content:space-between;align-items:center;padding:14px 8px 2px}
         .gc-dims .lbl{font-size:10.5px;color:var(--brass);text-transform:uppercase;letter-spacing:.2em;font-weight:600}
-        .gc-dims .val{font-family:"Fraunces",Georgia,serif;font-size:23px;font-weight:520;letter-spacing:.01em}
+        .gc-dims .val{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:23px;font-weight:520;letter-spacing:.01em}
         .gc-dims .val span{font-size:14px;color:var(--ink-soft);font-family:inherit}
 
         /* ---------- panels / controls ---------- */
-        .gc-panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px 24px;margin-bottom:18px;box-shadow:var(--shadow)}
+        .gc-panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px 28px;margin-bottom:24px;box-shadow:var(--shadow)}
         .gc-step{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;padding-bottom:13px;border-bottom:1px solid #e5e5e5}
-        .gc-step .num{font-family:"Fraunces",Georgia,serif;color:var(--brass);font-size:13px;font-weight:600;letter-spacing:.08em}
-        .gc-step h2{font-family:"Fraunces",Georgia,serif;font-size:19px;font-weight:520;letter-spacing:.002em}
+        .gc-step .num{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;color:var(--brass);font-size:13px;font-weight:600;letter-spacing:.08em}
+        .gc-step h2{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:19px;font-weight:520;letter-spacing:.002em}
         .gc-step .hint{margin-left:auto;font-size:12.5px;color:var(--ink-soft);letter-spacing:.02em}
 
         /* segmented (vanity / medicine cabinet) */
@@ -171,7 +171,7 @@
         @media (min-width:640px){.gc-dd{align-items:center}}
         .gc-ddsheet{background:var(--card);border:1px solid var(--line);border-radius:26px;max-width:440px;width:100%;max-height:min(640px,86vh);display:flex;flex-direction:column;box-shadow:var(--shadow-lift);animation:rise .32s var(--ease);overflow:hidden}
         .gc-ddhead{padding:18px 18px 12px;border-bottom:1px solid var(--line)}
-        .gc-ddhead h3{font-family:"Fraunces",Georgia,serif;font-size:21px;font-weight:500;margin-bottom:12px}
+        .gc-ddhead h3{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:21px;font-weight:500;margin-bottom:12px}
         .gc-search{display:flex;align-items:center;gap:8px;background:#f0f0f0;border-radius:12px;padding:10px 13px}
         .gc-search svg{flex-shrink:0;opacity:.45}
         .gc-search input{border:0;background:transparent;outline:none;font-size:15px;width:100%;font-family:inherit;color:var(--ink)}
@@ -199,7 +199,7 @@
         .gc-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;justify-content:center;pointer-events:none}
         .gc-barin{pointer-events:auto;display:flex;align-items:center;gap:18px;background:rgba(20,20,20,.88);backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3);border:1px solid rgba(92,118,80,.35);border-radius:24px;padding:13px 14px 13px 24px;box-shadow:0 10px 40px rgba(20,17,12,.35);max-width:580px;width:100%}
         .gc-price .cap{font-size:10px;text-transform:uppercase;letter-spacing:.24em;color:#6f8c61;font-weight:600}
-        .gc-price .amt{font-family:"Fraunces",Georgia,serif;font-size:31px;font-weight:520;letter-spacing:0;line-height:1.05;color:#f5f5f5;transition:opacity .2s}
+        .gc-price .amt{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:31px;font-weight:520;letter-spacing:0;line-height:1.05;color:#f5f5f5;transition:opacity .2s}
         .gc-price .sub{font-size:12px;color:#b8b8b8}
         .gc-cta{margin-left:auto;border:0;background:linear-gradient(135deg,#6f8c61 0%,#5C7650 60%,#445339 100%);color:#ffffff;font-size:15px;font-weight:600;letter-spacing:.02em;border-radius:16px;padding:15px 24px;cursor:pointer;transition:all .25s var(--ease);font-family:inherit;white-space:nowrap;box-shadow:0 4px 16px rgba(92,118,80,.45), inset 0 1px 0 rgba(255,255,255,.3)}
         .gc-cta:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(92,118,80,.55), inset 0 1px 0 rgba(255,255,255,.35);filter:brightness(1.05)}
@@ -212,13 +212,13 @@
         .gc-sheet{background:var(--card);border:1px solid var(--line);border-radius:30px;max-width:480px;width:100%;padding:32px;box-shadow:var(--shadow-lift);animation:rise .35s var(--ease)}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes rise{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
-        .gc-sheet h3{font-family:"Fraunces",Georgia,serif;font-size:27px;font-weight:480;margin-bottom:4px}
+        .gc-sheet h3{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:27px;font-weight:480;margin-bottom:4px}
         .gc-sheet .sub{color:var(--ink-soft);font-size:14px;margin-bottom:18px}
         .gc-sumrow{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
         .gc-sumrow .k{color:var(--ink-soft)}
         .gc-sumrow .v{font-weight:600;text-align:right}
         .gc-sumrow.total{border-bottom:0;padding-top:16px}
-        .gc-sumrow.total .v{font-family:"Fraunces",Georgia,serif;font-size:24px}
+        .gc-sumrow.total .v{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:24px}
         .gc-sheet .actions{display:flex;gap:10px;margin-top:20px}
         .gc-sheet .actions a,.gc-sheet .actions button{flex:1;text-align:center;text-decoration:none;border-radius:14px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s var(--ease)}
         .gc-go{background:linear-gradient(135deg,#6f8c61,#445339);color:#ffffff;border:0;box-shadow:0 4px 14px rgba(92,118,80,.4)}
