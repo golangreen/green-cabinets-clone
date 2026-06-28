@@ -301,7 +301,9 @@
            .gc-finalbtn{bottom:10px;right:10px;font-size:10.5px;padding:6px 10px;max-width:calc(50% - 14px)}
            /* Move rotate hint to TOP of stage on mobile so it never collides
               with the bottom action buttons regardless of scroll/orientation. */
-           .gc-3dhint{bottom:auto;top:8px;left:50%;transform:translateX(-50%);font-size:10.5px;padding:3px 10px;max-width:calc(100% - 120px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+           /* Hide hint on phones — top is occupied by lightseg, bottom by
+              action buttons, so there's no safe place that won't collide. */
+           .gc-3dhint{display:none}
           .gc-dims{padding:10px 4px 0;flex-wrap:wrap;gap:6px}
           .gc-dims .val{font-size:17px}
           .gc-dims .lbl{font-size:9px;letter-spacing:.14em}
