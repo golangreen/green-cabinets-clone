@@ -148,7 +148,8 @@ export default function FinishPicker({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={`Search ${activeCategory} (name, code, finish)…`}
-              className="w-full pl-7 pr-3 py-1.5 text-xs bg-background border border-border rounded-lg focus:outline-none focus:border-primary/50"
+              aria-label={`Search ${activeCategory} finishes`}
+              className="w-full pl-7 pr-3 py-1.5 text-xs bg-background border border-border rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus:border-primary/50"
             />
           </div>
         )}
