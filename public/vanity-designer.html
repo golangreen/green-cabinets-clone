@@ -297,9 +297,18 @@
           .gc-preview{padding:10px;border-radius:22px}
           .gc-stage{height:46vh;max-height:340px;min-height:240px;border-radius:16px}
           .gc-viewseg{top:18px;right:18px}
-           .gc-openbtn{bottom:10px;left:10px;font-size:10.5px;padding:6px 10px;max-width:42%}
-           .gc-finalbtn{bottom:10px;right:10px;font-size:10.5px;padding:6px 10px;max-width:50%}
+           .gc-openbtn{bottom:10px;left:10px;font-size:10.5px;padding:6px 10px;max-width:calc(50% - 14px)}
+           .gc-finalbtn{bottom:10px;right:10px;font-size:10.5px;padding:6px 10px;max-width:calc(50% - 14px)}
+           /* Move the rotate hint to the TOP of the stage on mobile so it
+              never collides with the bottom action buttons regardless of
+              orientation or how the user scrolls. */
+           .gc-3dhint{bottom:auto;top:8px;left:50%;transform:translateX(-50%);font-size:10.5px;padding:3px 10px;max-width:calc(100% - 120px);overflow:hidden;text-overflow:ellipsis}
+         }
+         /* Landscape phones: stage is short, hide hint and shrink buttons further */
+         @media (max-width:900px) and (orientation:landscape) and (max-height:500px){
            .gc-3dhint{display:none}
+           .gc-openbtn,.gc-finalbtn{font-size:10px;padding:5px 9px;max-width:38%}
+           .gc-stage{height:62vh;min-height:200px}
           .gc-dims{padding:10px 4px 0;flex-wrap:wrap;gap:6px}
           .gc-dims .val{font-size:17px}
           .gc-dims .lbl{font-size:9px;letter-spacing:.14em}
