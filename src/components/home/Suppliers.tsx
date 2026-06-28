@@ -221,26 +221,27 @@ const Suppliers = () => {
               }
             }}
           >
-            <a
-              href={supplier.website !== "catalog" ? supplier.website : undefined}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                if (supplier.website !== "catalog") {
-                  e.stopPropagation();
-                } else {
-                  e.preventDefault();
-                }
-              }}
-              className="absolute top-3 right-3 text-muted-foreground hover:text-[#1a1a1a] transition-colors z-10"
-              aria-label={`Visit ${supplier.name} website`}
-            >
-              {supplier.website === "catalog" ? (
-                <Image className="h-5 w-5" />
-              ) : (
+            {supplier.website !== "catalog" ? (
+              <a
+                href={supplier.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="absolute top-3 right-3 text-muted-foreground hover:text-[#1a1a1a] transition-colors z-10"
+                aria-label={`Visit ${supplier.name} website`}
+              >
                 <ExternalLink className="h-5 w-5" />
-              )}
-            </a>
+              </a>
+            ) : (
+              <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
+                className="absolute top-3 right-3 text-muted-foreground hover:text-[#1a1a1a] transition-colors z-10"
+                aria-label={`View ${supplier.name} catalog`}
+              >
+                <Image className="h-5 w-5" />
+              </button>
+            )}
 
             <div className="mb-4 bg-card rounded-xl p-4 h-28 flex items-center justify-center">
               {supplier.logo ? (
