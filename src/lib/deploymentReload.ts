@@ -41,35 +41,39 @@ function reloadOnce(reason: string) {
 
 export function initDeploymentReload() {
   if (typeof window === "undefined") return;
-  if (import.meta.env.DEV) return;
+
+
 
   // Clear the reload flag after a successful load so future deploys can trigger again.
   window.addEventListener("load", () => {
     setTimeout(() => sessionStorage.removeItem(RELOAD_FLAG), 5_000);
   });
 
-  let baseline: string | null = null;
-  fetchCurrentFingerprint().then((fp) => {
-    baseline = fp;
-  });
+  if (!import.meta.env.DEV) {
+    let baseline: string | null = null;
+    fetchCurrentFingerprint().then((fp) => {
+      baseline = fp;
+    });
 
-  const check = async () => {
-    if (document.visibilityState !== "visible") return;
-    const current = await fetchCurrentFingerprint();
-    if (!current) return;
-    if (!baseline) {
-      baseline = current;
-      return;
-    }
-    if (current !== baseline) {
-      reloadOnce("new deployment detected");
-    }
-  };
+    const check = async () => {
+      if (document.visibilityState !== "visible") return;
+      const current = await fetchCurrentFingerprint();
+      if (!current) return;
+      if (!baseline) {
+        baseline = current;
+        return;
+      }
+      if (current !== baseline) {
+        reloadOnce("new deployment detected");
+      }
+    };
 
-  setInterval(check, POLL_INTERVAL_MS);
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") check();
-  });
+    setInterval(check, POLL_INTERVAL_MS);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") check();
+    });
+  }
+
 
   // Catch failed dynamic imports / missing chunks from old hashed assets.
   const isChunkError = (msg: string) =>
