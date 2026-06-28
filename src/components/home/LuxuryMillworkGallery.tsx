@@ -91,7 +91,7 @@ const LuxuryMillworkGallery = () => {
                       aria-selected={isActive}
                       onClick={() => setActive(c)}
                       className={[
-                        "shrink-0 whitespace-nowrap text-base md:text-lg tracking-wide transition-colors duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm",
+                        "shrink-0 whitespace-nowrap text-base md:text-lg tracking-wide transition-colors duration-300 active:scale-95 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm px-1",
                         isActive
                           ? "text-[#1a1a1a] font-semibold"
                           : "text-muted-foreground font-normal hover:text-[#1a1a1a]",
