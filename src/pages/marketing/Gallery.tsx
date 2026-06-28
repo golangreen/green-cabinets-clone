@@ -82,7 +82,7 @@ const GalleryPage = () => {
             <button
               type="button"
               onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")}
-              className="inline-flex items-center gap-2 text-sm text-accent hover:text-[#445339] font-medium transition-colors active:scale-95"
+              className="inline-flex items-center gap-2 text-sm text-accent-foreground hover:text-[#445339] font-medium transition-colors active:scale-95"
             >
               <ArrowLeft className="h-4 w-4" />
               Back
@@ -92,7 +92,7 @@ const GalleryPage = () => {
 
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
           <header className="text-center mb-10">
-            <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
+            <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
               Real Projects · Real Craftsmanship
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">

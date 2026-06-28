@@ -37,7 +37,7 @@ export const VanityActions = ({
     <Button
       onClick={onRequestQuote}
       variant="outline"
-      className="w-full touch-manipulation border-[#5C7650] text-accent hover:bg-[#5C7650]/10"
+      className="w-full touch-manipulation border-[#5C7650] text-accent-foreground hover:bg-[#5C7650]/10"
       size="lg"
     >
       <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />

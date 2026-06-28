@@ -32,7 +32,7 @@ export const FeaturedProject = ({ project, slim = false }: Props) => {
 
       <div className="p-4 sm:p-5 space-y-3">
         <div>
-          <p className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-accent font-semibold">
+          <p className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-accent-foreground font-semibold">
             <MapPin className="h-3.5 w-3.5" />
             {project.neighborhood}, {project.borough}
             {project.year && <span className="text-muted-foreground">· {project.year}</span>}

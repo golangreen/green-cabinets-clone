@@ -116,12 +116,12 @@ const CaseStudyDetail = () => {
         <article className="container mx-auto px-4 sm:px-6 max-w-3xl py-10 sm:py-14">
           <Link
             to="/case-studies"
-            className="inline-flex items-center gap-2 text-sm text-accent hover:text-[#445339] font-medium mb-6"
+            className="inline-flex items-center gap-2 text-sm text-accent-foreground hover:text-[#445339] font-medium mb-6"
           >
             <ArrowLeft className="h-4 w-4" /> All case studies
           </Link>
 
-          <p className="text-xs uppercase tracking-widest text-accent font-semibold mb-3">
+          <p className="text-xs uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             {study.neighborhood}, {study.borough} · {study.year}
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 leading-tight">
@@ -170,13 +170,13 @@ const CaseStudyDetail = () => {
               {prev ? (
                 <Link to={`/case-studies/${prev.slug}`} className="group p-4 border border-border rounded-lg hover:border-[#5C7650] transition-colors">
                   <span className="text-xs text-muted-foreground">Previous</span>
-                  <p className="font-semibold text-foreground group-hover:text-accent transition-colors">{prev.title}</p>
+                  <p className="font-semibold text-foreground group-hover:text-accent-foreground transition-colors">{prev.title}</p>
                 </Link>
               ) : <span />}
               {next ? (
                 <Link to={`/case-studies/${next.slug}`} className="group p-4 border border-border rounded-lg hover:border-[#5C7650] transition-colors text-right">
                   <span className="text-xs text-muted-foreground">Next</span>
-                  <p className="font-semibold text-foreground group-hover:text-accent transition-colors">{next.title}</p>
+                  <p className="font-semibold text-foreground group-hover:text-accent-foreground transition-colors">{next.title}</p>
                 </Link>
               ) : <span />}
             </nav>

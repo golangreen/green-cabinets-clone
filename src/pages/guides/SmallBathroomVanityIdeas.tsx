@@ -112,7 +112,7 @@ const SmallBathroomVanityIdeas = () => (
 
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026 · 18"–36" layouts
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
@@ -141,7 +141,7 @@ const SmallBathroomVanityIdeas = () => (
             {IDEAS.map((i) => (
               <article key={i.width} className="border border-border rounded-lg p-6 hover:border-[#5C7650] transition-colors">
                 <div className="flex items-baseline gap-3 mb-2">
-                  <span className="font-mono font-bold text-accent text-xl">{i.width}</span>
+                  <span className="font-mono font-bold text-accent-foreground text-xl">{i.width}</span>
                   <h3 className="text-lg sm:text-xl font-bold text-foreground">{i.title}</h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2"><strong className="text-foreground">Storage:</strong> {i.storage}</p>
@@ -151,7 +151,7 @@ const SmallBathroomVanityIdeas = () => (
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3 flex items-center gap-2">
-            <Lightbulb className="h-6 w-6 text-accent" /> Six tricks that actually move the needle
+            <Lightbulb className="h-6 w-6 text-accent-foreground" /> Six tricks that actually move the needle
           </h2>
           <div className="space-y-4 mb-16">
             {TRICKS.map((t) => (
@@ -181,8 +181,8 @@ const SmallBathroomVanityIdeas = () => (
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Related reading</h2>
           <ul className="list-disc pl-5 space-y-2 text-base text-muted-foreground">
-            <li><Link to="/floating-bathroom-vanity" className="text-accent hover:underline">Floating bathroom vanity install guide</Link></li>
-            <li><Link to="/double-sink-vanity-guide" className="text-accent hover:underline">Double sink vanity sizing</Link></li>
+            <li><Link to="/floating-bathroom-vanity" className="text-accent-foreground hover:underline">Floating bathroom vanity install guide</Link></li>
+            <li><Link to="/double-sink-vanity-guide" className="text-accent-foreground hover:underline">Double sink vanity sizing</Link></li>
           </ul>
         </div>
       </section>

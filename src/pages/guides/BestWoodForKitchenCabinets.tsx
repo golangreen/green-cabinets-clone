@@ -161,7 +161,7 @@ const BestWoodForKitchenCabinets = () => (
 
       <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent font-semibold mb-3">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
@@ -196,11 +196,11 @@ const BestWoodForKitchenCabinets = () => (
                 className="border border-border rounded-lg p-6 hover:border-[#5C7650] transition-colors"
               >
                 <div className="flex items-start gap-3 mb-2">
-                  <Trophy className="h-5 w-5 text-accent mt-1 flex-shrink-0" />
+                  <Trophy className="h-5 w-5 text-accent-foreground mt-1 flex-shrink-0" />
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-foreground">{p.title}</p>
                     <h3 className="text-xl sm:text-2xl font-bold text-foreground">
-                      <Link to={`/wood-species/${p.slug}`} className="hover:text-accent transition-colors">
+                      <Link to={`/wood-species/${p.slug}`} className="hover:text-accent-foreground transition-colors">
                         {p.winner} <ArrowRight className="inline h-4 w-4" />
                       </Link>
                     </h3>
