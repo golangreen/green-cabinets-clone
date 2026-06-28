@@ -22,6 +22,12 @@
           --ink:#1a1a1a; --ink-soft:#5a5a5a;
           --paper:#d5d5d5; --card:#ffffff; --line:#c4c4c4;
           --radius:24px;
+          /* Stage overlay spacing tokens. Every absolutely-positioned control
+             inside .gc-stage references these so insets stay symmetrical and
+             new controls can't collide. Override per breakpoint, never per rule. */
+          --stage-pad:14px;     /* edge inset for overlay controls */
+          --stage-pad-top:26px; /* top inset (segmented pills sit higher) */
+          --overlay-gap:12px;   /* min gap between opposite-corner overlays */
           --shadow:0 1px 2px rgba(0,0,0,.04), 0 14px 40px rgba(0,0,0,.08);
           --shadow-lift:0 4px 10px rgba(0,0,0,.06), 0 28px 70px rgba(0,0,0,.16);
           --ease:cubic-bezier(.22,.8,.26,1);
