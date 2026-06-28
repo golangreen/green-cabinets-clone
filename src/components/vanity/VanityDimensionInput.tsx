@@ -67,7 +67,7 @@ export const VanityDimensionInput = ({
           className={error ? "flex-1 border-destructive focus-visible:ring-destructive" : "flex-1"}
         />
         <Select value={fraction} onValueChange={onFractionChange}>
-          <SelectTrigger className="w-24 bg-background">
+          <SelectTrigger aria-label={`${label} fraction`} className="w-24 bg-background">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-background z-50">
@@ -84,6 +84,7 @@ export const VanityDimensionInput = ({
       )}
       <div className="space-y-2">
         <Slider
+          aria-label={`${label} in sixteenths of an inch`}
           value={[totalSixteenths]}
           onValueChange={(v) => {
             const total = v[0];
