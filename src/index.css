@@ -115,10 +115,40 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  body {
+  html, body {
     @apply bg-background text-foreground;
+    /* Global guard: never allow horizontal page scroll on small screens */
+    overflow-x: clip;
+    max-width: 100vw;
+  }
+
+  /* Prevent common overflow culprits from blowing out their parent on mobile.
+     Scoped to ≤640px so desktop layouts (carousels, wide tables) stay intact. */
+  @media (max-width: 640px) {
+    img, video, canvas, svg, iframe {
+      max-width: 100%;
+      height: auto;
+    }
+    iframe, canvas, video {
+      /* height: auto breaks aspect-locked iframes/canvas; restore */
+      height: revert-layer;
+    }
+    pre, code, table {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    /* Long unbroken strings (URLs, emails) shouldn't push layout */
+    p, li, dd, dt, h1, h2, h3, h4, h5, h6, span, a, button, label {
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+    /* Flex/grid children must be allowed to shrink below their content size */
+    main, section, article, header, footer, aside, form, fieldset {
+      min-width: 0;
+    }
   }
 }
+
 
 /* Homepage scroll: intentionally NO scroll-snap.
    With ~20 sections on the homepage, scroll-snap (even `proximity`) causes
