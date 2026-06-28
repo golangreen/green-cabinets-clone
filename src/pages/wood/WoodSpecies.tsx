@@ -387,7 +387,7 @@ const WoodSpecies = () => {
               <Button asChild size="lg" className="bg-white text-accent-foreground hover:bg-white/90 hover:scale-105 transition-all">
                 <Link to="/#contact">Book a free consultation</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-accent-foreground hover:scale-105 transition-all">
+              <Button asChild size="lg" variant="outline" className="bg-[#5C7650] border-white text-white hover:bg-white hover:text-accent-foreground hover:scale-105 transition-all">
                 <Link to="/designer">Launch the designer</Link>
               </Button>
             </div>
