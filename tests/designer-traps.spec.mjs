@@ -52,15 +52,23 @@ const canvas = f.locator("canvas").first();
 await canvas.waitFor({ state: "visible", timeout: 5_000 });
 
 async function shot(name) {
-  const buf = await canvas.screenshot();
+  // Force a render frame before capture (preserveDrawingBuffer: false in
+  // renderer means element.screenshot on the canvas reads a cleared buffer;
+  // a full page screenshot goes through the compositor and grabs the
+  // last-presented WebGL frame).
+  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  const box = await canvas.boundingBox();
+  assert(box, "canvas has no bounding box");
+  const buf = await page.screenshot({ clip: box });
   writeFileSync(`${OUT}/${name}.png`, buf);
   return PNG.sync.read(buf);
 }
 
 async function selectTrap(id) {
   await f.locator(`[data-og="trap"][data-ov="${id}"]`).click();
-  // wait for re-render + material settle
   await page.waitForTimeout(700);
+  const cur = await f.evaluate(() => window.state?.trap);
+  assert.equal(cur, id, `state.trap did not update to ${id} (got ${cur})`);
 }
 
 function diffPct(a, b) {
