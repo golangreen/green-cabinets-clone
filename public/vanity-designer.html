@@ -3136,10 +3136,10 @@
         }
 
         let ddMode = "finish";
-        const stoneCSS = s => `background:
-  radial-gradient(ellipse 28px 7px at 28%% 32%%, ${s.vein}AA 0%%, transparent 100%%),
-  radial-gradient(ellipse 36px 6px at 70%% 64%%, ${(s.vein2 || s.vein)}88 0%%, transparent 100%%),
-  linear-gradient(115deg, ${s.base} 0%%, ${s.base} 100%%)`.replace(/%%/g, '%');
+        const stoneCSS = s => {
+            const uri = proceduralSwatchURI("stone", s.base, s.base, s.base, s.vein2 || s.vein);
+            return `background:${s.base} url('${uri}') center/cover no-repeat`;
+        };
         const curStone = () => STONES.find(s => s.id === state.stone);
 
         function openDD(mode) {
