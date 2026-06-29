@@ -65,10 +65,11 @@ async function shot(name) {
 }
 
 async function selectTrap(id) {
-  await f.locator(`[data-og="trap"][data-ov="${id}"]`).click();
+  const chip = f.locator(`[data-og="trap"][data-ov="${id}"]`);
+  await chip.click();
   await page.waitForTimeout(700);
-  const cur = await f.evaluate(() => window.state?.trap);
-  assert.equal(cur, id, `state.trap did not update to ${id} (got ${cur})`);
+  const on = await chip.evaluate((el) => el.classList.contains("on"));
+  assert(on, `chip ${id} did not enter .on state`);
 }
 
 function diffPct(a, b) {
