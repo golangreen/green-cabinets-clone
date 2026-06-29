@@ -2869,18 +2869,26 @@
         }
 
         /* ---------- color dropdown ---------- */
-        const chipCSS = f => {
+        /* Returns {bg, lazy} — `bg` is always cheap (color/gradient or already-loaded
+           swatch), `lazy` is the remote URL to apply only when the chip scrolls into view. */
+        const chipParts = f => {
             const back = realAvg[f.id] || f.c2 || f.c1;
             if (REAL_SWATCHES[f.id]) {
-                return `background:${back} url('${REAL_SWATCHES[f.id]}') center/cover no-repeat`;
+                return { bg: `background:${back} url('${REAL_SWATCHES[f.id]}') center/cover no-repeat`, lazy: "" };
             }
             if (f.img) {
                 const u = USE_DIRECT ? f.img : ("https://images.weserv.nl/?url=" + encodeURIComponent(stripProto(f.img)) + "&w=120&output=jpg&q=85");
-                return `background:${back} url('${u}') center/cover no-repeat`;
+                return { bg: `background:${back}`, lazy: u };
             }
-            return f.solid ? `background:${f.c1}`
-            : `background:repeating-linear-gradient(105deg,${f.c1} 0 7px,${f.c2} 7px 9px)`;
+            const bg = f.solid ? `background:${f.c1}`
+                : `background:repeating-linear-gradient(105deg,${f.c1} 0 7px,${f.c2} 7px 9px)`;
+            return { bg, lazy: "" };
         };
+        const chipCSS = f => {
+            const p = chipParts(f);
+            return p.lazy ? `${p.bg};background-image:url('${p.lazy}');background-size:cover;background-position:center` : p.bg;
+        };
+
 
         onSwatchLoaded = (id) => {
             /* a real swatch image/colour just resolved */
