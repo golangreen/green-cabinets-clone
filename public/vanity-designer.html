@@ -3921,12 +3921,34 @@
         const finishMaterial = f => finishMats(f).a;
 
         /* Real-world UV: wrap a finish onto a panel of (wIn x hIn) inches with grain
-           running vertically, at the correct physical scale. Tile photo = 24" square. */
+           running vertically, at the correct physical scale. Tile photo = 24" square.
+           Mapping rules:
+             - repeat is clamped so wood/stone never seam mid-panel for sizes
+               within typical cabinetry range (≤48"); larger panels still tile
+               at the physical 24" scale.
+             - offset is DETERMINISTIC (hashed from finish id + rounded panel
+               size) so stacked drawer fronts, adjacent doors, and re-renders
+               of the same SKU always align edge-to-edge instead of drifting.
+             - panels smaller than the tile are centred so trim/reveals sit
+               inside the texture rather than catching a wrap seam at the edge.
+             - stone uses ClampToEdgeWrapping on T to kill horizontal vein
+               seams that would otherwise telegraph across the slab.
+        */
         const TILE_IN = 24;
         const panelMatCache = new Map(); /* key: id|wIn|hIn|mirror — caps avoid leaks across many configs */
         const PANEL_MAT_CACHE_MAX = 400;
+        function _uvHash(id, wq, hq) {
+            let h = 2166136261 >>> 0;
+            const s = `${id}|${wq}|${hq}`;
+            for (let i = 0; i < s.length; i++) {
+                h ^= s.charCodeAt(i);
+                h = Math.imul(h, 16777619) >>> 0;
+            }
+            return (h % 1000) / 1000; /* 0..1 */
+        }
         function panelMat(f, wIn, hIn, mirror) {
-            const key = `${f.id}|${Math.round(wIn*4)}|${Math.round(hIn*4)}|${mirror?1:0}`;
+            const wq = Math.round(wIn * 4), hq = Math.round(hIn * 4);
+            const key = `${f.id}|${wq}|${hq}|${mirror?1:0}`;
             const cached = panelMatCache.get(key);
             if (cached) return cached;
             const base = mirror ? finishMats(f).b : finishMats(f).a;
@@ -3934,37 +3956,49 @@
                 panelMatCache.set(key, base);
                 return base; /* procedural fallback: leave as-is */
             }
+            const kind = f.kind || (f.solid ? "solid" : "wood");
             const m = base.clone();
+
+            /* repeat: scale to physical inches, clamp to avoid mid-panel seams */
+            let rx = Math.max(wIn / TILE_IN, .35);
+            let ry = Math.max(hIn / TILE_IN, .5);
+            if (kind === "wood") { rx = Math.min(rx, 1.5); ry = Math.min(ry, 1.6); }
+            else if (kind === "stone") { rx = Math.min(rx, 1.0); ry = Math.min(ry, 1.0); }
+            else if (kind === "concrete") { rx = Math.min(rx, 1.6); ry = Math.min(ry, 1.6); }
+
+            /* offset: centre when repeat <1 so trim/edges fall inside the
+               texture; for repeat ≥1 use a deterministic hash so identical
+               adjacent panels align rather than drift. */
+            const hashY = _uvHash(f.id, wq, hq);
+            const hashX = _uvHash(f.id + ":x", wq, hq);
+            const offX = rx < 1 ? (1 - rx) / 2 : hashX * (rx - Math.floor(rx) || 0.0001);
+            const offY = ry < 1 ? (1 - ry) / 2 : hashY * 0.25; /* shallow drift so grain start varies */
+
             const t = base.map.clone();
             t.needsUpdate = true;
-            t.wrapS = t.wrapT = THREE.RepeatWrapping;
+            t.wrapS = THREE.RepeatWrapping;
+            t.wrapT = (kind === "stone") ? THREE.ClampToEdgeWrapping : THREE.RepeatWrapping;
             t.anisotropy = base.map.anisotropy || 8;
             if (THREE.sRGBEncoding !== undefined)
                 t.encoding = base.map.encoding;
-            t.repeat.set(Math.max(wIn / TILE_IN, .35), Math.max(hIn / TILE_IN, .5));
-            if (mirror) {
-                t.repeat.x *= -1;
-            }
-            t.offset.set(mirror ? 1 : 0, Math.random() * 0.4);
+            t.center.set(0.5, 0.5);
+            t.repeat.set(mirror ? -rx : rx, ry);
+            t.offset.set(mirror ? 1 - offX : offX, offY);
             m.map = t;
-            if (base.bumpMap) {
-                const b = base.bumpMap.clone();
-                b.needsUpdate = true;
-                b.wrapS = b.wrapT = THREE.RepeatWrapping;
-                b.anisotropy = base.bumpMap.anisotropy || 8;
-                b.repeat.copy(t.repeat);
-                b.offset.copy(t.offset);
-                m.bumpMap = b;
-            }
-            if (base.normalMap) {
-                const n = base.normalMap.clone();
-                n.needsUpdate = true;
-                n.wrapS = n.wrapT = THREE.RepeatWrapping;
-                n.anisotropy = base.normalMap.anisotropy || 8;
-                n.repeat.copy(t.repeat);
-                n.offset.copy(t.offset);
-                m.normalMap = n;
-            }
+            const cloneAux = (src) => {
+                if (!src) return null;
+                const c = src.clone();
+                c.needsUpdate = true;
+                c.wrapS = t.wrapS;
+                c.wrapT = t.wrapT;
+                c.anisotropy = src.anisotropy || 8;
+                c.center.set(0.5, 0.5);
+                c.repeat.copy(t.repeat);
+                c.offset.copy(t.offset);
+                return c;
+            };
+            if (base.bumpMap) m.bumpMap = cloneAux(base.bumpMap);
+            if (base.normalMap) m.normalMap = cloneAux(base.normalMap);
             m.needsUpdate = true;
             if (panelMatCache.size >= PANEL_MAT_CACHE_MAX) {
                 /* LRU-ish: drop oldest 25% of clones and dispose their cloned maps */
