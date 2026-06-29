@@ -3808,10 +3808,42 @@
                 b: mk(texFrom(cvFlip), materialTex(reliefCanvasFrom(cvFlip, p.normalStrength || 1.6)))
             }; /* b = book-matched mirror */
             texCache[f.id] = pair;
+            /* Fallback path used by BOTH the curated REAL_SWATCHES loader and
+               the brand `f.img` loader when the photo fails to decode (CORS,
+               404, blocked proxy chain). Re-derives the procedural canvas with
+               `kind`-aware tone using whatever average we have on file, so
+               wood stays wood, stone stays stone, and the model's tone range
+               still tracks the chip swatch. */
+            const applyProceduralFallback = () => {
+                /* Seed realAvg from the procedural midtone so subsequent
+                   makeWoodCanvas() calls recentre on a stable hex. Prefer the
+                   richer of c2/c1 to avoid washed-out base fills. */
+                if (!realAvg[f.id]) {
+                    realAvg[f.id] = f.c2 || f.c1 || "#c9a063";
+                    onSwatchLoaded && onSwatchLoaded(f.id);
+                }
+                const cv2 = makeWoodCanvas(f);
+                const cv2Flip = flipCanvas(cv2);
+                const ta = texFrom(cv2);
+                const tb = texFrom(cv2Flip);
+                pair.a.map = ta; pair.a.bumpMap = ta;
+                pair.a.normalMap = materialTex(reliefCanvasFrom(cv2, p.normalStrength || 1.6));
+                pair.a.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
+                pair.a.needsUpdate = true;
+                pair.b.map = tb; pair.b.bumpMap = tb;
+                pair.b.normalMap = materialTex(reliefCanvasFrom(cv2Flip, p.normalStrength || 1.6));
+                pair.b.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
+                pair.b.needsUpdate = true;
+                if (typeof invalidatePanelMatCacheFor === "function") invalidatePanelMatCacheFor(f.id);
+                if (window.__gcTouch) window.__gcTouch();
+            };
+
             const realURL = REAL_SWATCHES[f.id];
             if (realURL) {
                 const im = new Image();
+                im.crossOrigin = "anonymous";
                 im.onload = () => {
+                    if (!im.naturalWidth) { applyProceduralFallback(); return; }
                     if (!realAvg[f.id]) {
                         realAvg[f.id] = avgOf(im);
                         onSwatchLoaded && onSwatchLoaded(f.id);
@@ -3846,6 +3878,7 @@
                     if (window.__gcTouch)
                         window.__gcTouch();
                 };
+                im.onerror = applyProceduralFallback;
                 im.src = realURL;
             } else if (f.img) {
                 loadSwatchImg(f.img, img => {
@@ -3881,7 +3914,7 @@
                     pair.b.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.b.needsUpdate = true;
                     if (typeof invalidatePanelMatCacheFor === "function") invalidatePanelMatCacheFor(f.id);
-                });
+                }, applyProceduralFallback);
             }
             return pair;
         }
