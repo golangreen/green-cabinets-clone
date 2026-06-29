@@ -455,6 +455,8 @@
                     </div>
                   </div>
                 </div>
+                <button id="dupBtn" type="button" style="margin-top:12px;width:100%;border:1px dashed rgba(92,118,80,.55);background:rgba(92,118,80,.08);color:#445339;font:600 12px/1 inherit;letter-spacing:.03em;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .2s">＋ Duplicate this configuration</button>
+                <div class="hint" id="dupHint" style="margin-top:6px;text-align:center"></div>
               </div>
 
               <div class="gc-panel gc-fade">
@@ -4819,6 +4821,19 @@
         $("vQtyIn").addEventListener("change", e => setQty("v", +e.target.value));
         $("mQtyIn").addEventListener("change", e => setQty("m", +e.target.value));
         syncQtyUI();
+        $("dupBtn").onclick = () => {
+            if (state.type !== "medicine") state.vQty = Math.min(20, state.vQty + 1);
+            if (state.type !== "vanity")   state.mQty = Math.min(20, state.mQty + 1);
+            syncQtyUI();
+            renderPrice();
+            const parts = [];
+            if (state.type !== "medicine") parts.push(`${state.vQty} vanit${state.vQty === 1 ? "y" : "ies"}`);
+            if (state.type !== "vanity")   parts.push(`${state.mQty} medicine cabinet${state.mQty === 1 ? "" : "s"}`);
+            const h = $("dupHint");
+            h.textContent = `Added — now ${parts.join(" + ")} with this exact spec.`;
+            clearTimeout($("dupHint")._t);
+            $("dupHint")._t = setTimeout(() => { h.textContent = ""; }, 3500);
+        };
         document.querySelectorAll("#segEdit button").forEach(b => b.onclick = () => {
             document.querySelectorAll("#segEdit button").forEach(x => x.classList.remove("on"));
             b.classList.add("on");
