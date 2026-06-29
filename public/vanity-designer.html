@@ -4585,10 +4585,19 @@
                         });
                     }
                     root.add(g);
+                    const hasPlumbing = sinksOver.length > 0;
+                    /* sink drawer extends nearly fully so the U-notch + trap are unmistakable */
+                    const slideOut = hasPlumbing
+                        ? Math.min(bd - 2.2, D * 0.78)
+                        : Math.min(D * 0.55, 10) * (rI === 0 ? 1 : 0.85);
                     animParts.push({
                         g,
                         type: "slide",
-                        out: Math.min(D * 0.55, 10) * (rI === 0 ? 1 : 0.85)
+                        out: slideOut,
+                        peek: hasPlumbing,
+                        /* world-space camera hint for the peek pose */
+                        peekY: cy + (-fh / 2 + 0.9) + bh + 2,
+                        peekZ: D / 2 + slideOut + 6
                     });
                 }
                 mIdx++;
@@ -5551,12 +5560,33 @@
                     else
                         p.g.rotation.y = animT * p.rot;
                 }
+                /* peek pose: when a sink drawer is opening, ease the camera lower + closer
+                   so the U-notch + trap are unmistakable, without yanking on close. */
+                const peek = animParts.find(p => p.peek);
+                const ease = peek ? animT : 0;
+                const peekYOff = peek ? (peek.peekY - targetPos.y) * 0.35 * ease : 0;
+                const peekDistMul = 1 - 0.22 * ease;          /* up to 22% closer */
+                const peekPhi = phi + 0.18 * ease;            /* tilt down */
+                const d = dist * peekDistMul;
                 camera.position.set(
-                targetPos.x + dist * Math.sin(phi) * Math.sin(theta),
-                targetPos.y + dist * Math.cos(phi),
-                targetPos.z + dist * Math.sin(phi) * Math.cos(theta)
+                    targetPos.x + d * Math.sin(peekPhi) * Math.sin(theta),
+                    targetPos.y + peekYOff + d * Math.cos(peekPhi),
+                    targetPos.z + d * Math.sin(peekPhi) * Math.cos(theta)
                 );
-                camera.lookAt(targetPos.x, targetPos.y, targetPos.z);
+                /* look slightly into the drawer cavity when peeking */
+                camera.lookAt(
+                    targetPos.x,
+                    targetPos.y + peekYOff * 0.6,
+                    targetPos.z + (peek ? 6 * ease : 0)
+                );
+                /* keep clip planes generous enough for the extended drawer + camera dolly */
+                const wantNear = Math.max(0.4, d * 0.012);
+                const wantFar = Math.max(2000, d * 12);
+                if (camera.near !== wantNear || camera.far !== wantFar) {
+                    camera.near = wantNear;
+                    camera.far = wantFar;
+                    camera.updateProjectionMatrix();
+                }
                 R.render(scene, camera);
             };
             animate();
