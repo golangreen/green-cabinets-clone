@@ -2775,12 +2775,43 @@
             const next = cur.map((v, k) => k === i ? inches : v * scale);
             setCurRows(next); /* store as inches; fractions still work since they normalize */
         }
-        const mStyleObj = () => STYLES.medicine.find(s => s.id === state.mStyle);
+        const mStyleObj = () => STYLES.medicine.find(s => s.id === state.mStyle) || STYLES.medicine[0];
 
         const $ = id => document.getElementById(id);
         const fmt = n => "$" + n.toLocaleString("en-US");
-        const curStyle = () => activeType() === "vanity" ? vStyleObj() : mStyleObj();
-        const curFinish = () => FINISHES.find(f => f.id === state.finish) || FINISHES[0];
+        const curStyle = () => (activeType() === "vanity" ? vStyleObj() : mStyleObj()) || STYLES.vanity[0];
+        const curFinish = () => FINISHES.find(f => f.id === state.finish)
+            || FINISHES.find(f => f.id === "tafisa-muse")
+            || FINISHES[0]
+            || { id: "fallback", name: "Default", brand: "tafisa", c1: "#C9A063", c2: "#A8814A", grain: "#7A5A2E", solid: true };
+
+        /* Keep state coherent across Vanity ↔ Medicine ↔ Both transitions.
+           Guards against undefined style/finish lookups and stale brand metadata. */
+        function ensureStateIntegrity() {
+            if (!["vanity", "medicine", "both"].includes(state.type)) state.type = "vanity";
+            if (state.type === "both") {
+                if (!["vanity", "medicine"].includes(state.editing)) state.editing = "vanity";
+            } else {
+                state.editing = state.type;
+            }
+            if (!STYLES.vanity.some(s => s.id === state.vStyle))   state.vStyle = STYLES.vanity[0].id;
+            if (!STYLES.medicine.some(s => s.id === state.mStyle)) state.mStyle = STYLES.medicine[0].id;
+            const vS = vStyleObj(), mS = mStyleObj();
+            state.vW = Math.min(Math.max(+state.vW || vS.min, vS.min), vS.max);
+            state.mW = Math.min(Math.max(+state.mW || mS.min, mS.min), mS.max);
+            if (!FINISHES.some(f => f.id === state.finish)) {
+                state.finish = (FINISHES.find(f => f.id === "tafisa-muse") || FINISHES[0]).id;
+            }
+            const fin = curFinish();
+            if (!fin.brand || !PRICING[fin.brand]) {
+                /* finish exists but brand metadata is stale — pin to a known brand for pricing */
+                fin.brand = PRICING[fin.brand] ? fin.brand : "tafisa";
+            }
+            if (!Array.isArray(state.vRows) || !state.vRows.length) state.vRows = [1, 1];
+            if (!Array.isArray(state.mRows) || !state.mRows.length) state.mRows = [1, 1];
+            state.vQty = Math.min(20, Math.max(1, Math.floor(+state.vQty) || 1));
+            state.mQty = Math.min(20, Math.max(1, Math.floor(+state.mQty) || 1));
+        }
 
         /* ---------- style cards (mini SVG thumbnails) ---------- */
         function thumbSVG(s) {
