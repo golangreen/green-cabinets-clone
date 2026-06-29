@@ -72,6 +72,9 @@
         .gc-overlay-tr{top:var(--stage-pad-top);right:var(--stage-pad-top)}
         .gc-overlay-bl{bottom:var(--stage-pad);left:var(--stage-pad)}
         .gc-overlay-br{bottom:var(--stage-pad);right:var(--stage-pad)}
+        /* Center variants — capped at 60% so they never collide with corner overlays */
+        .gc-overlay-tc{top:var(--stage-pad-top);left:50%;transform:translateX(-50%);max-width:min(60%,calc(100% - 2*var(--stage-pad-top) - var(--overlay-gap)))}
+        .gc-overlay-bc{bottom:var(--stage-pad);left:50%;transform:translateX(-50%);max-width:min(60%,calc(100% - 2*var(--stage-pad) - var(--overlay-gap)))}
 
         .gc-finalbtn{border:1px solid rgba(92,118,80,.55);background:linear-gradient(135deg,#6f8c61,#445339);color:#ffffff;font-size:11.5px;font-weight:700;letter-spacing:.03em;padding:8px 14px;border-radius:99px;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 14px rgba(68,83,57,.4)}
         .gc-finalbtn:hover{filter:brightness(1.07);transform:translateY(-1px);box-shadow:0 6px 20px rgba(68,83,57,.5)}
@@ -127,7 +130,7 @@
         .gc-stage{border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#e8e8e8 0%,#cfcfcf 100%);position:relative;height:440px;touch-action:pan-y;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05), inset 0 -40px 60px rgba(0,0,0,.05)}
         .gc-stage canvas{display:block;width:100%;height:100%;cursor:grab}
         .gc-stage canvas:active{cursor:grabbing}
-        .gc-3dhint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11.5px;color:#5a5a5a;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);border-radius:99px;padding:4px 12px;pointer-events:none;white-space:nowrap}
+        .gc-3dhint{font-size:11.5px;color:#5a5a5a;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);border-radius:99px;padding:4px 12px;pointer-events:none}
         .gc-hd{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
         .gc-hditem{display:flex;align-items:center;gap:10px}
         .gc-hditem .lbl{font-size:13px;font-weight:600;color:var(--ink-soft)}
@@ -263,14 +266,15 @@
         .gc-final{position:fixed;inset:0;z-index:200;background:rgba(24,21,16,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px}
         .gc-final.open{display:flex;animation:gcFade .25s ease}
         @keyframes gcFade{from{opacity:0}to{opacity:1}}
-        .gc-final-inner{background:#0f0f0f;border:1px solid rgba(92,118,80,.35);border-radius:24px;max-width:1100px;width:100%;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.6)}
-        .gc-final-close{position:absolute;top:34px;right:34px;z-index:3;width:40px;height:40px;border-radius:99px;border:1px solid rgba(255,255,255,.2);background:rgba(20,17,12,.6);color:#ECF1E8;font-size:17px;cursor:pointer;transition:all .2s}
+        .gc-final-inner{position:relative;background:#0f0f0f;border:1px solid rgba(92,118,80,.35);border-radius:24px;max-width:1100px;width:100%;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.6);--stage-pad-top:24px;--stage-pad:24px;--overlay-gap:16px}
+        /* Fullscreen final stage uses larger insets; scope the overlay tokens. */
+        .gc-final-stage{position:relative;background:linear-gradient(180deg,#e8e8e8,#dcdcdc);aspect-ratio:16/10;min-height:340px;overflow:hidden;--stage-pad:12px;--stage-pad-top:34px;--overlay-gap:16px}
+        .gc-final-close{width:40px;height:40px;border-radius:99px;border:1px solid rgba(255,255,255,.2);background:rgba(20,17,12,.6);color:#ECF1E8;font-size:17px;cursor:pointer;transition:all .2s;z-index:6}
         .gc-final-close:hover{background:rgba(20,17,12,.9)}
-        .gc-final-stage{position:relative;background:linear-gradient(180deg,#e8e8e8,#dcdcdc);aspect-ratio:16/10;min-height:340px;overflow:hidden}
         .gc-final-host{position:absolute;inset:0}
         .gc-final-host canvas{width:100%!important;height:100%!important;display:block;touch-action:none;cursor:grab}
         .gc-final-host canvas:active{cursor:grabbing}
-        .gc-final-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:2;background:rgba(20,17,12,.55);color:#e5e5e5;font-size:11px;letter-spacing:.03em;padding:6px 12px;border-radius:99px;pointer-events:none;backdrop-filter:blur(6px)}
+        .gc-final-hint{background:rgba(20,17,12,.55);color:#e5e5e5;font-size:11px;letter-spacing:.03em;padding:6px 12px;border-radius:99px;pointer-events:none;backdrop-filter:blur(6px);z-index:2}
         .gc-final-load{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:linear-gradient(180deg,#1a1a1a,#1a1a1a);color:#e5e5e5}
         .gc-final-spin{width:42px;height:42px;border-radius:99px;border:3px solid rgba(194,162,105,.25);border-top-color:#6f8c61;animation:gcSpin 1s linear infinite}
         @keyframes gcSpin{to{transform:rotate(360deg)}}
@@ -406,7 +410,7 @@
                 <button class="gc-openbtn gc-overlay gc-overlay-bl" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
                 <button class="gc-finalbtn gc-overlay gc-overlay-br" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
                 <canvas id="gl"></canvas><div class="gc-borrowed" id="glBorrowed">Viewing in full screen…</div>
-                <div class="gc-3dhint">Drag to spin · scroll or pinch to zoom</div>
+                <div class="gc-3dhint gc-overlay gc-overlay-bc">Drag to spin · scroll or pinch to zoom</div>
               </div>
               <div class="gc-dims">
                 <div><div class="lbl">W × H × D</div><div class="val" id="dimW">48 × 22 × 21<span> in</span></div></div>
@@ -517,14 +521,14 @@
 
           <div class="gc-final" id="finalOverlay" aria-hidden="true">
             <div class="gc-final-inner">
-              <button class="gc-final-close" id="finalClose" aria-label="Close">✕</button>
+              <button class="gc-final-close gc-overlay gc-overlay-tr" id="finalClose" aria-label="Close">✕</button>
               <div class="gc-final-stage" id="finalStage">
                 <div class="gc-final-host" id="finalHost"></div>
                 <div class="gc-final-load" id="finalLoad">
                   <div class="gc-final-spin"></div>
                   <div class="gc-final-msg" id="finalMsg">Loading your real finishes…</div>
                 </div>
-                <div class="gc-final-hint">Drag to rotate · scroll or pinch to zoom</div>
+                <div class="gc-final-hint gc-overlay gc-overlay-bc">Drag to rotate · scroll or pinch to zoom</div>
               </div>
               <div class="gc-final-bar">
                 <div class="gc-final-spec" id="finalSpec"></div>
