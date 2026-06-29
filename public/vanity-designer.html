@@ -4950,10 +4950,15 @@
 
         function init3D() {
             const canvas = $("gl");
+            /* preserveDrawingBuffer:false avoids the per-frame back-buffer copy
+               that triggers ReadPixels stalls in headless/offscreen renderers.
+               __gcCapture renders + toDataURL in the same synchronous task,
+               which is the supported way to read pixels without it. */
             R = new THREE.WebGLRenderer({
                 canvas,
                 antialias: true,
-                preserveDrawingBuffer: true
+                preserveDrawingBuffer: false,
+                powerPreference: "high-performance"
             });
             R.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             R.shadowMap.enabled = true;
