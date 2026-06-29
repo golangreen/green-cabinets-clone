@@ -1,0 +1,98 @@
+name: Designer trap render checks
+
+# Runs the standalone Playwright scripts in tests/ that verify the vanity
+# designer's plumbing-trap geometry:
+#   • drawer open-vs-closed for every trap (P / S / Bottle)
+#   • drawer-open trap switching keeps the cavity unclipped + non-black
+#   • trap × hardware-finish (chrome / nickel / brass / matte black) matrix
+#   • responsive viewport matrix for traps
+#   • persisted trap state survives reload
+# Boots Vite on :8080, runs scripts, uploads diff PNGs + reports on failure.
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'public/vanity-designer.html'
+      - 'tests/designer-trap-**'
+      - 'tests/designer-traps.spec.mjs'
+      - '.github/workflows/designer-traps.yml'
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  trap-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    env:
+      CI: 'true'
+      PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS: '1'
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright + Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Boot dev server
+        run: |
+          npm run dev -- --host 127.0.0.1 --port 8080 > /tmp/vite.log 2>&1 &
+          echo $! > /tmp/vite.pid
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8080/designer >/dev/null; then
+              echo "✓ dev server ready"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "✗ dev server failed to boot" >&2
+          tail -100 /tmp/vite.log >&2
+          exit 1
+
+      - name: Trap open-vs-closed (P / S / Bottle)
+        run: node tests/designer-trap-openclose.spec.mjs
+
+      - name: Drawer-open trap switching (no clip, no black)
+        run: node tests/designer-trap-switch-open.spec.mjs
+
+      - name: Trap × hardware-finish matrix
+        run: node tests/designer-trap-hwfinish-matrix.spec.mjs
+
+      - name: Responsive trap matrix
+        run: node tests/designer-trap-matrix.spec.mjs
+
+      - name: Trap state persists across reload
+        run: node tests/designer-trap-persist.spec.mjs
+
+      - name: Stop dev server
+        if: always()
+        run: |
+          if [ -f /tmp/vite.pid ]; then kill "$(cat /tmp/vite.pid)" 2>/dev/null || true; fi
+
+      - name: Upload trap diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: designer-trap-artifacts
+          path: |
+            /tmp/designer-trap-openclose/
+            /tmp/designer-trap-switch-open/
+            /tmp/designer-trap-hwfinish-matrix/
+            /tmp/designer-trap-matrix/
+            /tmp/designer-trap-persist/
+            /tmp/vite.log
+          retention-days: 14
+          if-no-files-found: ignore
