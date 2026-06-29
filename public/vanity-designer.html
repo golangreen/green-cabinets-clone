@@ -2985,14 +2985,16 @@
                 any = true;
                 const p = PRICING[b];
                 html += `<div class="gc-ddgroup"><span class="b">${p.label.split("—")[0].trim()}</span><span class="gc-pricebadge ${p.rate === null ? 'quote' : ''}">${p.tag}</span></div>`;
-                html += items.map(f => `
+                html += items.map(f => {
+                    const cp = chipParts(f);
+                    const lazyAttr = cp.lazy ? ` data-bg="${cp.lazy}"` : "";
+                    return `
       <button class="gc-ddrow ${f.id === state.finish ? 'on' : ''}" data-fin="${f.id}" role="option" aria-selected="${f.id === state.finish}">
-        <span class="chip" style="${chipCSS(f)}"></span>
+        <span class="chip" style="${cp.bg}"${lazyAttr}></span>
         <span><span class="nm">${f.name}${f.real ? ' <span class=\'gc-realtag\'>Real scan</span>' : ''}</span>${f.code ? `<br><span class="cd">${f.code}</span>` : ""}</span>
         <span class="tick">✓</span>
-      </button>`
-
-                ).join("");
+      </button>`;
+                }).join("");
             });
             $("ddList").innerHTML = any ? html : `<div class="gc-ddempty">No colors match "${q}". Try another name.</div>`;
             document.querySelectorAll("[data-fin]").forEach(b => b.onclick = () => {
@@ -3000,6 +3002,40 @@
                 closeDD();
                 renderAll();
             });
+            attachChipLazyLoader();
+        }
+
+        /* Lazy-load chip background images via IntersectionObserver so opening the
+           208-row picker doesn't fire 200+ HTTP requests at once. */
+        let _chipIO = null;
+        function attachChipLazyLoader() {
+            const root = $("ddList");
+            if (!root) return;
+            if (!("IntersectionObserver" in window)) {
+                root.querySelectorAll(".chip[data-bg]").forEach(applyChipBg);
+                return;
+            }
+            if (_chipIO) _chipIO.disconnect();
+            _chipIO = new IntersectionObserver((entries) => {
+                for (const e of entries) {
+                    if (e.isIntersecting) { applyChipBg(e.target); _chipIO.unobserve(e.target); }
+                }
+            }, { root, rootMargin: "200px 0px", threshold: 0.01 });
+            root.querySelectorAll(".chip[data-bg]").forEach(el => _chipIO.observe(el));
+        }
+        function applyChipBg(el) {
+            const u = el.getAttribute("data-bg");
+            if (!u) return;
+            const img = new Image();
+            img.decoding = "async";
+            img.loading = "lazy";
+            img.onload = () => {
+                el.style.backgroundImage = `url('${u}')`;
+                el.style.backgroundSize = "cover";
+                el.style.backgroundPosition = "center";
+            };
+            img.src = u;
+            el.removeAttribute("data-bg");
         }
 
         let ddMode = "finish";
