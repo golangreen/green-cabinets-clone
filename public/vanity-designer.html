@@ -2778,7 +2778,7 @@
         const $ = id => document.getElementById(id);
         const fmt = n => "$" + n.toLocaleString("en-US");
         const curStyle = () => activeType() === "vanity" ? vStyleObj() : mStyleObj();
-        const curFinish = () => FINISHES.find(f => f.id === state.finish);
+        const curFinish = () => FINISHES.find(f => f.id === state.finish) || FINISHES[0];
 
         /* ---------- style cards (mini SVG thumbnails) ---------- */
         function thumbSVG(s) {
