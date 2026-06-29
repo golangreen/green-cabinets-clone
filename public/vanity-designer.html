@@ -72,6 +72,9 @@
         .gc-overlay-tr{top:var(--stage-pad-top);right:var(--stage-pad-top)}
         .gc-overlay-bl{bottom:var(--stage-pad);left:var(--stage-pad)}
         .gc-overlay-br{bottom:var(--stage-pad);right:var(--stage-pad)}
+        /* Center variants — capped at 60% so they never collide with corner overlays */
+        .gc-overlay-tc{top:var(--stage-pad-top);left:50%;transform:translateX(-50%);max-width:min(60%,calc(100% - 2*var(--stage-pad-top) - var(--overlay-gap)))}
+        .gc-overlay-bc{bottom:var(--stage-pad);left:50%;transform:translateX(-50%);max-width:min(60%,calc(100% - 2*var(--stage-pad) - var(--overlay-gap)))}
 
         .gc-finalbtn{border:1px solid rgba(92,118,80,.55);background:linear-gradient(135deg,#6f8c61,#445339);color:#ffffff;font-size:11.5px;font-weight:700;letter-spacing:.03em;padding:8px 14px;border-radius:99px;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 14px rgba(68,83,57,.4)}
         .gc-finalbtn:hover{filter:brightness(1.07);transform:translateY(-1px);box-shadow:0 6px 20px rgba(68,83,57,.5)}
