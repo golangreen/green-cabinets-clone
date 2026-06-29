@@ -50,8 +50,10 @@ await page.waitForTimeout(2200); // ease-in dolly + drawer slide
 
 const canvas = f.locator("canvas").first();
 await canvas.waitFor({ state: "visible", timeout: 5_000 });
+await canvas.scrollIntoViewIfNeeded();
+await page.waitForTimeout(200);
 const iframeEl = await page.locator('iframe[src*="vanity-designer.html"]').elementHandle();
-const iframeBox = await iframeEl.boundingBox();
+let iframeBox = await iframeEl.boundingBox();
 
 async function shot(name) {
   // Force a render frame before capture. element.screenshot on a WebGL canvas
