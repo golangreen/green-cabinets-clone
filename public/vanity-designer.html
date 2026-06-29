@@ -4332,10 +4332,10 @@
         /* ---------- price ---------- */
         function billedInches() {
             if (state.type === "vanity")
-                return state.vW;
+                return state.vW * state.vQty;
             if (state.type === "medicine")
-                return state.mW;
-            return state.vW + state.mW;
+                return state.mW * state.mQty;
+            return state.vW * state.vQty + state.mW * state.mQty;
         }
         function extrasList() {
             const ex = [];
