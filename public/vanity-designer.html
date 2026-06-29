@@ -3741,6 +3741,7 @@
                     pair.b.needsUpdate = true;
                     pair.b.realScan = true;
 
+                    if (typeof invalidatePanelMatCacheFor === "function") invalidatePanelMatCacheFor(f.id);
                     if (window.__gcTouch)
                         window.__gcTouch();
                 };
