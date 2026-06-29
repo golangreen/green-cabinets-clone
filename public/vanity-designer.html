@@ -2632,6 +2632,24 @@
                 group: "hwfinish",
                 t: "Chrome",
                 d: "Bright"
+            },
+            {
+                id: "ptrap",
+                group: "trap",
+                t: "P-trap",
+                d: "Wall drain (standard)"
+            },
+            {
+                id: "strap",
+                group: "trap",
+                t: "S-trap",
+                d: "Floor drain"
+            },
+            {
+                id: "bottle",
+                group: "trap",
+                t: "Bottle trap",
+                d: "Exposed European"
             }
             ],
             medicine: [
@@ -2714,6 +2732,7 @@
             wall: "orig",
             hardware: "none",
             hwfinish: "brass",
+            trap: "ptrap",
             vRows: [1, 1],
             mRows: [1, 1],
             /* relative heights of each drawer/door row, top->bottom */
@@ -3188,6 +3207,8 @@
                     return showV || showM;
                 if (o.group === "hwfinish")
                     return (showV || showM) && state.hardware !== "none";
+                if (o.group === "trap")
+                    return showV && state.sinks !== "none";
                 if (o.group === "mbottom")
                     return showM && state.mStyle !== "ledmirror" && state.mH >= 16;
                 if (o.group === "mount")
@@ -4601,27 +4622,74 @@
                             drop.position.set(worldX, trapY + dropLen / 2, zc);
                             drop.castShadow = true;
                             root.add(drop);
-                            const trap = new THREE.Mesh(new THREE.TorusGeometry(_trapR, _trapTube, 12, 20, Math.PI), trapMat);
-                            trap.rotation.x = Math.PI / 2;
-                            trap.position.set(worldX, trapY, zc);
-                            trap.castShadow = true;
-                            root.add(trap);
-                            /* horizontal stub-out to the rear wall, length scaled to drawer depth */
-                            const stubLen = Math.min(rearD - 0.5, Math.max(2.5, bd * 0.25));
-                            const stub = new THREE.Mesh(new THREE.CylinderGeometry(_dropR * 0.9, _dropR * 0.9, stubLen, 16), pvcMat);
-                            stub.rotation.x = Math.PI / 2;
-                            stub.position.set(worldX + _trapR, trapY, zc - stubLen / 2);
-                            root.add(stub);
-                            /* slip-nut rings at the two compression joints (drop↔trap, trap↔stub) */
+
+                            const trapKind = state.trap || "ptrap";
                             const nutH = _trapTube * 0.7;
                             const nutR = _trapTube * 1.35;
-                            const nutA = new THREE.Mesh(new THREE.CylinderGeometry(nutR, nutR, nutH, 18), nutMat);
-                            nutA.position.set(worldX - _trapR, trapY + nutH * 0.4, zc);
-                            root.add(nutA);
-                            const nutB = new THREE.Mesh(new THREE.CylinderGeometry(nutR, nutR, nutH, 18), nutMat);
-                            nutB.rotation.x = Math.PI / 2;
-                            nutB.position.set(worldX + _trapR, trapY, zc - nutH * 0.4);
-                            root.add(nutB);
+
+                            if (trapKind === "bottle") {
+                                /* Bottle trap: vertical cylinder canister + horizontal stub-out to rear wall */
+                                const bottleR = _trapR * 0.95;
+                                const bottleH = _trapR * 2.6;
+                                const bottle = new THREE.Mesh(new THREE.CylinderGeometry(bottleR, bottleR, bottleH, 24), trapMat);
+                                bottle.position.set(worldX, trapY - bottleH * 0.15, zc);
+                                bottle.castShadow = true;
+                                root.add(bottle);
+                                /* bottle cap ring */
+                                const cap = new THREE.Mesh(new THREE.CylinderGeometry(bottleR * 1.08, bottleR * 1.08, nutH * 0.9, 24), nutMat);
+                                cap.position.set(worldX, trapY + bottleH * 0.35, zc);
+                                root.add(cap);
+                                /* outlet near top of canister, horizontal to rear */
+                                const stubLen = Math.min(rearD - 0.5, Math.max(2.5, bd * 0.25));
+                                const stub = new THREE.Mesh(new THREE.CylinderGeometry(_dropR * 0.9, _dropR * 0.9, stubLen, 16), trapMat);
+                                stub.rotation.x = Math.PI / 2;
+                                stub.position.set(worldX + bottleR, trapY + bottleH * 0.18, zc - stubLen / 2);
+                                root.add(stub);
+                                const nutOut = new THREE.Mesh(new THREE.CylinderGeometry(_dropR * 1.25, _dropR * 1.25, nutH, 18), nutMat);
+                                nutOut.rotation.x = Math.PI / 2;
+                                nutOut.position.set(worldX + bottleR, trapY + bottleH * 0.18, zc - nutH * 0.4);
+                                root.add(nutOut);
+                            } else {
+                                /* P/S-trap share the U-bend half-torus */
+                                const trap = new THREE.Mesh(new THREE.TorusGeometry(_trapR, _trapTube, 12, 20, Math.PI), trapMat);
+                                trap.rotation.x = Math.PI / 2;
+                                trap.position.set(worldX, trapY, zc);
+                                trap.castShadow = true;
+                                root.add(trap);
+
+                                if (trapKind === "strap") {
+                                    /* S-trap: second inverted bend turning the flow back DOWN to a floor drain */
+                                    const sBend = new THREE.Mesh(new THREE.TorusGeometry(_trapR, _trapTube, 12, 20, Math.PI), trapMat);
+                                    sBend.rotation.x = Math.PI / 2;
+                                    sBend.rotation.z = Math.PI;          /* flip the U upside down */
+                                    sBend.position.set(worldX + _trapR * 2, trapY, zc);
+                                    root.add(sBend);
+                                    /* vertical tail dropping through the cabinet floor */
+                                    const tailLen = Math.max(2.5, (drawerBotAbs - yBot) + 2);
+                                    const tail = new THREE.Mesh(new THREE.CylinderGeometry(_dropR * 0.9, _dropR * 0.9, tailLen, 16), pvcMat);
+                                    tail.position.set(worldX + _trapR * 3, trapY - tailLen / 2, zc);
+                                    root.add(tail);
+                                    const nutS = new THREE.Mesh(new THREE.CylinderGeometry(nutR, nutR, nutH, 18), nutMat);
+                                    nutS.position.set(worldX + _trapR * 3, trapY - nutH * 0.4, zc);
+                                    root.add(nutS);
+                                } else {
+                                    /* P-trap: horizontal stub-out to the rear wall (standard) */
+                                    const stubLen = Math.min(rearD - 0.5, Math.max(2.5, bd * 0.25));
+                                    const stub = new THREE.Mesh(new THREE.CylinderGeometry(_dropR * 0.9, _dropR * 0.9, stubLen, 16), pvcMat);
+                                    stub.rotation.x = Math.PI / 2;
+                                    stub.position.set(worldX + _trapR, trapY, zc - stubLen / 2);
+                                    root.add(stub);
+                                    const nutB = new THREE.Mesh(new THREE.CylinderGeometry(nutR, nutR, nutH, 18), nutMat);
+                                    nutB.rotation.x = Math.PI / 2;
+                                    nutB.position.set(worldX + _trapR, trapY, zc - nutH * 0.4);
+                                    root.add(nutB);
+                                }
+
+                                /* shared slip-nut at drop↔trap inlet */
+                                const nutA = new THREE.Mesh(new THREE.CylinderGeometry(nutR, nutR, nutH, 18), nutMat);
+                                nutA.position.set(worldX - _trapR, trapY + nutH * 0.4, zc);
+                                root.add(nutA);
+                            }
                         });
                     }
                     root.add(g);
