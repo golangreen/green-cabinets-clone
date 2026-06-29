@@ -684,874 +684,1670 @@
            when you have them (Shopify: Content → Files → copy link).
            Delete any line you don't stock; add lines for new decors.
            ============================================================ */
-        const FINISHES = [/* ---- TAFISA — real swatch photos from tafisa.ca ---- */
+        const FINISHES = [
         {
-            id: "t-muse",
+            id: "agt-647-antique-white",
+            name: "Antique White",
+            code: "AGT 647",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3019-sahara-cream",
+            name: "Sahara Cream",
+            code: "AGT 3019",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3091-sky-blue",
+            name: "Sky Blue",
+            code: "AGT 3091",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3092-tobac",
+            name: "Tobac",
+            code: "AGT 3092",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3093-linden",
+            name: "Linden",
+            code: "AGT 3093",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3094-sonara",
+            name: "Sonara",
+            code: "AGT 3094",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3095-victoria-grey",
+            name: "Victoria Grey",
+            code: "AGT 3095",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3096-havana-coffee",
+            name: "Havana Coffee",
+            code: "AGT 3096",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3097-olive-green",
+            name: "Olive Green",
+            code: "AGT 3097",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3114-sakura-pink",
+            name: "Sakura Pink",
+            code: "AGT 3114",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3049-deep-blue",
+            name: "Deep Blue",
+            code: "AGT 3049",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3050-leaf-green",
+            name: "Leaf Green",
+            code: "AGT 3050",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3051-caretta-green",
+            name: "Caretta Green",
+            code: "AGT 3051",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3056-slate-cream",
+            name: "Slate Cream",
+            code: "AGT 3056",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3057-slate-grey",
+            name: "Slate Grey",
+            code: "AGT 3057",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3058-slate-coffee",
+            name: "Slate Coffee",
+            code: "AGT 3058",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3062-croco-blue",
+            name: "Croco Blue",
+            code: "AGT 3062",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3066-limba-light-grey",
+            name: "Limba Light Grey",
+            code: "AGT 3066",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3069-slate-beige",
+            name: "Slate Beige",
+            code: "AGT 3069",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3103-linea-brown",
+            name: "Linea Brown",
+            code: "AGT 3103",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3105-mint-green",
+            name: "Mint Green",
+            code: "AGT 3105",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3111-orbit-inox",
+            name: "Orbit Inox",
+            code: "AGT 3111",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "agt-3112-luna-inox",
+            name: "Luna Inox",
+            code: "AGT 3112",
+            brand: "agt",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-w1000-st9",
+            name: "Premium White",
+            code: "W1000 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-w1100-st9",
+            name: "Alpine White",
+            code: "W1100 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-w980-st2",
+            name: "Platinum White",
+            code: "W980 ST2",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-u104-st9",
+            name: "Soft White",
+            code: "U104 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-u727-st9",
+            name: "Dust Grey",
+            code: "U727 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-u732-st9",
+            name: "Stone Grey",
+            code: "U732 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-u961-st2",
+            name: "Graphite Grey",
+            code: "U961 ST2",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-u899-st9",
+            name: "Soft Black",
+            code: "U899 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-u156-st9",
+            name: "Cashmere Grey",
+            code: "U156 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-u702-st9",
+            name: "Cubanit Grey",
+            code: "U702 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h1180-st37",
+            name: "White Bardolino Oak",
+            code: "H1180 ST37",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h3331-st10",
+            name: "Natural Davos Oak",
+            code: "H3331 ST10",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h1334-st9",
+            name: "Sand Gladstone Oak",
+            code: "H1334 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h1277-st9",
+            name: "Mountain Larch",
+            code: "H1277 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h3433-st22",
+            name: "Natural Hamilton Oak",
+            code: "H3433 ST22",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h1399-st10",
+            name: "Grey Brown Whiteriver Oak",
+            code: "H1399 ST10",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h3146-st19",
+            name: "Natural Aida Walnut",
+            code: "H3146 ST19",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h1199-st12",
+            name: "Dark Brown Sorano Oak",
+            code: "H1199 ST12",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h1137-st12",
+            name: "Black-Brown Sorano Oak",
+            code: "H1137 ST12",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-h3325-st28",
+            name: "Tobacco Pacific Walnut",
+            code: "H3325 ST28",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-f812-st9",
+            name: "White Levanto Marble",
+            code: "F812 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-f204-st75",
+            name: "Marmara Marble",
+            code: "F204 ST75",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-f206-st9",
+            name: "Black Marble",
+            code: "F206 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-f242-st10",
+            name: "Light Grey Beton",
+            code: "F242 ST10",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "egger-f186-st9",
+            name: "Anthracite Metal Rock",
+            code: "F186 ST9",
+            brand: "egger",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-bondi-oak",
+            name: "Bondi Oak",
+            code: "S4 BONDI OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_8fcb04e6-7dac-4d01-baf0-95179b5df15a?v=682&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-milk-oak",
+            name: "Milk Oak",
+            code: "S4 MILK OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_eb7bb13b-bb0c-4918-aef7-394fce6b6eba?v=688&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-pebble-triba",
+            name: "Pebble Triba",
+            code: "S4 PEBBLE TRIBA",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_8e34be81-36b1-4b52-9e67-92b73237fba6?v=878&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-ivory-oak",
+            name: "Ivory Oak",
+            code: "S4 IVORY OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_800654b4-c58d-44dd-80fc-84c92fede43e?v=683&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-ivory-infinite-oak",
+            name: "Ivory Infinite Oak",
+            code: "S4 IVORY INFINITE OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_d0929512-5bef-4d18-aca2-a52e87060b75?v=689&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-natural-oak",
+            name: "Natural Oak",
+            code: "S4 NATURAL OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_ff639898-edff-49db-9e8e-8c649e25e8e2?v=684&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-frozen-walnut",
+            name: "Frozen Walnut",
+            code: "S4 FROZEN WALNUT",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_c094d945-b6c4-45dd-b81c-d695db6af84c?v=687&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-manhattan-oak",
+            name: "Manhattan Oak",
+            code: "S4 MANHATTAN OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_6d3ee2db-5a5c-416a-9458-923755697e47?v=690&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-desert-oak",
+            name: "Desert Oak",
+            code: "S4 DESERT OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_8a366c64-c4e6-44e2-a65a-cc32132ecd4d?v=686&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-sahara-oak",
+            name: "Sahara Oak",
+            code: "S4 SAHARA OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_2dc387c4-fd15-47ce-b784-0bfd20bfc2e4?v=685&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-terra-sapele",
+            name: "Terra Sapele",
+            code: "S4 TERRA SAPELE",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_8a6ba113-4e6e-44e1-8424-6e8f1e3b552f?v=883&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-cinnamon-triba",
+            name: "Cinnamon Triba",
+            code: "S4 CINNAMON TRIBA",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_44cf5389-c0b4-4a31-9868-ec0c66bc449e?v=882&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-smoked-walnut",
+            name: "Smoked Walnut",
+            code: "S4 SMOKED WALNUT",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_51994d0b-7f86-44f9-be37-acf3a06e692f?v=879&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-pure-walnut",
+            name: "Pure Walnut",
+            code: "S4 PURE WALNUT",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_b9fef691-a736-4063-8ff5-129d5d6623fb?v=691&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-shadow-eucalyptus",
+            name: "Shadow Eucalyptus",
+            code: "S4 SHADOW EUCALYPTUS",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_6a7b0d86-84c1-4231-a784-a093d82168bb?v=1024&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-burley-oak",
+            name: "Burley Oak",
+            code: "S4 BURLEY OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_1885c0f5-49a5-4873-80a0-0620fdade90e?v=693&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-stardust-walnut",
+            name: "Stardust Walnut",
+            code: "S4 STARDUST WALNUT",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_2603a1e8-6d09-4273-98f0-79429f7c9988?v=695&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "shinnoki-s4-raven-oak",
+            name: "Raven Oak",
+            code: "S4 RAVEN OAK",
+            brand: "shinnoki",
+            img: "https://ods.decospan.com/api/assets/decospan-digital/inriverasset/4486_f0176dec-d79f-4f77-bc35-650f5bf6e566?v=694&r=s&w=640",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-muse",
             name: "Muse",
-            code: "M2061",
+            code: "TFL: M2061 (Q)",
             brand: "tafisa",
             img: "https://tafisa.ca/sites/default/files/styles/medium/public/2026-02/iconiq_24x24_m2061q_muse_muse_med_res.png?itok=maiVnZC8",
-            c1: "#DCCDB8",
-            c2: "#D0BFA6",
-            grain: "#B9A78C"
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-master2",
+            id: "tafisa-masterpiece",
             name: "Masterpiece",
-            code: "M2062",
+            code: "TFL: M2062 (Q)",
             brand: "tafisa",
             img: "https://tafisa.ca/sites/default/files/styles/medium/public/2026-02/iconiq_24x24_m2062q_mast_chef-doeuvre_med_res.png?itok=9Em7RWzf",
-            c1: "#C8A87E",
-            c2: "#BA9768",
-            grain: "#A07E50"
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-emblem",
+            id: "tafisa-emblem",
             name: "Emblem",
-            code: "M2063",
+            code: "TFL: M2063 (Q)",
             brand: "tafisa",
             img: "https://tafisa.ca/sites/default/files/styles/medium/public/2026-02/iconiq_24x24_m2063q_emblem_embleme_med_res.png?itok=Ebf05zu1",
-            c1: "#B3A48F",
-            c2: "#A6957D",
-            grain: "#8C7C64"
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-prodigy",
+            id: "tafisa-prodigy",
             name: "Prodigy",
-            code: "M2064",
+            code: "TFL: M2064 (Q)",
             brand: "tafisa",
             img: "https://tafisa.ca/sites/default/files/styles/medium/public/2026-02/iconiq_24x24_m2064q_prodigy_virtuose_med_res.png?itok=_wNHgKej",
-            c1: "#8F7458",
-            c2: "#7F6549",
-            grain: "#684F38"
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-maestro",
+            id: "tafisa-maestro",
             name: "Maestro",
-            code: "M2065",
+            code: "TFL: M2065 (Q)",
             brand: "tafisa",
             img: "https://tafisa.ca/sites/default/files/styles/medium/public/2026-02/iconiq_24x24_m2065q_maestro_maestro_med_res.png?itok=8pUBsL-y",
-            c1: "#6A523F",
-            c2: "#5C4534",
-            grain: "#493627"
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-pioneer",
+            id: "tafisa-pioneer",
             name: "Pioneer",
-            code: "M2066",
+            code: "TFL: M2066 (Q)",
             brand: "tafisa",
             img: "https://tafisa.ca/sites/default/files/styles/medium/public/2026-02/iconiq_24x24_m2066q_pioneer_pionnier_med_res.png?itok=T8lVuy1N",
-            c1: "#4A3C31",
-            c2: "#3F3228",
-            grain: "#30261E"
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-morndew",
-            name: "Morning Dew",
-            code: "M763",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2026-02/iconiq_24x24_m763q_morning_dew_rosee_du_matin_med_res.png?itok=ticTVbaF",
-            c1: "#CFD2C8",
-            c2: "#C2C5BA",
-            grain: "#A9AC9F"
-        },
-        {
-            id: "t-winter",
-            name: "Winter Fun!",
-            code: "M2004",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_M2004%28Y%29_24X24_72dpi.jpg?itok=EktHgO1F",
-            c1: "#ECE7DD",
-            c2: "#DFD8CB",
-            grain: "#C9C0AF"
-        },
-        {
-            id: "t-weekend",
-            name: "Weekend Getaway",
-            code: "M2003",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/tafisa_M2003%28Y%29_24X24_72dpi_1.jpg?itok=WQ08AxFY",
-            c1: "#E8DECF",
-            c2: "#DCCFBB",
-            grain: "#C5B49A"
-        },
-        {
-            id: "t-latnorth",
-            name: "Latitude North",
-            code: "L530",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L530%28A%29_24X24_72dpi.jpg?itok=ODLHhFik",
-            c1: "#E6E0D4",
-            c2: "#DAD2C2",
-            grain: "#C2B8A3"
-        },
-        {
-            id: "t-whitechoc",
-            name: "White Chocolate",
-            code: "L492",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L492%28R%29_24X24_72dpi.jpg?itok=OQw0fMzV",
-            c1: "#E5D7C0",
-            c2: "#D9C8AC",
-            grain: "#C1AD8E"
-        },
-        {
-            id: "t-fogo",
-            name: "Fogo Harbour",
-            code: "L565",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L565%28R%29_24X24_72dpi.jpg?itok=H0NywpLy",
-            c1: "#9A938A",
-            c2: "#8B847A",
-            grain: "#726B61"
-        },
-        {
-            id: "t-creme",
-            name: "Crème de la Crème",
-            code: "M2031",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2018-08/M2031%28B%29-Creme-de-la-Creme_Creme-de-la-Creme-_24x24.jpg?itok=ogGoS9jo",
-            c1: "#EFE7D6",
-            c2: "#E5DAC4",
-            grain: "#CFC1A6"
-        },
-        {
-            id: "t-nataff",
-            name: "Natural Affinity",
-            code: "L586",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L586K%20NaturalAffinity_12x12.jpg?itok=NCER0Jpf",
-            c1: "#CBA97D",
-            c2: "#BD9866",
-            grain: "#A37F4F"
-        },
-        {
-            id: "t-freespirit",
-            name: "Free Spirit",
-            code: "L580",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L580%28K%29%20Free%20Spirit_Esprit%20Libre_24X24%20%28Medium%29_0.jpg?itok=ugT5b-H5",
-            c1: "#D8BE97",
-            c2: "#CBAD80",
-            grain: "#B29265"
-        },
-        {
-            id: "t-niagara",
-            name: "Niagara",
-            code: "L544",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_L544%28A%29_24X24_72dpi.jpg?itok=eXPbRawB",
-            c1: "#B5AFA4",
-            c2: "#A8A195",
-            grain: "#8E877A"
-        },
-        {
-            id: "t-love",
-            name: "Love at First Sight",
-            code: "L590",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L590-12x12_Compress%C3%A9.jpg?itok=-nVrGffC",
-            c1: "#DEC49C",
-            c2: "#CFB186",
-            grain: "#B6986C"
-        },
-        {
-            id: "t-summer",
-            name: "Summer Breeze",
-            code: "L540",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L540%28A%29_24X24_72dpi.jpg?itok=rlu35QMj",
-            c1: "#E2D4BB",
-            c2: "#D6C5A6",
-            grain: "#BEAA87"
-        },
-        {
-            id: "t-mojave",
-            name: "Mojave",
-            code: "L546",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_L546%28A%29_24X24_72dpi.jpg?itok=OZNcpEZW",
-            c1: "#C5A077",
-            c2: "#B78F61",
-            grain: "#9D764B"
-        },
-        {
-            id: "t-maritime",
-            name: "Maritime Dune",
-            code: "L555",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L555%28R%29_24X24_72dpi.jpg?itok=BBXyJZll",
-            c1: "#C3B6A2",
-            c2: "#B6A78F",
-            grain: "#9C8D74"
-        },
-        {
-            id: "t-sheer",
-            name: "Sheer Beauty",
-            code: "L581",
-            real: true,
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L581%28K%29%20Sheer%20Beauty_Beaut%C3%A9%20Naturelle_24X24%20%28Medium%29.jpg?itok=rvPYs8c-",
-            c1: "#E0CDBA",
-            c2: "#D4BFA6",
-            grain: "#BCA68B"
-        },
-        {
-            id: "t-acacia",
-            name: "Acacia Honey",
-            code: "L591",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L591-12x12_Compress%C3%A9.jpg?itok=faBNbFVW",
-            c1: "#C99B62",
-            c2: "#BB8A4E",
-            grain: "#A1733D"
-        },
-        {
-            id: "t-casting",
-            name: "Casting at First Light",
-            code: "M2007",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_M2007%28Y%29_24X24_72dpi.jpg?itok=ei2tIB_C",
-            c1: "#D3CCC0",
-            c2: "#C6BEB0",
-            grain: "#ADA494"
-        },
-        {
-            id: "t-hardrock",
-            name: "Hardrock Maple",
-            code: "L303",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/1000x1000_L303%28C%29_hires.jpg?itok=1fgU_ffc",
-            c1: "#E3C9A2",
-            c2: "#D7BA8D",
-            grain: "#BFA173"
-        },
-        {
-            id: "t-rhapsody",
-            name: "Rhapsody",
-            code: "L585",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L585%28K%29%20Rhapsody_Rhapsodie_24X24%20%28Medium%29.jpg?itok=zXeDsV5H",
-            c1: "#8A6C4F",
-            c2: "#7B5D41",
-            grain: "#644A33"
-        },
-        {
-            id: "t-sable",
-            name: "Sable Island",
-            code: "L562",
-            brand: "tafisa",
-            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_L562%28R%29_24X24_72dpi.jpg?itok=fnELUq4m",
-            c1: "#B7AC9B",
-            c2: "#AA9D89",
-            grain: "#90836E"
-        },
-        {
-            id: "t-blackq",
+            id: "tafisa-black",
             name: "Black",
-            code: "M203",
+            code: "TFL: M203(Q)",
             brand: "tafisa",
             img: "https://tafisa.ca/sites/default/files/styles/medium/public/2026-03/texture_iconiq_retouche_low-res.png?itok=FaSTpnXk",
-            solid: true,
-            c1: "#2B2A28",
-            c2: "#262523",
-            grain: "#1D1C1B"
-        }, /* Tafisa favorites awaiting photos (catalog pages 2-6 are scrape-blocked) */
-        {
-            id: "t-brunch",
-            name: "Sunday Brunch",
-            code: "M2005",
-            brand: "tafisa",
-            c1: "#DCB88A",
-            c2: "#CCA470",
-            grain: "#B58D55"
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-stroll",
-            name: "Sunday Stroll",
-            code: "M2054",
+            id: "tafisa-morning-dew",
+            name: "Morning Dew",
+            code: "TFL: M763(Q)",
             brand: "tafisa",
-            c1: "#B7A48E",
-            c2: "#A6907A",
-            grain: "#8E7861"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2026-02/iconiq_24x24_m763q_morning_dew_rosee_du_matin_med_res.png?itok=ticTVbaF",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-sugar",
-            name: "Sugar on Ice",
-            code: "M2014",
+            id: "tafisa-winter-fun!",
+            name: "Winter Fun!",
+            code: "TFL: HG2004",
             brand: "tafisa",
-            c1: "#DED9D0",
-            c2: "#CFC8BC",
-            grain: "#B8AF9F"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-02/M2004%28Y%29-LessGreen.jpg?itok=-EUyJwpY",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-blues",
-            name: "Summertime Blues",
-            code: "M2013",
+            id: "tafisa-latitude-north",
+            name: "Latitude North",
+            code: "TFL: L530 (A)",
             brand: "tafisa",
-            c1: "#AEB0AC",
-            c2: "#9C9E9A",
-            grain: "#84867F"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L530%28A%29_24X24_72dpi.jpg?itok=ODLHhFik",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-apres",
-            name: "Après-Ski",
-            code: "M2015",
+            id: "tafisa-white-chocolate",
+            name: "White Chocolate",
+            code: "TFL: L492 (R)",
             brand: "tafisa",
-            c1: "#CCC7BE",
-            c2: "#BBB5AA",
-            grain: "#A29B8E"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L492%28R%29_24X24_72dpi.jpg?itok=OQw0fMzV",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-brass",
-            name: "Brass Band",
-            code: "M2053",
+            id: "tafisa-fogo-harbour",
+            name: "Fogo Harbour",
+            code: "TFL: L565 (R)",
             brand: "tafisa",
-            c1: "#B98F5E",
-            c2: "#A77B4B",
-            grain: "#8C6438"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L565%28R%29_24X24_72dpi.jpg?itok=H0NywpLy",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-sunset",
-            name: "Sunset Cruise",
-            code: "M2002",
+            id: "tafisa-weekend-getaway",
+            name: "Weekend Getaway",
+            code: "TFL: M2003 (Y)",
             brand: "tafisa",
-            c1: "#A98262",
-            c2: "#96704F",
-            grain: "#7C5A3D"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/tafisa_M2003%28Y%29_24X24_72dpi_1.jpg?itok=WQ08AxFY",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-ganache",
-            name: "Ganache",
-            code: "M2055",
+            id: "tafisa-cr\u00e8me-de-la-cr\u00e8me",
+            name: "Cr\u00e8me de la Cr\u00e8me",
+            code: "TFL: M2031 (B)",
             brand: "tafisa",
-            c1: "#6B5645",
-            c2: "#594636",
-            grain: "#463728"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2018-08/M2031%28B%29-Creme-de-la-Creme_Creme-de-la-Creme-_24x24.jpg?itok=ogGoS9jo",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-kiss",
-            name: "Kiss Curl",
-            code: "L592",
+            id: "tafisa-natural-affinity",
+            name: "Natural Affinity",
+            code: "TFL: L586 (K)",
             brand: "tafisa",
-            c1: "#E4D2B4",
-            c2: "#D6C09E",
-            grain: "#BFA883"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L586K%20NaturalAffinity_12x12.jpg?itok=NCER0Jpf",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-sweet",
-            name: "Sweet & Savory",
-            code: "L588",
+            id: "tafisa-free-spirit",
+            name: "Free Spirit",
+            code: "TFL: L580 (K)",
             brand: "tafisa",
-            c1: "#C9A87E",
-            c2: "#B99368",
-            grain: "#9F7B50"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L580%28K%29%20Free%20Spirit_Esprit%20Libre_24X24%20%28Medium%29_0.jpg?itok=ugT5b-H5",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-fashion",
-            name: "Fashionista",
-            code: "L582",
+            id: "tafisa-niagara",
+            name: "Niagara",
+            code: "TFL: L544 (A)",
             brand: "tafisa",
-            c1: "#B08A5F",
-            c2: "#9D764C",
-            grain: "#84613B"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_L544%28A%29_24X24_72dpi.jpg?itok=eXPbRawB",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-salt",
-            name: "Salt of the Earth",
-            code: "L589",
+            id: "tafisa-love-at-first-sight",
+            name: "Love at First Sight",
+            code: "TFL: L590 (K)",
             brand: "tafisa",
-            c1: "#B7A68C",
-            c2: "#A69377",
-            grain: "#8C7A5F"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L590-12x12_Compress%C3%A9.jpg?itok=-nVrGffC",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-mastermind",
-            name: "Mastermind",
-            code: "L593",
+            id: "tafisa-summer-breeze",
+            name: "Summer Breeze",
+            code: "TFL: L540 (A)",
             brand: "tafisa",
-            c1: "#6F5A44",
-            c2: "#5D4936",
-            grain: "#4A3929"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L540%28A%29_24X24_72dpi.jpg?itok=rlu35QMj",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-beach",
+            id: "tafisa-mojave",
+            name: "Mojave",
+            code: "TFL: L546 (A)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_L546%28A%29_24X24_72dpi.jpg?itok=OZNcpEZW",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-maritime-dune",
+            name: "Maritime Dune",
+            code: "TFL: L555 (R)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L555%28R%29_24X24_72dpi.jpg?itok=BBXyJZll",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sheer-beauty",
+            name: "Sheer Beauty",
+            code: "TFL: L581 (K)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L581%28K%29%20Sheer%20Beauty_Beaut%C3%A9%20Naturelle_24X24%20%28Medium%29.jpg?itok=rvPYs8c-",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-acacia-honey",
+            name: "Acacia Honey",
+            code: "TFL: L591 (K)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L591-12x12_Compress%C3%A9.jpg?itok=faBNbFVW",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-casting-at-first-light",
+            name: "Casting at First Light",
+            code: "TFL: M2007 (Y)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_M2007%28Y%29_24X24_72dpi.jpg?itok=ei2tIB_C",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-hardrock-maple",
+            name: "Hardrock Maple",
+            code: "TFL: L303 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/1000x1000_L303%28C%29_hires.jpg?itok=1fgU_ffc",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-rhapsody",
+            name: "Rhapsody",
+            code: "TFL: L585 (K)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L585%28K%29%20Rhapsody_Rhapsodie_24X24%20%28Medium%29.jpg?itok=zXeDsV5H",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-secret",
+            name: "Secret",
+            code: "HPL: T443 (CR)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L443%28C%29_hires.jpg?itok=NUXZhLAl",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sable-island",
+            name: "Sable Island",
+            code: "TFL: L562 (R)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_L562%28R%29_24X24_72dpi.jpg?itok=fnELUq4m",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-prestige-maple",
+            name: "Prestige Maple",
+            code: "TFL: L476 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/1000x1000_L476%28C%29_hires.jpg?itok=moj1fzCy",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-tofino",
+            name: "Tofino",
+            code: "TFL: L564 (R)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_L564%28R%29_24X24_72dpi.jpg?itok=_XGjL31w",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-beach-memories",
             name: "Beach Memories",
-            code: "L491",
+            code: "TFL: L491 (S)",
             brand: "tafisa",
-            c1: "#D6BD96",
-            c2: "#C7AA7E",
-            grain: "#AF9163"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L491%28S%29_hires.jpg?itok=W9gyZjCM",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-moon",
-            name: "Moonlight",
-            code: "L761",
+            id: "tafisa-dolce-vita",
+            name: "Dolce Vita",
+            code: "TFL: L488 (S)",
             brand: "tafisa",
-            c1: "#D5D2CB",
-            c2: "#C6C2B9",
-            grain: "#AFAA9F"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L488%28S%29_24X24_72dpi.jpg?itok=XICB6KI5",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-river",
+            id: "tafisa-sugar-rush",
+            name: "Sugar Rush",
+            code: "TFL: L587 (K)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L587K%20SugarRush_12x12.jpg?itok=zihJkNGr",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-fashionista",
+            name: "Fashionista",
+            code: "TFL: HG582",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-02/L582%28K%29%20Fashionista_24X24%20%28Medium%29.jpg?itok=KQG2ZNyW",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-kiss-curl",
+            name: "Kiss Curl",
+            code: "TFL: PM592",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-02/TAFISA_L592K_Karisma_24x24_300dpi%20%28Medium%29.jpg?itok=QUUciIyb",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-tea-for-two",
+            name: "Tea for Two",
+            code: "TFL: M2006 (Y)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/tafisa_M2006%28Y%29_24X24_72dpi.jpg?itok=dF9WgRrM",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-candlelight",
+            name: "Candlelight",
+            code: "TFL: L421 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L421%28C%29_hires.jpg?itok=pFT0U4EV",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-nutmeg",
+            name: "Nutmeg",
+            code: "TFL: L481 (S)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L481%28S%29_24X24_72dpi.jpg?itok=VA9Fqa3O",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-apr\u00e8s-ski",
+            name: "Apr\u00e8s-Ski",
+            code: "TFL: M2015 (Y)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/tafisa_M2015%28Y%29_24X24_72dpi.jpg?itok=PO4y4WG4",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sweet-&amp;-savory",
+            name: "Sweet &amp; Savory",
+            code: "TFL: L588 (K)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L588K%20Sweet%26Savory_12x12.jpg?itok=BL-OwFWu",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-laurentian-path",
+            name: "Laurentian Path",
+            code: "TFL: L556 (R)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L556%28R%29_24X24_72dpi.jpg?itok=rqq68SGx",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-salt-of-the-earth",
+            name: "Salt of the Earth",
+            code: "TFL: L589 (K)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L589K%20SaltOfTheEarth_12x12.jpg?itok=CI7ZNZAq",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-rocky-mountain",
+            name: "Rocky Mountain",
+            code: "TFL: L557 (R)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L557%28R%29_24X24_72dpi.jpg?itok=u1G_ULf1",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sunday-brunch",
+            name: "Sunday Brunch",
+            code: "TFL: M2005 (Y)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/tafisa_M2005%28Y%29_24X24_72dpi.jpg?itok=00Mn6WIy",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sugar-on-ice",
+            name: "Sugar on Ice",
+            code: "TFL: M2014 (Y)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_M2014%28Y%29_24X24_72dpi.jpg?itok=jX3P0v7Z",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-bora-bora",
+            name: "Bora Bora",
+            code: "TFL: L497 (S)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L497%28S%29_24X24_72dpi_0.jpg?itok=QKzTZZ4C",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-antigua",
+            name: "Antigua",
+            code: "TFL: L498 (S)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L498%28S%29_24X24_72dpi.jpg?itok=AYEn0Zpn",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-rustik-cherry",
+            name: "Rustik Cherry",
+            code: "TFL: L521 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L521%28C%29_hires.jpg?itok=8o2lBkN_",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-hot-cinnamon",
+            name: "Hot Cinnamon",
+            code: "TFL: L480 (S)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/Tafisa_L480%28S%29_24X24_72dpi.jpg?itok=U7ZQzTGa",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-copa-cabana",
+            name: "Copa Cabana",
+            code: "TFL: L489 (S)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L489%28S%29_24X24_72dpi.jpg?itok=xs_W98KU",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-summer-flame",
+            name: "Summer Flame",
+            code: "TFL: L420 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L420%28C%29_hires.jpg?itok=FZEYTxDy",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-dark-rum-cherry",
+            name: "Dark Rum Cherry",
+            code: "TFL: L473 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L473%28C%29_24X24_72dpi.jpg?itok=QkX9G0QW",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-shiraz-cherry",
+            name: "Shiraz Cherry",
+            code: "TFL: L472 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L472%28C%29_hires.jpg?itok=8sOi3xNF",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-iron-horse",
+            name: "Iron Horse",
+            code: "TFL: HG 834",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-11/HG834_24X24%20%28Medium%29.jpg?itok=NPJsAoEI",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-force-of-nature",
+            name: "Force of Nature",
+            code: "TFL: L830 (K)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L830%28K%29%20Force%20of%20Nature_Force%20de%20la%20Nature_24X24%20%28Medium%29.jpg?itok=RBEUik6c",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-river-rock",
             name: "River Rock",
-            code: "L538",
+            code: "TFL: L538 (A)",
             brand: "tafisa",
-            c1: "#A9A299",
-            c2: "#988F85",
-            grain: "#7F766C"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L538%28A%29_24X24_72dpi.jpg?itok=M0DliyAl",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-sundown",
-            name: "Sundown",
-            code: "L768",
+            id: "tafisa-mastermind",
+            name: "Mastermind",
+            code: "TFL: L593 (K)",
             brand: "tafisa",
-            c1: "#7A5F4A",
-            c2: "#684E3B",
-            grain: "#533D2D"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-05/L593-12x12_Compress%C3%A9-moyen.jpg?itok=NSAn7HsM",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-starry",
-            name: "Starry Night",
-            code: "L762",
+            id: "tafisa-brushed-aluminum",
+            name: "Brushed Aluminum",
+            code: "TFL: L474 (C)",
             brand: "tafisa",
-            c1: "#3B3A37",
-            c2: "#2F2E2B",
-            grain: "#262522"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L474%28C%29_24X24_72dpi.jpg?itok=P-QyTHoX",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-carte",
-            name: "Carte Blanche",
-            code: "PM",
+            id: "tafisa-rock-solid",
+            name: "Rock Solid",
+            code: "TFL: L831 (K)",
             brand: "tafisa",
-            solid: true,
-            c1: "#F5F3EF",
-            c2: "#F0EDE8",
-            grain: "#E2DED6"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L831%28K%29%20Roc%20Solid_Roc%20Solide_24X24%20%28Medium%29.jpg?itok=uD0BLkvG",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-snow",
-            name: "Snowfall",
-            code: "L105",
+            id: "tafisa-latitude-east",
+            name: "Latitude East",
+            code: "TFL: L533 (A)",
             brand: "tafisa",
-            solid: true,
-            c1: "#F7F6F3",
-            c2: "#F2F1ED",
-            grain: "#E5E3DD"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L533%28A%29_24x24_72dpi.jpg?itok=FnNGBv3y",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-cream",
-            name: "Cream Puff",
-            code: "PM781",
+            id: "tafisa-summertime-blues",
+            name: "Summertime Blues",
+            code: "TFL: M2013 (Y)",
             brand: "tafisa",
-            solid: true,
-            c1: "#EFE6D8",
-            c2: "#EAE0CF",
-            grain: "#DACDB7"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/tafisa_M2013%28Y%29_24X24_72dpi.jpg?itok=wxd_psfT",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-sand",
-            name: "Sand Castle",
-            code: "PM782",
+            id: "tafisa-the-chameleon",
+            name: "The Chameleon",
+            code: "TFL: L584 (K)",
             brand: "tafisa",
-            solid: true,
-            c1: "#DCCDB6",
-            c2: "#D5C5AB",
-            grain: "#C2AF91"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L584%28K%29%20The%20Chameleon_Le%20Cam%C3%A9l%C3%A9on_24X24%20%28Medium%29.jpg?itok=eNsiRaK5",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-tira",
-            name: "Tiramisu",
-            code: "PM783",
+            id: "tafisa-m\u00e9gantic",
+            name: "M\u00e9gantic",
+            code: "TFL: L563 (R)",
             brand: "tafisa",
-            solid: true,
-            c1: "#C3A98B",
-            c2: "#BBA080",
-            grain: "#A68B6A"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/Tafisa_L563%28R%29_24X24_72dpi.jpg?itok=nF9Z7sMZ",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-terra",
-            name: "Terrarossa",
-            code: "PM780",
+            id: "tafisa-new-wave",
+            name: "New Wave",
+            code: "TFL: M2041 (B)",
             brand: "tafisa",
-            solid: true,
-            c1: "#9A5A48",
-            c2: "#915240",
-            grain: "#7C4536"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2018-08/M2041%28B%29-New-Wave_Nouvelle-Vague_24x24.jpg?itok=Ssr9-3iP",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-garden",
-            name: "Secret Garden",
-            code: "PM784",
+            id: "tafisa-sunset-cruise",
+            name: "Sunset Cruise",
+            code: "TFL: M2002 (Y)",
             brand: "tafisa",
-            solid: true,
-            c1: "#6E7D63",
-            c2: "#65745A",
-            grain: "#55624C"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/tafisa_M2002%28Y%29_24X24_72dpi.jpg?itok=Tmqk9586",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-eucal",
-            name: "Eucalyptus",
-            code: "PM773",
+            id: "tafisa-home-sweet-home",
+            name: "Home Sweet Home",
+            code: "TFL: M2034 (B)",
             brand: "tafisa",
-            solid: true,
-            c1: "#8B9486",
-            c2: "#828B7D",
-            grain: "#6F786A"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2018-08/M2034%28B%29-Home-Sweet-Home_Home-Sweet-Home_24x24.jpg?itok=DZbWbM8f",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "t-calmsea",
-            name: "Calm Sea",
-            code: "PM772",
-            brand: "tafisa",
-            solid: true,
-            c1: "#9AA8A6",
-            c2: "#90A09E",
-            grain: "#7C8C8A"
-        },
-        {
-            id: "t-urban",
+            id: "tafisa-urban-vibe",
             name: "Urban Vibe",
-            code: "PM832",
+            code: "TFL: L832 (K)",
             brand: "tafisa",
-            solid: true,
-            c1: "#8C8A85",
-            c2: "#83817C",
-            grain: "#6F6D68"
-        }, /* ---- EGGER decors (photos pending — Egger blocks scraping) ---- */
-        {
-            id: "e-white",
-            name: "Premium White",
-            code: "W1000",
-            brand: "egger",
-            solid: true,
-            c1: "#F4F2EE",
-            c2: "#EFEDE8",
-            grain: "#E1DED7"
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L832%28K%29%20Urban%20Vibe_Amiance%20Urbaine_24X24%20%28Medium%29.jpg?itok=pDlQaAa_",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "e-cash",
-            name: "Cashmere Grey",
-            code: "U702",
-            brand: "egger",
-            solid: true,
-            c1: "#CFC8BE",
-            c2: "#C8C0B5",
-            grain: "#B3AA9D"
+            id: "tafisa-southwester",
+            name: "Southwester",
+            code: "TFL: L535 (A)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L535%28A%29_24X24_72dpi.jpg?itok=5oovb6uK",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "e-halifax",
-            name: "Natural Halifax Oak",
-            code: "H1180",
-            brand: "egger",
-            c1: "#C49A6A",
-            c2: "#B58955",
-            grain: "#9A7243"
+            id: "tafisa-breakwater",
+            name: "Breakwater",
+            code: "TFL: L537 (A)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L537%28A%29_24X24_72dpi.jpg?itok=qsiq_U36",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "e-nebraska",
-            name: "Natural Nebraska Oak",
-            code: "H3331",
-            brand: "egger",
-            c1: "#C7A275",
-            c2: "#B89060",
-            grain: "#9E794C"
+            id: "tafisa-first-class",
+            name: "First Class",
+            code: "TFL: L583 (K)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/L583%28K%29%20First%20Class_Premi%C3%A8re%20Classe_24X24%20%28Medium%29.jpg?itok=PDOqnd1C",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "e-gladstone",
-            name: "Sand Gladstone Oak",
-            code: "H3309",
-            brand: "egger",
-            c1: "#D2BC97",
-            c2: "#C4AC82",
-            grain: "#AB9269"
+            id: "tafisa-tuxedo",
+            name: "Tuxedo",
+            code: "TFL: L477 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L477%28C%29_24X24_72dpi.jpg?itok=UDtYLxm1",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "e-river",
-            name: "Grey-Brown White River Oak",
-            code: "H1313",
-            brand: "egger",
-            c1: "#A89683",
-            c2: "#988672",
-            grain: "#7F6F5C"
+            id: "tafisa-grenada",
+            name: "Grenada",
+            code: "TFL: L499 (S)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L499%28S%29_24X24_72dpi.jpg?itok=kvuu6DwO",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "e-thermo",
-            name: "Black-Brown Thermo Oak",
-            code: "H1199",
-            brand: "egger",
-            c1: "#4A3A2E",
-            c2: "#3E3026",
-            grain: "#30251D"
+            id: "tafisa-truffle",
+            name: "Truffle",
+            code: "TFL: L479 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L479%28C%29_hires.jpg?itok=90S3qRxe",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "e-black",
-            name: "Black",
-            code: "U999",
-            brand: "egger",
-            solid: true,
-            c1: "#232221",
-            c2: "#1F1E1D",
-            grain: "#171615"
-        }, /* ---- REHAU RAUVISIO super matte (photos pending) ---- */
-        {
-            id: "r-white",
-            name: "Super Matte White",
-            code: "",
-            brand: "rehau",
-            solid: true,
-            c1: "#F2F0EC",
-            c2: "#EDEBE6",
-            grain: "#DFDCD5"
+            id: "tafisa-spring-blossom",
+            name: "Spring Blossom",
+            code: "TFL: L543 (A)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L543%28A%29_24X24_72dpi_0.jpg?itok=-mWcuSvM",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "r-stone",
-            name: "Super Matte Stone",
-            code: "",
-            brand: "rehau",
-            solid: true,
-            c1: "#B9B2A7",
-            c2: "#B1A99D",
-            grain: "#9C9487"
+            id: "tafisa-chocolate-pear-tree",
+            name: "Chocolate Pear Tree",
+            code: "TFL: L444 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L444%28C%29_hires.jpg?itok=i0p9t_wk",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "r-sage",
-            name: "Super Matte Sage",
-            code: "",
-            brand: "rehau",
-            solid: true,
-            c1: "#7E8C73",
-            c2: "#75836A",
-            grain: "#637158"
+            id: "tafisa-dark-chocolate",
+            name: "Dark Chocolate",
+            code: "TFL: L494 (R)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L494%28R%29_24X24_72dpi.jpg?itok=xKxs-YPr",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "r-ink",
-            name: "Super Matte Ink",
-            code: "",
-            brand: "rehau",
-            solid: true,
-            c1: "#2E2D2B",
-            c2: "#292827",
-            grain: "#201F1E"
-        }, /* ---- WILSONART HPL classics (photos pending — Wilsonart blocks scraping) ---- */
+            id: "tafisa-latitude-west",
+            name: "Latitude West",
+            code: "TFL: L532 (A)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L532%28A%29_24X24_72dpi.jpg?itok=Zxi2wmVw",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
         {
-            id: "w-deswhite",
+            id: "tafisa-t\u00eate-\u00e0-t\u00eate",
+            name: "T\u00eate-\u00e0-T\u00eate",
+            code: "TFL: M2001 (Y)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/tafisa_M2001%28Y%29_24X24_72dpi_0.jpg?itok=mMoKXXal",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-black-tie",
+            name: "Black Tie",
+            code: "TFL: M2035 (B)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2018-08/M2035%28B%29-Black-Tie_Cravate-Noire_24X24.jpg?itok=-vDdUl_4",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-after-hours",
+            name: "After-Hours",
+            code: "TFL: M2010 (Y)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-03/tafisa_M2010%28Y%29_24X24_72dpi.jpg?itok=axayivs1",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-camera-obscura",
+            name: "Camera Obscura",
+            code: "TFL: PM 835",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/PM835_24X24%20%28Medium%29.jpg?itok=agbrNYDQ",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-carte-blanche",
+            name: "Carte Blanche",
+            code: "TFL: L115 (I)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2021-07/PMHG115_24X24%20%28Medium%29-Frame_0.png?itok=qUyMkU0c",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-white",
+            name: "White",
+            code: "TFL: M175(B)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2019-11/M175B%20-%2012%27%27x12%27%27.jpg?itok=IR7XO82T",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-white--",
+            name: "White",
+            code: "TFL: L175 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L175%28C%29_hires.jpg?itok=iOQ6UDa1",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-glacier-white",
+            name: "Glacier White",
+            code: "TFL: L191 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L191%28C%29_hires.jpg?itok=DiCPmWTo",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-classic-white",
+            name: "Classic White",
+            code: "TFL: L178 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L178%28C%29_hires.jpg?itok=g3EFfBsp",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-froth-of-sea",
+            name: "Froth of Sea",
+            code: "TFL: L080 (M)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2025-05/materia_24x24_RGB__L080_Froth%20of%20Sea_%C3%89cume%20de%20Mer.jpg?itok=dX0nbCE9",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-vanilla-orchid",
+            name: "Vanilla Orchid",
+            code: "TFL: PM100",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/PMHG100_24X24%20%28Medium%29.jpg?itok=vXBWz3G_",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-gardenia",
+            name: "Gardenia",
+            code: "TFL: PM775",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-08/PM775-24x24-RGB.jpg?itok=Lapar2XQ",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-cashmere",
+            name: "Cashmere",
+            code: "TFL: PM776",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-08/PM776-24x24-RGB.jpg?itok=pJ0fp6Eo",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-snowfall",
+            name: "Snowfall",
+            code: "TFL: L105 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-01/L105-12x12.png?itok=iDVvFb88",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-ivory",
+            name: "Ivory",
+            code: "TFL: L204 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/1000x1000_L204%28C%29_hires.jpg?itok=3tvVF77E",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-cream-puff",
+            name: "Cream Puff",
+            code: "TFL: PM781",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2025-09/pm781_24x24_72_dpi_rgb.jpg?itok=dpv4gzdl",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sea-fog",
+            name: "Sea Fog",
+            code: "TFL: L769 (I)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L769%28I%29_24X24_72dpi.jpg?itok=Uuks6hya",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-daybreak",
+            name: "Daybreak",
+            code: "TFL: L764 (M)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2025-05/materia_24x24_RGB_L764_Daybreak_Au%20Petit%20Matin.jpg?itok=I2_QHvAc",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-milky-way",
+            name: "Milky Way",
+            code: "TFL: L767 (M)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2025-05/materia_24x24_RGB_L767_Milky%20Way_Voie%20Lact%C3%A9e.jpg?itok=CbpeeuYz",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-slate",
+            name: "Slate",
+            code: "TFL: L228 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L228%28C%29_24X24_72dpi.jpg?itok=iyLJsBCL",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sundown",
+            name: "Sundown",
+            code: "TFL: L768 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2018-08/960x960_L768_hires_0.jpg?itok=b1aqqLwG",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sand-castle",
+            name: "Sand Castle",
+            code: "TFL: PM782",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2025-09/pm782_24x24_72_dpi_rgb.jpg?itok=b-VixI6n",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-tiramisu",
+            name: "Tiramisu",
+            code: "TFL: PM783",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2025-09/pm783_24x24_72_dpi_rgb.jpg?itok=tZbnr2QG",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sunflower",
+            name: "Sunflower",
+            code: "TFL: PM774",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/PM774_24X24%20%28Medium%29.jpg?itok=z6V9Y61g",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-steampunk",
+            name: "Steampunk",
+            code: "TFL: HG833",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-11/HG833_24X24%20%28Medium%29.jpg?itok=sklEjSMU",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-terrarossa",
+            name: "Terrarossa",
+            code: "TFL: PM780",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-08/PM780-24x24-RGB.jpg?itok=r9Wf48wk",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-sage-leaf",
+            name: "Sage Leaf",
+            code: "TFL: PM779",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-08/PM779-24x24-RGB-2.jpg?itok=xQsk6QrS",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-secret-garden",
+            name: "Secret Garden",
+            code: "TFL: PM784",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2025-09/pm784_24x24_72_dpi_rgb.jpg?itok=MPLgOwfi",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-eucalyptus",
+            name: "Eucalyptus",
+            code: "TFL: PM773",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/PM773_24X24%20%28Medium%29.jpg?itok=alSBJnFT",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-summer-drops",
+            name: "Summer Drops",
+            code: "TFL: PM202",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2023-07/L202_Crystalite_24x24_150dpi.jpg?itok=pYSPVo2r",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-winter-horizon",
+            name: "Winter Horizon",
+            code: "TFL: PM777",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-08/PM777-24x24-RGB.jpg?itok=zCT58BsB",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-rain-cloud",
+            name: "Rain Cloud",
+            code: "TFL: L760 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L760%28C%29_hires.jpg?itok=ERmVCBTi",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-shadows",
+            name: "Shadows",
+            code: "TFL: L201 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/960x960_L201%28C%29_hires.jpg?itok=zL_2vmnK",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-north-wind",
+            name: "North Wind",
+            code: "TFL: PM771",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/PMHG771_24X24%20%28Medium%29.jpg?itok=e0wQ65fm",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-evening-star",
+            name: "Evening Star",
+            code: "TFL: L770 (I)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L770%28I%29_24X24_72dpi.jpg?itok=-1qXY5es",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-steel-blue",
+            name: "Steel Blue",
+            code: "TFL: PM778",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2024-08/PM778-24x24-RGB.jpg?itok=7Y2UuVKf",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-moonlight",
+            name: "Moonlight",
+            code: "TFL: L761 (M)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2025-05/materia_24x24_RGB_L761_Moonlight_Claire%20de%20Lune.jpg?itok=X0WE9iyo",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-calm-sea",
+            name: "Calm Sea",
+            code: "TFL: PM772",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/PM772_24X24%20%28Medium%29.jpg?itok=scI0Ikqr",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-midnight-sun",
+            name: "Midnight Sun",
+            code: "TFL: PM765",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-10/PMHG765_24X24%20%28Medium%29.jpg?itok=mVuSiu-e",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "tafisa-starry-night",
+            name: "Starry Night",
+            code: "TFL: L762 (C)",
+            brand: "tafisa",
+            img: "https://tafisa.ca/sites/default/files/styles/medium/public/2020-04/tafisa_L762%28C%29_24X24_72dpi.jpg?itok=IfbLglsC",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "wilsonart-4951-38",
+            name: "Calcutta Marble",
+            code: "4951-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "wilsonart-4925-38",
+            name: "Carrara Envision",
+            code: "4925-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "wilsonart-1573-60",
             name: "Designer White",
-            code: "D354",
+            code: "1573-60",
             brand: "wilsonart",
-            solid: true,
-            c1: "#F4F3F0",
-            c2: "#EFEEEA",
-            grain: "#E1E0DB"
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "w-frosty",
-            name: "Frosty White",
-            code: "1573",
+            id: "wilsonart-4924-38",
+            name: "White Cararra",
+            code: "4924-38",
             brand: "wilsonart",
-            solid: true,
-            c1: "#F2F1EE",
-            c2: "#EDECE8",
-            grain: "#DFDED9"
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "w-black",
+            id: "wilsonart-4926-38",
+            name: "Calacatta Marble",
+            code: "4926-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "wilsonart-4931-38",
+            name: "Calcutta Blanc",
+            code: "4931-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "wilsonart-4934-38",
+            name: "Marbled Dawn",
+            code: "4934-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "wilsonart-4940-38",
+            name: "Smokey Topaz",
+            code: "4940-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "wilsonart-4942-38",
+            name: "Luna Night",
+            code: "4942-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "wilsonart-4882-38",
+            name: "Asian Night",
+            code: "4882-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
+        },
+        {
+            id: "wilsonart-1595-60",
             name: "Black",
-            code: "1595",
+            code: "1595-60",
             brand: "wilsonart",
-            solid: true,
-            c1: "#272625",
-            c2: "#222120",
-            grain: "#191818"
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "w-landmark",
-            name: "Landmark Wood",
-            code: "7981K",
+            id: "wilsonart-1500-60",
+            name: "Natural Almond",
+            code: "1500-60",
             brand: "wilsonart",
-            c1: "#A78A68",
-            c2: "#977953",
-            grain: "#7D6342"
-        }, /* ---- SHINNOKI — full collection with real panel photos ---- */
-        {
-            id: "s-bondi",
-            name: "Bondi Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-bondi-oak-s1.jpg",
-            c1: "#E9DFCB",
-            c2: "#DFD3BA",
-            grain: "#C9BB9E"
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-milk",
-            name: "Milk Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-milk-oak-s1.jpg",
-            c1: "#E3D2AF",
-            c2: "#D6C29A",
-            grain: "#BFAA7E"
+            id: "wilsonart-1572-60",
+            name: "Frosty White",
+            code: "1572-60",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-pebble",
-            name: "Pebble Triba",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-pebble-triba-s1.jpg",
-            c1: "#D8CDBC",
-            c2: "#CBBFAB",
-            grain: "#B3A68F"
+            id: "wilsonart-d381-60",
+            name: "Dove Grey",
+            code: "D381-60",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-ivory",
-            name: "Ivory Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-ivory-oak-s1.jpg",
-            c1: "#DBC79F",
-            c2: "#CEB78A",
-            grain: "#B69E6F"
+            id: "wilsonart-d90-60",
+            name: "Graphite Nebula",
+            code: "D90-60",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-ivoryinf",
-            name: "Ivory Infinite Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-ivory-infinite-oak-s1.jpg",
-            c1: "#D8C49B",
-            c2: "#CBB386",
-            grain: "#B29A6B"
+            id: "wilsonart-7965k-12",
+            name: "Salvage Planked Elm",
+            code: "7965K-12",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-natural",
-            name: "Natural Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-natural-oak-s1.jpg",
-            c1: "#CDAF7F",
-            c2: "#BE9D69",
-            grain: "#A48452"
+            id: "wilsonart-7972k-12",
+            name: "Monticello Maple",
+            code: "7972K-12",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-frozen",
-            name: "Frozen Walnut",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-frozen-walnut-s1.jpg",
-            c1: "#B49C7E",
-            c2: "#A48A6A",
-            grain: "#8A7153"
+            id: "wilsonart-7977k-12",
+            name: "Asian Sun",
+            code: "7977K-12",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-manhattan",
-            name: "Manhattan Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-manhattan-oak-s1.jpg",
-            c1: "#A98E66",
-            c2: "#997D54",
-            grain: "#806742"
+            id: "wilsonart-7980k-12",
+            name: "Kalahari Topaz",
+            code: "7980K-12",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-desert",
-            name: "Desert Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-desert-oak-s1.jpg",
-            c1: "#B69468",
-            c2: "#A78355",
-            grain: "#8C6C43"
+            id: "wilsonart-7949k-12",
+            name: "Bannister Oak",
+            code: "7949K-12",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-sahara",
-            name: "Sahara Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-sahara-oak-s1.jpg",
-            c1: "#A87C4E",
-            c2: "#996D40",
-            grain: "#7F5832"
+            id: "wilsonart-7964k-12",
+            name: "Cafelle",
+            code: "7964K-12",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-terra",
-            name: "Terra Sapele",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-terra-sapele-s1.jpg",
-            c1: "#8A5C3F",
-            c2: "#7B4F34",
-            grain: "#643F29"
+            id: "wilsonart-7981k-12",
+            name: "Florence Walnut",
+            code: "7981K-12",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-cinnamon",
-            name: "Cinnamon Triba",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-cinnamon-triba-s1.jpg",
-            c1: "#96684A",
-            c2: "#875A3E",
-            grain: "#6F4830"
+            id: "wilsonart-7973k-12",
+            name: "Skyros Walnut",
+            code: "7973K-12",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-smoked",
-            name: "Smoked Walnut",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-smoked-walnut-s1.jpg",
-            c1: "#6B4F38",
-            c2: "#5D432E",
-            grain: "#4A3424"
+            id: "wilsonart-4884-38",
+            name: "Concrete Formwood",
+            code: "4884-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         },
         {
-            id: "s-pure",
-            name: "Pure Walnut",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-pure-walnut-s1.jpg",
-            c1: "#7A5B40",
-            c2: "#6C4E35",
-            grain: "#573E2A"
-        },
-        {
-            id: "s-shadow",
-            name: "Shadow Eucalyptus",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-shadow-eucalyptus-s1.jpg",
-            c1: "#5C4A3D",
-            c2: "#4F3F33",
-            grain: "#3E3128"
-        },
-        {
-            id: "s-burley",
-            name: "Burley Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-burley-oak-s1.jpg",
-            c1: "#4E4138",
-            c2: "#43372F",
-            grain: "#352B24"
-        },
-        {
-            id: "s-stardust",
-            name: "Stardust Walnut",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-stardust-walnut-s1.jpg",
-            c1: "#4A3A30",
-            c2: "#3F3128",
-            grain: "#31261F"
-        },
-        {
-            id: "s-raven",
-            name: "Raven Oak",
-            code: "",
-            brand: "shinnoki",
-            img: "https://www.robinreigi.com/wp-content/uploads/2025/01/shinnoki-decospan-wood-panel-raven-oak-s1.jpg",
-            c1: "#35302B",
-            c2: "#2D2925",
-            grain: "#23201C"
+            id: "wilsonart-4885-38",
+            name: "Weathered Fiberwood",
+            code: "4885-38",
+            brand: "wilsonart",
+            img: "",
+            c1: "#C9C2B6", c2: "#B6AE9F", grain: "#8F8675"
         }
         ];
 
