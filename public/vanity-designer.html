@@ -3207,6 +3207,8 @@
                     return showV || showM;
                 if (o.group === "hwfinish")
                     return (showV || showM) && state.hardware !== "none";
+                if (o.group === "trap")
+                    return showV && state.sinks !== "none";
                 if (o.group === "mbottom")
                     return showM && state.mStyle !== "ledmirror" && state.mH >= 16;
                 if (o.group === "mount")
