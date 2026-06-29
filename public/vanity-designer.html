@@ -3910,12 +3910,14 @@
                 pair.a.normalMap = materialTex(reliefCanvasFrom(cv2, p.normalStrength || 1.6));
                 pair.a.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                 pair.a.roughnessMap = materialTex(roughnessCanvasFrom(cv2, p));
+                pair.a.roughness = 1.0;
                 applyPaletteTint(pair.a, f, p);
                 pair.a.needsUpdate = true;
                 pair.b.map = tb; pair.b.bumpMap = tb;
                 pair.b.normalMap = materialTex(reliefCanvasFrom(cv2Flip, p.normalStrength || 1.6));
                 pair.b.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                 pair.b.roughnessMap = materialTex(roughnessCanvasFrom(cv2Flip, p));
+                pair.b.roughness = 1.0;
                 applyPaletteTint(pair.b, f, p);
                 pair.b.needsUpdate = true;
                 if (typeof invalidatePanelMatCacheFor === "function") invalidatePanelMatCacheFor(f.id);
