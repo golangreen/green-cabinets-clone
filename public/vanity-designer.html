@@ -3385,7 +3385,8 @@
                 cv = document.createElement("canvas");
             cv.width = cv.height = S;
             const x = cv.getContext("2d");
-            /* if we've sampled the real swatch colour, recentre the procedural tone to it */
+            /* if we've sampled the real swatch colour, recentre the procedural tone to it
+               so the 3D model matches the chip exactly */
             if (typeof realAvg !== "undefined" && realAvg[f.id]) {
                 const ra = realAvg[f.id];
                 f = {
@@ -3395,60 +3396,87 @@
                     grain: shade(ra, -34)
                 };
             }
-            /* base: soft horizontal sheen between c1 and c2 */
-            const g = x.createLinearGradient(0, 0, S, 0);
-            g.addColorStop(0, f.c1);
-            g.addColorStop(.35, f.c2);
-            g.addColorStop(.65, f.c1);
-            g.addColorStop(1, f.c2);
-            x.fillStyle = g;
+            const kind = f.kind || (f.solid ? "solid" : "wood");
+            /* base wash — diagonal gradient between c1/c2 keeps parity with chip SVG */
+            const baseFill = realAvg[f.id] || f.c2 || f.c1 || "#cccccc";
+            x.fillStyle = baseFill;
             x.fillRect(0, 0, S, S);
-            if (!f.solid) {
-                /* broad tonal bands (plank/figure variation) */
-                for (let b = 0; b < 7; b++) {
-                    const bx = Math.random() * S,
-                        bw = 40 + Math.random() * 90;
-                    const bg = x.createLinearGradient(bx, 0, bx + bw, 0);
-                    bg.addColorStop(0, "transparent");
-                    bg.addColorStop(.5, f.c2);
-                    bg.addColorStop(1, "transparent");
-                    x.globalAlpha = .16 + Math.random() * .12;
-                    x.fillStyle = bg;
-                    x.fillRect(bx - 10, 0, bw + 20, S);
-                }
-                /* long wavy grain lines, varied weight & alpha */
-                for (let i = 0; i < 70; i++) {
-                    const px = Math.random() * S,
-                        amp = 2 + Math.random() * 7,
-                        ph = Math.random() * 6.28;
+            const dg = x.createLinearGradient(0, 0, S, S);
+            dg.addColorStop(0, f.c1);
+            dg.addColorStop(1, f.c2);
+            x.globalAlpha = 0.55;
+            x.fillStyle = dg;
+            x.fillRect(0, 0, S, S);
+            x.globalAlpha = 1;
+
+            if (kind === "wood") {
+                /* long horizontal grain bands — same direction as chip preview */
+                for (let i = 0; i < 60; i++) {
+                    const y = (i / 60) * S + Math.sin(i * 1.7) * 6;
+                    const op = 0.18 + ((i * 37) % 17) / 100;
                     x.strokeStyle = f.grain;
-                    x.globalAlpha = .05 + Math.random() * .22;
-                    x.lineWidth = .5 + Math.random() * 1.4;
+                    x.globalAlpha = op;
+                    x.lineWidth = 0.6 + ((i * 13) % 5) * 0.3;
                     x.beginPath();
-                    x.moveTo(px, 0);
-                    for (let yy = 0; yy <= S; yy += 32)
-                        x.lineTo(px + Math.sin(yy / 70 + ph) * amp + Math.sin(yy / 23 + ph * 2) * 1.5, yy);
+                    x.moveTo(0, y);
+                    x.bezierCurveTo(S * 0.33, y + Math.sin(i) * 6, S * 0.66, y - Math.cos(i) * 5, S, y - 3);
                     x.stroke();
                 }
-                /* a few darker mineral streaks */
-                for (let i = 0; i < 8; i++) {
-                    const px = Math.random() * S,
-                        len = 60 + Math.random() * 160,
-                        y0 = Math.random() * S;
+                /* darker mineral streaks */
+                for (let i = 0; i < 10; i++) {
+                    const py = Math.random() * S,
+                          len = 80 + Math.random() * 220;
                     x.strokeStyle = f.grain;
-                    x.globalAlpha = .25;
-                    x.lineWidth = 1.8;
+                    x.globalAlpha = 0.25;
+                    x.lineWidth = 1.6;
                     x.beginPath();
-                    x.moveTo(px, y0);
-                    x.lineTo(px + Math.sin(y0) * 4, y0 + len);
+                    x.moveTo(Math.random() * S, py);
+                    x.lineTo(Math.random() * S + len, py + (Math.random() - 0.5) * 4);
                     x.stroke();
                 }
+            } else if (kind === "stone") {
+                /* marble veining — meandering beziers in grain color */
+                for (let v = 0; v < 6; v++) {
+                    let vx = Math.random() * S, vy = -10;
+                    x.beginPath();
+                    x.moveTo(vx, vy);
+                    while (vy < S + 10) {
+                        const nx = vx + (Math.random() - 0.5) * 50,
+                              ny = vy + 40 + Math.random() * 50;
+                        x.quadraticCurveTo(vx + (Math.random() - 0.5) * 30, (vy + ny) / 2, nx, ny);
+                        vx = nx; vy = ny;
+                    }
+                    x.strokeStyle = f.grain;
+                    x.globalAlpha = 0.55; x.lineWidth = 1.6 + Math.random() * 1.2; x.stroke();
+                    x.globalAlpha = 0.18; x.lineWidth = 7 + Math.random() * 5; x.stroke();
+                }
+            } else if (kind === "concrete") {
+                /* fine speckle */
+                for (let i = 0; i < 1600; i++) {
+                    const px = Math.random() * S, py = Math.random() * S,
+                          r = Math.random() * 1.6 + 0.4;
+                    x.fillStyle = f.grain;
+                    x.globalAlpha = 0.10 + Math.random() * 0.18;
+                    x.beginPath(); x.arc(px, py, r, 0, 6.28); x.fill();
+                }
+                x.globalAlpha = 1;
+            } else {
+                /* solid — soft brushed sheen using c1/c2 bands */
+                const g2 = x.createLinearGradient(0, 0, S, 0);
+                g2.addColorStop(0, f.c1);
+                g2.addColorStop(0.5, f.c2);
+                g2.addColorStop(1, f.c1);
+                x.globalAlpha = 0.35;
+                x.fillStyle = g2;
+                x.fillRect(0, 0, S, S);
+                x.globalAlpha = 1;
             }
-            /* fine noise for material tooth (both wood & lacquer) */
+            /* fine noise for material tooth */
             const n = x.getImageData(0, 0, S, S),
                 d = n.data;
+            const noiseAmt = kind === "solid" ? 6 : kind === "concrete" ? 14 : 10;
             for (let i = 0; i < d.length; i += 4) {
-                const v = (Math.random() - .5) * (f.solid ? 6 : 11);
+                const v = (Math.random() - .5) * noiseAmt;
                 d[i] += v;
                 d[i + 1] += v;
                 d[i + 2] += v;
@@ -3457,6 +3485,7 @@
             x.globalAlpha = 1;
             return cv;
         }
+
 
         function makeStoneCanvas(st) {
             const S = 512,
@@ -3737,11 +3766,16 @@
             if (/super\s*matte|supermat|fenix|nanotech/.test(n))    return PANEL_PRESETS.super_matte;
             if (/matte|matt\b/.test(n))                              return PANEL_PRESETS.matte_lam;
             if (/textur|emboss|relief|stucco|woven/.test(n))         return PANEL_PRESETS.textured_syn;
+            /* honor explicit `kind` metadata before keyword guessing */
+            if (f.kind === "stone")    return PANEL_PRESETS.stone_look;
+            if (f.kind === "concrete") return PANEL_PRESETS.stone_look;
+            if (f.kind === "wood")     return PANEL_PRESETS.wood_satin;
             if (/stone|concrete|marble|terrazzo/.test(n))            return PANEL_PRESETS.stone_look;
             if (/oak|walnut|ash|oiled|raw|natural\s*wood/.test(n) && !f.solid) return PANEL_PRESETS.wood_oiled;
             if (!f.solid)                                            return PANEL_PRESETS.wood_satin;
             return PANEL_PRESETS.satin_lacquer;
         }
+
 
         function finishMats(f) {
             if (texCache[f.id])
