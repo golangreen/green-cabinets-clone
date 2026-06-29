@@ -1915,7 +1915,9 @@
             mRows: [1, 1],
             /* relative heights of each drawer/door row, top->bottom */
             vShelfW: 12,
-            mShelfW: 10 /* open-shelf column widths, inches */
+            mShelfW: 10, /* open-shelf column widths, inches */
+            vQty: 1,
+            mQty: 1
         };
 
         const activeType = () => state.type === "both" ? state.editing : state.type;
