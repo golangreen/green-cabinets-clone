@@ -2911,7 +2911,7 @@
             const key = (kind || "solid") + "|" + hex + "|" + c1 + "|" + c2 + "|" + grain;
             if (_procCache[key]) return _procCache[key];
             const W = 120, H = 80;
-            const esc = s => s.replace(/#/g, "%23");
+            const esc = s => s.replace(/#/g, "%23").replace(/'/g, "%27").replace(/"/g, "%22").replace(/</g, "%3C").replace(/>/g, "%3E");
             let body = "";
             if (kind === "wood") {
                 // long horizontal grain bands with knot-like darker streaks
