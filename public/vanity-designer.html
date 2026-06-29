@@ -3679,7 +3679,76 @@
             return t;
         }
 
-        function tunePhysical(m, p) {
+        /* Per-finish roughness map: maps the panel canvas's own luminance into
+           a narrow roughness window so gloss "breathes" along grain/vein lines
+           instead of being a uniform sheen. Window is chosen so stone reads
+           matte, satin wood reads silky, and gloss stays glossy. The result is
+           a single-channel PNG-encoded canvas (Three.js samples .g for
+           roughnessMap). */
+        function roughnessCanvasFrom(src, p) {
+            const S = 256;
+            const cv = document.createElement("canvas");
+            cv.width = cv.height = S;
+            const x = cv.getContext("2d", { willReadFrequently: true });
+            const base = p.roughness ?? .4;
+            /* tighter window for matte/stone, wider for satin wood */
+            const span = base > .55 ? .07 : base > .35 ? .14 : .05;
+            const lo = Math.max(0, base - span * .35);
+            const hi = Math.min(1, base + span * .65);
+            try {
+                x.drawImage(src, 0, 0, S, S);
+                const img = x.getImageData(0, 0, S, S);
+                const d = img.data;
+                for (let i = 0; i < d.length; i += 4) {
+                    const l = (d[i] * .299 + d[i + 1] * .587 + d[i + 2] * .114) / 255;
+                    /* darker valleys = glossier (oil/sheen pooling), highlights = more matte */
+                    const r = Math.round((hi - (hi - lo) * (1 - l)) * 255);
+                    d[i] = d[i + 1] = d[i + 2] = r;
+                    d[i + 3] = 255;
+                }
+                x.putImageData(img, 0, 0);
+            } catch {
+                x.fillStyle = `rgb(${Math.round(base * 255)},${Math.round(base * 255)},${Math.round(base * 255)})`;
+                x.fillRect(0, 0, S, S);
+            }
+            return cv;
+        }
+
+        function _hexToRGB(hex) {
+            const h = (hex || "").replace("#", "");
+            if (h.length !== 6) return { r: .8, g: .8, b: .8 };
+            return {
+                r: parseInt(h.slice(0, 2), 16) / 255,
+                g: parseInt(h.slice(2, 4), 16) / 255,
+                b: parseInt(h.slice(4, 6), 16) / 255
+            };
+        }
+        /* Mix the panel's own palette into the reflection tint so highlights
+           read like the material (warm walnut highlights vs cool stone
+           glints) instead of a generic white spec. Subtle — 18% influence
+           for stone, 26% for wood — keeps panels recognisable. */
+        function applyPaletteTint(m, f, p) {
+            const hex = f && (f.c2 || f.c1 || f.swatchHex || f.color);
+            if (!hex) return;
+            const c = _hexToRGB(hex);
+            const isWood = !f.solid && (f.kind === "wood" || !f.kind);
+            const isStone = f.kind === "stone" || f.kind === "concrete";
+            const mix = isStone ? .18 : isWood ? .26 : .14;
+            const blend = (v) => 1 - mix + v * mix;
+            if ('specularColor' in m && m.specularColor) {
+                m.specularColor.setRGB(blend(c.r), blend(c.g), blend(c.b));
+                if ('specularIntensity' in m)
+                    m.specularIntensity = isStone ? .55 : isWood ? .85 : 1.0;
+            }
+            if ('sheen' in m) {
+                m.sheen = p.sheen ?? (isWood ? .22 : isStone ? .08 : 0);
+                m.sheenRoughness = p.sheenRoughness ?? (isWood ? .75 : .9);
+                if (m.sheenColor)
+                    m.sheenColor.setRGB(blend(c.r), blend(c.g), blend(c.b));
+            }
+        }
+
+        function tunePhysical(m, p, f) {
             m.roughness = p.roughness;
             m.metalness = p.metalness || 0;
             if ('clearcoat' in m) m.clearcoat = p.clearcoat || 0;
@@ -3687,6 +3756,7 @@
             if ('reflectivity' in m) m.reflectivity = p.reflectivity ?? .55;
             m.envMap = ENV;
             m.envMapIntensity = p.envMapIntensity || 1;
+            if (f) applyPaletteTint(m, f, p);
             m.userData.preset = p;
             return m;
         }
