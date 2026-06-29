@@ -4531,6 +4531,7 @@
             const rows = [["Piece", typeName]];
             if (state.type !== "medicine") {
                 rows.push(["Vanity", `${vStyleObj().name.replace(/&amp;/g, "&")} · ${fracIn(state.vW)}W × ${fracIn(state.vH)}H × ${fracIn(state.vD)}D`]);
+                rows.push(["Vanity quantity", `${state.vQty}`]);
                 rows.push(["Sink", state.sinks === "sink2" && state.vW >= 48 ? "Double" : "Single"]);
             }
             if (state.type !== "vanity") {
@@ -4538,6 +4539,7 @@
                 if (state.mStyle === "framedshelf")
                     mdesc += ` · shelves ${state.shelfpos}`;
                 rows.push(["Medicine Cabinet", mdesc]);
+                rows.push(["Medicine cabinet quantity", `${state.mQty}`]);
                 rows.push(["Mount", state.mount === "surface" ? "Surface" : "Recessed"]);
             }
             rows.push(["Color", `${f.name}${f.code ? ` (${f.code})` : ""} · ${brandShort}`]);
