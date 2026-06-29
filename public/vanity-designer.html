@@ -437,6 +437,24 @@
                   <button data-edit="vanity" class="on">Styling: Vanity</button>
                   <button data-edit="medicine">Styling: Medicine Cabinet</button>
                 </div>
+                <div id="qtyWrap" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:12px">
+                  <div id="qtyVanityWrap" style="flex:1;min-width:140px">
+                    <div class="hint" style="margin-bottom:6px">How many vanities?</div>
+                    <div class="gc-numwrap">
+                      <button id="vQtyMinus" aria-label="Fewer vanities">−</button>
+                      <input type="text" id="vQtyIn" inputmode="numeric" value="1" style="width:48px;text-align:center">
+                      <button id="vQtyPlus" aria-label="More vanities">+</button>
+                    </div>
+                  </div>
+                  <div id="qtyMedicineWrap" style="flex:1;min-width:140px;display:none">
+                    <div class="hint" style="margin-bottom:6px">How many medicine cabinets?</div>
+                    <div class="gc-numwrap">
+                      <button id="mQtyMinus" aria-label="Fewer medicine cabinets">−</button>
+                      <input type="text" id="mQtyIn" inputmode="numeric" value="1" style="width:48px;text-align:center">
+                      <button id="mQtyPlus" aria-label="More medicine cabinets">+</button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="gc-panel gc-fade">
@@ -1897,7 +1915,9 @@
             mRows: [1, 1],
             /* relative heights of each drawer/door row, top->bottom */
             vShelfW: 12,
-            mShelfW: 10 /* open-shelf column widths, inches */
+            mShelfW: 10, /* open-shelf column widths, inches */
+            vQty: 1,
+            mQty: 1
         };
 
         const activeType = () => state.type === "both" ? state.editing : state.type;
@@ -4312,10 +4332,10 @@
         /* ---------- price ---------- */
         function billedInches() {
             if (state.type === "vanity")
-                return state.vW;
+                return state.vW * state.vQty;
             if (state.type === "medicine")
-                return state.mW;
-            return state.vW + state.mW;
+                return state.mW * state.mQty;
+            return state.vW * state.vQty + state.mW * state.mQty;
         }
         function extrasList() {
             const ex = [];
@@ -4495,8 +4515,8 @@
                 const ex = extrasTotal();
                 $("priceAmt").textContent = fmt(inches * p.rate + ex);
                 const base = state.type === "both"
-                ? `(${state.vW} + ${state.mW}) in × $${p.rate}/in`
-                : `${inches} in × $${p.rate}/in`;
+                ? `(${state.vW}×${state.vQty} + ${state.mW}×${state.mQty}) in × $${p.rate}/in`
+                : `${state.type === "vanity" ? state.vW : state.mW} in × ${state.type === "vanity" ? state.vQty : state.mQty} × $${p.rate}/in`;
                 $("priceSub").textContent = base + (ex ? ` + ${fmt(ex)} options` : "") + ` · ${p.label.split("—")[0].trim()}`;
                 $("ctaBtn").textContent = "Get this quote";
             }
@@ -4511,6 +4531,7 @@
             const rows = [["Piece", typeName]];
             if (state.type !== "medicine") {
                 rows.push(["Vanity", `${vStyleObj().name.replace(/&amp;/g, "&")} · ${fracIn(state.vW)}W × ${fracIn(state.vH)}H × ${fracIn(state.vD)}D`]);
+                rows.push(["Vanity quantity", `${state.vQty}`]);
                 rows.push(["Sink", state.sinks === "sink2" && state.vW >= 48 ? "Double" : "Single"]);
             }
             if (state.type !== "vanity") {
@@ -4518,6 +4539,7 @@
                 if (state.mStyle === "framedshelf")
                     mdesc += ` · shelves ${state.shelfpos}`;
                 rows.push(["Medicine Cabinet", mdesc]);
+                rows.push(["Medicine cabinet quantity", `${state.mQty}`]);
                 rows.push(["Mount", state.mount === "surface" ? "Surface" : "Recessed"]);
             }
             rows.push(["Color", `${f.name}${f.code ? ` (${f.code})` : ""} · ${brandShort}`]);
@@ -4775,8 +4797,28 @@
             state.type = b.dataset.type;
             if (state.type !== "both")
                 state.editing = state.type === "medicine" ? "medicine" : "vanity";
+            syncQtyUI();
             renderAll();
         });
+        function syncQtyUI() {
+            $("qtyVanityWrap").style.display = state.type === "medicine" ? "none" : "";
+            $("qtyMedicineWrap").style.display = state.type === "vanity" ? "none" : "";
+            $("vQtyIn").value = state.vQty;
+            $("mQtyIn").value = state.mQty;
+        }
+        function setQty(which, n) {
+            n = Math.max(1, Math.min(20, Math.floor(n) || 1));
+            if (which === "v") state.vQty = n; else state.mQty = n;
+            syncQtyUI();
+            renderPrice();
+        }
+        $("vQtyMinus").onclick = () => setQty("v", state.vQty - 1);
+        $("vQtyPlus").onclick = () => setQty("v", state.vQty + 1);
+        $("mQtyMinus").onclick = () => setQty("m", state.mQty - 1);
+        $("mQtyPlus").onclick = () => setQty("m", state.mQty + 1);
+        $("vQtyIn").addEventListener("change", e => setQty("v", +e.target.value));
+        $("mQtyIn").addEventListener("change", e => setQty("m", +e.target.value));
+        syncQtyUI();
         document.querySelectorAll("#segEdit button").forEach(b => b.onclick = () => {
             document.querySelectorAll("#segEdit button").forEach(x => x.classList.remove("on"));
             b.classList.add("on");
