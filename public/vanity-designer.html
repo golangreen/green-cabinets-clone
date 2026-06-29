@@ -4515,8 +4515,8 @@
                 const ex = extrasTotal();
                 $("priceAmt").textContent = fmt(inches * p.rate + ex);
                 const base = state.type === "both"
-                ? `(${state.vW} + ${state.mW}) in × $${p.rate}/in`
-                : `${inches} in × $${p.rate}/in`;
+                ? `(${state.vW}×${state.vQty} + ${state.mW}×${state.mQty}) in × $${p.rate}/in`
+                : `${state.type === "vanity" ? state.vW : state.mW} in × ${state.type === "vanity" ? state.vQty : state.mQty} × $${p.rate}/in`;
                 $("priceSub").textContent = base + (ex ? ` + ${fmt(ex)} options` : "") + ` · ${p.label.split("—")[0].trim()}`;
                 $("ctaBtn").textContent = "Get this quote";
             }
