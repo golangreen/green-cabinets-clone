@@ -379,6 +379,11 @@
                     height:70vh;min-height:200px}
           .gc-openbtn,.gc-finalbtn{font-size:10px;padding:5px 9px}
         }
+        /* Tablet landscape (e.g. iPad 1024×768): bottom-center hint would
+           collide with bottom-right action — hide hint to keep corners clear */
+        @media (min-width:901px) and (max-width:1180px) and (orientation:landscape){
+          .gc-3dhint,.gc-final-hint{display:none}
+        }
         /* comfortable touch targets on any coarse pointer */
         @media (pointer:coarse){
           .gc-ddrow{padding:13px 12px}
