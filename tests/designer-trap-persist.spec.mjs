@@ -34,13 +34,16 @@ for (const trap of TRAPS) {
   await page.waitForTimeout(250); // debounce save (120ms)
   assert.equal(await activeTrap(f), trap, `${trap}: chip didn't activate`);
 
-  // Capture both persistence signals
-  const url1 = page.url();
+  // Capture both persistence signals (URL lives on the iframe, same-origin)
+  const ifrUrl = await page.evaluate(() => {
+    const fr = document.querySelector('iframe[src*="vanity-designer.html"]');
+    return fr.contentWindow.location.href;
+  });
   const ls = await page.evaluate(() => {
     const fr = document.querySelector('iframe[src*="vanity-designer.html"]');
     return fr.contentWindow.localStorage.getItem("gc.designer.state.v1");
   });
-  assert(/\?s=/.test(url1), `${trap}: URL didn't get ?s=`);
+  assert(/\?s=/.test(ifrUrl), `${trap}: iframe URL didn't get ?s= (${ifrUrl})`);
   assert(ls && JSON.parse(ls).trap === trap, `${trap}: localStorage missing/wrong`);
 
   // 1. Reload — localStorage path
@@ -48,12 +51,14 @@ for (const trap of TRAPS) {
   f = await getFrame(page);
   assert.equal(await activeTrap(f), trap, `${trap}: lost after reload (localStorage)`);
 
-  // 2. Fresh context — URL share path (no localStorage)
+  // 2. Fresh context — URL share path (no localStorage). Load the iframe URL
+  //    directly; it's a same-origin static asset and self-hydrates from ?s=.
   const ctx2 = await browser.newContext({ viewport: { width: 1280, height: 1800 } });
   const page2 = await ctx2.newPage();
-  await page2.goto(url1, { waitUntil: "domcontentloaded" });
-  const f2 = await getFrame(page2);
-  assert.equal(await activeTrap(f2), trap, `${trap}: lost via URL share`);
+  await page2.goto(ifrUrl, { waitUntil: "domcontentloaded" });
+  await page2.waitForFunction(() => !!document.querySelector('[data-og="trap"].on'), null, { timeout: 5_000 });
+  const trapInShare = await page2.evaluate(() => document.querySelector('[data-og="trap"].on')?.dataset.ov);
+  assert.equal(trapInShare, trap, `${trap}: lost via URL share`);
   await ctx2.close();
 
   // Clear localStorage between traps so each test starts clean
