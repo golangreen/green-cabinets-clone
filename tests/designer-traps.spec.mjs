@@ -44,13 +44,9 @@ await f.waitForFunction(() => !!document.querySelector('[data-og="trap"]'), null
   timeout: 5_000,
 });
 
-// Open the bottom drawer so the plumbing block is visible in the capture.
-// (the designer animates drawer-open via the "Look inside" button)
-const peek = f.locator('button:has-text("Look inside")').first();
-if (await peek.count()) {
-  await peek.click().catch(() => {});
-  await page.waitForTimeout(900); // ease-in dolly
-}
+// Open drawers/doors so the plumbing block is visible.
+await f.locator("#animBtn").click();
+await page.waitForTimeout(2200); // ease-in dolly + drawer slide
 
 const canvas = f.locator("canvas").first();
 await canvas.waitFor({ state: "visible", timeout: 5_000 });
