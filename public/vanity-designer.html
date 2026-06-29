@@ -3857,25 +3857,28 @@
             const cv = makeWoodCanvas(f);
             const Mat = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
             const p = panelPresetFor(f);
-            const mk = (t, n) => {
+            const mk = (t, n, rough) => {
                 const m = new Mat({
                     map: t,
                     bumpMap: t,
                     bumpScale: p.bumpScale,
                     normalMap: n,
                     normalScale: new THREE.Vector2(p.normalScale || .08, p.normalScale || .08),
+                    roughnessMap: rough || null,
                     roughness: p.roughness,
                     metalness: p.metalness,
                     envMap: ENV,
                     envMapIntensity: p.envMapIntensity
                 });
-                return tunePhysical(m, p);
+                return tunePhysical(m, p, f);
             };
 
             const cvFlip = flipCanvas(cv);
+            const rA = materialTex(roughnessCanvasFrom(cv, p));
+            const rB = materialTex(roughnessCanvasFrom(cvFlip, p));
             const pair = {
-                a: mk(texFrom(cv), materialTex(reliefCanvasFrom(cv, p.normalStrength || 1.6))),
-                b: mk(texFrom(cvFlip), materialTex(reliefCanvasFrom(cvFlip, p.normalStrength || 1.6)))
+                a: mk(texFrom(cv), materialTex(reliefCanvasFrom(cv, p.normalStrength || 1.6)), rA),
+                b: mk(texFrom(cvFlip), materialTex(reliefCanvasFrom(cvFlip, p.normalStrength || 1.6)), rB)
             }; /* b = book-matched mirror */
             texCache[f.id] = pair;
             /* Fallback path used by BOTH the curated REAL_SWATCHES loader and
