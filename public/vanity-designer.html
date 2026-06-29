@@ -3260,48 +3260,52 @@
            Each preset drives env cubemap colours + three.js lights + tone
            exposure + envMapIntensity multiplier. Switching presets re-veneers
            every PBR material so roughness/clearcoat read correctly. */
+        /* Neutral, white-balanced presets so the rendered finish color
+           matches the swatch hex. Lights/env are kept near D65 to avoid
+           tinting the panel's true color; "morning" and "warm" keep a
+           subtle directional warmth without skewing midtones. */
         const LIGHTING_PRESETS = {
             morning: {
                 label: "Morning",
-                bg: 0xEFE6D2, exposure: 1.18, envMul: 1.10,
+                bg: 0xEDEAE4, exposure: 1.10, envMul: 1.05,
                 env: {
-                    px:["#FFE9C2","#E8C594", true], nx:["#F3DDB8","#C8AC7E", false],
-                    py:["#FFF6E1","#FFE2B6", true], ny:["#8A7E68","#6A5F4E", false],
-                    pz:["#FFEAC2","#E2C292", true], nz:["#E8D6B0","#C2A77C", false]
+                    px:["#F6EFE2","#D8CFBE", true], nx:["#EFE8DA","#CCC3B1", false],
+                    py:["#FFFDF6","#F0EADC", true], ny:["#8C857A","#6E6862", false],
+                    pz:["#F4EDDF","#D2C9B7", true], nz:["#EAE3D5","#C6BDAB", false]
                 },
-                hemi:  { sky:0xFFE7BC, ground:0x8E7F62, i:0.55 },
-                key:   { color:0xFFD79A, i:1.55, pos:[110, 90, 70] },
-                fill:  { color:0xE8D4B6, i:0.32, pos:[-70, 50, 60] },
-                rim:   { color:0xFFF0D2, i:0.30, pos:[0, 60, -90] }
+                hemi:  { sky:0xFFF5E2, ground:0x8A8378, i:0.50 },
+                key:   { color:0xFFEAC8, i:1.45, pos:[110, 90, 70] },
+                fill:  { color:0xEAE3D4, i:0.34, pos:[-70, 50, 60] },
+                rim:   { color:0xFFF6E4, i:0.30, pos:[0, 60, -90] }
             },
             overhead: {
                 label: "Overhead",
-                bg: 0xE7E1D5, exposure: 1.12, envMul: 1.00,
+                bg: 0xEBE8E2, exposure: 1.08, envMul: 1.00,
                 env: {
-                    px:["#EFE9DE","#C9C1B2", true], nx:["#E4DDD0","#BDB5A6", false],
-                    py:["#FFFFFF","#F2ECDE", true], ny:["#8A8276","#6E675C", false],
-                    pz:["#F0EADD","#CFC7B7", true], nz:["#E8E1D3","#C7BEAE", false]
+                    px:["#F1EDE5","#CFC8BB", true], nx:["#ECE6D9","#C6BFAF", false],
+                    py:["#FFFFFF","#F4EFE4", true], ny:["#8C857A","#6E675C", false],
+                    pz:["#F0ECE0","#CDC6B7", true], nz:["#EAE4D6","#C5BCAA", false]
                 },
-                hemi:  { sky:0xFFFBF2, ground:0x9A9486, i:0.42 },
-                key:   { color:0xFFF1DA, i:1.25, pos:[70, 130, 90] },
-                fill:  { color:0xDCE6F0, i:0.28, pos:[-80, 50, 70] },
-                rim:   { color:0xFFFFFF, i:0.25, pos:[0, 60, -90] }
+                hemi:  { sky:0xFFFBF2, ground:0x948D80, i:0.45 },
+                key:   { color:0xFFF6E6, i:1.30, pos:[70, 130, 90] },
+                fill:  { color:0xE6ECEF, i:0.30, pos:[-80, 50, 70] },
+                rim:   { color:0xFFFFFF, i:0.26, pos:[0, 60, -90] }
             },
             warm: {
                 label: "Warm",
-                bg: 0xE6D8C0, exposure: 1.05, envMul: 0.95,
+                bg: 0xE8E2D4, exposure: 1.04, envMul: 0.98,
                 env: {
-                    px:["#F4E2C2","#C9A874", true], nx:["#E8D2AC","#B8966A", false],
-                    py:["#FFE8C0","#F0CE96", true], ny:["#6E5F48","#52442F", false],
-                    pz:["#F2DDB6","#C9A06A", true], nz:["#E2C898","#A8825A", false]
+                    px:["#F1E7D2","#CDBE9F", true], nx:["#ECE0C8","#C4B597", false],
+                    py:["#FBEFD7","#EDDFBF", true], ny:["#776B57","#594E3E", false],
+                    pz:["#EFE4CC","#C9B795", false], nz:["#E6D9BC","#BCA982", false]
                 },
-                hemi:  { sky:0xFFE0AE, ground:0x6E5A40, i:0.40 },
-                key:   { color:0xFFC98A, i:1.35, pos:[60, 110, 80] },
-                fill:  { color:0xF0C68A, i:0.30, pos:[-70, 50, 60] },
-                rim:   { color:0xFFD7A0, i:0.32, pos:[0, 60, -90] }
+                hemi:  { sky:0xFFEAC2, ground:0x77674F, i:0.42 },
+                key:   { color:0xFFDDB2, i:1.30, pos:[60, 110, 80] },
+                fill:  { color:0xF1DCB8, i:0.32, pos:[-70, 50, 60] },
+                rim:   { color:0xFFE3BC, i:0.30, pos:[0, 60, -90] }
             }
         };
-        let CURRENT_LIGHTING = "warm";
+        let CURRENT_LIGHTING = "overhead";
 
         function makeEnv(presetId) {
             const p = LIGHTING_PRESETS[presetId || CURRENT_LIGHTING].env;
@@ -4422,6 +4426,28 @@
                 D = state.mD;
             const fr = 2.2,
                 t = 1.0;
+            /* wall contact shadow — parallels the vanity's floor blob so
+               both pieces read as physically grounded under the same key
+               light. Painted onto a plane just in front of the back wall. */
+            (function addMedWallShadow() {
+                const cv = document.createElement("canvas");
+                cv.width = cv.height = 128;
+                const cx = cv.getContext("2d");
+                const rg = cx.createRadialGradient(64, 64, 6, 64, 64, 62);
+                rg.addColorStop(0, "rgba(20,16,12,.42)");
+                rg.addColorStop(0.55, "rgba(20,16,12,.18)");
+                rg.addColorStop(1, "rgba(20,16,12,0)");
+                cx.fillStyle = rg;
+                cx.fillRect(0, 0, 128, 128);
+                const tex = new THREE.CanvasTexture(cv);
+                const plane = new THREE.Mesh(
+                    new THREE.PlaneGeometry(W + fr + 26, H + fr + 18),
+                    new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false })
+                );
+                plane.position.set(0, yMid - 1.5, zFace - D - 0.05);
+                plane.renderOrder = 0;
+                root.add(plane);
+            })();
             const interiorMat = new THREE.MeshStandardMaterial({
                 color: new THREE.Color(finishColor(curFinish())),
                 roughness: .85
