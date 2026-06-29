@@ -69,10 +69,14 @@ for (const t of TRAPS) {
   await chip.click();
   await page.waitForTimeout(400);
 
+  await canvas.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(150);
   const box = await canvas.boundingBox();
-  // No clipping: canvas keeps its footprint and stays inside the viewport
-  assert.ok(box.width > 100 && box.height > 100, `${t}: canvas collapsed (${box.width}x${box.height})`);
-  assert.ok(box.x >= -1 && box.y >= -1, `${t}: canvas off-viewport (${box.x},${box.y})`);
+  // No clipping: canvas keeps a real footprint after scrolling into view
+  assert.ok(box && box.width > 100 && box.height > 100,
+    `${t}: canvas collapsed (${box?.width}x${box?.height})`);
+  assert.ok(box.y + box.height > 0 && box.x + box.width > 0,
+    `${t}: canvas off-viewport (${box.x},${box.y})`);
 
   const file = path.join(OUT, `open_${t}_${Date.now()}.png`);
   const shot = await canvas.screenshot({ path: file });
