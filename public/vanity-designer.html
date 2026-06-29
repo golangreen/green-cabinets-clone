@@ -4614,6 +4614,16 @@
                             stub.rotation.x = Math.PI / 2;
                             stub.position.set(worldX + _trapR, trapY, zc - stubLen / 2);
                             root.add(stub);
+                            /* slip-nut rings at the two compression joints (drop↔trap, trap↔stub) */
+                            const nutH = _trapTube * 0.7;
+                            const nutR = _trapTube * 1.35;
+                            const nutA = new THREE.Mesh(new THREE.CylinderGeometry(nutR, nutR, nutH, 18), nutMat);
+                            nutA.position.set(worldX - _trapR, trapY + nutH * 0.4, zc);
+                            root.add(nutA);
+                            const nutB = new THREE.Mesh(new THREE.CylinderGeometry(nutR, nutR, nutH, 18), nutMat);
+                            nutB.rotation.x = Math.PI / 2;
+                            nutB.position.set(worldX + _trapR, trapY, zc - nutH * 0.4);
+                            root.add(nutB);
                         });
                     }
                     root.add(g);
