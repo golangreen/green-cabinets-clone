@@ -2744,6 +2744,57 @@
 
         const DEFAULT_PRICING = { label: "Custom finish", rate: 22, tag: "$22 / inch" };
         const pricingFor = brand => (brand && PRICING[brand]) ? PRICING[brand] : DEFAULT_PRICING;
+
+        /* ---------- persistence (localStorage + ?s= URL) ----------
+           Keeps every option — including trap (P/S/Bottle) — across reloads
+           and makes the configurator shareable via URL. */
+        const GC_PERSIST_KEY = "gc.designer.state.v1";
+        const GC_PERSIST_KEYS = [
+            "type","editing","vStyle","mStyle","vW","mW","finish","stone",
+            "vH","vD","mH","mD","sinks","mount","shelfpos","vshelf","vbottom",
+            "mbottom","wall","hardware","hwfinish","trap","vRows","mRows",
+            "vShelfW","mShelfW","vQty","mQty"
+        ];
+        function gcPickState() {
+            const o = {};
+            for (const k of GC_PERSIST_KEYS) if (state[k] !== undefined) o[k] = state[k];
+            return o;
+        }
+        function gcMerge(src) {
+            if (!src || typeof src !== "object") return;
+            for (const k of GC_PERSIST_KEYS) if (src[k] !== undefined) state[k] = src[k];
+        }
+        function gcLoadState() {
+            try {
+                const u = new URL(location.href);
+                const enc = u.searchParams.get("s");
+                if (enc) {
+                    const j = JSON.parse(decodeURIComponent(escape(atob(enc.replace(/-/g,"+").replace(/_/g,"/")))));
+                    gcMerge(j); return;
+                }
+            } catch (_) {}
+            try {
+                const raw = localStorage.getItem(GC_PERSIST_KEY);
+                if (raw) gcMerge(JSON.parse(raw));
+            } catch (_) {}
+        }
+        let _gcSaveT = 0;
+        function gcSaveState() {
+            clearTimeout(_gcSaveT);
+            _gcSaveT = setTimeout(() => {
+                try {
+                    const j = JSON.stringify(gcPickState());
+                    localStorage.setItem(GC_PERSIST_KEY, j);
+                    const enc = btoa(unescape(encodeURIComponent(j)))
+                        .replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+                    const u = new URL(location.href);
+                    if (u.searchParams.get("s") !== enc) {
+                        u.searchParams.set("s", enc);
+                        history.replaceState(null, "", u);
+                    }
+                } catch (_) {}
+            }, 120);
+        }
         const activeType = () => (state.type === "both" ? state.editing : state.type) === "medicine" ? "medicine" : "vanity";
         const curW = () => activeType() === "vanity" ? state.vW : state.mW;
         const vStyleObj = () => STYLES.vanity.find(s => s.id === state.vStyle) || STYLES.vanity[0];
