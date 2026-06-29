@@ -4797,6 +4797,31 @@
             state.type = b.dataset.type;
             if (state.type !== "both")
                 state.editing = state.type === "medicine" ? "medicine" : "vanity";
+            syncQtyUI();
+            renderAll();
+        });
+        function syncQtyUI() {
+            $("qtyVanityWrap").style.display = state.type === "medicine" ? "none" : "";
+            $("qtyMedicineWrap").style.display = state.type === "vanity" ? "none" : "";
+            $("vQtyIn").value = state.vQty;
+            $("mQtyIn").value = state.mQty;
+        }
+        function setQty(which, n) {
+            n = Math.max(1, Math.min(20, Math.floor(n) || 1));
+            if (which === "v") state.vQty = n; else state.mQty = n;
+            syncQtyUI();
+            renderPrice();
+        }
+        $("vQtyMinus").onclick = () => setQty("v", state.vQty - 1);
+        $("vQtyPlus").onclick = () => setQty("v", state.vQty + 1);
+        $("mQtyMinus").onclick = () => setQty("m", state.mQty - 1);
+        $("mQtyPlus").onclick = () => setQty("m", state.mQty + 1);
+        $("vQtyIn").addEventListener("change", e => setQty("v", +e.target.value));
+        $("mQtyIn").addEventListener("change", e => setQty("m", +e.target.value));
+        syncQtyUI();
+            state.type = b.dataset.type;
+            if (state.type !== "both")
+                state.editing = state.type === "medicine" ? "medicine" : "vanity";
             renderAll();
         });
         document.querySelectorAll("#segEdit button").forEach(b => b.onclick = () => {
