@@ -3779,7 +3779,7 @@
                     pair.b.normalMap = materialTex(reliefCanvasFrom(img, p.normalStrength || 1.6), { mirrorX: true });
                     pair.b.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.b.needsUpdate = true;
-
+                    if (typeof invalidatePanelMatCacheFor === "function") invalidatePanelMatCacheFor(f.id);
                 });
             }
             return pair;
