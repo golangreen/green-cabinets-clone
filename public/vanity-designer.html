@@ -2723,9 +2723,11 @@
             mQty: 1
         };
 
-        const activeType = () => state.type === "both" ? state.editing : state.type;
+        const DEFAULT_PRICING = { label: "Custom finish", rate: 22, tag: "$22 / inch" };
+        const pricingFor = brand => (brand && PRICING[brand]) ? PRICING[brand] : DEFAULT_PRICING;
+        const activeType = () => (state.type === "both" ? state.editing : state.type) === "medicine" ? "medicine" : "vanity";
         const curW = () => activeType() === "vanity" ? state.vW : state.mW;
-        const vStyleObj = () => STYLES.vanity.find(s => s.id === state.vStyle);
+        const vStyleObj = () => STYLES.vanity.find(s => s.id === state.vStyle) || STYLES.vanity[0];
         const curRows = () => activeType() === "vanity" ? state.vRows : state.mRows;
         const setCurRows = (a) => {
             if (activeType() === "vanity")
