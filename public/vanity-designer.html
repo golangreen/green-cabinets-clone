@@ -3766,11 +3766,16 @@
             if (/super\s*matte|supermat|fenix|nanotech/.test(n))    return PANEL_PRESETS.super_matte;
             if (/matte|matt\b/.test(n))                              return PANEL_PRESETS.matte_lam;
             if (/textur|emboss|relief|stucco|woven/.test(n))         return PANEL_PRESETS.textured_syn;
+            /* honor explicit `kind` metadata before keyword guessing */
+            if (f.kind === "stone")    return PANEL_PRESETS.stone_look;
+            if (f.kind === "concrete") return PANEL_PRESETS.stone_look;
+            if (f.kind === "wood")     return PANEL_PRESETS.wood_satin;
             if (/stone|concrete|marble|terrazzo/.test(n))            return PANEL_PRESETS.stone_look;
             if (/oak|walnut|ash|oiled|raw|natural\s*wood/.test(n) && !f.solid) return PANEL_PRESETS.wood_oiled;
             if (!f.solid)                                            return PANEL_PRESETS.wood_satin;
             return PANEL_PRESETS.satin_lacquer;
         }
+
 
         function finishMats(f) {
             if (texCache[f.id])
