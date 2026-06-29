@@ -3865,12 +3865,19 @@
                     normalMap: n,
                     normalScale: new THREE.Vector2(p.normalScale || .08, p.normalScale || .08),
                     roughnessMap: rough || null,
-                    roughness: p.roughness,
+                    /* Three multiplies roughnessMap.g * material.roughness, so
+                       when we bind a map whose values are already absolute
+                       targets we must set roughness=1 — otherwise the map's
+                       0.3–0.5 values get scaled by 0.38 and the panel reads
+                       as mirror gloss, blowing out under the HDR env. */
+                    roughness: rough ? 1.0 : p.roughness,
                     metalness: p.metalness,
                     envMap: ENV,
                     envMapIntensity: p.envMapIntensity
                 });
-                return tunePhysical(m, p, f);
+                const tuned = tunePhysical(m, p, f);
+                if (rough) tuned.roughness = 1.0; /* tunePhysical resets roughness; re-pin */
+                return tuned;
             };
 
             const cvFlip = flipCanvas(cv);
