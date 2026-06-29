@@ -4462,8 +4462,40 @@
             const _dropR = Math.max(0.45, Math.min(0.9, _basinW * 0.055));
             /* notch must clear the trap arc plus a small fab gap */
             const _notchHW = Math.max(2.4, _trapR + _trapTube + 0.6);
-            const pvcMat = new THREE.MeshStandardMaterial({ color: 0xEAEAEA, roughness: .35, metalness: .05 });
-            const trapMat = new THREE.MeshStandardMaterial({ color: 0xBFC3C6, roughness: .25, metalness: .9, envMap: ENV, envMapIntensity: 1.0 });
+            /* PVC drain: warm off-white, satin clearcoat for that injection-molded plastic look.
+               Picks up the room's tone via ENV so it sits in the same palette as the cabinet. */
+            const _hwTone = HW_COLORS[state.hwfinish] || HW_COLORS.nickel;
+            const pvcMat = new THREE.MeshPhysicalMaterial({
+                color: 0xEDEAE3,            /* warm white, not pure */
+                roughness: 0.42,
+                metalness: 0.0,
+                clearcoat: 0.55,
+                clearcoatRoughness: 0.32,
+                envMap: ENV,
+                envMapIntensity: 0.55,
+                sheen: 0.15,
+                sheenColor: new THREE.Color(0xF6F1E6)
+            });
+            /* P-trap: matches the hardware finish (chrome / brushed nickel / matte black / brass)
+               so it reads as a coordinated piece, not a random pipe. */
+            const _isMatte = state.hwfinish === "black";
+            const trapMat = new THREE.MeshPhysicalMaterial({
+                color: _hwTone,
+                roughness: _isMatte ? 0.55 : 0.18,
+                metalness: _isMatte ? 0.35 : 0.95,
+                clearcoat: _isMatte ? 0.0 : 0.7,
+                clearcoatRoughness: 0.08,
+                envMap: ENV,
+                envMapIntensity: _isMatte ? 0.6 : 1.35
+            });
+            /* slip-nut rings (compression couplings) — same metal as the trap, slightly rougher */
+            const nutMat = new THREE.MeshPhysicalMaterial({
+                color: _hwTone,
+                roughness: _isMatte ? 0.6 : 0.28,
+                metalness: _isMatte ? 0.4 : 0.92,
+                envMap: ENV,
+                envMapIntensity: _isMatte ? 0.5 : 1.1
+            });
             let mIdx = 0;
             regions.forEach(rg => {
                 const rw = rg[1] - rg[0];
