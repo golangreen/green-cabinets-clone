@@ -217,7 +217,18 @@
         .gc-opt{border:1.5px solid var(--line);border-radius:13px;background:#fff;padding:12px 10px;cursor:pointer;text-align:center;transition:all .22s var(--ease);font-family:inherit}
         .gc-opt.on{border-color:var(--brass);background:var(--brass-tint)}
         .gc-opt .t{font-size:13.5px;font-weight:600}
-        .gc-opt .d{font-size:11.5px;color:var(--ink-soft)}
+        .gc-opt .d{font-size:11.5px;color:var(--ink-soft);line-height:1.35}
+        .gc-opt.on .t{color:var(--brass-dark)}
+
+        /* grouped option sections (e.g. plumbing trap layout) */
+        .gc-optgroup{margin-top:14px}
+        .gc-optgroup:first-child{margin-top:0}
+        .gc-optgroup .glabel{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+        .gc-optgroup .glabel .tt{font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--ink);text-transform:capitalize}
+        .gc-optgroup .glabel .sub{font-size:11.5px;color:var(--brass-dark);font-weight:600}
+        .gc-optgroup.trap .gc-opt.on{box-shadow:0 0 0 2px rgba(92,118,80,.22)}
+        .gc-optgroup.trap .gc-opt .d{min-height:2.7em}
+        .gc-optgroup.trap .gc-opt.on .t:after{content:" ✓";font-size:12px}
 
         /* sticky price bar */
         .gc-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;justify-content:center;pointer-events:none}
@@ -2637,19 +2648,19 @@
                 id: "ptrap",
                 group: "trap",
                 t: "P-trap",
-                d: "Wall drain (standard)"
+                d: "Wall drain — the standard U-bend that drains into the wall. Most common in US bathrooms."
             },
             {
                 id: "strap",
                 group: "trap",
                 t: "S-trap",
-                d: "Floor drain"
+                d: "Floor drain — used when the drain line exits through the floor instead of the wall."
             },
             {
                 id: "bottle",
                 group: "trap",
                 t: "Bottle trap",
-                d: "Exposed European"
+                d: "Exposed European cylinder — sleek, easy to clean, and pairs with modern open vanities."
             }
             ],
             medicine: [
@@ -3273,11 +3284,39 @@
                 return
             }
             $("optPanel").style.display = "";
-            $("optGrid").innerHTML = opts.map(o => `
-    <button class="gc-opt ${state[o.group] === o.id ? 'on' : ''}" data-og="${o.group}" data-ov="${o.id}">
-      <div class="t">${o.t}</div><div class="d">${o.d}</div>
-    </button>`
-            ).join("");
+            const groupOrder = ["sinks","vshelf","vbottom","hardware","hwfinish","trap","mount","mbottom","shelfpos"];
+            const groupLabels = {
+                sinks: "Sink layout",
+                vshelf: "Open shelving",
+                vbottom: "Bottom style",
+                hardware: "Hardware style",
+                hwfinish: "Hardware finish",
+                trap: "Plumbing trap layout",
+                mount: "Mount type",
+                mbottom: "Cabinet bottom",
+                shelfpos: "Shelves position"
+            };
+            const groupHint = (g) => {
+                if (g !== "trap") return "";
+                const cur = OPTIONS.vanity.find(o => o.group === "trap" && o.id === state.trap);
+                return cur ? `Current: ${cur.t}` : "";
+            };
+            const byGroup = {};
+            opts.forEach(o => { (byGroup[o.group] ||= []).push(o); });
+            $("optGrid").innerHTML = groupOrder
+                .filter(g => byGroup[g])
+                .map(g => {
+                    const hint = groupHint(g);
+                    const chips = byGroup[g].map(o => `
+        <button class="gc-opt ${state[o.group] === o.id ? 'on' : ''}" data-og="${o.group}" data-ov="${o.id}" aria-pressed="${state[o.group] === o.id ? 'true' : 'false'}">
+          <div class="t">${o.t}</div><div class="d">${o.d}</div>
+        </button>`).join("");
+                    return `
+        <div class="gc-optgroup ${g}">
+          <div class="glabel"><span class="tt">${groupLabels[g] || g}</span>${hint ? `<span class="sub">${hint}</span>` : ""}</div>
+          <div class="gc-opts">${chips}</div>
+        </div>`;
+                }).join("");
             document.querySelectorAll("[data-og]").forEach(b => b.onclick = () => {
                 state[b.dataset.og] = b.dataset.ov;
                 renderAll();
