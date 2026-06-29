@@ -2937,6 +2937,7 @@
                 } else {
                     /* procedural finish that sampled a real avg colour: rebuild once to recentre tone */
                     delete texCache[cur.id];
+                    if (typeof invalidatePanelMatCacheFor === "function") invalidatePanelMatCacheFor(cur.id);
                     if (typeof buildScene === "function")
                         buildScene();
                 }
