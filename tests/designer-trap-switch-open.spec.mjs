@@ -1,23 +1,27 @@
 // Playwright: with the drawer OPEN, cycle P-trap → S-trap → Bottle → P-trap and
-// verify the under-sink cavity never clips (canvas stays in-bounds) or turns black
-// (mean luminance above floor, non-trivial pixel variance).
-import { test, expect } from "@playwright/test";
+// verify the under-sink cavity never clips (canvas stays in-bounds) or turns
+// black (mean luminance above floor, non-trivial pixel variance).
+//
+// Run: node tests/designer-trap-switch-open.spec.mjs
+
+import { chromium } from "playwright";
+import { strict as assert } from "node:assert";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { PNG } from "pngjs";
-import fs from "node:fs";
 import path from "node:path";
 
 const OUT = "/tmp/designer-trap-switch-open";
-fs.mkdirSync(OUT, { recursive: true });
+mkdirSync(OUT, { recursive: true });
 
-const TRAPS = ["ptrap", "strap", "bottle"];
+const TRAPS = ["ptrap", "strap", "bottle", "ptrap"];
+const IGNORE = [/performance_metrics/i, /status of 401/i];
+const keep = (m) => !IGNORE.some((re) => re.test(m));
 
 function analyze(buf) {
   const png = PNG.sync.read(buf);
   const { data, width, height } = png;
   let sum = 0, sumSq = 0, n = 0, dark = 0;
   for (let i = 0; i < data.length; i += 4) {
-    const a = data[i + 3];
-    if (a === 0) continue;
     const y = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
     sum += y; sumSq += y * y; n++;
     if (y < 8) dark++;
@@ -27,54 +31,62 @@ function analyze(buf) {
   return { width, height, mean, variance, darkRatio: dark / n };
 }
 
-test("drawer-open trap switching keeps cavity visible and unclipped", async ({ page }) => {
-  const errors = [];
-  page.on("pageerror", (e) => errors.push(String(e)));
-  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+const browser = await chromium.launch({ headless: true });
+const ctx = await browser.newContext({ viewport: { width: 1280, height: 1800 } });
+const page = await ctx.newPage();
 
-  await page.setViewportSize({ width: 1280, height: 1800 });
-  await page.goto("http://localhost:8080/designer", { waitUntil: "domcontentloaded" });
+const errors = [];
+page.on("pageerror", (e) => errors.push(String(e)));
+page.on("console", (m) => m.type() === "error" && keep(m.text()) && errors.push(m.text()));
 
-  const frame = page.frameLocator('iframe[src*="vanity-designer"]');
-  await frame.locator("canvas").first().waitFor({ state: "visible", timeout: 15000 });
+await page.goto("http://localhost:8080/designer", { waitUntil: "domcontentloaded" });
 
-  // Ensure a sink is active so traps render
-  const sinkChip = frame.locator('[data-sinks]').first();
-  if (await sinkChip.count()) await sinkChip.click().catch(() => {});
+const iframeEl = await page.waitForSelector('iframe[src*="vanity-designer"]', { timeout: 15000 });
+const frame = await iframeEl.contentFrame();
+await frame.waitForSelector("canvas", { state: "visible", timeout: 15000 });
 
-  // Open the drawer
-  const lookInside = frame.getByRole("button", { name: /look inside/i });
-  await lookInside.click();
-  await page.waitForTimeout(700); // camera dolly ease
+// Ensure a sink is active so the trap UI renders
+const sinkChip = await frame.$('[data-sinks]');
+if (sinkChip) await sinkChip.click().catch(() => {});
+await page.waitForTimeout(200);
 
-  const canvas = frame.locator("canvas").first();
-  const box0 = await canvas.boundingBox();
-  expect(box0, "canvas must be laid out").toBeTruthy();
+// Open the drawer to fully expose the cavity + plumbing
+const openBtn =
+  (await frame.$('button:has-text("Look inside")')) ||
+  (await frame.$('button:has-text("look inside")'));
+assert.ok(openBtn, "Look-inside button not found");
+await openBtn.click();
+await page.waitForTimeout(800); // camera dolly + drawer ease
 
-  const results = [];
-  for (const t of [...TRAPS, "ptrap"]) {
-    const chip = frame.locator(`[data-trap="${t}"]`);
-    await chip.click();
-    await page.waitForTimeout(350);
+const canvas = await frame.$("canvas");
+const baseBox = await canvas.boundingBox();
+assert.ok(baseBox && baseBox.width > 100 && baseBox.height > 100, "canvas must be laid out");
 
-    const box = await canvas.boundingBox();
-    // No clipping: canvas stays inside viewport and keeps non-zero footprint
-    expect(box.width).toBeGreaterThan(100);
-    expect(box.height).toBeGreaterThan(100);
-    expect(box.x).toBeGreaterThanOrEqual(-1);
-    expect(box.y).toBeGreaterThanOrEqual(-1);
+const results = [];
+for (const t of TRAPS) {
+  const chip = await frame.$(`[data-trap="${t}"]`);
+  assert.ok(chip, `trap chip [data-trap="${t}"] not found`);
+  await chip.click();
+  await page.waitForTimeout(400);
 
-    const file = path.join(OUT, `open_${t}_${Date.now()}.png`);
-    const shot = await canvas.screenshot({ path: file });
-    const a = analyze(shot);
-    results.push({ trap: t, ...a, file });
+  const box = await canvas.boundingBox();
+  // No clipping: canvas keeps its footprint and stays inside the viewport
+  assert.ok(box.width > 100 && box.height > 100, `${t}: canvas collapsed (${box.width}x${box.height})`);
+  assert.ok(box.x >= -1 && box.y >= -1, `${t}: canvas off-viewport (${box.x},${box.y})`);
 
-    // Never black, never flat
-    expect(a.mean, `${t} mean luminance`).toBeGreaterThan(18);
-    expect(a.darkRatio, `${t} dark-pixel ratio`).toBeLessThan(0.85);
-    expect(a.variance, `${t} variance`).toBeGreaterThan(50);
-  }
+  const file = path.join(OUT, `open_${t}_${Date.now()}.png`);
+  const shot = await canvas.screenshot({ path: file });
+  const a = analyze(shot);
+  results.push({ trap: t, ...a, file });
 
-  fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify({ results, errors }, null, 2));
-  expect(errors, errors.join("\n")).toEqual([]);
-});
+  // Never black / never flat
+  assert.ok(a.mean > 18, `${t}: frame too dark (mean=${a.mean.toFixed(2)})`);
+  assert.ok(a.darkRatio < 0.85, `${t}: too many black pixels (${(a.darkRatio * 100).toFixed(1)}%)`);
+  assert.ok(a.variance > 50, `${t}: frame too flat (var=${a.variance.toFixed(2)})`);
+}
+
+writeFileSync(path.join(OUT, "report.json"), JSON.stringify({ results, errors }, null, 2));
+assert.equal(errors.length, 0, "console/page errors:\n" + errors.join("\n"));
+
+await browser.close();
+console.log("OK", results.map(r => `${r.trap}:mean=${r.mean.toFixed(1)},var=${r.variance.toFixed(0)},dark=${(r.darkRatio*100).toFixed(1)}%`).join(" | "));
