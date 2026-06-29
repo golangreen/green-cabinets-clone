@@ -437,6 +437,24 @@
                   <button data-edit="vanity" class="on">Styling: Vanity</button>
                   <button data-edit="medicine">Styling: Medicine Cabinet</button>
                 </div>
+                <div id="qtyWrap" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:12px">
+                  <div id="qtyVanityWrap" style="flex:1;min-width:140px">
+                    <div class="hint" style="margin-bottom:6px">How many vanities?</div>
+                    <div class="gc-numwrap">
+                      <button id="vQtyMinus" aria-label="Fewer vanities">−</button>
+                      <input type="text" id="vQtyIn" inputmode="numeric" value="1" style="width:48px;text-align:center">
+                      <button id="vQtyPlus" aria-label="More vanities">+</button>
+                    </div>
+                  </div>
+                  <div id="qtyMedicineWrap" style="flex:1;min-width:140px;display:none">
+                    <div class="hint" style="margin-bottom:6px">How many medicine cabinets?</div>
+                    <div class="gc-numwrap">
+                      <button id="mQtyMinus" aria-label="Fewer medicine cabinets">−</button>
+                      <input type="text" id="mQtyIn" inputmode="numeric" value="1" style="width:48px;text-align:center">
+                      <button id="mQtyPlus" aria-label="More medicine cabinets">+</button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="gc-panel gc-fade">
