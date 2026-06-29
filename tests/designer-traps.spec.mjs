@@ -50,16 +50,24 @@ await page.waitForTimeout(2200); // ease-in dolly + drawer slide
 
 const canvas = f.locator("canvas").first();
 await canvas.waitFor({ state: "visible", timeout: 5_000 });
+const iframeEl = await page.locator('iframe[src*="vanity-designer.html"]').elementHandle();
+const iframeBox = await iframeEl.boundingBox();
 
 async function shot(name) {
-  // Force a render frame before capture (preserveDrawingBuffer: false in
-  // renderer means element.screenshot on the canvas reads a cleared buffer;
-  // a full page screenshot goes through the compositor and grabs the
-  // last-presented WebGL frame).
+  // Force a render frame before capture. element.screenshot on a WebGL canvas
+  // with preserveDrawingBuffer:false reads a cleared buffer, so we go through
+  // page.screenshot (compositor path) and clip to the canvas rect mapped into
+  // page coords via the iframe's bounding box.
   await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
-  const box = await canvas.boundingBox();
-  assert(box, "canvas has no bounding box");
-  const buf = await page.screenshot({ clip: box });
+  const local = await canvas.boundingBox();
+  assert(local, "canvas has no bounding box");
+  const clip = {
+    x: iframeBox.x + local.x,
+    y: iframeBox.y + local.y,
+    width: local.width,
+    height: local.height,
+  };
+  const buf = await page.screenshot({ clip });
   writeFileSync(`${OUT}/${name}.png`, buf);
   return PNG.sync.read(buf);
 }
