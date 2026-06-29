@@ -3284,11 +3284,39 @@
                 return
             }
             $("optPanel").style.display = "";
-            $("optGrid").innerHTML = opts.map(o => `
-    <button class="gc-opt ${state[o.group] === o.id ? 'on' : ''}" data-og="${o.group}" data-ov="${o.id}">
-      <div class="t">${o.t}</div><div class="d">${o.d}</div>
-    </button>`
-            ).join("");
+            const groupOrder = ["sinks","vshelf","vbottom","hardware","hwfinish","trap","mount","mbottom","shelfpos"];
+            const groupLabels = {
+                sinks: "Sink layout",
+                vshelf: "Open shelving",
+                vbottom: "Bottom style",
+                hardware: "Hardware style",
+                hwfinish: "Hardware finish",
+                trap: "Plumbing trap layout",
+                mount: "Mount type",
+                mbottom: "Cabinet bottom",
+                shelfpos: "Shelves position"
+            };
+            const groupHint = (g) => {
+                if (g !== "trap") return "";
+                const cur = OPTIONS.vanity.find(o => o.group === "trap" && o.id === state.trap);
+                return cur ? `Current: ${cur.t}` : "";
+            };
+            const byGroup = {};
+            opts.forEach(o => { (byGroup[o.group] ||= []).push(o); });
+            $("optGrid").innerHTML = groupOrder
+                .filter(g => byGroup[g])
+                .map(g => {
+                    const hint = groupHint(g);
+                    const chips = byGroup[g].map(o => `
+        <button class="gc-opt ${state[o.group] === o.id ? 'on' : ''}" data-og="${o.group}" data-ov="${o.id}" aria-pressed="${state[o.group] === o.id ? 'true' : 'false'}">
+          <div class="t">${o.t}</div><div class="d">${o.d}</div>
+        </button>`).join("");
+                    return `
+        <div class="gc-optgroup ${g}">
+          <div class="glabel"><span class="tt">${groupLabels[g] || g}</span>${hint ? `<span class="sub">${hint}</span>` : ""}</div>
+          <div class="gc-opts">${chips}</div>
+        </div>`;
+                }).join("");
             document.querySelectorAll("[data-og]").forEach(b => b.onclick = () => {
                 state[b.dataset.og] = b.dataset.ov;
                 renderAll();
