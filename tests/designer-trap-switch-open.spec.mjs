@@ -45,9 +45,9 @@ const iframeEl = await page.waitForSelector('iframe[src*="vanity-designer"]', { 
 const frame = await iframeEl.contentFrame();
 await frame.waitForSelector("canvas", { state: "visible", timeout: 15000 });
 
-// Ensure a sink is active so the trap UI renders
-const sinkChip = await frame.$('[data-sinks]');
-if (sinkChip) await sinkChip.click().catch(() => {});
+// Ensure we're on the vanity (sinks default to "sink1" → trap chips render)
+const vanityTab = await frame.$('button:has-text("Vanity")');
+if (vanityTab) await vanityTab.click().catch(() => {});
 await page.waitForTimeout(200);
 
 // Open the drawer to fully expose the cavity + plumbing
