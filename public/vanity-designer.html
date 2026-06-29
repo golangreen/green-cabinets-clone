@@ -3062,14 +3062,23 @@
             if (!u) return;
             const img = new Image();
             img.decoding = "async";
-            img.loading = "lazy";
+            /* NB: do NOT set img.loading="lazy" on a detached Image().
+               loading=lazy only fetches once the element is in the document
+               and intersecting the viewport. Off-DOM, the fetch never starts,
+               onload never fires, and the chip stays on its fallback color.
+               The IntersectionObserver in attachChipLazyLoader already gates
+               when this function runs, so eager-fetch here is correct. */
             img.onload = () => {
                 el.style.backgroundImage = `url('${u}')`;
                 el.style.backgroundSize = "cover";
                 el.style.backgroundPosition = "center";
+                el.removeAttribute("data-bg");
+            };
+            img.onerror = () => {
+                /* keep the fallback color; drop data-bg so we don't retry */
+                el.removeAttribute("data-bg");
             };
             img.src = u;
-            el.removeAttribute("data-bg");
         }
 
         let ddMode = "finish";
