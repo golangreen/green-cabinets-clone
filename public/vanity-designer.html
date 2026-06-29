@@ -266,9 +266,7 @@
         .gc-final{position:fixed;inset:0;z-index:200;background:rgba(24,21,16,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px}
         .gc-final.open{display:flex;animation:gcFade .25s ease}
         @keyframes gcFade{from{opacity:0}to{opacity:1}}
-        .gc-final-inner{background:#0f0f0f;border:1px solid rgba(92,118,80,.35);border-radius:24px;max-width:1100px;width:100%;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.6)}
-        .gc-final-close{position:absolute;top:34px;right:34px;z-index:3;width:40px;height:40px;border-radius:99px;border:1px solid rgba(255,255,255,.2);background:rgba(20,17,12,.6);color:#ECF1E8;font-size:17px;cursor:pointer;transition:all .2s}
-        .gc-final-close:hover{background:rgba(20,17,12,.9)}
+        .gc-final-inner{position:relative;background:#0f0f0f;border:1px solid rgba(92,118,80,.35);border-radius:24px;max-width:1100px;width:100%;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.6);--stage-pad-top:24px;--stage-pad:24px;--overlay-gap:16px}
         /* Fullscreen final stage uses larger insets; scope the overlay tokens. */
         .gc-final-stage{position:relative;background:linear-gradient(180deg,#e8e8e8,#dcdcdc);aspect-ratio:16/10;min-height:340px;overflow:hidden;--stage-pad:12px;--stage-pad-top:34px;--overlay-gap:16px}
         .gc-final-close{width:40px;height:40px;border-radius:99px;border:1px solid rgba(255,255,255,.2);background:rgba(20,17,12,.6);color:#ECF1E8;font-size:17px;cursor:pointer;transition:all .2s;z-index:6}
