@@ -4819,11 +4819,6 @@
         $("vQtyIn").addEventListener("change", e => setQty("v", +e.target.value));
         $("mQtyIn").addEventListener("change", e => setQty("m", +e.target.value));
         syncQtyUI();
-            state.type = b.dataset.type;
-            if (state.type !== "both")
-                state.editing = state.type === "medicine" ? "medicine" : "vanity";
-            renderAll();
-        });
         document.querySelectorAll("#segEdit button").forEach(b => b.onclick = () => {
             document.querySelectorAll("#segEdit button").forEach(x => x.classList.remove("on"));
             b.classList.add("on");
