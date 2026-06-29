@@ -60,14 +60,19 @@ async function shot(name) {
   // with preserveDrawingBuffer:false reads a cleared buffer, so we go through
   // page.screenshot (compositor path) and clip to the canvas rect mapped into
   // page coords via the iframe's bounding box.
+  await canvas.scrollIntoViewIfNeeded();
+  iframeBox = await iframeEl.boundingBox();
   await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
   const local = await canvas.boundingBox();
   assert(local, "canvas has no bounding box");
+  const vp = page.viewportSize();
+  const x = Math.max(0, iframeBox.x + local.x);
+  const y = Math.max(0, iframeBox.y + local.y);
   const clip = {
-    x: iframeBox.x + local.x,
-    y: iframeBox.y + local.y,
-    width: local.width,
-    height: local.height,
+    x,
+    y,
+    width: Math.min(local.width, vp.width - x),
+    height: Math.min(local.height, vp.height - y),
   };
   const buf = await page.screenshot({ clip });
   writeFileSync(`${OUT}/${name}.png`, buf);
