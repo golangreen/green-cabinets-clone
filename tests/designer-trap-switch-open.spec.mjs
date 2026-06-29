@@ -64,7 +64,7 @@ assert.ok(baseBox && baseBox.width > 100 && baseBox.height > 100, "canvas must b
 
 const results = [];
 for (const t of TRAPS) {
-  const chip = await frame.$(`[data-trap="${t}"]`);
+  const chip = await frame.$(`[data-og="trap"][data-ov="${t}"]`);
   assert.ok(chip, `trap chip [data-trap="${t}"] not found`);
   await chip.click();
   await page.waitForTimeout(400);
