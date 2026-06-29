@@ -3740,10 +3740,15 @@
                 if ('specularIntensity' in m)
                     m.specularIntensity = isStone ? .55 : isWood ? .85 : 1.0;
             }
-            if ('sheen' in m) {
+            /* Three r128 exposes `sheen` as a legacy vector/color-like physical
+               uniform, not the newer numeric intensity. Assigning a number here
+               makes WebGL call uniform3fv(number), which blanks the renderer on
+               iPhone/Safari/headless. Only use the modern sheen API when it is
+               actually numeric; otherwise leave the legacy uniform untouched. */
+            if ('sheen' in m && typeof m.sheen === "number") {
                 m.sheen = p.sheen ?? (isWood ? .22 : isStone ? .08 : 0);
-                m.sheenRoughness = p.sheenRoughness ?? (isWood ? .75 : .9);
-                if (m.sheenColor)
+                if ('sheenRoughness' in m) m.sheenRoughness = p.sheenRoughness ?? (isWood ? .75 : .9);
+                if (m.sheenColor && typeof m.sheenColor.setRGB === "function")
                     m.sheenColor.setRGB(blend(c.r), blend(c.g), blend(c.b));
             }
         }
