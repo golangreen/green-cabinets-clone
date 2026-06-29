@@ -2937,6 +2937,7 @@
                 } else {
                     /* procedural finish that sampled a real avg colour: rebuild once to recentre tone */
                     delete texCache[cur.id];
+                    if (typeof invalidatePanelMatCacheFor === "function") invalidatePanelMatCacheFor(cur.id);
                     if (typeof buildScene === "function")
                         buildScene();
                 }
@@ -3740,6 +3741,7 @@
                     pair.b.needsUpdate = true;
                     pair.b.realScan = true;
 
+                    if (typeof invalidatePanelMatCacheFor === "function") invalidatePanelMatCacheFor(f.id);
                     if (window.__gcTouch)
                         window.__gcTouch();
                 };
@@ -3777,7 +3779,7 @@
                     pair.b.normalMap = materialTex(reliefCanvasFrom(img, p.normalStrength || 1.6), { mirrorX: true });
                     pair.b.normalScale = new THREE.Vector2(p.normalScale || .08, p.normalScale || .08);
                     pair.b.needsUpdate = true;
-
+                    if (typeof invalidatePanelMatCacheFor === "function") invalidatePanelMatCacheFor(f.id);
                 });
             }
             return pair;
@@ -3787,10 +3789,17 @@
         /* Real-world UV: wrap a finish onto a panel of (wIn x hIn) inches with grain
            running vertically, at the correct physical scale. Tile photo = 24" square. */
         const TILE_IN = 24;
+        const panelMatCache = new Map(); /* key: id|wIn|hIn|mirror — caps avoid leaks across many configs */
+        const PANEL_MAT_CACHE_MAX = 400;
         function panelMat(f, wIn, hIn, mirror) {
+            const key = `${f.id}|${Math.round(wIn*4)}|${Math.round(hIn*4)}|${mirror?1:0}`;
+            const cached = panelMatCache.get(key);
+            if (cached) return cached;
             const base = mirror ? finishMats(f).b : finishMats(f).a;
-            if (!base.map)
+            if (!base.map) {
+                panelMatCache.set(key, base);
                 return base; /* procedural fallback: leave as-is */
+            }
             const m = base.clone();
             const t = base.map.clone();
             t.needsUpdate = true;
@@ -3798,12 +3807,10 @@
             t.anisotropy = base.map.anisotropy || 8;
             if (THREE.sRGBEncoding !== undefined)
                 t.encoding = base.map.encoding;
-            /* repeat = how many 24" tiles span this panel; clamp so tiny drawers still show grain */
             t.repeat.set(Math.max(wIn / TILE_IN, .35), Math.max(hIn / TILE_IN, .5));
             if (mirror) {
                 t.repeat.x *= -1;
-            } /* book-match flip */
-            /* random vertical offset per panel so adjacent fronts aren't identical */
+            }
             t.offset.set(mirror ? 1 : 0, Math.random() * 0.4);
             m.map = t;
             if (base.bumpMap) {
@@ -3825,7 +3832,37 @@
                 m.normalMap = n;
             }
             m.needsUpdate = true;
+            if (panelMatCache.size >= PANEL_MAT_CACHE_MAX) {
+                /* LRU-ish: drop oldest 25% of clones and dispose their cloned maps */
+                const drop = Math.floor(PANEL_MAT_CACHE_MAX * 0.25);
+                let i = 0;
+                for (const [k, v] of panelMatCache) {
+                    if (i++ >= drop) break;
+                    if (v && v !== finishMats(f).a && v !== finishMats(f).b) {
+                        v.map && v.map.dispose && v.map.dispose();
+                        v.bumpMap && v.bumpMap.dispose && v.bumpMap.dispose();
+                        v.normalMap && v.normalMap.dispose && v.normalMap.dispose();
+                        v.dispose && v.dispose();
+                    }
+                    panelMatCache.delete(k);
+                }
+            }
+            panelMatCache.set(key, m);
             return m;
+        }
+        /* When a real swatch image finishes loading, invalidate cached panel
+           materials for that finish so the scene picks up the upgraded texture. */
+        function invalidatePanelMatCacheFor(finishId) {
+            for (const k of [...panelMatCache.keys()]) {
+                if (k.startsWith(finishId + "|")) {
+                    const v = panelMatCache.get(k);
+                    v && v.map && v.map.dispose && v.map.dispose();
+                    v && v.bumpMap && v.bumpMap.dispose && v.bumpMap.dispose();
+                    v && v.normalMap && v.normalMap.dispose && v.normalMap.dispose();
+                    v && v.dispose && v.dispose();
+                    panelMatCache.delete(k);
+                }
+            }
         }
         /* real colour if we have it, else the hand-tuned hex */
         const finishColor = f => realAvg[f.id] || f.c2 || f.c1 || "#C9A063";
