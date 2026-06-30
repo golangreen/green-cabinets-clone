@@ -6072,6 +6072,39 @@
             if (state.type !== "medicine") {
                 const st = curStone();
                 rows.push(["Countertop", `${st.name}${st.code ? ` (${st.code})` : ""} — quoted separately`]);
+                /* U-shaped drawer plumbing cutout — matches the 3D geometry exactly so
+                   the shop can build the drawer box to the right notch around the trap. */
+                const _nR = state.vRows.length;
+                const _innerH = frontUsableInches();
+                const _usableH = Math.max(_innerH - 0.45 * (_nR + 1), 0);
+                const _fr = rowFractions(state.vRows);
+                const _topRowH = _usableH * (_fr[0] || 0);
+                const _bh = Math.max(_topRowH * 0.55, 2.5);
+                const _bd = Math.max(state.vD - 5, 4);
+                const _frontStripD = Math.min(3.5, _bd * 0.35);
+                const _notchDepth = _bd - _frontStripD;
+                const _basinW = Math.min(16, state.vW * 0.36);
+                const _trapTube = Math.max(0.42, Math.min(0.85, _basinW * 0.045));
+                const _trapR = Math.max(0.85, Math.min(1.6, _basinW * 0.11));
+                const _notchHW = Math.max(2.4, _trapR + _trapTube + 0.6);
+                const _notchW = 2 * _notchHW;
+                const _two = state.sinks === "sink2" && state.vW >= 40;
+                const _sinkX = _two
+                    ? [state.vW / 2 - state.vW * 0.24, state.vW / 2 + state.vW * 0.24]
+                    : [state.vW / 2];
+                const _cutCount = _sinkX.length;
+                rows.push([
+                    "Top drawer U-cut",
+                    `${_cutCount}× notch · ${fracIn(_notchW)}W × ${fracIn(_notchDepth)}D × ${fracIn(_bh)}H · leaves ${fracIn(_frontStripD)} solid front strip · cut from drawer back`
+                ]);
+                rows.push([
+                    "Sink centerline(s) from left",
+                    _sinkX.map(x => fracIn(x)).join(" · ") + ` (drawer box depth ${fracIn(_bd)})`
+                ]);
+                rows.push([
+                    "Drain / trap clearance",
+                    `${fracIn(_basinW)} basin Ø reference · trap radius ${fracIn(_trapR)} + tube Ø ${fracIn(_trapTube * 2)} (${state.trap === "strap" ? "S-trap" : state.trap === "bottle" ? "Bottle trap" : "P-trap"})`
+                ]);
             }
             extrasList().forEach(e => rows.push([e[0], "+" + fmt(e[1])]));
             const inches = billedInches();
