@@ -60,9 +60,13 @@ serve(async (req) => {
 
     const email = emailRaw && isEmail(emailRaw) ? emailRaw : "";
 
-    const attachments: Array<{ filename: string; content: string }> = [];
-    if (image instanceof File && image.size > 0) {
-      const buf = new Uint8Array(await image.arrayBuffer());
+    const attachments: Array<{ filename: string; content: string; content_id?: string }> = [];
+    const inlineCids: Record<string, string> = {};
+
+    async function addFile(field: string, filename: string, cid?: string) {
+      const f = form.get(field);
+      if (!(f instanceof File) || f.size === 0) return;
+      const buf = new Uint8Array(await f.arrayBuffer());
       let binary = "";
       const chunk = 0x8000;
       for (let i = 0; i < buf.length; i += chunk) {
@@ -71,18 +75,36 @@ serve(async (req) => {
           Array.from(buf.subarray(i, i + chunk)),
         );
       }
-      attachments.push({
-        filename: "green-cabinets-design.png",
+      const att: { filename: string; content: string; content_id?: string } = {
+        filename,
         content: btoa(binary),
-      });
+      };
+      if (cid) {
+        att.content_id = cid;
+        inlineCids[field] = cid;
+      }
+      attachments.push(att);
     }
 
+    await addFile("design_image", "green-cabinets-design.png", "design@gc");
+    await addFile("ucut_plan", "ucut-plan-view.png", "ucutplan@gc");
+    await addFile("ucut_trap", "ucut-trap-side.png", "ucuttrap@gc");
+
+    const inlineImg = (cid?: string, alt = "") =>
+      cid
+        ? `<img src="cid:${cid}" alt="${escapeHtml(alt)}" style="max-width:100%;border:1px solid #ddd;border-radius:6px;margin:8px 0"/>`
+        : "";
+
     const html = `
-      <div style="font-family:Arial,sans-serif;color:#222;line-height:1.5">
+      <div style="font-family:Arial,sans-serif;color:#222;line-height:1.5;max-width:720px">
         ${name ? `<p><strong>From:</strong> ${escapeHtml(name)}</p>` : ""}
         ${email ? `<p><strong>Email:</strong> ${escapeHtml(email)}</p>` : ""}
-        <h3>Quote</h3>
-        <pre style="white-space:pre-wrap;font-family:inherit;background:#f6f6f6;padding:12px;border-radius:6px">${escapeHtml(quote)}</pre>
+        <h3 style="margin-top:18px">Quote &amp; Build Measurements</h3>
+        <pre style="white-space:pre-wrap;font-family:inherit;background:#f6f6f6;padding:12px;border-radius:6px;font-size:13px">${escapeHtml(quote)}</pre>
+        ${inlineCids.design_image ? `<h3 style="margin-top:22px">Design preview</h3>${inlineImg(inlineCids.design_image, "3D design preview")}` : ""}
+        ${inlineCids.ucut_plan || inlineCids.ucut_trap ? `<h3 style="margin-top:22px">U-cut shop drawing</h3>` : ""}
+        ${inlineCids.ucut_plan ? `<p style="margin:6px 0"><strong>Plan view (looking down)</strong> — notch W×D and sink centerlines from left edge.</p>${inlineImg(inlineCids.ucut_plan, "U-cut plan view")}` : ""}
+        ${inlineCids.ucut_trap ? `<p style="margin:6px 0"><strong>Trap side view</strong> — tube Ø and trap radius.</p>${inlineImg(inlineCids.ucut_trap, "Trap side view")}` : ""}
       </div>
     `;
 
