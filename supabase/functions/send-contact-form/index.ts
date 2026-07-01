@@ -136,21 +136,21 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({
         from: "Green Cabinets Contact <orders@greencabinetsny.com>",
         to: ["orders@greencabinetsny.com"],
-        subject: `New Contact Form Submission from ${formData.name}`,
+        subject: `New Contact Form Submission from ${escapeHtml(formData.name)}`,
         html: `
           <h2>New Contact Form Submission</h2>
           
           <h3>Customer Information</h3>
-          <p><strong>Name:</strong> ${formData.name}</p>
-          <p><strong>Email:</strong> ${formData.email}</p>
-          ${formData.phone ? `<p><strong>Phone:</strong> ${formData.phone}</p>` : ''}
-          ${formData.projectType ? `<p><strong>Project Type:</strong> ${formData.projectType}</p>` : ''}
+          <p><strong>Name:</strong> ${escapeHtml(formData.name)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(formData.email)}</p>
+          ${formData.phone ? `<p><strong>Phone:</strong> ${escapeHtml(formData.phone)}</p>` : ''}
+          ${formData.projectType ? `<p><strong>Project Type:</strong> ${escapeHtml(formData.projectType)}</p>` : ''}
           
           <h3>Message</h3>
-          <p>${formData.message.replace(/\n/g, '<br>')}</p>
+          <p>${escapeHtml(formData.message).replace(/\n/g, '<br>')}</p>
           
           <p style="margin-top: 30px; color: #666;">
-            Reply to ${formData.email} to contact the customer directly.
+            Reply to ${escapeHtml(formData.email)} to contact the customer directly.
           </p>
         `,
       }),
