@@ -4,6 +4,10 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
+const escapeHtml = (s: unknown): string =>
+  String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+
+
 const quoteRequestSchema = z.object({
   customerName: z.string().trim().min(1).max(100),
   customerEmail: z.string().trim().email().max(255),
