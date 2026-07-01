@@ -81,7 +81,7 @@ const About = () => (
           <div className="grid md:grid-cols-3 gap-6 mb-16">
             <div className="p-6 border border-border rounded-lg">
               <Hammer className="h-6 w-6 text-accent-foreground mb-3" />
-              <h3 className="font-semibold text-lg mb-1">Built in Brooklyn</h3>
+              <h2 className="font-semibold text-lg mb-1">Built in Brooklyn</h2>
               <p className="text-sm text-muted-foreground">
                 Every cabinet is milled, sanded, and sprayed in our Bushwick shop. You're welcome
                 to visit while yours is in raw wood.
@@ -89,7 +89,7 @@ const About = () => (
             </div>
             <div className="p-6 border border-border rounded-lg">
               <Award className="h-6 w-6 text-accent-foreground mb-3" />
-              <h3 className="font-semibold text-lg mb-1">15+ years</h3>
+              <h2 className="font-semibold text-lg mb-1">15+ years</h2>
               <p className="text-sm text-muted-foreground">
                 Founded in 2009. Hundreds of NYC kitchens, vanities, and built-ins shipped across
                 the five boroughs.
@@ -97,7 +97,7 @@ const About = () => (
             </div>
             <div className="p-6 border border-border rounded-lg">
               <MapPin className="h-6 w-6 text-accent-foreground mb-3" />
-              <h3 className="font-semibold text-lg mb-1">All five boroughs</h3>
+              <h2 className="font-semibold text-lg mb-1">All five boroughs</h2>
               <p className="text-sm text-muted-foreground">
                 Brooklyn, Manhattan, Queens, the Bronx, and Staten Island — brownstones, lofts,
                 co-ops, and new construction.
