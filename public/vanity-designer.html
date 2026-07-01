@@ -122,6 +122,8 @@
         .gc-layrow .rin::-webkit-outer-spin-button,.gc-layrow .rin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
         .gc-layrow .del{flex-shrink:0;width:30px;height:30px;border:0;background:transparent;color:var(--ink-soft);font-size:17px;cursor:pointer;border-radius:8px}
         .gc-layrow .del:hover{background:rgba(0,0,0,.06);color:#b4453a}
+        .gc-kindbtn{flex-shrink:0;height:30px;padding:0 10px;border:1px solid var(--line);background:#f0f0f0;color:var(--brass-dark);border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.02em;cursor:pointer;font-family:inherit;transition:all .18s;min-width:60px}
+        .gc-kindbtn:hover:not(:disabled){border-color:var(--brass);background:#fff}
         .gc-layadd{display:flex;gap:8px}
         .gc-laybtn{flex:1;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px;font-size:13.5px;font-weight:600;color:var(--brass-dark);cursor:pointer;font-family:inherit;transition:all .2s}
         .gc-laybtn:hover{border-color:var(--brass)}
@@ -2754,6 +2756,7 @@
             hwfinish: "brass",
             trap: "ptrap",
             vRows: [1, 1],
+            vRowsKind: ["drawer", "drawer"],
             mRows: [1, 1],
             /* relative heights of each drawer/door row, top->bottom */
             vShelfW: 12,
@@ -2772,7 +2775,7 @@
         const GC_PERSIST_KEYS = [
             "type","editing","vStyle","mStyle","vW","mW","finish","stone",
             "vH","vD","mH","mD","sinks","mount","shelfpos","vshelf","vbottom",
-            "mbottom","wall","hardware","hwfinish","trap","vRows","mRows",
+            "mbottom","wall","hardware","hwfinish","trap","vRows","vRowsKind","mRows",
             "vShelfW","mShelfW","vQty","mQty"
         ];
         function gcPickState() {
@@ -2899,6 +2902,11 @@
             }
             if (!Array.isArray(state.vRows) || !state.vRows.length) state.vRows = [1, 1];
             if (!Array.isArray(state.mRows) || !state.mRows.length) state.mRows = [1, 1];
+            /* keep vRowsKind in lockstep with vRows; default new/missing rows to "drawer" */
+            if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
+            state.vRowsKind = state.vRows.map((_, i) =>
+                state.vRowsKind[i] === "door" ? "door" : "drawer"
+            );
             state.vQty = Math.min(20, Math.max(1, Math.floor(+state.vQty) || 1));
             state.mQty = Math.min(20, Math.max(1, Math.floor(+state.mQty) || 1));
         }
@@ -4629,6 +4637,56 @@
                     yCursor -= fh + gap;
                     const mirror = (mIdx + rI) % 2 === 1;
                     const cx = (rg[0] + rg[1]) / 2;
+
+                    /* ---- door row branch (hinged fronts + interior shelf) ----
+                       If this row is set to "door" AND no sink sits above it,
+                       build hinged door(s) instead of a drawer box. Sink rows
+                       are always drawers so the U-cut + trap stay valid. */
+                    {
+                        const edgeBufDoor = _notchHW + 0.8;
+                        const sinksHere = (rI === 0)
+                            ? _fxs.filter(fx => fx >= cx - fw / 2 + edgeBufDoor && fx <= cx + fw / 2 - edgeBufDoor)
+                            : [];
+                        const kind = (state.vRowsKind && state.vRowsKind[rI]) || "drawer";
+                        if (kind === "door" && sinksHere.length === 0 && fw >= 8) {
+                            const twoDoors = fw >= 22;
+                            const gapD = 0.18;
+                            const dwEach = twoDoors ? (fw - gapD) / 2 : fw;
+                            const hwM = metalMat();
+                            const makeDoor = (hingeX, dir, dw) => {
+                                const gg = new THREE.Group();
+                                gg.position.set(hingeX, cy, D / 2 - 0.5);
+                                const dFront = mk(dw, fh, 1, panelMat(f, dw, fh, mirror));
+                                dFront.position.set(dir * dw / 2, 0, 0.5);
+                                gg.add(dFront);
+                                const pullLen = Math.min(dw * 0.5, 5);
+                                const pull = mk(pullLen, 0.35, 0.55, hwM);
+                                pull.position.set(dir * (dw - 1.4), 0, 1.05);
+                                gg.add(pull);
+                                root.add(gg);
+                                animParts.push({ g: gg, type: "hinge", rot: -dir * 1.15 });
+                            };
+                            if (twoDoors) {
+                                makeDoor(cx - fw / 2, 1, dwEach);
+                                makeDoor(cx + fw / 2, -1, dwEach);
+                            } else {
+                                makeDoor(cx - fw / 2, 1, dwEach);
+                            }
+                            /* interior back + one shelf so the cavity reads correctly when open */
+                            const bd2 = Math.max(D - 4, 4);
+                            const zcBack = D / 2 - 1.5 - bd2 / 2;
+                            const backP = mk(fw - 1, Math.max(fh - 1, 1), 0.4, wm.a);
+                            backP.position.set(cx, cy, zcBack - bd2 / 2 + 0.2);
+                            root.add(backP);
+                            if (fh >= 10) {
+                                const shelf = mk(fw - 1.6, 0.5, bd2 - 0.6, wm.a);
+                                shelf.position.set(cx, cy, zcBack);
+                                root.add(shelf);
+                            }
+                            continue;
+                        }
+                    }
+
                     const g = new THREE.Group();
                     g.position.set(cx, cy, 0);
                     const front = mk(fw, fh, 1, panelMat(f, fw, fh, mirror));
@@ -5931,26 +5989,32 @@
             const totalH = frontUsableInches();
             $("layoutHint").textContent = `${at === "vanity" ? "Vanity" : "Cabinet"} \u00b7 ${fmtMeasure(totalH)} of fronts`;
             const rowMax = (totalH - 2 * (rows.length - 1)).toFixed(1); /* max one row can take, leaving 2" min for others */
-            $("layRows").innerHTML = rows.map((v, i) => `
+            const isVanity = at === "vanity";
+            const kinds = state.vRowsKind || [];
+            $("layRows").innerHTML = rows.map((v, i) => {
+                const kind = kinds[i] === "door" ? "door" : "drawer";
+                const sinkLocked = isVanity && i === 0; /* top row sits under sink → drawer only */
+                const kindBtn = isVanity ? `
+        <button class="gc-kindbtn" data-lr="kind" data-i="${i}"
+                title="${sinkLocked ? "Top row is under the sink — must be a drawer" : "Toggle drawer / door"}"
+                ${sinkLocked ? "disabled style='opacity:.45;cursor:not-allowed'" : ""}>
+          ${sinkLocked ? "Drawer" : (kind === "door" ? "Door" : "Drawer")}
+        </button>` : "";
+                return `
     <div class="gc-layrow">
-      <div class="bar" style="flex-grow:${
-            fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
+      <div class="bar" style="flex-grow:${fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
       <div class="rowctl">
-        <input type="range" class="rslide" data-i="${
-            i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
+        <input type="range" class="rslide" data-i="${i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
                style="--fill:${((Math.min(inch[i], rowMax) - 2) / (Math.max(rowMax - 2, 0.1)) * 100).toFixed(0)}%">
         <div class="gc-numwrap">
-          <button data-lr="dn" data-i="${
-            i}" aria-label="Shorter">\u2212</button>
+          <button data-lr="dn" data-i="${i}" aria-label="Shorter">\u2212</button>
           <input type="text" class="rin" data-i="${i}" inputmode="decimal" value="${fmtMeasure(inch[i])}">
           <button data-lr="up" data-i="${i}" aria-label="Taller">+</button>
-        </div>
+        </div>${kindBtn}
       </div>
-      <button class="del" data-lr="del" data-i="${
-
-            i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
-    </div>`
-            ).join("");
+      <button class="del" data-lr="del" data-i="${i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
+    </div>`;
+            }).join("");
             /* live drag: update on input (every move), commit on change */
             document.querySelectorAll(".rslide").forEach(sl => {
                 sl.oninput = () => {
@@ -5986,6 +6050,14 @@
                     const r = curRows().slice();
                     r.splice(i, 1);
                     setCurRows(r);
+                    if (activeType() === "vanity" && Array.isArray(state.vRowsKind)) {
+                        state.vRowsKind.splice(i, 1);
+                    }
+                }
+                if (b.dataset.lr === "kind" && activeType() === "vanity" && i > 0) {
+                    if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
+                    while (state.vRowsKind.length < curRows().length) state.vRowsKind.push("drawer");
+                    state.vRowsKind[i] = state.vRowsKind[i] === "door" ? "drawer" : "door";
                 }
                 renderLayout();
                 renderPreview();
@@ -6005,6 +6077,10 @@
             const avg = rows.reduce((s, v) => s + v, 0) / rows.length;
             rows.push(avg);
             setCurRows(rows);
+            if (activeType() === "vanity") {
+                if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
+                state.vRowsKind.push("drawer");
+            }
             renderLayout();
             renderPreview();
         };
