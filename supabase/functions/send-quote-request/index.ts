@@ -4,6 +4,10 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
+const escapeHtml = (s: unknown): string =>
+  String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+
+
 const quoteRequestSchema = z.object({
   customerName: z.string().trim().min(1).max(100),
   customerEmail: z.string().trim().email().max(255),
@@ -125,26 +129,26 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({
       from: "Green Cabinets Quote <onboarding@resend.dev>",
       to: ["info@greencabinets.com"],
-      subject: `New Custom Vanity Quote Request from ${quoteData.customerName}`,
+      subject: `New Custom Vanity Quote Request from ${escapeHtml(quoteData.customerName)}`,
       html: `
         <h2>New Custom Bathroom Vanity Quote Request</h2>
         
         <h3>Customer Information</h3>
-        <p><strong>Name:</strong> ${quoteData.customerName}</p>
-        <p><strong>Email:</strong> ${quoteData.customerEmail}</p>
-        <p><strong>Phone:</strong> ${quoteData.customerPhone}</p>
-        <p><strong>Location:</strong> ${quoteData.zipCode}</p>
+        <p><strong>Name:</strong> ${escapeHtml(quoteData.customerName)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(quoteData.customerEmail)}</p>
+        <p><strong>Phone:</strong> ${escapeHtml(quoteData.customerPhone)}</p>
+        <p><strong>Location:</strong> ${escapeHtml(quoteData.zipCode)}</p>
         
         <h3>Configuration Details</h3>
-        <p><strong>Brand:</strong> ${quoteData.brand}</p>
-        <p><strong>Finish:</strong> ${quoteData.finish}</p>
-        <p><strong>Dimensions:</strong> ${quoteData.width}" W x ${quoteData.height}" H x ${quoteData.depth}" D</p>
+        <p><strong>Brand:</strong> ${escapeHtml(quoteData.brand)}</p>
+        <p><strong>Finish:</strong> ${escapeHtml(quoteData.finish)}</p>
+        <p><strong>Dimensions:</strong> ${escapeHtml(quoteData.width)}" W x ${escapeHtml(quoteData.height)}" H x ${escapeHtml(quoteData.depth)}" D</p>
         
         <h3>Pricing Breakdown</h3>
-        <p><strong>Base Price:</strong> $${quoteData.basePrice}</p>
-        <p><strong>Tax:</strong> $${quoteData.tax}</p>
-        <p><strong>Shipping:</strong> $${quoteData.shipping}</p>
-        <p><strong>Total Price:</strong> $${quoteData.totalPrice}</p>
+        <p><strong>Base Price:</strong> $${escapeHtml(quoteData.basePrice)}</p>
+        <p><strong>Tax:</strong> $${escapeHtml(quoteData.tax)}</p>
+        <p><strong>Shipping:</strong> $${escapeHtml(quoteData.shipping)}</p>
+        <p><strong>Total Price:</strong> $${escapeHtml(quoteData.totalPrice)}</p>
         
         <p style="margin-top: 30px; color: #666;">
           Reply to this email to contact the customer directly.
@@ -172,20 +176,20 @@ const handler = async (req: Request): Promise<Response> => {
       to: [quoteData.customerEmail],
       subject: "We Received Your Custom Vanity Quote Request",
       html: `
-        <h2>Thank you for your quote request, ${quoteData.customerName}!</h2>
+        <h2>Thank you for your quote request, ${escapeHtml(quoteData.customerName)}!</h2>
         
         <p>We've received your custom bathroom vanity configuration and will get back to you within 24 hours with a detailed quote.</p>
         
         <h3>Your Configuration Summary</h3>
-        <p><strong>Brand:</strong> ${quoteData.brand}</p>
-        <p><strong>Finish:</strong> ${quoteData.finish}</p>
-        <p><strong>Dimensions:</strong> ${quoteData.width}" W x ${quoteData.height}" H x ${quoteData.depth}" D</p>
+        <p><strong>Brand:</strong> ${escapeHtml(quoteData.brand)}</p>
+        <p><strong>Finish:</strong> ${escapeHtml(quoteData.finish)}</p>
+        <p><strong>Dimensions:</strong> ${escapeHtml(quoteData.width)}" W x ${escapeHtml(quoteData.height)}" H x ${escapeHtml(quoteData.depth)}" D</p>
         
         <h3>Estimated Pricing</h3>
-        <p><strong>Base Price:</strong> $${quoteData.basePrice}</p>
-        <p><strong>Tax:</strong> $${quoteData.tax}</p>
-        <p><strong>Shipping:</strong> $${quoteData.shipping}</p>
-        <p><strong>Total Estimate:</strong> $${quoteData.totalPrice}</p>
+        <p><strong>Base Price:</strong> $${escapeHtml(quoteData.basePrice)}</p>
+        <p><strong>Tax:</strong> $${escapeHtml(quoteData.tax)}</p>
+        <p><strong>Shipping:</strong> $${escapeHtml(quoteData.shipping)}</p>
+        <p><strong>Total Estimate:</strong> $${escapeHtml(quoteData.totalPrice)}</p>
         
         <p style="margin-top: 30px;">
           If you have any questions, feel free to reply to this email or call us directly.
