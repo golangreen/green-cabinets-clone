@@ -145,14 +145,14 @@ const handler = async (req: Request): Promise<Response> => {
             Thank You for Your Quote Request!
           </h2>
           
-          <p>Hi ${validatedData.customerName},</p>
+          <p>Hi ${escapeHtml(validatedData.customerName)},</p>
           
           <p>Thank you for requesting a quote for your custom vanity. We've received your request and will get back to you within 24 hours with a detailed quote.</p>
 
           <div style="background-color: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px;">
             <h3 style="color: #333; margin-top: 0;">Your Configuration Summary</h3>
-            <p><strong>Brand:</strong> ${validatedData.brand}</p>
-            <p><strong>Finish:</strong> ${validatedData.finish}</p>
+            <p><strong>Brand:</strong> ${escapeHtml(validatedData.brand)}</p>
+            <p><strong>Finish:</strong> ${escapeHtml(validatedData.finish)}</p>
             <p><strong>Width:</strong> ${validatedData.width.toFixed(2)}" (${linearFeet} linear feet)</p>
             <p><strong>Estimated Total:</strong> <span style="color: #2dd4bf; font-size: 18px; font-weight: bold;">$${validatedData.totalPrice.toFixed(2)}</span></p>
           </div>
