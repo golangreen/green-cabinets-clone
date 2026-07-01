@@ -244,7 +244,14 @@
         .gc-modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;background:rgba(31,29,25,.4);backdrop-filter:blur(4px);padding:16px}
         .gc-modal.open{display:flex;animation:fadeIn .25s var(--ease)}
         @media (min-width:640px){.gc-modal{align-items:center}}
-        .gc-sheet{background:var(--card);border:1px solid var(--line);border-radius:30px;max-width:480px;width:100%;padding:32px;box-shadow:var(--shadow-lift);animation:rise .35s var(--ease)}
+        .gc-sheet{background:var(--card);border:1px solid var(--line);border-radius:30px;max-width:820px;width:100%;padding:32px;box-shadow:var(--shadow-lift);animation:rise .35s var(--ease);max-height:92vh;overflow-y:auto}
+        .gc-ucut{margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#faf9f5}
+        .gc-ucut-title{font:600 12px/1 -apple-system,Segoe UI,Roboto,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5C7650;margin-bottom:10px}
+        .gc-ucut-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:12px}
+        @media (max-width:640px){.gc-ucut-grid{grid-template-columns:1fr}}
+        .gc-ucut-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+        .gc-ucut-h{font:600 11px/1 sans-serif;color:#5C7650;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+        .gc-ucut-legend{font:400 11px/1.35 sans-serif;color:#666;margin-top:6px}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes rise{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
         .gc-sheet h3{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:27px;font-weight:480;margin-bottom:4px}
@@ -613,6 +620,7 @@
                 <h3>Your design</h3>
                 <div class="sub">Built by hand in Bushwick. Here's your spec sheet.</div>
                 <div id="sumRows"></div>
+                <div id="uCutDiagram" class="gc-ucut" aria-live="polite"></div>
                 <form id="quoteForm" onsubmit="return false" method="post" autocomplete="on">
                     <div class="gc-emailrow">
                         <label class="gc-flabel" for="clientName">Full name</label>
@@ -6134,6 +6142,7 @@
                 body: bodyLines.join("\n"),
                 subject: `Quote request — ${typeName} (${total})`
             };
+            renderUCutOnScreen();
             $("modal").classList.add("open");
         }
 
@@ -6339,16 +6348,8 @@
             });
         })();
         $("closeModal").onclick = () => $("modal").classList.remove("open");
-        /* ---------- printable U-cut spec sheet ---------- */
-        function buildUCutSpecHTML() {
-            const f = curFinish(), st = (state.type !== "medicine") ? curStone() : null;
-            const brandShort = (BRANDS[f.brand] || {}).short || f.brand;
-            const rows = (modalSpec && modalSpec.rows) ? modalSpec.rows : [];
-            const rowsHtml = rows.map(r =>
-                `<tr><th>${r[0]}</th><td>${r[1]}</td></tr>`
-            ).join("");
-
-            /* recompute geometry so the SVG matches what we quoted */
+        /* ---------- U-cut diagram (shared by on-screen modal + print sheet) ---------- */
+        function computeUCut() {
             const W = state.vW, D = state.vD;
             const nR = state.vRows.length;
             const innerH = frontUsableInches();
@@ -6371,78 +6372,112 @@
                 : [W / 2];
             const trapKind = state.trap === "strap" ? "S-trap"
                           : state.trap === "bottle" ? "Bottle trap" : "P-trap";
+            return { W, D, bh, bd, frontStripD, notchDepth, basinW, trapTube, trapR, dropR, notchHW, notchW, sinkX, trapKind };
+        }
 
-            /* ---- SVG 1: top-down plan view of drawer box with U-notches ---- */
-            const pad = 24, scale = Math.min(560 / W, 320 / bd);
-            const pW = W * scale, pD = bd * scale;
-            const svgW = pW + pad * 2, svgH = pD + pad * 2 + 40;
-            const notchesSvg = sinkX.map(cx => {
-                const x = pad + (cx - notchHW) * scale;
-                const y = pad; /* cut from back = top of plan */
-                const w = notchW * scale;
-                const h = notchDepth * scale;
+        function buildPlanSvg(g, maxW) {
+            maxW = maxW || 560;
+            const pad = 28, scale = Math.min(maxW / g.W, 320 / g.bd);
+            const pW = g.W * scale, pD = g.bd * scale;
+            const svgW = pW + pad * 2, svgH = pD + pad * 2 + 46;
+            const notchesSvg = g.sinkX.map(cx => {
+                const x = pad + (cx - g.notchHW) * scale;
+                const y = pad;
+                const w = g.notchW * scale;
+                const h = g.notchDepth * scale;
                 return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}"
                         fill="#eef2ea" stroke="#5C7650" stroke-width="1.4" stroke-dasharray="5 3"/>
-                        <text x="${(x + w / 2).toFixed(1)}" y="${(y + h / 2).toFixed(1)}"
-                              text-anchor="middle" font-size="11" fill="#3a4a32">notch<tspan x="${(x + w / 2).toFixed(1)}" dy="12">${fracIn(notchW)} × ${fracIn(notchDepth)}</tspan></text>`;
+                        <text x="${(x + w / 2).toFixed(1)}" y="${(y + h / 2 - 4).toFixed(1)}"
+                              text-anchor="middle" font-size="11" fill="#3a4a32" font-weight="600">${fracIn(g.notchW)}<tspan x="${(x + w / 2).toFixed(1)}" dy="13" font-weight="400">× ${fracIn(g.notchDepth)}D</tspan></text>`;
             }).join("");
-            const cLines = sinkX.map(cx => {
+            const cLines = g.sinkX.map(cx => {
                 const x = pad + cx * scale;
-                return `<line x1="${x}" y1="${pad - 6}" x2="${x}" y2="${pad + pD + 6}"
-                    stroke="#c22" stroke-width="0.8" stroke-dasharray="2 3"/>
-                    <text x="${x}" y="${pad + pD + 20}" text-anchor="middle" font-size="10" fill="#c22">CL ${fracIn(cx)}</text>`;
+                return `<line x1="${x}" y1="${pad - 10}" x2="${x}" y2="${pad + pD + 10}"
+                    stroke="#c22" stroke-width="0.9" stroke-dasharray="2 3"/>
+                    <text x="${x}" y="${pad + pD + 24}" text-anchor="middle" font-size="10" fill="#c22" font-weight="600">CL ${fracIn(cx)}</text>`;
             }).join("");
-            const planSvg = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgW} ${svgH}" width="100%" style="max-width:640px">
+            return `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgW} ${svgH}" width="100%" style="max-width:${maxW + pad * 2}px;height:auto;display:block">
               <rect x="${pad}" y="${pad}" width="${pW}" height="${pD}" fill="#faf8f3" stroke="#1f1d19" stroke-width="1.6"/>
               ${notchesSvg}
               ${cLines}
-              <text x="${pad}" y="${pad - 8}" font-size="11" fill="#666">BACK (cut side)</text>
-              <text x="${pad}" y="${pad + pD + 20}" font-size="11" fill="#666">FRONT — solid strip ${fracIn(frontStripD)}</text>
-              <text x="${pad + pW + 6}" y="${pad + pD / 2}" font-size="11" fill="#666" transform="rotate(90 ${pad + pW + 6} ${pad + pD / 2})">Box depth ${fracIn(bd)}</text>
-              <text x="${pad + pW / 2}" y="${svgH - 6}" text-anchor="middle" font-size="11" fill="#666">Overall drawer width ≈ ${fracIn(W - 2)} · Box height ${fracIn(bh)}</text>
+              <text x="${pad}" y="${pad - 10}" font-size="11" fill="#666">BACK (cut side) ← ${fracIn(g.W)} ←</text>
+              <text x="${pad}" y="${pad + pD + 40}" font-size="11" fill="#666">FRONT · solid strip ${fracIn(g.frontStripD)}</text>
+              <text x="${pad + pW + 8}" y="${pad + pD / 2}" font-size="11" fill="#666" transform="rotate(90 ${pad + pW + 8} ${pad + pD / 2})">Box depth ${fracIn(g.bd)}</text>
             </svg>`;
+        }
 
-            /* ---- SVG 2: side-view trap diagram (P / S / Bottle) ---- */
-            const ts = 12; /* px per inch */
-            const tW = 320, tH = 200;
-            let trapDiag = "";
+        function buildTrapSvg(g) {
+            const ts = 12, tW = 320, tH = 200;
             const cx = 160, drainY = 30, floorY = tH - 20;
-            /* drop pipe */
-            const dropSvg = `<line x1="${cx}" y1="${drainY}" x2="${cx}" y2="${floorY - 60}" stroke="#8a8a8a" stroke-width="${dropR * ts}"/>`;
-            if (state.trap === "bottle") {
+            const dropSvg = `<line x1="${cx}" y1="${drainY}" x2="${cx}" y2="${floorY - 60}" stroke="#8a8a8a" stroke-width="${g.dropR * ts}"/>`;
+            let trapDiag = "";
+            if (g.trapKind === "Bottle trap") {
                 trapDiag = `${dropSvg}
-                  <rect x="${cx - trapR * ts}" y="${floorY - 60}" width="${trapR * 2 * ts}" height="${trapR * 2 * ts}" rx="4" fill="#c9ccd1" stroke="#5b6068"/>
-                  <line x1="${cx + trapR * ts}" y1="${floorY - 50}" x2="${tW - 10}" y2="${floorY - 50}" stroke="#8a8a8a" stroke-width="${dropR * ts}"/>
-                  <text x="${cx}" y="${floorY - 62 - trapR * ts}" text-anchor="middle" font-size="11">Bottle trap</text>
+                  <rect x="${cx - g.trapR * ts}" y="${floorY - 60}" width="${g.trapR * 2 * ts}" height="${g.trapR * 2 * ts}" rx="4" fill="#c9ccd1" stroke="#5b6068"/>
+                  <line x1="${cx + g.trapR * ts}" y1="${floorY - 50}" x2="${tW - 10}" y2="${floorY - 50}" stroke="#8a8a8a" stroke-width="${g.dropR * ts}"/>
                   <text x="${cx}" y="${floorY - 5}" text-anchor="middle" font-size="10" fill="#666">wall stub-out to rear</text>`;
-            } else if (state.trap === "strap") {
+            } else if (g.trapKind === "S-trap") {
                 trapDiag = `${dropSvg}
-                  <path d="M${cx - trapR * ts},${floorY - 60}
-                           a${trapR * ts},${trapR * ts} 0 1,0 ${trapR * 2 * ts},0"
-                        fill="none" stroke="#8a8a8a" stroke-width="${trapTube * ts}"/>
-                  <path d="M${cx + trapR * ts},${floorY - 60}
-                           a${trapR * ts},${trapR * ts} 0 1,1 -${trapR * 2 * ts},0"
-                        fill="none" stroke="#8a8a8a" stroke-width="${trapTube * ts}"/>
-                  <line x1="${cx - trapR * 2 * ts}" y1="${floorY - 60}" x2="${cx - trapR * 2 * ts}" y2="${floorY}" stroke="#8a8a8a" stroke-width="${dropR * ts}"/>
+                  <path d="M${cx - g.trapR * ts},${floorY - 60} a${g.trapR * ts},${g.trapR * ts} 0 1,0 ${g.trapR * 2 * ts},0" fill="none" stroke="#8a8a8a" stroke-width="${g.trapTube * ts}"/>
+                  <path d="M${cx + g.trapR * ts},${floorY - 60} a${g.trapR * ts},${g.trapR * ts} 0 1,1 -${g.trapR * 2 * ts},0" fill="none" stroke="#8a8a8a" stroke-width="${g.trapTube * ts}"/>
+                  <line x1="${cx - g.trapR * 2 * ts}" y1="${floorY - 60}" x2="${cx - g.trapR * 2 * ts}" y2="${floorY}" stroke="#8a8a8a" stroke-width="${g.dropR * ts}"/>
                   <text x="${cx}" y="${floorY - 5}" text-anchor="middle" font-size="10" fill="#666">S-trap → floor drain</text>`;
             } else {
                 trapDiag = `${dropSvg}
-                  <path d="M${cx - trapR * ts},${floorY - 60}
-                           a${trapR * ts},${trapR * ts} 0 1,0 ${trapR * 2 * ts},0"
-                        fill="none" stroke="#8a8a8a" stroke-width="${trapTube * ts}"/>
-                  <line x1="${cx + trapR * ts}" y1="${floorY - 60}" x2="${tW - 10}" y2="${floorY - 60}" stroke="#8a8a8a" stroke-width="${dropR * ts}"/>
+                  <path d="M${cx - g.trapR * ts},${floorY - 60} a${g.trapR * ts},${g.trapR * ts} 0 1,0 ${g.trapR * 2 * ts},0" fill="none" stroke="#8a8a8a" stroke-width="${g.trapTube * ts}"/>
+                  <line x1="${cx + g.trapR * ts}" y1="${floorY - 60}" x2="${tW - 10}" y2="${floorY - 60}" stroke="#8a8a8a" stroke-width="${g.dropR * ts}"/>
                   <text x="${cx}" y="${floorY - 5}" text-anchor="middle" font-size="10" fill="#666">P-trap → rear wall</text>`;
             }
-            const trapSvg = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${tW} ${tH}" width="100%" style="max-width:360px">
+            return `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${tW} ${tH}" width="100%" style="max-width:340px;height:auto;display:block">
               <line x1="10" y1="${drainY}" x2="${tW - 10}" y2="${drainY}" stroke="#1f1d19" stroke-width="1.2"/>
               <text x="12" y="${drainY - 4}" font-size="10" fill="#666">basin underside</text>
               <line x1="10" y1="${floorY}" x2="${tW - 10}" y2="${floorY}" stroke="#1f1d19" stroke-width="1.2"/>
               ${trapDiag}
-              <text x="${cx + trapR * ts + 6}" y="${floorY - 66}" font-size="10" fill="#666">tube Ø ${fracIn(trapTube * 2)}</text>
-              <text x="${cx + 6}" y="${(drainY + floorY - 60) / 2}" font-size="10" fill="#666">trap R ${fracIn(trapR)}</text>
+              <text x="${cx + g.trapR * ts + 6}" y="${floorY - 66}" font-size="10" fill="#666">tube Ø ${fracIn(g.trapTube * 2)}</text>
+              <text x="${cx + 6}" y="${(drainY + floorY - 60) / 2}" font-size="10" fill="#666">trap R ${fracIn(g.trapR)}</text>
             </svg>`;
+        }
+
+        function renderUCutOnScreen() {
+            const host = $("uCutDiagram");
+            if (!host) return;
+            if (state.type === "medicine") { host.innerHTML = ""; host.style.display = "none"; return; }
+            const g = computeUCut();
+            host.style.display = "";
+            host.innerHTML = `
+              <div class="gc-ucut-title">U-shaped drawer cut · ${g.trapKind}</div>
+              <div class="gc-ucut-grid">
+                <div class="gc-ucut-card">
+                  <div class="gc-ucut-h">Plan view (looking down)</div>
+                  ${buildPlanSvg(g, 520)}
+                  <div class="gc-ucut-legend">Dashed = cut from drawer back · Red = sink centerline from LEFT edge · Front strip stays solid.</div>
+                </div>
+                <div class="gc-ucut-card">
+                  <div class="gc-ucut-h">${g.trapKind} · side view</div>
+                  ${buildTrapSvg(g)}
+                  <div class="gc-ucut-legend">Basin Ø ref ${fracIn(g.basinW)} · drop pipe Ø ${fracIn(g.dropR * 2)}.</div>
+                </div>
+              </div>`;
+        }
+
+        /* ---------- printable U-cut spec sheet ---------- */
+        function buildUCutSpecHTML() {
+            const f = curFinish(), st = (state.type !== "medicine") ? curStone() : null;
+            const brandShort = (BRANDS[f.brand] || {}).short || f.brand;
+            const rows = (modalSpec && modalSpec.rows) ? modalSpec.rows : [];
+            const rowsHtml = rows.map(r =>
+                `<tr><th>${r[0]}</th><td>${r[1]}</td></tr>`
+            ).join("");
+            const g = computeUCut();
+            const trapKind = g.trapKind;
+
+
+            const planSvg = buildPlanSvg(g, 560);
+            const trapSvg = buildTrapSvg(g);
+            const { basinW, trapR, dropR, frontStripD, sinkX } = g;
+
 
             const date = new Date().toLocaleDateString();
             return `<!doctype html><html><head><meta charset="utf-8">
