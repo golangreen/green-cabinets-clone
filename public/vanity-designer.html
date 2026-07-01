@@ -2900,6 +2900,11 @@
             }
             if (!Array.isArray(state.vRows) || !state.vRows.length) state.vRows = [1, 1];
             if (!Array.isArray(state.mRows) || !state.mRows.length) state.mRows = [1, 1];
+            /* keep vRowsKind in lockstep with vRows; default new/missing rows to "drawer" */
+            if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
+            state.vRowsKind = state.vRows.map((_, i) =>
+                state.vRowsKind[i] === "door" ? "door" : "drawer"
+            );
             state.vQty = Math.min(20, Math.max(1, Math.floor(+state.vQty) || 1));
             state.mQty = Math.min(20, Math.max(1, Math.floor(+state.mQty) || 1));
         }
