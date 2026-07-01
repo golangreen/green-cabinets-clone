@@ -86,9 +86,9 @@ serve(async (req) => {
       attachments.push(att);
     }
 
-    await addFile("design_image", "green-cabinets-design.png", "design@gc");
-    await addFile("ucut_plan", "ucut-plan-view.png", "ucutplan@gc");
-    await addFile("ucut_trap", "ucut-trap-side.png", "ucuttrap@gc");
+    await addFile("design_image", "green-cabinets-design.png", "design-preview");
+    await addFile("ucut_plan", "ucut-plan-view.png", "ucut-plan-view");
+    await addFile("ucut_trap", "ucut-trap-side.png", "ucut-trap-side");
     await addFile("ucut_plan_svg", "ucut-plan-view.svg");
     await addFile("ucut_trap_svg", "ucut-trap-side.svg");
 
