@@ -244,7 +244,14 @@
         .gc-modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;background:rgba(31,29,25,.4);backdrop-filter:blur(4px);padding:16px}
         .gc-modal.open{display:flex;animation:fadeIn .25s var(--ease)}
         @media (min-width:640px){.gc-modal{align-items:center}}
-        .gc-sheet{background:var(--card);border:1px solid var(--line);border-radius:30px;max-width:480px;width:100%;padding:32px;box-shadow:var(--shadow-lift);animation:rise .35s var(--ease)}
+        .gc-sheet{background:var(--card);border:1px solid var(--line);border-radius:30px;max-width:820px;width:100%;padding:32px;box-shadow:var(--shadow-lift);animation:rise .35s var(--ease);max-height:92vh;overflow-y:auto}
+        .gc-ucut{margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#faf9f5}
+        .gc-ucut-title{font:600 12px/1 -apple-system,Segoe UI,Roboto,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5C7650;margin-bottom:10px}
+        .gc-ucut-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:12px}
+        @media (max-width:640px){.gc-ucut-grid{grid-template-columns:1fr}}
+        .gc-ucut-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+        .gc-ucut-h{font:600 11px/1 sans-serif;color:#5C7650;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+        .gc-ucut-legend{font:400 11px/1.35 sans-serif;color:#666;margin-top:6px}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes rise{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
         .gc-sheet h3{font-family:"Outfit",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:27px;font-weight:480;margin-bottom:4px}
