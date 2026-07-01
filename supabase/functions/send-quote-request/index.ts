@@ -176,20 +176,20 @@ const handler = async (req: Request): Promise<Response> => {
       to: [quoteData.customerEmail],
       subject: "We Received Your Custom Vanity Quote Request",
       html: `
-        <h2>Thank you for your quote request, ${quoteData.customerName}!</h2>
+        <h2>Thank you for your quote request, ${escapeHtml(quoteData.customerName)}!</h2>
         
         <p>We've received your custom bathroom vanity configuration and will get back to you within 24 hours with a detailed quote.</p>
         
         <h3>Your Configuration Summary</h3>
-        <p><strong>Brand:</strong> ${quoteData.brand}</p>
-        <p><strong>Finish:</strong> ${quoteData.finish}</p>
-        <p><strong>Dimensions:</strong> ${quoteData.width}" W x ${quoteData.height}" H x ${quoteData.depth}" D</p>
+        <p><strong>Brand:</strong> ${escapeHtml(quoteData.brand)}</p>
+        <p><strong>Finish:</strong> ${escapeHtml(quoteData.finish)}</p>
+        <p><strong>Dimensions:</strong> ${escapeHtml(quoteData.width)}" W x ${escapeHtml(quoteData.height)}" H x ${escapeHtml(quoteData.depth)}" D</p>
         
         <h3>Estimated Pricing</h3>
-        <p><strong>Base Price:</strong> $${quoteData.basePrice}</p>
-        <p><strong>Tax:</strong> $${quoteData.tax}</p>
-        <p><strong>Shipping:</strong> $${quoteData.shipping}</p>
-        <p><strong>Total Estimate:</strong> $${quoteData.totalPrice}</p>
+        <p><strong>Base Price:</strong> $${escapeHtml(quoteData.basePrice)}</p>
+        <p><strong>Tax:</strong> $${escapeHtml(quoteData.tax)}</p>
+        <p><strong>Shipping:</strong> $${escapeHtml(quoteData.shipping)}</p>
+        <p><strong>Total Estimate:</strong> $${escapeHtml(quoteData.totalPrice)}</p>
         
         <p style="margin-top: 30px;">
           If you have any questions, feel free to reply to this email or call us directly.
