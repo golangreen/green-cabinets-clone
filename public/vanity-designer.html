@@ -5987,26 +5987,32 @@
             const totalH = frontUsableInches();
             $("layoutHint").textContent = `${at === "vanity" ? "Vanity" : "Cabinet"} \u00b7 ${fmtMeasure(totalH)} of fronts`;
             const rowMax = (totalH - 2 * (rows.length - 1)).toFixed(1); /* max one row can take, leaving 2" min for others */
-            $("layRows").innerHTML = rows.map((v, i) => `
+            const isVanity = at === "vanity";
+            const kinds = state.vRowsKind || [];
+            $("layRows").innerHTML = rows.map((v, i) => {
+                const kind = kinds[i] === "door" ? "door" : "drawer";
+                const sinkLocked = isVanity && i === 0; /* top row sits under sink → drawer only */
+                const kindBtn = isVanity ? `
+        <button class="gc-kindbtn" data-lr="kind" data-i="${i}"
+                title="${sinkLocked ? "Top row is under the sink — must be a drawer" : "Toggle drawer / door"}"
+                ${sinkLocked ? "disabled style='opacity:.45;cursor:not-allowed'" : ""}>
+          ${sinkLocked ? "Drawer" : (kind === "door" ? "Door" : "Drawer")}
+        </button>` : "";
+                return `
     <div class="gc-layrow">
-      <div class="bar" style="flex-grow:${
-            fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
+      <div class="bar" style="flex-grow:${fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
       <div class="rowctl">
-        <input type="range" class="rslide" data-i="${
-            i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
+        <input type="range" class="rslide" data-i="${i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
                style="--fill:${((Math.min(inch[i], rowMax) - 2) / (Math.max(rowMax - 2, 0.1)) * 100).toFixed(0)}%">
         <div class="gc-numwrap">
-          <button data-lr="dn" data-i="${
-            i}" aria-label="Shorter">\u2212</button>
+          <button data-lr="dn" data-i="${i}" aria-label="Shorter">\u2212</button>
           <input type="text" class="rin" data-i="${i}" inputmode="decimal" value="${fmtMeasure(inch[i])}">
           <button data-lr="up" data-i="${i}" aria-label="Taller">+</button>
-        </div>
+        </div>${kindBtn}
       </div>
-      <button class="del" data-lr="del" data-i="${
-
-            i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
-    </div>`
-            ).join("");
+      <button class="del" data-lr="del" data-i="${i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
+    </div>`;
+            }).join("");
             /* live drag: update on input (every move), commit on change */
             document.querySelectorAll(".rslide").forEach(sl => {
                 sl.oninput = () => {
