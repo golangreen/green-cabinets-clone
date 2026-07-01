@@ -56,7 +56,7 @@ serve(async (req) => {
       sanitizeHeader(String(form.get("_subject") ?? "")).trim() ||
       "New Quote from Green Cabinets";
     const quote = String(form.get("quote") ?? "");
-    const image = form.get("design_image");
+    
 
     const email = emailRaw && isEmail(emailRaw) ? emailRaw : "";
 
