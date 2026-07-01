@@ -6048,6 +6048,14 @@
                     const r = curRows().slice();
                     r.splice(i, 1);
                     setCurRows(r);
+                    if (activeType() === "vanity" && Array.isArray(state.vRowsKind)) {
+                        state.vRowsKind.splice(i, 1);
+                    }
+                }
+                if (b.dataset.lr === "kind" && activeType() === "vanity" && i > 0) {
+                    if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
+                    while (state.vRowsKind.length < curRows().length) state.vRowsKind.push("drawer");
+                    state.vRowsKind[i] = state.vRowsKind[i] === "door" ? "drawer" : "door";
                 }
                 renderLayout();
                 renderPreview();
@@ -6067,6 +6075,10 @@
             const avg = rows.reduce((s, v) => s + v, 0) / rows.length;
             rows.push(avg);
             setCurRows(rows);
+            if (activeType() === "vanity") {
+                if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
+                state.vRowsKind.push("drawer");
+            }
             renderLayout();
             renderPreview();
         };
