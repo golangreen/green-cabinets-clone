@@ -4629,6 +4629,56 @@
                     yCursor -= fh + gap;
                     const mirror = (mIdx + rI) % 2 === 1;
                     const cx = (rg[0] + rg[1]) / 2;
+
+                    /* ---- door row branch (hinged fronts + interior shelf) ----
+                       If this row is set to "door" AND no sink sits above it,
+                       build hinged door(s) instead of a drawer box. Sink rows
+                       are always drawers so the U-cut + trap stay valid. */
+                    {
+                        const edgeBufDoor = _notchHW + 0.8;
+                        const sinksHere = (rI === 0)
+                            ? _fxs.filter(fx => fx >= cx - fw / 2 + edgeBufDoor && fx <= cx + fw / 2 - edgeBufDoor)
+                            : [];
+                        const kind = (state.vRowsKind && state.vRowsKind[rI]) || "drawer";
+                        if (kind === "door" && sinksHere.length === 0 && fw >= 8) {
+                            const twoDoors = fw >= 22;
+                            const gapD = 0.18;
+                            const dwEach = twoDoors ? (fw - gapD) / 2 : fw;
+                            const hwM = metalMat();
+                            const makeDoor = (hingeX, dir, dw) => {
+                                const gg = new THREE.Group();
+                                gg.position.set(hingeX, cy, D / 2 - 0.5);
+                                const dFront = mk(dw, fh, 1, panelMat(f, dw, fh, mirror));
+                                dFront.position.set(dir * dw / 2, 0, 0.5);
+                                gg.add(dFront);
+                                const pullLen = Math.min(dw * 0.5, 5);
+                                const pull = mk(pullLen, 0.35, 0.55, hwM);
+                                pull.position.set(dir * (dw - 1.4), 0, 1.05);
+                                gg.add(pull);
+                                root.add(gg);
+                                animParts.push({ g: gg, type: "hinge", rot: -dir * 1.15 });
+                            };
+                            if (twoDoors) {
+                                makeDoor(cx - fw / 2, 1, dwEach);
+                                makeDoor(cx + fw / 2, -1, dwEach);
+                            } else {
+                                makeDoor(cx - fw / 2, 1, dwEach);
+                            }
+                            /* interior back + one shelf so the cavity reads correctly when open */
+                            const bd2 = Math.max(D - 4, 4);
+                            const zcBack = D / 2 - 1.5 - bd2 / 2;
+                            const backP = mk(fw - 1, Math.max(fh - 1, 1), 0.4, wm.a);
+                            backP.position.set(cx, cy, zcBack - bd2 / 2 + 0.2);
+                            root.add(backP);
+                            if (fh >= 10) {
+                                const shelf = mk(fw - 1.6, 0.5, bd2 - 0.6, wm.a);
+                                shelf.position.set(cx, cy, zcBack);
+                                root.add(shelf);
+                            }
+                            continue;
+                        }
+                    }
+
                     const g = new THREE.Group();
                     g.position.set(cx, cy, 0);
                     const front = mk(fw, fh, 1, panelMat(f, fw, fh, mirror));
