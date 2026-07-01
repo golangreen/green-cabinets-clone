@@ -6253,11 +6253,13 @@
             if (state.type === "medicine") return {};
             try {
                 const g = computeUCut();
+                const planSvg = buildPlanSvg(g, 720);
+                const trapSvg = buildTrapSvg(g);
                 const [plan, trap] = await Promise.all([
-                    svgToPngDataURL(buildPlanSvg(g, 720), 1000),
-                    svgToPngDataURL(buildTrapSvg(g), 720)
+                    svgToPngDataURL(planSvg, 1000),
+                    svgToPngDataURL(trapSvg, 720)
                 ]);
-                return { plan, trap };
+                return { plan, trap, planSvg, trapSvg };
             } catch (e) { return {}; }
         }
         async function sendQuoteEmail() {
@@ -6312,6 +6314,10 @@
                         fd.append("ucut_plan", dataURLtoBlob(ucut.plan), "ucut-plan-view.png");
                     if (ucut.trap)
                         fd.append("ucut_trap", dataURLtoBlob(ucut.trap), "ucut-trap-side.png");
+                    if (ucut.planSvg)
+                        fd.append("ucut_plan_svg", new Blob([ucut.planSvg], { type: "image/svg+xml;charset=utf-8" }), "ucut-plan-view.svg");
+                    if (ucut.trapSvg)
+                        fd.append("ucut_trap_svg", new Blob([ucut.trapSvg], { type: "image/svg+xml;charset=utf-8" }), "ucut-trap-side.svg");
                     const headers = {
                         "Accept": "application/json"
                     };
@@ -6438,7 +6444,7 @@
                     <text x="${x}" y="${pad + pD + 24}" text-anchor="middle" font-size="10" fill="#c22" font-weight="600">CL ${fracIn(cx)}</text>`;
             }).join("");
             return `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgW} ${svgH}" width="100%" style="max-width:${maxW + pad * 2}px;height:auto;display:block">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgW} ${svgH}" width="${Math.ceil(svgW)}" height="${Math.ceil(svgH)}" style="width:100%;max-width:${maxW + pad * 2}px;height:auto;display:block">
               <rect x="${pad}" y="${pad}" width="${pW}" height="${pD}" fill="#faf8f3" stroke="#1f1d19" stroke-width="1.6"/>
               ${notchesSvg}
               ${cLines}
@@ -6471,7 +6477,7 @@
                   <text x="${cx}" y="${floorY - 5}" text-anchor="middle" font-size="10" fill="#666">P-trap → rear wall</text>`;
             }
             return `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${tW} ${tH}" width="100%" style="max-width:340px;height:auto;display:block">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${tW} ${tH}" width="${tW}" height="${tH}" style="width:100%;max-width:340px;height:auto;display:block">
               <line x1="10" y1="${drainY}" x2="${tW - 10}" y2="${drainY}" stroke="#1f1d19" stroke-width="1.2"/>
               <text x="12" y="${drainY - 4}" font-size="10" fill="#666">basin underside</text>
               <line x1="10" y1="${floorY}" x2="${tW - 10}" y2="${floorY}" stroke="#1f1d19" stroke-width="1.2"/>

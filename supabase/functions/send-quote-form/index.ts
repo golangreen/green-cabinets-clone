@@ -60,7 +60,7 @@ serve(async (req) => {
 
     const email = emailRaw && isEmail(emailRaw) ? emailRaw : "";
 
-    const attachments: Array<{ filename: string; content: string; content_id?: string }> = [];
+    const attachments: Array<{ filename: string; content: string; contentId?: string }> = [];
     const inlineCids: Record<string, string> = {};
 
     async function addFile(field: string, filename: string, cid?: string) {
@@ -75,20 +75,22 @@ serve(async (req) => {
           Array.from(buf.subarray(i, i + chunk)),
         );
       }
-      const att: { filename: string; content: string; content_id?: string } = {
+      const att: { filename: string; content: string; contentId?: string } = {
         filename,
         content: btoa(binary),
       };
       if (cid) {
-        att.content_id = cid;
+        att.contentId = cid;
         inlineCids[field] = cid;
       }
       attachments.push(att);
     }
 
-    await addFile("design_image", "green-cabinets-design.png", "design@gc");
-    await addFile("ucut_plan", "ucut-plan-view.png", "ucutplan@gc");
-    await addFile("ucut_trap", "ucut-trap-side.png", "ucuttrap@gc");
+    await addFile("design_image", "green-cabinets-design.png", "design-preview");
+    await addFile("ucut_plan", "ucut-plan-view.png", "ucut-plan-view");
+    await addFile("ucut_trap", "ucut-trap-side.png", "ucut-trap-side");
+    await addFile("ucut_plan_svg", "ucut-plan-view.svg");
+    await addFile("ucut_trap_svg", "ucut-trap-side.svg");
 
     const inlineImg = (cid?: string, alt = "") =>
       cid
