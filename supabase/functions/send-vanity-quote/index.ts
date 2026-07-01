@@ -55,7 +55,7 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({
         from: "Green Cabinets Quotes <orders@greencabinetsny.com>",
         to: ["orders@greencabinetsny.com"],
-        subject: `New Custom Vanity Quote Request - ${validatedData.customerName}`,
+        subject: `New Custom Vanity Quote Request - ${escapeHtml(validatedData.customerName)}`,
         html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #2dd4bf; border-bottom: 3px solid #D4AF37; padding-bottom: 10px;">
@@ -64,16 +64,16 @@ const handler = async (req: Request): Promise<Response> => {
           
           <div style="background-color: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px;">
             <h3 style="color: #333; margin-top: 0;">Customer Information</h3>
-            <p><strong>Name:</strong> ${validatedData.customerName}</p>
-            <p><strong>Email:</strong> <a href="mailto:${validatedData.customerEmail}">${validatedData.customerEmail}</a></p>
-            ${validatedData.customerPhone ? `<p><strong>Phone:</strong> ${validatedData.customerPhone}</p>` : ''}
-            <p><strong>ZIP Code:</strong> ${validatedData.zipCode} (${validatedData.state})</p>
+            <p><strong>Name:</strong> ${escapeHtml(validatedData.customerName)}</p>
+            <p><strong>Email:</strong> <a href="mailto:${escapeHtml(validatedData.customerEmail)}">${escapeHtml(validatedData.customerEmail)}</a></p>
+            ${validatedData.customerPhone ? `<p><strong>Phone:</strong> ${escapeHtml(validatedData.customerPhone)}</p>` : ''}
+            <p><strong>ZIP Code:</strong> ${escapeHtml(validatedData.zipCode)} (${escapeHtml(validatedData.state)})</p>
           </div>
 
           <div style="background-color: #fff; padding: 20px; margin: 20px 0; border: 2px solid #2dd4bf; border-radius: 8px;">
             <h3 style="color: #2dd4bf; margin-top: 0;">Vanity Configuration</h3>
-            <p><strong>Brand:</strong> ${validatedData.brand}</p>
-            <p><strong>Finish/Color:</strong> ${validatedData.finish}</p>
+            <p><strong>Brand:</strong> ${escapeHtml(validatedData.brand)}</p>
+            <p><strong>Finish/Color:</strong> ${escapeHtml(validatedData.finish)}</p>
             <p><strong>Width:</strong> ${validatedData.width.toFixed(2)}" (${linearFeet} linear feet)</p>
             ${validatedData.height ? `<p><strong>Height:</strong> ${validatedData.height.toFixed(2)}"</p>` : ''}
             ${validatedData.depth ? `<p><strong>Depth:</strong> ${validatedData.depth.toFixed(2)}"</p>` : ''}
@@ -88,13 +88,13 @@ const handler = async (req: Request): Promise<Response> => {
               </tr>
               ${validatedData.tax > 0 ? `
               <tr>
-                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">Tax (${validatedData.state}):</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">Tax (${escapeHtml(validatedData.state)}):</td>
                 <td style="padding: 8px 0; border-bottom: 1px solid #ddd; text-align: right;">$${validatedData.tax.toFixed(2)}</td>
               </tr>
               ` : ''}
               ${validatedData.shipping > 0 ? `
               <tr>
-                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">Shipping to ${validatedData.state}:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">Shipping to ${escapeHtml(validatedData.state)}:</td>
                 <td style="padding: 8px 0; border-bottom: 1px solid #ddd; text-align: right;">$${validatedData.shipping.toFixed(2)}</td>
               </tr>
               ` : ''}
@@ -108,7 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
           ${validatedData.additionalNotes ? `
           <div style="background-color: #fff3cd; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #D4AF37;">
             <h3 style="color: #856404; margin-top: 0;">Additional Notes</h3>
-            <p style="color: #856404; white-space: pre-wrap;">${validatedData.additionalNotes}</p>
+            <p style="color: #856404; white-space: pre-wrap;">${escapeHtml(validatedData.additionalNotes)}</p>
           </div>
           ` : ''}
 
