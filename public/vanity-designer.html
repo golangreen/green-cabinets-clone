@@ -6339,6 +6339,191 @@
             });
         })();
         $("closeModal").onclick = () => $("modal").classList.remove("open");
+        /* ---------- printable U-cut spec sheet ---------- */
+        function buildUCutSpecHTML() {
+            const f = curFinish(), st = (state.type !== "medicine") ? curStone() : null;
+            const brandShort = (BRANDS[f.brand] || {}).short || f.brand;
+            const rows = (modalSpec && modalSpec.rows) ? modalSpec.rows : [];
+            const rowsHtml = rows.map(r =>
+                `<tr><th>${r[0]}</th><td>${r[1]}</td></tr>`
+            ).join("");
+
+            /* recompute geometry so the SVG matches what we quoted */
+            const W = state.vW, D = state.vD;
+            const nR = state.vRows.length;
+            const innerH = frontUsableInches();
+            const usableH = Math.max(innerH - 0.45 * (nR + 1), 0);
+            const fr = rowFractions(state.vRows);
+            const topRowH = usableH * (fr[0] || 0);
+            const bh = Math.max(topRowH * 0.55, 2.5);
+            const bd = Math.max(D - 5, 4);
+            const frontStripD = Math.min(3.5, bd * 0.35);
+            const notchDepth = bd - frontStripD;
+            const basinW = Math.min(16, W * 0.36);
+            const trapTube = Math.max(0.42, Math.min(0.85, basinW * 0.045));
+            const trapR = Math.max(0.85, Math.min(1.6, basinW * 0.11));
+            const dropR = Math.max(0.45, Math.min(0.9, basinW * 0.055));
+            const notchHW = Math.max(2.4, trapR + trapTube + 0.6);
+            const notchW = 2 * notchHW;
+            const two = state.sinks === "sink2" && state.vW >= 40;
+            const sinkX = two
+                ? [W / 2 - W * 0.24, W / 2 + W * 0.24]
+                : [W / 2];
+            const trapKind = state.trap === "strap" ? "S-trap"
+                          : state.trap === "bottle" ? "Bottle trap" : "P-trap";
+
+            /* ---- SVG 1: top-down plan view of drawer box with U-notches ---- */
+            const pad = 24, scale = Math.min(560 / W, 320 / bd);
+            const pW = W * scale, pD = bd * scale;
+            const svgW = pW + pad * 2, svgH = pD + pad * 2 + 40;
+            const notchesSvg = sinkX.map(cx => {
+                const x = pad + (cx - notchHW) * scale;
+                const y = pad; /* cut from back = top of plan */
+                const w = notchW * scale;
+                const h = notchDepth * scale;
+                return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}"
+                        fill="#eef2ea" stroke="#5C7650" stroke-width="1.4" stroke-dasharray="5 3"/>
+                        <text x="${(x + w / 2).toFixed(1)}" y="${(y + h / 2).toFixed(1)}"
+                              text-anchor="middle" font-size="11" fill="#3a4a32">notch<tspan x="${(x + w / 2).toFixed(1)}" dy="12">${fracIn(notchW)} × ${fracIn(notchDepth)}</tspan></text>`;
+            }).join("");
+            const cLines = sinkX.map(cx => {
+                const x = pad + cx * scale;
+                return `<line x1="${x}" y1="${pad - 6}" x2="${x}" y2="${pad + pD + 6}"
+                    stroke="#c22" stroke-width="0.8" stroke-dasharray="2 3"/>
+                    <text x="${x}" y="${pad + pD + 20}" text-anchor="middle" font-size="10" fill="#c22">CL ${fracIn(cx)}</text>`;
+            }).join("");
+            const planSvg = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgW} ${svgH}" width="100%" style="max-width:640px">
+              <rect x="${pad}" y="${pad}" width="${pW}" height="${pD}" fill="#faf8f3" stroke="#1f1d19" stroke-width="1.6"/>
+              ${notchesSvg}
+              ${cLines}
+              <text x="${pad}" y="${pad - 8}" font-size="11" fill="#666">BACK (cut side)</text>
+              <text x="${pad}" y="${pad + pD + 20}" font-size="11" fill="#666">FRONT — solid strip ${fracIn(frontStripD)}</text>
+              <text x="${pad + pW + 6}" y="${pad + pD / 2}" font-size="11" fill="#666" transform="rotate(90 ${pad + pW + 6} ${pad + pD / 2})">Box depth ${fracIn(bd)}</text>
+              <text x="${pad + pW / 2}" y="${svgH - 6}" text-anchor="middle" font-size="11" fill="#666">Overall drawer width ≈ ${fracIn(W - 2)} · Box height ${fracIn(bh)}</text>
+            </svg>`;
+
+            /* ---- SVG 2: side-view trap diagram (P / S / Bottle) ---- */
+            const ts = 12; /* px per inch */
+            const tW = 320, tH = 200;
+            let trapDiag = "";
+            const cx = 160, drainY = 30, floorY = tH - 20;
+            /* drop pipe */
+            const dropSvg = `<line x1="${cx}" y1="${drainY}" x2="${cx}" y2="${floorY - 60}" stroke="#8a8a8a" stroke-width="${dropR * ts}"/>`;
+            if (state.trap === "bottle") {
+                trapDiag = `${dropSvg}
+                  <rect x="${cx - trapR * ts}" y="${floorY - 60}" width="${trapR * 2 * ts}" height="${trapR * 2 * ts}" rx="4" fill="#c9ccd1" stroke="#5b6068"/>
+                  <line x1="${cx + trapR * ts}" y1="${floorY - 50}" x2="${tW - 10}" y2="${floorY - 50}" stroke="#8a8a8a" stroke-width="${dropR * ts}"/>
+                  <text x="${cx}" y="${floorY - 62 - trapR * ts}" text-anchor="middle" font-size="11">Bottle trap</text>
+                  <text x="${cx}" y="${floorY - 5}" text-anchor="middle" font-size="10" fill="#666">wall stub-out to rear</text>`;
+            } else if (state.trap === "strap") {
+                trapDiag = `${dropSvg}
+                  <path d="M${cx - trapR * ts},${floorY - 60}
+                           a${trapR * ts},${trapR * ts} 0 1,0 ${trapR * 2 * ts},0"
+                        fill="none" stroke="#8a8a8a" stroke-width="${trapTube * ts}"/>
+                  <path d="M${cx + trapR * ts},${floorY - 60}
+                           a${trapR * ts},${trapR * ts} 0 1,1 -${trapR * 2 * ts},0"
+                        fill="none" stroke="#8a8a8a" stroke-width="${trapTube * ts}"/>
+                  <line x1="${cx - trapR * 2 * ts}" y1="${floorY - 60}" x2="${cx - trapR * 2 * ts}" y2="${floorY}" stroke="#8a8a8a" stroke-width="${dropR * ts}"/>
+                  <text x="${cx}" y="${floorY - 5}" text-anchor="middle" font-size="10" fill="#666">S-trap → floor drain</text>`;
+            } else {
+                trapDiag = `${dropSvg}
+                  <path d="M${cx - trapR * ts},${floorY - 60}
+                           a${trapR * ts},${trapR * ts} 0 1,0 ${trapR * 2 * ts},0"
+                        fill="none" stroke="#8a8a8a" stroke-width="${trapTube * ts}"/>
+                  <line x1="${cx + trapR * ts}" y1="${floorY - 60}" x2="${tW - 10}" y2="${floorY - 60}" stroke="#8a8a8a" stroke-width="${dropR * ts}"/>
+                  <text x="${cx}" y="${floorY - 5}" text-anchor="middle" font-size="10" fill="#666">P-trap → rear wall</text>`;
+            }
+            const trapSvg = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${tW} ${tH}" width="100%" style="max-width:360px">
+              <line x1="10" y1="${drainY}" x2="${tW - 10}" y2="${drainY}" stroke="#1f1d19" stroke-width="1.2"/>
+              <text x="12" y="${drainY - 4}" font-size="10" fill="#666">basin underside</text>
+              <line x1="10" y1="${floorY}" x2="${tW - 10}" y2="${floorY}" stroke="#1f1d19" stroke-width="1.2"/>
+              ${trapDiag}
+              <text x="${cx + trapR * ts + 6}" y="${floorY - 66}" font-size="10" fill="#666">tube Ø ${fracIn(trapTube * 2)}</text>
+              <text x="${cx + 6}" y="${(drainY + floorY - 60) / 2}" font-size="10" fill="#666">trap R ${fracIn(trapR)}</text>
+            </svg>`;
+
+            const date = new Date().toLocaleDateString();
+            return `<!doctype html><html><head><meta charset="utf-8">
+            <title>U-cut Spec Sheet — Green Cabinets NY</title>
+            <style>
+              @page{size:letter;margin:0.6in}
+              *{box-sizing:border-box}
+              body{font:13px/1.45 -apple-system,Segoe UI,Roboto,sans-serif;color:#1f1d19;margin:0;padding:24px;background:#fff}
+              header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #5C7650;padding-bottom:10px;margin-bottom:14px}
+              h1{margin:0;font-size:18px;color:#5C7650}
+              h2{font-size:13px;margin:18px 0 6px;color:#5C7650;text-transform:uppercase;letter-spacing:.06em}
+              .meta{font-size:11px;color:#666;text-align:right}
+              table{width:100%;border-collapse:collapse;font-size:12px}
+              th,td{border:1px solid #e2e0da;padding:6px 8px;text-align:left;vertical-align:top}
+              th{background:#f5f4ee;font-weight:600;width:34%}
+              .diag{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-top:8px;page-break-inside:avoid}
+              .card{border:1px solid #e2e0da;border-radius:6px;padding:10px;background:#fff}
+              .card h3{margin:0 0 6px;font-size:11px;color:#5C7650;text-transform:uppercase;letter-spacing:.06em}
+              .legend{font-size:10px;color:#666;margin-top:4px}
+              footer{margin-top:20px;border-top:1px solid #d5d4ce;padding-top:8px;font-size:10px;color:#666;display:flex;justify-content:space-between}
+              @media print{.noprint{display:none!important}}
+              .noprint{position:fixed;top:8px;right:8px}
+              .noprint button{background:#5C7650;color:#fff;border:0;padding:8px 14px;border-radius:6px;font:600 12px sans-serif;cursor:pointer;margin-left:6px}
+            </style></head><body>
+            <div class="noprint">
+              <button onclick="window.print()">Print / Save PDF</button>
+              <button onclick="window.close()" style="background:#666">Close</button>
+            </div>
+            <header>
+              <div>
+                <h1>U-cut Shop Drawing</h1>
+                <div style="font-size:11px;color:#666">Green Cabinets NY · Bushwick, Brooklyn</div>
+              </div>
+              <div class="meta">
+                ${date}<br>
+                Finish: ${f.name}${f.code ? " (" + f.code + ")" : ""} · ${brandShort}<br>
+                ${st ? "Counter: " + st.name : ""}
+              </div>
+            </header>
+
+            <h2>Build spec</h2>
+            <table>${rowsHtml || '<tr><td>Open the "Get quote" dialog first to populate.</td></tr>'}</table>
+
+            <h2>Top drawer — plan view (looking down)</h2>
+            <div class="diag">
+              <div class="card">
+                ${planSvg}
+                <div class="legend">Dashed rectangles = U-shape cut from the drawer back. Red dashed lines = sink centerlines from the LEFT edge of the cabinet. Front strip stays solid for drawer-front attachment.</div>
+              </div>
+              <div class="card">
+                <h3>${trapKind} reference · side view</h3>
+                ${trapSvg}
+                <div class="legend">Confirm supply/waste rough-in on site. Tube diameters shown are nominal — actual PVC/brass may vary by ±1/8".</div>
+              </div>
+            </div>
+
+            <h2>Fabrication notes</h2>
+            <ul style="margin:6px 0 0 18px;padding:0;font-size:12px">
+              <li>Cut U-notch from the <strong>back</strong> of the drawer box only; front rail (${fracIn(frontStripD)}) stays solid.</li>
+              <li>Notch dimensions include trap tube + slip-nut clearance (+0.6" fab gap).</li>
+              <li>${sinkX.length === 2 ? "Two notches — verify adjacent notches don't overlap after final sink placement." : "Single notch centered under basin."}</li>
+              <li>Basin Ø reference: ${fracIn(basinW)}. Trap radius: ${fracIn(trapR)}. Drop pipe Ø: ${fracIn(dropR * 2)}.</li>
+            </ul>
+
+            <footer>
+              <span>orders@greencabinetsny.com · greencabinetsny.com</span>
+              <span>Spec generated from live 3D geometry — verify before cutting.</span>
+            </footer>
+            <script>window.addEventListener("load",function(){setTimeout(function(){try{window.focus();window.print();}catch(e){}},350);});<\/script>
+            </body></html>`;
+        }
+        $("printSpec").onclick = () => {
+            if (state.type === "medicine") {
+                alert("U-cut spec only applies to vanities (medicine cabinets have no plumbing cutout).");
+                return;
+            }
+            const html = buildUCutSpecHTML();
+            const w = window.open("", "_blank", "width=900,height=1100");
+            if (!w) { alert("Please allow pop-ups to print the spec sheet."); return; }
+            w.document.open(); w.document.write(html); w.document.close();
+        };
         $("modal").onclick = e => {
             if (e.target === $("modal"))
                 $("modal").classList.remove("open")
