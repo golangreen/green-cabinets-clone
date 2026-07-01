@@ -6298,6 +6298,7 @@
                 }
                 try {
                     const img = captureDesignImage(1600);
+                    const ucut = await captureUCutImages();
                     const fd = new FormData();
                     fd.append("name", nm || "(not provided)");
                     fd.append("email", email || "(not provided)");
@@ -6307,6 +6308,10 @@
                         fd.append("_cc", email); /* client gets a copy */
                     if (img)
                         fd.append("design_image", dataURLtoBlob(img), "green-cabinets-design.png");
+                    if (ucut.plan)
+                        fd.append("ucut_plan", dataURLtoBlob(ucut.plan), "ucut-plan-view.png");
+                    if (ucut.trap)
+                        fd.append("ucut_trap", dataURLtoBlob(ucut.trap), "ucut-trap-side.png");
                     const headers = {
                         "Accept": "application/json"
                     };
