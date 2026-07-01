@@ -30,6 +30,14 @@ serve(async (req) => {
       expand: ['line_items', 'customer'],
     });
 
+    if (session.payment_status !== "paid" && session.status !== "complete") {
+      console.warn("Refusing to send confirmation for unpaid session:", sessionId, session.payment_status, session.status);
+      return new Response(
+        JSON.stringify({ error: "Payment not completed" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
     if (!session.customer_details?.email) {
       throw new Error("No customer email found in session");
     }
