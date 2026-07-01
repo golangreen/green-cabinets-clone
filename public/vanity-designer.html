@@ -6253,11 +6253,13 @@
             if (state.type === "medicine") return {};
             try {
                 const g = computeUCut();
+                const planSvg = buildPlanSvg(g, 720);
+                const trapSvg = buildTrapSvg(g);
                 const [plan, trap] = await Promise.all([
-                    svgToPngDataURL(buildPlanSvg(g, 720), 1000),
-                    svgToPngDataURL(buildTrapSvg(g), 720)
+                    svgToPngDataURL(planSvg, 1000),
+                    svgToPngDataURL(trapSvg, 720)
                 ]);
-                return { plan, trap };
+                return { plan, trap, planSvg, trapSvg };
             } catch (e) { return {}; }
         }
         async function sendQuoteEmail() {
@@ -6312,6 +6314,10 @@
                         fd.append("ucut_plan", dataURLtoBlob(ucut.plan), "ucut-plan-view.png");
                     if (ucut.trap)
                         fd.append("ucut_trap", dataURLtoBlob(ucut.trap), "ucut-trap-side.png");
+                    if (ucut.planSvg)
+                        fd.append("ucut_plan_svg", new Blob([ucut.planSvg], { type: "image/svg+xml;charset=utf-8" }), "ucut-plan-view.svg");
+                    if (ucut.trapSvg)
+                        fd.append("ucut_trap_svg", new Blob([ucut.trapSvg], { type: "image/svg+xml;charset=utf-8" }), "ucut-trap-side.svg");
                     const headers = {
                         "Accept": "application/json"
                     };
