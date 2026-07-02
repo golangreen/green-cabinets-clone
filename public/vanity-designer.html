@@ -4677,30 +4677,33 @@
                             ? _fxs.filter(fx => fx >= cx - fw / 2 + edgeBufDoor && fx <= cx + fw / 2 - edgeBufDoor)
                             : [];
                         const kind = _segKind;
-                        if (kind === "door" && sinksHere.length === 0 && fw >= 6) {
-                            const twoDoors = fw >= 22;
-                            const gapD = 0.18;
-                            const dwEach = twoDoors ? (fw - gapD) / 2 : fw;
-                            const hwM = metalMat();
-                            const makeDoor = (hingeX, dir, dw) => {
-                                const gg = new THREE.Group();
-                                gg.position.set(hingeX, cy, D / 2 - 0.5);
-                                const dFront = mk(dw, fh, 1, panelMat(f, dw, fh, mirror));
-                                dFront.position.set(dir * dw / 2, 0, 0.5);
-                                gg.add(dFront);
-                                const pullLen = Math.min(dw * 0.5, 5);
-                                const pull = mk(pullLen, 0.35, 0.55, hwM);
-                                pull.position.set(dir * (dw - 1.4), 0, 1.05);
-                                gg.add(pull);
-                                root.add(gg);
-                                animParts.push({ g: gg, type: "hinge", rot: -dir * 1.15 });
-                            };
-                            if (twoDoors) {
-                                makeDoor(cx - fw / 2, 1, dwEach);
-                                makeDoor(cx + fw / 2, -1, dwEach);
-                            } else {
-                                makeDoor(cx - fw / 2, 1, dwEach);
-                            }
+                         if (kind === "door" && sinksHere.length === 0 && fw >= 6) {
+                             const hingePref = (_rowSegs[sI] && _rowSegs[sI].hinge) || (fw >= 22 ? "pair" : "L");
+                             const twoDoors = hingePref === "pair" && fw >= 12;
+                             const gapD = 0.18;
+                             const dwEach = twoDoors ? (fw - gapD) / 2 : fw;
+                             const hwM = metalMat();
+                             const makeDoor = (hingeX, dir, dw) => {
+                                 const gg = new THREE.Group();
+                                 gg.position.set(hingeX, cy, D / 2 - 0.5);
+                                 const dFront = mk(dw, fh, 1, panelMat(f, dw, fh, mirror));
+                                 dFront.position.set(dir * dw / 2, 0, 0.5);
+                                 gg.add(dFront);
+                                 const pullLen = Math.min(dw * 0.5, 5);
+                                 const pull = mk(pullLen, 0.35, 0.55, hwM);
+                                 pull.position.set(dir * (dw - 1.4), 0, 1.05);
+                                 gg.add(pull);
+                                 root.add(gg);
+                                 animParts.push({ g: gg, type: "hinge", rot: -dir * 1.15 });
+                             };
+                             if (twoDoors) {
+                                 makeDoor(cx - fw / 2, 1, dwEach);
+                                 makeDoor(cx + fw / 2, -1, dwEach);
+                             } else if (hingePref === "R") {
+                                 makeDoor(cx + fw / 2, -1, dwEach);
+                             } else {
+                                 makeDoor(cx - fw / 2, 1, dwEach);
+                             }
                             /* interior back + one shelf so the cavity reads correctly when open */
                             const bd2 = Math.max(D - 4, 4);
                             const zcBack = D / 2 - 1.5 - bd2 / 2;
@@ -6026,14 +6029,19 @@
                 const rowSegs = Array.isArray(segs[i]) && segs[i].length ? segs[i] : [{ kind: "drawer" }];
                 const segsUI = isVanity ? `
         <div class="gc-segs" data-row="${i}">
-          ${rowSegs.map((s, si) => `
+          ${rowSegs.map((s, si) => {
+            const hg = s.hinge || "pair";
+            const hgLabel = hg === "L" ? "Hinge \u2190" : hg === "R" ? "Hinge \u2192" : "Double";
+            return `
             <button class="gc-segbtn" data-lr="segkind" data-i="${i}" data-s="${si}"
                     title="${sinkLocked ? "Sink row locked to drawer" : "Toggle drawer / door"}"
                     ${sinkLocked ? "disabled style='opacity:.55;cursor:not-allowed'" : ""}>
               ${s.kind === "door" ? "Door" : "Drawer"}
             </button>
+            ${(!sinkLocked && s.kind === "door") ? `<button class="gc-segbtn" data-lr="seghinge" data-i="${i}" data-s="${si}" title="Cycle hinge: Left \u2192 Right \u2192 Double" style="font-size:11px;padding:2px 6px">${hgLabel}</button>` : ""}
             ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segdel" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove front">\u00d7</button>` : ""}
-          `).join("")}
+          `;
+          }).join("")}
           ${(!sinkLocked && rowSegs.length < 4) ? `<button class="gc-segadd" data-lr="segadd" data-i="${i}" title="Add front">+ front</button>` : ""}
         </div>` : "";
                 return `
@@ -6097,10 +6105,21 @@
                     const sIdx = +b.dataset.s;
                     if (b.dataset.lr === "segkind") {
                         const seg = state.vRowsSegments[i][sIdx];
-                        if (seg) seg.kind = seg.kind === "door" ? "drawer" : "door";
+                        if (seg) {
+                            seg.kind = seg.kind === "door" ? "drawer" : "door";
+                            if (seg.kind === "door" && !seg.hinge) seg.hinge = "pair";
+                        }
+                    }
+                    if (b.dataset.lr === "seghinge") {
+                        const seg = state.vRowsSegments[i][sIdx];
+                        if (seg && seg.kind === "door") {
+                            const order = ["pair", "L", "R"];
+                            const cur = seg.hinge || "pair";
+                            seg.hinge = order[(order.indexOf(cur) + 1) % order.length];
+                        }
                     }
                     if (b.dataset.lr === "segadd" && state.vRowsSegments[i].length < 4) {
-                        state.vRowsSegments[i].push({ kind: "door" });
+                        state.vRowsSegments[i].push({ kind: "door", hinge: "L" });
                     }
                     if (b.dataset.lr === "segdel" && state.vRowsSegments[i].length > 1) {
                         state.vRowsSegments[i].splice(sIdx, 1);
