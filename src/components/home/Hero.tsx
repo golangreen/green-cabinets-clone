@@ -100,51 +100,18 @@ const Hero = () => {
       <section data-testid="hero-carousel" className="relative h-dvh min-h-[560px] w-full overflow-hidden">
         {/* Background images with crossfade */}
         <div className="absolute inset-0 bg-muted">
-          {(() => {
-            const current = shuffledImages[currentImageIndex];
-            const isLcp = current.src === "/hero-lcp.webp";
-            const commonClass = `absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
-              isTransitioning ? "opacity-0" : "opacity-100"
-            }`;
-            if (isLcp) {
-              return (
-                <picture>
-                  <source
-                    type="image/avif"
-                    srcSet="/hero-lcp-640.avif 640w, /hero-lcp-1024.avif 1024w, /hero-lcp-1600.avif 1600w"
-                    sizes="100vw"
-                  />
-                  <source
-                    type="image/webp"
-                    srcSet="/hero-lcp-640.webp 640w, /hero-lcp-1024.webp 1024w, /hero-lcp-1600.webp 1600w"
-                    sizes="100vw"
-                  />
-                  <img
-                    src="/hero-lcp-1024.webp"
-                    alt={current.alt}
-                    width={1920}
-                    height={1080}
-                    className={commonClass}
-                    loading="eager"
-                    fetchPriority="high"
-                    decoding="async"
-                  />
-                </picture>
-              );
-            }
-            return (
-              <img
-                src={current.src}
-                alt={current.alt}
-                width={1920}
-                height={1080}
-                className={commonClass}
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-              />
-            );
-          })()}
+          <img
+            src={shuffledImages[currentImageIndex].src}
+            alt={shuffledImages[currentImageIndex].alt}
+            width={1920}
+            height={1080}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
+              isTransitioning ? 'opacity-0' : 'opacity-100'
+            }`}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+          />
           {nextImageIndex !== null && (
             <img
               src={shuffledImages[nextImageIndex].src}

@@ -1,58 +1,58 @@
 import { lazy, type ComponentType } from "react";
 
-const RELOAD_KEY = "__lovable_lazy_reload_count__";
-const MAX_RELOADS = 2;
+const RELOAD_FLAG = "__lovable_lazy_reload__";
 
 const isChunkError = (err: unknown) => {
   const msg = err instanceof Error ? err.message : String(err ?? "");
-  return /Importing a module script failed|Failed to fetch dynamically imported module|ChunkLoadError|Loading chunk [\d]+ failed|error loading dynamically imported module/i.test(
+  return /Importing a module script failed|Failed to fetch dynamically imported module|ChunkLoadError|Loading chunk [\d]+ failed/i.test(
     msg,
   );
 };
 
-const getCount = () => {
-  try { return parseInt(sessionStorage.getItem(RELOAD_KEY) || "0", 10) || 0; } catch { return 0; }
-};
-const setCount = (n: number) => { try { sessionStorage.setItem(RELOAD_KEY, String(n)); } catch {} };
-const clearCount = () => { try { sessionStorage.removeItem(RELOAD_KEY); } catch {} };
-
+/**
+ * React.lazy wrapper that triggers a one-time hard reload when a chunk fails
+ * to load — typically caused by stale hashed asset URLs after a deploy. The
+ * rejected import inside Suspense never reaches window.onunhandledrejection,
+ * so we catch it here.
+ */
 if (typeof window !== "undefined") {
-  // Once the app fully loads, reset so future deploys can trigger a fresh reload cycle.
-  window.addEventListener("load", () => setTimeout(clearCount, 2_000));
+  // Clear the one-shot reload flag once the app successfully mounts, so a
+  // future stale-chunk error after the next deploy can trigger another reload.
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      try { sessionStorage.removeItem(RELOAD_FLAG); } catch {}
+    }, 4_000);
+  });
 }
-
-const hardReload = () => {
-  const url = new URL(window.location.href);
-  url.searchParams.set("_r", Date.now().toString(36));
-  window.location.replace(url.toString());
-};
 
 export function lazyWithReload<T extends ComponentType<any>>(
   factory: () => Promise<{ default: T }>,
 ) {
-  const tryLoad = async (): Promise<{ default: T }> => {
+  return lazy(async () => {
     try {
-      const mod = await factory();
-      clearCount();
-      return mod;
+      return await factory();
     } catch (err) {
-      if (!isChunkError(err) || typeof window === "undefined") throw err;
-      // brief backoff then retry once in-place (covers Vite dep re-optimize)
-      await new Promise((r) => setTimeout(r, 300));
-      try {
-        const mod = await factory();
-        clearCount();
-        return mod;
-      } catch (err2) {
-        const n = getCount();
-        if (n < MAX_RELOADS) {
-          setCount(n + 1);
-          hardReload();
-          return new Promise<{ default: T }>(() => {}); // hang until reload
+      if (isChunkError(err) && typeof window !== "undefined") {
+        const already = sessionStorage.getItem(RELOAD_FLAG);
+        if (!already) {
+          sessionStorage.setItem(RELOAD_FLAG, "1");
+          // Cache-bust: append a query so the browser bypasses any stale SW/CDN copy.
+          const url = new URL(window.location.href);
+          url.searchParams.set("_r", Date.now().toString(36));
+          window.location.replace(url.toString());
+          // Return a never-resolving promise so Suspense stays mounted during reload.
+          return new Promise<{ default: T }>(() => {});
         }
-        throw err2;
+        // Already tried once — try one more direct retry before surfacing the error,
+        // in case Vite's dep optimizer just finished re-bundling.
+        try {
+          await new Promise((r) => setTimeout(r, 250));
+          return await factory();
+        } catch {
+          /* fall through to throw */
+        }
       }
+      throw err;
     }
-  };
-  return lazy(tryLoad);
+  });
 }

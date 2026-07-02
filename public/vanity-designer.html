@@ -104,15 +104,7 @@
         .gc-stage::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
           box-shadow:inset 0 0 120px 10px rgba(30,24,16,.18), inset 0 -40px 80px rgba(30,24,16,.12);z-index:2}
         .gc-layrows{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-        .gc-layout-status{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-        .gc-front-mini{height:56px;border-radius:10px;background:#f4f2ed;border:1px solid #e5e1d8;padding:6px;display:flex;flex-direction:column;gap:4px}
-        .gc-mini-top{height:13px;border-radius:4px;background:#d8ded4;border:1px solid rgba(92,118,80,.22);position:relative}
-        .gc-mini-top:after{content:"sink drawer";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:7px;font-weight:800;color:#5c7650;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
-        .gc-mini-row{flex:1;display:flex;gap:4px;min-height:0}
-        .gc-mini-front{flex:1;border-radius:4px;background:linear-gradient(180deg,#8aa17f,#6f8865);border:1px solid rgba(50,65,44,.28);position:relative;overflow:hidden}
-        .gc-mini-front.drawer:after{content:"";position:absolute;left:18%;right:18%;top:50%;height:2px;border-radius:99px;background:rgba(255,255,255,.68)}
         .gc-layrow{display:flex;align-items:center;gap:12px;background:#e5e5e5;border-radius:13px;padding:8px 10px}
-        .gc-layrow-wrap.simple .gc-layrow{display:none}
         .gc-layrow .bar{width:72px;flex-shrink:0;height:26px;border-radius:8px;background:linear-gradient(180deg,#a8c39d,#7a9670);position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);min-width:30px;transition:flex-grow .15s var(--ease)}
         .gc-layrow .bar .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#445339}
         .gc-layrow .gc-numwrap{background:#f0f0f0;flex-shrink:0}
@@ -132,24 +124,6 @@
         .gc-layrow .del:hover{background:rgba(0,0,0,.06);color:#b4453a}
         .gc-kindbtn{flex-shrink:0;height:30px;padding:0 10px;border:1px solid var(--line);background:#f0f0f0;color:var(--brass-dark);border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.02em;cursor:pointer;font-family:inherit;transition:all .18s;min-width:60px}
         .gc-kindbtn:hover:not(:disabled){border-color:var(--brass);background:#fff}
-        /* Blueprint-style front editor */
-        .gc-layrow-wrap{display:flex;flex-direction:column;gap:0}
-        .gc-rowcfg{margin:6px 0 4px;padding:13px;background:#fafaf7;border:1px solid #ececec;border-radius:12px;display:flex;flex-direction:column;gap:10px}
-        .gc-rowcfg-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-        .gc-rowcfg-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:850;color:#333;text-transform:uppercase;letter-spacing:.04em}
-        .gc-rowcfg-title .badge{width:20px;height:20px;border-radius:50%;background:#2a2a2a;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
-        .gc-rowcfg-title .sub{font-weight:500;color:#888;letter-spacing:.01em;text-transform:none;font-size:11px;margin-left:2px}
-        .gc-stepper{display:inline-flex;align-items:center;background:#fff;border:1px solid #e2e2e2;border-radius:8px;padding:2px}
-        .gc-stepper button{width:26px;height:26px;border:0;background:transparent;color:#333;font-size:15px;font-weight:700;cursor:pointer;border-radius:6px;font-family:inherit}
-        .gc-stepper button:hover:not(:disabled){background:#f0f0f0}
-        .gc-stepper button:disabled{opacity:.3;cursor:not-allowed}
-        .gc-stepper .cnt{padding:0 8px;font-size:11px;font-weight:800;color:#333;min-width:92px;text-align:center;letter-spacing:.02em;text-transform:uppercase}
-        .gc-seggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:8px}
-        .gc-segcard{padding:11px;background:#fff;border:1px solid #e6e6e6;border-radius:10px;display:flex;flex-direction:column;gap:8px;position:relative}
-        .gc-segcard[data-locked="1"]{background:#f4f4f2;border-style:dashed}
-        .gc-segcard .lbl{font-size:10.5px;font-weight:850;color:#666;text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;justify-content:space-between;gap:8px}
-        .gc-segrm{border:0;background:transparent;color:#9b625d;cursor:pointer;font-size:11px;font-weight:800;font-family:inherit;padding:4px 6px;border-radius:7px}
-        .gc-segrm:hover{background:#fee;color:#a33}
         .gc-layadd{display:flex;gap:8px}
         .gc-laybtn{flex:1;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px;font-size:13.5px;font-weight:600;color:var(--brass-dark);cursor:pointer;font-family:inherit;transition:all .2s}
         .gc-laybtn:hover{border-color:var(--brass)}
@@ -191,10 +165,6 @@
         .gc-style svg{display:block;width:100%;height:auto;border-radius:8px;margin-bottom:8px}
         .gc-style .t{font-size:14px;font-weight:600}
         .gc-style .d{font-size:12px;color:var(--ink-soft);margin-top:1px}
-        /* Drawer-only build — legacy hotspot surface stays hidden if any thumbnail still injects it. */
-        .gc-hot{display:none !important}
-
-
 
         /* width slider */
         .gc-width{display:flex;align-items:center;gap:16px}
@@ -385,7 +355,6 @@
           .gc-subseg button{font-size:12px}
           .gc-styles{gap:8px}
           .gc-style{padding:12px 10px}
-          .gc-seggrid{grid-template-columns:1fr}
           .gc-width{flex-wrap:wrap;gap:10px}
           .gc-width input[type=range]{flex:1 1 100%;order:2;height:6px}
           .gc-width input[type=range]::-webkit-slider-thumb{width:34px;height:34px}
@@ -463,7 +432,7 @@
                   <button data-light="overhead" title="Overhead showroom"><span class="dot" style="background:#FFFFFF"></span><span class="lbl">Overhead</span></button>
                   <button data-light="warm" class="on" title="Warm showroom"><span class="dot" style="background:#FFC98A"></span><span class="lbl">Warm</span></button>
                 </div>
-                <button class="gc-openbtn gc-overlay gc-overlay-bl" id="animBtn" title="Open drawers">Look inside</button>
+                <button class="gc-openbtn gc-overlay gc-overlay-bl" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
                 <button class="gc-finalbtn gc-overlay gc-overlay-br" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
                 <canvas id="gl"></canvas><div class="gc-borrowed" id="glBorrowed">Viewing in full screen…</div>
                 <div class="gc-3dhint gc-overlay gc-overlay-bc">Drag to spin · scroll or pinch to zoom</div>
@@ -544,8 +513,7 @@
               </div>
 
               <div class="gc-panel gc-fade" id="layoutPanel">
-                <div class="gc-step"><span class="num">L</span><h2>Drawer setup</h2><span class="hint" id="layoutHint">Adjust row heights &amp; fronts</span></div>
-                <div id="layoutStatus" aria-live="polite" aria-atomic="true" class="gc-layout-status"></div>
+                <div class="gc-step"><span class="num">L</span><h2>Front layout</h2><span class="hint" id="layoutHint">Drawers &amp; doors</span></div>
                 <div class="gc-layrows" id="layRows"></div>
                 <div class="gc-layadd">
                   <button id="layAdd" class="gc-laybtn">+ Add row</button>
@@ -2514,7 +2482,7 @@
             {
                 id: "float2",
                 name: "Floating · Two Drawer",
-                desc: "Slab drawer + drawer bank below",
+                desc: "Slab fronts, finger pull",
                 min: 10,
                 max: 60,
                 presets: [10, 24, 30, 36, 48],
@@ -2524,7 +2492,7 @@
             {
                 id: "float4",
                 name: "Floating · Four Drawer",
-                desc: "His & hers · full drawer stack",
+                desc: "Double bank, his &amp; hers",
                 min: 10,
                 max: 96,
                 presets: [48, 60, 72, 84],
@@ -2534,7 +2502,7 @@
             {
                 id: "stone",
                 name: "Stone Apron",
-                desc: "Stone top · drawer bank below",
+                desc: "Thick stone top, integrated sink",
                 min: 10,
                 max: 96,
                 presets: [36, 48, 60, 72],
@@ -2544,7 +2512,7 @@
             {
                 id: "compact",
                 name: "Compact Float",
-                desc: "Single drawer · powder rooms",
+                desc: "Single drawer, powder rooms",
                 min: 10,
                 max: 36,
                 presets: [10, 12, 18, 24, 30],
@@ -2788,15 +2756,14 @@
             hwfinish: "brass",
             trap: "ptrap",
             vRows: [1, 1],
-            vRowsSegments: [[{ kind: "drawer" }], [{ kind: "drawer" }]],
+            vRowsKind: ["drawer", "drawer"],
             mRows: [1, 1],
-            /* relative heights of each drawer row, top->bottom */
+            /* relative heights of each drawer/door row, top->bottom */
             vShelfW: 12,
             mShelfW: 10, /* open-shelf column widths, inches */
             vQty: 1,
             mQty: 1
         };
-        window.__gcState = state;
 
         const DEFAULT_PRICING = { label: "Custom finish", rate: 22, tag: "$22 / inch" };
         const pricingFor = brand => (brand && PRICING[brand]) ? PRICING[brand] : DEFAULT_PRICING;
@@ -2808,7 +2775,7 @@
         const GC_PERSIST_KEYS = [
             "type","editing","vStyle","mStyle","vW","mW","finish","stone",
             "vH","vD","mH","mD","sinks","mount","shelfpos","vshelf","vbottom",
-            "mbottom","wall","hardware","hwfinish","trap","vRows","vRowsSegments","mRows",
+            "mbottom","wall","hardware","hwfinish","trap","vRows","vRowsKind","mRows",
             "vShelfW","mShelfW","vQty","mQty"
         ];
         function gcPickState() {
@@ -2866,7 +2833,7 @@
             return rows.map(v => v / t);
         }
 
-        /* Usable height of the drawer stack, in real inches, for the active piece.
+        /* Usable height of the drawer/door stack, in real inches, for the active piece.
            Vanity: cabinet height minus ~2" counter minus optional bottom shelf (~6").
            Medicine: cabinet height minus ~1.5" frame minus optional bottom row. */
         function frontUsableInches() {
@@ -2904,37 +2871,6 @@
         const mStyleObj = () => STYLES.medicine.find(s => s.id === state.mStyle) || STYLES.medicine[0];
 
         const $ = id => document.getElementById(id);
-        const layoutStatus = () => $("layoutStatus");
-        function announceFrontChange(rowIdx, segIdx) {
-            const el = layoutStatus();
-            if (!el) return;
-            el.textContent = `Drawer updated at row ${rowIdx + 1}, front ${segIdx + 1}.`;
-        }
-        /* Drawer-only build: single canonical layout. */
-        const FRONT_LAYOUTS = [
-            {
-                id: "drawers",
-                name: "All drawers",
-                desc: "Every front is a soft-close drawer.",
-                rows: [[{ kind: "drawer" }], [{ kind: "drawer" }]]
-            }
-        ];
-        function cloneSegments(rows) {
-            return rows.map(row => row.map(() => ({ kind: "drawer" })));
-        }
-        function matchFrontPreset() { return "drawers"; }
-        function applyFrontPreset(id) {
-            const preset = FRONT_LAYOUTS.find(p => p.id === id) || FRONT_LAYOUTS[0];
-            state.vRowsSegments = cloneSegments(preset.rows);
-            state.vRows = preset.rows.map(() => 1);
-            announceFrontChange(1, 0);
-        }
-        function frontPreviewHTML(rows) {
-            const bottom = (rows && rows[1] && rows[1].length ? rows[1] : [{ kind: "drawer" }]);
-            return `<div class="gc-front-mini" aria-hidden="true"><div class="gc-mini-top"></div><div class="gc-mini-row">${bottom.map(() =>
-                `<span class="gc-mini-front drawer"></span>`
-            ).join("")}</div></div>`;
-        }
         const fmt = n => "$" + n.toLocaleString("en-US");
         const curStyle = () => (activeType() === "vanity" ? vStyleObj() : mStyleObj()) || STYLES.vanity[0];
         const curFinish = () => FINISHES.find(f => f.id === state.finish)
@@ -2966,21 +2902,17 @@
             }
             if (!Array.isArray(state.vRows) || !state.vRows.length) state.vRows = [1, 1];
             if (!Array.isArray(state.mRows) || !state.mRows.length) state.mRows = [1, 1];
-            /* drawer-only build: strip any legacy kind state */
-            delete state.vRowsKind;
-            if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
-            state.vRowsSegments = state.vRows.map((_, i) => {
-                const cur = Array.isArray(state.vRowsSegments[i]) ? state.vRowsSegments[i] : null;
-                const count = cur && cur.length ? Math.min(cur.length, 4) : 1;
-                return Array.from({ length: count }, () => ({ kind: "drawer" }));
-            });
-            state.vRowsSegments[0] = [{ kind: "drawer" }];
+            /* keep vRowsKind in lockstep with vRows; default new/missing rows to "drawer" */
+            if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
+            state.vRowsKind = state.vRows.map((_, i) =>
+                state.vRowsKind[i] === "door" ? "door" : "drawer"
+            );
             state.vQty = Math.min(20, Math.max(1, Math.floor(+state.vQty) || 1));
             state.mQty = Math.min(20, Math.max(1, Math.floor(+state.mQty) || 1));
         }
 
         /* ---------- style cards (mini SVG thumbnails) ---------- */
-        function thumbSVG(s, interactive = false) {
+        function thumbSVG(s) {
             const f = curFinish();
             if (activeType() === "medicine") {
                 const shelf = s.id === "framedshelf";
@@ -2995,47 +2927,13 @@
     </svg>`
                 ;
             }
-            /* Vanity thumbnails: TOP = countertop with sink cut-outs (sinks sit on
-               the stone). BOTTOM = drawer fronts drawn from the live state. */
-            const layouts = {
-                float2:  { cx: 35, cw: 90,  sinks: state.sinks === "sink2" ? 2 : 1 },
-                float4:  { cx: 20, cw: 120, sinks: 2 },
-                stone:   { cx: 25, cw: 110, sinks: state.sinks === "sink2" ? 2 : 1 },
-                compact: { cx: 55, cw: 50,  sinks: 1 }
+            const map = {
+                float2: `<rect x="35" y="38" width="90" height="34" rx="3" fill="${f.c1}"/><line x1="35" y1="55" x2="125" y2="55" stroke="${f.grain}" stroke-width="1.4"/><rect x="33" y="33" width="94" height="6" rx="2" fill="#F2F0EC"/>`,
+                float4: `<rect x="20" y="38" width="120" height="34" rx="3" fill="${f.c1}"/><line x1="20" y1="55" x2="140" y2="55" stroke="${f.grain}" stroke-width="1.4"/><line x1="80" y1="38" x2="80" y2="72" stroke="${f.grain}" stroke-width="1.4"/><rect x="18" y="33" width="124" height="6" rx="2" fill="#F2F0EC"/>`,
+                stone: `<rect x="25" y="44" width="110" height="28" rx="3" fill="${f.c1}"/><line x1="25" y1="58" x2="135" y2="58" stroke="${f.grain}" stroke-width="1.4"/><rect x="22" y="30" width="116" height="15" rx="2" fill="#B9B0A2"/><path d="M30 34 l20 7 M70 32 l24 8 M110 35 l16 5" stroke="#A89D8C" stroke-width="1" fill="none"/>`,
+                compact: `<rect x="55" y="42" width="50" height="28" rx="3" fill="${f.c1}"/><rect x="53" y="37" width="54" height="6" rx="2" fill="#F2F0EC"/>`
             };
-            const L = layouts[s.id] || layouts.float2;
-            const isStone = s.id === "stone";
-            const topY = isStone ? 24 : 30;
-            const topH = isStone ? 14 : 10;
-            const basinY = topY + topH / 2;
-            const bx1 = L.cx + L.cw * (L.sinks === 2 ? 0.28 : 0.5);
-            const bx2 = L.cx + L.cw * 0.72;
-            const counter = `
-        <rect x="${L.cx - 3}" y="${topY}" width="${L.cw + 6}" height="${topH}" rx="2" fill="${isStone ? "#B9B0A2" : "#F2F0EC"}" stroke="#C9C2B3" stroke-width="0.6"/>
-        ${isStone ? `<path d="M${L.cx + 3} ${topY + 4} l20 6 M${L.cx + 40} ${topY + 2} l24 7 M${L.cx + 80} ${topY + 5} l18 5" stroke="#A89D8C" stroke-width="1" fill="none"/>` : ""}
-        <ellipse cx="${bx1}" cy="${basinY}" rx="8" ry="2.4" fill="#CFD6D9" opacity=".9"/>
-        <circle cx="${bx1}" cy="${basinY}" r="0.9" fill="#5a6a70"/>
-        ${L.sinks === 2 ? `<ellipse cx="${bx2}" cy="${basinY}" rx="8" ry="2.4" fill="#CFD6D9" opacity=".9"/><circle cx="${bx2}" cy="${basinY}" r="0.9" fill="#5a6a70"/>` : ""}`;
-            const segs = (Array.isArray(state.vRowsSegments) && state.vRowsSegments[1] && state.vRowsSegments[1].length)
-                ? state.vRowsSegments[1]
-                : [{ kind: "drawer" }, { kind: "drawer" }];
-            const rowY = topY + topH + 4;
-            const rowH = 84 - rowY;
-            const segW = L.cw / segs.length;
-            const segsSVG = `<rect x="${L.cx}" y="${rowY}" width="${L.cw}" height="${rowH}" rx="3" fill="${f.c1}"/>` +
-                segs.map((_seg, i) => {
-                    const sx = L.cx + i * segW;
-                    const midY = rowY + rowH / 2;
-                    const decor = `<line x1="${sx + 5}" y1="${midY}" x2="${sx + segW - 5}" y2="${midY}" stroke="${f.grain}" stroke-width="1.3"/>
-                           <rect x="${sx + segW / 2 - 4}" y="${midY - 1.2}" width="8" height="2.4" rx="1" fill="${f.grain}" opacity=".55"/>`;
-                    const divider = i > 0 ? `<line x1="${sx}" y1="${rowY}" x2="${sx}" y2="${rowY + rowH}" stroke="${f.grain}" stroke-width="1.2"/>` : "";
-                    return divider + decor + `<title>Drawer front</title>`;
-                }).join("");
-            return `<svg viewBox="0 0 160 100" role="img" aria-label="${s.name} \u2014 countertop with basins on top, drawers below" style="pointer-events:none">
-        <rect width="160" height="100" fill="#EFEBE3"/>
-        <g><title>Countertop \u2014 sinks sit here, no cabinet front on this band</title>${counter}</g>
-        ${segsSVG}
-      </svg>`;
+            return `<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#EFEBE3"/>${map[s.id]}</svg>`;
         }
 
         function renderStyles() {
@@ -3044,30 +2942,27 @@
             const cur = at === "vanity" ? state.vStyle : state.mStyle;
             $("styleGrid").innerHTML = STYLES[at].map(s => `
     <button class="gc-style ${s.id === cur ? 'on' : ''}" data-style="${s.id}">
-      ${thumbSVG(s, false)}
+      ${thumbSVG(s)}
       <span class="t">${s.name}</span>
       <span class="d">${s.desc}</span>
     </button>`
             ).join("");
-            document.querySelectorAll("[data-style]").forEach(b => {
-                b.onclick = () => {
-                    if (at === "vanity")
-                        state.vStyle = b.dataset.style;
-                    else
-                        state.mStyle = b.dataset.style;
-                    const s = curStyle();
-                    setWidthRaw(Math.min(Math.max(curW(), s.min), s.max));
-                    if (s.sinks === 2)
-                        state.sinks = "sink2";
-                    else if (s.sinks === 1 && curW() < 48)
-                        state.sinks = "sink1";
-                    renderAll();
-                    if (typeof preloadSwatchColors === "function")
-                        setTimeout(preloadSwatchColors, 300);
-                };
+            document.querySelectorAll("[data-style]").forEach(b => b.onclick = () => {
+                if (at === "vanity")
+                    state.vStyle = b.dataset.style;
+                else
+                    state.mStyle = b.dataset.style;
+                const s = curStyle();
+                setWidthRaw(Math.min(Math.max(curW(), s.min), s.max));
+                if (s.sinks === 2)
+                    state.sinks = "sink2";
+                else if (s.sinks === 1 && curW() < 48)
+                    state.sinks = "sink1";
+                renderAll();
+                if (typeof preloadSwatchColors === "function")
+                    setTimeout(preloadSwatchColors, 300);
             });
         }
-
         function setWidthRaw(w) {
             if (activeType() === "vanity")
                 state.vW = w;
@@ -3788,7 +3683,7 @@
 
         /* ================== SHOWROOM MATERIAL PRESETS ==================
            Map countertop + panel categories -> physically-tuned PBR params
-           so each option reads like the real slab/front under showroom light.
+           so each option reads like the real slab/door under showroom light.
            Tweak ONE table here, every surface in the scene updates. */
         const STONE_PRESETS = {
             /* polished engineered quartz - mirror-like clearcoat over diffuse */
@@ -4054,7 +3949,7 @@
             return "#" + h(r) + h(g) + h(b);
         }
 
-        /* ----- PANEL / DRAWER-FRONT SHOWROOM PRESETS -----
+        /* ----- PANEL / DOOR-FRONT SHOWROOM PRESETS -----
            Categories cover every panel style we stock. Resolved from
            finish.finish > finish.category > name keywords > brand default. */
         const PANEL_PRESETS = {
@@ -4251,7 +4146,7 @@
                within typical cabinetry range (≤48"); larger panels still tile
                at the physical 24" scale.
              - offset is DETERMINISTIC (hashed from finish id + rounded panel
-               size) so stacked drawer fronts and re-renders
+               size) so stacked drawer fronts, adjacent doors, and re-renders
                of the same SKU always align edge-to-edge instead of drifting.
              - panels smaller than the tile are centred so trim/reveals sit
                inside the texture rather than catching a wrap seam at the edge.
@@ -4733,24 +4628,64 @@
                 if (rw < 6)
                     return;
                 const cols = 1; /* one column per region; rows are custom */
-                const rowFw = rw - gap * 2;
-                const rowCx = (rg[0] + rg[1]) / 2;
+                const fw = rw - gap * 2;
                 /* lay rows from TOP down so vRows[0] is the top drawer */
                 let yCursor = yB + innerH - gap;
                 for (let rI = 0; rI < nR; rI++) {
                     const fh = usableH * fr[rI];
                     const cy = yCursor - fh / 2;
                     yCursor -= fh + gap;
-                    /* row is split into 1–4 side-by-side drawer fronts. */
-                    const _rowSegs = (state.vRowsSegments && state.vRowsSegments[rI]) || [{ kind: "drawer" }];
-                    const segGap = 0.28;
-                    const _nS = Math.max(1, _rowSegs.length);
-                    const _segW = Math.max(4, (rowFw - segGap * (_nS - 1)) / _nS);
-                    for (let sI = 0; sI < _nS; sI++) {
-                        const fw = _segW;
-                        const cx = (rowCx - rowFw / 2) + _segW / 2 + sI * (_segW + segGap);
-                        const mirror = (mIdx + rI + sI) % 2 === 1;
+                    const mirror = (mIdx + rI) % 2 === 1;
+                    const cx = (rg[0] + rg[1]) / 2;
 
+                    /* ---- door row branch (hinged fronts + interior shelf) ----
+                       If this row is set to "door" AND no sink sits above it,
+                       build hinged door(s) instead of a drawer box. Sink rows
+                       are always drawers so the U-cut + trap stay valid. */
+                    {
+                        const edgeBufDoor = _notchHW + 0.8;
+                        const sinksHere = (rI === 0)
+                            ? _fxs.filter(fx => fx >= cx - fw / 2 + edgeBufDoor && fx <= cx + fw / 2 - edgeBufDoor)
+                            : [];
+                        const kind = (state.vRowsKind && state.vRowsKind[rI]) || "drawer";
+                        if (kind === "door" && sinksHere.length === 0 && fw >= 8) {
+                            const twoDoors = fw >= 22;
+                            const gapD = 0.18;
+                            const dwEach = twoDoors ? (fw - gapD) / 2 : fw;
+                            const hwM = metalMat();
+                            const makeDoor = (hingeX, dir, dw) => {
+                                const gg = new THREE.Group();
+                                gg.position.set(hingeX, cy, D / 2 - 0.5);
+                                const dFront = mk(dw, fh, 1, panelMat(f, dw, fh, mirror));
+                                dFront.position.set(dir * dw / 2, 0, 0.5);
+                                gg.add(dFront);
+                                const pullLen = Math.min(dw * 0.5, 5);
+                                const pull = mk(pullLen, 0.35, 0.55, hwM);
+                                pull.position.set(dir * (dw - 1.4), 0, 1.05);
+                                gg.add(pull);
+                                root.add(gg);
+                                animParts.push({ g: gg, type: "hinge", rot: -dir * 1.15 });
+                            };
+                            if (twoDoors) {
+                                makeDoor(cx - fw / 2, 1, dwEach);
+                                makeDoor(cx + fw / 2, -1, dwEach);
+                            } else {
+                                makeDoor(cx - fw / 2, 1, dwEach);
+                            }
+                            /* interior back + one shelf so the cavity reads correctly when open */
+                            const bd2 = Math.max(D - 4, 4);
+                            const zcBack = D / 2 - 1.5 - bd2 / 2;
+                            const backP = mk(fw - 1, Math.max(fh - 1, 1), 0.4, wm.a);
+                            backP.position.set(cx, cy, zcBack - bd2 / 2 + 0.2);
+                            root.add(backP);
+                            if (fh >= 10) {
+                                const shelf = mk(fw - 1.6, 0.5, bd2 - 0.6, wm.a);
+                                shelf.position.set(cx, cy, zcBack);
+                                root.add(shelf);
+                            }
+                            continue;
+                        }
+                    }
 
                     const g = new THREE.Group();
                     g.position.set(cx, cy, 0);
@@ -4929,7 +4864,6 @@
                         peekY: cy + (-fh / 2 + 0.9) + bh + 2,
                         peekZ: D / 2 + slideOut + 6
                     });
-                    } /* end segment loop */
                 }
                 mIdx++;
             });
@@ -6053,59 +5987,32 @@
             const fr = rowFractions(rows);
             const inch = rowInches();
             const totalH = frontUsableInches();
-            $("layoutHint").textContent = at === "vanity"
-                ? `Vanity \u00b7 ${fmtMeasure(totalH)} of drawer fronts`
-                : `Cabinet \u00b7 ${fmtMeasure(totalH)} of fronts`;
+            $("layoutHint").textContent = `${at === "vanity" ? "Vanity" : "Cabinet"} \u00b7 ${fmtMeasure(totalH)} of fronts`;
             const rowMax = (totalH - 2 * (rows.length - 1)).toFixed(1); /* max one row can take, leaving 2" min for others */
             const isVanity = at === "vanity";
-            const layAddWrap = $("layAdd") && $("layAdd").parentElement;
-            if (layAddWrap) layAddWrap.style.display = isVanity ? "none" : "";
-            const segs = state.vRowsSegments || [];
-            const presetUI = "";
-            $("layRows").innerHTML = presetUI + rows.map((v, i) => {
+            const kinds = state.vRowsKind || [];
+            $("layRows").innerHTML = rows.map((v, i) => {
+                const kind = kinds[i] === "door" ? "door" : "drawer";
                 const sinkLocked = isVanity && i === 0; /* top row sits under sink → drawer only */
-                const rowSegs = Array.isArray(segs[i]) && segs[i].length ? segs[i] : [{ kind: "drawer" }];
-                const segsUI = isVanity ? `
-        <div class="gc-rowcfg" data-row="${i}">
-          <div class="gc-rowcfg-head">
-            <div class="gc-rowcfg-title">
-              <span class="badge">${i + 1}</span>
-              <span>${sinkLocked ? "Top plumbing drawer" : `Row ${i + 1}`}</span>
-              ${sinkLocked ? '<span class="sub">Always a drawer with U-cut</span>' : `<span class="sub">Left to right, drawer fronts</span>`}
-            </div>
-            ${sinkLocked ? '' : `
-            <div class="gc-stepper" role="group" aria-label="Number of drawers in this row">
-              <button data-lr="segstepdn" data-i="${i}" ${rowSegs.length <= 1 ? 'disabled' : ''} aria-label="Remove one side-by-side drawer">\u2212</button>
-              <span class="cnt">${rowSegs.length} side by side</span>
-              <button data-lr="segstepup" data-i="${i}" ${rowSegs.length >= 4 ? 'disabled' : ''} aria-label="Add one side-by-side drawer">+</button>
-            </div>`}
-          </div>
-          <div class="gc-seggrid">
-            ${rowSegs.map((_s, si) => `
-              <div class="gc-segcard" data-locked="${sinkLocked ? 1 : 0}">
-                <div class="lbl">
-                  <span>Drawer ${si + 1} ${rowSegs.length > 1 ? (si === 0 ? '· left' : si === rowSegs.length - 1 ? '· right' : '· middle') : ''}</span>
-                  ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segrm" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove drawer ${si + 1}" title="Remove this drawer">Remove</button>` : ''}
-                </div>
-              </div>`).join('')}
-          </div>
-        </div>` : "";
+                const kindBtn = isVanity ? `
+        <button class="gc-kindbtn" data-lr="kind" data-i="${i}"
+                title="${sinkLocked ? "Top row is under the sink — must be a drawer" : "Toggle drawer / door"}"
+                ${sinkLocked ? "disabled style='opacity:.45;cursor:not-allowed'" : ""}>
+          ${sinkLocked ? "Drawer" : (kind === "door" ? "Door" : "Drawer")}
+        </button>` : "";
                 return `
-    <div class="gc-layrow-wrap ${isVanity ? 'simple' : ''}">
-      <div class="gc-layrow">
-        <div class="bar" style="flex-grow:${fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
-        <div class="rowctl">
-          <input type="range" class="rslide" data-i="${i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
-                 style="--fill:${((Math.min(inch[i], rowMax) - 2) / (Math.max(rowMax - 2, 0.1)) * 100).toFixed(0)}%">
-          <div class="gc-numwrap">
-            <button data-lr="dn" data-i="${i}" aria-label="Shorter">\u2212</button>
-            <input type="text" class="rin" data-i="${i}" inputmode="decimal" value="${fmtMeasure(inch[i])}">
-            <button data-lr="up" data-i="${i}" aria-label="Taller">+</button>
-          </div>
-        </div>
-        <button class="del" data-lr="del" data-i="${i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
+    <div class="gc-layrow">
+      <div class="bar" style="flex-grow:${fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
+      <div class="rowctl">
+        <input type="range" class="rslide" data-i="${i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
+               style="--fill:${((Math.min(inch[i], rowMax) - 2) / (Math.max(rowMax - 2, 0.1)) * 100).toFixed(0)}%">
+        <div class="gc-numwrap">
+          <button data-lr="dn" data-i="${i}" aria-label="Shorter">\u2212</button>
+          <input type="text" class="rin" data-i="${i}" inputmode="decimal" value="${fmtMeasure(inch[i])}">
+          <button data-lr="up" data-i="${i}" aria-label="Taller">+</button>
+        </div>${kindBtn}
       </div>
-      ${segsUI}
+      <button class="del" data-lr="del" data-i="${i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
     </div>`;
             }).join("");
             /* live drag: update on input (every move), commit on change */
@@ -6143,24 +6050,14 @@
                     const r = curRows().slice();
                     r.splice(i, 1);
                     setCurRows(r);
-                    if (activeType() === "vanity") {
-                        if (Array.isArray(state.vRowsSegments)) state.vRowsSegments.splice(i, 1);
+                    if (activeType() === "vanity" && Array.isArray(state.vRowsKind)) {
+                        state.vRowsKind.splice(i, 1);
                     }
                 }
-                if (activeType() === "vanity" && i > 0) {
-                    if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
-                    while (state.vRowsSegments.length < curRows().length) state.vRowsSegments.push([{ kind: "drawer" }]);
-                    const sIdx = +b.dataset.s;
-                    if ((b.dataset.lr === "segadd" || b.dataset.lr === "segstepup") && state.vRowsSegments[i].length < 4) {
-                        state.vRowsSegments[i].push({ kind: "drawer" });
-                        announceFrontChange(i, state.vRowsSegments[i].length - 1);
-                    }
-                    if (b.dataset.lr === "segstepdn" && state.vRowsSegments[i].length > 1) {
-                        state.vRowsSegments[i].pop();
-                    }
-                    if (b.dataset.lr === "segdel" && state.vRowsSegments[i].length > 1) {
-                        state.vRowsSegments[i].splice(sIdx, 1);
-                    }
+                if (b.dataset.lr === "kind" && activeType() === "vanity" && i > 0) {
+                    if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
+                    while (state.vRowsKind.length < curRows().length) state.vRowsKind.push("drawer");
+                    state.vRowsKind[i] = state.vRowsKind[i] === "door" ? "drawer" : "door";
                 }
                 renderLayout();
                 renderPreview();
@@ -6181,8 +6078,8 @@
             rows.push(avg);
             setCurRows(rows);
             if (activeType() === "vanity") {
-                if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
-                state.vRowsSegments.push([{ kind: "drawer" }]);
+                if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
+                state.vRowsKind.push("drawer");
             }
             renderLayout();
             renderPreview();
@@ -7048,8 +6945,6 @@
         }
         /* hydrate from URL/localStorage BEFORE first paint so the 3D scene
            builds with the persisted trap/finish/sink config */
-        window.__gcRenderLayout = renderLayout;
-        window.__gcRenderPreview = renderPreview;
         gcLoadState();
         /* first paint: run now, then again after layout settles so the 3D canvas
            initialises with real dimensions (fixes blank stage on load) */
@@ -7080,7 +6975,6 @@
                 applyLighting(b.dataset.light);
             });
         })();
-        
         </script>
         </div>
         </body>
