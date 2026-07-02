@@ -2969,10 +2969,8 @@
             }
             if (!Array.isArray(state.vRows) || !state.vRows.length) state.vRows = [1, 1];
             if (!Array.isArray(state.mRows) || !state.mRows.length) state.mRows = [1, 1];
-            /* keep vRowsKind in lockstep with vRows; default new/missing rows to "drawer" */
-            if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
-            /* Doors option disabled — force every row to drawer. */
-            state.vRowsKind = state.vRows.map(() => "drawer");
+            /* drawer-only build: strip any legacy kind state */
+            delete state.vRowsKind;
             if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
             state.vRowsSegments = state.vRows.map((_, i) => {
                 const cur = Array.isArray(state.vRowsSegments[i]) ? state.vRowsSegments[i] : null;
