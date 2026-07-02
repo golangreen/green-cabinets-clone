@@ -6079,14 +6079,25 @@
                     const r = curRows().slice();
                     r.splice(i, 1);
                     setCurRows(r);
-                    if (activeType() === "vanity" && Array.isArray(state.vRowsKind)) {
-                        state.vRowsKind.splice(i, 1);
+                    if (activeType() === "vanity") {
+                        if (Array.isArray(state.vRowsKind)) state.vRowsKind.splice(i, 1);
+                        if (Array.isArray(state.vRowsSegments)) state.vRowsSegments.splice(i, 1);
                     }
                 }
-                if (b.dataset.lr === "kind" && activeType() === "vanity" && i > 0) {
-                    if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
-                    while (state.vRowsKind.length < curRows().length) state.vRowsKind.push("drawer");
-                    state.vRowsKind[i] = state.vRowsKind[i] === "door" ? "drawer" : "door";
+                if (activeType() === "vanity" && i > 0) {
+                    if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
+                    while (state.vRowsSegments.length < curRows().length) state.vRowsSegments.push([{ kind: "drawer" }]);
+                    const sIdx = +b.dataset.s;
+                    if (b.dataset.lr === "segkind") {
+                        const seg = state.vRowsSegments[i][sIdx];
+                        if (seg) seg.kind = seg.kind === "door" ? "drawer" : "door";
+                    }
+                    if (b.dataset.lr === "segadd" && state.vRowsSegments[i].length < 4) {
+                        state.vRowsSegments[i].push({ kind: "door" });
+                    }
+                    if (b.dataset.lr === "segdel" && state.vRowsSegments[i].length > 1) {
+                        state.vRowsSegments[i].splice(sIdx, 1);
+                    }
                 }
                 renderLayout();
                 renderPreview();
