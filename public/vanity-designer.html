@@ -7311,6 +7311,8 @@
         }
         /* hydrate from URL/localStorage BEFORE first paint so the 3D scene
            builds with the persisted trap/finish/sink config */
+        window.__gcRenderLayout = renderLayout;
+        window.__gcRenderPreview = renderPreview;
         gcLoadState();
         /* first paint: run now, then again after layout settles so the 3D canvas
            initialises with real dimensions (fixes blank stage on load) */
