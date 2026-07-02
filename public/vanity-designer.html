@@ -6274,6 +6274,7 @@
                         if (seg) {
                             seg.kind = seg.kind === "door" ? "drawer" : "door";
                             if (seg.kind === "door" && !seg.hinge) seg.hinge = "pair";
+                            announceFrontChange(i, sIdx, seg.kind, seg.hinge);
                         }
                     }
                     if (b.dataset.lr === "seghinge") {
