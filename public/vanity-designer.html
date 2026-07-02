@@ -2946,13 +2946,33 @@
     </svg>`
                 ;
             }
-            const map = {
-                float2: `<rect x="35" y="38" width="90" height="34" rx="3" fill="${f.c1}"/><line x1="35" y1="55" x2="125" y2="55" stroke="${f.grain}" stroke-width="1.4"/><rect x="33" y="33" width="94" height="6" rx="2" fill="#F2F0EC"/>`,
-                float4: `<rect x="20" y="38" width="120" height="34" rx="3" fill="${f.c1}"/><line x1="20" y1="55" x2="140" y2="55" stroke="${f.grain}" stroke-width="1.4"/><line x1="80" y1="38" x2="80" y2="72" stroke="${f.grain}" stroke-width="1.4"/><rect x="18" y="33" width="124" height="6" rx="2" fill="#F2F0EC"/>`,
-                stone: `<rect x="25" y="44" width="110" height="28" rx="3" fill="${f.c1}"/><line x1="25" y1="58" x2="135" y2="58" stroke="${f.grain}" stroke-width="1.4"/><rect x="22" y="30" width="116" height="15" rx="2" fill="#B9B0A2"/><path d="M30 34 l20 7 M70 32 l24 8 M110 35 l16 5" stroke="#A89D8C" stroke-width="1" fill="none"/>`,
-                compact: `<rect x="55" y="42" width="50" height="28" rx="3" fill="${f.c1}"/><rect x="53" y="37" width="54" height="6" rx="2" fill="#F2F0EC"/>`
+            /* Vanity thumbnails: TOP band = drawer (sink row, locked),
+               BOTTOM band = door(s) with a hinge dot + swing arc so users
+               instantly see where doors can be added in step L (Front layout). */
+            const doorBand = (x, y, w, h, twin) => {
+                const mid = x + w / 2;
+                const hingeR = 1.6;
+                const arc = (hx, dir) => `<path d="M ${hx} ${y + h - 3} q ${dir * 6} -3 ${dir * 9} -9" stroke="${f.grain}" stroke-width="1" fill="none" opacity=".7" stroke-dasharray="2 2"/>`;
+                return `
+        <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${f.c1}"/>
+        ${twin ? `<line x1="${mid}" y1="${y}" x2="${mid}" y2="${y + h}" stroke="${f.grain}" stroke-width="1.2"/>` : ""}
+        <circle cx="${x + 3}" cy="${y + h / 2}" r="${hingeR}" fill="${f.grain}"/>
+        ${twin ? `<circle cx="${x + w - 3}" cy="${y + h / 2}" r="${hingeR}" fill="${f.grain}"/>${arc(mid - 2, -1)}${arc(mid + 2, 1)}` : arc(x + w - 3, -1)}`;
             };
-            return `<svg viewBox="0 0 160 100"><rect width="160" height="100" fill="#EFEBE3"/>${map[s.id]}</svg>`;
+            const map = {
+                float2: `<rect x="35" y="30" width="90" height="18" rx="3" fill="${f.c1}"/><line x1="35" y1="39" x2="125" y2="39" stroke="${f.grain}" stroke-width="1.2"/><rect x="33" y="26" width="94" height="5" rx="2" fill="#F2F0EC"/>${doorBand(35, 52, 90, 30, true)}`,
+                float4: `<rect x="20" y="30" width="120" height="18" rx="3" fill="${f.c1}"/><line x1="20" y1="39" x2="140" y2="39" stroke="${f.grain}" stroke-width="1.2"/><line x1="80" y1="30" x2="80" y2="48" stroke="${f.grain}" stroke-width="1.2"/><rect x="18" y="26" width="124" height="5" rx="2" fill="#F2F0EC"/>${doorBand(20, 52, 58, 30, true)}${doorBand(82, 52, 58, 30, true)}`,
+                stone: `<rect x="22" y="24" width="116" height="14" rx="2" fill="#B9B0A2"/><path d="M28 28 l20 6 M68 26 l24 7 M108 29 l18 5" stroke="#A89D8C" stroke-width="1" fill="none"/><rect x="25" y="40" width="110" height="14" rx="3" fill="${f.c1}"/>${doorBand(25, 56, 110, 28, true)}`,
+                compact: `<rect x="55" y="30" width="50" height="16" rx="3" fill="${f.c1}"/><rect x="53" y="26" width="54" height="5" rx="2" fill="#F2F0EC"/>${doorBand(55, 50, 50, 32, false)}`
+            };
+            return `<svg viewBox="0 0 160 100" role="img" aria-label="${s.name} — drawers on top, doors on bottom">
+        <rect width="160" height="100" fill="#EFEBE3"/>
+        ${map[s.id]}
+        <g font-family="ui-sans-serif,system-ui" font-size="7" fill="${f.grain}" opacity=".85">
+          <text x="6" y="42">drawer</text>
+          <text x="6" y="72">door</text>
+        </g>
+      </svg>`;
         }
 
         function renderStyles() {
