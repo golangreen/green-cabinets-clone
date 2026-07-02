@@ -3065,6 +3065,7 @@
                 const row = state.vRowsSegments[1] || (state.vRowsSegments[1] = [{ kind: "door" }]);
                 if (!row[i]) return false;
                 row[i].kind = row[i].kind === "door" ? "drawer" : "door";
+                announceFrontChange(1, i, row[i].kind, row[i].hinge);
                 renderAll();
                 /* restore focus to the same segment after re-render */
                 requestAnimationFrame(() => {
