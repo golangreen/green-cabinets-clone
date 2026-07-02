@@ -2931,7 +2931,7 @@
         }
 
         /* ---------- style cards (mini SVG thumbnails) ---------- */
-        function thumbSVG(s) {
+        function thumbSVG(s, interactive = false) {
             const f = curFinish();
             if (activeType() === "medicine") {
                 const shelf = s.id === "framedshelf";
@@ -2946,32 +2946,61 @@
     </svg>`
                 ;
             }
-            /* Vanity thumbnails: TOP band = drawer (sink row, locked),
-               BOTTOM band = door(s) with a hinge dot + swing arc so users
-               instantly see where doors can be added in step L (Front layout). */
-            const doorBand = (x, y, w, h, twin) => {
-                const mid = x + w / 2;
-                const hingeR = 1.6;
-                const arc = (hx, dir) => `<path d="M ${hx} ${y + h - 3} q ${dir * 6} -3 ${dir * 9} -9" stroke="${f.grain}" stroke-width="1" fill="none" opacity=".7" stroke-dasharray="2 2"/>`;
-                return `
-        <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${f.c1}"/>
-        ${twin ? `<line x1="${mid}" y1="${y}" x2="${mid}" y2="${y + h}" stroke="${f.grain}" stroke-width="1.2"/>` : ""}
-        <circle cx="${x + 3}" cy="${y + h / 2}" r="${hingeR}" fill="${f.grain}"/>
-        ${twin ? `<circle cx="${x + w - 3}" cy="${y + h / 2}" r="${hingeR}" fill="${f.grain}"/>${arc(mid - 2, -1)}${arc(mid + 2, 1)}` : arc(x + w - 3, -1)}`;
+            /* Vanity thumbnails: TOP = countertop with sink cut-outs (no dummy drawer,
+               because sinks sit on the stone). BOTTOM = door/drawer segments that
+               act as click hotspots — tapping a front toggles door ↔ drawer for
+               the currently-selected style. */
+            const layouts = {
+                float2:  { cx: 35, cw: 90,  sinks: state.sinks === "sink2" ? 2 : 1 },
+                float4:  { cx: 20, cw: 120, sinks: 2 },
+                stone:   { cx: 25, cw: 110, sinks: state.sinks === "sink2" ? 2 : 1 },
+                compact: { cx: 55, cw: 50,  sinks: 1 }
             };
-            const map = {
-                float2: `<rect x="35" y="30" width="90" height="18" rx="3" fill="${f.c1}"/><line x1="35" y1="39" x2="125" y2="39" stroke="${f.grain}" stroke-width="1.2"/><rect x="33" y="26" width="94" height="5" rx="2" fill="#F2F0EC"/>${doorBand(35, 52, 90, 30, true)}`,
-                float4: `<rect x="20" y="30" width="120" height="18" rx="3" fill="${f.c1}"/><line x1="20" y1="39" x2="140" y2="39" stroke="${f.grain}" stroke-width="1.2"/><line x1="80" y1="30" x2="80" y2="48" stroke="${f.grain}" stroke-width="1.2"/><rect x="18" y="26" width="124" height="5" rx="2" fill="#F2F0EC"/>${doorBand(20, 52, 58, 30, true)}${doorBand(82, 52, 58, 30, true)}`,
-                stone: `<rect x="22" y="24" width="116" height="14" rx="2" fill="#B9B0A2"/><path d="M28 28 l20 6 M68 26 l24 7 M108 29 l18 5" stroke="#A89D8C" stroke-width="1" fill="none"/><rect x="25" y="40" width="110" height="14" rx="3" fill="${f.c1}"/>${doorBand(25, 56, 110, 28, true)}`,
-                compact: `<rect x="55" y="30" width="50" height="16" rx="3" fill="${f.c1}"/><rect x="53" y="26" width="54" height="5" rx="2" fill="#F2F0EC"/>${doorBand(55, 50, 50, 32, false)}`
-            };
-            return `<svg viewBox="0 0 160 100" role="img" aria-label="${s.name} — drawers on top, doors on bottom">
+            const L = layouts[s.id] || layouts.float2;
+            const isStone = s.id === "stone";
+            /* Countertop slab + basin hints */
+            const topY = isStone ? 24 : 30;
+            const topH = isStone ? 14 : 10;
+            const basinY = topY + topH / 2;
+            const bx1 = L.cx + L.cw * (L.sinks === 2 ? 0.28 : 0.5);
+            const bx2 = L.cx + L.cw * 0.72;
+            const counter = `
+        <rect x="${L.cx - 3}" y="${topY}" width="${L.cw + 6}" height="${topH}" rx="2" fill="${isStone ? "#B9B0A2" : "#F2F0EC"}" stroke="#C9C2B3" stroke-width="0.6"/>
+        ${isStone ? `<path d="M${L.cx + 3} ${topY + 4} l20 6 M${L.cx + 40} ${topY + 2} l24 7 M${L.cx + 80} ${topY + 5} l18 5" stroke="#A89D8C" stroke-width="1" fill="none"/>` : ""}
+        <ellipse cx="${bx1}" cy="${basinY}" rx="8" ry="2.4" fill="#CFD6D9" opacity=".9"/>
+        <circle cx="${bx1}" cy="${basinY}" r="0.9" fill="#5a6a70"/>
+        ${L.sinks === 2 ? `<ellipse cx="${bx2}" cy="${basinY}" rx="8" ry="2.4" fill="#CFD6D9" opacity=".9"/><circle cx="${bx2}" cy="${basinY}" r="0.9" fill="#5a6a70"/>` : ""}`;
+            /* Segment row driven by live state so hotspots reflect the real config */
+            const segs = (interactive && Array.isArray(state.vRowsSegments) && state.vRowsSegments[1] && state.vRowsSegments[1].length)
+                ? state.vRowsSegments[1]
+                : [{ kind: "door" }, { kind: "door" }];
+            const rowY = topY + topH + 4;
+            const rowH = 84 - rowY;
+            const segW = L.cw / segs.length;
+            const segsSVG = `<rect x="${L.cx}" y="${rowY}" width="${L.cw}" height="${rowH}" rx="3" fill="${f.c1}"/>` +
+                segs.map((seg, i) => {
+                    const sx = L.cx + i * segW;
+                    const isDoor = seg.kind === "door";
+                    const midY = rowY + rowH / 2;
+                    const decor = isDoor
+                        ? `<circle cx="${sx + 3}" cy="${midY}" r="1.5" fill="${f.grain}"/>
+                           <path d="M ${sx + segW - 3} ${rowY + rowH - 3} q -6 -3 -9 -9" stroke="${f.grain}" stroke-width="1" fill="none" opacity=".7" stroke-dasharray="2 2"/>`
+                        : `<line x1="${sx + 5}" y1="${midY}" x2="${sx + segW - 5}" y2="${midY}" stroke="${f.grain}" stroke-width="1.3"/>
+                           <rect x="${sx + segW / 2 - 4}" y="${midY - 1.2}" width="8" height="2.4" rx="1" fill="${f.grain}" opacity=".55"/>`;
+                    const divider = i > 0 ? `<line x1="${sx}" y1="${rowY}" x2="${sx}" y2="${rowY + rowH}" stroke="${f.grain}" stroke-width="1.2"/>` : "";
+                    const hot = interactive
+                        ? `<rect class="gc-hot" data-seg="${i}" x="${sx}" y="${rowY}" width="${segW}" height="${rowH}" fill="transparent" style="cursor:pointer;pointer-events:all"><title>Tap to switch to ${isDoor ? "drawer" : "door"}</title></rect>`
+                        : "";
+                    return divider + decor + hot;
+                }).join("");
+            const hint = interactive
+                ? `<text x="80" y="96" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6.2" fill="${f.grain}" opacity=".8">tap fronts to toggle door / drawer</text>`
+                : `<text x="80" y="96" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6.2" fill="${f.grain}" opacity=".55">select to edit fronts</text>`;
+            return `<svg viewBox="0 0 160 100" role="img" aria-label="${s.name} — countertop above, tap fronts to toggle door or drawer" style="pointer-events:${interactive ? "all" : "none"}">
         <rect width="160" height="100" fill="#EFEBE3"/>
-        ${map[s.id]}
-        <g font-family="ui-sans-serif,system-ui" font-size="7" fill="${f.grain}" opacity=".85">
-          <text x="6" y="42">drawer</text>
-          <text x="6" y="72">door</text>
-        </g>
+        ${counter}
+        ${segsSVG}
+        ${hint}
       </svg>`;
         }
 
@@ -2981,12 +3010,25 @@
             const cur = at === "vanity" ? state.vStyle : state.mStyle;
             $("styleGrid").innerHTML = STYLES[at].map(s => `
     <button class="gc-style ${s.id === cur ? 'on' : ''}" data-style="${s.id}">
-      ${thumbSVG(s)}
+      ${thumbSVG(s, at === "vanity" && s.id === cur)}
       <span class="t">${s.name}</span>
       <span class="d">${s.desc}</span>
     </button>`
             ).join("");
-            document.querySelectorAll("[data-style]").forEach(b => b.onclick = () => {
+            document.querySelectorAll("[data-style]").forEach(b => b.onclick = (ev) => {
+                /* hotspot click on the selected card toggles a segment instead of re-selecting */
+                const hot = ev.target.closest(".gc-hot");
+                if (hot && b.classList.contains("on") && at === "vanity") {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    const i = +hot.dataset.seg;
+                    const row = state.vRowsSegments[1] || (state.vRowsSegments[1] = [{ kind: "door" }]);
+                    if (row[i]) {
+                        row[i].kind = row[i].kind === "door" ? "drawer" : "door";
+                        renderAll();
+                    }
+                    return;
+                }
                 if (at === "vanity")
                     state.vStyle = b.dataset.style;
                 else
