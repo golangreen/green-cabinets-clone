@@ -217,6 +217,11 @@
         .gc-hot:focus{outline:none}
         .gc-hot:focus-visible{stroke:#5C7650;stroke-width:2;stroke-dasharray:3 2;fill:rgba(92,118,80,.12)}
 
+        /* Doors option cancelled — hide every UI surface that offered it. */
+        .gc-wizrow,#gcWizOpen,#gcWiz,.gc-front-presets,.gc-layout-note,
+        .gc-tog,.gc-hinge,.gc-front-strip{display:none !important}
+
+
 
         /* width slider */
         .gc-width{display:flex;align-items:center;gap:16px}
@@ -488,7 +493,7 @@
                   <button data-light="overhead" title="Overhead showroom"><span class="dot" style="background:#FFFFFF"></span><span class="lbl">Overhead</span></button>
                   <button data-light="warm" class="on" title="Warm showroom"><span class="dot" style="background:#FFC98A"></span><span class="lbl">Warm</span></button>
                 </div>
-                <button class="gc-openbtn gc-overlay gc-overlay-bl" id="animBtn" title="Open drawers &amp; doors">Look inside</button>
+                <button class="gc-openbtn gc-overlay gc-overlay-bl" id="animBtn" title="Open drawers">Look inside</button>
                 <button class="gc-finalbtn gc-overlay gc-overlay-br" id="finalBtn" title="Render the finished piece in real finishes">✨ See it for real</button>
                 <canvas id="gl"></canvas><div class="gc-borrowed" id="glBorrowed">Viewing in full screen…</div>
                 <div class="gc-3dhint gc-overlay gc-overlay-bc">Drag to spin · scroll or pinch to zoom</div>
@@ -569,7 +574,7 @@
               </div>
 
               <div class="gc-panel gc-fade" id="layoutPanel">
-                <div class="gc-step"><span class="num">L</span><h2>Door &amp; drawer setup</h2><span class="hint" id="layoutHint">Pick a layout first</span></div>
+                <div class="gc-step"><span class="num">L</span><h2>Drawer setup</h2><span class="hint" id="layoutHint">Adjust row heights &amp; fronts</span></div>
                 <div id="layoutStatus" aria-live="polite" aria-atomic="true" class="gc-layout-status"></div>
                 <div class="gc-wizrow">
                   <button id="gcWizOpen" class="gc-laybtn" type="button">✨ Guide me (3 quick questions)</button>
@@ -2971,10 +2976,8 @@
             }
         ];
         function cloneSegments(rows) {
-            return rows.map(row => row.map(seg => ({
-                kind: seg && seg.kind === "door" ? "door" : "drawer",
-                ...(seg && seg.kind === "door" ? { hinge: (seg.hinge === "L" || seg.hinge === "R" || seg.hinge === "pair") ? seg.hinge : "pair" } : {})
-            })));
+            /* Doors option disabled — coerce every segment to a drawer. */
+            return rows.map(row => row.map(() => ({ kind: "drawer" })));
         }
         function matchFrontPreset() {
             const rows = state.vRowsSegments || [];
@@ -3035,23 +3038,14 @@
             if (!Array.isArray(state.mRows) || !state.mRows.length) state.mRows = [1, 1];
             /* keep vRowsKind in lockstep with vRows; default new/missing rows to "drawer" */
             if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
-            state.vRowsKind = state.vRows.map((_, i) =>
-                state.vRowsKind[i] === "door" ? "door" : "drawer"
-            );
-            /* vRowsSegments[i] = [{kind:'drawer'|'door'}, ...] — up to 4 fronts per row, left→right */
+            /* Doors option disabled — force every row to drawer. */
+            state.vRowsKind = state.vRows.map(() => "drawer");
             if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
             state.vRowsSegments = state.vRows.map((_, i) => {
-                const legacy = state.vRowsKind[i] === "door" ? "door" : "drawer";
                 const cur = Array.isArray(state.vRowsSegments[i]) ? state.vRowsSegments[i] : null;
-                const arr = (cur && cur.length)
-                    ? cur.slice(0, 4).map(s => {
-                        const isDoor = s && s.kind === "door";
-                        return { kind: isDoor ? "door" : "drawer", ...(isDoor ? { hinge: (s.hinge === "L" || s.hinge === "R" || s.hinge === "pair") ? s.hinge : "pair" } : {}) };
-                    })
-                    : [{ kind: legacy }];
-                return arr.length ? arr : [{ kind: legacy }];
+                const count = cur && cur.length ? Math.min(cur.length, 4) : 1;
+                return Array.from({ length: count }, () => ({ kind: "drawer" }));
             });
-            /* row 0 sits under the sink → must remain a single drawer for U-cut plumbing */
             state.vRowsSegments[0] = [{ kind: "drawer" }];
             state.vQty = Math.min(20, Math.max(1, Math.floor(+state.vQty) || 1));
             state.mQty = Math.min(20, Math.max(1, Math.floor(+state.mQty) || 1));
@@ -6269,7 +6263,7 @@
             const inch = rowInches();
             const totalH = frontUsableInches();
             $("layoutHint").textContent = at === "vanity"
-                ? "Start with a picture preset"
+                ? `Vanity \u00b7 ${fmtMeasure(totalH)} of drawer fronts`
                 : `Cabinet \u00b7 ${fmtMeasure(totalH)} of fronts`;
             const rowMax = (totalH - 2 * (rows.length - 1)).toFixed(1); /* max one row can take, leaving 2" min for others */
             const isVanity = at === "vanity";
@@ -7365,7 +7359,7 @@
             });
         })();
         /* ---------- 3-step onboarding wizard ---------- */
-        (function gcWizard(){
+        (function gcWizard(){ return; /* Doors option cancelled — wizard disabled */
           const STYLE = document.createElement("style");
           STYLE.textContent = `
             .gc-wizrow{margin:6px 0 10px}
