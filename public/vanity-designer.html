@@ -4677,30 +4677,33 @@
                             ? _fxs.filter(fx => fx >= cx - fw / 2 + edgeBufDoor && fx <= cx + fw / 2 - edgeBufDoor)
                             : [];
                         const kind = _segKind;
-                        if (kind === "door" && sinksHere.length === 0 && fw >= 6) {
-                            const twoDoors = fw >= 22;
-                            const gapD = 0.18;
-                            const dwEach = twoDoors ? (fw - gapD) / 2 : fw;
-                            const hwM = metalMat();
-                            const makeDoor = (hingeX, dir, dw) => {
-                                const gg = new THREE.Group();
-                                gg.position.set(hingeX, cy, D / 2 - 0.5);
-                                const dFront = mk(dw, fh, 1, panelMat(f, dw, fh, mirror));
-                                dFront.position.set(dir * dw / 2, 0, 0.5);
-                                gg.add(dFront);
-                                const pullLen = Math.min(dw * 0.5, 5);
-                                const pull = mk(pullLen, 0.35, 0.55, hwM);
-                                pull.position.set(dir * (dw - 1.4), 0, 1.05);
-                                gg.add(pull);
-                                root.add(gg);
-                                animParts.push({ g: gg, type: "hinge", rot: -dir * 1.15 });
-                            };
-                            if (twoDoors) {
-                                makeDoor(cx - fw / 2, 1, dwEach);
-                                makeDoor(cx + fw / 2, -1, dwEach);
-                            } else {
-                                makeDoor(cx - fw / 2, 1, dwEach);
-                            }
+                         if (kind === "door" && sinksHere.length === 0 && fw >= 6) {
+                             const hingePref = (_rowSegs[sI] && _rowSegs[sI].hinge) || (fw >= 22 ? "pair" : "L");
+                             const twoDoors = hingePref === "pair" && fw >= 12;
+                             const gapD = 0.18;
+                             const dwEach = twoDoors ? (fw - gapD) / 2 : fw;
+                             const hwM = metalMat();
+                             const makeDoor = (hingeX, dir, dw) => {
+                                 const gg = new THREE.Group();
+                                 gg.position.set(hingeX, cy, D / 2 - 0.5);
+                                 const dFront = mk(dw, fh, 1, panelMat(f, dw, fh, mirror));
+                                 dFront.position.set(dir * dw / 2, 0, 0.5);
+                                 gg.add(dFront);
+                                 const pullLen = Math.min(dw * 0.5, 5);
+                                 const pull = mk(pullLen, 0.35, 0.55, hwM);
+                                 pull.position.set(dir * (dw - 1.4), 0, 1.05);
+                                 gg.add(pull);
+                                 root.add(gg);
+                                 animParts.push({ g: gg, type: "hinge", rot: -dir * 1.15 });
+                             };
+                             if (twoDoors) {
+                                 makeDoor(cx - fw / 2, 1, dwEach);
+                                 makeDoor(cx + fw / 2, -1, dwEach);
+                             } else if (hingePref === "R") {
+                                 makeDoor(cx + fw / 2, -1, dwEach);
+                             } else {
+                                 makeDoor(cx - fw / 2, 1, dwEach);
+                             }
                             /* interior back + one shelf so the cavity reads correctly when open */
                             const bd2 = Math.max(D - 4, 4);
                             const zcBack = D / 2 - 1.5 - bd2 / 2;
