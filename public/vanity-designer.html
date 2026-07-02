@@ -2813,6 +2813,7 @@
             trap: "ptrap",
             vRows: [1, 1],
             vRowsKind: ["drawer", "drawer"],
+            vRowsSegments: [[{ kind: "drawer" }], [{ kind: "drawer" }]],
             mRows: [1, 1],
             /* relative heights of each drawer/door row, top->bottom */
             vShelfW: 12,
@@ -2831,7 +2832,7 @@
         const GC_PERSIST_KEYS = [
             "type","editing","vStyle","mStyle","vW","mW","finish","stone",
             "vH","vD","mH","mD","sinks","mount","shelfpos","vshelf","vbottom",
-            "mbottom","wall","hardware","hwfinish","trap","vRows","vRowsKind","mRows",
+            "mbottom","wall","hardware","hwfinish","trap","vRows","vRowsKind","vRowsSegments","mRows",
             "vShelfW","mShelfW","vQty","mQty"
         ];
         function gcPickState() {
