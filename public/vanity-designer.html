@@ -3033,23 +3033,14 @@
             if (!Array.isArray(state.mRows) || !state.mRows.length) state.mRows = [1, 1];
             /* keep vRowsKind in lockstep with vRows; default new/missing rows to "drawer" */
             if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
-            state.vRowsKind = state.vRows.map((_, i) =>
-                state.vRowsKind[i] === "door" ? "door" : "drawer"
-            );
-            /* vRowsSegments[i] = [{kind:'drawer'|'door'}, ...] — up to 4 fronts per row, left→right */
+            /* Doors option disabled — force every row to drawer. */
+            state.vRowsKind = state.vRows.map(() => "drawer");
             if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
             state.vRowsSegments = state.vRows.map((_, i) => {
-                const legacy = state.vRowsKind[i] === "door" ? "door" : "drawer";
                 const cur = Array.isArray(state.vRowsSegments[i]) ? state.vRowsSegments[i] : null;
-                const arr = (cur && cur.length)
-                    ? cur.slice(0, 4).map(s => {
-                        const isDoor = s && s.kind === "door";
-                        return { kind: isDoor ? "door" : "drawer", ...(isDoor ? { hinge: (s.hinge === "L" || s.hinge === "R" || s.hinge === "pair") ? s.hinge : "pair" } : {}) };
-                    })
-                    : [{ kind: legacy }];
-                return arr.length ? arr : [{ kind: legacy }];
+                const count = cur && cur.length ? Math.min(cur.length, 4) : 1;
+                return Array.from({ length: count }, () => ({ kind: "drawer" }));
             });
-            /* row 0 sits under the sink → must remain a single drawer for U-cut plumbing */
             state.vRowsSegments[0] = [{ kind: "drawer" }];
             state.vQty = Math.min(20, Math.max(1, Math.floor(+state.vQty) || 1));
             state.mQty = Math.min(20, Math.max(1, Math.floor(+state.mQty) || 1));
