@@ -3052,8 +3052,8 @@
       <span class="d">${s.desc}</span>
     </button>`
             ).join("");
-            document.querySelectorAll("[data-style]").forEach(b => b.onclick = (ev) => {
             const toggleHot = (hot) => {
+
                 const i = +hot.dataset.seg;
                 const row = state.vRowsSegments[1] || (state.vRowsSegments[1] = [{ kind: "door" }]);
                 if (!row[i]) return false;
