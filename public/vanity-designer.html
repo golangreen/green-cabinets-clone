@@ -6176,36 +6176,65 @@
             $("layRows").innerHTML = rows.map((v, i) => {
                 const sinkLocked = isVanity && i === 0; /* top row sits under sink → drawer only */
                 const rowSegs = Array.isArray(segs[i]) && segs[i].length ? segs[i] : [{ kind: "drawer" }];
+                const hArrowL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14"/><path d="M18 12H10"/><path d="M13 8l-3 4 3 4"/></svg>';
+                const hArrowR = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5v14"/><path d="M6 12h8"/><path d="M11 8l3 4-3 4"/></svg>';
+                const hDouble = '<svg width="16" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v14"/><path d="M20 5v14"/><path d="M8 12h3"/><path d="M13 12h3"/></svg>';
                 const segsUI = isVanity ? `
-        <div class="gc-segs" data-row="${i}">
-          ${rowSegs.map((s, si) => {
-            const hg = s.hinge || "pair";
-            const hgLabel = hg === "L" ? "Hinge \u2190" : hg === "R" ? "Hinge \u2192" : "Double";
-            return `
-            <button class="gc-segbtn" data-lr="segkind" data-i="${i}" data-s="${si}"
-                    title="${sinkLocked ? "Sink row locked to drawer" : "Toggle drawer / door"}"
-                    ${sinkLocked ? "disabled style='opacity:.55;cursor:not-allowed'" : ""}>
-              ${s.kind === "door" ? "Door" : "Drawer"}
-            </button>
-            ${(!sinkLocked && s.kind === "door") ? `<button class="gc-segbtn" data-lr="seghinge" data-i="${i}" data-s="${si}" title="Cycle hinge: Left \u2192 Right \u2192 Double" style="font-size:11px;padding:2px 6px">${hgLabel}</button>` : ""}
-            ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segdel" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove front">\u00d7</button>` : ""}
-          `;
-          }).join("")}
-          ${(!sinkLocked && rowSegs.length < 4) ? `<button class="gc-segadd" data-lr="segadd" data-i="${i}" title="Add front">+ front</button>` : ""}
+        <div class="gc-rowcfg" data-row="${i}">
+          <div class="gc-rowcfg-head">
+            <div class="gc-rowcfg-title">
+              <span class="badge">${i + 1}</span>
+              <span>${sinkLocked ? "Sink Row" : "Fronts"}</span>
+              ${sinkLocked ? '<span class="sub">Plumbing \u2014 locked</span>' : `<span class="sub">Tap type to switch</span>`}
+            </div>
+            ${sinkLocked ? '' : `
+            <div class="gc-stepper" role="group" aria-label="Number of fronts in this row">
+              <button data-lr="segstepdn" data-i="${i}" ${rowSegs.length <= 1 ? 'disabled' : ''} aria-label="Fewer fronts">\u2212</button>
+              <span class="cnt">${rowSegs.length} Front${rowSegs.length > 1 ? 's' : ''}</span>
+              <button data-lr="segstepup" data-i="${i}" ${rowSegs.length >= 4 ? 'disabled' : ''} aria-label="More fronts">+</button>
+            </div>`}
+          </div>
+          <div class="gc-seggrid">
+            ${rowSegs.map((s, si) => {
+                const hg = s.hinge || "pair";
+                const isDoor = s.kind === "door";
+                return `
+              <div class="gc-segcard" data-locked="${sinkLocked ? 1 : 0}">
+                <div class="lbl">
+                  <span>S${si + 1}</span>
+                  ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segrm" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove front S${si + 1}" title="Remove this front">\u00d7</button>` : ''}
+                </div>
+                <div class="gc-tog" role="group" aria-label="Front type">
+                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="drawer" class="${!isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${!isDoor}">Drawer</button>
+                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="door" class="${isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${isDoor}">Door</button>
+                </div>
+                ${(isDoor && !sinkLocked) ? `
+                <div class="lbl" style="margin-top:2px">Hinge</div>
+                <div class="gc-hinge" role="group" aria-label="Hinge orientation">
+                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="L" class="${hg === 'L' ? 'on' : ''}" aria-pressed="${hg === 'L'}" title="Hinge on left, door swings to the right">${hArrowR}</button>
+                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="pair" class="${hg === 'pair' ? 'on' : ''}" aria-pressed="${hg === 'pair'}" title="Double doors meeting in the middle">${hDouble}</button>
+                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="R" class="${hg === 'R' ? 'on' : ''}" aria-pressed="${hg === 'R'}" title="Hinge on right, door swings to the left">${hArrowL}</button>
+                </div>` : ''}
+              </div>`;
+            }).join('')}
+          </div>
         </div>` : "";
                 return `
-    <div class="gc-layrow">
-      <div class="bar" style="flex-grow:${fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
-      <div class="rowctl">
-        <input type="range" class="rslide" data-i="${i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
-               style="--fill:${((Math.min(inch[i], rowMax) - 2) / (Math.max(rowMax - 2, 0.1)) * 100).toFixed(0)}%">
-        <div class="gc-numwrap">
-          <button data-lr="dn" data-i="${i}" aria-label="Shorter">\u2212</button>
-          <input type="text" class="rin" data-i="${i}" inputmode="decimal" value="${fmtMeasure(inch[i])}">
-          <button data-lr="up" data-i="${i}" aria-label="Taller">+</button>
-        </div>${segsUI}
+    <div class="gc-layrow-wrap">
+      <div class="gc-layrow">
+        <div class="bar" style="flex-grow:${fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
+        <div class="rowctl">
+          <input type="range" class="rslide" data-i="${i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
+                 style="--fill:${((Math.min(inch[i], rowMax) - 2) / (Math.max(rowMax - 2, 0.1)) * 100).toFixed(0)}%">
+          <div class="gc-numwrap">
+            <button data-lr="dn" data-i="${i}" aria-label="Shorter">\u2212</button>
+            <input type="text" class="rin" data-i="${i}" inputmode="decimal" value="${fmtMeasure(inch[i])}">
+            <button data-lr="up" data-i="${i}" aria-label="Taller">+</button>
+          </div>
+        </div>
+        <button class="del" data-lr="del" data-i="${i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
       </div>
-      <button class="del" data-lr="del" data-i="${i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
+      ${segsUI}
     </div>`;
             }).join("");
             /* live drag: update on input (every move), commit on change */
