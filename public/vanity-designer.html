@@ -3109,9 +3109,29 @@
                     const sx = L.cx + i * segW;
                     const isDoor = seg.kind === "door";
                     const midY = rowY + rowH / 2;
+                    /* Architectural elevation door-swing symbol (NKBA / AWI convention):
+                       dashed triangle whose APEX marks the HINGE side; wide base is
+                       the pull edge. Small filled square at apex = hinge barrel. */
+                    const swing = (hinge) => {
+                        const pad = 2.5;
+                        const x0 = sx + pad, x1 = sx + segW - pad;
+                        const y0 = rowY + pad, y1 = rowY + rowH - pad;
+                        const stroke = `stroke="${f.grain}" stroke-width="0.9" stroke-dasharray="2 1.6" fill="none" opacity=".85"`;
+                        if (hinge === "pair") {
+                            /* Two mirrored triangles: apexes on outer edges, meet at center */
+                            const cx = sx + segW / 2;
+                            return `<polyline points="${x0},${y0} ${cx},${midY} ${x0},${y1}" ${stroke}/>
+                                    <polyline points="${x1},${y0} ${cx},${midY} ${x1},${y1}" ${stroke}/>
+                                    <rect x="${x0 - 0.6}" y="${midY - 1}" width="1.6" height="2" fill="${f.grain}"/>
+                                    <rect x="${x1 - 1}" y="${midY - 1}" width="1.6" height="2" fill="${f.grain}"/>`;
+                        }
+                        const apexX = hinge === "R" ? x1 : x0;
+                        const baseX = hinge === "R" ? x0 : x1;
+                        return `<polyline points="${baseX},${y0} ${apexX},${midY} ${baseX},${y1}" ${stroke}/>
+                                <rect x="${apexX - 0.8}" y="${midY - 1}" width="1.6" height="2" fill="${f.grain}"/>`;
+                    };
                     const decor = isDoor
-                        ? `<circle cx="${sx + 3}" cy="${midY}" r="1.5" fill="${f.grain}"/>
-                           <path d="M ${sx + segW - 3} ${rowY + rowH - 3} q -6 -3 -9 -9" stroke="${f.grain}" stroke-width="1" fill="none" opacity=".7" stroke-dasharray="2 2"/>`
+                        ? swing(seg.hinge || "pair")
                         : `<line x1="${sx + 5}" y1="${midY}" x2="${sx + segW - 5}" y2="${midY}" stroke="${f.grain}" stroke-width="1.3"/>
                            <rect x="${sx + segW / 2 - 4}" y="${midY - 1.2}" width="8" height="2.4" rx="1" fill="${f.grain}" opacity=".55"/>`;
                     const divider = i > 0 ? `<line x1="${sx}" y1="${rowY}" x2="${sx}" y2="${rowY + rowH}" stroke="${f.grain}" stroke-width="1.2"/>` : "";
@@ -3126,6 +3146,7 @@
                         : `<title>${tip}</title>`;
                     return divider + decor + hot;
                 }).join("");
+
             const hint = interactive
                 ? `<text x="80" y="94" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6" fill="${f.grain}" opacity=".7">Tap a front to switch \u2014 use the editor below for hinge \u0026 more</text>`
                 : `<text x="80" y="94" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6" fill="${f.grain}" opacity=".45">Select to edit fronts</text>`;
