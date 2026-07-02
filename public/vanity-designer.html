@@ -2825,6 +2825,7 @@
             vQty: 1,
             mQty: 1
         };
+        window.__gcState = state;
 
         const DEFAULT_PRICING = { label: "Custom finish", rate: 22, tag: "$22 / inch" };
         const pricingFor = brand => (brand && PRICING[brand]) ? PRICING[brand] : DEFAULT_PRICING;
