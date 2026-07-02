@@ -2791,10 +2791,9 @@
             hwfinish: "brass",
             trap: "ptrap",
             vRows: [1, 1],
-            vRowsKind: ["drawer", "drawer"],
             vRowsSegments: [[{ kind: "drawer" }], [{ kind: "drawer" }]],
             mRows: [1, 1],
-            /* relative heights of each drawer/door row, top->bottom */
+            /* relative heights of each drawer row, top->bottom */
             vShelfW: 12,
             mShelfW: 10, /* open-shelf column widths, inches */
             vQty: 1,
@@ -2812,7 +2811,7 @@
         const GC_PERSIST_KEYS = [
             "type","editing","vStyle","mStyle","vW","mW","finish","stone",
             "vH","vD","mH","mD","sinks","mount","shelfpos","vshelf","vbottom",
-            "mbottom","wall","hardware","hwfinish","trap","vRows","vRowsKind","vRowsSegments","mRows",
+            "mbottom","wall","hardware","hwfinish","trap","vRows","vRowsSegments","mRows",
             "vShelfW","mShelfW","vQty","mQty"
         ];
         function gcPickState() {
@@ -2870,7 +2869,7 @@
             return rows.map(v => v / t);
         }
 
-        /* Usable height of the drawer/door stack, in real inches, for the active piece.
+        /* Usable height of the drawer stack, in real inches, for the active piece.
            Vanity: cabinet height minus ~2" counter minus optional bottom shelf (~6").
            Medicine: cabinet height minus ~1.5" frame minus optional bottom row. */
         function frontUsableInches() {
@@ -2931,7 +2930,6 @@
             const preset = FRONT_LAYOUTS.find(p => p.id === id) || FRONT_LAYOUTS[0];
             state.vRowsSegments = cloneSegments(preset.rows);
             state.vRows = preset.rows.map(() => 1);
-            state.vRowsKind = state.vRowsSegments.map(() => "drawer");
             announceFrontChange(1, 0);
         }
         function frontPreviewHTML(rows) {
@@ -2971,10 +2969,8 @@
             }
             if (!Array.isArray(state.vRows) || !state.vRows.length) state.vRows = [1, 1];
             if (!Array.isArray(state.mRows) || !state.mRows.length) state.mRows = [1, 1];
-            /* keep vRowsKind in lockstep with vRows; default new/missing rows to "drawer" */
-            if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
-            /* Doors option disabled — force every row to drawer. */
-            state.vRowsKind = state.vRows.map(() => "drawer");
+            /* drawer-only build: strip any legacy kind state */
+            delete state.vRowsKind;
             if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
             state.vRowsSegments = state.vRows.map((_, i) => {
                 const cur = Array.isArray(state.vRowsSegments[i]) ? state.vRowsSegments[i] : null;
@@ -3795,7 +3791,7 @@
 
         /* ================== SHOWROOM MATERIAL PRESETS ==================
            Map countertop + panel categories -> physically-tuned PBR params
-           so each option reads like the real slab/door under showroom light.
+           so each option reads like the real slab/front under showroom light.
            Tweak ONE table here, every surface in the scene updates. */
         const STONE_PRESETS = {
             /* polished engineered quartz - mirror-like clearcoat over diffuse */
@@ -4061,7 +4057,7 @@
             return "#" + h(r) + h(g) + h(b);
         }
 
-        /* ----- PANEL / DOOR-FRONT SHOWROOM PRESETS -----
+        /* ----- PANEL / DRAWER-FRONT SHOWROOM PRESETS -----
            Categories cover every panel style we stock. Resolved from
            finish.finish > finish.category > name keywords > brand default. */
         const PANEL_PRESETS = {
@@ -4258,7 +4254,7 @@
                within typical cabinetry range (≤48"); larger panels still tile
                at the physical 24" scale.
              - offset is DETERMINISTIC (hashed from finish id + rounded panel
-               size) so stacked drawer fronts, adjacent doors, and re-renders
+               size) so stacked drawer fronts and re-renders
                of the same SKU always align edge-to-edge instead of drifting.
              - panels smaller than the tile are centred so trim/reveals sit
                inside the texture rather than catching a wrap seam at the edge.
@@ -6151,7 +6147,6 @@
                     r.splice(i, 1);
                     setCurRows(r);
                     if (activeType() === "vanity") {
-                        if (Array.isArray(state.vRowsKind)) state.vRowsKind.splice(i, 1);
                         if (Array.isArray(state.vRowsSegments)) state.vRowsSegments.splice(i, 1);
                     }
                 }
@@ -6189,8 +6184,6 @@
             rows.push(avg);
             setCurRows(rows);
             if (activeType() === "vanity") {
-                if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
-                state.vRowsKind.push("drawer");
                 if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
                 state.vRowsSegments.push([{ kind: "drawer" }]);
             }
@@ -7090,7 +7083,7 @@
                 applyLighting(b.dataset.light);
             });
         })();
-        /* Door/hinge onboarding wizard removed — drawer-only build. */
+        
         </script>
         </div>
         </body>
