@@ -6296,11 +6296,28 @@
                             seg.hinge = order[(order.indexOf(cur) + 1) % order.length];
                         }
                     }
-                    if (b.dataset.lr === "segadd" && state.vRowsSegments[i].length < 4) {
+                    if ((b.dataset.lr === "segadd" || b.dataset.lr === "segstepup") && state.vRowsSegments[i].length < 4) {
                         state.vRowsSegments[i].push({ kind: "door", hinge: "L" });
+                    }
+                    if (b.dataset.lr === "segstepdn" && state.vRowsSegments[i].length > 1) {
+                        state.vRowsSegments[i].pop();
                     }
                     if (b.dataset.lr === "segdel" && state.vRowsSegments[i].length > 1) {
                         state.vRowsSegments[i].splice(sIdx, 1);
+                    }
+                    if (b.dataset.lr === "segset") {
+                        const seg = state.vRowsSegments[i][sIdx];
+                        if (seg) {
+                            seg.kind = b.dataset.k === "door" ? "door" : "drawer";
+                            if (seg.kind === "door" && !seg.hinge) seg.hinge = "pair";
+                        }
+                    }
+                    if (b.dataset.lr === "seghingeset") {
+                        const seg = state.vRowsSegments[i][sIdx];
+                        if (seg && seg.kind === "door") {
+                            const h = b.dataset.h;
+                            if (h === "L" || h === "R" || h === "pair") seg.hinge = h;
+                        }
                     }
                 }
                 renderLayout();
