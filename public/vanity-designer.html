@@ -124,13 +124,33 @@
         .gc-layrow .del:hover{background:rgba(0,0,0,.06);color:#b4453a}
         .gc-kindbtn{flex-shrink:0;height:30px;padding:0 10px;border:1px solid var(--line);background:#f0f0f0;color:var(--brass-dark);border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.02em;cursor:pointer;font-family:inherit;transition:all .18s;min-width:60px}
         .gc-kindbtn:hover:not(:disabled){border-color:var(--brass);background:#fff}
-        .gc-segs{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-left:6px}
-        .gc-segbtn{height:26px;padding:0 8px;border:1px solid var(--line);background:#f6f6f6;color:var(--brass-dark);border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.02em;cursor:pointer;font-family:inherit;transition:all .15s}
-        .gc-segbtn:hover:not(:disabled){border-color:var(--brass);background:#fff}
-        .gc-segdel{height:22px;width:22px;padding:0;border:1px solid var(--line);background:#fff;color:#a33;border-radius:50%;font-size:14px;line-height:1;cursor:pointer;font-family:inherit;margin-right:2px}
-        .gc-segdel:hover{border-color:#a33;background:#fee}
-        .gc-segadd{height:26px;padding:0 8px;border:1px dashed var(--brass);background:transparent;color:var(--brass-dark);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
-        .gc-segadd:hover{background:#fff}
+        /* Blueprint-style front editor */
+        .gc-layrow-wrap{display:flex;flex-direction:column;gap:0}
+        .gc-rowcfg{margin:6px 0 4px;padding:12px;background:#fafaf7;border:1px solid #ececec;border-radius:12px;display:flex;flex-direction:column;gap:10px}
+        .gc-rowcfg-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+        .gc-rowcfg-title{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;color:#333;text-transform:uppercase;letter-spacing:.06em}
+        .gc-rowcfg-title .badge{width:20px;height:20px;border-radius:50%;background:#2a2a2a;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+        .gc-rowcfg-title .sub{font-weight:500;color:#888;letter-spacing:.01em;text-transform:none;font-size:11px;margin-left:2px}
+        .gc-stepper{display:inline-flex;align-items:center;background:#fff;border:1px solid #e2e2e2;border-radius:8px;padding:2px}
+        .gc-stepper button{width:26px;height:26px;border:0;background:transparent;color:#333;font-size:15px;font-weight:700;cursor:pointer;border-radius:6px;font-family:inherit}
+        .gc-stepper button:hover:not(:disabled){background:#f0f0f0}
+        .gc-stepper button:disabled{opacity:.3;cursor:not-allowed}
+        .gc-stepper .cnt{padding:0 8px;font-size:11px;font-weight:800;color:#333;min-width:66px;text-align:center;letter-spacing:.03em;text-transform:uppercase}
+        .gc-seggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:8px}
+        .gc-segcard{padding:10px;background:#fff;border:1px solid #e6e6e6;border-radius:10px;display:flex;flex-direction:column;gap:8px;position:relative}
+        .gc-segcard[data-locked="1"]{background:#f4f4f2;border-style:dashed}
+        .gc-segcard .lbl{font-size:9.5px;font-weight:800;color:#8b8b8b;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;justify-content:space-between}
+        .gc-tog{display:flex;gap:2px;background:#f0efec;border-radius:7px;padding:2px}
+        .gc-tog button{flex:1;height:26px;border:0;background:transparent;color:#8a8a8a;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border-radius:5px;font-family:inherit;transition:all .15s}
+        .gc-tog button.on{background:var(--brass);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+        .gc-tog button:disabled{cursor:not-allowed;opacity:.55}
+        .gc-hinge{display:flex;gap:4px}
+        .gc-hinge button{flex:1;height:28px;border:1px solid #e2e2e2;background:#fff;border-radius:6px;color:#666;cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0}
+        .gc-hinge button.on{border-color:var(--brass);background:rgba(92,118,80,.09);color:var(--brass-dark)}
+        .gc-hinge button:hover:not(.on){background:#f6f6f6}
+        .gc-hinge svg{display:block}
+        .gc-segrm{position:absolute;top:5px;right:5px;width:18px;height:18px;border:0;background:transparent;color:#bbb;cursor:pointer;font-size:15px;line-height:1;border-radius:50%;font-family:inherit;padding:0}
+        .gc-segrm:hover{background:#fee;color:#a33}
         .gc-layadd{display:flex;gap:8px}
         .gc-laybtn{flex:1;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px;font-size:13.5px;font-weight:600;color:var(--brass-dark);cursor:pointer;font-family:inherit;transition:all .2s}
         .gc-laybtn:hover{border-color:var(--brass)}
@@ -3003,40 +3023,14 @@
                         : `<title>${tip}</title>`;
                     return divider + decor + hot;
                 }).join("");
-            /* Compact on-image legend: countertop chip · drawer chip · door chip */
-            const legend = `
-
-        <g font-family="ui-sans-serif,system-ui" font-size="5.6" fill="#3B3A36">
-          <rect x="4" y="4" width="152" height="12" rx="2" fill="#ffffff" opacity=".82" stroke="#D9D3C6" stroke-width="0.5"/>
-          <g transform="translate(8,7)">
-            <rect width="10" height="6" rx="1" fill="#B9B0A2" stroke="#A89D8C" stroke-width="0.4"/>
-            <title>Countertop — sinks sit on top, no front here</title>
-          </g>
-          <text x="21" y="12">counter</text>
-          <g transform="translate(50,7)">
-            <rect width="10" height="6" rx="1" fill="${f.c1}"/>
-            <line x1="2" y1="3" x2="8" y2="3" stroke="${f.grain}" stroke-width="0.9"/>
-            <title>Drawer — horizontal pull, slides out</title>
-          </g>
-          <text x="63" y="12">drawer</text>
-          <g transform="translate(92,7)">
-            <rect width="10" height="6" rx="1" fill="${f.c1}"/>
-            <circle cx="1.6" cy="3" r="0.9" fill="${f.grain}"/>
-            <path d="M 8 5 q -2 -1 -3 -3" stroke="${f.grain}" stroke-width="0.6" fill="none" stroke-dasharray="1 1"/>
-            <title>Door — hinged front, swings open</title>
-          </g>
-          <text x="105" y="12">door</text>
-          ${interactive ? `<circle cx="150" cy="10" r="3" fill="#5C7650"/><text x="150" y="12.2" text-anchor="middle" font-size="4.6" fill="#fff" font-weight="700">i</text><title>Tap any front below to toggle door ↔ drawer</title>` : ""}
-        </g>`;
             const hint = interactive
-                ? `<text x="80" y="96" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6.2" fill="${f.grain}" opacity=".85">tap or press Enter on any front to toggle door / drawer</text>`
-                : `<text x="80" y="96" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6.2" fill="${f.grain}" opacity=".55">select to edit fronts</text>`;
+                ? `<text x="80" y="94" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6" fill="${f.grain}" opacity=".7">Tap a front to switch \u2014 use the editor below for hinge \u0026 more</text>`
+                : `<text x="80" y="94" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6" fill="${f.grain}" opacity=".45">Select to edit fronts</text>`;
 
-            return `<svg viewBox="0 0 160 100" role="img" aria-label="${s.name} — legend at top, countertop with basins, doors/drawers below (tap to toggle when selected)" style="pointer-events:${interactive ? "all" : "none"}">
+            return `<svg viewBox="0 0 160 100" role="img" aria-label="${s.name} \u2014 countertop with basins on top, doors and drawers below" style="pointer-events:${interactive ? "all" : "none"}">
         <rect width="160" height="100" fill="#EFEBE3"/>
-        <g><title>Countertop — sinks sit here, no cabinet front on this band</title>${counter}</g>
+        <g><title>Countertop \u2014 sinks sit here, no cabinet front on this band</title>${counter}</g>
         ${segsSVG}
-        ${legend}
         ${hint}
       </svg>`;
         }
@@ -6156,36 +6150,65 @@
             $("layRows").innerHTML = rows.map((v, i) => {
                 const sinkLocked = isVanity && i === 0; /* top row sits under sink → drawer only */
                 const rowSegs = Array.isArray(segs[i]) && segs[i].length ? segs[i] : [{ kind: "drawer" }];
+                const hArrowL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14"/><path d="M18 12H10"/><path d="M13 8l-3 4 3 4"/></svg>';
+                const hArrowR = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5v14"/><path d="M6 12h8"/><path d="M11 8l3 4-3 4"/></svg>';
+                const hDouble = '<svg width="16" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v14"/><path d="M20 5v14"/><path d="M8 12h3"/><path d="M13 12h3"/></svg>';
                 const segsUI = isVanity ? `
-        <div class="gc-segs" data-row="${i}">
-          ${rowSegs.map((s, si) => {
-            const hg = s.hinge || "pair";
-            const hgLabel = hg === "L" ? "Hinge \u2190" : hg === "R" ? "Hinge \u2192" : "Double";
-            return `
-            <button class="gc-segbtn" data-lr="segkind" data-i="${i}" data-s="${si}"
-                    title="${sinkLocked ? "Sink row locked to drawer" : "Toggle drawer / door"}"
-                    ${sinkLocked ? "disabled style='opacity:.55;cursor:not-allowed'" : ""}>
-              ${s.kind === "door" ? "Door" : "Drawer"}
-            </button>
-            ${(!sinkLocked && s.kind === "door") ? `<button class="gc-segbtn" data-lr="seghinge" data-i="${i}" data-s="${si}" title="Cycle hinge: Left \u2192 Right \u2192 Double" style="font-size:11px;padding:2px 6px">${hgLabel}</button>` : ""}
-            ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segdel" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove front">\u00d7</button>` : ""}
-          `;
-          }).join("")}
-          ${(!sinkLocked && rowSegs.length < 4) ? `<button class="gc-segadd" data-lr="segadd" data-i="${i}" title="Add front">+ front</button>` : ""}
+        <div class="gc-rowcfg" data-row="${i}">
+          <div class="gc-rowcfg-head">
+            <div class="gc-rowcfg-title">
+              <span class="badge">${i + 1}</span>
+              <span>${sinkLocked ? "Sink Row" : "Fronts"}</span>
+              ${sinkLocked ? '<span class="sub">Plumbing \u2014 locked</span>' : `<span class="sub">Tap type to switch</span>`}
+            </div>
+            ${sinkLocked ? '' : `
+            <div class="gc-stepper" role="group" aria-label="Number of fronts in this row">
+              <button data-lr="segstepdn" data-i="${i}" ${rowSegs.length <= 1 ? 'disabled' : ''} aria-label="Fewer fronts">\u2212</button>
+              <span class="cnt">${rowSegs.length} Front${rowSegs.length > 1 ? 's' : ''}</span>
+              <button data-lr="segstepup" data-i="${i}" ${rowSegs.length >= 4 ? 'disabled' : ''} aria-label="More fronts">+</button>
+            </div>`}
+          </div>
+          <div class="gc-seggrid">
+            ${rowSegs.map((s, si) => {
+                const hg = s.hinge || "pair";
+                const isDoor = s.kind === "door";
+                return `
+              <div class="gc-segcard" data-locked="${sinkLocked ? 1 : 0}">
+                <div class="lbl">
+                  <span>S${si + 1}</span>
+                  ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segrm" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove front S${si + 1}" title="Remove this front">\u00d7</button>` : ''}
+                </div>
+                <div class="gc-tog" role="group" aria-label="Front type">
+                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="drawer" class="${!isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${!isDoor}">Drawer</button>
+                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="door" class="${isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${isDoor}">Door</button>
+                </div>
+                ${(isDoor && !sinkLocked) ? `
+                <div class="lbl" style="margin-top:2px">Hinge</div>
+                <div class="gc-hinge" role="group" aria-label="Hinge orientation">
+                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="L" class="${hg === 'L' ? 'on' : ''}" aria-pressed="${hg === 'L'}" title="Hinge on left, door swings to the right">${hArrowR}</button>
+                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="pair" class="${hg === 'pair' ? 'on' : ''}" aria-pressed="${hg === 'pair'}" title="Double doors meeting in the middle">${hDouble}</button>
+                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="R" class="${hg === 'R' ? 'on' : ''}" aria-pressed="${hg === 'R'}" title="Hinge on right, door swings to the left">${hArrowL}</button>
+                </div>` : ''}
+              </div>`;
+            }).join('')}
+          </div>
         </div>` : "";
                 return `
-    <div class="gc-layrow">
-      <div class="bar" style="flex-grow:${fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
-      <div class="rowctl">
-        <input type="range" class="rslide" data-i="${i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
-               style="--fill:${((Math.min(inch[i], rowMax) - 2) / (Math.max(rowMax - 2, 0.1)) * 100).toFixed(0)}%">
-        <div class="gc-numwrap">
-          <button data-lr="dn" data-i="${i}" aria-label="Shorter">\u2212</button>
-          <input type="text" class="rin" data-i="${i}" inputmode="decimal" value="${fmtMeasure(inch[i])}">
-          <button data-lr="up" data-i="${i}" aria-label="Taller">+</button>
-        </div>${segsUI}
+    <div class="gc-layrow-wrap">
+      <div class="gc-layrow">
+        <div class="bar" style="flex-grow:${fr[i] * rows.length}"><span class="pct">${fracIn(inch[i])}</span></div>
+        <div class="rowctl">
+          <input type="range" class="rslide" data-i="${i}" min="2" max="${rowMax}" step="0.0625" value="${Math.min(inch[i], rowMax).toFixed(4)}"
+                 style="--fill:${((Math.min(inch[i], rowMax) - 2) / (Math.max(rowMax - 2, 0.1)) * 100).toFixed(0)}%">
+          <div class="gc-numwrap">
+            <button data-lr="dn" data-i="${i}" aria-label="Shorter">\u2212</button>
+            <input type="text" class="rin" data-i="${i}" inputmode="decimal" value="${fmtMeasure(inch[i])}">
+            <button data-lr="up" data-i="${i}" aria-label="Taller">+</button>
+          </div>
+        </div>
+        <button class="del" data-lr="del" data-i="${i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
       </div>
-      <button class="del" data-lr="del" data-i="${i}" aria-label="Remove row" ${rows.length <= 1 ? 'disabled style=\'opacity:.3;cursor:default\'' : ''}>\u00d7</button>
+      ${segsUI}
     </div>`;
             }).join("");
             /* live drag: update on input (every move), commit on change */
@@ -6247,11 +6270,28 @@
                             seg.hinge = order[(order.indexOf(cur) + 1) % order.length];
                         }
                     }
-                    if (b.dataset.lr === "segadd" && state.vRowsSegments[i].length < 4) {
+                    if ((b.dataset.lr === "segadd" || b.dataset.lr === "segstepup") && state.vRowsSegments[i].length < 4) {
                         state.vRowsSegments[i].push({ kind: "door", hinge: "L" });
+                    }
+                    if (b.dataset.lr === "segstepdn" && state.vRowsSegments[i].length > 1) {
+                        state.vRowsSegments[i].pop();
                     }
                     if (b.dataset.lr === "segdel" && state.vRowsSegments[i].length > 1) {
                         state.vRowsSegments[i].splice(sIdx, 1);
+                    }
+                    if (b.dataset.lr === "segset") {
+                        const seg = state.vRowsSegments[i][sIdx];
+                        if (seg) {
+                            seg.kind = b.dataset.k === "door" ? "door" : "drawer";
+                            if (seg.kind === "door" && !seg.hinge) seg.hinge = "pair";
+                        }
+                    }
+                    if (b.dataset.lr === "seghingeset") {
+                        const seg = state.vRowsSegments[i][sIdx];
+                        if (seg && seg.kind === "door") {
+                            const h = b.dataset.h;
+                            if (h === "L" || h === "R" || h === "pair") seg.hinge = h;
+                        }
                     }
                 }
                 renderLayout();
