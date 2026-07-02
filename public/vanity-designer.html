@@ -104,6 +104,7 @@
         .gc-stage::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
           box-shadow:inset 0 0 120px 10px rgba(30,24,16,.18), inset 0 -40px 80px rgba(30,24,16,.12);z-index:2}
         .gc-layrows{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+        .gc-layout-status{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
         .gc-layrow{display:flex;align-items:center;gap:12px;background:#e5e5e5;border-radius:13px;padding:8px 10px}
         .gc-layrow .bar{width:72px;flex-shrink:0;height:26px;border-radius:8px;background:linear-gradient(180deg,#a8c39d,#7a9670);position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);min-width:30px;transition:flex-grow .15s var(--ease)}
         .gc-layrow .bar .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#445339}
