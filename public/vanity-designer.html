@@ -172,6 +172,10 @@
         .gc-style svg{display:block;width:100%;height:auto;border-radius:8px;margin-bottom:8px}
         .gc-style .t{font-size:14px;font-weight:600}
         .gc-style .d{font-size:12px;color:var(--ink-soft);margin-top:1px}
+        .gc-hot{outline:none}
+        .gc-hot:focus{outline:none}
+        .gc-hot:focus-visible{stroke:#5C7650;stroke-width:2;stroke-dasharray:3 2;fill:rgba(92,118,80,.12)}
+
 
         /* width slider */
         .gc-width{display:flex;align-items:center;gap:16px}
@@ -2991,13 +2995,17 @@
                     const tip = interactive
                         ? `${isDoor ? "Door" : "Drawer"} · position ${i + 1} of ${segs.length}. Tap to switch to ${isDoor ? "drawer (horizontal pull)" : "door (hinge + swing)"}.`
                         : `${isDoor ? "Door" : "Drawer"} front`;
+                    const ariaLbl = interactive
+                        ? `${isDoor ? "Door" : "Drawer"} at position ${i + 1} of ${segs.length}. Press Enter or Space to switch to ${isDoor ? "drawer" : "door"}.`
+                        : tip;
                     const hot = interactive
-                        ? `<rect class="gc-hot" data-seg="${i}" x="${sx}" y="${rowY}" width="${segW}" height="${rowH}" fill="transparent" style="cursor:pointer;pointer-events:all"><title>${tip}</title></rect>`
+                        ? `<rect class="gc-hot" data-seg="${i}" x="${sx}" y="${rowY}" width="${segW}" height="${rowH}" fill="transparent" tabindex="0" role="button" aria-label="${ariaLbl}" aria-pressed="${isDoor ? "false" : "true"}" style="cursor:pointer;pointer-events:all"><title>${tip}</title></rect>`
                         : `<title>${tip}</title>`;
                     return divider + decor + hot;
                 }).join("");
             /* Compact on-image legend: countertop chip · drawer chip · door chip */
             const legend = `
+
         <g font-family="ui-sans-serif,system-ui" font-size="5.6" fill="#3B3A36">
           <rect x="4" y="4" width="152" height="12" rx="2" fill="#ffffff" opacity=".82" stroke="#D9D3C6" stroke-width="0.5"/>
           <g transform="translate(8,7)">
@@ -3021,8 +3029,9 @@
           ${interactive ? `<circle cx="150" cy="10" r="3" fill="#5C7650"/><text x="150" y="12.2" text-anchor="middle" font-size="4.6" fill="#fff" font-weight="700">i</text><title>Tap any front below to toggle door ↔ drawer</title>` : ""}
         </g>`;
             const hint = interactive
-                ? `<text x="80" y="96" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6.2" fill="${f.grain}" opacity=".85">tap fronts to toggle door / drawer</text>`
+                ? `<text x="80" y="96" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6.2" fill="${f.grain}" opacity=".85">tap or press Enter on any front to toggle door / drawer</text>`
                 : `<text x="80" y="96" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6.2" fill="${f.grain}" opacity=".55">select to edit fronts</text>`;
+
             return `<svg viewBox="0 0 160 100" role="img" aria-label="${s.name} — legend at top, countertop with basins, doors/drawers below (tap to toggle when selected)" style="pointer-events:${interactive ? "all" : "none"}">
         <rect width="160" height="100" fill="#EFEBE3"/>
         <g><title>Countertop — sinks sit here, no cabinet front on this band</title>${counter}</g>
@@ -3043,35 +3052,65 @@
       <span class="d">${s.desc}</span>
     </button>`
             ).join("");
-            document.querySelectorAll("[data-style]").forEach(b => b.onclick = (ev) => {
-                /* hotspot click on the selected card toggles a segment instead of re-selecting */
-                const hot = ev.target.closest(".gc-hot");
-                if (hot && b.classList.contains("on") && at === "vanity") {
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    const i = +hot.dataset.seg;
-                    const row = state.vRowsSegments[1] || (state.vRowsSegments[1] = [{ kind: "door" }]);
-                    if (row[i]) {
-                        row[i].kind = row[i].kind === "door" ? "drawer" : "door";
-                        renderAll();
-                    }
-                    return;
-                }
-                if (at === "vanity")
-                    state.vStyle = b.dataset.style;
-                else
-                    state.mStyle = b.dataset.style;
-                const s = curStyle();
-                setWidthRaw(Math.min(Math.max(curW(), s.min), s.max));
-                if (s.sinks === 2)
-                    state.sinks = "sink2";
-                else if (s.sinks === 1 && curW() < 48)
-                    state.sinks = "sink1";
+            const toggleHot = (hot) => {
+
+                const i = +hot.dataset.seg;
+                const row = state.vRowsSegments[1] || (state.vRowsSegments[1] = [{ kind: "door" }]);
+                if (!row[i]) return false;
+                row[i].kind = row[i].kind === "door" ? "drawer" : "door";
                 renderAll();
-                if (typeof preloadSwatchColors === "function")
-                    setTimeout(preloadSwatchColors, 300);
+                /* restore focus to the same segment after re-render */
+                requestAnimationFrame(() => {
+                    const next = document.querySelector(`.gc-style.on .gc-hot[data-seg="${i}"]`);
+                    if (next && typeof next.focus === "function") next.focus();
+                });
+                return true;
+            };
+            document.querySelectorAll("[data-style]").forEach(b => {
+                b.onclick = (ev) => {
+                    /* hotspot click on the selected card toggles a segment instead of re-selecting */
+                    const hot = ev.target.closest(".gc-hot");
+                    if (hot && b.classList.contains("on") && at === "vanity") {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        toggleHot(hot);
+                        return;
+                    }
+                    if (at === "vanity")
+                        state.vStyle = b.dataset.style;
+                    else
+                        state.mStyle = b.dataset.style;
+                    const s = curStyle();
+                    setWidthRaw(Math.min(Math.max(curW(), s.min), s.max));
+                    if (s.sinks === 2)
+                        state.sinks = "sink2";
+                    else if (s.sinks === 1 && curW() < 48)
+                        state.sinks = "sink1";
+                    renderAll();
+                    if (typeof preloadSwatchColors === "function")
+                        setTimeout(preloadSwatchColors, 300);
+                };
+                /* Keyboard: Enter/Space on a focused hotspot toggles door↔drawer.
+                   Arrow Left/Right moves focus between hotspots inside the card. */
+                b.addEventListener("keydown", (ev) => {
+                    const hot = ev.target.closest && ev.target.closest(".gc-hot");
+                    if (!hot || !b.classList.contains("on") || at !== "vanity") return;
+                    if (ev.key === "Enter" || ev.key === " " || ev.key === "Spacebar") {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        toggleHot(hot);
+                    } else if (ev.key === "ArrowRight" || ev.key === "ArrowLeft") {
+                        ev.preventDefault();
+                        const hots = Array.from(b.querySelectorAll(".gc-hot"));
+                        const idx = hots.indexOf(hot);
+                        const dir = ev.key === "ArrowRight" ? 1 : -1;
+                        const next = hots[(idx + dir + hots.length) % hots.length];
+                        if (next) next.focus();
+                    }
+                });
             });
         }
+
         function setWidthRaw(w) {
             if (activeType() === "vanity")
                 state.vW = w;
