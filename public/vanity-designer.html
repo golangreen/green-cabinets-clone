@@ -6120,6 +6120,8 @@
             if (activeType() === "vanity") {
                 if (!Array.isArray(state.vRowsKind)) state.vRowsKind = [];
                 state.vRowsKind.push("drawer");
+                if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
+                state.vRowsSegments.push([{ kind: "drawer" }]);
             }
             renderLayout();
             renderPreview();
