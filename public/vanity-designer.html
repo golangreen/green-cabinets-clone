@@ -2930,7 +2930,6 @@
             const preset = FRONT_LAYOUTS.find(p => p.id === id) || FRONT_LAYOUTS[0];
             state.vRowsSegments = cloneSegments(preset.rows);
             state.vRows = preset.rows.map(() => 1);
-            state.vRowsKind = state.vRowsSegments.map(() => "drawer");
             announceFrontChange(1, 0);
         }
         function frontPreviewHTML(rows) {
