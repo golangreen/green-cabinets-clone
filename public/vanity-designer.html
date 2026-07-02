@@ -6351,6 +6351,11 @@
                     renderPreview();
                 };
             });
+            document.querySelectorAll("[data-layout-preset]").forEach(b => b.onclick = () => {
+                applyFrontPreset(b.dataset.layoutPreset);
+                renderLayout();
+                renderPreview();
+            });
             document.querySelectorAll("[data-lr]").forEach(b => b.onclick = () => {
                 const i = +b.dataset.i;
                 if (b.dataset.lr === "up")
