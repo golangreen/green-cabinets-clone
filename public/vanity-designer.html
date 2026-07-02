@@ -2939,6 +2939,64 @@
             const pos = `row ${rowIdx + 1}, front ${segIdx + 1}`;
             el.textContent = `Front changed to ${label}${hingeText ? " — " + hingeText : ""} at ${pos}.`;
         }
+        const FRONT_LAYOUTS = [
+            {
+                id: "drawers",
+                name: "All drawers",
+                desc: "Simple pull-out storage. Best when you want drawers everywhere below the sink drawer.",
+                rows: [[{ kind: "drawer" }], [{ kind: "drawer" }]]
+            },
+            {
+                id: "pairdoors",
+                name: "Sink drawer + 2 doors",
+                desc: "The easiest door layout: one plumbing drawer on top, double doors below.",
+                rows: [[{ kind: "drawer" }], [{ kind: "door", hinge: "pair" }]]
+            },
+            {
+                id: "leftdrawers",
+                name: "Drawers left · door right",
+                desc: "Common combo: drawer stack for small items, door storage on one side.",
+                rows: [[{ kind: "drawer" }], [{ kind: "drawer" }, { kind: "door", hinge: "R" }]]
+            },
+            {
+                id: "rightdrawers",
+                name: "Door left · drawers right",
+                desc: "Same combo reversed when plumbing or room layout works better this way.",
+                rows: [[{ kind: "drawer" }], [{ kind: "door", hinge: "L" }, { kind: "drawer" }]]
+            }
+        ];
+        function cloneSegments(rows) {
+            return rows.map(row => row.map(seg => ({
+                kind: seg && seg.kind === "door" ? "door" : "drawer",
+                ...(seg && seg.kind === "door" ? { hinge: (seg.hinge === "L" || seg.hinge === "R" || seg.hinge === "pair") ? seg.hinge : "pair" } : {})
+            })));
+        }
+        function matchFrontPreset() {
+            const rows = state.vRowsSegments || [];
+            const norm = row => (row || []).map(seg => `${seg.kind === "door" ? "D" : "R"}${seg.kind === "door" ? (seg.hinge || "pair") : ""}`).join("|");
+            const current = `${norm(rows[0])}/${norm(rows[1])}`;
+            const found = FRONT_LAYOUTS.find(p => {
+                const r = cloneSegments(p.rows);
+                return `${norm(r[0])}/${norm(r[1])}` === current;
+            });
+            return found ? found.id : "custom";
+        }
+        function applyFrontPreset(id) {
+            const preset = FRONT_LAYOUTS.find(p => p.id === id);
+            if (!preset) return;
+            state.vRowsSegments = cloneSegments(preset.rows);
+            state.vRows = preset.rows.map(() => 1);
+            state.vRowsKind = state.vRowsSegments.map(row => row.some(seg => seg.kind === "door") ? "door" : "drawer");
+            announceFrontChange(1, 0, state.vRowsSegments[1]?.[0]?.kind || "drawer", state.vRowsSegments[1]?.[0]?.hinge);
+        }
+        function frontPreviewHTML(rows) {
+            const bottom = (rows && rows[1] && rows[1].length ? rows[1] : [{ kind: "drawer" }]);
+            return `<div class="gc-front-mini" aria-hidden="true"><div class="gc-mini-top"></div><div class="gc-mini-row">${bottom.map(seg => {
+                const isDoor = seg.kind === "door";
+                const hinge = isDoor ? (seg.hinge || "pair") : "";
+                return `<span class="gc-mini-front ${isDoor ? "door" : "drawer"} ${hinge === "L" ? "left" : hinge === "R" ? "right" : hinge === "pair" ? "pair" : ""}"></span>`;
+            }).join("")}</div></div>`;
+        }
         const fmt = n => "$" + n.toLocaleString("en-US");
         const curStyle = () => (activeType() === "vanity" ? vStyleObj() : mStyleObj()) || STYLES.vanity[0];
         const curFinish = () => FINISHES.find(f => f.id === state.finish)
@@ -2981,7 +3039,10 @@
                 const legacy = state.vRowsKind[i] === "door" ? "door" : "drawer";
                 const cur = Array.isArray(state.vRowsSegments[i]) ? state.vRowsSegments[i] : null;
                 const arr = (cur && cur.length)
-                    ? cur.slice(0, 4).map(s => ({ kind: s && s.kind === "door" ? "door" : "drawer" }))
+                    ? cur.slice(0, 4).map(s => {
+                        const isDoor = s && s.kind === "door";
+                        return { kind: isDoor ? "door" : "drawer", ...(isDoor ? { hinge: (s.hinge === "L" || s.hinge === "R" || s.hinge === "pair") ? s.hinge : "pair" } : {}) };
+                    })
                     : [{ kind: legacy }];
                 return arr.length ? arr : [{ kind: legacy }];
             });
