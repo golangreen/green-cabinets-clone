@@ -6105,10 +6105,21 @@
                     const sIdx = +b.dataset.s;
                     if (b.dataset.lr === "segkind") {
                         const seg = state.vRowsSegments[i][sIdx];
-                        if (seg) seg.kind = seg.kind === "door" ? "drawer" : "door";
+                        if (seg) {
+                            seg.kind = seg.kind === "door" ? "drawer" : "door";
+                            if (seg.kind === "door" && !seg.hinge) seg.hinge = "pair";
+                        }
+                    }
+                    if (b.dataset.lr === "seghinge") {
+                        const seg = state.vRowsSegments[i][sIdx];
+                        if (seg && seg.kind === "door") {
+                            const order = ["pair", "L", "R"];
+                            const cur = seg.hinge || "pair";
+                            seg.hinge = order[(order.indexOf(cur) + 1) % order.length];
+                        }
                     }
                     if (b.dataset.lr === "segadd" && state.vRowsSegments[i].length < 4) {
-                        state.vRowsSegments[i].push({ kind: "door" });
+                        state.vRowsSegments[i].push({ kind: "door", hinge: "L" });
                     }
                     if (b.dataset.lr === "segdel" && state.vRowsSegments[i].length > 1) {
                         state.vRowsSegments[i].splice(sIdx, 1);
