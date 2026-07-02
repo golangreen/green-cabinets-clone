@@ -2971,10 +2971,8 @@
             }
         ];
         function cloneSegments(rows) {
-            return rows.map(row => row.map(seg => ({
-                kind: seg && seg.kind === "door" ? "door" : "drawer",
-                ...(seg && seg.kind === "door" ? { hinge: (seg.hinge === "L" || seg.hinge === "R" || seg.hinge === "pair") ? seg.hinge : "pair" } : {})
-            })));
+            /* Doors option disabled — coerce every segment to a drawer. */
+            return rows.map(row => row.map(() => ({ kind: "drawer" })));
         }
         function matchFrontPreset() {
             const rows = state.vRowsSegments || [];
