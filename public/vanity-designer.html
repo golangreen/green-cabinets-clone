@@ -2907,6 +2907,18 @@
             state.vRowsKind = state.vRows.map((_, i) =>
                 state.vRowsKind[i] === "door" ? "door" : "drawer"
             );
+            /* vRowsSegments[i] = [{kind:'drawer'|'door'}, ...] — up to 4 fronts per row, left→right */
+            if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
+            state.vRowsSegments = state.vRows.map((_, i) => {
+                const legacy = state.vRowsKind[i] === "door" ? "door" : "drawer";
+                const cur = Array.isArray(state.vRowsSegments[i]) ? state.vRowsSegments[i] : null;
+                const arr = (cur && cur.length)
+                    ? cur.slice(0, 4).map(s => ({ kind: s && s.kind === "door" ? "door" : "drawer" }))
+                    : [{ kind: legacy }];
+                return arr.length ? arr : [{ kind: legacy }];
+            });
+            /* row 0 sits under the sink → must remain a single drawer for U-cut plumbing */
+            state.vRowsSegments[0] = [{ kind: "drawer" }];
             state.vQty = Math.min(20, Math.max(1, Math.floor(+state.vQty) || 1));
             state.mQty = Math.min(20, Math.max(1, Math.floor(+state.mQty) || 1));
         }
