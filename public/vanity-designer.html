@@ -4669,8 +4669,8 @@
                         const sinksHere = (rI === 0)
                             ? _fxs.filter(fx => fx >= cx - fw / 2 + edgeBufDoor && fx <= cx + fw / 2 - edgeBufDoor)
                             : [];
-                        const kind = (state.vRowsKind && state.vRowsKind[rI]) || "drawer";
-                        if (kind === "door" && sinksHere.length === 0 && fw >= 8) {
+                        const kind = _segKind;
+                        if (kind === "door" && sinksHere.length === 0 && fw >= 6) {
                             const twoDoors = fw >= 22;
                             const gapD = 0.18;
                             const dwEach = twoDoors ? (fw - gapD) / 2 : fw;
