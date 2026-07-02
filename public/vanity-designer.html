@@ -3001,8 +3001,11 @@
                     const hot = interactive
                         ? `<rect class="gc-hot" data-seg="${i}" x="${sx}" y="${rowY}" width="${segW}" height="${rowH}" fill="transparent" tabindex="0" role="button" aria-label="${ariaLbl}" aria-pressed="${isDoor ? "false" : "true"}" style="cursor:pointer;pointer-events:all"><title>${tip}</title></rect>`
                         : `<title>${tip}</title>`;
-
+                    return divider + decor + hot;
+                }).join("");
+            /* Compact on-image legend: countertop chip · drawer chip · door chip */
             const legend = `
+
         <g font-family="ui-sans-serif,system-ui" font-size="5.6" fill="#3B3A36">
           <rect x="4" y="4" width="152" height="12" rx="2" fill="#ffffff" opacity=".82" stroke="#D9D3C6" stroke-width="0.5"/>
           <g transform="translate(8,7)">
