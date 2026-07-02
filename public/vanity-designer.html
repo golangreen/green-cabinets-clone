@@ -6242,31 +6242,47 @@
             const fr = rowFractions(rows);
             const inch = rowInches();
             const totalH = frontUsableInches();
-            $("layoutHint").textContent = `${at === "vanity" ? "Vanity" : "Cabinet"} \u00b7 ${fmtMeasure(totalH)} of fronts`;
+            $("layoutHint").textContent = at === "vanity"
+                ? "Start with a picture preset"
+                : `Cabinet \u00b7 ${fmtMeasure(totalH)} of fronts`;
             const rowMax = (totalH - 2 * (rows.length - 1)).toFixed(1); /* max one row can take, leaving 2" min for others */
             const isVanity = at === "vanity";
             const segs = state.vRowsSegments || [];
-            $("layRows").innerHTML = rows.map((v, i) => {
+            const activePreset = isVanity ? matchFrontPreset() : "";
+            const presetUI = isVanity ? `
+              <p class="gc-layout-note">Choose the picture that looks closest. The top drawer stays a drawer for sink plumbing; everything below can be drawers, doors, or a mix.</p>
+              <div class="gc-front-presets" role="group" aria-label="Quick door and drawer layouts">
+                ${FRONT_LAYOUTS.map(p => `
+                  <button class="gc-front-preset ${activePreset === p.id ? 'on' : ''}" data-layout-preset="${p.id}" aria-pressed="${activePreset === p.id}">
+                    ${frontPreviewHTML(p.rows)}
+                    <span class="name">${p.name}</span>
+                    <span class="desc">${p.desc}</span>
+                  </button>
+                `).join("")}
+              </div>` : "";
+            $("layRows").innerHTML = presetUI + rows.map((v, i) => {
                 const sinkLocked = isVanity && i === 0; /* top row sits under sink → drawer only */
                 const rowSegs = Array.isArray(segs[i]) && segs[i].length ? segs[i] : [{ kind: "drawer" }];
-                const hArrowL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14"/><path d="M18 12H10"/><path d="M13 8l-3 4 3 4"/></svg>';
-                const hArrowR = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5v14"/><path d="M6 12h8"/><path d="M11 8l3 4-3 4"/></svg>';
-                const hDouble = '<svg width="16" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v14"/><path d="M20 5v14"/><path d="M8 12h3"/><path d="M13 12h3"/></svg>';
                 const segsUI = isVanity ? `
         <div class="gc-rowcfg" data-row="${i}">
           <div class="gc-rowcfg-head">
             <div class="gc-rowcfg-title">
               <span class="badge">${i + 1}</span>
-              <span>${sinkLocked ? "Sink Row" : "Fronts"}</span>
-              ${sinkLocked ? '<span class="sub">Plumbing \u2014 locked</span>' : `<span class="sub">Tap type to switch</span>`}
+              <span>${sinkLocked ? "Top plumbing drawer" : `Row ${i + 1}`}</span>
+              ${sinkLocked ? '<span class="sub">Always a drawer with U-cut</span>' : `<span class="sub">Left to right, like the vanity picture</span>`}
             </div>
             ${sinkLocked ? '' : `
             <div class="gc-stepper" role="group" aria-label="Number of fronts in this row">
-              <button data-lr="segstepdn" data-i="${i}" ${rowSegs.length <= 1 ? 'disabled' : ''} aria-label="Fewer fronts">\u2212</button>
-              <span class="cnt">${rowSegs.length} Front${rowSegs.length > 1 ? 's' : ''}</span>
-              <button data-lr="segstepup" data-i="${i}" ${rowSegs.length >= 4 ? 'disabled' : ''} aria-label="More fronts">+</button>
+              <button data-lr="segstepdn" data-i="${i}" ${rowSegs.length <= 1 ? 'disabled' : ''} aria-label="Remove one side-by-side front">\u2212</button>
+              <span class="cnt">${rowSegs.length} side by side</span>
+              <button data-lr="segstepup" data-i="${i}" ${rowSegs.length >= 4 ? 'disabled' : ''} aria-label="Add one side-by-side front">+</button>
             </div>`}
           </div>
+          <div class="gc-front-strip" aria-hidden="true">${rowSegs.map((s, si) => {
+              const isDoorChip = s.kind === "door";
+              const hingeChip = isDoorChip ? (s.hinge || "pair") : "";
+              return `<span class="gc-front-chip ${isDoorChip ? 'door' : 'drawer'} ${hingeChip === 'L' ? 'left' : hingeChip === 'R' ? 'right' : hingeChip === 'pair' ? 'pair' : ''}">${isDoorChip ? 'Door' : 'Drawer'}</span>`;
+          }).join('')}</div>
           <div class="gc-seggrid">
             ${rowSegs.map((s, si) => {
                 const hg = s.hinge || "pair";
@@ -6274,19 +6290,19 @@
                 return `
               <div class="gc-segcard" data-locked="${sinkLocked ? 1 : 0}">
                 <div class="lbl">
-                  <span>S${si + 1}</span>
-                  ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segrm" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove front S${si + 1}" title="Remove this front">\u00d7</button>` : ''}
+                  <span>Front ${si + 1} ${rowSegs.length > 1 ? (si === 0 ? '· left' : si === rowSegs.length - 1 ? '· right' : '· middle') : ''}</span>
+                  ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segrm" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove front ${si + 1}" title="Remove this front">Remove</button>` : ''}
                 </div>
-                <div class="gc-tog" role="group" aria-label="Front type">
-                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="drawer" class="${!isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${!isDoor}">Drawer</button>
-                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="door" class="${isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${isDoor}">Door</button>
+                <div class="gc-tog" role="group" aria-label="Choose drawer or door for front ${si + 1}">
+                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="drawer" class="${!isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${!isDoor}">Drawer<br><small>pulls out</small></button>
+                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="door" class="${isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${isDoor}">Door<br><small>opens</small></button>
                 </div>
                 ${(isDoor && !sinkLocked) ? `
-                <div class="lbl" style="margin-top:2px">Hinge</div>
-                <div class="gc-hinge" role="group" aria-label="Hinge orientation">
-                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="L" class="${hg === 'L' ? 'on' : ''}" aria-pressed="${hg === 'L'}" title="Hinge on left, door swings to the right">${hArrowR}</button>
-                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="pair" class="${hg === 'pair' ? 'on' : ''}" aria-pressed="${hg === 'pair'}" title="Double doors meeting in the middle">${hDouble}</button>
-                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="R" class="${hg === 'R' ? 'on' : ''}" aria-pressed="${hg === 'R'}" title="Hinge on right, door swings to the left">${hArrowL}</button>
+                <div class="lbl" style="margin-top:2px">Door swing</div>
+                <div class="gc-hinge" role="group" aria-label="Door swing side for front ${si + 1}">
+                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="L" class="${hg === 'L' ? 'on' : ''}" aria-pressed="${hg === 'L'}" title="Hinge on left side">Left<br>hinge</button>
+                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="pair" class="${hg === 'pair' ? 'on' : ''}" aria-pressed="${hg === 'pair'}" title="Two doors meeting in the middle">Double<br>doors</button>
+                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="R" class="${hg === 'R' ? 'on' : ''}" aria-pressed="${hg === 'R'}" title="Hinge on right side">Right<br>hinge</button>
                 </div>` : ''}
               </div>`;
             }).join('')}
