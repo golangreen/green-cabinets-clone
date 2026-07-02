@@ -571,6 +571,9 @@
               <div class="gc-panel gc-fade" id="layoutPanel">
                 <div class="gc-step"><span class="num">L</span><h2>Door &amp; drawer setup</h2><span class="hint" id="layoutHint">Pick a layout first</span></div>
                 <div id="layoutStatus" aria-live="polite" aria-atomic="true" class="gc-layout-status"></div>
+                <div class="gc-wizrow">
+                  <button id="gcWizOpen" class="gc-laybtn" type="button">✨ Guide me (3 quick questions)</button>
+                </div>
                 <div class="gc-layrows" id="layRows"></div>
                 <div class="gc-layadd">
                   <button id="layAdd" class="gc-laybtn">+ Add row</button>
@@ -2822,6 +2825,7 @@
             vQty: 1,
             mQty: 1
         };
+        window.__gcState = state;
 
         const DEFAULT_PRICING = { label: "Custom finish", rate: 22, tag: "$22 / inch" };
         const pricingFor = brand => (brand && PRICING[brand]) ? PRICING[brand] : DEFAULT_PRICING;
@@ -7307,6 +7311,8 @@
         }
         /* hydrate from URL/localStorage BEFORE first paint so the 3D scene
            builds with the persisted trap/finish/sink config */
+        window.__gcRenderLayout = renderLayout;
+        window.__gcRenderPreview = renderPreview;
         gcLoadState();
         /* first paint: run now, then again after layout settles so the 3D canvas
            initialises with real dimensions (fixes blank stage on load) */
@@ -7336,6 +7342,202 @@
                 seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
                 applyLighting(b.dataset.light);
             });
+        })();
+        /* ---------- 3-step onboarding wizard ---------- */
+        (function gcWizard(){
+          const STYLE = document.createElement("style");
+          STYLE.textContent = `
+            .gc-wizrow{margin:6px 0 10px}
+            #gcWizOpen{width:100%;background:#5C7650;color:#fff;border:0;padding:12px 14px;border-radius:10px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(92,118,80,.25)}
+            #gcWizOpen:hover{background:#445339}
+            .gc-wiz-back{position:fixed;inset:0;background:rgba(15,20,15,.55);backdrop-filter:blur(3px);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+            .gc-wiz-back.open{display:flex}
+            .gc-wiz{background:#fff;border-radius:16px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;font-family:inherit}
+            .gc-wiz-head{padding:14px 18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;gap:12px}
+            .gc-wiz-head h3{margin:0;font-size:15px;color:#5C7650;letter-spacing:.02em}
+            .gc-wiz-x{border:0;background:transparent;font-size:22px;cursor:pointer;color:#666;line-height:1}
+            .gc-wiz-dots{display:flex;gap:6px}
+            .gc-wiz-dots span{width:8px;height:8px;border-radius:50%;background:#d5d5d5}
+            .gc-wiz-dots span.on{background:#5C7650}
+            .gc-wiz-body{padding:20px 18px 8px}
+            .gc-wiz-body h4{margin:0 0 6px;font-size:19px;color:#111}
+            .gc-wiz-body p{margin:0 0 14px;color:#555;font-size:13px}
+            .gc-wiz-opts{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+            .gc-wiz-opts.one{grid-template-columns:1fr}
+            .gc-wiz-opt{border:2px solid #e2e2e2;background:#fafafa;border-radius:12px;padding:14px 12px;cursor:pointer;text-align:center;transition:all .15s;font:inherit;color:#222}
+            .gc-wiz-opt:hover{border-color:#5C7650;background:#f2f6ef}
+            .gc-wiz-opt.on{border-color:#5C7650;background:#eaf0e4;box-shadow:inset 0 0 0 2px #5C7650}
+            .gc-wiz-opt .big{font-size:17px;font-weight:600;display:block;margin-bottom:2px}
+            .gc-wiz-opt .sm{font-size:12px;color:#666}
+            .gc-wiz-svg{display:block;margin:0 auto 6px}
+            .gc-wiz-foot{display:flex;justify-content:space-between;gap:8px;padding:12px 18px 18px}
+            .gc-wiz-btn{border:0;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
+            .gc-wiz-btn.prim{background:#5C7650;color:#fff}
+            .gc-wiz-btn.prim:hover{background:#445339}
+            .gc-wiz-btn.prim:disabled{background:#b7c2ae;cursor:not-allowed}
+            .gc-wiz-btn.ghost{background:transparent;color:#5C7650}
+            .gc-wiz-num{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+          `;
+          document.head.appendChild(STYLE);
+
+          const el = document.createElement("div");
+          el.className = "gc-wiz-back";
+          el.id = "gcWizBack";
+          el.innerHTML = `
+            <div class="gc-wiz" role="dialog" aria-modal="true" aria-labelledby="gcWizTitle">
+              <div class="gc-wiz-head">
+                <h3 id="gcWizTitle">Quick setup wizard</h3>
+                <div class="gc-wiz-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                <button class="gc-wiz-x" id="gcWizX" aria-label="Close wizard">×</button>
+              </div>
+              <div class="gc-wiz-body" id="gcWizBody"></div>
+              <div class="gc-wiz-foot">
+                <button class="gc-wiz-btn ghost" id="gcWizBack2">← Back</button>
+                <button class="gc-wiz-btn prim" id="gcWizNext">Next →</button>
+              </div>
+            </div>`;
+          document.body.appendChild(el);
+
+          const state = { step: 0, kind: null, hinge: "pair", count: 2 };
+
+          function drawDoor(hinge){
+            const arc = hinge === "L"
+              ? '<path d="M6 42 Q6 6 42 6" stroke="#5C7650" stroke-width="2" fill="none" stroke-dasharray="3 3"/><circle cx="6" cy="6" r="3" fill="#5C7650"/>'
+              : hinge === "R"
+              ? '<path d="M42 42 Q42 6 6 6" stroke="#5C7650" stroke-width="2" fill="none" stroke-dasharray="3 3"/><circle cx="42" cy="6" r="3" fill="#5C7650"/>'
+              : '<path d="M24 42 Q10 12 6 6" stroke="#5C7650" stroke-width="2" fill="none" stroke-dasharray="3 3"/><path d="M24 42 Q38 12 42 6" stroke="#5C7650" stroke-width="2" fill="none" stroke-dasharray="3 3"/><circle cx="6" cy="6" r="3" fill="#5C7650"/><circle cx="42" cy="6" r="3" fill="#5C7650"/>';
+            return `<svg class="gc-wiz-svg" width="48" height="48" viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="3" fill="#fff" stroke="#333"/>${arc}</svg>`;
+          }
+          function drawDrawer(){
+            return '<svg class="gc-wiz-svg" width="48" height="48" viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="3" fill="#fff" stroke="#333"/><rect x="18" y="22" width="12" height="4" rx="2" fill="#5C7650"/></svg>';
+          }
+          function drawCount(n){
+            const w = 40 / n;
+            let cells = "";
+            for (let i = 0; i < n; i++) cells += `<rect x="${4 + i*w}" y="4" width="${w - 0.5}" height="40" rx="2" fill="#fff" stroke="#333"/>`;
+            return `<svg class="gc-wiz-svg" width="48" height="48" viewBox="0 0 48 48">${cells}</svg>`;
+          }
+
+          function applyLive(){
+            if (typeof window.__gcState === "undefined") return;
+            const st = window.__gcState;
+            if (!Array.isArray(st.vRowsSegments)) st.vRowsSegments = [];
+            while (st.vRowsSegments.length < 2) st.vRowsSegments.push([{ kind:"drawer" }]);
+            const cnt = Math.max(1, Math.min(4, state.count));
+            const row = [];
+            for (let i = 0; i < cnt; i++){
+              if (state.kind === "door") row.push({ kind:"door", hinge: state.hinge || "pair" });
+              else row.push({ kind:"drawer" });
+            }
+            st.vRowsSegments[1] = row;
+            if (typeof window.__gcRenderLayout === "function") window.__gcRenderLayout();
+            if (typeof window.__gcRenderPreview === "function") window.__gcRenderPreview();
+          }
+
+          function render(){
+            const dots = el.querySelectorAll(".gc-wiz-dots span");
+            dots.forEach((d, i) => d.classList.toggle("on", i === state.step));
+            const body = el.querySelector("#gcWizBody");
+            const nextBtn = el.querySelector("#gcWizNext");
+            const backBtn = el.querySelector("#gcWizBack2");
+            backBtn.style.visibility = state.step === 0 ? "hidden" : "visible";
+            const totalSteps = state.kind === "drawer" ? 2 : 3; // skip hinge for drawer
+            const lastStep = totalSteps - 1;
+            if (state.step === 0){
+              body.innerHTML = `
+                <h4>1. What goes below the sink?</h4>
+                <p>The top drawer stays a drawer for plumbing. Choose what fills the rest of the vanity.</p>
+                <div class="gc-wiz-opts">
+                  <button class="gc-wiz-opt ${state.kind==="drawer"?"on":""}" data-k="drawer">${drawDrawer()}<span class="big">Drawers</span><span class="sm">Pull-out storage</span></button>
+                  <button class="gc-wiz-opt ${state.kind==="door"?"on":""}" data-k="door">${drawDoor("pair")}<span class="big">Doors</span><span class="sm">Hinged, open outward</span></button>
+                </div>`;
+              body.querySelectorAll("[data-k]").forEach(b => b.onclick = () => {
+                state.kind = b.dataset.k;
+                applyLive();
+                render();
+              });
+              nextBtn.disabled = !state.kind;
+              nextBtn.textContent = "Next →";
+            } else if (state.step === 1 && state.kind === "door"){
+              body.innerHTML = `
+                <h4>2. Which way should the doors open?</h4>
+                <p>Pick the hinge style you prefer for these doors.</p>
+                <div class="gc-wiz-opts" style="grid-template-columns:1fr 1fr 1fr">
+                  <button class="gc-wiz-opt ${state.hinge==="L"?"on":""}" data-h="L">${drawDoor("L")}<span class="big">Left</span><span class="sm">Hinge on left</span></button>
+                  <button class="gc-wiz-opt ${state.hinge==="pair"?"on":""}" data-h="pair">${drawDoor("pair")}<span class="big">Double</span><span class="sm">Meet in middle</span></button>
+                  <button class="gc-wiz-opt ${state.hinge==="R"?"on":""}" data-h="R">${drawDoor("R")}<span class="big">Right</span><span class="sm">Hinge on right</span></button>
+                </div>`;
+              body.querySelectorAll("[data-h]").forEach(b => b.onclick = () => {
+                state.hinge = b.dataset.h;
+                applyLive();
+                render();
+              });
+              nextBtn.disabled = false;
+              nextBtn.textContent = "Next →";
+            } else {
+              // count step
+              body.innerHTML = `
+                <h4>${totalSteps}. How many fronts side by side?</h4>
+                <p>Split the lower vanity into this many equal pieces.</p>
+                <div class="gc-wiz-num">
+                  ${[1,2,3,4].map(n => `<button class="gc-wiz-opt ${state.count===n?"on":""}" data-n="${n}">${drawCount(n)}<span class="big">${n}</span></button>`).join("")}
+                </div>`;
+              body.querySelectorAll("[data-n]").forEach(b => b.onclick = () => {
+                state.count = +b.dataset.n;
+                applyLive();
+                render();
+              });
+              nextBtn.disabled = false;
+              nextBtn.textContent = "Done ✓";
+            }
+          }
+
+          function open(){
+            // seed from current state
+            const st = window.__gcState;
+            const cur = st && Array.isArray(st.vRowsSegments) && st.vRowsSegments[1];
+            if (cur && cur.length){
+              state.kind = cur[0].kind || "drawer";
+              state.hinge = cur[0].hinge || "pair";
+              state.count = cur.length;
+            }
+            state.step = 0;
+            el.classList.add("open");
+            render();
+          }
+          function close(){ el.classList.remove("open"); }
+
+          document.getElementById("gcWizOpen").onclick = open;
+          el.querySelector("#gcWizX").onclick = close;
+          el.addEventListener("click", e => { if (e.target === el) close(); });
+          el.querySelector("#gcWizBack2").onclick = () => {
+            if (state.step > 0){
+              // if we're on count step and kind is drawer, back goes to step 0
+              state.step = (state.step === 2 && state.kind === "drawer") ? 0 : state.step - 1;
+              render();
+            }
+          };
+          el.querySelector("#gcWizNext").onclick = () => {
+            const totalSteps = state.kind === "drawer" ? 2 : 3;
+            if (state.step === 0){
+              // skip hinge for drawer
+              state.step = state.kind === "drawer" ? 2 : 1;
+            } else if (state.step === 1){
+              state.step = 2;
+            } else {
+              applyLive();
+              close();
+              return;
+            }
+            render();
+          };
+
+          // auto-open once per browser
+          try {
+            if (!localStorage.getItem("gcWizSeen")){
+              setTimeout(() => { open(); localStorage.setItem("gcWizSeen","1"); }, 900);
+            }
+          } catch(_){}
         })();
         </script>
         </div>
