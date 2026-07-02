@@ -2904,6 +2904,17 @@
         const mStyleObj = () => STYLES.medicine.find(s => s.id === state.mStyle) || STYLES.medicine[0];
 
         const $ = id => document.getElementById(id);
+        const layoutStatus = () => $("layoutStatus");
+        function announceFrontChange(rowIdx, segIdx, kind, hinge) {
+            const el = layoutStatus();
+            if (!el) return;
+            const label = kind === "door" ? "door" : "drawer";
+            const hingeText = kind === "door" && hinge && hinge !== "pair"
+                ? (hinge === "L" ? "hinge on the left" : "hinge on the right")
+                : (kind === "door" && hinge === "pair" ? "double doors" : "");
+            const pos = `row ${rowIdx + 1}, front ${segIdx + 1}`;
+            el.textContent = `Front changed to ${label}${hingeText ? " — " + hingeText : ""} at ${pos}.`;
+        }
         const fmt = n => "$" + n.toLocaleString("en-US");
         const curStyle = () => (activeType() === "vanity" ? vStyleObj() : mStyleObj()) || STYLES.vanity[0];
         const curFinish = () => FINISHES.find(f => f.id === state.finish)
