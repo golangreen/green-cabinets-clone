@@ -105,21 +105,12 @@
           box-shadow:inset 0 0 120px 10px rgba(30,24,16,.18), inset 0 -40px 80px rgba(30,24,16,.12);z-index:2}
         .gc-layrows{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
         .gc-layout-status{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-        .gc-layout-note{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#eef3ea;color:#3e5437;font-size:12.5px;font-weight:650;line-height:1.35}
-        .gc-front-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
-        .gc-front-preset{border:1.5px solid #dddddd;background:#fff;border-radius:14px;padding:11px;text-align:left;cursor:pointer;font-family:inherit;transition:all .18s var(--ease);display:flex;flex-direction:column;gap:8px;min-height:132px;color:var(--ink)}
-        .gc-front-preset:hover{border-color:#b9c8b3;transform:translateY(-1px)}
-        .gc-front-preset.on{border-color:var(--brass);background:var(--brass-tint);box-shadow:0 0 0 3px rgba(92,118,80,.13)}
-        .gc-front-preset .name{font-size:14px;font-weight:800;color:#222;letter-spacing:.01em}
-        .gc-front-preset .desc{font-size:11.5px;color:#666;line-height:1.25}
         .gc-front-mini{height:56px;border-radius:10px;background:#f4f2ed;border:1px solid #e5e1d8;padding:6px;display:flex;flex-direction:column;gap:4px}
         .gc-mini-top{height:13px;border-radius:4px;background:#d8ded4;border:1px solid rgba(92,118,80,.22);position:relative}
         .gc-mini-top:after{content:"sink drawer";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:7px;font-weight:800;color:#5c7650;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
         .gc-mini-row{flex:1;display:flex;gap:4px;min-height:0}
         .gc-mini-front{flex:1;border-radius:4px;background:linear-gradient(180deg,#8aa17f,#6f8865);border:1px solid rgba(50,65,44,.28);position:relative;overflow:hidden}
         .gc-mini-front.drawer:after{content:"";position:absolute;left:18%;right:18%;top:50%;height:2px;border-radius:99px;background:rgba(255,255,255,.68)}
-        .gc-mini-front.door:after{content:"";position:absolute;top:50%;width:4px;height:4px;margin-top:-2px;border-radius:50%;background:rgba(255,255,255,.72)}
-        .gc-mini-front.left:after{left:6px}.gc-mini-front.right:after{right:6px}.gc-mini-front.pair:before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:1px solid rgba(255,255,255,.45)}.gc-mini-front.pair:after{left:calc(50% - 2px)}
         .gc-layrow{display:flex;align-items:center;gap:12px;background:#e5e5e5;border-radius:13px;padding:8px 10px}
         .gc-layrow-wrap.simple .gc-layrow{display:none}
         .gc-layrow .bar{width:72px;flex-shrink:0;height:26px;border-radius:8px;background:linear-gradient(180deg,#a8c39d,#7a9670);position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);min-width:30px;transition:flex-grow .15s var(--ease)}
@@ -153,23 +144,10 @@
         .gc-stepper button:hover:not(:disabled){background:#f0f0f0}
         .gc-stepper button:disabled{opacity:.3;cursor:not-allowed}
         .gc-stepper .cnt{padding:0 8px;font-size:11px;font-weight:800;color:#333;min-width:92px;text-align:center;letter-spacing:.02em;text-transform:uppercase}
-        .gc-front-strip{display:flex;gap:5px;height:44px;padding:5px;border-radius:11px;background:#eeeae2;border:1px solid #e1ddd4}
-        .gc-front-chip{flex:1;min-width:0;border-radius:7px;background:#fff;border:1px solid #dcd7cc;color:#384a32;display:flex;align-items:center;justify-content:center;text-align:center;font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.04em;position:relative;overflow:hidden}
-        .gc-front-chip.drawer:before{content:"";position:absolute;left:16%;right:16%;top:50%;height:2px;border-radius:99px;background:#5c7650;opacity:.55}
-        .gc-front-chip.door:before{content:"";position:absolute;top:0;bottom:0;border-left:1px solid rgba(92,118,80,.28)}
-        .gc-front-chip.door.pair:before{left:50%}.gc-front-chip.door.left:before{left:0}.gc-front-chip.door.right:before{right:0}
         .gc-seggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:8px}
         .gc-segcard{padding:11px;background:#fff;border:1px solid #e6e6e6;border-radius:10px;display:flex;flex-direction:column;gap:8px;position:relative}
         .gc-segcard[data-locked="1"]{background:#f4f4f2;border-style:dashed}
         .gc-segcard .lbl{font-size:10.5px;font-weight:850;color:#666;text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;justify-content:space-between;gap:8px}
-        .gc-tog{display:flex;gap:3px;background:#f0efec;border-radius:8px;padding:3px}
-        .gc-tog button{flex:1;min-height:34px;border:0;background:transparent;color:#777;font-size:12px;font-weight:850;cursor:pointer;border-radius:6px;font-family:inherit;transition:all .15s;line-height:1.1}
-        .gc-tog button.on{background:var(--brass);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.12)}
-        .gc-tog button:disabled{cursor:not-allowed;opacity:.55}
-        .gc-hinge{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-        .gc-hinge button{min-height:32px;border:1px solid #e2e2e2;background:#fff;border-radius:7px;color:#666;cursor:pointer;font-family:inherit;font-size:10.5px;font-weight:850;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:4px;text-align:center;line-height:1.05}
-        .gc-hinge button.on{border-color:var(--brass);background:rgba(92,118,80,.09);color:var(--brass-dark)}
-        .gc-hinge button:hover:not(.on){background:#f6f6f6}
         .gc-segrm{border:0;background:transparent;color:#9b625d;cursor:pointer;font-size:11px;font-weight:800;font-family:inherit;padding:4px 6px;border-radius:7px}
         .gc-segrm:hover{background:#fee;color:#a33}
         .gc-layadd{display:flex;gap:8px}
@@ -213,13 +191,8 @@
         .gc-style svg{display:block;width:100%;height:auto;border-radius:8px;margin-bottom:8px}
         .gc-style .t{font-size:14px;font-weight:600}
         .gc-style .d{font-size:12px;color:var(--ink-soft);margin-top:1px}
-        .gc-hot{outline:none}
-        .gc-hot:focus{outline:none}
-        .gc-hot:focus-visible{stroke:#5C7650;stroke-width:2;stroke-dasharray:3 2;fill:rgba(92,118,80,.12)}
-
-        /* Doors option cancelled — hide every UI surface that offered it. */
-        .gc-wizrow,#gcWizOpen,#gcWiz,.gc-front-presets,.gc-layout-note,
-        .gc-tog,.gc-hinge,.gc-front-strip{display:none !important}
+        /* Drawer-only build — legacy hotspot surface stays hidden if any thumbnail still injects it. */
+        .gc-hot{display:none !important}
 
 
 
@@ -412,10 +385,7 @@
           .gc-subseg button{font-size:12px}
           .gc-styles{gap:8px}
           .gc-style{padding:12px 10px}
-          .gc-front-presets{grid-template-columns:1fr}
-          .gc-front-preset{min-height:116px}
           .gc-seggrid{grid-template-columns:1fr}
-          .gc-hinge button{font-size:10px}
           .gc-width{flex-wrap:wrap;gap:10px}
           .gc-width input[type=range]{flex:1 1 100%;order:2;height:6px}
           .gc-width input[type=range]::-webkit-slider-thumb{width:34px;height:34px}
@@ -2547,7 +2517,7 @@
             {
                 id: "float2",
                 name: "Floating · Two Drawer",
-                desc: "Slab drawer + doors below",
+                desc: "Slab drawer + drawer bank below",
                 min: 10,
                 max: 60,
                 presets: [10, 24, 30, 36, 48],
@@ -2557,7 +2527,7 @@
             {
                 id: "float4",
                 name: "Floating · Four Drawer",
-                desc: "His & hers · doors optional",
+                desc: "His & hers · full drawer stack",
                 min: 10,
                 max: 96,
                 presets: [48, 60, 72, 84],
@@ -2567,7 +2537,7 @@
             {
                 id: "stone",
                 name: "Stone Apron",
-                desc: "Stone top · doors below drawer",
+                desc: "Stone top · drawer bank below",
                 min: 10,
                 max: 96,
                 presets: [36, 48, 60, 72],
@@ -2577,7 +2547,7 @@
             {
                 id: "compact",
                 name: "Compact Float",
-                desc: "Drawer + door · powder rooms",
+                desc: "Single drawer · powder rooms",
                 min: 10,
                 max: 36,
                 presets: [10, 12, 18, 24, 30],
@@ -2939,71 +2909,36 @@
 
         const $ = id => document.getElementById(id);
         const layoutStatus = () => $("layoutStatus");
-        function announceFrontChange(rowIdx, segIdx, kind, hinge) {
+        function announceFrontChange(rowIdx, segIdx) {
             const el = layoutStatus();
             if (!el) return;
-            const label = kind === "door" ? "door" : "drawer";
-            const hingeText = kind === "door" && hinge && hinge !== "pair"
-                ? (hinge === "L" ? "hinge on the left" : "hinge on the right")
-                : (kind === "door" && hinge === "pair" ? "double doors" : "");
-            const pos = `row ${rowIdx + 1}, front ${segIdx + 1}`;
-            el.textContent = `Front changed to ${label}${hingeText ? " — " + hingeText : ""} at ${pos}.`;
+            el.textContent = `Drawer updated at row ${rowIdx + 1}, front ${segIdx + 1}.`;
         }
+        /* Drawer-only build: single canonical layout. */
         const FRONT_LAYOUTS = [
             {
                 id: "drawers",
                 name: "All drawers",
-                desc: "Simple pull-out storage. Best when you want drawers everywhere below the sink drawer.",
+                desc: "Every front is a soft-close drawer.",
                 rows: [[{ kind: "drawer" }], [{ kind: "drawer" }]]
-            },
-            {
-                id: "pairdoors",
-                name: "Sink drawer + 2 doors",
-                desc: "The easiest door layout: one plumbing drawer on top, double doors below.",
-                rows: [[{ kind: "drawer" }], [{ kind: "door", hinge: "pair" }]]
-            },
-            {
-                id: "leftdrawers",
-                name: "Drawers left · door right",
-                desc: "Common combo: drawer stack for small items, door storage on one side.",
-                rows: [[{ kind: "drawer" }], [{ kind: "drawer" }, { kind: "door", hinge: "R" }]]
-            },
-            {
-                id: "rightdrawers",
-                name: "Door left · drawers right",
-                desc: "Same combo reversed when plumbing or room layout works better this way.",
-                rows: [[{ kind: "drawer" }], [{ kind: "door", hinge: "L" }, { kind: "drawer" }]]
             }
         ];
         function cloneSegments(rows) {
-            /* Doors option disabled — coerce every segment to a drawer. */
             return rows.map(row => row.map(() => ({ kind: "drawer" })));
         }
-        function matchFrontPreset() {
-            const rows = state.vRowsSegments || [];
-            const norm = row => (row || []).map(seg => `${seg.kind === "door" ? "D" : "R"}${seg.kind === "door" ? (seg.hinge || "pair") : ""}`).join("|");
-            const current = `${norm(rows[0])}/${norm(rows[1])}`;
-            const found = FRONT_LAYOUTS.find(p => {
-                const r = cloneSegments(p.rows);
-                return `${norm(r[0])}/${norm(r[1])}` === current;
-            });
-            return found ? found.id : "custom";
-        }
+        function matchFrontPreset() { return "drawers"; }
         function applyFrontPreset(id) {
-            const preset = FRONT_LAYOUTS.find(p => p.id === id);
-            if (!preset) return;
+            const preset = FRONT_LAYOUTS.find(p => p.id === id) || FRONT_LAYOUTS[0];
             state.vRowsSegments = cloneSegments(preset.rows);
             state.vRows = preset.rows.map(() => 1);
-            state.vRowsKind = state.vRowsSegments.map(row => row.some(seg => seg.kind === "door") ? "door" : "drawer");
-            announceFrontChange(1, 0, state.vRowsSegments[1]?.[0]?.kind || "drawer", state.vRowsSegments[1]?.[0]?.hinge);
+            state.vRowsKind = state.vRowsSegments.map(() => "drawer");
+            announceFrontChange(1, 0);
         }
         function frontPreviewHTML(rows) {
             const bottom = (rows && rows[1] && rows[1].length ? rows[1] : [{ kind: "drawer" }]);
-            return `<div class="gc-front-mini" aria-hidden="true"><div class="gc-mini-top"></div><div class="gc-mini-row">${bottom.map(seg => {
-                const isDoor = seg.kind === "door";
-                const hinge = isDoor ? (seg.hinge || "pair") : "";
-                return `<span class="gc-mini-front ${isDoor ? "door" : "drawer"} ${hinge === "L" ? "left" : hinge === "R" ? "right" : hinge === "pair" ? "pair" : ""}"></span>`;
-            }).join("")}</div></div>`;
+            return `<div class="gc-front-mini" aria-hidden="true"><div class="gc-mini-top"></div><div class="gc-mini-row">${bottom.map(() =>
+                `<span class="gc-mini-front drawer"></span>`
+            ).join("")}</div></div>`;
         }
         const fmt = n => "$" + n.toLocaleString("en-US");
         const curStyle = () => (activeType() === "vanity" ? vStyleObj() : mStyleObj()) || STYLES.vanity[0];
@@ -3067,10 +3002,8 @@
     </svg>`
                 ;
             }
-            /* Vanity thumbnails: TOP = countertop with sink cut-outs (no dummy drawer,
-               because sinks sit on the stone). BOTTOM = door/drawer segments that
-               act as click hotspots — tapping a front toggles door ↔ drawer for
-               the currently-selected style. */
+            /* Vanity thumbnails: TOP = countertop with sink cut-outs (sinks sit on
+               the stone). BOTTOM = drawer fronts drawn from the live state. */
             const layouts = {
                 float2:  { cx: 35, cw: 90,  sinks: state.sinks === "sink2" ? 2 : 1 },
                 float4:  { cx: 20, cw: 120, sinks: 2 },
@@ -3079,7 +3012,6 @@
             };
             const L = layouts[s.id] || layouts.float2;
             const isStone = s.id === "stone";
-            /* Countertop slab + basin hints */
             const topY = isStone ? 24 : 30;
             const topH = isStone ? 14 : 10;
             const basinY = topY + topH / 2;
@@ -3091,65 +3023,25 @@
         <ellipse cx="${bx1}" cy="${basinY}" rx="8" ry="2.4" fill="#CFD6D9" opacity=".9"/>
         <circle cx="${bx1}" cy="${basinY}" r="0.9" fill="#5a6a70"/>
         ${L.sinks === 2 ? `<ellipse cx="${bx2}" cy="${basinY}" rx="8" ry="2.4" fill="#CFD6D9" opacity=".9"/><circle cx="${bx2}" cy="${basinY}" r="0.9" fill="#5a6a70"/>` : ""}`;
-            /* Segment row driven by live state so hotspots reflect the real config */
-            const segs = (interactive && Array.isArray(state.vRowsSegments) && state.vRowsSegments[1] && state.vRowsSegments[1].length)
+            const segs = (Array.isArray(state.vRowsSegments) && state.vRowsSegments[1] && state.vRowsSegments[1].length)
                 ? state.vRowsSegments[1]
-                : [{ kind: "door" }, { kind: "door" }];
+                : [{ kind: "drawer" }, { kind: "drawer" }];
             const rowY = topY + topH + 4;
             const rowH = 84 - rowY;
             const segW = L.cw / segs.length;
             const segsSVG = `<rect x="${L.cx}" y="${rowY}" width="${L.cw}" height="${rowH}" rx="3" fill="${f.c1}"/>` +
-                segs.map((seg, i) => {
+                segs.map((_seg, i) => {
                     const sx = L.cx + i * segW;
-                    const isDoor = seg.kind === "door";
                     const midY = rowY + rowH / 2;
-                    /* Architectural elevation door-swing symbol (NKBA / AWI convention):
-                       dashed triangle whose APEX marks the HINGE side; wide base is
-                       the pull edge. Small filled square at apex = hinge barrel. */
-                    const swing = (hinge) => {
-                        const pad = 2.5;
-                        const x0 = sx + pad, x1 = sx + segW - pad;
-                        const y0 = rowY + pad, y1 = rowY + rowH - pad;
-                        const stroke = `stroke="${f.grain}" stroke-width="0.9" stroke-dasharray="2 1.6" fill="none" opacity=".85"`;
-                        if (hinge === "pair") {
-                            /* Two mirrored triangles: apexes on outer edges, meet at center */
-                            const cx = sx + segW / 2;
-                            return `<polyline points="${x0},${y0} ${cx},${midY} ${x0},${y1}" ${stroke}/>
-                                    <polyline points="${x1},${y0} ${cx},${midY} ${x1},${y1}" ${stroke}/>
-                                    <rect x="${x0 - 0.6}" y="${midY - 1}" width="1.6" height="2" fill="${f.grain}"/>
-                                    <rect x="${x1 - 1}" y="${midY - 1}" width="1.6" height="2" fill="${f.grain}"/>`;
-                        }
-                        const apexX = hinge === "R" ? x1 : x0;
-                        const baseX = hinge === "R" ? x0 : x1;
-                        return `<polyline points="${baseX},${y0} ${apexX},${midY} ${baseX},${y1}" ${stroke}/>
-                                <rect x="${apexX - 0.8}" y="${midY - 1}" width="1.6" height="2" fill="${f.grain}"/>`;
-                    };
-                    const decor = isDoor
-                        ? swing(seg.hinge || "pair")
-                        : `<line x1="${sx + 5}" y1="${midY}" x2="${sx + segW - 5}" y2="${midY}" stroke="${f.grain}" stroke-width="1.3"/>
+                    const decor = `<line x1="${sx + 5}" y1="${midY}" x2="${sx + segW - 5}" y2="${midY}" stroke="${f.grain}" stroke-width="1.3"/>
                            <rect x="${sx + segW / 2 - 4}" y="${midY - 1.2}" width="8" height="2.4" rx="1" fill="${f.grain}" opacity=".55"/>`;
                     const divider = i > 0 ? `<line x1="${sx}" y1="${rowY}" x2="${sx}" y2="${rowY + rowH}" stroke="${f.grain}" stroke-width="1.2"/>` : "";
-                    const tip = interactive
-                        ? `${isDoor ? "Door" : "Drawer"} · position ${i + 1} of ${segs.length}. Tap to switch to ${isDoor ? "drawer (horizontal pull)" : "door (hinge + swing)"}.`
-                        : `${isDoor ? "Door" : "Drawer"} front`;
-                    const ariaLbl = interactive
-                        ? `${isDoor ? "Door" : "Drawer"} at position ${i + 1} of ${segs.length}. Press Enter or Space to switch to ${isDoor ? "drawer" : "door"}.`
-                        : tip;
-                    const hot = interactive
-                        ? `<rect class="gc-hot" data-seg="${i}" x="${sx}" y="${rowY}" width="${segW}" height="${rowH}" fill="transparent" tabindex="0" role="button" aria-label="${ariaLbl}" aria-pressed="${isDoor ? "false" : "true"}" style="cursor:pointer;pointer-events:all"><title>${tip}</title></rect>`
-                        : `<title>${tip}</title>`;
-                    return divider + decor + hot;
+                    return divider + decor + `<title>Drawer front</title>`;
                 }).join("");
-
-            const hint = interactive
-                ? `<text x="80" y="94" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6" fill="${f.grain}" opacity=".7">Tap a front to switch \u2014 use the editor below for hinge \u0026 more</text>`
-                : `<text x="80" y="94" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="6" fill="${f.grain}" opacity=".45">Select to edit fronts</text>`;
-
-            return `<svg viewBox="0 0 160 100" role="img" aria-label="${s.name} \u2014 countertop with basins on top, doors and drawers below" style="pointer-events:${interactive ? "all" : "none"}">
+            return `<svg viewBox="0 0 160 100" role="img" aria-label="${s.name} \u2014 countertop with basins on top, drawers below" style="pointer-events:none">
         <rect width="160" height="100" fill="#EFEBE3"/>
         <g><title>Countertop \u2014 sinks sit here, no cabinet front on this band</title>${counter}</g>
         ${segsSVG}
-        ${hint}
       </svg>`;
         }
 
@@ -3164,31 +3056,8 @@
       <span class="d">${s.desc}</span>
     </button>`
             ).join("");
-            const toggleHot = (hot) => {
-
-                const i = +hot.dataset.seg;
-                const row = state.vRowsSegments[1] || (state.vRowsSegments[1] = [{ kind: "door" }]);
-                if (!row[i]) return false;
-                row[i].kind = row[i].kind === "door" ? "drawer" : "door";
-                announceFrontChange(1, i, row[i].kind, row[i].hinge);
-                renderAll();
-                /* restore focus to the same segment after re-render */
-                requestAnimationFrame(() => {
-                    const next = document.querySelector(`.gc-style.on .gc-hot[data-seg="${i}"]`);
-                    if (next && typeof next.focus === "function") next.focus();
-                });
-                return true;
-            };
             document.querySelectorAll("[data-style]").forEach(b => {
-                b.onclick = (ev) => {
-                    /* hotspot click on the selected card toggles a segment instead of re-selecting */
-                    const hot = ev.target.closest(".gc-hot");
-                    if (hot && b.classList.contains("on") && at === "vanity") {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        toggleHot(hot);
-                        return;
-                    }
+                b.onclick = () => {
                     if (at === "vanity")
                         state.vStyle = b.dataset.style;
                     else
@@ -3203,24 +3072,6 @@
                     if (typeof preloadSwatchColors === "function")
                         setTimeout(preloadSwatchColors, 300);
                 };
-                /* Keyboard: Enter/Space on a focused hotspot toggles door↔drawer.
-                   Arrow Left/Right moves focus between hotspots inside the card. */
-                b.addEventListener("keydown", (ev) => {
-                    const hot = ev.target.closest && ev.target.closest(".gc-hot");
-                    if (!hot || !b.classList.contains("on") || at !== "vanity") return;
-                    if (ev.key === "Enter" || ev.key === " " || ev.key === "Spacebar") {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        toggleHot(hot);
-                    } else if (ev.key === "ArrowRight" || ev.key === "ArrowLeft") {
-                        ev.preventDefault();
-                        const hots = Array.from(b.querySelectorAll(".gc-hot"));
-                        const idx = hots.indexOf(hot);
-                        const dir = ev.key === "ArrowRight" ? 1 : -1;
-                        const next = hots[(idx + dir + hots.length) % hots.length];
-                        if (next) next.focus();
-                    }
-                });
             });
         }
 
@@ -4897,7 +4748,7 @@
                     const fh = usableH * fr[rI];
                     const cy = yCursor - fh / 2;
                     yCursor -= fh + gap;
-                    /* row is split into 1–4 side-by-side fronts (drawer/door mix). */
+                    /* row is split into 1–4 side-by-side drawer fronts. */
                     const _rowSegs = (state.vRowsSegments && state.vRowsSegments[rI]) || [{ kind: "drawer" }];
                     const segGap = 0.28;
                     const _nS = Math.max(1, _rowSegs.length);
@@ -4906,60 +4757,7 @@
                         const fw = _segW;
                         const cx = (rowCx - rowFw / 2) + _segW / 2 + sI * (_segW + segGap);
                         const mirror = (mIdx + rI + sI) % 2 === 1;
-                        const _segKind = _rowSegs[sI] && _rowSegs[sI].kind === "door" ? "door" : "drawer";
 
-
-                    /* ---- door row branch (hinged fronts + interior shelf) ----
-                       If this row is set to "door" AND no sink sits above it,
-                       build hinged door(s) instead of a drawer box. Sink rows
-                       are always drawers so the U-cut + trap stay valid. */
-                    {
-                        const edgeBufDoor = _notchHW + 0.8;
-                        const sinksHere = (rI === 0)
-                            ? _fxs.filter(fx => fx >= cx - fw / 2 + edgeBufDoor && fx <= cx + fw / 2 - edgeBufDoor)
-                            : [];
-                        const kind = _segKind;
-                         if (kind === "door" && sinksHere.length === 0 && fw >= 6) {
-                             const hingePref = (_rowSegs[sI] && _rowSegs[sI].hinge) || (fw >= 22 ? "pair" : "L");
-                             const twoDoors = hingePref === "pair" && fw >= 12;
-                             const gapD = 0.18;
-                             const dwEach = twoDoors ? (fw - gapD) / 2 : fw;
-                             const hwM = metalMat();
-                             const makeDoor = (hingeX, dir, dw) => {
-                                 const gg = new THREE.Group();
-                                 gg.position.set(hingeX, cy, D / 2 - 0.5);
-                                 const dFront = mk(dw, fh, 1, panelMat(f, dw, fh, mirror));
-                                 dFront.position.set(dir * dw / 2, 0, 0.5);
-                                 gg.add(dFront);
-                                 const pullLen = Math.min(dw * 0.5, 5);
-                                 const pull = mk(pullLen, 0.35, 0.55, hwM);
-                                 pull.position.set(dir * (dw - 1.4), 0, 1.05);
-                                 gg.add(pull);
-                                 root.add(gg);
-                                 animParts.push({ g: gg, type: "hinge", rot: -dir * 1.15 });
-                             };
-                             if (twoDoors) {
-                                 makeDoor(cx - fw / 2, 1, dwEach);
-                                 makeDoor(cx + fw / 2, -1, dwEach);
-                             } else if (hingePref === "R") {
-                                 makeDoor(cx + fw / 2, -1, dwEach);
-                             } else {
-                                 makeDoor(cx - fw / 2, 1, dwEach);
-                             }
-                            /* interior back + one shelf so the cavity reads correctly when open */
-                            const bd2 = Math.max(D - 4, 4);
-                            const zcBack = D / 2 - 1.5 - bd2 / 2;
-                            const backP = mk(fw - 1, Math.max(fh - 1, 1), 0.4, wm.a);
-                            backP.position.set(cx, cy, zcBack - bd2 / 2 + 0.2);
-                            root.add(backP);
-                            if (fh >= 10) {
-                                const shelf = mk(fw - 1.6, 0.5, bd2 - 0.6, wm.a);
-                                shelf.position.set(cx, cy, zcBack);
-                                root.add(shelf);
-                            }
-                            continue;
-                        }
-                    }
 
                     const g = new THREE.Group();
                     g.position.set(cx, cy, 0);
@@ -6270,18 +6068,7 @@
             const layAddWrap = $("layAdd") && $("layAdd").parentElement;
             if (layAddWrap) layAddWrap.style.display = isVanity ? "none" : "";
             const segs = state.vRowsSegments || [];
-            const activePreset = isVanity ? matchFrontPreset() : "";
-            const presetUI = isVanity ? `
-              <p class="gc-layout-note">Choose the picture that looks closest. The top drawer stays a drawer for sink plumbing; everything below can be drawers, doors, or a mix.</p>
-              <div class="gc-front-presets" role="group" aria-label="Quick door and drawer layouts">
-                ${FRONT_LAYOUTS.map(p => `
-                  <button class="gc-front-preset ${activePreset === p.id ? 'on' : ''}" data-layout-preset="${p.id}" aria-pressed="${activePreset === p.id}">
-                    ${frontPreviewHTML(p.rows)}
-                    <span class="name">${p.name}</span>
-                    <span class="desc">${p.desc}</span>
-                  </button>
-                `).join("")}
-              </div>` : "";
+            const presetUI = "";
             $("layRows").innerHTML = presetUI + rows.map((v, i) => {
                 const sinkLocked = isVanity && i === 0; /* top row sits under sink → drawer only */
                 const rowSegs = Array.isArray(segs[i]) && segs[i].length ? segs[i] : [{ kind: "drawer" }];
@@ -6291,43 +6078,23 @@
             <div class="gc-rowcfg-title">
               <span class="badge">${i + 1}</span>
               <span>${sinkLocked ? "Top plumbing drawer" : `Row ${i + 1}`}</span>
-              ${sinkLocked ? '<span class="sub">Always a drawer with U-cut</span>' : `<span class="sub">Left to right, like the vanity picture</span>`}
+              ${sinkLocked ? '<span class="sub">Always a drawer with U-cut</span>' : `<span class="sub">Left to right, drawer fronts</span>`}
             </div>
             ${sinkLocked ? '' : `
-            <div class="gc-stepper" role="group" aria-label="Number of fronts in this row">
-              <button data-lr="segstepdn" data-i="${i}" ${rowSegs.length <= 1 ? 'disabled' : ''} aria-label="Remove one side-by-side front">\u2212</button>
+            <div class="gc-stepper" role="group" aria-label="Number of drawers in this row">
+              <button data-lr="segstepdn" data-i="${i}" ${rowSegs.length <= 1 ? 'disabled' : ''} aria-label="Remove one side-by-side drawer">\u2212</button>
               <span class="cnt">${rowSegs.length} side by side</span>
-              <button data-lr="segstepup" data-i="${i}" ${rowSegs.length >= 4 ? 'disabled' : ''} aria-label="Add one side-by-side front">+</button>
+              <button data-lr="segstepup" data-i="${i}" ${rowSegs.length >= 4 ? 'disabled' : ''} aria-label="Add one side-by-side drawer">+</button>
             </div>`}
           </div>
-          <div class="gc-front-strip" aria-hidden="true">${rowSegs.map((s, si) => {
-              const isDoorChip = s.kind === "door";
-              const hingeChip = isDoorChip ? (s.hinge || "pair") : "";
-              return `<span class="gc-front-chip ${isDoorChip ? 'door' : 'drawer'} ${hingeChip === 'L' ? 'left' : hingeChip === 'R' ? 'right' : hingeChip === 'pair' ? 'pair' : ''}">${isDoorChip ? 'Door' : 'Drawer'}</span>`;
-          }).join('')}</div>
           <div class="gc-seggrid">
-            ${rowSegs.map((s, si) => {
-                const hg = s.hinge || "pair";
-                const isDoor = s.kind === "door";
-                return `
+            ${rowSegs.map((_s, si) => `
               <div class="gc-segcard" data-locked="${sinkLocked ? 1 : 0}">
                 <div class="lbl">
-                  <span>Front ${si + 1} ${rowSegs.length > 1 ? (si === 0 ? '· left' : si === rowSegs.length - 1 ? '· right' : '· middle') : ''}</span>
-                  ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segrm" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove front ${si + 1}" title="Remove this front">Remove</button>` : ''}
+                  <span>Drawer ${si + 1} ${rowSegs.length > 1 ? (si === 0 ? '· left' : si === rowSegs.length - 1 ? '· right' : '· middle') : ''}</span>
+                  ${(!sinkLocked && rowSegs.length > 1) ? `<button class="gc-segrm" data-lr="segdel" data-i="${i}" data-s="${si}" aria-label="Remove drawer ${si + 1}" title="Remove this drawer">Remove</button>` : ''}
                 </div>
-                <div class="gc-tog" role="group" aria-label="Choose drawer or door for front ${si + 1}">
-                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="drawer" class="${!isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${!isDoor}">Drawer<br><small>pulls out</small></button>
-                  <button data-lr="segset" data-i="${i}" data-s="${si}" data-k="door" class="${isDoor ? 'on' : ''}" ${sinkLocked ? 'disabled' : ''} aria-pressed="${isDoor}">Door<br><small>opens</small></button>
-                </div>
-                ${(isDoor && !sinkLocked) ? `
-                <div class="lbl" style="margin-top:2px">Door swing</div>
-                <div class="gc-hinge" role="group" aria-label="Door swing side for front ${si + 1}">
-                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="L" class="${hg === 'L' ? 'on' : ''}" aria-pressed="${hg === 'L'}" title="Hinge on left side">Left<br>hinge</button>
-                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="pair" class="${hg === 'pair' ? 'on' : ''}" aria-pressed="${hg === 'pair'}" title="Two doors meeting in the middle">Double<br>doors</button>
-                  <button data-lr="seghingeset" data-i="${i}" data-s="${si}" data-h="R" class="${hg === 'R' ? 'on' : ''}" aria-pressed="${hg === 'R'}" title="Hinge on right side">Right<br>hinge</button>
-                </div>` : ''}
-              </div>`;
-            }).join('')}
+              </div>`).join('')}
           </div>
         </div>` : "";
                 return `
@@ -6373,11 +6140,6 @@
                     renderPreview();
                 };
             });
-            document.querySelectorAll("[data-layout-preset]").forEach(b => b.onclick = () => {
-                applyFrontPreset(b.dataset.layoutPreset);
-                renderLayout();
-                renderPreview();
-            });
             document.querySelectorAll("[data-lr]").forEach(b => b.onclick = () => {
                 const i = +b.dataset.i;
                 if (b.dataset.lr === "up")
@@ -6397,45 +6159,15 @@
                     if (!Array.isArray(state.vRowsSegments)) state.vRowsSegments = [];
                     while (state.vRowsSegments.length < curRows().length) state.vRowsSegments.push([{ kind: "drawer" }]);
                     const sIdx = +b.dataset.s;
-                    if (b.dataset.lr === "segkind") {
-                        const seg = state.vRowsSegments[i][sIdx];
-                        if (seg) {
-                            seg.kind = seg.kind === "door" ? "drawer" : "door";
-                            if (seg.kind === "door" && !seg.hinge) seg.hinge = "pair";
-                            announceFrontChange(i, sIdx, seg.kind, seg.hinge);
-                        }
-                    }
-                    if (b.dataset.lr === "seghinge") {
-                        const seg = state.vRowsSegments[i][sIdx];
-                        if (seg && seg.kind === "door") {
-                            const order = ["pair", "L", "R"];
-                            const cur = seg.hinge || "pair";
-                            seg.hinge = order[(order.indexOf(cur) + 1) % order.length];
-                        }
-                    }
                     if ((b.dataset.lr === "segadd" || b.dataset.lr === "segstepup") && state.vRowsSegments[i].length < 4) {
-                        state.vRowsSegments[i].push({ kind: "door", hinge: "L" });
+                        state.vRowsSegments[i].push({ kind: "drawer" });
+                        announceFrontChange(i, state.vRowsSegments[i].length - 1);
                     }
                     if (b.dataset.lr === "segstepdn" && state.vRowsSegments[i].length > 1) {
                         state.vRowsSegments[i].pop();
                     }
                     if (b.dataset.lr === "segdel" && state.vRowsSegments[i].length > 1) {
                         state.vRowsSegments[i].splice(sIdx, 1);
-                    }
-                    if (b.dataset.lr === "segset") {
-                        const seg = state.vRowsSegments[i][sIdx];
-                        if (seg) {
-                            seg.kind = b.dataset.k === "door" ? "door" : "drawer";
-                            if (seg.kind === "door" && !seg.hinge) seg.hinge = "pair";
-                            announceFrontChange(i, sIdx, seg.kind, seg.hinge);
-                        }
-                    }
-                    if (b.dataset.lr === "seghingeset") {
-                        const seg = state.vRowsSegments[i][sIdx];
-                        if (seg && seg.kind === "door") {
-                            const h = b.dataset.h;
-                            if (h === "L" || h === "R" || h === "pair") seg.hinge = h;
-                        }
                     }
                 }
                 renderLayout();
@@ -7358,207 +7090,7 @@
                 applyLighting(b.dataset.light);
             });
         })();
-        /* ---------- 3-step onboarding wizard ---------- */
-        (function gcWizard(){ return; /* Doors option cancelled — wizard disabled */
-          const STYLE = document.createElement("style");
-          STYLE.textContent = `
-            .gc-wizrow{margin:6px 0 10px}
-            #gcWizOpen{width:100%;background:#5C7650;color:#fff;border:0;padding:12px 14px;border-radius:10px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(92,118,80,.25)}
-            #gcWizOpen:hover{background:#445339}
-            .gc-wiz-back{position:fixed;inset:0;background:rgba(15,20,15,.55);backdrop-filter:blur(3px);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
-            .gc-wiz-back.open{display:flex}
-            .gc-wiz{background:#fff;border-radius:16px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;font-family:inherit}
-            .gc-wiz-head{padding:14px 18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;gap:12px}
-            .gc-wiz-head h3{margin:0;font-size:15px;color:#5C7650;letter-spacing:.02em}
-            .gc-wiz-x{border:0;background:transparent;font-size:22px;cursor:pointer;color:#666;line-height:1}
-            .gc-wiz-dots{display:flex;gap:6px}
-            .gc-wiz-dots span{width:8px;height:8px;border-radius:50%;background:#d5d5d5}
-            .gc-wiz-dots span.on{background:#5C7650}
-            .gc-wiz-body{padding:20px 18px 8px}
-            .gc-wiz-body h4{margin:0 0 6px;font-size:19px;color:#111}
-            .gc-wiz-body p{margin:0 0 14px;color:#555;font-size:13px}
-            .gc-wiz-opts{display:grid;gap:10px;grid-template-columns:1fr 1fr}
-            .gc-wiz-opts.one{grid-template-columns:1fr}
-            .gc-wiz-opt{border:2px solid #e2e2e2;background:#fafafa;border-radius:12px;padding:14px 12px;cursor:pointer;text-align:center;transition:all .15s;font:inherit;color:#222}
-            .gc-wiz-opt:hover{border-color:#5C7650;background:#f2f6ef}
-            .gc-wiz-opt.on{border-color:#5C7650;background:#eaf0e4;box-shadow:inset 0 0 0 2px #5C7650}
-            .gc-wiz-opt .big{font-size:17px;font-weight:600;display:block;margin-bottom:2px}
-            .gc-wiz-opt .sm{font-size:12px;color:#666}
-            .gc-wiz-svg{display:block;margin:0 auto 6px}
-            .gc-wiz-foot{display:flex;justify-content:space-between;gap:8px;padding:12px 18px 18px}
-            .gc-wiz-btn{border:0;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
-            .gc-wiz-btn.prim{background:#5C7650;color:#fff}
-            .gc-wiz-btn.prim:hover{background:#445339}
-            .gc-wiz-btn.prim:disabled{background:#b7c2ae;cursor:not-allowed}
-            .gc-wiz-btn.ghost{background:transparent;color:#5C7650}
-            .gc-wiz-num{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-          `;
-          document.head.appendChild(STYLE);
-
-          const el = document.createElement("div");
-          el.className = "gc-wiz-back";
-          el.id = "gcWizBack";
-          el.innerHTML = `
-            <div class="gc-wiz" role="dialog" aria-modal="true" aria-labelledby="gcWizTitle">
-              <div class="gc-wiz-head">
-                <h3 id="gcWizTitle">Quick setup wizard</h3>
-                <div class="gc-wiz-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-                <button class="gc-wiz-x" id="gcWizX" aria-label="Close wizard">×</button>
-              </div>
-              <div class="gc-wiz-body" id="gcWizBody"></div>
-              <div class="gc-wiz-foot">
-                <button class="gc-wiz-btn ghost" id="gcWizBack2">← Back</button>
-                <button class="gc-wiz-btn prim" id="gcWizNext">Next →</button>
-              </div>
-            </div>`;
-          document.body.appendChild(el);
-
-          const state = { step: 0, kind: null, hinge: "pair", count: 2 };
-
-          function drawDoor(hinge){
-            /* Elevation-view door-swing symbol: dashed triangle whose APEX = hinge side.
-               Matches NKBA/AWI millwork drafting convention. */
-            const S = 'stroke="#5C7650" stroke-width="2" fill="none" stroke-dasharray="3 2.5"';
-            const H = (x,y) => `<rect x="${x-1.8}" y="${y-3}" width="3.6" height="6" fill="#5C7650"/>`;
-            const arc = hinge === "L"
-              ? `<polyline points="42,8 8,24 42,40" ${S}/>${H(8,24)}`
-              : hinge === "R"
-              ? `<polyline points="8,8 40,24 8,40" ${S}/>${H(40,24)}`
-              : `<polyline points="24,8 8,24 24,40" ${S}/><polyline points="24,8 40,24 24,40" ${S}/>${H(8,24)}${H(40,24)}`;
-            return `<svg class="gc-wiz-svg" width="48" height="48" viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="3" fill="#fff" stroke="#333"/>${arc}</svg>`;
-          }
-
-          function drawDrawer(){
-            return '<svg class="gc-wiz-svg" width="48" height="48" viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="3" fill="#fff" stroke="#333"/><rect x="18" y="22" width="12" height="4" rx="2" fill="#5C7650"/></svg>';
-          }
-          function drawCount(n){
-            const w = 40 / n;
-            let cells = "";
-            for (let i = 0; i < n; i++) cells += `<rect x="${4 + i*w}" y="4" width="${w - 0.5}" height="40" rx="2" fill="#fff" stroke="#333"/>`;
-            return `<svg class="gc-wiz-svg" width="48" height="48" viewBox="0 0 48 48">${cells}</svg>`;
-          }
-
-          function applyLive(){
-            if (typeof window.__gcState === "undefined") return;
-            const st = window.__gcState;
-            if (!Array.isArray(st.vRowsSegments)) st.vRowsSegments = [];
-            while (st.vRowsSegments.length < 2) st.vRowsSegments.push([{ kind:"drawer" }]);
-            const cnt = Math.max(1, Math.min(4, state.count));
-            const row = [];
-            for (let i = 0; i < cnt; i++){
-              if (state.kind === "door") row.push({ kind:"door", hinge: state.hinge || "pair" });
-              else row.push({ kind:"drawer" });
-            }
-            st.vRowsSegments[1] = row;
-            if (typeof window.__gcRenderLayout === "function") window.__gcRenderLayout();
-            if (typeof window.__gcRenderPreview === "function") window.__gcRenderPreview();
-          }
-
-          function render(){
-            const dots = el.querySelectorAll(".gc-wiz-dots span");
-            dots.forEach((d, i) => d.classList.toggle("on", i === state.step));
-            const body = el.querySelector("#gcWizBody");
-            const nextBtn = el.querySelector("#gcWizNext");
-            const backBtn = el.querySelector("#gcWizBack2");
-            backBtn.style.visibility = state.step === 0 ? "hidden" : "visible";
-            const totalSteps = state.kind === "drawer" ? 2 : 3; // skip hinge for drawer
-            const lastStep = totalSteps - 1;
-            if (state.step === 0){
-              body.innerHTML = `
-                <h4>1. What goes below the sink?</h4>
-                <p>The top drawer stays a drawer for plumbing. Choose what fills the rest of the vanity.</p>
-                <div class="gc-wiz-opts">
-                  <button class="gc-wiz-opt ${state.kind==="drawer"?"on":""}" data-k="drawer">${drawDrawer()}<span class="big">Drawers</span><span class="sm">Pull-out storage</span></button>
-                  <button class="gc-wiz-opt ${state.kind==="door"?"on":""}" data-k="door">${drawDoor("pair")}<span class="big">Doors</span><span class="sm">Hinged, open outward</span></button>
-                </div>`;
-              body.querySelectorAll("[data-k]").forEach(b => b.onclick = () => {
-                state.kind = b.dataset.k;
-                applyLive();
-                render();
-              });
-              nextBtn.disabled = !state.kind;
-              nextBtn.textContent = "Next →";
-            } else if (state.step === 1 && state.kind === "door"){
-              body.innerHTML = `
-                <h4>2. Which way should the doors open?</h4>
-                <p>Pick the hinge style you prefer for these doors.</p>
-                <div class="gc-wiz-opts" style="grid-template-columns:1fr 1fr 1fr">
-                  <button class="gc-wiz-opt ${state.hinge==="L"?"on":""}" data-h="L">${drawDoor("L")}<span class="big">Left</span><span class="sm">Hinge on left</span></button>
-                  <button class="gc-wiz-opt ${state.hinge==="pair"?"on":""}" data-h="pair">${drawDoor("pair")}<span class="big">Double</span><span class="sm">Meet in middle</span></button>
-                  <button class="gc-wiz-opt ${state.hinge==="R"?"on":""}" data-h="R">${drawDoor("R")}<span class="big">Right</span><span class="sm">Hinge on right</span></button>
-                </div>`;
-              body.querySelectorAll("[data-h]").forEach(b => b.onclick = () => {
-                state.hinge = b.dataset.h;
-                applyLive();
-                render();
-              });
-              nextBtn.disabled = false;
-              nextBtn.textContent = "Next →";
-            } else {
-              // count step
-              body.innerHTML = `
-                <h4>${totalSteps}. How many fronts side by side?</h4>
-                <p>Split the lower vanity into this many equal pieces.</p>
-                <div class="gc-wiz-num">
-                  ${[1,2,3,4].map(n => `<button class="gc-wiz-opt ${state.count===n?"on":""}" data-n="${n}">${drawCount(n)}<span class="big">${n}</span></button>`).join("")}
-                </div>`;
-              body.querySelectorAll("[data-n]").forEach(b => b.onclick = () => {
-                state.count = +b.dataset.n;
-                applyLive();
-                render();
-              });
-              nextBtn.disabled = false;
-              nextBtn.textContent = "Done ✓";
-            }
-          }
-
-          function open(){
-            // seed from current state
-            const st = window.__gcState;
-            const cur = st && Array.isArray(st.vRowsSegments) && st.vRowsSegments[1];
-            if (cur && cur.length){
-              state.kind = cur[0].kind || "drawer";
-              state.hinge = cur[0].hinge || "pair";
-              state.count = cur.length;
-            }
-            state.step = 0;
-            el.classList.add("open");
-            render();
-          }
-          function close(){ el.classList.remove("open"); }
-
-          document.getElementById("gcWizOpen").onclick = open;
-          el.querySelector("#gcWizX").onclick = close;
-          el.addEventListener("click", e => { if (e.target === el) close(); });
-          el.querySelector("#gcWizBack2").onclick = () => {
-            if (state.step > 0){
-              // if we're on count step and kind is drawer, back goes to step 0
-              state.step = (state.step === 2 && state.kind === "drawer") ? 0 : state.step - 1;
-              render();
-            }
-          };
-          el.querySelector("#gcWizNext").onclick = () => {
-            const totalSteps = state.kind === "drawer" ? 2 : 3;
-            if (state.step === 0){
-              // skip hinge for drawer
-              state.step = state.kind === "drawer" ? 2 : 1;
-            } else if (state.step === 1){
-              state.step = 2;
-            } else {
-              applyLive();
-              close();
-              return;
-            }
-            render();
-          };
-
-          // auto-open once per browser
-          try {
-            if (!localStorage.getItem("gcWizSeen")){
-              setTimeout(() => { open(); localStorage.setItem("gcWizSeen","1"); }, 900);
-            }
-          } catch(_){}
-        })();
+        /* Door/hinge onboarding wizard removed — drawer-only build. */
         </script>
         </div>
         </body>
