@@ -6263,7 +6263,7 @@
             const inch = rowInches();
             const totalH = frontUsableInches();
             $("layoutHint").textContent = at === "vanity"
-                ? "Start with a picture preset"
+                ? `Vanity \u00b7 ${fmtMeasure(totalH)} of drawer fronts`
                 : `Cabinet \u00b7 ${fmtMeasure(totalH)} of fronts`;
             const rowMax = (totalH - 2 * (rows.length - 1)).toFixed(1); /* max one row can take, leaving 2" min for others */
             const isVanity = at === "vanity";
