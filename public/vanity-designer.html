@@ -3139,7 +3139,7 @@
             const cur = at === "vanity" ? state.vStyle : state.mStyle;
             $("styleGrid").innerHTML = STYLES[at].map(s => `
     <button class="gc-style ${s.id === cur ? 'on' : ''}" data-style="${s.id}">
-      ${thumbSVG(s, at === "vanity" && s.id === cur)}
+      ${thumbSVG(s, false)}
       <span class="t">${s.name}</span>
       <span class="d">${s.desc}</span>
     </button>`
