@@ -4648,8 +4648,17 @@
                     const fh = usableH * fr[rI];
                     const cy = yCursor - fh / 2;
                     yCursor -= fh + gap;
-                    const mirror = (mIdx + rI) % 2 === 1;
-                    const cx = (rg[0] + rg[1]) / 2;
+                    /* row is split into 1–4 side-by-side fronts (drawer/door mix). */
+                    const _rowSegs = (state.vRowsSegments && state.vRowsSegments[rI]) || [{ kind: "drawer" }];
+                    const segGap = 0.28;
+                    const _nS = Math.max(1, _rowSegs.length);
+                    const _segW = Math.max(4, (rowFw - segGap * (_nS - 1)) / _nS);
+                    for (let sI = 0; sI < _nS; sI++) {
+                        const fw = _segW;
+                        const cx = (rowCx - rowFw / 2) + _segW / 2 + sI * (_segW + segGap);
+                        const mirror = (mIdx + rI + sI) % 2 === 1;
+                        const _segKind = _rowSegs[sI] && _rowSegs[sI].kind === "door" ? "door" : "drawer";
+
 
                     /* ---- door row branch (hinged fronts + interior shelf) ----
                        If this row is set to "door" AND no sink sits above it,
