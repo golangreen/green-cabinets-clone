@@ -3010,12 +3010,25 @@
             const cur = at === "vanity" ? state.vStyle : state.mStyle;
             $("styleGrid").innerHTML = STYLES[at].map(s => `
     <button class="gc-style ${s.id === cur ? 'on' : ''}" data-style="${s.id}">
-      ${thumbSVG(s)}
+      ${thumbSVG(s, at === "vanity" && s.id === cur)}
       <span class="t">${s.name}</span>
       <span class="d">${s.desc}</span>
     </button>`
             ).join("");
-            document.querySelectorAll("[data-style]").forEach(b => b.onclick = () => {
+            document.querySelectorAll("[data-style]").forEach(b => b.onclick = (ev) => {
+                /* hotspot click on the selected card toggles a segment instead of re-selecting */
+                const hot = ev.target.closest(".gc-hot");
+                if (hot && b.classList.contains("on") && at === "vanity") {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    const i = +hot.dataset.seg;
+                    const row = state.vRowsSegments[1] || (state.vRowsSegments[1] = [{ kind: "door" }]);
+                    if (row[i]) {
+                        row[i].kind = row[i].kind === "door" ? "drawer" : "door";
+                        renderAll();
+                    }
+                    return;
+                }
                 if (at === "vanity")
                     state.vStyle = b.dataset.style;
                 else
