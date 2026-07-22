@@ -7,6 +7,12 @@
  *  2. Listen for module/chunk load errors caused by missing old hashed files
  *     and force a one-time hard reload.
  */
+import {
+  clearModuleLoadRecoveryFlag,
+  isModuleLoadEvent,
+  isModuleLoadError,
+  recoverFromModuleLoadError,
+} from "@/lib/moduleLoadRecovery";
 
 const POLL_INTERVAL_MS = 60_000; // 1 minute
 const RELOAD_FLAG = "__lovable_reloaded_for_new_deploy__";
@@ -47,6 +53,7 @@ export function initDeploymentReload() {
   // Clear the reload flag after a successful load so future deploys can trigger again.
   window.addEventListener("load", () => {
     setTimeout(() => sessionStorage.removeItem(RELOAD_FLAG), 5_000);
+    clearModuleLoadRecoveryFlag(5_000);
   });
 
   if (!import.meta.env.DEV) {
@@ -74,20 +81,14 @@ export function initDeploymentReload() {
     });
   }
 
-
   // Catch failed dynamic imports / missing chunks from old hashed assets.
-  const isChunkError = (msg: string) =>
-    /Importing a module script failed|Failed to fetch dynamically imported module|ChunkLoadError|Loading chunk [\d]+ failed/i.test(
-      msg,
-    );
-
   window.addEventListener("error", (e) => {
     const msg = e?.message || (e as any)?.error?.message || "";
-    if (isChunkError(msg)) reloadOnce("module script load failed");
-  });
+    if (isModuleLoadEvent(e) || isModuleLoadError(msg)) recoverFromModuleLoadError("module script load failed");
+  }, true);
 
   window.addEventListener("unhandledrejection", (e) => {
     const msg = (e?.reason && (e.reason.message || String(e.reason))) || "";
-    if (isChunkError(msg)) reloadOnce("module script load failed (promise)");
+    if (isModuleLoadError(msg)) recoverFromModuleLoadError("module script load failed (promise)");
   });
 }

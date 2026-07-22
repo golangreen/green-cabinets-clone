@@ -10,6 +10,7 @@ import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/layout/HashScrollHandler";
 import LegacyRedirect from "@/components/layout/LegacyRedirect";
 import ScrollToTopButton from "@/components/layout/ScrollToTopButton";
+import ChunkErrorBoundary from "@/components/system/ChunkErrorBoundary";
 
 const Index = lazy(() => import("./pages/marketing/Index"));
 const Landing = lazy(() => import("./pages/marketing/Landing"));
@@ -69,8 +70,9 @@ const App = () => {
       <Sonner />
       <BrowserRouter>
         <HashScrollHandler />
-        <Suspense fallback={<RouteFallback />}>
-          <Routes>
+        <ChunkErrorBoundary fallback={<RouteFallback />}>
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/landing" element={<Landing />} />
             <Route path="/shop" element={<Shop />} />
@@ -142,8 +144,9 @@ const App = () => {
             <Route path="/:boroughPath" element={<Borough />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+            </Routes>
+          </Suspense>
+        </ChunkErrorBoundary>
         <ScrollToTopButton />
       </BrowserRouter>
     </TooltipProvider>
