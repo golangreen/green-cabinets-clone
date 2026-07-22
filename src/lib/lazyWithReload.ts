@@ -1,13 +1,9 @@
 import { lazy, type ComponentType } from "react";
-
-const RELOAD_FLAG = "__lovable_lazy_reload__";
-
-const isChunkError = (err: unknown) => {
-  const msg = err instanceof Error ? err.message : String(err ?? "");
-  return /Importing a module script failed|Failed to fetch dynamically imported module|ChunkLoadError|Loading chunk [\d]+ failed/i.test(
-    msg,
-  );
-};
+import {
+  clearModuleLoadRecoveryFlag,
+  isModuleLoadError,
+  recoverFromModuleLoadError,
+} from "@/lib/moduleLoadRecovery";
 
 /**
  * React.lazy wrapper that triggers a one-time hard reload when a chunk fails
@@ -18,11 +14,7 @@ const isChunkError = (err: unknown) => {
 if (typeof window !== "undefined") {
   // Clear the one-shot reload flag once the app successfully mounts, so a
   // future stale-chunk error after the next deploy can trigger another reload.
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      try { sessionStorage.removeItem(RELOAD_FLAG); } catch {}
-    }, 4_000);
-  });
+  window.addEventListener("load", () => clearModuleLoadRecoveryFlag(4_000));
 }
 
 export function lazyWithReload<T extends ComponentType<any>>(
@@ -32,17 +24,12 @@ export function lazyWithReload<T extends ComponentType<any>>(
     try {
       return await factory();
     } catch (err) {
-      if (isChunkError(err) && typeof window !== "undefined") {
-        const already = sessionStorage.getItem(RELOAD_FLAG);
-        if (!already) {
-          sessionStorage.setItem(RELOAD_FLAG, "1");
-          // Cache-bust: append a query so the browser bypasses any stale SW/CDN copy.
-          const url = new URL(window.location.href);
-          url.searchParams.set("_r", Date.now().toString(36));
-          window.location.replace(url.toString());
+      if (isModuleLoadError(err) && typeof window !== "undefined") {
+        if (recoverFromModuleLoadError("lazy route chunk failed")) {
           // Return a never-resolving promise so Suspense stays mounted during reload.
           return new Promise<{ default: T }>(() => {});
         }
+
         // Already tried once — try one more direct retry before surfacing the error,
         // in case Vite's dep optimizer just finished re-bundling.
         try {
