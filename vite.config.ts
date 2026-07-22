@@ -81,6 +81,18 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  optimizeDeps: {
+    include: [
+      "@radix-ui/react-tooltip",
+      "@supabase/supabase-js",
+      "@tanstack/react-query",
+      "lucide-react",
+      "react",
+      "react-dom/client",
+      "react/jsx-dev-runtime",
+      "react-router-dom",
+    ],
+  },
   plugins: [
     earlyModuleLoadRecoveryPlugin(),
     validateJsonLdPlugin(),
