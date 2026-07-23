@@ -180,6 +180,14 @@ async function main() {
     lastmod: p.updatedAt.slice(0, 10),
   }));
 
+  const blogArticles = await fetchBlogArticles();
+  const blog: SitemapEntry[] = blogArticles.map((b) => ({
+    path: `/blog/${b.slug}`,
+    changefreq: "weekly",
+    priority: "0.7",
+    lastmod: (b.updated_at || today).slice(0, 10),
+  }));
+
   const sections: { name: string; entries: SitemapEntry[] }[] = [
     { name: "core", entries: core },
     { name: "guides", entries: guides },
@@ -187,6 +195,7 @@ async function main() {
     { name: "wood-species", entries: woodSpecies },
     { name: "case-studies", entries: caseStudies },
     { name: "products", entries: products },
+    { name: "blog", entries: blog },
   ].filter((s) => s.entries.length > 0);
 
   mkdirSync(resolve("public/sitemaps"), { recursive: true });
