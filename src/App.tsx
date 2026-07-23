@@ -58,6 +58,7 @@ const FloatingBathroomVanity = lazy(() => import("./pages/guides/FloatingBathroo
 const SmallBathroomVanityIdeas = lazy(() => import("./pages/guides/SmallBathroomVanityIdeas"));
 const ReachInClosetSystemsNYC = lazy(() => import("./pages/guides/ReachInClosetSystemsNYC"));
 const CustomVsSemiCustomCabinets = lazy(() => import("./pages/guides/CustomVsSemiCustomCabinets"));
+const ShakerVsSlimShakerCabinets = lazy(() => import("./pages/guides/ShakerVsSlimShakerCabinets"));
 
 const RouteFallback = () => (
   <div className="min-h-screen flex items-center justify-center" aria-busy="true" />
