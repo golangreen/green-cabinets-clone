@@ -93,6 +93,7 @@ const core: SitemapEntry[] = [
 
 const guides: SitemapEntry[] = [
   { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9", lastmod: today },
+  { path: "/kitchen-cabinets-staten-island", changefreq: "monthly", priority: "0.9", lastmod: today },
   { path: "/best-wood-for-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/cabinet-wood-types-and-costs", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/natural-wood-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
