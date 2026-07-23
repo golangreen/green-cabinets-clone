@@ -27,12 +27,37 @@ export default function BlogArticlePage() {
   return (
     <div className="min-h-screen flex flex-col">
       {article && (
-        <Seo
-          title={article.meta_title || article.title}
-          description={article.meta_description || article.excerpt || undefined}
-          path={`/blog/${article.slug}`}
-          image={article.image_url || undefined}
-        />
+        <>
+          <Seo
+            title={article.meta_title || article.title}
+            description={article.meta_description || article.excerpt || undefined}
+            path={`/blog/${article.slug}`}
+            image={article.image_url || undefined}
+          />
+          <Helmet>
+            <script type="application/ld+json">
+              {JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                headline: article.title,
+                description: article.meta_description || article.excerpt || undefined,
+                image: article.image_url || undefined,
+                datePublished: article.created_at,
+                dateModified: (article as any).updated_at || article.created_at,
+                mainEntityOfPage: `https://greencabinetsny.com/blog/${article.slug}`,
+                author: { "@type": "Organization", name: "Green Cabinets NY" },
+                publisher: {
+                  "@type": "Organization",
+                  name: "Green Cabinets NY",
+                  logo: {
+                    "@type": "ImageObject",
+                    url: "https://greencabinetsny.com/icon-512.png",
+                  },
+                },
+              })}
+            </script>
+          </Helmet>
+        </>
       )}
       <Header />
       <main className="flex-1 container mx-auto px-4 py-16 sm:py-20 md:py-24 max-w-3xl">
