@@ -45,3 +45,6 @@ verify_jwt = true
 [functions.send-order]
 verify_jwt = false
 
+[functions.meev-publish]
+verify_jwt = false
+

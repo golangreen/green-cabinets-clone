@@ -16,6 +16,23 @@ const SHOPIFY_STORE = "green-cabinets-clone-5eeb3.myshopify.com";
 const SHOPIFY_API_VERSION = "2025-07";
 const SHOPIFY_STOREFRONT_TOKEN = "585dda31c3bbc355eb6f937d3307f76b";
 
+const SUPABASE_URL = "https://mczagaaiyzbhjvtrojia.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jemFnYWFpeXpiaGp2dHJvamlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODcxOTMsImV4cCI6MjA3NzE2MzE5M30.j7Cg7ULJklrohMgYZ1BqYurgR01eUHYHFWHwI9_zae0";
+
+async function fetchBlogArticles(): Promise<{ slug: string; updated_at: string }[]> {
+  try {
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/blog_articles?select=slug,updated_at&order=updated_at.desc`,
+      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    if (!r.ok) return [];
+    return await r.json();
+  } catch {
+    return [];
+  }
+}
+
 interface SitemapEntry {
   path: string;
   lastmod?: string;
@@ -70,6 +87,7 @@ const core: SitemapEntry[] = [
   { path: "/wood-species", changefreq: "monthly", priority: "0.8", lastmod: today },
   { path: "/about", changefreq: "monthly", priority: "0.7", lastmod: today },
   { path: "/case-studies", changefreq: "monthly", priority: "0.8", lastmod: today },
+  { path: "/blog", changefreq: "weekly", priority: "0.8", lastmod: today },
   { path: "/landing", changefreq: "monthly", priority: "0.7", lastmod: today },
 ];
 
@@ -162,6 +180,14 @@ async function main() {
     lastmod: p.updatedAt.slice(0, 10),
   }));
 
+  const blogArticles = await fetchBlogArticles();
+  const blog: SitemapEntry[] = blogArticles.map((b) => ({
+    path: `/blog/${b.slug}`,
+    changefreq: "weekly",
+    priority: "0.7",
+    lastmod: (b.updated_at || today).slice(0, 10),
+  }));
+
   const sections: { name: string; entries: SitemapEntry[] }[] = [
     { name: "core", entries: core },
     { name: "guides", entries: guides },
@@ -169,6 +195,7 @@ async function main() {
     { name: "wood-species", entries: woodSpecies },
     { name: "case-studies", entries: caseStudies },
     { name: "products", entries: products },
+    { name: "blog", entries: blog },
   ].filter((s) => s.entries.length > 0);
 
   mkdirSync(resolve("public/sitemaps"), { recursive: true });

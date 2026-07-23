@@ -134,6 +134,57 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_articles: {
+        Row: {
+          canonical_url: string | null
+          content_html: string
+          content_image_urls: string[]
+          created_at: string
+          excerpt: string | null
+          external_id: string | null
+          id: string
+          image_url: string | null
+          meta_description: string | null
+          meta_title: string | null
+          slug: string
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          canonical_url?: string | null
+          content_html?: string
+          content_image_urls?: string[]
+          created_at?: string
+          excerpt?: string | null
+          external_id?: string | null
+          id?: string
+          image_url?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          slug: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          canonical_url?: string | null
+          content_html?: string
+          content_image_urls?: string[]
+          created_at?: string
+          excerpt?: string | null
+          external_id?: string | null
+          id?: string
+          image_url?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          slug?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       compatibility_rules: {
         Row: {
           allowed_door_styles: string[]

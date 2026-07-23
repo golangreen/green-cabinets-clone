@@ -18,6 +18,8 @@ const About = lazy(() => import("./pages/marketing/About"));
 const GalleryPage = lazy(() => import("./pages/marketing/Gallery"));
 const CaseStudies = lazy(() => import("./pages/marketing/CaseStudies"));
 const CaseStudyDetail = lazy(() => import("./pages/marketing/CaseStudyDetail"));
+const Blog = lazy(() => import("./pages/blog/Blog"));
+const BlogArticle = lazy(() => import("./pages/blog/BlogArticle"));
 
 const Shop = lazy(() => import("./pages/shop/Shop"));
 const ProductDetail = lazy(() => import("./pages/shop/ProductDetail"));
@@ -134,6 +136,8 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/case-studies" element={<CaseStudies />} />
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogArticle />} />
             <Route path="/best-wood-for-kitchen-cabinets" element={<BestWoodForKitchenCabinets />} />
             <Route path="/cabinet-wood-types-and-costs" element={<CabinetWoodTypesAndCosts />} />
             <Route path="/natural-wood-kitchen-cabinets" element={<NaturalWoodKitchenCabinets />} />
