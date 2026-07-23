@@ -102,6 +102,7 @@ const guides: SitemapEntry[] = [
   { path: "/small-bathroom-vanity-ideas", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/reach-in-closet-systems-nyc", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/custom-vs-semi-custom-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
+  { path: "/shaker-vs-slim-shaker-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
 ];
 
 const locations: SitemapEntry[] = [
