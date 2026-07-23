@@ -70,6 +70,7 @@ const core: SitemapEntry[] = [
   { path: "/wood-species", changefreq: "monthly", priority: "0.8", lastmod: today },
   { path: "/about", changefreq: "monthly", priority: "0.7", lastmod: today },
   { path: "/case-studies", changefreq: "monthly", priority: "0.8", lastmod: today },
+  { path: "/blog", changefreq: "weekly", priority: "0.8", lastmod: today },
   { path: "/landing", changefreq: "monthly", priority: "0.7", lastmod: today },
 ];
 
