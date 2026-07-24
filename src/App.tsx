@@ -51,6 +51,7 @@ const FinishesColors = lazy(() => import("./pages/wood/FinishesColors"));
 const KitchenRenovationBrooklyn = lazy(() => import("./pages/guides/KitchenRenovationBrooklyn"));
 const KitchenRenovationManhattan = lazy(() => import("./pages/guides/KitchenRenovationManhattan"));
 const KitchenCabinetsStatenIsland = lazy(() => import("./pages/guides/KitchenCabinetsStatenIsland"));
+const CustomKitchenCabinetsQueens = lazy(() => import("./pages/guides/CustomKitchenCabinetsQueens"));
 const BestWoodForKitchenCabinets = lazy(() => import("./pages/guides/BestWoodForKitchenCabinets"));
 const CabinetWoodTypesAndCosts = lazy(() => import("./pages/guides/CabinetWoodTypesAndCosts"));
 const NaturalWoodKitchenCabinets = lazy(() => import("./pages/guides/NaturalWoodKitchenCabinets"));
