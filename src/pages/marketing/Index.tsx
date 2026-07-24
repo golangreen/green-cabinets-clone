@@ -3,7 +3,6 @@ import { lazyWithReload as lazy } from "@/lib/lazyWithReload";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/layout/Header";
 import Hero from "@/components/home/Hero";
-import SpringPromotion from "@/components/home/SpringPromotion";
 import Services from "@/components/home/Services";
 import Features from "@/components/home/Features";
 import About from "@/components/home/About";
