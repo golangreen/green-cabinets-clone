@@ -71,7 +71,6 @@ const Index = () => {
 
       </Helmet>
       <Header />
-      <SpringPromotion />
       <main>
         <Hero />
         <Services />
