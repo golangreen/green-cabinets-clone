@@ -85,7 +85,7 @@ const GalleryPage = () => {
               className="inline-flex items-center gap-2 text-sm text-accent-foreground hover:text-[#445339] font-medium transition-colors active:scale-95"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back
+              Back to Home
             </button>
           </div>
         </div>

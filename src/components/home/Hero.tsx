@@ -80,7 +80,7 @@ const Hero = () => {
       <section className="bg-background pt-28 pb-16 sm:py-24 md:py-36 min-h-[360px] sm:min-h-[420px] md:min-h-[560px] flex items-center">
         <div className="container mx-auto px-4 text-center w-full">
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-6 text-foreground min-h-[3em] sm:min-h-[2.4em] md:min-h-[2.4em] flex items-center justify-center">
-            <span>Custom Kitchen &amp; Bathroom Millwork</span>
+            <span>Green Cabinets NY — Custom Kitchen &amp; Bathroom Millwork in Brooklyn</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
             Premier sustainable custom kitchen cabinets in Brooklyn, Manhattan, and Queens. Designed and built in Bushwick for homeowners and developers across NYC.
