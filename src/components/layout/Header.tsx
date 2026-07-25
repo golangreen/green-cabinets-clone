@@ -55,16 +55,17 @@ const Header = () => {
             <a href="/" onClick={e => {
             e.preventDefault();
             navigate('/');
-          }} className="cursor-pointer flex flex-col items-center">
+          }} className="cursor-pointer flex flex-col items-center" aria-label="Green Cabinets NY — go to homepage">
               <div className="relative h-16 sm:h-20 md:h-24 w-auto">
                 <img 
                   src={logoColor} 
-                  alt="Green Cabinets Logo" 
+                  alt="Green Cabinets NY"
                   className={`h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-0' : 'opacity-100'}`}
                 />
                 <img 
                   src={logoBlack} 
-                  alt="Green Cabinets Logo" 
+                  alt=""
+                  aria-hidden="true"
                   className={`absolute top-0 left-0 h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
                 />
               </div>

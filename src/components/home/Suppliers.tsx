@@ -247,7 +247,7 @@ const Suppliers = () => {
               {supplier.logo ? (
                 <img
                   src={supplier.logo}
-                  alt={`${supplier.name} logo`}
+                  alt={`${supplier.name} — ${supplier.description}`}
                   className="max-w-full max-h-full object-contain"
                 />
               ) : (
