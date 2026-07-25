@@ -105,6 +105,7 @@ const guides: SitemapEntry[] = [
   { path: "/reach-in-closet-systems-nyc", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/custom-vs-semi-custom-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
   { path: "/shaker-vs-slim-shaker-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
+  { path: "/luxury-kitchen-design-nyc", changefreq: "monthly", priority: "0.9", lastmod: today },
 ];
 
 const locations: SitemapEntry[] = [

@@ -61,6 +61,7 @@ const SmallBathroomVanityIdeas = lazy(() => import("./pages/guides/SmallBathroom
 const ReachInClosetSystemsNYC = lazy(() => import("./pages/guides/ReachInClosetSystemsNYC"));
 const CustomVsSemiCustomCabinets = lazy(() => import("./pages/guides/CustomVsSemiCustomCabinets"));
 const ShakerVsSlimShakerCabinets = lazy(() => import("./pages/guides/ShakerVsSlimShakerCabinets"));
+const LuxuryKitchenDesignNyc = lazy(() => import("./pages/guides/LuxuryKitchenDesignNyc"));
 
 const RouteFallback = () => (
   <div className="min-h-screen flex items-center justify-center" aria-busy="true" />
@@ -144,6 +145,7 @@ const App = () => {
 
             <Route path="/custom-vs-semi-custom-cabinets" element={<CustomVsSemiCustomCabinets />} />
             <Route path="/shaker-vs-slim-shaker-cabinets" element={<ShakerVsSlimShakerCabinets />} />
+            <Route path="/luxury-kitchen-design-nyc" element={<LuxuryKitchenDesignNyc />} />
             <Route path="/about" element={<About />} />
             <Route path="/case-studies" element={<CaseStudies />} />
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
