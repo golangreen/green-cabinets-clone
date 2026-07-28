@@ -165,7 +165,7 @@ export const CartDrawer = () => {
                   disabled={items.length === 0}
                 >
                   <CreditCard className="w-4 h-4 mr-2" />
-                  Checkout Here
+                  Proceed to Checkout
                 </Button>
                 
                 <div className="space-y-2">
