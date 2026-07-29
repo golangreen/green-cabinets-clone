@@ -159,10 +159,16 @@ function renderUrlset(entries: SitemapEntry[]) {
   ].join("\n");
 }
 
-function renderIndex(sitemaps: { loc: string; lastmod: string }[]) {
-  const items = sitemaps.map(
-    (s) =>
-      `  <sitemap>\n    <loc>${s.loc}</loc>\n    <lastmod>${s.lastmod}</lastmod>\n  </sitemap>`,
+function renderIndex(sitemaps: { loc: string; lastmod?: string }[]) {
+  const items = sitemaps.map((s) =>
+    [
+      `  <sitemap>`,
+      `    <loc>${s.loc}</loc>`,
+      s.lastmod ? `    <lastmod>${s.lastmod}</lastmod>` : null,
+      `  </sitemap>`,
+    ]
+      .filter(Boolean)
+      .join("\n"),
   );
   return [
     `<?xml version="1.0" encoding="UTF-8"?>`,
@@ -172,10 +178,11 @@ function renderIndex(sitemaps: { loc: string; lastmod: string }[]) {
   ].join("\n");
 }
 
-// Latest entry lastmod for the index — falls back to today.
-function maxLastmod(entries: SitemapEntry[]): string {
+// Latest authoritative entry lastmod for the index; omitted when no entry
+// carries a page-specific timestamp (never fall back to the build date).
+function maxLastmod(entries: SitemapEntry[]): string | undefined {
   const dates = entries.map((e) => e.lastmod).filter((x): x is string => Boolean(x));
-  return dates.length ? dates.sort().slice(-1)[0] : today;
+  return dates.length ? dates.sort().slice(-1)[0] : undefined;
 }
 
 async function main() {
