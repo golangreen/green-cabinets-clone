@@ -14,7 +14,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/kitchen-renovation-manhattan";
 const TITLE = "Kitchen Renovation Manhattan — Co-op & Loft Guide 2026";
 const DESC =
-  "Manhattan kitchen renovation guide: co-op board alteration agreements, freight elevator logistics, loft-scale millwork, and 2026 pricing from a Bushwick custom cabinet shop.";
+  "Manhattan kitchen renovation guide: co-op alteration agreements, freight elevator logistics, loft-scale millwork, and 2026 custom cabinet pricing.";
 
 const FAQS = [
   {

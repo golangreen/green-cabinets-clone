@@ -79,33 +79,34 @@ async function fetchShopifyProductHandles(): Promise<{ handle: string; updatedAt
 }
 
 const core: SitemapEntry[] = [
-  { path: "/", changefreq: "weekly", priority: "1.0", lastmod: today },
-  { path: "/shop", changefreq: "weekly", priority: "0.9", lastmod: today },
-  { path: "/designer", changefreq: "monthly", priority: "0.7", lastmod: today },
-  { path: "/gallery", changefreq: "weekly", priority: "0.8", lastmod: today },
-  { path: "/finishes-colors", changefreq: "monthly", priority: "0.8", lastmod: today },
-  { path: "/wood-species", changefreq: "monthly", priority: "0.8", lastmod: today },
-  { path: "/about", changefreq: "monthly", priority: "0.7", lastmod: today },
-  { path: "/case-studies", changefreq: "monthly", priority: "0.8", lastmod: today },
-  { path: "/blog", changefreq: "weekly", priority: "0.8", lastmod: today },
-  { path: "/landing", changefreq: "monthly", priority: "0.7", lastmod: today },
+  { path: "/", changefreq: "weekly", priority: "1.0" },
+  { path: "/shop", changefreq: "weekly", priority: "0.9" },
+  { path: "/designer", changefreq: "monthly", priority: "0.7" },
+  { path: "/gallery", changefreq: "weekly", priority: "0.8" },
+  { path: "/finishes-colors", changefreq: "monthly", priority: "0.8" },
+  { path: "/wood-species", changefreq: "monthly", priority: "0.8" },
+  { path: "/about", changefreq: "monthly", priority: "0.7" },
+  { path: "/case-studies", changefreq: "monthly", priority: "0.8" },
+  { path: "/blog", changefreq: "weekly", priority: "0.8" },
+  { path: "/landing", changefreq: "monthly", priority: "0.7" },
 ];
 
 const guides: SitemapEntry[] = [
-  { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9", lastmod: today },
-  { path: "/kitchen-renovation-manhattan", changefreq: "monthly", priority: "0.9", lastmod: today },
-  { path: "/kitchen-cabinets-staten-island", changefreq: "monthly", priority: "0.9", lastmod: today },
-  { path: "/custom-kitchen-cabinets-queens", changefreq: "monthly", priority: "0.9", lastmod: today },
-  { path: "/best-wood-for-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/cabinet-wood-types-and-costs", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/natural-wood-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/double-sink-vanity-guide", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/floating-bathroom-vanity", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/small-bathroom-vanity-ideas", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/reach-in-closet-systems-nyc", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/custom-vs-semi-custom-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/shaker-vs-slim-shaker-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/luxury-kitchen-design-nyc", changefreq: "monthly", priority: "0.9", lastmod: today },
+  { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9" },
+  { path: "/kitchen-renovation-manhattan", changefreq: "monthly", priority: "0.9" },
+  { path: "/kitchen-cabinets-staten-island", changefreq: "monthly", priority: "0.9" },
+  { path: "/custom-kitchen-cabinets-queens", changefreq: "monthly", priority: "0.9" },
+  { path: "/best-wood-for-kitchen-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/cabinet-wood-types-and-costs", changefreq: "monthly", priority: "0.85" },
+  { path: "/natural-wood-kitchen-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/double-sink-vanity-guide", changefreq: "monthly", priority: "0.85" },
+  { path: "/floating-bathroom-vanity", changefreq: "monthly", priority: "0.85" },
+  { path: "/small-bathroom-vanity-ideas", changefreq: "monthly", priority: "0.85" },
+  { path: "/reach-in-closet-systems-nyc", changefreq: "monthly", priority: "0.85" },
+  { path: "/custom-vs-semi-custom-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/shaker-vs-slim-shaker-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/white-oak-vs-walnut-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/luxury-kitchen-design-nyc", changefreq: "monthly", priority: "0.9" },
 ];
 
 const locations: SitemapEntry[] = [
@@ -113,13 +114,13 @@ const locations: SitemapEntry[] = [
     path: `/custom-kitchen-cabinets-${b.slug}`,
     changefreq: "monthly" as const,
     priority: "0.9",
-    lastmod: today,
+
   })),
   ...Object.values(NEIGHBORHOODS).map((n) => ({
     path: `/custom-kitchen-cabinets-${n.slug}`,
     changefreq: "monthly" as const,
     priority: "0.85",
-    lastmod: today,
+
   })),
 ];
 
@@ -127,7 +128,7 @@ const woodSpecies: SitemapEntry[] = WOOD_SPECIES.map((w) => ({
   path: `/wood-species/${w.slug}`,
   changefreq: "monthly",
   priority: "0.7",
-  lastmod: today,
+
 }));
 
 const caseStudies: SitemapEntry[] = CASE_STUDIES.map((c) => ({
@@ -158,10 +159,16 @@ function renderUrlset(entries: SitemapEntry[]) {
   ].join("\n");
 }
 
-function renderIndex(sitemaps: { loc: string; lastmod: string }[]) {
-  const items = sitemaps.map(
-    (s) =>
-      `  <sitemap>\n    <loc>${s.loc}</loc>\n    <lastmod>${s.lastmod}</lastmod>\n  </sitemap>`,
+function renderIndex(sitemaps: { loc: string; lastmod?: string }[]) {
+  const items = sitemaps.map((s) =>
+    [
+      `  <sitemap>`,
+      `    <loc>${s.loc}</loc>`,
+      s.lastmod ? `    <lastmod>${s.lastmod}</lastmod>` : null,
+      `  </sitemap>`,
+    ]
+      .filter(Boolean)
+      .join("\n"),
   );
   return [
     `<?xml version="1.0" encoding="UTF-8"?>`,
@@ -171,10 +178,11 @@ function renderIndex(sitemaps: { loc: string; lastmod: string }[]) {
   ].join("\n");
 }
 
-// Latest entry lastmod for the index — falls back to today.
-function maxLastmod(entries: SitemapEntry[]): string {
+// Latest authoritative entry lastmod for the index; omitted when no entry
+// carries a page-specific timestamp (never fall back to the build date).
+function maxLastmod(entries: SitemapEntry[]): string | undefined {
   const dates = entries.map((e) => e.lastmod).filter((x): x is string => Boolean(x));
-  return dates.length ? dates.sort().slice(-1)[0] : today;
+  return dates.length ? dates.sort().slice(-1)[0] : undefined;
 }
 
 async function main() {
@@ -191,7 +199,7 @@ async function main() {
     path: `/blog/${b.slug}`,
     changefreq: "weekly",
     priority: "0.7",
-    lastmod: (b.updated_at || today).slice(0, 10),
+    lastmod: b.updated_at ? b.updated_at.slice(0, 10) : undefined,
   }));
 
   const sections: { name: string; entries: SitemapEntry[] }[] = [
@@ -206,7 +214,7 @@ async function main() {
 
   mkdirSync(resolve("public/sitemaps"), { recursive: true });
 
-  const indexEntries: { loc: string; lastmod: string }[] = [];
+  const indexEntries: { loc: string; lastmod?: string }[] = [];
   let total = 0;
   for (const s of sections) {
     const path = `public/sitemaps/sitemap-${s.name}.xml`;
