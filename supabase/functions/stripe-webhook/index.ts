@@ -236,7 +236,7 @@ serve(async (req) => {
           // Build order summary HTML
           const itemsHtml = (orderItems as Array<{ quantity: number; customAttributes?: Array<{ key: string; value: string }> }>).map((item) => {
             const attributes = item.customAttributes
-              ?.map((attr) => `${attr.key}: ${attr.value}`)
+              ?.map((attr) => `${escapeHtml(attr.key)}: ${escapeHtml(attr.value)}`)
               .join("<br/>") || "";
             
             return `
