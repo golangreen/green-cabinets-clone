@@ -39,12 +39,24 @@ const checkRateLimit = (ip: string): boolean => {
   return true;
 };
 
+// Google's documented test secret always returns success — never accept it.
+const GOOGLE_TEST_SECRET_KEY = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
+
 const verifyRecaptcha = async (token: string, clientIp: string): Promise<boolean> => {
+  if (!RECAPTCHA_SECRET_KEY || RECAPTCHA_SECRET_KEY === GOOGLE_TEST_SECRET_KEY) {
+    console.error("reCAPTCHA secret is missing or is the Google test secret; rejecting request");
+    return false;
+  }
+
   try {
     const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `secret=${RECAPTCHA_SECRET_KEY}&response=${token}&remoteip=${clientIp}`,
+      body: new URLSearchParams({
+        secret: RECAPTCHA_SECRET_KEY,
+        response: token,
+        remoteip: clientIp,
+      }).toString(),
     });
 
     const data = await response.json();

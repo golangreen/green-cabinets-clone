@@ -266,7 +266,7 @@ serve(async (req) => {
                   
                   <!-- Content -->
                   <div style="padding: 40px 30px;">
-                    <p style="font-size: 16px; margin-bottom: 20px;">Hi ${customerName},</p>
+                    <p style="font-size: 16px; margin-bottom: 20px;">Hi ${escapeHtml(customerName)},</p>
                     <p style="font-size: 16px; margin-bottom: 30px;">Thank you for your order! We've received your payment and will begin processing your custom vanity order shortly.</p>
                     
                     <!-- Order Details -->
