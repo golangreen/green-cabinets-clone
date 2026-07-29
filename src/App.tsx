@@ -147,6 +147,7 @@ const App = () => {
 
             <Route path="/custom-vs-semi-custom-cabinets" element={<CustomVsSemiCustomCabinets />} />
             <Route path="/shaker-vs-slim-shaker-cabinets" element={<ShakerVsSlimShakerCabinets />} />
+            <Route path="/white-oak-vs-walnut-cabinets" element={<WhiteOakVsWalnutCabinets />} />
             <Route path="/luxury-kitchen-design-nyc" element={<LuxuryKitchenDesignNyc />} />
             <Route path="/about" element={<About />} />
             <Route path="/case-studies" element={<CaseStudies />} />
