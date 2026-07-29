@@ -199,7 +199,7 @@ async function main() {
     path: `/blog/${b.slug}`,
     changefreq: "weekly",
     priority: "0.7",
-    lastmod: (b.updated_at || today).slice(0, 10),
+    lastmod: b.updated_at ? b.updated_at.slice(0, 10) : undefined,
   }));
 
   const sections: { name: string; entries: SitemapEntry[] }[] = [
@@ -214,7 +214,7 @@ async function main() {
 
   mkdirSync(resolve("public/sitemaps"), { recursive: true });
 
-  const indexEntries: { loc: string; lastmod: string }[] = [];
+  const indexEntries: { loc: string; lastmod?: string }[] = [];
   let total = 0;
   for (const s of sections) {
     const path = `public/sitemaps/sitemap-${s.name}.xml`;
