@@ -61,6 +61,7 @@ const SmallBathroomVanityIdeas = lazy(() => import("./pages/guides/SmallBathroom
 const ReachInClosetSystemsNYC = lazy(() => import("./pages/guides/ReachInClosetSystemsNYC"));
 const CustomVsSemiCustomCabinets = lazy(() => import("./pages/guides/CustomVsSemiCustomCabinets"));
 const ShakerVsSlimShakerCabinets = lazy(() => import("./pages/guides/ShakerVsSlimShakerCabinets"));
+const WhiteOakVsWalnutCabinets = lazy(() => import("./pages/guides/WhiteOakVsWalnutCabinets"));
 const LuxuryKitchenDesignNyc = lazy(() => import("./pages/guides/LuxuryKitchenDesignNyc"));
 
 const RouteFallback = () => (
