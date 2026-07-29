@@ -28,6 +28,15 @@ const corsHeaders = {
 
 const SHOPIFY_ADMIN_API_VERSION = "2025-01";
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
   apiVersion: "2025-08-27.basil",
 });
@@ -227,7 +236,7 @@ serve(async (req) => {
           // Build order summary HTML
           const itemsHtml = (orderItems as Array<{ quantity: number; customAttributes?: Array<{ key: string; value: string }> }>).map((item) => {
             const attributes = item.customAttributes
-              ?.map((attr) => `${attr.key}: ${attr.value}`)
+              ?.map((attr) => `${escapeHtml(attr.key)}: ${escapeHtml(attr.value)}`)
               .join("<br/>") || "";
             
             return `
@@ -257,7 +266,7 @@ serve(async (req) => {
                   
                   <!-- Content -->
                   <div style="padding: 40px 30px;">
-                    <p style="font-size: 16px; margin-bottom: 20px;">Hi ${customerName},</p>
+                    <p style="font-size: 16px; margin-bottom: 20px;">Hi ${escapeHtml(customerName)},</p>
                     <p style="font-size: 16px; margin-bottom: 30px;">Thank you for your order! We've received your payment and will begin processing your custom vanity order shortly.</p>
                     
                     <!-- Order Details -->

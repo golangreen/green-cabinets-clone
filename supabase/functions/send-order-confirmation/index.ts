@@ -11,6 +11,15 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+function escapeHtml(value: string): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 interface OrderConfirmationRequest {
   sessionId: string;
 }
@@ -53,7 +62,7 @@ serve(async (req) => {
       orderItemsHtml = session.line_items.data.map((item: { description?: string; quantity: number; amount_total: number }) => `
         <tr>
           <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
-            ${item.description || 'Item'}
+            ${escapeHtml(item.description || 'Item')}
           </td>
           <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center;">
             ${item.quantity}
@@ -96,7 +105,7 @@ serve(async (req) => {
             </div>
             
             <div class="content">
-              <p>Hi ${customerName},</p>
+              <p>Hi ${escapeHtml(customerName)},</p>
               
               <p>We're excited to confirm your order! Your payment has been successfully processed and we're preparing to start work on your custom cabinetry.</p>
               

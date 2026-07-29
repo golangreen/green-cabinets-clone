@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuoteForm } from "@/hooks/useQuoteForm";
 import { Phone, Mail, MapPin, CheckCircle2 } from "lucide-react";
-import { RECAPTCHA_SITE_KEY } from "@/config/recaptcha";
+import { RECAPTCHA_SITE_KEY, RECAPTCHA_ENABLED } from "@/config/recaptcha";
 import logo from "@/assets/logos/logo-color.svg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 
@@ -237,13 +237,19 @@ const Landing = () => {
                   className="text-base resize-none"
                 />
               </div>
-              <div className="flex justify-center">
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={RECAPTCHA_SITE_KEY}
-                  theme="light"
-                />
-              </div>
+              {RECAPTCHA_ENABLED ? (
+                <div className="flex justify-center">
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={RECAPTCHA_SITE_KEY}
+                    theme="light"
+                  />
+                </div>
+              ) : (
+                <p className="text-center text-sm text-muted-foreground">
+                  Spam protection is not configured. Please contact us directly if the form does not submit.
+                </p>
+              )}
               <Button 
                 type="submit"
                 size="lg"
