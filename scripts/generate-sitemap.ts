@@ -79,34 +79,34 @@ async function fetchShopifyProductHandles(): Promise<{ handle: string; updatedAt
 }
 
 const core: SitemapEntry[] = [
-  { path: "/", changefreq: "weekly", priority: "1.0", lastmod: today },
-  { path: "/shop", changefreq: "weekly", priority: "0.9", lastmod: today },
-  { path: "/designer", changefreq: "monthly", priority: "0.7", lastmod: today },
-  { path: "/gallery", changefreq: "weekly", priority: "0.8", lastmod: today },
-  { path: "/finishes-colors", changefreq: "monthly", priority: "0.8", lastmod: today },
-  { path: "/wood-species", changefreq: "monthly", priority: "0.8", lastmod: today },
-  { path: "/about", changefreq: "monthly", priority: "0.7", lastmod: today },
-  { path: "/case-studies", changefreq: "monthly", priority: "0.8", lastmod: today },
-  { path: "/blog", changefreq: "weekly", priority: "0.8", lastmod: today },
-  { path: "/landing", changefreq: "monthly", priority: "0.7", lastmod: today },
+  { path: "/", changefreq: "weekly", priority: "1.0" },
+  { path: "/shop", changefreq: "weekly", priority: "0.9" },
+  { path: "/designer", changefreq: "monthly", priority: "0.7" },
+  { path: "/gallery", changefreq: "weekly", priority: "0.8" },
+  { path: "/finishes-colors", changefreq: "monthly", priority: "0.8" },
+  { path: "/wood-species", changefreq: "monthly", priority: "0.8" },
+  { path: "/about", changefreq: "monthly", priority: "0.7" },
+  { path: "/case-studies", changefreq: "monthly", priority: "0.8" },
+  { path: "/blog", changefreq: "weekly", priority: "0.8" },
+  { path: "/landing", changefreq: "monthly", priority: "0.7" },
 ];
 
 const guides: SitemapEntry[] = [
-  { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9", lastmod: today },
-  { path: "/kitchen-renovation-manhattan", changefreq: "monthly", priority: "0.9", lastmod: today },
-  { path: "/kitchen-cabinets-staten-island", changefreq: "monthly", priority: "0.9", lastmod: today },
-  { path: "/custom-kitchen-cabinets-queens", changefreq: "monthly", priority: "0.9", lastmod: today },
-  { path: "/best-wood-for-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/cabinet-wood-types-and-costs", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/natural-wood-kitchen-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/double-sink-vanity-guide", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/floating-bathroom-vanity", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/small-bathroom-vanity-ideas", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/reach-in-closet-systems-nyc", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/custom-vs-semi-custom-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/shaker-vs-slim-shaker-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/white-oak-vs-walnut-cabinets", changefreq: "monthly", priority: "0.85", lastmod: today },
-  { path: "/luxury-kitchen-design-nyc", changefreq: "monthly", priority: "0.9", lastmod: today },
+  { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9" },
+  { path: "/kitchen-renovation-manhattan", changefreq: "monthly", priority: "0.9" },
+  { path: "/kitchen-cabinets-staten-island", changefreq: "monthly", priority: "0.9" },
+  { path: "/custom-kitchen-cabinets-queens", changefreq: "monthly", priority: "0.9" },
+  { path: "/best-wood-for-kitchen-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/cabinet-wood-types-and-costs", changefreq: "monthly", priority: "0.85" },
+  { path: "/natural-wood-kitchen-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/double-sink-vanity-guide", changefreq: "monthly", priority: "0.85" },
+  { path: "/floating-bathroom-vanity", changefreq: "monthly", priority: "0.85" },
+  { path: "/small-bathroom-vanity-ideas", changefreq: "monthly", priority: "0.85" },
+  { path: "/reach-in-closet-systems-nyc", changefreq: "monthly", priority: "0.85" },
+  { path: "/custom-vs-semi-custom-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/shaker-vs-slim-shaker-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/white-oak-vs-walnut-cabinets", changefreq: "monthly", priority: "0.85" },
+  { path: "/luxury-kitchen-design-nyc", changefreq: "monthly", priority: "0.9" },
 ];
 
 const locations: SitemapEntry[] = [
@@ -114,13 +114,13 @@ const locations: SitemapEntry[] = [
     path: `/custom-kitchen-cabinets-${b.slug}`,
     changefreq: "monthly" as const,
     priority: "0.9",
-    lastmod: today,
+
   })),
   ...Object.values(NEIGHBORHOODS).map((n) => ({
     path: `/custom-kitchen-cabinets-${n.slug}`,
     changefreq: "monthly" as const,
     priority: "0.85",
-    lastmod: today,
+
   })),
 ];
 
@@ -128,7 +128,7 @@ const woodSpecies: SitemapEntry[] = WOOD_SPECIES.map((w) => ({
   path: `/wood-species/${w.slug}`,
   changefreq: "monthly",
   priority: "0.7",
-  lastmod: today,
+
 }));
 
 const caseStudies: SitemapEntry[] = CASE_STUDIES.map((c) => ({
