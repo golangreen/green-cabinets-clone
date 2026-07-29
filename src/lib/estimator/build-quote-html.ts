@@ -88,12 +88,12 @@ export function buildQuoteHtml({
         </table>
         <div style="padding:20px;border:1px solid #e5e7eb;border-top:none;">
           <h2 style="color:#1E2320;margin:0 0 16px;">New Quote Request</h2>
-          ${customerName ? `<p><strong>Customer:</strong> ${customerName}</p>` : ''}
-          ${customerEmail ? `<p><strong>Email:</strong> ${customerEmail}</p>` : ''}
-          <p><strong>Project:</strong> ${fileName}</p>
-          <p><strong>Cabinet Style:</strong> ${locationName} (${locationMultiplier}×)</p>
+          ${customerName ? `<p><strong>Customer:</strong> ${escapeHtml(customerName)}</p>` : ''}
+          ${customerEmail ? `<p><strong>Email:</strong> ${escapeHtml(customerEmail)}</p>` : ''}
+          <p><strong>Project:</strong> ${escapeHtml(fileName ?? '')}</p>
+          <p><strong>Cabinet Style:</strong> ${escapeHtml(locationName ?? '')} (${locationMultiplier}×)</p>
           <p><strong>Date:</strong> ${date} | <strong>Valid Until:</strong> ${validUntil}</p>
-          ${trimmedNotes ? `<div style="margin-top:12px;padding:10px;background:#f9fafb;border-left:3px solid #4B6C5C;border-radius:4px;"><p style="margin:0 0 4px;font-size:12px;font-weight:bold;color:#4B6C5C;">Project Notes / Special Instructions</p><p style="margin:0;font-size:12px;color:#333;white-space:pre-wrap;">${trimmedNotes.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p></div>` : ''}
+          ${trimmedNotes ? `<div style="margin-top:12px;padding:10px;background:#f9fafb;border-left:3px solid #4B6C5C;border-radius:4px;"><p style="margin:0 0 4px;font-size:12px;font-weight:bold;color:#4B6C5C;">Project Notes / Special Instructions</p><p style="margin:0;font-size:12px;color:#333;white-space:pre-wrap;">${escapeHtml(trimmedNotes)}</p></div>` : ''}
 
           ${blueprintImageUrls.length > 0 ? `
             <div style="margin:16px 0;text-align:center;">
