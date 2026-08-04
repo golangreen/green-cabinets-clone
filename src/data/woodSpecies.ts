@@ -493,7 +493,15 @@ export const WOOD_SPECIES: WoodSpecies[] = [
           "Red oak ambers gently with UV exposure over 5-10 years, deepening from pinkish-red toward a warmer amber-brown. The change is subtle and generally improves the color, mellowing the pink undertone that can read as cold when new. A UV-protective topcoat slows but does not stop this aging.",
       },
     ],
+    metaTitle: "Red Oak Kitchen Cabinets NYC — Cost, Grain & Stains",
+    metaDescription:
+      "Custom red oak kitchen cabinets in NYC from $350/lf — 25-30% less than white oak, Janka 1,290, 6-8 week lead time. Rift-cut, limed, and honey finishes.",
+    h1: "Red Oak Kitchen Cabinets",
+    aboutHeading: "Red Oak Cabinets — Cost, Cut, Stain & Durability",
     faqHeading: "Red Oak Cabinet FAQs — Grain, Stain, Cost & Durability",
+    ogTitle: "Red Oak Kitchen Cabinets — The Best-Value Hardwood in NYC",
+    ogDescription:
+      "Rift-cut and plain-sawn red oak cabinets built in Brooklyn. $4,000-$8,000 less than white oak per kitchen, with the same daily durability.",
   },
   {
     slug: "birch",
