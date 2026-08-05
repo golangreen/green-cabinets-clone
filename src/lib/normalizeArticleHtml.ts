@@ -5,8 +5,8 @@
 
 function mdInline(s: string): string {
   return s
-    .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*\*\*([\s\S]+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+    .replace(/\*\*([\s\S]+?)\*\*/g, "<strong>$1</strong>")
     .replace(/(^|[\s(])\*(?!\s)([^*]+?)\*(?=[\s).,;:!?]|$)/g, "$1<em>$2</em>")
     .replace(/^\s*\*+\s*/, "")
     .replace(/`([^`]+?)`/g, "<code>$1</code>")
