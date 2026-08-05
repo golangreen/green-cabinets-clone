@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Seo from "@/components/Seo";
 import { getBlogArticleBySlug, type BlogArticle } from "@/services/blogService";
+import { normalizeArticleHtml } from "@/lib/normalizeArticleHtml";
 
 export default function BlogArticlePage() {
   const { slug } = useParams<{ slug: string }>();
@@ -112,7 +113,7 @@ export default function BlogArticlePage() {
             <div
               className="prose prose-neutral dark:prose-invert max-w-none"
               // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{ __html: article.content_html }}
+              dangerouslySetInnerHTML={{ __html: normalizeArticleHtml(article.content_html) }}
             />
           </article>
         )}
