@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Seo from "@/components/Seo";
 import { getBlogArticleBySlug, type BlogArticle } from "@/services/blogService";
+import { normalizeArticleHtml } from "@/lib/normalizeArticleHtml";
 
 export default function BlogArticlePage() {
   const { slug } = useParams<{ slug: string }>();
