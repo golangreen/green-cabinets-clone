@@ -56,6 +56,13 @@ export function normalizeArticleHtml(html: string): string {
   doc.querySelectorAll("p").forEach((p) => {
     if (p.children.length > 0) return;
     const text = p.textContent || "";
+    if (/^key takeaways:?$/i.test(text.trim())) {
+      const h = doc.createElement("h2");
+      h.setAttribute("style", p.getAttribute("style") || "");
+      h.textContent = text.trim().replace(/:$/, "");
+      p.replaceWith(h);
+      return;
+    }
     const items = splitBullets(text);
     if (items) {
       const ul = doc.createElement("ul");
