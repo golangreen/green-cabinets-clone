@@ -15,19 +15,18 @@ function mdInline(s: string): string {
 
 /** Split a markdown-ish blob into bullet items. Returns null if not a list. */
 function splitBullets(text: string): string[] | null {
-  const raw = text.replace(/\r/g, "");
-  // bullets are either newline-prefixed or inline "- **" runs
-  let parts: string[];
-  if (/\n\s*[-*•]\s+/.test(raw)) {
-    parts = raw.split(/\n\s*[-*•]\s+/);
-  } else if (/-\s\*\*/.test(raw)) {
-    parts = raw.split(/(?:^|\s)-\s(?=\*\*)/);
-  } else {
-    return null;
-  }
+  // Normalize inline "…text.- **Next**" runs into real newline bullets first,
+  // so bullets glued to the previous sentence still split.
+  const raw = text
+    .replace(/\r/g, "")
+    .replace(/\s*[-–•]\s+(?=\*\*)/g, "\n- ")
+    .replace(/\s*•\s+/g, "\n- ");
+  if (!/\n\s*[-*•]\s+/.test(raw)) return null;
+  const parts = raw.split(/\n\s*[-*•]\s+/);
   const items = parts.map((p) => mdInline(p)).filter(Boolean);
   return items.length > 1 ? items : null;
 }
+
 
 export function normalizeArticleHtml(html: string): string {
   if (typeof window === "undefined" || !html) return html;
