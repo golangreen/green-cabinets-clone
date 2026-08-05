@@ -146,7 +146,7 @@ const WoodSpeciesDetail = () => {
                     style={{ backgroundColor: wood.swatch }}
                     aria-hidden="true"
                   />
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a]">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
                     {wood.h1 ?? wood.name}
                   </h1>
                 </div>
@@ -184,10 +184,10 @@ const WoodSpeciesDetail = () => {
         {/* Long-form */}
         <section className="py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-3xl prose prose-neutral dark:prose-invert max-w-none">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
               {wood.aboutHeading ?? `About ${wood.name}`}
             </h2>
-            <div className="space-y-5 text-[#1a1a1a] leading-relaxed">
+            <div className="space-y-5 text-foreground leading-relaxed">
               {wood.longDescription.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
@@ -215,7 +215,7 @@ const WoodSpeciesDetail = () => {
         {/* Pros & Cons */}
         <section className="py-12 sm:py-16 bg-muted/40">
           <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-8 text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8 text-center">
               The Honest Tradeoffs
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -226,7 +226,7 @@ const WoodSpeciesDetail = () => {
                   </h3>
                   <ul className="space-y-2">
                     {wood.pros.map((p) => (
-                      <li key={p} className="flex gap-2 text-sm text-[#1a1a1a]">
+                      <li key={p} className="flex gap-2 text-sm text-foreground">
                         <Check className="w-4 h-4 text-accent-foreground shrink-0 mt-0.5" />
                         <span>{p}</span>
                       </li>
@@ -241,7 +241,7 @@ const WoodSpeciesDetail = () => {
                   </h3>
                   <ul className="space-y-2">
                     {wood.cons.map((c) => (
-                      <li key={c} className="flex gap-2 text-sm text-[#1a1a1a]">
+                      <li key={c} className="flex gap-2 text-sm text-foreground">
                         <X className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
                         <span>{c}</span>
                       </li>
@@ -268,7 +268,7 @@ const WoodSpeciesDetail = () => {
         {faqsWithIds.length > 0 && (
           <section id="faq" className="py-12 sm:py-16 bg-muted/40 scroll-mt-24">
             <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-6 text-center">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6 text-center">
                 {wood.faqHeading ?? "Frequently Asked Questions"}
               </h2>
 
@@ -300,7 +300,7 @@ const WoodSpeciesDetail = () => {
                     type="button"
                     onClick={() => setFaqQuery("")}
                     aria-label="Clear search"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-[#1a1a1a]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Clear
                   </button>
@@ -322,7 +322,7 @@ const WoodSpeciesDetail = () => {
                     aria-controls="faq-toc-list"
                     className="w-full flex items-center justify-between gap-3 p-5 text-left hover:bg-muted/30 transition-colors"
                   >
-                    <span className="text-sm font-semibold text-[#1a1a1a]">
+                    <span className="text-sm font-semibold text-foreground">
                       {faqQuery ? `Matching questions (${filteredFaqs.length})` : `Jump to a question (${filteredFaqs.length})`}
                     </span>
                     <ChevronDown
@@ -359,7 +359,7 @@ const WoodSpeciesDetail = () => {
                 <dl className="space-y-6">
                   {filteredFaqs.map((f) => (
                     <div key={f.id} id={`faq-${f.id}`} className="scroll-mt-24 group">
-                      <dt className="font-semibold text-[#1a1a1a] mb-2 flex items-start gap-2">
+                      <dt className="font-semibold text-foreground mb-2 flex items-start gap-2">
                         <span className="flex-1">
                           <HighlightedText text={f.question} query={faqQuery} />
                         </span>
@@ -384,9 +384,9 @@ const WoodSpeciesDetail = () => {
 
         {/* Direct head-to-head comparisons (internal linking for topical authority) */}
         {comparisons.length > 0 && (
-          <section className="py-12 sm:py-16 bg-[#f7f7f5]">
+          <section className="py-12 sm:py-16 bg-muted/40">
             <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-3 text-center">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 text-center">
                 {wood.name} Comparisons
               </h2>
               <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
@@ -414,7 +414,7 @@ const WoodSpeciesDetail = () => {
                           style={{ backgroundColor: target.swatch }}
                         />
                       </div>
-                      <h3 className="font-semibold text-[#1a1a1a] group-hover:text-accent-foreground transition-colors">
+                      <h3 className="font-semibold text-foreground group-hover:text-accent-foreground transition-colors">
                         {c.title}
                       </h3>
                       <p className="text-sm text-[#555555] mt-2 leading-relaxed flex-1">{c.blurb}</p>
@@ -432,7 +432,7 @@ const WoodSpeciesDetail = () => {
         {/* Related */}
         <section className="py-12 sm:py-16">
           <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-8 text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8 text-center">
               Compare with Other Species
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -449,7 +449,7 @@ const WoodSpeciesDetail = () => {
                     className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="p-4">
-                    <h3 className="font-semibold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
+                    <h3 className="font-semibold text-foreground">{w.h1 ?? `${w.name} Cabinets`}</h3>
                     <p className="text-xs text-[#555555] mt-1 line-clamp-2">{w.tagline}</p>
                   </div>
                 </Link>
@@ -494,7 +494,7 @@ const WoodSpeciesDetail = () => {
 const Spec = ({ label, value, small }: { label: string; value: string; small?: boolean }) => (
   <div className="bg-background rounded-lg p-3 border border-border">
     <p className="text-xs text-muted-foreground uppercase tracking-wider">{label}</p>
-    <p className={`font-semibold text-[#1a1a1a] mt-1 ${small ? "text-xs" : "text-base"}`}>{value}</p>
+    <p className={`font-semibold text-foreground mt-1 ${small ? "text-xs" : "text-base"}`}>{value}</p>
   </div>
 );
 
@@ -503,7 +503,7 @@ const DetailList = ({ title, items }: { title: string; items: string[] }) => (
     <h3 className="font-semibold text-accent-foreground mb-3">{title}</h3>
     <ul className="space-y-1.5">
       {items.map((it) => (
-        <li key={it} className="text-sm text-[#1a1a1a] flex gap-2">
+        <li key={it} className="text-sm text-foreground flex gap-2">
           <span className="text-accent-foreground">•</span>
           <span>{it}</span>
         </li>
@@ -520,7 +520,7 @@ const HighlightedText = ({ text, query }: { text: string; query: string }) => {
     <>
       {parts.map((part, i) =>
         part.toLowerCase() === q.toLowerCase() ? (
-          <mark key={i} className="bg-[#5C7650]/20 text-[#1a1a1a] rounded px-0.5">
+          <mark key={i} className="bg-[#5C7650]/20 text-foreground rounded px-0.5">
             {part}
           </mark>
         ) : (

@@ -206,3 +206,30 @@ All colors MUST be HSL.
   --tw-prose-invert-th-borders: hsl(var(--border));
   --tw-prose-invert-td-borders: hsl(var(--border));
 }
+
+/* CMS article HTML ships inline light-mode colors (e.g. style="color:#333",
+   background:#f8f9fa TOC cards). Neutralize them in dark mode so prose stays
+   readable. Scoped to .dark .prose so light mode is untouched. */
+.dark .prose [style*="color:#333"],
+.dark .prose [style*="color: #333"],
+.dark .prose [style*="color:#374151"],
+.dark .prose [style*="color:#111"],
+.dark .prose [style*="color:#222"],
+.dark .prose [style*="color:#444"],
+.dark .prose [style*="color:#555"] {
+  color: hsl(var(--foreground)) !important;
+}
+.dark .prose a[style*="color"] {
+  color: hsl(var(--primary)) !important;
+}
+.dark .prose [style*="background:#f"],
+.dark .prose [style*="background: #f"],
+.dark .prose [style*="background-color:#f"],
+.dark .prose [style*="background-color: #f"] {
+  background: hsl(var(--muted)) !important;
+}
+.dark .prose [style*="border:1px solid #e"],
+.dark .prose [style*="border: 1px solid #e"],
+.dark .prose [style*="border-color:#e"] {
+  border-color: hsl(var(--border)) !important;
+}
