@@ -23,7 +23,12 @@ function splitBullets(text: string): string[] | null {
     .replace(/\s*•\s+/g, "\n- ");
   if (!/\n\s*[-*•]\s+/.test(raw)) return null;
   const parts = raw.split(/\n\s*[-*•]\s+/);
-  const items = parts.map((p) => mdInline(p)).filter(Boolean);
+  const items = parts
+    // CMS sometimes drops one asterisk of the opening "**" on the first item
+    .map((p) => (/^\*(?!\*)/.test(p.trim()) && /\*\*/.test(p) ? p.trim().replace(/^\*/, "**") : p))
+    .map((p) => mdInline(p))
+    .filter(Boolean);
+
   return items.length > 1 ? items : null;
 }
 
