@@ -81,14 +81,38 @@ export const ShopProducts = () => {
   };
 
   if (loading) {
+    // Render the same shell/height as the loaded state to avoid layout shift (CLS).
     return (
-      <div className="py-24 px-4">
-        <div className="container mx-auto text-center">
-          <p className="text-muted-foreground">Loading products...</p>
+      <section className="py-20 bg-background" aria-busy="true">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="font-display text-5xl font-bold text-[#1a1a1a] mb-4">Our Products</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Browse our collection of premium custom cabinetry
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center w-full max-w-2xl mx-auto mb-12">
+            <div className="h-[60px] w-full sm:w-auto sm:min-w-[200px] rounded-md bg-muted animate-pulse" />
+            <div className="h-[60px] w-full sm:w-auto sm:min-w-[200px] rounded-md bg-muted animate-pulse" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="overflow-hidden rounded-lg border border-gray-200">
+              <div className="aspect-square bg-muted animate-pulse" />
+              <div className="p-6 space-y-3">
+                <div className="h-6 w-2/3 bg-muted animate-pulse rounded" />
+                <div className="h-4 w-full bg-muted animate-pulse rounded" />
+                <div className="h-8 w-1/3 bg-muted animate-pulse rounded" />
+                <div className="h-10 w-full bg-muted animate-pulse rounded" />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
     );
   }
+
 
   if (products.length === 0) {
     return (
