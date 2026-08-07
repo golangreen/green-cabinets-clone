@@ -22,13 +22,15 @@ test.describe('Homepage', () => {
     await expect(page.locator('h1')).toContainText(/shop/i);
   });
 
-  test('should open and close chatbot', async ({ page }) => {
-    await page.goto('/');
+  test('chatbot launcher on content pages sends signed-out users to /auth', async ({ page }) => {
+    // The assistant is mounted on guide/location pages (not the homepage) and
+    // requires a session, so an anonymous click routes to the auth page.
+    await page.goto('/kitchen-renovation-brooklyn');
 
-    await page.getByTestId('chatbot-toggle').click();
-    await expect(page.getByTestId('chatbot-window')).toBeVisible();
-
-    await page.getByTestId('chatbot-close').click();
-    await expect(page.getByTestId('chatbot-window')).not.toBeVisible();
+    const toggle = page.getByTestId('chatbot-toggle');
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+    await expect(page).toHaveURL(/\/auth/);
   });
+
 });
