@@ -79,6 +79,7 @@ const App = () => {
       <Sonner />
       <BrowserRouter>
         <HashScrollHandler />
+        <CanonicalManager />
         <ChunkErrorBoundary fallback={<RouteFallback />}>
           <Suspense fallback={<RouteFallback />}>
             <Routes>
