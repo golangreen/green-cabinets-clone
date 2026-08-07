@@ -14,6 +14,7 @@ import { BOROUGHS, BoroughSlug } from "@/data/boroughSeo";
 import { NEIGHBORHOODS } from "@/data/neighborhoodSeo";
 import Neighborhood from "@/pages/locations/Neighborhood";
 import NotFound from "@/pages/system/NotFound";
+import { APP_CONFIG } from "@/config/app";
 
 const PREFIX = "custom-kitchen-cabinets-";
 
@@ -45,7 +46,8 @@ const Borough = () => {
     provider: {
       "@type": "LocalBusiness",
       name: "Green Cabinets NY",
-      telephone: "+1-718-804-5488",
+      telephone: APP_CONFIG.structuredData.telephone,
+      email: APP_CONFIG.structuredData.email,
       url: "https://greencabinetsny.com",
     },
     areaServed: { "@type": "City", name: borough.name },

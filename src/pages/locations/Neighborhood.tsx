@@ -17,6 +17,7 @@ import type { NeighborhoodSeo } from "@/data/neighborhoodSeo";
 import { BOROUGHS } from "@/data/boroughSeo";
 import { getProjectsByNeighborhood } from "@/data/projects";
 import FeaturedProject from "@/components/projects/FeaturedProject";
+import { APP_CONFIG } from "@/config/app";
 
 // Eagerly resolve every gallery asset URL once at build time.
 const GALLERY_ASSETS = import.meta.glob(
@@ -79,7 +80,8 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
     "@id": `${n.url}#localbusiness`,
     name: `Green Cabinets NY — ${n.name}`,
     url: n.url,
-    telephone: "+1-718-804-5488",
+    telephone: APP_CONFIG.structuredData.telephone,
+    email: APP_CONFIG.structuredData.email,
     image: "https://greencabinetsny.com/og-image.jpg",
     priceRange: "$$$",
     address: {
