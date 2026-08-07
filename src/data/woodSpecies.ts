@@ -459,7 +459,11 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       "rift cut red oak",
       "red oak vs white oak",
       "honey oak cabinets",
+      "custom red oak cabinetry nyc",
+      "red oak cabinet finishes",
+      "red oak cabinet durability",
     ],
+
     faqs: [
       {
         question: "Is red oak cheaper than white oak?",
