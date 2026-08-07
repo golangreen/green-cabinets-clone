@@ -135,14 +135,39 @@ if (rRes.status !== 200) {
   if (!hasSitemap) fails.push(`robots.txt missing Sitemap: ${EXPECTED_SITEMAP} (got ${JSON.stringify(sitemaps)})`);
 }
 
-// 2. sitemap.xml — fetch + structural validation of every <loc>
+// 2. sitemap.xml — fetch + structural validation of every <loc>.
+//    sitemap.xml may be a <sitemapindex>; expand child sitemaps one level.
 console.log("");
-const sRes = await fetch(`${HOST}/sitemap.xml`);
-const sBody = await sRes.text();
+const fetchLocs = async (url) => {
+  const res = await fetch(url);
+  const body = await res.text();
+  return { res, body, locs: [...body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]) };
+};
+
+const sTop = await fetchLocs(`${HOST}/sitemap.xml`);
+const sRes = sTop.res;
 if (sRes.status !== 200) fails.push(`sitemap.xml status ${sRes.status}`);
-const rawLocs = [...sBody.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+
+let rawLocs = sTop.locs;
+const isIndex = /<sitemapindex[\s>]/i.test(sTop.body);
+if (isIndex) {
+  const children = sTop.locs;
+  log(true, `sitemap.xml is a sitemapindex (${children.length} child sitemaps)`);
+  rawLocs = [];
+  for (const child of children) {
+    const { res, locs } = await fetchLocs(child);
+    if (res.status !== 200) {
+      fails.push(`child sitemap ${child} status ${res.status}`);
+      log(false, `  ${child} → ${res.status}`);
+      continue;
+    }
+    log(true, `  ${child} (${locs.length} urls)`);
+    rawLocs.push(...locs);
+  }
+}
 const sitemapLocs = new Set(rawLocs);
 log(sRes.status === 200, `sitemap.xml 200 (${rawLocs.length} urls)`);
+
 
 // 2a. Per-loc validation: absolute HTTPS, expected host, no query/fragment,
 //     no `//` in path, no trailing slash (except root), no uppercase, lowercase host.
