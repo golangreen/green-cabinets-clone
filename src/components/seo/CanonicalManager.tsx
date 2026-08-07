@@ -77,14 +77,25 @@ export default function CanonicalManager() {
       }
     };
 
-    // Run now, after Helmet flushes, and on any later head mutation.
-    sync();
-    const raf = requestAnimationFrame(sync);
-    const observer = new MutationObserver(sync);
+    // Debounce so Helmet finishes its own head flush before we reconcile.
+    let timer: number | undefined;
+    let observing = true;
+    const schedule = () => {
+      if (!observing) return;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        observing = false;
+        sync();
+        observing = true;
+      }, 120);
+    };
+
+    schedule();
+    const observer = new MutationObserver(schedule);
     observer.observe(head, { childList: true, attributes: true, subtree: true });
 
     return () => {
-      cancelAnimationFrame(raf);
+      window.clearTimeout(timer);
       observer.disconnect();
     };
   }, [pathname, search]);
