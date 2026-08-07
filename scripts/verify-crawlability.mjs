@@ -299,6 +299,14 @@ const HREF_RE = /href=["']([^"']+)["']/i;
 const META_ROBOTS_RE = /<meta[^>]+name=["']robots["'][^>]*>/i;
 const CONTENT_RE = /content=["']([^"']+)["']/i;
 
+// Cross-origin runs (preview) legitimately redirect to the canonical host.
+// Only a *path* change counts as "redirected away" in that mode.
+const sameTarget = (a, b) => {
+  if (SAME_ORIGIN) return normPath(a) === normPath(b);
+  try { return new URL(a).pathname.replace(/\/+$/, "") === new URL(b).pathname.replace(/\/+$/, ""); }
+  catch { return normPath(a) === normPath(b); }
+};
+
 const normPath = (u) => {
   try {
     const x = new URL(u);
@@ -320,13 +328,13 @@ for (const path of MUST_BE_INDEXED) {
   const isRedirect = headRes.status >= 300 && headRes.status < 400;
   const redirectTo = isRedirect ? headRes.headers.get("location") : null;
   const redirectedAway =
-    isRedirect && !!redirectTo && normPath(new URL(redirectTo, url).href) !== normPath(url);
+    isRedirect && !!redirectTo && !sameTarget(new URL(redirectTo, url).href, url);
 
   // Then follow to inspect the final landed page (canonical, noindex, etc.).
   const r = await fetch(url, { redirect: "follow" });
   const html = await r.text();
   const finalUrl = r.url || url;
-  const finalDifferent = normPath(finalUrl) !== normPath(url);
+  const finalDifferent = !sameTarget(finalUrl, url);
   const headerNoindex = /noindex/i.test(r.headers.get("x-robots-tag") || "");
 
   const canonTag = html.match(CANONICAL_RE)?.[0] ?? "";
