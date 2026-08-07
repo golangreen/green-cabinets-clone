@@ -55,26 +55,30 @@ export default function CanonicalManager() {
       }
       if (link.getAttribute("href") !== href) link.setAttribute("href", href);
 
-      // Keep og:url aligned with the canonical when no route set one.
+      // Keep og:url aligned with the canonical, but never fight Helmet:
+      // if the route manages its own head tags, leave og:url to it.
+      const helmetManaged = head.querySelector('[data-rh="true"]') !== null;
       const ogs = Array.from(
         head.querySelectorAll<HTMLMetaElement>('meta[property="og:url"]'),
       );
       const ogOwned = ogs.filter((m) => m.hasAttribute(AUTO_ATTR));
       const ogExternal = ogs.filter((m) => !m.hasAttribute(AUTO_ATTR));
-      if (ogExternal.length > 0) {
+
+      if (helmetManaged || ogExternal.length > 0) {
         ogOwned.forEach((m) => m.remove());
         ogExternal.slice(1).forEach((m) => m.remove());
-      } else {
-        let og = ogOwned[0];
-        ogOwned.slice(1).forEach((m) => m.remove());
-        if (!og) {
-          og = document.createElement("meta");
-          og.setAttribute("property", "og:url");
-          og.setAttribute(AUTO_ATTR, "true");
-          head.appendChild(og);
-        }
-        if (og.getAttribute("content") !== href) og.setAttribute("content", href);
+        return;
       }
+
+      let og = ogOwned[0];
+      ogOwned.slice(1).forEach((m) => m.remove());
+      if (!og) {
+        og = document.createElement("meta");
+        og.setAttribute("property", "og:url");
+        og.setAttribute(AUTO_ATTR, "true");
+        head.appendChild(og);
+      }
+      if (og.getAttribute("content") !== href) og.setAttribute("content", href);
     };
 
     // Debounce so Helmet finishes its own head flush before we reconcile.
