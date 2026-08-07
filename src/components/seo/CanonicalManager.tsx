@@ -30,37 +30,9 @@ export default function CanonicalManager() {
       return `${SITE_ORIGIN}${path}${qs ? `?${qs}` : ""}`;
     };
 
-    const sync = () => {
-      const links = Array.from(
-        head.querySelectorAll<HTMLLinkElement>('link[rel="canonical"]'),
-      );
-      const owned = links.filter((l) => l.hasAttribute(AUTO_ATTR));
-      const external = links.filter((l) => !l.hasAttribute(AUTO_ATTR));
-
-      const href = canonicalHref();
-
-      if (external.length > 0) {
-        // A route-level canonical exists — remove ours and any duplicates.
-        owned.forEach((l) => l.remove());
-        external.slice(1).forEach((l) => l.remove());
-        syncOgUrl(href);
-        return;
-      }
-
-
-      const href = canonicalHref();
-      let link = owned[0];
-      owned.slice(1).forEach((l) => l.remove());
-      if (!link) {
-        link = document.createElement("link");
-        link.setAttribute("rel", "canonical");
-        link.setAttribute(AUTO_ATTR, "true");
-        head.appendChild(link);
-      }
-      if (link.getAttribute("href") !== href) link.setAttribute("href", href);
-
-      // Keep og:url aligned with the canonical, but never fight Helmet:
-      // if the route manages its own head tags, leave og:url to it.
+    const syncOgUrl = (href: string) => {
+      // Never fight Helmet: if the route manages its own head tags,
+      // leave og:url to it.
       const helmetManaged = head.querySelector('[data-rh="true"]') !== null;
       const ogs = Array.from(
         head.querySelectorAll<HTMLMetaElement>('meta[property="og:url"]'),
@@ -84,6 +56,36 @@ export default function CanonicalManager() {
       }
       if (og.getAttribute("content") !== href) og.setAttribute("content", href);
     };
+
+    const sync = () => {
+      const links = Array.from(
+        head.querySelectorAll<HTMLLinkElement>('link[rel="canonical"]'),
+      );
+      const owned = links.filter((l) => l.hasAttribute(AUTO_ATTR));
+      const external = links.filter((l) => !l.hasAttribute(AUTO_ATTR));
+      const href = canonicalHref();
+
+      if (external.length > 0) {
+        // A route-level canonical exists — remove ours and any duplicates.
+        owned.forEach((l) => l.remove());
+        external.slice(1).forEach((l) => l.remove());
+        syncOgUrl(href);
+        return;
+      }
+
+      let link = owned[0];
+      owned.slice(1).forEach((l) => l.remove());
+      if (!link) {
+        link = document.createElement("link");
+        link.setAttribute("rel", "canonical");
+        link.setAttribute(AUTO_ATTR, "true");
+        head.appendChild(link);
+      }
+      if (link.getAttribute("href") !== href) link.setAttribute("href", href);
+
+      syncOgUrl(href);
+    };
+
 
     // Debounce so Helmet finishes its own head flush before we reconcile.
     let timer: number | undefined;
