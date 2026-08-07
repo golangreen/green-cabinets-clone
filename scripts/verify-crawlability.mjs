@@ -8,7 +8,15 @@
  *
  * Exits non-zero on any failure (CI-friendly).
  */
-const HOST = "https://greencabinetsny.com";
+// Canonical host: what <loc> / rel=canonical values must point at.
+const HOST = (process.env.CANONICAL_HOST || "https://greencabinetsny.com").replace(/\/+$/, "");
+// Origin actually fetched. Defaults to HOST; set CRAWL_ORIGIN to run the same
+// assertions against a preview/staging deploy while still requiring the
+// production canonical form.
+const ORIGIN = (process.env.CRAWL_ORIGIN || HOST).replace(/\/+$/, "");
+const SAME_ORIGIN = ORIGIN === HOST;
+// Rewrite a canonical-host URL onto the origin under test.
+const onOrigin = (u) => (SAME_ORIGIN ? u : u.replace(HOST, ORIGIN));
 
 // --- expectations for the `*` user-agent group ---------------------------
 const EXPECTED_DISALLOW = [
@@ -92,10 +100,10 @@ const c = {
 const fails = [];
 const log = (ok, msg) => console.log(`${ok ? c.green("✓") : c.red("✗")} ${msg}`);
 
-console.log(c.dim(`→ Verifying ${HOST}\n`));
+console.log(c.dim(`→ Verifying ${ORIGIN}${SAME_ORIGIN ? "" : `  (canonical host: ${HOST})`}\n`));
 
 // 1. robots.txt — full parse + per-rule assertions
-const rRes = await fetch(`${HOST}/robots.txt`);
+const rRes = await fetch(`${ORIGIN}/robots.txt`);
 const rBody = await rRes.text();
 if (rRes.status !== 200) {
   fails.push(`robots.txt status ${rRes.status}`);
@@ -151,7 +159,7 @@ const fetchLocs = async (url) => {
   return { res, body, locs: [...body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]) };
 };
 
-const sTop = await fetchLocs(`${HOST}/sitemap.xml`);
+const sTop = await fetchLocs(`${ORIGIN}/sitemap.xml`);
 const sRes = sTop.res;
 if (sRes.status !== 200) fails.push(`sitemap.xml status ${sRes.status}`);
 
@@ -162,7 +170,7 @@ if (isIndex) {
   log(true, `sitemap.xml is a sitemapindex (${children.length} child sitemaps)`);
   rawLocs = [];
   for (const child of children) {
-    const { res, locs } = await fetchLocs(child);
+    const { res, locs } = await fetchLocs(onOrigin(child));
     if (res.status !== 200) {
       fails.push(`child sitemap ${child} status ${res.status}`);
       log(false, `  ${child} → ${res.status}`);
@@ -291,6 +299,14 @@ const HREF_RE = /href=["']([^"']+)["']/i;
 const META_ROBOTS_RE = /<meta[^>]+name=["']robots["'][^>]*>/i;
 const CONTENT_RE = /content=["']([^"']+)["']/i;
 
+// Cross-origin runs (preview) legitimately redirect to the canonical host.
+// Only a *path* change counts as "redirected away" in that mode.
+const sameTarget = (a, b) => {
+  if (SAME_ORIGIN) return normPath(a) === normPath(b);
+  try { return new URL(a).pathname.replace(/\/+$/, "") === new URL(b).pathname.replace(/\/+$/, ""); }
+  catch { return normPath(a) === normPath(b); }
+};
+
 const normPath = (u) => {
   try {
     const x = new URL(u);
@@ -302,22 +318,23 @@ const normPath = (u) => {
 };
 
 for (const path of MUST_BE_INDEXED) {
-  const url = `${HOST}${path}`;
-  const expectedCanonical = `${HOST}${path}`;
-  const inSitemap = sitemapLocs.has(url) || sitemapLocs.has(url.replace(/\/$/, "")) || sitemapPaths.has(path);
+  const url = `${ORIGIN}${path}`;
+  const canonicalUrl = `${HOST}${path}`;
+  const expectedCanonical = canonicalUrl;
+  const inSitemap = sitemapLocs.has(canonicalUrl) || sitemapLocs.has(canonicalUrl.replace(/\/$/, "")) || sitemapPaths.has(path);
 
   // First, manual mode catches a single-hop redirect cleanly (3xx Location).
   const headRes = await fetch(url, { redirect: "manual" });
   const isRedirect = headRes.status >= 300 && headRes.status < 400;
   const redirectTo = isRedirect ? headRes.headers.get("location") : null;
   const redirectedAway =
-    isRedirect && !!redirectTo && normPath(new URL(redirectTo, url).href) !== normPath(url);
+    isRedirect && !!redirectTo && !sameTarget(new URL(redirectTo, url).href, url);
 
   // Then follow to inspect the final landed page (canonical, noindex, etc.).
   const r = await fetch(url, { redirect: "follow" });
   const html = await r.text();
   const finalUrl = r.url || url;
-  const finalDifferent = normPath(finalUrl) !== normPath(url);
+  const finalDifferent = !sameTarget(finalUrl, url);
   const headerNoindex = /noindex/i.test(r.headers.get("x-robots-tag") || "");
 
   const canonTag = html.match(CANONICAL_RE)?.[0] ?? "";
