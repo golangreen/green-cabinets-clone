@@ -2,7 +2,7 @@
 // Writes a sitemap index at public/sitemap.xml plus per-section sitemaps in
 // public/sitemaps/. Splitting by section keeps each file well under the
 // 50k URL / 50MB limit and lets crawlers ingest sections independently.
-import { writeFileSync, mkdirSync } from "fs";
+import { writeFileSync, mkdirSync, readdirSync, rmSync } from "fs";
 import { resolve } from "path";
 import { NEIGHBORHOODS } from "../src/data/neighborhoodSeo";
 import { BOROUGHS } from "../src/data/boroughSeo";
@@ -10,6 +10,18 @@ import { WOOD_SPECIES } from "../src/data/woodSpecies";
 import { CASE_STUDIES } from "../src/data/caseStudies";
 
 const BASE_URL = "https://greencabinetsny.com";
+
+// Sitemap protocol caps a urlset at 50k URLs / 50MB and an index at 50k
+// children. Split well below that so files stay small and cacheable.
+const MAX_URLS_PER_SITEMAP = 5000;
+const MAX_SITEMAPS_PER_INDEX = 50_000;
+
+function chunk<T>(items: T[], size: number): T[][] {
+  if (items.length <= size) return [items];
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  return out;
+}
 const today = new Date().toISOString().slice(0, 10);
 
 const SHOPIFY_STORE = "green-cabinets-clone-5eeb3.myshopify.com";
