@@ -12,6 +12,8 @@ const Contact = () => {
   const [contactMethod, setContactMethod] = useState<string>("email-golan");
   const [showQuoteForm, setShowQuoteForm] = useState(false);
   const [isNight, setIsNight] = useState(false);
+  const [gateOpen, setGateOpen] = useState(false);
+  const { unlocked } = useContactUnlock();
 
   useEffect(() => {
     const check = () => {
