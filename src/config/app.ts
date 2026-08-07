@@ -13,6 +13,17 @@ export const APP_CONFIG = {
     phoneEncoded: 'NzE4ODA0NTQ4OA==',
     address: 'New York, NY',
   },
+  /**
+   * Plain-text contact details for structured data ONLY.
+   * Search engines must always see the real phone/email — the human-verification
+   * gate applies exclusively to the visible contact UI (ObfuscatedEmail/Phone).
+   * Never render these directly in the DOM as visible text or mailto/tel links.
+   */
+  structuredData: {
+    telephone: '+1-718-804-5488',
+    email: 'orders@greencabinetsny.com',
+  },
+
 } as const;
 
 export const SHOPIFY_CONFIG = {
