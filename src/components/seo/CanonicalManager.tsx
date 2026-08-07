@@ -56,15 +56,24 @@ export default function CanonicalManager() {
       if (link.getAttribute("href") !== href) link.setAttribute("href", href);
 
       // Keep og:url aligned with the canonical when no route set one.
-      let og = head.querySelector<HTMLMetaElement>('meta[property="og:url"]');
-      if (!og) {
-        og = document.createElement("meta");
-        og.setAttribute("property", "og:url");
-        og.setAttribute(AUTO_ATTR, "true");
-        head.appendChild(og);
-      }
-      if (og.hasAttribute(AUTO_ATTR) && og.getAttribute("content") !== href) {
-        og.setAttribute("content", href);
+      const ogs = Array.from(
+        head.querySelectorAll<HTMLMetaElement>('meta[property="og:url"]'),
+      );
+      const ogOwned = ogs.filter((m) => m.hasAttribute(AUTO_ATTR));
+      const ogExternal = ogs.filter((m) => !m.hasAttribute(AUTO_ATTR));
+      if (ogExternal.length > 0) {
+        ogOwned.forEach((m) => m.remove());
+        ogExternal.slice(1).forEach((m) => m.remove());
+      } else {
+        let og = ogOwned[0];
+        ogOwned.slice(1).forEach((m) => m.remove());
+        if (!og) {
+          og = document.createElement("meta");
+          og.setAttribute("property", "og:url");
+          og.setAttribute(AUTO_ATTR, "true");
+          head.appendChild(og);
+        }
+        if (og.getAttribute("content") !== href) og.setAttribute("content", href);
       }
     };
 
