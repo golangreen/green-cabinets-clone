@@ -119,6 +119,7 @@ export default function PaymentSuccess() {
               <div className="flex flex-col sm:flex-row gap-2 text-sm">
                 <ObfuscatedEmail 
                   encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20="
+                  alwaysReveal
                   className="text-accent-foreground hover:text-[#445339] flex items-center gap-1"
                 >
                   <Mail className="w-4 h-4" />
@@ -128,6 +129,7 @@ export default function PaymentSuccess() {
                 <ObfuscatedPhone 
                   encoded="NzE4ODA0NTQ4OA=="
                   type="tel"
+                  alwaysReveal
                   className="text-accent-foreground hover:text-[#445339]"
                 />
               </div>

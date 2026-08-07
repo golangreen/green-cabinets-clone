@@ -5,11 +5,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import QuoteForm from "@/components/marketing/QuoteForm";
 import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
 import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
+import ContactGateDialog from "@/components/privacy/ContactGateDialog";
+import { useContactUnlock } from "@/components/privacy/contactUnlock";
 
 const Contact = () => {
   const [contactMethod, setContactMethod] = useState<string>("email-golan");
   const [showQuoteForm, setShowQuoteForm] = useState(false);
   const [isNight, setIsNight] = useState(false);
+  const [gateOpen, setGateOpen] = useState(false);
+  const { unlocked } = useContactUnlock();
 
   useEffect(() => {
     const check = () => {
@@ -27,11 +31,19 @@ const Contact = () => {
     "text-golan": { href: `sms:+1${atob('NzE4ODA0NTQ4OA==')}`, label: "Text Golan" },
   };
 
-  const handleContact = () => {
+  const openContact = () => {
     const option = contactOptions[contactMethod as keyof typeof contactOptions];
     if (option) {
       window.location.href = option.href;
     }
+  };
+
+  const handleContact = () => {
+    if (!unlocked) {
+      setGateOpen(true);
+      return;
+    }
+    openContact();
   };
 
   return (
@@ -161,6 +173,7 @@ const Contact = () => {
       </div>
 
       <QuoteForm isOpen={showQuoteForm} onClose={() => setShowQuoteForm(false)} />
+      <ContactGateDialog open={gateOpen} onOpenChange={setGateOpen} onVerified={openContact} />
     </section>
   );
 };

@@ -2,23 +2,33 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import QuoteForm from "@/components/marketing/QuoteForm";
+import ContactGateDialog from "@/components/privacy/ContactGateDialog";
+import { useContactUnlock } from "@/components/privacy/contactUnlock";
 
 const CTA = () => {
   const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
   const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [gateOpen, setGateOpen] = useState(false);
+  const { unlocked } = useContactUnlock();
 
-  const handleConsultation = () => {
+  const openContact = () => {
     if (contactMethod === "email") {
       // Decode email client-side to protect from bots
       const encoded = 'b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20='; // Base64 encoded: orders@greencabinetsny.com
-      const email = atob(encoded);
-      window.location.href = `mailto:${email}`;
+      window.location.href = `mailto:${atob(encoded)}`;
     } else {
       // Decode phone number client-side to protect from bots
       const encoded = 'NzE4ODA0NTQ4OA=='; // Base64 encoded: 7188045488
-      const phone = atob(encoded);
-      window.location.href = `sms:+1${phone}`;
+      window.location.href = `sms:+1${atob(encoded)}`;
     }
+  };
+
+  const handleConsultation = () => {
+    if (!unlocked) {
+      setGateOpen(true);
+      return;
+    }
+    openContact();
   };
 
   return (
@@ -69,6 +79,7 @@ const CTA = () => {
       </div>
 
       <QuoteForm isOpen={showQuoteForm} onClose={() => setShowQuoteForm(false)} />
+      <ContactGateDialog open={gateOpen} onOpenChange={setGateOpen} onVerified={openContact} />
     </section>
   );
 };
