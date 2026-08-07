@@ -5,6 +5,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import QuoteForm from "@/components/marketing/QuoteForm";
 import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
 import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
+import ContactGateDialog from "@/components/privacy/ContactGateDialog";
+import { useContactUnlock } from "@/components/privacy/contactUnlock";
 
 const Contact = () => {
   const [contactMethod, setContactMethod] = useState<string>("email-golan");
