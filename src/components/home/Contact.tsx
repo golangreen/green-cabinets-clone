@@ -31,11 +31,19 @@ const Contact = () => {
     "text-golan": { href: `sms:+1${atob('NzE4ODA0NTQ4OA==')}`, label: "Text Golan" },
   };
 
-  const handleContact = () => {
+  const openContact = () => {
     const option = contactOptions[contactMethod as keyof typeof contactOptions];
     if (option) {
       window.location.href = option.href;
     }
+  };
+
+  const handleContact = () => {
+    if (!unlocked) {
+      setGateOpen(true);
+      return;
+    }
+    openContact();
   };
 
   return (
