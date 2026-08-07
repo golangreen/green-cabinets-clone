@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { Quote, Star } from "lucide-react";
+import { APP_CONFIG } from "@/config/app";
 
 const testimonials = [
   {
@@ -48,7 +49,8 @@ const Testimonials = () => {
     "name": "Green Cabinets NY",
     "url": "https://greencabinetsny.com",
     "image": "https://greencabinetsny.com/og-image.jpg",
-    "telephone": "+1-718-804-5488",
+    "telephone": APP_CONFIG.structuredData.telephone,
+    "email": APP_CONFIG.structuredData.email,
     "priceRange": "$$-$$$",
     "address": {
       "@type": "PostalAddress",
