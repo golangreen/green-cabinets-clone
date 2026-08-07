@@ -5,6 +5,8 @@ name: Verify Crawlability (Production)
 # all guide URLs are crawlable. Also runs on a schedule and on-demand.
 
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
     paths:
@@ -45,4 +47,37 @@ jobs:
           echo "::warning::Deploy did not flip within 5min — running verify anyway"
 
       - name: Verify crawlability
+        run: node scripts/verify-crawlability.mjs
+
+  verify-preview:
+    name: Verify Crawlability (Preview)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # Fetch the published preview deploy, but keep asserting the production
+      # canonical form so duplicate <loc>, stale EXPECTED_GUIDES and canonical
+      # mismatches all still fail.
+      CRAWL_ORIGIN: ${{ vars.PREVIEW_ORIGIN || 'https://green-cabinets-clone.lovable.app' }}
+      CANONICAL_HOST: https://greencabinetsny.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Wait for preview deploy to respond
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sfI "$CRAWL_ORIGIN/robots.txt" >/dev/null; then
+              echo "✓ Preview reachable at $CRAWL_ORIGIN"
+              exit 0
+            fi
+            echo "…waiting for preview ($i/30)"
+            sleep 10
+          done
+          echo "::error::Preview $CRAWL_ORIGIN never responded"
+          exit 1
+
+      - name: Verify crawlability against preview
         run: node scripts/verify-crawlability.mjs
