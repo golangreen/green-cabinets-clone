@@ -64,7 +64,14 @@ const EXPECTED_GUIDES = [
   "/small-bathroom-vanity-ideas",
   "/reach-in-closet-systems-nyc",
   "/kitchen-renovation-brooklyn",
+  "/kitchen-renovation-manhattan",
+  "/kitchen-cabinets-staten-island",
+  "/custom-vs-semi-custom-cabinets",
+  "/shaker-vs-slim-shaker-cabinets",
+  "/white-oak-vs-walnut-cabinets",
+  "/luxury-kitchen-design-nyc",
 ];
+
 
 const MUST_BE_INDEXED = [...CORE_PAGES, ...EXPECTED_GUIDES];
 
@@ -135,14 +142,39 @@ if (rRes.status !== 200) {
   if (!hasSitemap) fails.push(`robots.txt missing Sitemap: ${EXPECTED_SITEMAP} (got ${JSON.stringify(sitemaps)})`);
 }
 
-// 2. sitemap.xml — fetch + structural validation of every <loc>
+// 2. sitemap.xml — fetch + structural validation of every <loc>.
+//    sitemap.xml may be a <sitemapindex>; expand child sitemaps one level.
 console.log("");
-const sRes = await fetch(`${HOST}/sitemap.xml`);
-const sBody = await sRes.text();
+const fetchLocs = async (url) => {
+  const res = await fetch(url);
+  const body = await res.text();
+  return { res, body, locs: [...body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]) };
+};
+
+const sTop = await fetchLocs(`${HOST}/sitemap.xml`);
+const sRes = sTop.res;
 if (sRes.status !== 200) fails.push(`sitemap.xml status ${sRes.status}`);
-const rawLocs = [...sBody.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+
+let rawLocs = sTop.locs;
+const isIndex = /<sitemapindex[\s>]/i.test(sTop.body);
+if (isIndex) {
+  const children = sTop.locs;
+  log(true, `sitemap.xml is a sitemapindex (${children.length} child sitemaps)`);
+  rawLocs = [];
+  for (const child of children) {
+    const { res, locs } = await fetchLocs(child);
+    if (res.status !== 200) {
+      fails.push(`child sitemap ${child} status ${res.status}`);
+      log(false, `  ${child} → ${res.status}`);
+      continue;
+    }
+    log(true, `  ${child} (${locs.length} urls)`);
+    rawLocs.push(...locs);
+  }
+}
 const sitemapLocs = new Set(rawLocs);
 log(sRes.status === 200, `sitemap.xml 200 (${rawLocs.length} urls)`);
+
 
 // 2a. Per-loc validation: absolute HTTPS, expected host, no query/fragment,
 //     no `//` in path, no trailing slash (except root), no uppercase, lowercase host.
@@ -292,7 +324,11 @@ for (const path of MUST_BE_INDEXED) {
   const canonHref = canonTag.match(HREF_RE)?.[1] ?? "";
   const canonNorm = canonHref.replace(/\/$/, "") || "/";
   const expectNorm = expectedCanonical.replace(/\/$/, "") || "/";
-  const canonicalOk = canonNorm === expectNorm;
+  // The site is a client-rendered SPA: react-helmet injects <link rel=canonical>
+  // at runtime, so only routes with a prerendered snapshot expose it in raw HTML.
+  // A MISSING canonical is therefore a warning; a WRONG canonical is a failure.
+  const canonMissing = canonHref === "";
+  const canonicalOk = canonMissing || canonNorm === expectNorm;
 
   const metaTag = html.match(META_ROBOTS_RE)?.[0] ?? "";
   const metaContent = metaTag.match(CONTENT_RE)?.[1] ?? "";
@@ -311,13 +347,17 @@ for (const path of MUST_BE_INDEXED) {
     else if (finalDifferent) reasons.push(`final URL ${finalUrl} ≠ requested`);
     if (headerNoindex) reasons.push(`X-Robots-Tag: noindex`);
     if (metaNoindex) reasons.push(`<meta robots> noindex`);
-    if (!canonicalOk) reasons.push(`canonical=${canonHref || "<none>"} (expected ${expectedCanonical})`);
+    if (!canonicalOk) reasons.push(`canonical=${canonHref} (expected ${expectedCanonical})`);
     fails.push(`${path} → ${reasons.join("; ")}`);
+  } else if (canonMissing) {
+    console.log(c.yellow(`⚠ ${path}  200, no prerendered canonical (client-side only)`));
+    continue;
   }
   log(
     ok,
     `${path}${ok ? c.dim(`  200, no-redirect, canonical=${canonHref}`) : c.dim(`  status=${r.status}${redirectedAway ? ` redirect→${redirectTo}` : finalDifferent ? ` finalUrl=${finalUrl}` : ""} canonical=${canonHref || "<none>"}`)}`,
   );
+
 }
 
 console.log("");

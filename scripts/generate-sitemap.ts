@@ -95,7 +95,9 @@ const guides: SitemapEntry[] = [
   { path: "/kitchen-renovation-brooklyn", changefreq: "monthly", priority: "0.9" },
   { path: "/kitchen-renovation-manhattan", changefreq: "monthly", priority: "0.9" },
   { path: "/kitchen-cabinets-staten-island", changefreq: "monthly", priority: "0.9" },
-  { path: "/custom-kitchen-cabinets-queens", changefreq: "monthly", priority: "0.9" },
+  // /custom-kitchen-cabinets-queens lives in the locations sitemap (borough page) —
+  // listing it here too produced a duplicate <loc> across child sitemaps.
+
   { path: "/best-wood-for-kitchen-cabinets", changefreq: "monthly", priority: "0.85" },
   { path: "/cabinet-wood-types-and-costs", changefreq: "monthly", priority: "0.85" },
   { path: "/natural-wood-kitchen-cabinets", changefreq: "monthly", priority: "0.85" },
