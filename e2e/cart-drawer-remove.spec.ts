@@ -31,12 +31,13 @@ test.describe('Cart Drawer Remove Item', () => {
     const dialog = page.locator('[role="dialog"]');
     await expect(dialog.getByText('1 item in your cart')).toBeVisible();
 
-    // Remove the only line item via the trash button (first icon-only ghost button in the line).
-    const removeButton = dialog.locator('button:has(svg.lucide-trash-2)').first();
+    // Remove the only line item via its accessible remove button.
+    const removeButton = dialog.getByRole('button', { name: /remove .* from cart/i }).first();
+
     await removeButton.click();
 
     // Drawer should now show the empty state.
-    await expect(dialog.getByText('Your cart is empty')).toBeVisible();
+    await expect(dialog.getByText('Your cart is empty').last()).toBeVisible();
 
     // The Total row and checkout buttons should no longer be rendered.
     await expect(dialog.locator('div', { hasText: /^Total/ })).toHaveCount(0);

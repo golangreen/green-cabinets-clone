@@ -112,7 +112,6 @@ export default function BlogArticlePage() {
 
             <div
               className="prose prose-neutral dark:prose-invert max-w-none"
-              // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{ __html: normalizeArticleHtml(article.content_html) }}
             />
           </article>

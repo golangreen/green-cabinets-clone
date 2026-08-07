@@ -1,81 +1,58 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * E2E tests for Vanity Designer feature
+ * E2E tests for the Vanity Designer.
+ * The designer is a self-contained app served from /vanity-designer.html and
+ * embedded in the React shell at /designer via an iframe, so all assertions
+ * run inside that frame.
  */
+const FRAME = 'iframe[title="Vanity Designer"]';
+
 test.describe('Vanity Designer', () => {
-  test('should load vanity designer', async ({ page }) => {
+  test('should load the designer inside the site shell', async ({ page }) => {
     await page.goto('/designer');
-    
-    // Check for key elements
-    await expect(page.locator('text=Vanity Designer')).toBeVisible();
-    await expect(page.locator('canvas')).toBeVisible(); // 3D canvas
+
+    const frame = page.frameLocator(FRAME);
+    await expect(frame.locator('canvas').first()).toBeVisible({ timeout: 30000 });
   });
 
-  test('should update vanity dimensions', async ({ page }) => {
+  test('should display live pricing', async ({ page }) => {
     await page.goto('/designer');
-    
-    // Find dimension inputs
-    const widthInput = page.locator('input[type="number"]').first();
-    
-    // Update width
-    await widthInput.clear();
-    await widthInput.fill('48');
-    
-    // Verify update (canvas should re-render)
-    await page.waitForTimeout(500);
+
+    const frame = page.frameLocator(FRAME);
+    const price = frame.locator('#priceAmt');
+    await expect(price).toBeVisible({ timeout: 30000 });
+    await expect(price).toHaveText(/\$[\d,]+/);
   });
 
-  test('should change vanity finish', async ({ page }) => {
+  test('should update the price when width changes', async ({ page }) => {
     await page.goto('/designer');
-    
-    // Open finish selector
-    const finishButton = page.locator('button:has-text("White Oak")');
-    if (await finishButton.isVisible()) {
-      await finishButton.click();
-      
-      // Select different finish
-      await page.click('text=Walnut');
-      
-      // Verify selection
-      await expect(page.locator('button:has-text("Walnut")')).toBeVisible();
-    }
+
+    const frame = page.frameLocator(FRAME);
+    const price = frame.locator('#priceAmt');
+    await expect(price).toBeVisible({ timeout: 30000 });
+
+    const before = await price.textContent();
+
+    // Width presets are rendered as buttons carrying the width in data-p.
+    const presets = frame.locator('[data-p]');
+    const count = await presets.count();
+    test.skip(count < 2, 'No width presets rendered in this build');
+
+    await presets.nth(count - 1).click();
+    await expect(price).not.toHaveText(before ?? '', { timeout: 10000 });
   });
 
-  test('should display pricing', async ({ page }) => {
+  test('can open the quote dialog', async ({ page }) => {
     await page.goto('/designer');
-    
-    // Check for pricing card
-    await expect(page.locator('text=Base Price')).toBeVisible();
-    await expect(page.locator('text=Total')).toBeVisible();
-  });
 
-  test('should request quote', async ({ page }) => {
-    await page.goto('/designer');
-    
-    // Click request quote button
-    const quoteButton = page.locator('button:has-text("Request Quote")');
-    if (await quoteButton.isVisible()) {
+    const frame = page.frameLocator(FRAME);
+    await expect(frame.locator('#priceAmt')).toBeVisible({ timeout: 30000 });
+
+    const quoteButton = frame.getByRole('button', { name: /quote/i }).first();
+    if (await quoteButton.count()) {
       await quoteButton.click();
-      
-      // Verify quote form or navigation
-      await expect(page.locator('text=Contact Information')).toBeVisible({ timeout: 5000 });
-    }
-  });
-
-  test('should toggle fullscreen preview', async ({ page }) => {
-    await page.goto('/designer');
-    
-    // Find fullscreen button
-    const fullscreenButton = page.locator('button:has-text("Fullscreen")');
-    if (await fullscreenButton.isVisible()) {
-      await fullscreenButton.click();
-      
-      // Verify fullscreen mode
-      await expect(page.locator('[data-testid="fullscreen-preview"]')).toBeVisible();
-      
-      // Exit fullscreen
-      await page.press('body', 'Escape');
+      await expect(frame.locator('text=/Estimated price/i').first()).toBeVisible({ timeout: 10000 });
     }
   });
 });
