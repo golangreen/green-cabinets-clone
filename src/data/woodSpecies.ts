@@ -500,7 +500,23 @@ export const WOOD_SPECIES: WoodSpecies[] = [
         answer:
           "Red oak ambers gently with UV exposure over 5-10 years, deepening from pinkish-red toward a warmer amber-brown. The change is subtle and generally improves the color, mellowing the pink undertone that can read as cold when new. A UV-protective topcoat slows but does not stop this aging.",
       },
+      {
+        question: "How durable are red oak cabinets in a family kitchen?",
+        answer:
+          "Very. Red oak's 1,290 lbf Janka rating is harder than walnut and cherry, and its open cathedral grain camouflages the scratches that show as bright lines on smooth species like maple. Damaged edges can be sanded and re-stained in place instead of replaced. The one limit is standing water — the pores are not watertight, so we seal sink bases and dishwasher returns on all six sides and keep toe kicks in a matched laminate.",
+      },
+      {
+        question: "What finishes work best on red oak cabinets?",
+        answer:
+          "Clear hardwax oil over rift-cut for a matte Scandinavian look; limed or cerused white to read the grain as texture; honey or amber pigment stain for mid-century warmth; a dye-then-pigment sequence for espresso or gray when you need to neutralize the pink undertone; and grain-filled paint if you want oak texture under color. Keep sheen at 10-20% matte — satin and gloss make the open pores glint.",
+      },
+      {
+        question: "Do you build custom red oak cabinetry across NYC?",
+        answer:
+          "Yes. Green Cabinets NY builds red oak kitchens, islands, vanities, and built-ins to the exact opening in our Brooklyn shop, with delivery and installation across Brooklyn, Queens, Manhattan, the Bronx, and Staten Island. Kitchen cabinetry runs about $350 per linear foot with a 6-8 week lead time.",
+      },
     ],
+
     metaTitle: "Red Oak Kitchen Cabinets NYC — Cost, Grain & Stains",
     metaDescription:
       "Custom red oak kitchen cabinets in NYC from $350/lf — 25-30% less than white oak, Janka 1,290, 6-8 week lead time. Rift-cut, limed, and honey finishes.",
