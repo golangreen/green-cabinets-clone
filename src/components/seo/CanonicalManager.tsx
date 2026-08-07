@@ -79,15 +79,9 @@ export default function CanonicalManager() {
 
     // Debounce so Helmet finishes its own head flush before we reconcile.
     let timer: number | undefined;
-    let observing = true;
     const schedule = () => {
-      if (!observing) return;
       window.clearTimeout(timer);
-      timer = window.setTimeout(() => {
-        observing = false;
-        sync();
-        observing = true;
-      }, 120);
+      timer = window.setTimeout(sync, 120);
     };
 
     schedule();
