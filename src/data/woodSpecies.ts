@@ -419,7 +419,11 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       "Cost in the NYC market currently runs $7-$10 per board foot for plain-sawn red oak — the most affordable premium domestic hardwood available. Rift-cut red oak runs $10-$13/bf, still well below plain-sawn white oak. For a typical 30-linear-foot kitchen, expect red oak cabinetry to cost roughly $4,000-$8,000 less than equivalent white oak construction, with no compromise on durability or finish quality.",
       "Best uses include traditional shaker, mid-century modern slab, painted bases where you want grain texture visible, transitional kitchens on a budget, and any project that needs to ship in 6 weeks instead of 10. We have specified red oak for prewar Brooklyn brownstones, Queens family kitchens, and several flip projects in Bushwick and Bed-Stuy where the budget mattered more than the trend.",
       "The honest knock on red oak is the pinkish undertone. It clashes with cool color palettes (gray, blue, true white) and reads dated when paired with the wrong stain. Done well — limed white over rift-cut, or a warm honey stain over plain-sawn — red oak looks current and intentional. Done badly with a generic medium stain it can read as a 1995 builder-grade kitchen. Cut and finish matter more for red oak than for any other species on this list.",
+      "**Durability in a real NYC kitchen.** At 1,290 lbf Janka, red oak door faces shrug off the dents that soft species pick up from backpacks, pot handles, and dog tails. The open pore structure that hurts it around water actually helps around wear: scratches disappear into the grain instead of reading as bright lines across a flat field, and a damaged edge can be sanded and re-stained in place rather than replaced. Where red oak needs discipline is moisture — we spec a full conversion-varnish envelope (backs, edges, and interior faces) on sink bases and dishwasher returns, and we keep toe kicks in a matched laminate rather than solid oak so mop water never wicks into end grain. Radiator-heated prewar apartments swing from 20% to 55% relative humidity across a year; five-piece doors with floating center panels absorb that movement, while one-piece slab doors in red oak should be veneered over an engineered core rather than glued up solid.",
+      "**Finish options we build in.** Clear hardwax oil over rift-cut for a matte Scandinavian read; limed or cerused white where you want the grain to show as texture, not color; honey and amber pigment stains for mid-century warmth; espresso and gray dye stains when the pink undertone needs to be neutralized (dye first, pigment second — pigment alone leaves the pores pinker than the field); and grain-filled paint for clients who want oak texture under a color. Sheen matters as much as color: 10–20% matte hides the open pore, while satin and above make it glint. Every red oak job leaves our Brooklyn shop with door samples finished from the same batch so what you approve is what ships.",
+      "**Custom red oak cabinetry in NYC.** We build red oak kitchens, islands, vanities, and built-ins to the exact opening — no filler strips, no stock sizes — out of our Brooklyn shop, with delivery and install across Brooklyn, Queens, Manhattan, the Bronx, and Staten Island. Typical scope runs $350 per linear foot for kitchen cabinetry, with a 6–8 week lead time that beats white oak by two weeks and rift-cut by up to six.",
     ],
+
     jankaHardness: 1290,
     specificGravity: 0.63,
     costTier: "$$",
@@ -455,7 +459,11 @@ export const WOOD_SPECIES: WoodSpecies[] = [
       "rift cut red oak",
       "red oak vs white oak",
       "honey oak cabinets",
+      "custom red oak cabinetry nyc",
+      "red oak cabinet finishes",
+      "red oak cabinet durability",
     ],
+
     faqs: [
       {
         question: "Is red oak cheaper than white oak?",
@@ -492,7 +500,23 @@ export const WOOD_SPECIES: WoodSpecies[] = [
         answer:
           "Red oak ambers gently with UV exposure over 5-10 years, deepening from pinkish-red toward a warmer amber-brown. The change is subtle and generally improves the color, mellowing the pink undertone that can read as cold when new. A UV-protective topcoat slows but does not stop this aging.",
       },
+      {
+        question: "How durable are red oak cabinets in a family kitchen?",
+        answer:
+          "Very. Red oak's 1,290 lbf Janka rating is harder than walnut and cherry, and its open cathedral grain camouflages the scratches that show as bright lines on smooth species like maple. Damaged edges can be sanded and re-stained in place instead of replaced. The one limit is standing water — the pores are not watertight, so we seal sink bases and dishwasher returns on all six sides and keep toe kicks in a matched laminate.",
+      },
+      {
+        question: "What finishes work best on red oak cabinets?",
+        answer:
+          "Clear hardwax oil over rift-cut for a matte Scandinavian look; limed or cerused white to read the grain as texture; honey or amber pigment stain for mid-century warmth; a dye-then-pigment sequence for espresso or gray when you need to neutralize the pink undertone; and grain-filled paint if you want oak texture under color. Keep sheen at 10-20% matte — satin and gloss make the open pores glint.",
+      },
+      {
+        question: "Do you build custom red oak cabinetry across NYC?",
+        answer:
+          "Yes. Green Cabinets NY builds red oak kitchens, islands, vanities, and built-ins to the exact opening in our Brooklyn shop, with delivery and installation across Brooklyn, Queens, Manhattan, the Bronx, and Staten Island. Kitchen cabinetry runs about $350 per linear foot with a 6-8 week lead time.",
+      },
     ],
+
     metaTitle: "Red Oak Kitchen Cabinets NYC — Cost, Grain & Stains",
     metaDescription:
       "Custom red oak kitchen cabinets in NYC from $350/lf — 25-30% less than white oak, Janka 1,290, 6-8 week lead time. Rift-cut, limed, and honey finishes.",
