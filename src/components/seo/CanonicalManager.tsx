@@ -37,12 +37,16 @@ export default function CanonicalManager() {
       const owned = links.filter((l) => l.hasAttribute(AUTO_ATTR));
       const external = links.filter((l) => !l.hasAttribute(AUTO_ATTR));
 
+      const href = canonicalHref();
+
       if (external.length > 0) {
         // A route-level canonical exists — remove ours and any duplicates.
         owned.forEach((l) => l.remove());
         external.slice(1).forEach((l) => l.remove());
+        syncOgUrl(href);
         return;
       }
+
 
       const href = canonicalHref();
       let link = owned[0];
