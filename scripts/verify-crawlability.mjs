@@ -100,10 +100,10 @@ const c = {
 const fails = [];
 const log = (ok, msg) => console.log(`${ok ? c.green("✓") : c.red("✗")} ${msg}`);
 
-console.log(c.dim(`→ Verifying ${HOST}\n`));
+console.log(c.dim(`→ Verifying ${ORIGIN}${SAME_ORIGIN ? "" : `  (canonical host: ${HOST})`}\n`));
 
 // 1. robots.txt — full parse + per-rule assertions
-const rRes = await fetch(`${HOST}/robots.txt`);
+const rRes = await fetch(`${ORIGIN}/robots.txt`);
 const rBody = await rRes.text();
 if (rRes.status !== 200) {
   fails.push(`robots.txt status ${rRes.status}`);
@@ -159,7 +159,7 @@ const fetchLocs = async (url) => {
   return { res, body, locs: [...body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]) };
 };
 
-const sTop = await fetchLocs(`${HOST}/sitemap.xml`);
+const sTop = await fetchLocs(`${ORIGIN}/sitemap.xml`);
 const sRes = sTop.res;
 if (sRes.status !== 200) fails.push(`sitemap.xml status ${sRes.status}`);
 
@@ -170,7 +170,7 @@ if (isIndex) {
   log(true, `sitemap.xml is a sitemapindex (${children.length} child sitemaps)`);
   rawLocs = [];
   for (const child of children) {
-    const { res, locs } = await fetchLocs(child);
+    const { res, locs } = await fetchLocs(onOrigin(child));
     if (res.status !== 200) {
       fails.push(`child sitemap ${child} status ${res.status}`);
       log(false, `  ${child} → ${res.status}`);
@@ -310,9 +310,10 @@ const normPath = (u) => {
 };
 
 for (const path of MUST_BE_INDEXED) {
-  const url = `${HOST}${path}`;
-  const expectedCanonical = `${HOST}${path}`;
-  const inSitemap = sitemapLocs.has(url) || sitemapLocs.has(url.replace(/\/$/, "")) || sitemapPaths.has(path);
+  const url = `${ORIGIN}${path}`;
+  const canonicalUrl = `${HOST}${path}`;
+  const expectedCanonical = canonicalUrl;
+  const inSitemap = sitemapLocs.has(canonicalUrl) || sitemapLocs.has(canonicalUrl.replace(/\/$/, "")) || sitemapPaths.has(path);
 
   // First, manual mode catches a single-hop redirect cleanly (3xx Location).
   const headRes = await fetch(url, { redirect: "manual" });
