@@ -8,7 +8,15 @@
  *
  * Exits non-zero on any failure (CI-friendly).
  */
-const HOST = "https://greencabinetsny.com";
+// Canonical host: what <loc> / rel=canonical values must point at.
+const HOST = (process.env.CANONICAL_HOST || "https://greencabinetsny.com").replace(/\/+$/, "");
+// Origin actually fetched. Defaults to HOST; set CRAWL_ORIGIN to run the same
+// assertions against a preview/staging deploy while still requiring the
+// production canonical form.
+const ORIGIN = (process.env.CRAWL_ORIGIN || HOST).replace(/\/+$/, "");
+const SAME_ORIGIN = ORIGIN === HOST;
+// Rewrite a canonical-host URL onto the origin under test.
+const onOrigin = (u) => (SAME_ORIGIN ? u : u.replace(HOST, ORIGIN));
 
 // --- expectations for the `*` user-agent group ---------------------------
 const EXPECTED_DISALLOW = [
