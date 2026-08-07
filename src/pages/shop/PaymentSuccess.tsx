@@ -131,7 +131,7 @@ export default function PaymentSuccess() {
                   type="tel"
                   alwaysReveal
                   className="text-accent-foreground hover:text-[#445339]"
-                />appended
+                />
               </div>
             </div>
 
