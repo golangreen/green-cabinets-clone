@@ -212,25 +212,61 @@ async function main() {
     { name: "case-studies", entries: caseStudies },
     { name: "products", entries: products },
     { name: "blog", entries: blog },
-  ].filter((s) => s.entries.length > 0);
+  ];
+
+  // Global dedupe across sections — a duplicate <loc> anywhere in the index
+  // fails crawlability verification. First section wins.
+  const seen = new Set<string>();
+  const deduped = sections
+    .map((s) => ({
+      name: s.name,
+      entries: s.entries.filter((e) => {
+        const path = e.path.replace(/\/+$/, "") || "/";
+        if (seen.has(path)) {
+          console.warn(`  ! duplicate path dropped from "${s.name}": ${path}`);
+          return false;
+        }
+        seen.add(path);
+        return true;
+      }),
+    }))
+    .filter((s) => s.entries.length > 0);
 
   mkdirSync(resolve("public/sitemaps"), { recursive: true });
 
+  // Remove stale part files so shrinking a section never leaves orphaned
+  // sitemaps behind (they'd 404 or serve dead URLs from a cached index).
+  for (const f of readdirSync(resolve("public/sitemaps"))) {
+    if (/^sitemap-.*\.xml$/.test(f)) rmSync(resolve("public/sitemaps", f));
+  }
+
   const indexEntries: { loc: string; lastmod?: string }[] = [];
   let total = 0;
-  for (const s of sections) {
-    const path = `public/sitemaps/sitemap-${s.name}.xml`;
-    writeFileSync(resolve(path), renderUrlset(s.entries));
-    indexEntries.push({
-      loc: `${BASE_URL}/sitemaps/sitemap-${s.name}.xml`,
-      lastmod: maxLastmod(s.entries),
+  for (const s of deduped) {
+    const parts = chunk(s.entries, MAX_URLS_PER_SITEMAP);
+    parts.forEach((entries, i) => {
+      // Single-part sections keep their stable filename; split sections get
+      // -1, -2, … suffixes so the index stays parseable as they grow.
+      const name = parts.length === 1 ? s.name : `${s.name}-${i + 1}`;
+      const path = `public/sitemaps/sitemap-${name}.xml`;
+      writeFileSync(resolve(path), renderUrlset(entries));
+      indexEntries.push({
+        loc: `${BASE_URL}/sitemaps/sitemap-${name}.xml`,
+        lastmod: maxLastmod(entries),
+      });
+      total += entries.length;
+      console.log(`  ${path} (${entries.length} urls)`);
     });
-    total += s.entries.length;
-    console.log(`  ${path} (${s.entries.length} urls)`);
+  }
+
+  if (indexEntries.length > MAX_SITEMAPS_PER_INDEX) {
+    throw new Error(
+      `sitemap index has ${indexEntries.length} children (limit ${MAX_SITEMAPS_PER_INDEX}); nested indexes required.`,
+    );
   }
 
   writeFileSync(resolve("public/sitemap.xml"), renderIndex(indexEntries));
-  console.log(`sitemap.xml index written (${sections.length} sitemaps, ${total} urls)`);
+  console.log(`sitemap.xml index written (${indexEntries.length} sitemaps, ${total} urls)`);
 }
 
 main();
