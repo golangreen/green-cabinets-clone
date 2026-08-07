@@ -324,7 +324,11 @@ for (const path of MUST_BE_INDEXED) {
   const canonHref = canonTag.match(HREF_RE)?.[1] ?? "";
   const canonNorm = canonHref.replace(/\/$/, "") || "/";
   const expectNorm = expectedCanonical.replace(/\/$/, "") || "/";
-  const canonicalOk = canonNorm === expectNorm;
+  // The site is a client-rendered SPA: react-helmet injects <link rel=canonical>
+  // at runtime, so only routes with a prerendered snapshot expose it in raw HTML.
+  // A MISSING canonical is therefore a warning; a WRONG canonical is a failure.
+  const canonMissing = canonHref === "";
+  const canonicalOk = canonMissing || canonNorm === expectNorm;
 
   const metaTag = html.match(META_ROBOTS_RE)?.[0] ?? "";
   const metaContent = metaTag.match(CONTENT_RE)?.[1] ?? "";
@@ -343,13 +347,17 @@ for (const path of MUST_BE_INDEXED) {
     else if (finalDifferent) reasons.push(`final URL ${finalUrl} ≠ requested`);
     if (headerNoindex) reasons.push(`X-Robots-Tag: noindex`);
     if (metaNoindex) reasons.push(`<meta robots> noindex`);
-    if (!canonicalOk) reasons.push(`canonical=${canonHref || "<none>"} (expected ${expectedCanonical})`);
+    if (!canonicalOk) reasons.push(`canonical=${canonHref} (expected ${expectedCanonical})`);
     fails.push(`${path} → ${reasons.join("; ")}`);
+  } else if (canonMissing) {
+    console.log(c.yellow(`⚠ ${path}  200, no prerendered canonical (client-side only)`));
+    continue;
   }
   log(
     ok,
     `${path}${ok ? c.dim(`  200, no-redirect, canonical=${canonHref}`) : c.dim(`  status=${r.status}${redirectedAway ? ` redirect→${redirectTo}` : finalDifferent ? ` finalUrl=${finalUrl}` : ""} canonical=${canonHref || "<none>"}`)}`,
   );
+
 }
 
 console.log("");
