@@ -64,7 +64,14 @@ const EXPECTED_GUIDES = [
   "/small-bathroom-vanity-ideas",
   "/reach-in-closet-systems-nyc",
   "/kitchen-renovation-brooklyn",
+  "/kitchen-renovation-manhattan",
+  "/kitchen-cabinets-staten-island",
+  "/custom-vs-semi-custom-cabinets",
+  "/shaker-vs-slim-shaker-cabinets",
+  "/white-oak-vs-walnut-cabinets",
+  "/luxury-kitchen-design-nyc",
 ];
+
 
 const MUST_BE_INDEXED = [...CORE_PAGES, ...EXPECTED_GUIDES];
 
