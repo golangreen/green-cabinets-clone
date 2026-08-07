@@ -173,6 +173,7 @@ const Contact = () => {
       </div>
 
       <QuoteForm isOpen={showQuoteForm} onClose={() => setShowQuoteForm(false)} />
+      <ContactGateDialog open={gateOpen} onOpenChange={setGateOpen} onVerified={openContact} />
     </section>
   );
 };
