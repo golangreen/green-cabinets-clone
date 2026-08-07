@@ -13,7 +13,7 @@ const BASE_URL = "https://greencabinetsny.com";
 
 // Sitemap protocol caps a urlset at 50k URLs / 50MB and an index at 50k
 // children. Split well below that so files stay small and cacheable.
-const MAX_URLS_PER_SITEMAP = 5000;
+const MAX_URLS_PER_SITEMAP = Number(process.env.SITEMAP_MAX_URLS ?? 5000);
 const MAX_SITEMAPS_PER_INDEX = 50_000;
 
 function chunk<T>(items: T[], size: number): T[][] {
