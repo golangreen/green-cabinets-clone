@@ -46,7 +46,7 @@ const AuthorByline = ({
       itemScope
       itemType="https://schema.org/Person"
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
         {initials}
       </div>
       <div className="leading-tight">
