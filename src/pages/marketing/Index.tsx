@@ -34,9 +34,10 @@ const Index = () => {
     <div className="min-h-screen">
       <Helmet>
         {/* Primary Meta Tags */}
-        <title>Custom Cabinets Brooklyn & NYC | Green Cabinets NY</title>
-        <meta name="title" content="Custom Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets" />
-        <meta name="description" content="Custom kitchen cabinets in Brooklyn, Manhattan & Queens since 2009. Vanities, closets & sustainable millwork built in Bushwick. Free consult: (718) 804-5488." />
+        <title>Bespoke European Cabinetry NYC | Green Cabinets NY</title>
+        <meta name="title" content="Bespoke European Cabinetry & Luxury Kitchens NYC | Green Cabinets" />
+        <meta name="description" content="Bespoke European cabinetry and luxury custom kitchens for Brooklyn, Manhattan & Queens. Handcrafted in Bushwick since 2009 — vanities, closets, millwork. Free design consult." />
+
         <meta name="keywords" content="custom kitchen cabinets in Brooklyn, custom kitchen cabinets Manhattan, custom kitchen cabinets Queens, shaker cabinets NYC, slim shaker cabinets, shaker kitchen cabinets Brooklyn, bathroom vanities NYC, custom cabinetry Brooklyn, kitchen cabinets New York, closet systems Brooklyn, cabinet maker Brooklyn, sustainable cabinets NYC" />
 
         {/* Open Graph / Facebook */}
