@@ -315,9 +315,20 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                       <p className="text-sm text-destructive mt-1">{errors.message.message}</p>
                     )}
                   </div>
+
+                  {RECAPTCHA_ENABLED ? (
+                    <div className="flex justify-center">
+                      <ReCAPTCHA ref={recaptchaRef} sitekey={RECAPTCHA_SITE_KEY} theme="light" />
+                    </div>
+                  ) : (
+                    <p className="text-center text-sm text-muted-foreground">
+                      Spam protection is not configured. Please contact us directly if the form does not submit.
+                    </p>
+                  )}
                 </div>
               </div>
             )}
+
 
             {/* Navigation Buttons */}
             <div className="flex justify-between pt-4 border-t">
