@@ -84,16 +84,29 @@ Address: ${data.address}
 ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
 `.trim();
 
+    const recaptchaToken = recaptchaRef.current?.getValue() ?? undefined;
+    if (!recaptchaToken) {
+      setCaptchaError(
+        RECAPTCHA_ENABLED
+          ? "Please confirm you're not a robot."
+          : "Spam protection is not configured. Please contact us directly.",
+      );
+      return;
+    }
+    setCaptchaError(null);
+
     const result = await submitQuote({
       name: data.name,
       email: data.email,
       phone: data.phone,
       message,
       projectType: data.projectType,
+      recaptchaToken,
     });
     
     if (result.success) {
       reset();
+      recaptchaRef.current?.reset();
       setStep(1);
       onClose();
     }
