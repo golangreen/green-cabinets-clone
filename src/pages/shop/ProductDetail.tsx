@@ -50,7 +50,7 @@ export default function ProductDetail() {
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-            <Link to="/">
+            <Link to="/shop">
               <Button variant="outline">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Shop
@@ -110,7 +110,7 @@ export default function ProductDetail() {
       <Header />
       <main className="flex-1 pt-[96px] sm:pt-[128px] md:pt-[160px] pb-6 sm:pb-8 md:pb-12">
         <div className="container mx-auto px-4">
-          <Link to="/">
+          <Link to="/shop">
             <Button variant="ghost" className="mb-4 sm:mb-6 touch-manipulation">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Shop

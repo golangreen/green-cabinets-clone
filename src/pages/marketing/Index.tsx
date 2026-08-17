@@ -34,9 +34,10 @@ const Index = () => {
     <div className="min-h-screen">
       <Helmet>
         {/* Primary Meta Tags */}
-        <title>Custom Cabinets Brooklyn & NYC | Green Cabinets NY</title>
-        <meta name="title" content="Custom Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets" />
-        <meta name="description" content="Custom kitchen cabinets in Brooklyn, Manhattan & Queens since 2009. Vanities, closets & sustainable millwork built in Bushwick. Free consult: (718) 804-5488." />
+        <title>Bespoke European Cabinetry NYC | Green Cabinets NY</title>
+        <meta name="title" content="Bespoke European Cabinetry & Luxury Kitchens NYC | Green Cabinets" />
+        <meta name="description" content="Bespoke European cabinetry and luxury custom kitchens for Brooklyn, Manhattan & Queens. Handcrafted in Bushwick since 2009 — vanities, closets, millwork. Free design consult." />
+
         <meta name="keywords" content="custom kitchen cabinets in Brooklyn, custom kitchen cabinets Manhattan, custom kitchen cabinets Queens, shaker cabinets NYC, slim shaker cabinets, shaker kitchen cabinets Brooklyn, bathroom vanities NYC, custom cabinetry Brooklyn, kitchen cabinets New York, closet systems Brooklyn, cabinet maker Brooklyn, sustainable cabinets NYC" />
 
         {/* Open Graph / Facebook */}
@@ -44,8 +45,8 @@ const Index = () => {
         <meta property="og:site_name" content="Green Cabinets NY" />
         <meta property="og:locale" content="en_US" />
         <meta property="og:url" content="https://greencabinetsny.com/" />
-        <meta property="og:title" content="Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY" />
-        <meta property="og:description" content="Custom shaker & slim shaker kitchen cabinets in Brooklyn, Manhattan, and Queens since 2009. Premium bathroom vanities, closets & millwork built in Bushwick. Free consultation." />
+        <meta property="og:title" content="Bespoke European Cabinetry & Luxury Kitchens in NYC | Green Cabinets NY" />
+        <meta property="og:description" content="Bespoke European cabinetry, luxury custom kitchens, vanities and millwork handcrafted in Bushwick for Brooklyn, Manhattan and Queens homes since 2009." />
         <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
         <meta property="og:image:secure_url" content="https://greencabinetsny.com/og-image.jpg" />
         <meta property="og:image:type" content="image/jpeg" />
