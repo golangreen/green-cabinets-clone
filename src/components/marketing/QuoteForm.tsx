@@ -40,6 +40,8 @@ type FormData = z.infer<typeof formSchema>;
 
 const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
   const [step, setStep] = useState(1);
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { submitQuote, isSubmitting } = useQuoteForm();
   const totalSteps = 4;
 
