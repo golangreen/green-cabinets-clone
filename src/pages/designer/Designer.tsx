@@ -174,6 +174,12 @@ export default function Designer() {
           <Link to="/" className="flex-shrink-0">
             <img src={logoImage} alt="Green Cabinets" className="h-10 cursor-pointer transition-all duration-300 hover:scale-110 hover:opacity-80" />
           </Link>
+
+          <h1 className="hidden lg:block text-sm font-semibold tracking-wide text-white/90">
+            Kitchen Room Designer
+          </h1>
+
+
           
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="bg-transparent border-none h-auto p-0 gap-4">
