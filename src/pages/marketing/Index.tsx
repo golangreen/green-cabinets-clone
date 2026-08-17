@@ -45,8 +45,8 @@ const Index = () => {
         <meta property="og:site_name" content="Green Cabinets NY" />
         <meta property="og:locale" content="en_US" />
         <meta property="og:url" content="https://greencabinetsny.com/" />
-        <meta property="og:title" content="Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY" />
-        <meta property="og:description" content="Custom shaker & slim shaker kitchen cabinets in Brooklyn, Manhattan, and Queens since 2009. Premium bathroom vanities, closets & millwork built in Bushwick. Free consultation." />
+        <meta property="og:title" content="Bespoke European Cabinetry & Luxury Kitchens in NYC | Green Cabinets NY" />
+        <meta property="og:description" content="Bespoke European cabinetry, luxury custom kitchens, vanities and millwork handcrafted in Bushwick for Brooklyn, Manhattan and Queens homes since 2009." />
         <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
         <meta property="og:image:secure_url" content="https://greencabinetsny.com/og-image.jpg" />
         <meta property="og:image:type" content="image/jpeg" />
