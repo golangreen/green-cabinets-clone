@@ -343,6 +343,10 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                       Spam protection is not configured. Please contact us directly if the form does not submit.
                     </p>
                   )}
+                  {captchaError && (
+                    <p className="text-center text-sm text-destructive">{captchaError}</p>
+                  )}
+
                 </div>
               </div>
             )}
