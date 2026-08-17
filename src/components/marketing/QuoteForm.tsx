@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { RECAPTCHA_SITE_KEY, RECAPTCHA_ENABLED } from "@/config/recaptcha";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -37,6 +40,8 @@ type FormData = z.infer<typeof formSchema>;
 
 const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
   const [step, setStep] = useState(1);
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { submitQuote, isSubmitting } = useQuoteForm();
   const totalSteps = 4;
 
@@ -79,16 +84,29 @@ Address: ${data.address}
 ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
 `.trim();
 
+    const recaptchaToken = recaptchaRef.current?.getValue() ?? undefined;
+    if (!recaptchaToken) {
+      setCaptchaError(
+        RECAPTCHA_ENABLED
+          ? "Please confirm you're not a robot."
+          : "Spam protection is not configured. Please contact us directly.",
+      );
+      return;
+    }
+    setCaptchaError(null);
+
     const result = await submitQuote({
       name: data.name,
       email: data.email,
       phone: data.phone,
       message,
       projectType: data.projectType,
+      recaptchaToken,
     });
     
     if (result.success) {
       reset();
+      recaptchaRef.current?.reset();
       setStep(1);
       onClose();
     }
@@ -315,9 +333,24 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                       <p className="text-sm text-destructive mt-1">{errors.message.message}</p>
                     )}
                   </div>
+
+                  {RECAPTCHA_ENABLED ? (
+                    <div className="flex justify-center">
+                      <ReCAPTCHA ref={recaptchaRef} sitekey={RECAPTCHA_SITE_KEY} theme="light" />
+                    </div>
+                  ) : (
+                    <p className="text-center text-sm text-muted-foreground">
+                      Spam protection is not configured. Please contact us directly if the form does not submit.
+                    </p>
+                  )}
+                  {captchaError && (
+                    <p className="text-center text-sm text-destructive">{captchaError}</p>
+                  )}
+
                 </div>
               </div>
             )}
+
 
             {/* Navigation Buttons */}
             <div className="flex justify-between pt-4 border-t">
