@@ -15,6 +15,9 @@ const VanityDesignerEmbed = () => (
       <Header />
       <main className="flex-1 pt-[96px] sm:pt-[128px] md:pt-[160px] pb-6 sm:pb-8">
         <div className="container mx-auto px-2 sm:px-4">
+          <h1 className="mb-4 text-2xl sm:text-3xl font-semibold text-foreground">
+            Design Your Custom Bathroom Vanity
+          </h1>
           <div className="mx-auto max-w-[1280px] rounded-2xl border border-border bg-background shadow-2xl overflow-hidden">
             <iframe
               src="/vanity-designer.html"
