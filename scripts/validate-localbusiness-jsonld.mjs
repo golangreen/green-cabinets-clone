@@ -54,8 +54,12 @@ function findLocalBusiness(blocks) {
 function validateAddress(addr) {
   if (!addr || typeof addr !== "object") { err("address is missing or not an object"); return; }
   if (addr["@type"] !== "PostalAddress") err(`address.@type must be "PostalAddress", got ${JSON.stringify(addr["@type"])}`);
-  for (const f of ["streetAddress", "addressLocality", "addressRegion", "postalCode", "addressCountry"]) {
+  // Appointment-only business: no public storefront, so street/postal are intentionally omitted.
+  for (const f of ["addressLocality", "addressRegion", "addressCountry"]) {
     if (!addr[f] || typeof addr[f] !== "string") err(`address.${f} missing or not a string`);
+  }
+  for (const f of ["streetAddress", "postalCode"]) {
+    if (addr[f] !== undefined && typeof addr[f] !== "string") err(`address.${f} must be a string`);
   }
 }
 
