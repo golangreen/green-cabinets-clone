@@ -56,6 +56,8 @@ serve(async (req) => {
       sanitizeHeader(String(form.get("_subject") ?? "")).trim() ||
       "New Quote from Green Cabinets";
     const quote = String(form.get("quote") ?? "");
+    const phone = sanitizeHeader(String(form.get("phone") ?? "")).trim();
+    const borough = sanitizeHeader(String(form.get("borough") ?? "")).trim();
     
 
     const email = emailRaw && isEmail(emailRaw) ? emailRaw : "";
@@ -101,6 +103,8 @@ serve(async (req) => {
       <div style="font-family:Arial,sans-serif;color:#222;line-height:1.5;max-width:720px">
         ${name ? `<p><strong>From:</strong> ${escapeHtml(name)}</p>` : ""}
         ${email ? `<p><strong>Email:</strong> ${escapeHtml(email)}</p>` : ""}
+        ${phone ? `<p><strong>Phone:</strong> ${escapeHtml(phone)}</p>` : ""}
+        ${borough ? `<p><strong>Borough:</strong> ${escapeHtml(borough)}</p>` : ""}
         <h3 style="margin-top:18px">Quote &amp; Build Measurements</h3>
         <pre style="white-space:pre-wrap;font-family:inherit;background:#f6f6f6;padding:12px;border-radius:6px;font-size:13px">${escapeHtml(quote)}</pre>
         ${inlineCids.design_image ? `<h3 style="margin-top:22px">Design preview</h3>${inlineImg(inlineCids.design_image, "3D design preview")}` : ""}

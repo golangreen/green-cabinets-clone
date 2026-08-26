@@ -270,9 +270,9 @@
         .gc-close{background:#f0f0f0;color:var(--ink);border:0}
         .gc-emailrow{margin:14px 0 4px;display:flex;flex-direction:column;gap:4px}
         .gc-flabel{font-size:11.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.02em;margin:6px 0 1px}
-        .gc-emailrow input{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-size:15px;font-family:inherit;color:var(--ink);background:var(--card);transition:border-color .2s}
-        .gc-emailrow input:focus{outline:none;border-color:var(--brass)}
-        .gc-emailrow input.bad{border-color:#c0584b}
+        .gc-emailrow input,.gc-emailrow select{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-size:15px;font-family:inherit;color:var(--ink);background:var(--card);transition:border-color .2s}
+        .gc-emailrow input:focus,.gc-emailrow select:focus{outline:none;border-color:var(--brass)}
+        .gc-emailrow input.bad,.gc-emailrow select.bad{border-color:#c0584b}
         .gc-emailhint{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:6px;min-height:14px}
         .gc-emailhint.err{color:#c0584b}
         .gc-altlink{display:block;text-align:center;font-size:12.5px;color:var(--ink-soft);text-decoration:underline;margin-top:12px}
@@ -625,10 +625,19 @@
                 <div id="uCutDiagram" class="gc-ucut" aria-live="polite"></div>
                 <form id="quoteForm" onsubmit="return false" method="post" autocomplete="on">
                     <div class="gc-emailrow">
-                        <label class="gc-flabel" for="clientName">Full name</label>
-                        <input type="text" id="clientName" name="name" placeholder="Your name" autocomplete="name" autocapitalize="words" autocorrect="off" spellcheck="false">
-                        <label class="gc-flabel" for="clientEmail">Email address</label>
-                        <input type="email" id="clientEmail" name="email" placeholder="your@email.com" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false">
+                        <label class="gc-flabel" for="clientName">Full name *</label>
+                        <input type="text" id="clientName" name="name" placeholder="Your name" autocomplete="name" autocapitalize="words" autocorrect="off" spellcheck="false" required>
+                        <label class="gc-flabel" for="clientEmail">Email address *</label>
+                        <input type="email" id="clientEmail" name="email" placeholder="your@email.com" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" required>
+                        <label class="gc-flabel" for="clientPhone">Phone *</label>
+                        <input type="tel" id="clientPhone" name="phone" placeholder="(718) 555-0123" autocomplete="tel" inputmode="tel" required>
+                        <label class="gc-flabel" for="clientBorough">Borough *</label>
+                        <select id="clientBorough" name="borough" required>
+                            <option value="">Select your borough</option>
+                            <option value="Brooklyn">Brooklyn</option>
+                            <option value="Manhattan">Manhattan</option>
+                            <option value="Queens">Queens</option>
+                        </select>
                         <span class="gc-emailhint" id="emailHint"></span>
                     </div>
                 </form>
@@ -637,7 +646,8 @@
                     <button class="gc-close" id="printSpec" type="button" title="Open a printable shop drawing with U-cut measurements and trap diagram">Print U-cut spec</button>
                     <button class="gc-go" id="emailQuote">Email this quote + image</button>
                 </div>
-                <a class="gc-altlink" id="quoteLink" href="https://greencabinetsny.com/pages/contact" target="_top">or request via our contact form</a>
+                <a class="gc-altlink" id="quoteLink" href="https://greencabinetsny.com/#contact" target="_top">or request via our contact form</a>
+
                 <div class="gc-note">
                     Pricing covers the cabinet. Countertops, sinks &amp; install quoted separately.
                     <br>
@@ -6341,18 +6351,26 @@
         async function sendQuoteEmail() {
             const inp = $("clientEmail"),
                 nameInp = $("clientName"),
+                phoneInp = $("clientPhone"),
+                boroughInp = $("clientBorough"),
                 hint = $("emailHint"),
                 btn = $("emailQuote");
             const email = (inp.value || "").trim();
             const nm = (nameInp.value || "").trim();
-            if (email && !isEmail(email)) {
-                inp.classList.add("bad");
+            const phone = (phoneInp.value || "").trim();
+            const borough = (boroughInp.value || "").trim();
+            const fail = (el, msg) => {
+                [inp, nameInp, phoneInp, boroughInp].forEach(e => e.classList.remove("bad"));
+                el.classList.add("bad");
                 hint.classList.add("err");
-                hint.textContent = "That email doesn't look right \u2014 check it, or leave it blank.";
-                inp.focus();
-                return;
-            }
-            inp.classList.remove("bad");
+                hint.textContent = msg;
+                el.focus();
+            };
+            if (nm.length < 2) return fail(nameInp, "Please enter your full name.");
+            if (!email || !isEmail(email)) return fail(inp, "Please enter a valid email address.");
+            if (phone.replace(/\D/g, "").length < 10) return fail(phoneInp, "Please enter a valid phone number.");
+            if (!borough) return fail(boroughInp, "Please select your borough \u2014 Brooklyn, Manhattan or Queens.");
+            [inp, nameInp, phoneInp, boroughInp].forEach(e => e.classList.remove("bad"));
             hint.classList.remove("err");
             const s = modalSpec || {
                 subject: "Quote request",
@@ -6360,10 +6378,9 @@
             };
             let body = s.body,
                 subject = s.subject;
-            if (nm) {
-                body = body.replace(/Thank you!$/, `Thank you!\n\n\u2014 ${nm}`);
-                subject = `${subject} \u2014 ${nm}`;
-            }
+            body += `\n\nContact:\nName: ${nm}\nEmail: ${email}\nPhone: ${phone}\nBorough: ${borough}`;
+            subject = `${subject} \u2014 ${nm} (${borough})`;
+
 
             /* ---- Path A: backend configured -> POST everything incl. the image, hands-off ---- */
             if (QUOTE_ENDPOINT) {
@@ -6379,7 +6396,9 @@
                     const ucut = await captureUCutImages();
                     const fd = new FormData();
                     fd.append("name", nm || "(not provided)");
-                    fd.append("email", email || "(not provided)");
+                    fd.append("email", email);
+                    fd.append("phone", phone);
+                    fd.append("borough", borough);
                     fd.append("_subject", subject);
                     fd.append("quote", body);
                     if (email)
