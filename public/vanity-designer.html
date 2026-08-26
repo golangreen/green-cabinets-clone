@@ -6396,7 +6396,9 @@
                     const ucut = await captureUCutImages();
                     const fd = new FormData();
                     fd.append("name", nm || "(not provided)");
-                    fd.append("email", email || "(not provided)");
+                    fd.append("email", email);
+                    fd.append("phone", phone);
+                    fd.append("borough", borough);
                     fd.append("_subject", subject);
                     fd.append("quote", body);
                     if (email)
