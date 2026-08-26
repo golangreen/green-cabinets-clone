@@ -41,19 +41,19 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     url: `${BASE}/custom-kitchen-cabinets-bushwick`,
     title: "Custom Cabinets in Bushwick, Brooklyn | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets handcrafted in our Bushwick shop since 2009. FSC hardwoods, low-VOC finishes, free consultation.",
+      "Custom kitchen cabinets designed by our Bushwick-based team since 2009 and built by vetted millwork suppliers. FSC hardwoods, low-VOC finishes, free consultation.",
     keywords:
-      "custom kitchen cabinets Bushwick, Bushwick cabinet maker, Bushwick kitchen renovation, custom cabinetry Bushwick Brooklyn, Bushwick cabinet shop, kitchen cabinets 11206 11207 11221",
+      "custom kitchen cabinets Bushwick, Bushwick cabinet maker, Bushwick kitchen renovation, custom cabinetry Bushwick Brooklyn, Bushwick kitchen cabinets, kitchen cabinets in Bushwick",
     heroTagline:
-      "Designed, milled, and hand-finished in Bushwick — installed across Brooklyn.",
+      "Designed in Bushwick, built by vetted millwork suppliers, and installed across Brooklyn.",
     intro:
-      "Green Cabinets NY is a Bushwick-based custom cabinet shop. Every kitchen we build leaves the same neighborhood you live in — milled, sanded, sprayed, and crated by the same craftspeople who design it.",
+      "Green Cabinets NY is a Bushwick-based custom cabinetry company. Every kitchen we design is built to our specifications by vetted millwork suppliers, then installed in the same neighborhood you live in.",
     body: [
       {
         heading: "Your local Bushwick cabinet maker",
         paragraphs: [
-          "We're not a showroom that subcontracts to a factory in another state. Our shop is a working woodshop in Bushwick where every face frame, door, drawer box, and finished panel for your kitchen is built. That means shorter lead times for our Bushwick neighbors, no shipping damage, and the ability to walk a client through their cabinets while they're still in raw wood — something almost no NYC cabinet company can offer.",
-          "Most of our Bushwick projects come from referrals on the same block. We've worked in the loft conversions along Wyckoff Avenue, the brick rowhouses near Maria Hernandez Park, the Knickerbocker Avenue walk-ups, and the new construction off Myrtle. Each one has its own quirks — and after 15+ years working this neighborhood, we know them.",
+          "We're a Bushwick-based design and specification team, not a call-center reseller working with a factory in another state. We design every face frame, door, drawer box, and finished panel, then work with vetted local millwork suppliers to build it to spec. That means shorter lead times for our Bushwick neighbors, careful quality control, and the kind of hands-on project management most NYC cabinet companies can't offer.",
+          "Most of our Bushwick projects come from referrals on the same block. We've worked in the loft conversions along Wyckoff Avenue, the brick rowhouses near Maria Hernandez Park, the Knickerbocker Avenue walk-ups, and the new construction off Myrtle. Each one has its own quirks — and after 15+ years designing for this neighborhood, we know them.",
         ],
       },
       {
@@ -74,12 +74,12 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
       {
         question: "Are you really based in Bushwick?",
         answer:
-          "Yes. Our cabinet shop has been in Bushwick since 2009. Every kitchen we sell is designed, milled, and hand-finished here before installation. Bushwick clients are welcome to visit the shop while their cabinets are being built.",
+          "Yes. Green Cabinets NY has been Bushwick-based since 2009. Every kitchen is designed here and built to our specifications by vetted millwork suppliers before installation. We're happy to bring finish and material samples to your home by appointment.",
       },
       {
         question: "How fast can you install a kitchen in Bushwick?",
         answer:
-          "For Bushwick clients, we can typically start a project within 1–2 weeks of approval. Total timeline runs 4–6 weeks: 1 week design, 2–3 weeks fabrication in our shop, and 3–7 days for installation in your home.",
+          "For Bushwick clients, we can typically start a project within 1–2 weeks of approval. Total timeline runs 4–6 weeks: 1 week design, 2–3 weeks fabrication by our vetted millwork suppliers, and 3–7 days for installation in your home.",
       },
       {
         question: "Do you work in Bushwick walk-up apartments and lofts?",
@@ -104,13 +104,13 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     title:
       "Custom Cabinets in Williamsburg, Brooklyn | Green Cabinets",
     description:
-      "Custom kitchen cabinets in Williamsburg — lofts, brownstones, new construction. Built in our Bushwick shop. Free consultation.",
+      "Custom kitchen cabinets in Williamsburg — lofts, brownstones, new construction. Designed by our Bushwick-based team, built by vetted suppliers. Free consultation.",
     keywords:
       "custom kitchen cabinets Williamsburg, Williamsburg Brooklyn cabinet maker, loft kitchen Williamsburg, custom cabinetry Williamsburg, Williamsburg condo kitchen renovation, kitchen cabinets 11211 11249",
     heroTagline:
       "Loft kitchens, brownstone galleys, and new-construction Williamsburg condos.",
     intro:
-      "Williamsburg is one of our most-served neighborhoods. Our Bushwick workshop is twenty minutes away, which means short delivery windows, easy site visits, and same-week punch-list returns.",
+      "Williamsburg is one of our most-served neighborhoods. We're based just twenty minutes away in Bushwick, which means short delivery windows, easy site visits, and same-week punch-list returns.",
     body: [
       {
         heading: "Cabinetry built for Williamsburg's range of homes",
@@ -148,7 +148,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
       {
         question: "How long does a Williamsburg kitchen take?",
         answer:
-          "4–6 weeks total: 1–2 weeks design and material selection, 2–3 weeks fabrication in our Bushwick shop, and 3–7 days for installation in Williamsburg.",
+          "4–6 weeks total: 1–2 weeks design and material selection, 2–3 weeks fabrication by our vetted millwork suppliers, and 3–7 days for installation in Williamsburg.",
       },
       {
         question: "Which Williamsburg areas do you serve?",
@@ -168,7 +168,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     title:
       "Custom Cabinets in Park Slope, Brooklyn | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets for Park Slope brownstones and co-ops. Built in our Bushwick shop with care for historic homes. (718) 804-5488.",
+      "Custom kitchen cabinets for Park Slope brownstones and co-ops. Designed in Bushwick with care for historic homes, built by vetted suppliers. (718) 804-5488.",
     keywords:
       "custom kitchen cabinets Park Slope, Park Slope brownstone kitchen, Park Slope cabinet maker, custom cabinetry Park Slope, Park Slope kitchen renovation, kitchen cabinets 11215 11217",
     heroTagline:
@@ -205,7 +205,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
       {
         question: "Can you match the trim and moldings already in my brownstone?",
         answer:
-          "We mill custom face frames, crown moldings, and door profiles to match existing trim. For especially detailed brownstones, we'll take molding samples back to our Bushwick shop and replicate the profile in house.",
+          "We design custom face frames, crown moldings, and door profiles to match existing trim, and work with our vetted millwork suppliers to replicate the exact profile. For especially detailed brownstones, we'll bring molding samples to your home to confirm the match before fabrication.",
       },
       {
         question: "How much does a Park Slope kitchen renovation cost?",
@@ -276,7 +276,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
       {
         question: "How long does a SoHo kitchen install take?",
         answer:
-          "4–6 weeks total: 1–2 weeks design, 2–3 weeks fabrication in our Bushwick shop, and 5–10 days on site in SoHo (longer than Brooklyn projects because of freight-elevator scheduling and building protection requirements).",
+          "4–6 weeks total: 1–2 weeks design, 2–3 weeks fabrication by our vetted millwork suppliers, and 5–10 days on site in SoHo (longer than Brooklyn projects because of freight-elevator scheduling and building protection requirements).",
       },
     ],
     geo: { latitude: 40.7233, longitude: -74.0019 },
@@ -291,13 +291,13 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     title:
       "LIC Custom Cabinets, Queens | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets for Long Island City condos and lofts. Built in our nearby Brooklyn shop. New construction and resale upgrades. (718) 804-5488.",
+      "Custom kitchen cabinets for Long Island City condos and lofts, designed by our Brooklyn-based team and built by vetted suppliers. New construction and resale upgrades. (718) 804-5488.",
     keywords:
       "custom kitchen cabinets Long Island City, LIC cabinet maker, custom cabinetry Long Island City, LIC condo kitchen renovation, LIC loft kitchen, kitchen cabinets 11101 11109",
     heroTagline:
       "LIC condo and loft kitchens, designed for the way the neighborhood lives now.",
     intro:
-      "Long Island City has the fastest-growing residential skyline in NYC. Our Bushwick shop is fifteen minutes away — close enough to handle LIC projects with the same speed and care we bring to Brooklyn.",
+      "Long Island City has the fastest-growing residential skyline in NYC. We're based fifteen minutes away in Bushwick — close enough to handle LIC projects with the same speed and care we bring to Brooklyn.",
     body: [
       {
         heading: "Cabinetry for new-construction LIC condos",
@@ -310,7 +310,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
         heading: "Loft conversions and new-construction work",
         paragraphs: [
           "LIC also has a strong stock of converted industrial loft buildings — many along Vernon Boulevard, Jackson Avenue, and 5th Street. These spaces, like SoHo lofts, want oversized islands and double-stacked uppers. We're equipped to design either: a polished modern condo kitchen or a rougher, more architectural loft kitchen.",
-          "For LIC developers and architects, we also build to-spec custom cabinetry packages for new-construction units — flat-pack delivery, shop drawings, and on-site install handled by our team.",
+          "For LIC developers and architects, we also design to-spec custom cabinetry packages for new-construction units — shop drawings, supplier coordination, and on-site install handled by our team.",
         ],
       },
       {
@@ -353,13 +353,13 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     url: `${BASE}/custom-kitchen-cabinets-dumbo`,
     title: "Custom Cabinets in DUMBO, Brooklyn | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets for DUMBO loft conversions and waterfront condos. Built in our Bushwick shop. Co-op and condo board experience. (718) 804-5488.",
+      "Custom kitchen cabinets for DUMBO loft conversions and waterfront condos, designed by our Bushwick-based team and built by vetted suppliers. Co-op and condo board experience. (718) 804-5488.",
     keywords:
       "custom kitchen cabinets DUMBO, DUMBO loft kitchen, DUMBO cabinet maker, custom cabinetry DUMBO Brooklyn, DUMBO condo kitchen renovation, kitchen cabinets 11201",
     heroTagline:
       "Loft and waterfront condo kitchens, designed to live up to a DUMBO view.",
     intro:
-      "DUMBO's converted warehouse condos have some of the highest ceilings, biggest windows, and most demanding clients in NYC. Our Bushwick shop is fifteen minutes away — close enough to handle DUMBO projects with the speed and care the buildings require.",
+      "DUMBO's converted warehouse condos have some of the highest ceilings, biggest windows, and most demanding clients in NYC. We're based fifteen minutes away in Bushwick — close enough to handle DUMBO projects with the speed and care the buildings require.",
     body: [
       {
         heading: "Cabinetry built for DUMBO loft conversions",
@@ -401,7 +401,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
       {
         question: "How long does a DUMBO kitchen install take?",
         answer:
-          "4–6 weeks total: 1–2 weeks design, 2–3 weeks fabrication in our Bushwick shop, and 5–10 days on site in DUMBO (longer than a typical Brooklyn project because of freight-elevator scheduling and building protection requirements).",
+          "4–6 weeks total: 1–2 weeks design, 2–3 weeks fabrication by our vetted millwork suppliers, and 5–10 days on site in DUMBO (longer than a typical Brooklyn project because of freight-elevator scheduling and building protection requirements).",
       },
     ],
     geo: { latitude: 40.7033, longitude: -73.9881 },
@@ -422,7 +422,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     heroTagline:
       "Heritage cabinetry for Brooklyn Heights brownstones and pre-war co-ops.",
     intro:
-      "Brooklyn Heights was NYC's first designated Historic District (1965). Many of its 19th-century townhouses still have original moldings, plaster ceilings, and out-of-square corners — exactly the homes our shop was built to work in.",
+      "Brooklyn Heights was NYC's first designated Historic District (1965). Many of its 19th-century townhouses still have original moldings, plaster ceilings, and out-of-square corners — exactly the homes our design process was built to work in.",
     body: [
       {
         heading: "Brownstone and townhouse cabinetry, done with care",
@@ -453,7 +453,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
       {
         question: "Can you match original Brooklyn Heights brownstone trim?",
         answer:
-          "Yes. We mill custom face frames, crown moldings, and door profiles to match existing 19th-century trim. For especially detailed homes we'll bring molding samples back to our Bushwick shop and replicate the profile in house.",
+          "Yes. We design custom face frames, crown moldings, and door profiles to match existing 19th-century trim, and work with our vetted millwork suppliers to replicate the profile precisely. For especially detailed homes we'll bring molding samples to your home to confirm the match.",
       },
       {
         question: "How much does a Brooklyn Heights kitchen renovation cost?",
@@ -525,7 +525,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
       {
         question: "How long does a Tribeca kitchen install take?",
         answer:
-          "4–7 weeks total: 1–2 weeks design, 2–3 weeks fabrication in our Bushwick shop, and 7–14 days on site in Tribeca (longer than a Brooklyn project because of freight-elevator scheduling and building protection requirements).",
+          "4–7 weeks total: 1–2 weeks design, 2–3 weeks fabrication by our vetted millwork suppliers, and 7–14 days on site in Tribeca (longer than a Brooklyn project because of freight-elevator scheduling and building protection requirements).",
       },
     ],
     geo: { latitude: 40.7163, longitude: -74.0086 },
@@ -601,13 +601,13 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
     url: `${BASE}/custom-kitchen-cabinets-astoria`,
     title: "Custom Cabinets in Astoria, Queens | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets for Astoria rowhouses, co-ops, and condos. Built in our nearby Brooklyn shop. Free in-home consultation. (718) 804-5488.",
+      "Custom kitchen cabinets for Astoria rowhouses, co-ops, and condos, designed by our Brooklyn-based team and built by vetted suppliers. Free in-home consultation. (718) 804-5488.",
     keywords:
       "custom kitchen cabinets Astoria, Astoria cabinet maker, Astoria Queens kitchen renovation, custom cabinetry Astoria, kitchen cabinets 11102 11103 11105 11106",
     heroTagline:
       "Astoria rowhouse, co-op, and condo kitchens — built for the way the neighborhood cooks.",
     intro:
-      "Astoria has one of the most diverse food cultures in the country, and kitchens here have to work hard. Our Bushwick shop is twenty minutes away — close enough to handle Astoria projects with the same speed and care we bring to Brooklyn.",
+      "Astoria has one of the most diverse food cultures in the country, and kitchens here have to work hard. We're based twenty minutes away in Bushwick — close enough to handle Astoria projects with the same speed and care we bring to Brooklyn.",
     body: [
       {
         heading: "Cabinetry built for how Astoria lives",
@@ -664,7 +664,7 @@ const RAW: Record<string, Omit<NeighborhoodSeo, "gallery">> = {
 const GALLERIES: Record<string, NeighborhoodSeo["gallery"]> = {
   bushwick: [
     { file: "two-tone-kitchen-island.jpg", caption: "Two-tone shaker kitchen with custom island" },
-    { file: "kitchen-construction-two-tone-cabinets.jpeg", caption: "Two-tone cabinetry mid-install in our Bushwick shop" },
+    { file: "kitchen-construction-two-tone-cabinets.jpeg", caption: "Two-tone cabinetry mid-install, ready for delivery" },
     { file: "modern-kitchen-dark-island.jpg", caption: "Modern kitchen with deep-tone island" },
     { file: "two-tone-kitchen-wide.jpg", caption: "Wide-format two-tone kitchen with painted base cabinets" },
     { file: "contemporary-wood-cabinets.jpg", caption: "Natural wood contemporary cabinetry" },
@@ -706,7 +706,7 @@ const GALLERIES: Record<string, NeighborhoodSeo["gallery"]> = {
     { file: "dark-modern-kitchen.jpg", caption: "Dark modern loft kitchen" },
     { file: "two-tone-kitchen-island.jpg", caption: "Two-tone island in a converted warehouse loft" },
     { file: "modern-kitchen-dark-island.jpg", caption: "Loft kitchen with dark island and integrated appliances" },
-    { file: "kitchen-construction-two-tone-cabinets.jpeg", caption: "Two-tone cabinetry mid-build in our shop" },
+    { file: "kitchen-construction-two-tone-cabinets.jpeg", caption: "Two-tone cabinetry mid-build, staged for delivery" },
   ],
   "brooklyn-heights": [
     { file: "classic-white-kitchen.jpg", caption: "Classic white inset shaker for a Brooklyn Heights townhouse" },
