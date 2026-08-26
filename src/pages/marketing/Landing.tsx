@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useQuoteForm } from "@/hooks/useQuoteForm";
 import { Phone, Mail, MapPin, CheckCircle2 } from "lucide-react";
 import { RECAPTCHA_SITE_KEY, RECAPTCHA_ENABLED } from "@/config/recaptcha";
+import { useSpamGuard } from "@/lib/spamGuard";
 import logo from "@/assets/logos/logo-color.svg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
 
@@ -15,6 +16,7 @@ const Landing = () => {
   const navigate = useNavigate();
   const { submitQuote, isSubmitting } = useQuoteForm();
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const { getGuard, reset: resetGuard, honeypotProps } = useSpamGuard();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,9 +27,9 @@ const Landing = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Get reCAPTCHA token
-    const recaptchaToken = recaptchaRef.current?.getValue();
-    if (!recaptchaToken) {
+    // reCAPTCHA when configured, otherwise the keyless honeypot/dwell guard.
+    const recaptchaToken = recaptchaRef.current?.getValue() ?? undefined;
+    if (RECAPTCHA_ENABLED && !recaptchaToken) {
       return;
     }
 
@@ -38,11 +40,13 @@ const Landing = () => {
       message: formData.message,
       projectType: "landing_page_inquiry",
       recaptchaToken,
+      spamGuard: recaptchaToken ? undefined : getGuard(),
     });
 
     if (result.success) {
       setFormData({ name: "", email: "", phone: "", message: "" });
       recaptchaRef.current?.reset();
+      resetGuard();
     }
   };
 
@@ -245,11 +249,8 @@ const Landing = () => {
                     theme="light"
                   />
                 </div>
-              ) : (
-                <p className="text-center text-sm text-muted-foreground">
-                  Spam protection is not configured. Please contact us directly if the form does not submit.
-                </p>
-              )}
+              ) : null}
+              <input {...honeypotProps} />
               <Button 
                 type="submit"
                 size="lg"

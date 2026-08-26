@@ -85,12 +85,8 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
 `.trim();
 
     const recaptchaToken = recaptchaRef.current?.getValue() ?? undefined;
-    if (!recaptchaToken) {
-      setCaptchaError(
-        RECAPTCHA_ENABLED
-          ? "Please confirm you're not a robot."
-          : "Spam protection is not configured. Please contact us directly.",
-      );
+    if (RECAPTCHA_ENABLED && !recaptchaToken) {
+      setCaptchaError("Please confirm you're not a robot.");
       return;
     }
     setCaptchaError(null);
@@ -102,6 +98,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
       message,
       projectType: data.projectType,
       recaptchaToken,
+      spamGuard: recaptchaToken ? undefined : getGuard(),
     });
     
     if (result.success) {
