@@ -44,11 +44,11 @@ const FAQS = [
   },
   {
     q: "Do you serve all Staten Island neighborhoods?",
-    a: "Yes — North Shore (St. George, Stapleton, New Brighton, West Brighton, Port Richmond), Mid-Island (Todt Hill, New Dorp, Grasmere, Grant City), and South Shore (Great Kills, Eltingville, Annadale, Huguenot, Tottenville, Prince's Bay). Delivery logistics are the same borough-wide; install scheduling depends on truck routing from Bushwick.",
+    a: "Yes — North Shore (St. George, Stapleton, New Brighton, West Brighton, Port Richmond), Mid-Island (Todt Hill, New Dorp, Grasmere, Grant City), and South Shore (Great Kills, Eltingville, Annadale, Huguenot, Tottenville, Prince's Bay). Delivery logistics are the same borough-wide; install scheduling depends on delivery routing from our suppliers.",
   },
   {
     q: "Where can I see your cabinets before ordering?",
-    a: "Visit our vetted suppliers at 10 Montieth St, Brooklyn — about 45 minutes from the Staten Island Ferry terminal or 30 minutes from the Verrazzano off-hours. You'll see finish samples, door styles, hardware, and cabinets in raw wood on the production floor. Most Staten Island clients come once for finish selection and skip the second trip.",
+    a: "We don't have a walk-in showroom, but we bring finish samples, door styles, and hardware to you by appointment — anywhere in Staten Island. Most clients do one in-home session for finish selection and finalize the rest by email.",
   },
 ];
 
