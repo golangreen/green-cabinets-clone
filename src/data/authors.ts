@@ -48,10 +48,8 @@ export const PEOPLE = [
     email: "orders@greencabinetsny.com",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "10 Montieth St",
       addressLocality: "Brooklyn",
       addressRegion: "NY",
-      postalCode: "11206",
       addressCountry: "US",
     },
     knowsAbout: [
@@ -64,7 +62,7 @@ export const PEOPLE = [
       "Co-op and DOB approval workflows",
     ],
     description:
-      "Founder of Green Cabinets NY (2009). Master cabinetmaker specializing in custom kitchen cabinets, bathroom vanities, and architectural millwork built in Bushwick, Brooklyn for NYC homeowners, architects, and developers.",
+      "Founder of Green Cabinets NY (2009). Master cabinetmaker specializing in custom kitchen cabinets, bathroom vanities, and architectural millwork built for NYC homeowners, architects, and developers.",
     sameAs: [
       "https://www.instagram.com/greencabinetsny",
       "https://www.instagram.com/green_cabinets_",
