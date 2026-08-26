@@ -28,7 +28,6 @@ const Designer = lazy(() => import("./pages/designer/Designer"));
 const VanityDesignerEmbed = lazy(() => import("./pages/designer/VanityDesignerEmbed"));
 const Estimator = lazy(() => import("./pages/estimator/Estimator"));
 const EstimatorSavedQuotes = lazy(() => import("./pages/estimator/SavedQuotes"));
-const VanityConfiguratorPage = lazy(() => import("./pages/vanity/VanityConfiguratorPage"));
 const NotFound = lazy(() => import("./pages/system/NotFound"));
 
 const PerformanceMonitor = lazy(() => import("./pages/admin/PerformanceMonitor"));
@@ -88,7 +87,8 @@ const App = () => {
             <Route path="/room-designer" element={<Designer />} />
             <Route path="/estimator" element={<Estimator />} />
             <Route path="/estimator/quotes" element={<EstimatorSavedQuotes />} />
-            <Route path="/vanity-configurator" element={<VanityConfiguratorPage />} />
+            <Route path="/vanity-configurator" element={<Navigate to="/designer" replace />} />
+            <Route path="/vanity-designer" element={<Navigate to="/designer" replace />} />
             <Route path="/product/:handle" element={<Navigate to="/" replace />} />
             <Route path="/performance" element={
               <AdminRoute>

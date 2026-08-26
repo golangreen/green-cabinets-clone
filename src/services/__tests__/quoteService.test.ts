@@ -54,12 +54,24 @@ describe('QuoteService', () => {
     expect(mockSupabase.functions.invoke).not.toHaveBeenCalled();
   });
 
-  it('rejects missing reCAPTCHA token', async () => {
+  it('rejects submissions with no captcha token and no spam guard', async () => {
     const { recaptchaToken, ...noToken } = validRequest;
     const result = await service.submitQuote(noToken);
     expect(result.success).toBe(false);
-    expect(result.error).toMatch(/recaptcha/i);
+    expect(result.error).toMatch(/spam/i);
   });
+
+  it('accepts the keyless spam guard when no captcha token is present', async () => {
+    mockSupabase.functions.invoke.mockResolvedValueOnce({ data: { success: true }, error: null });
+    const { recaptchaToken, ...noToken } = validRequest;
+    const result = await service.submitQuote({
+      ...noToken,
+      spamGuard: { hp: '', elapsedMs: 5000 },
+    });
+    expect(result.success).toBe(true);
+  });
+
+
 
   it('rejects message that is too short', async () => {
     const result = await service.submitQuote({ ...validRequest, message: 'short' });

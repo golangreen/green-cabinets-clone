@@ -7,6 +7,8 @@ export interface QuoteRequest {
   message: string;
   projectType?: string;
   recaptchaToken?: string;
+  /** Keyless fallback proof (honeypot + dwell time) used when reCAPTCHA is off. */
+  spamGuard?: { hp: string; elapsedMs: number };
 }
 
 /**
@@ -51,9 +53,9 @@ export class QuoteService {
       // Validate inputs
       this.validateQuoteRequest(request);
 
-      // Validate reCAPTCHA token if provided
-      if (!request.recaptchaToken) {
-        throw new Error('reCAPTCHA verification is required');
+      // Either a reCAPTCHA token or the keyless honeypot/dwell proof is required.
+      if (!request.recaptchaToken && !request.spamGuard) {
+        throw new Error('Spam verification is required');
       }
 
       // Send via edge function
@@ -65,6 +67,7 @@ export class QuoteService {
           message: this.sanitizeString(request.message),
           projectType: request.projectType,
           recaptchaToken: request.recaptchaToken,
+          spamGuard: request.spamGuard,
         },
       });
 

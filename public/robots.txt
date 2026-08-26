@@ -73,6 +73,7 @@ Disallow: /admin/
 Disallow: /admin
 Disallow: /performance
 Disallow: /auth
+Disallow: /vanity-designer.html
 Disallow: /checkout
 Disallow: /payment-success
 

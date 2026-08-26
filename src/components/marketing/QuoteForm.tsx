@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { RECAPTCHA_SITE_KEY, RECAPTCHA_ENABLED } from "@/config/recaptcha";
+import { useSpamGuard } from "@/lib/spamGuard";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,6 +43,7 @@ const QuoteForm = ({ isOpen, onClose }: QuoteFormProps) => {
   const [step, setStep] = useState(1);
   const [captchaError, setCaptchaError] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const { getGuard, reset: resetGuard, honeypotProps } = useSpamGuard();
   const { submitQuote, isSubmitting } = useQuoteForm();
   const totalSteps = 4;
 
@@ -85,12 +87,8 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
 `.trim();
 
     const recaptchaToken = recaptchaRef.current?.getValue() ?? undefined;
-    if (!recaptchaToken) {
-      setCaptchaError(
-        RECAPTCHA_ENABLED
-          ? "Please confirm you're not a robot."
-          : "Spam protection is not configured. Please contact us directly.",
-      );
+    if (RECAPTCHA_ENABLED && !recaptchaToken) {
+      setCaptchaError("Please confirm you're not a robot.");
       return;
     }
     setCaptchaError(null);
@@ -102,11 +100,13 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
       message,
       projectType: data.projectType,
       recaptchaToken,
+      spamGuard: recaptchaToken ? undefined : getGuard(),
     });
     
     if (result.success) {
       reset();
       recaptchaRef.current?.reset();
+      resetGuard();
       setStep(1);
       onClose();
     }
@@ -338,11 +338,8 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                     <div className="flex justify-center">
                       <ReCAPTCHA ref={recaptchaRef} sitekey={RECAPTCHA_SITE_KEY} theme="light" />
                     </div>
-                  ) : (
-                    <p className="text-center text-sm text-muted-foreground">
-                      Spam protection is not configured. Please contact us directly if the form does not submit.
-                    </p>
-                  )}
+                  ) : null}
+                  <input {...honeypotProps} />
                   {captchaError && (
                     <p className="text-center text-sm text-destructive">{captchaError}</p>
                   )}

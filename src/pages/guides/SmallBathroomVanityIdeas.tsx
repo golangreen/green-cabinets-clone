@@ -94,7 +94,7 @@ const SmallBathroomVanityIdeas = () => (
     <BreadcrumbSchema
       items={[
         { name: "Home", url: "/" },
-        { name: "Vanities", url: "/vanity-designer" },
+        { name: "Vanities", url: "/designer" },
         { name: "Small Bathroom Vanity Ideas", url: URL },
       ]}
     />
@@ -105,7 +105,7 @@ const SmallBathroomVanityIdeas = () => (
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
-          { label: "Vanities", to: "/vanity-designer" },
+          { label: "Vanities", to: "/designer" },
           { label: "Small Bathroom Vanity Ideas" },
         ]}
       />
@@ -175,7 +175,7 @@ const SmallBathroomVanityIdeas = () => (
               Configure a small vanity in your exact width and get a price right now.
             </p>
             <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
-              <Link to="/vanity-designer">Open the vanity designer <ArrowRight className="h-4 w-4 ml-2" /></Link>
+              <Link to="/designer">Open the vanity designer <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>
 
