@@ -90,7 +90,7 @@ const howToJsonLd = {
   ],
   tool: [
     { "@type": "HowToTool", name: "Licensed NYC general contractor" },
-    { "@type": "HowToTool", name: "Cabinet shop (millwork)" },
+    { "@type": "HowToTool", name: "Millwork supplier" },
     { "@type": "HowToTool", name: "Countertop fabricator" },
     { "@type": "HowToTool", name: "Licensed plumber and electrician" },
   ],

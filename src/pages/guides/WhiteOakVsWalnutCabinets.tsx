@@ -14,7 +14,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/white-oak-vs-walnut-cabinets";
 const TITLE = "White Oak vs Walnut Cabinets — NYC Comparison Guide 2026";
 const DESC =
-  "White oak vs walnut kitchen cabinets: grain, hardness, color shift, grain matching, and 2026 NYC pricing from a Brooklyn custom cabinet shop.";
+  "White oak vs walnut kitchen cabinets: grain, hardness, color shift, grain matching, and 2026 NYC pricing from a Brooklyn custom cabinetmaker.";
 const KEYWORDS =
   "white oak vs walnut kitchen cabinets, white oak cabinets nyc, walnut cabinets nyc, rift sawn white oak cabinets, luxury wood cabinets brooklyn";
 
