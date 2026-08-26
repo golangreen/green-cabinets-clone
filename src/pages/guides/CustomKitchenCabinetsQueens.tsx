@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     q: "Where can I see your cabinets before ordering?",
-    a: "Visit our vetted suppliers at 10 Montieth St, Brooklyn — 10 minutes from the Queens border, 15–20 minutes from Astoria or LIC on the L or off the BQE. You'll see finish samples, door styles, hardware, and cabinets in raw wood on the production floor. Most Queens clients come once for finish selection and finalize the rest by email.",
+    a: "We don't have a walk-in showroom, but we bring finish samples, door styles, and hardware to you by appointment, anywhere in Queens. Most clients do one in-home session for finish selection and finalize the rest by email.",
   },
 ];
 
