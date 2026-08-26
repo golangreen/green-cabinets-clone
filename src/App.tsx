@@ -22,10 +22,6 @@ const CaseStudyDetail = lazy(() => import("./pages/marketing/CaseStudyDetail"));
 const Blog = lazy(() => import("./pages/blog/Blog"));
 const BlogArticle = lazy(() => import("./pages/blog/BlogArticle"));
 
-const Shop = lazy(() => import("./pages/shop/Shop"));
-const ProductDetail = lazy(() => import("./pages/shop/ProductDetail"));
-const Checkout = lazy(() => import("./pages/shop/Checkout"));
-const PaymentSuccess = lazy(() => import("./pages/shop/PaymentSuccess"));
 
 const Auth = lazy(() => import("./pages/auth/Auth"));
 const Designer = lazy(() => import("./pages/designer/Designer"));
@@ -86,16 +82,14 @@ const App = () => {
             <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/landing" element={<Landing />} />
-            <Route path="/shop" element={<Shop />} />
+            <Route path="/shop" element={<Navigate to="/" replace />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/designer" element={<VanityDesignerEmbed />} />
             <Route path="/room-designer" element={<Designer />} />
             <Route path="/estimator" element={<Estimator />} />
             <Route path="/estimator/quotes" element={<EstimatorSavedQuotes />} />
             <Route path="/vanity-configurator" element={<VanityConfiguratorPage />} />
-            <Route path="/product/:handle" element={<ProductDetail />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/product/:handle" element={<Navigate to="/" replace />} />
             <Route path="/performance" element={
               <AdminRoute>
                 <PerformanceMonitor />

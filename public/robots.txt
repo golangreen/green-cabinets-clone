@@ -73,6 +73,8 @@ Disallow: /admin/
 Disallow: /admin
 Disallow: /performance
 Disallow: /auth
+Disallow: /shop
+Disallow: /product/
 Disallow: /checkout
 Disallow: /payment-success
 

@@ -92,7 +92,6 @@ async function fetchShopifyProductHandles(): Promise<{ handle: string; updatedAt
 
 const core: SitemapEntry[] = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/shop", changefreq: "weekly", priority: "0.9" },
   { path: "/designer", changefreq: "monthly", priority: "0.7" },
   { path: "/gallery", changefreq: "weekly", priority: "0.8" },
   { path: "/finishes-colors", changefreq: "monthly", priority: "0.8" },

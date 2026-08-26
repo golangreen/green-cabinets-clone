@@ -4,7 +4,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import logoColor from "@/assets/logos/logo-color.svg";
 import logoBlack from "@/assets/logos/logo-black.svg";
-import { CartDrawer } from "@/components/shop/CartDrawer";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -75,8 +74,6 @@ const Header = () => {
 
           {/* Right Side - Hamburger Menu */}
           <div className="ml-auto flex items-center gap-2">
-            <CartDrawer />
-            
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className={`transition-all duration-300 hover:scale-110 ${scrolled ? 'hover:bg-muted' : 'hover:bg-white/10'}`} aria-label="Open menu">
@@ -124,9 +121,6 @@ const Header = () => {
                     </a>
                     <a href="/estimator" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                       Cost Estimator
-                    </a>
-                    <a href="/shop" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                      Shop
                     </a>
                     <a href="/finishes-colors" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                       Finishes &amp; Colors
