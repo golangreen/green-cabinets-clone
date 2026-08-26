@@ -472,7 +472,7 @@ const WoodSpeciesDetail = () => {
               Want a real {wood.name.toLowerCase()} sample in your hand?
             </h2>
             <p className="text-base sm:text-lg text-primary-foreground">
-              Visit our Bushwick showroom or have us bring samples to your home anywhere in NYC.
+              We'll bring samples to your home anywhere in Brooklyn, Manhattan, or Queens by appointment.
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
               <Button asChild size="lg" className="bg-white text-accent-foreground hover:bg-white/90 hover:scale-105 transition-all">

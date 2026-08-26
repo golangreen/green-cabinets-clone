@@ -66,7 +66,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
       {
         heading: "Timeline",
-        body: "Co-op application to approval: 6 weeks. Cabinet build in our Bushwick shop: 5 weeks (overlapped with demo). On-site demo + rough-in: 9 days. Cabinet install: 6 days. Counter template, fab, install: 14 days. Backsplash + punch list: 5 days. Total from approval to functional kitchen: 9 weeks.",
+        body: "Co-op application to approval: 6 weeks. Cabinet design and supplier fabrication: 5 weeks (overlapped with demo). On-site demo + rough-in: 9 days. Cabinet install: 6 days. Counter template, fab, install: 14 days. Backsplash + punch list: 5 days. Total from approval to functional kitchen: 9 weeks.",
       },
       {
         heading: "What we would do differently",
@@ -102,11 +102,11 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
       {
         heading: "What we built",
-        body: "28 linear feet of hard-maple shaker cabinets sprayed in Benjamin Moore White Dove (matched in our Bushwick spray booth, not field-painted). Hard maple was chosen specifically for paint — its tight, even grain stays smooth under multiple coats and resists telegraphing through. We boxed the chimney chase with a custom plaster-finish hood surround that ties it visually into the upper cabinets. Hardware is unlacquered brushed brass that will patina with use.",
+        body: "28 linear feet of hard-maple shaker cabinets sprayed in Benjamin Moore White Dove (matched and sprayed by our vetted millwork supplier, not field-painted). Hard maple was chosen specifically for paint — its tight, even grain stays smooth under multiple coats and resists telegraphing through. We boxed the chimney chase with a custom plaster-finish hood surround that ties it visually into the upper cabinets. Hardware is unlacquered brushed brass that will patina with use.",
       },
       {
         heading: "Cost breakdown",
-        body: "Cabinetry (paint-grade maple, sprayed in-shop): $11,900. Soapstone counters + custom hood surround: $13,800. Appliance package (Wolf range, Sub-Zero fridge, Miele DW): $19,500. Plumbing/electrical incl. gas line move: $9,400. Demo + framing + plaster: $7,800. Subway tile backsplash + zellige accent: $4,200. Project management + DOB filing: $5,400. Total delivered: $72,000.",
+        body: "Cabinetry (paint-grade maple, sprayed by our supplier): $11,900. Soapstone counters + custom hood surround: $13,800. Appliance package (Wolf range, Sub-Zero fridge, Miele DW): $19,500. Plumbing/electrical incl. gas line move: $9,400. Demo + framing + plaster: $7,800. Subway tile backsplash + zellige accent: $4,200. Project management + DOB filing: $5,400. Total delivered: $72,000.",
       },
       {
         heading: "Timeline",

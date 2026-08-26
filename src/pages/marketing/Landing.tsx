@@ -54,7 +54,7 @@ const Landing = () => {
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>Get a Free Quote | Green Cabinets NY</title>
-        <meta name="description" content="Request a free quote for custom kitchen cabinets and bathroom vanities from Green Cabinets in Bushwick, Brooklyn." />
+        <meta name="description" content="Request a free quote for custom kitchen cabinets and bathroom vanities from Green Cabinets, Brooklyn-based, serving Brooklyn, Manhattan &amp; Queens." />
         <meta name="robots" content="noindex, nofollow" />
         <meta property="og:title" content="Get a Free Quote | Green Cabinets" />
         <meta property="og:description" content="Request a free quote for custom kitchen cabinets and bathroom vanities in Brooklyn." />
@@ -296,8 +296,8 @@ const Landing = () => {
               <div className="flex flex-col items-center gap-3 p-4">
                 <MapPin className="w-8 h-8 text-primary" />
                 <div>
-                  <div className="font-semibold text-foreground">Visit Us</div>
-                  <div className="text-sm text-muted-foreground">New York, NY</div>
+                  <div className="font-semibold text-foreground">Service Area</div>
+                  <div className="text-sm text-muted-foreground">Brooklyn, Manhattan & Queens, by appointment</div>
                 </div>
               </div>
             </div>

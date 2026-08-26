@@ -170,7 +170,7 @@ const BestWoodForKitchenCabinets = () => (
           <p className="text-base sm:text-lg text-[#444] mb-6">
             There is no single best wood for kitchen cabinets. There is a best wood for{" "}
             <em>your</em> kitchen — once you know whether you're painting or staining, how hard the
-            cabinets will get hit, and where you sit on cost. Here's how a Bushwick cabinet shop
+            cabinets will get hit, and where you sit on cost. Here's how a Brooklyn-based cabinet company
             actually picks.
           </p>
           <div className="flex justify-center">

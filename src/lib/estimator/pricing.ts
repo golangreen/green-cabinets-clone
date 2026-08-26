@@ -117,7 +117,7 @@ export function resolveStyleMultiplier(locationKey: string, selectedFinishId?: s
 }
 
 export const DELIVERY_OPTIONS: Record<DeliveryConfig['option'], { name: string; description: string }> = {
-  none: { name: 'No Delivery', description: 'Customer pickup from warehouse' },
+  none: { name: 'No Delivery', description: 'Customer arranges pickup' },
   flatrate: { name: 'Flat Rate', description: 'Single delivery fee regardless of order size' },
   peritem: { name: 'Per Item', description: 'Fee calculated per cabinet/accessory' },
 };

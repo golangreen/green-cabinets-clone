@@ -200,7 +200,7 @@ const Estimator = () => {
               (718) 804-5488
             </a>
           </p>
-          <p className="mt-1">Green Cabinets NY — 10 Montieth St, Bushwick, Brooklyn</p>
+          <p className="mt-1">Green Cabinets NY — Brooklyn, NY · Serving Brooklyn, Manhattan &amp; Queens by appointment</p>
         </div>
       </div>
     </div>

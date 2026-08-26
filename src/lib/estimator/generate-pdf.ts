@@ -70,13 +70,13 @@ export async function generateQuotePDF(
 
   // Left side — address
   doc.setFontSize(7);
-  doc.text('10 Montieth St, Bushwick', margin, 28);
-  doc.text('Brooklyn, NY 11206', margin, 32);
+  doc.text('Brooklyn, NY — by appointment', margin, 28);
+  doc.text('Serving Brooklyn, Manhattan & Queens', margin, 32);
 
   // Right side — contact
   const rightX = pageW - margin;
   doc.text('orders@greencabinetsny.com', rightX, 28, { align: 'right' });
-  doc.text('(718) 804-5488 | (917) 819-5538', rightX, 32, { align: 'right' });
+  doc.text('(718) 804-5488', rightX, 32, { align: 'right' });
 
   y = 42;
 

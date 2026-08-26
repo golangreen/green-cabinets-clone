@@ -31,7 +31,7 @@ const FAQS = [
   },
   {
     q: "Is slim shaker more expensive than classic shaker?",
-    a: 'From our Bushwick shop the cost is within 3–5% either way. Slim shaker uses less material but requires tighter tolerances on the mortise-and-tenon joinery — a 1" rail leaves no room for a sloppy joint. The pricing evens out.',
+    a: 'From our vetted suppliers the cost is within 3–5% either way. Slim shaker uses less material but requires tighter tolerances on the mortise-and-tenon joinery — a 1" rail leaves no room for a sloppy joint. The pricing evens out.',
   },
   {
     q: "Do slim shaker doors hold up long-term?",
@@ -135,8 +135,7 @@ const ShakerVsSlimShakerCabinets = () => (
           brownstone-classic kitchen and a Williamsburg-loft kitchen.
         </p>
         <p className="text-lg text-[#555555]">
-          Here's how we help clients pick between the two at our Bushwick
-          workshop — with actual proportions, joinery specs, and hardware
+          Here's how we help clients pick between the two — with actual proportions, joinery specs, and hardware
           pairings that hold up in NYC apartments.
         </p>
         <div className="mt-8 flex justify-center">
@@ -207,14 +206,14 @@ const ShakerVsSlimShakerCabinets = () => (
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
-              Construction from our Bushwick shop
+              Construction from our vetted suppliers
             </h2>
           </div>
           <ul className="space-y-2 text-[#555555]">
             {[
               'Both profiles use 5-piece solid-wood door construction — no MDF veneer, no stapled panels.',
               'Mortise-and-tenon joinery is standard on both; slim shaker demands a tighter joint tolerance because there\'s less material to hide seasonal movement.',
-              'We spray and cure in-house in Bushwick — the finish batch stays consistent across every door in your order.',
+              'Our suppliers spray and cure to our spec — the finish batch stays consistent across every door in your order.',
               'Panel float is engineered per species — quartersawn white oak, walnut, maple, and painted poplar all behave differently in a narrow rail.',
             ].map((item) => (
               <li key={item} className="flex gap-3">

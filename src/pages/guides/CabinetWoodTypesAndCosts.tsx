@@ -75,7 +75,7 @@ const FAQ = [
   { q: "What are the most common types of wood used for kitchen cabinets?", a: "The seven most-used species in custom kitchens are hard maple, white oak, red oak, cherry, walnut, hickory, and birch. Maple dominates paint-grade work; white oak dominates stained and natural; walnut and rift-cut white oak lead the premium tier." },
   { q: "What is the cheapest wood for cabinets?", a: "Knotty alder and red oak are the two cheapest hardwoods we mill — both run roughly $15–$25 per linear foot below our $350/lf blended baseline. Birch is close behind. For paint-grade work on a tight budget, birch beats alder." },
   { q: "What is the most expensive wood for cabinets?", a: "Mahogany and American walnut, each adding $100–$250 per linear foot over the baseline. Rift-cut white oak is the third-most expensive at $75–$125/lf premium, mostly due to lumber yield — straight-grain rift cuts waste roughly half the log." },
-  { q: "How much do custom wood kitchen cabinets cost per linear foot?", a: "Our blended baseline at the Bushwick shop is $350/lf for a full custom kitchen in hard maple, painted, with shaker doors, dovetail boxes, and Blum soft-close hardware. Species premiums on top of that range from −$25/lf (red oak) to +$250/lf (mahogany). Door style, finish, and hardware can each shift the total another $20–$60/lf." },
+  { q: "How much do custom wood kitchen cabinets cost per linear foot?", a: "Our blended baseline at our vetted suppliers is $350/lf for a full custom kitchen in hard maple, painted, with shaker doors, dovetail boxes, and Blum soft-close hardware. Species premiums on top of that range from −$25/lf (red oak) to +$250/lf (mahogany). Door style, finish, and hardware can each shift the total another $20–$60/lf." },
   { q: "Which wood is most durable for kitchen cabinets?", a: "Hickory, by Janka hardness — 1,820 lbf, roughly 25% harder than hard maple and 40% harder than red oak. For families with kids, dogs, or rentals, nothing else comes close at the same price point." },
   { q: "What's the difference between rift-cut and quartersawn oak?", a: "Both produce straight grain instead of cathedral arches. Quartersawn shows visible medullary ray flecks (the Mission/Stickley look). Rift-cut hides them — straight, plain, modern. Same hardness and stability, rift-cut runs ~20% pricier due to even tighter lumber yield." },
   { q: "Is solid wood better than plywood for cabinets?", a: "Different parts, different jobs. Doors and face frames should be solid hardwood — they're seen and they take wear. Cabinet boxes are usually 3/4\" hardwood plywood (more dimensionally stable than solid wood at large widths). A 'solid wood cabinet' built entirely from solid lumber will warp; quality custom cabinets mix solid and ply on purpose." },
@@ -146,7 +146,7 @@ const CabinetWoodTypesAndCosts = () => (
             Cabinet Wood Types and Costs
           </h1>
           <p className="text-base sm:text-lg text-[#444] mb-6">
-            Every hardwood we mill at our Bushwick shop, with real cost premiums over our $350 per
+            Every hardwood we mill at our vetted suppliers, with real cost premiums over our $350 per
             linear foot blended baseline. Use this to triage species before reading the
             individual deep-dives.
           </p>

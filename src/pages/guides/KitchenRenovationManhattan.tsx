@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "How do you deliver cabinets to a Manhattan high-rise?",
-    a: "Freight elevator only, reserved through the building manager. Standard windows are 9am–4pm weekdays, often with a same-day install requirement. We build in Bushwick, pad-wrap each cabinet, and stage the truck for the exact freight slot. Doorman buildings on the Upper East Side, Upper West Side, and Midtown all follow this pattern. Walk-up brownstones in the West Village or Harlem swap the elevator problem for a stairwell one — narrower cabinets, split deliveries.",
+    a: "Freight elevator only, reserved through the building manager. Standard windows are 9am–4pm weekdays, often with a same-day install requirement. Our suppliers build to our specifications, we pad-wrap each cabinet, and stage the truck for the exact freight slot. Doorman buildings on the Upper East Side, Upper West Side, and Midtown all follow this pattern. Walk-up brownstones in the West Village or Harlem swap the elevator problem for a stairwell one — narrower cabinets, split deliveries.",
   },
   {
     q: "What cabinet styles work best for Manhattan apartments?",
@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "How long does a Manhattan kitchen renovation take?",
-    a: "6–14 weeks from board approval to final punch-list. Cabinets are milled in Bushwick during the 4-week board-review window so they land the week demo finishes. Countertops template the day cabinets install, add 2–3 weeks for stone fabrication. Appliance integration, backsplash, and paint close out the last 2–4 weeks. Buildings with strict work-hour restrictions (some Fifth Avenue co-ops cap noise to 9am–4pm) can add a week.",
+    a: "6–14 weeks from board approval to final punch-list. Cabinets are milled by our suppliers to spec during the 4-week board-review window so they land the week demo finishes. Countertops template the day cabinets install, add 2–3 weeks for stone fabrication. Appliance integration, backsplash, and paint close out the last 2–4 weeks. Buildings with strict work-hour restrictions (some Fifth Avenue co-ops cap noise to 9am–4pm) can add a week.",
   },
   {
     q: "What paperwork does the co-op board actually want?",
@@ -146,7 +146,7 @@ const KitchenRenovationManhattan = () => (
           the demo hammer swings in 2026.
         </p>
         <p className="text-lg text-[#555555]">
-          We build every cabinet at our Bushwick shop and install across
+          We build every cabinet at our vetted suppliers and install across
           Manhattan from the Battery to Inwood. Here's how a specialist
           millwork shop navigates the borough's peculiar rules.
         </p>
@@ -196,7 +196,7 @@ const KitchenRenovationManhattan = () => (
             {[
               "Every Manhattan co-op requires an executed Alteration Agreement before demo — no exceptions.",
               "Standard submission: signed agreement, contractor COI naming the corporation and managing agent, licensed plumber/electrician letters, DOB permits if applicable, drawings, and finish schedule.",
-              "Budget 4–8 weeks for board review. We use that window to mill and cure cabinets in Bushwick so nothing sits in a hallway.",
+              "Budget 4–8 weeks for board review. We use that window to have cabinets milled and cured by our suppliers so nothing sits in a hallway.",
               "Many Fifth Avenue and Park Avenue buildings restrict work to 9am–4pm weekdays and prohibit summer renovation entirely — verify calendar before signing.",
               "Refundable deposits ($5,000–$25,000) and non-refundable review fees ($500–$2,500) are standard line items.",
             ].map((item) => (
@@ -241,7 +241,7 @@ const KitchenRenovationManhattan = () => (
           <ul className="space-y-3 text-[#555555]">
             {[
               ["Weeks 0–2", "Design consult, measure, finish selection, drawings for board package."],
-              ["Weeks 2–8", "Board review in parallel with cabinet production at Bushwick."],
+              ["Weeks 2–8", "Board review in parallel with cabinet production at our suppliers."],
               ["Weeks 8–9", "Board approves. Demo starts. Cabinets delivered via freight elevator, installed 1–2 days."],
               ["Weeks 9–12", "Countertop template, fabrication, install. Appliance integration. Backsplash."],
               ["Weeks 12–14", "Punch-list, paint touch-up, final board sign-off, close-out COI."],
@@ -286,7 +286,7 @@ const KitchenRenovationManhattan = () => (
           Manhattan neighborhoods we install in
         </h2>
         <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
-          Every Manhattan install routes from our Bushwick shop — same
+          Every Manhattan install routes from our vetted suppliers — same
           cabinets, same install crew, same finish samples you'd see in
           Brooklyn or Staten Island.
         </p>

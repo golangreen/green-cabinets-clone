@@ -52,14 +52,19 @@ const Testimonials = () => {
     "telephone": APP_CONFIG.structuredData.telephone,
     "email": APP_CONFIG.structuredData.email,
     "priceRange": "$$-$$$",
+    "sameAs": ["https://instagram.com/green_cabinets_"],
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "10 Montieth St",
       "addressLocality": "Brooklyn",
       "addressRegion": "NY",
-      "postalCode": "11206",
       "addressCountry": "US",
     },
+    "areaServed": [
+      { "@type": "AdministrativeArea", "name": "Brooklyn, NY" },
+      { "@type": "AdministrativeArea", "name": "Manhattan, NY" },
+      { "@type": "AdministrativeArea", "name": "Queens, NY" },
+    ],
+
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "5",

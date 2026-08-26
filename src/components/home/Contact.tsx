@@ -85,60 +85,41 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Address */}
+          {/* Service area */}
           <div className="p-6 md:p-8 rounded-2xl bg-[#5C7650]/10">
             <div className="w-16 h-16 rounded-xl bg-primary flex items-center justify-center mb-6">
               <MapPin className="w-8 h-8 text-white" />
             </div>
-            <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Visit Us</h3>
-            <address className="text-sm md:text-base text-muted-foreground not-italic">
-              10 Montieth St<br />
-              Bushwick, Brooklyn, NY 11206
-            </address>
+            <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Service Area</h3>
+            <p className="text-sm md:text-base text-muted-foreground">
+              Brooklyn, Manhattan &amp; Queens
+              <br />
+              By appointment only
+            </p>
           </div>
         </div>
 
-        {/* Google Map Embed */}
+        {/* By-appointment note */}
         <div className="max-w-5xl mx-auto mb-12 px-4">
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=10+Montieth+St+Brooklyn+NY+11206"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open 10 Montieth St in Google Maps"
-            className="block rounded-2xl overflow-hidden shadow-lg relative group"
-          >
-            <iframe
-              src="https://www.google.com/maps?q=10+Montieth+St+Brooklyn+NY+11206&z=16&output=embed"
-              width="100%"
-              height="320"
-              style={{ border: 0 }}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Green Cabinets Location - 10 Montieth St, Brooklyn"
-              className={`w-full pointer-events-none transition-[filter] duration-500 ${isNight ? "[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]" : ""}`}
-            />
-            <span className="absolute top-3 right-3 text-xs font-semibold bg-background/95 text-foreground px-3 py-1.5 rounded-md shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
-              Get Directions ↗
-            </span>
-          </a>
-
-          {/* Neighborhood + Landmarks */}
-          <div className="mt-4 p-4 sm:p-5 rounded-xl bg-[#5C7650]/5 border border-[#5C7650]/10">
+          <div className="p-4 sm:p-5 rounded-xl bg-[#5C7650]/5 border border-[#5C7650]/10">
             <div className="flex items-start gap-3">
               <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
               <div className="text-sm md:text-base text-muted-foreground">
                 <p className="font-semibold text-[#1a1a1a] mb-1">
-                  Bushwick, Brooklyn
+                  We come to you
                 </p>
                 <p>
-                  Near the Morgan Ave L train, Maria Hernandez Park, and the
-                  East Williamsburg industrial corridor — a short ride from
-                  Williamsburg, Bed-Stuy, and Ridgewood.
+                  Green Cabinets NY is an appointment-based custom cabinetry
+                  service — there is no walk-in location. We bring finish and
+                  door samples to your home for measuring and selection anywhere
+                  in Brooklyn, Manhattan, or Queens, then handle delivery and
+                  installation on site.
                 </p>
               </div>
             </div>
           </div>
         </div>
+
 
         {/* CTA Buttons */}
         <div className="flex flex-col items-center justify-center gap-4 max-w-md mx-auto">

@@ -62,10 +62,10 @@ export async function generateComparisonPDF(quotes: CompareQuote[]) {
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
   doc.text('Custom Kitchen & Bathroom Millwork', textLeft, 19);
-  doc.text('10 Montieth St, Bushwick, Brooklyn, NY 11206', textLeft, 24);
+  doc.text('Brooklyn, NY — serving Brooklyn, Manhattan & Queens by appointment', textLeft, 24);
   const rightX = pageW - margin;
   doc.text('orders@greencabinetsny.com', rightX, 13, { align: 'right' });
-  doc.text('Golan: (718) 804-5488  |  Andy: (917) 819-5538', rightX, 19, { align: 'right' });
+  doc.text('(718) 804-5488', rightX, 19, { align: 'right' });
   y = 36;
 
   // ── Title ──

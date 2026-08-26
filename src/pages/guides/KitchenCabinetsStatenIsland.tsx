@@ -15,7 +15,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/kitchen-cabinets-staten-island";
 const TITLE = "Kitchen Cabinets Staten Island — Insider Buyer's Guide 2026";
 const DESC =
-  "Insider guide to buying custom kitchen cabinets in Staten Island: 2026 pricing, delivery from our Bushwick shop, borough-specific layouts, and install logistics.";
+  "Insider guide to buying custom kitchen cabinets in Staten Island: 2026 pricing, delivery from our vetted suppliers, borough-specific layouts, and install logistics.";
 
 const FAQS = [
   {
@@ -24,11 +24,11 @@ const FAQS = [
   },
   {
     q: "Do you deliver and install in Staten Island?",
-    a: "Yes. We build every cabinet at our Bushwick shop and truck them to Staten Island — Verrazzano-Narrows Bridge for South Shore installs (Tottenville, Great Kills, Eltingville), Goethals or Bayonne Bridge for North Shore (St. George, New Brighton, Port Richmond). Delivery adds a bridge-toll line item; install crews stage from the shop the morning of the drop.",
+    a: "Yes. We build every cabinet at our vetted suppliers and truck them to Staten Island — Verrazzano-Narrows Bridge for South Shore installs (Tottenville, Great Kills, Eltingville), Goethals or Bayonne Bridge for North Shore (St. George, New Brighton, Port Richmond). Delivery adds a bridge-toll line item; install crews stage from the shop the morning of the drop.",
   },
   {
     q: "What's the lead time for Staten Island kitchens?",
-    a: "Plan on 4–6 weeks from signed design to install day. Cabinets are milled, sprayed, and cured in Bushwick, then delivered and installed in 1–2 days depending on kitchen size. Countertop templating happens the day cabinets land; stone fabrication adds another 2–3 weeks.",
+    a: "Plan on 4–6 weeks from signed design to install day. Cabinets are milled, sprayed, and cured by our suppliers to spec, then delivered and installed in 1–2 days depending on kitchen size. Countertop templating happens the day cabinets land; stone fabrication adds another 2–3 weeks.",
   },
   {
     q: "Do I need permits for a kitchen remodel in Staten Island?",
@@ -44,11 +44,11 @@ const FAQS = [
   },
   {
     q: "Do you serve all Staten Island neighborhoods?",
-    a: "Yes — North Shore (St. George, Stapleton, New Brighton, West Brighton, Port Richmond), Mid-Island (Todt Hill, New Dorp, Grasmere, Grant City), and South Shore (Great Kills, Eltingville, Annadale, Huguenot, Tottenville, Prince's Bay). Delivery logistics are the same borough-wide; install scheduling depends on truck routing from Bushwick.",
+    a: "Yes — North Shore (St. George, Stapleton, New Brighton, West Brighton, Port Richmond), Mid-Island (Todt Hill, New Dorp, Grasmere, Grant City), and South Shore (Great Kills, Eltingville, Annadale, Huguenot, Tottenville, Prince's Bay). Delivery logistics are the same borough-wide; install scheduling depends on delivery routing from our suppliers.",
   },
   {
     q: "Where can I see your cabinets before ordering?",
-    a: "Visit our Bushwick shop at 10 Montieth St, Brooklyn — about 45 minutes from the Staten Island Ferry terminal or 30 minutes from the Verrazzano off-hours. You'll see finish samples, door styles, hardware, and cabinets in raw wood on the production floor. Most Staten Island clients come once for finish selection and skip the second trip.",
+    a: "We don't have a walk-in showroom, but we bring finish samples, door styles, and hardware to you by appointment — anywhere in Staten Island. Most clients do one in-home session for finish selection and finalize the rest by email.",
   },
 ];
 
@@ -148,8 +148,8 @@ const KitchenCabinetsStatenIsland = () => (
         <p className="text-lg text-[#555555]">
           North Shore colonials, Mid-Island splits, South Shore
           semi-attached rows — every Staten Island kitchen has a layout
-          that stock cabinets can't quite hit. Here's what a Bushwick
-          cabinet shop that ships across the bridges wants you to know.
+          that stock cabinets can't quite hit. Here's what a Brooklyn-based
+          cabinet company that ships across the bridges wants you to know.
         </p>
         <div className="mt-8 flex justify-center">
           <AuthorByline author="golan" label="Written by" />
@@ -190,7 +190,7 @@ const KitchenCabinetsStatenIsland = () => (
           <div className="flex items-center gap-3 mb-4">
             <Truck className="w-6 h-6 text-primary" />
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
-              Delivery logistics from Bushwick to Staten Island
+              Delivery logistics to Staten Island
             </h2>
           </div>
           <ul className="space-y-2 text-[#555555]">
@@ -219,7 +219,7 @@ const KitchenCabinetsStatenIsland = () => (
           <ul className="space-y-3 text-[#555555]">
             {[
               ["Week 0", "Design consult, measure, finish selection, deposit."],
-              ["Weeks 1–4", "Cabinets in production at Bushwick — mill, sand, spray, cure."],
+              ["Weeks 1–4", "Cabinets in production at our suppliers — mill, sand, spray, cure."],
               ["Week 5", "Delivery over the bridge. Install (1–2 days). Countertop template same day."],
               ["Weeks 6–8", "Countertops fabricated and installed. Backsplash, hardware, plumbing hookup."],
             ].map(([when, what]) => (
@@ -263,7 +263,7 @@ const KitchenCabinetsStatenIsland = () => (
           Staten Island neighborhoods we install in
         </h2>
         <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
-          Every Staten Island install routes from our Bushwick shop — same
+          Every Staten Island install routes from our vetted suppliers — same
           cabinets, same install crew, same finish samples you'd see in
           Brooklyn or Manhattan.
         </p>

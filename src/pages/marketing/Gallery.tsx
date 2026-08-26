@@ -49,7 +49,7 @@ const GalleryPage = () => {
         />
         <link rel="canonical" href="https://greencabinetsny.com/gallery" />
         <meta property="og:title" content="Project Gallery: Custom Kitchens, Vanities & Closets | Green Cabinets" />
-        <meta property="og:description" content="Real Brooklyn and NYC projects: custom kitchens, bathroom vanities, and closet systems built in our Bushwick shop." />
+        <meta property="og:description" content="Real Brooklyn and NYC projects: custom kitchens, bathroom vanities, and closet systems designed by us and built by vetted millwork suppliers." />
         <meta property="og:url" content="https://greencabinetsny.com/gallery" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />

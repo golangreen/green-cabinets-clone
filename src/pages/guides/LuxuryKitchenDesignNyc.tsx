@@ -14,7 +14,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/luxury-kitchen-design-nyc";
 const TITLE = "Luxury Kitchen Design NYC — 2026 High-End Trends & Millwork";
 const DESC =
-  "Luxury kitchen design in NYC: marble waterfall islands, integrated wood dining, hidden appliances, and full-height millwork from a Bushwick high-end custom cabinet shop.";
+  "Luxury kitchen design in NYC: marble waterfall islands, integrated wood dining, hidden appliances, and full-height millwork from a Brooklyn-based high-end kitchen design studio.";
 
 const FAQS = [
   {
@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     q: "How long does a luxury kitchen renovation take?",
-    a: "14–24 weeks from design lock to final punch-list. Design and finish selection take 4–6 weeks; cabinets are milled in Bushwick over 8–10 weeks; stone templating and fabrication add 3–4 weeks; integrated appliance install and final trim take another 3–4 weeks. Board approval in a Manhattan co-op adds 4–8 weeks in parallel.",
+    a: "14–24 weeks from design lock to final punch-list. Design and finish selection take 4–6 weeks; cabinets are milled by our suppliers to spec over 8–10 weeks; stone templating and fabrication add 3–4 weeks; integrated appliance install and final trim take another 3–4 weeks. Board approval in a Manhattan co-op adds 4–8 weeks in parallel.",
   },
 ];
 
@@ -151,8 +151,8 @@ const LuxuryKitchenDesignNyc = () => (
         </h1>
         <p className="text-xl text-[#555555] mb-6">
           Marble waterfalls, integrated wood dining, hidden appliances, and
-          full-height flush millwork — what a Bushwick custom cabinet shop
-          builds for Manhattan townhouses, Brooklyn brownstones, and Hamptons
+          full-height flush millwork — what a Brooklyn-based custom kitchen studio
+          designs for Manhattan townhouses, Brooklyn brownstones, and Hamptons
           getaways in 2026.
         </p>
         <div className="mt-8 flex justify-center">
@@ -194,7 +194,7 @@ const LuxuryKitchenDesignNyc = () => (
               "Shinnoki real wood veneers — grain-matched across full runs, book-matched on tall pantries.",
               "Hand-painted MDF in deep saturated colors — charcoal, forest green, oxblood, midnight blue.",
               "Tafisa and Egger PerfectSense matte — budget-luxury when a full walnut package isn't in scope.",
-              "Fluted or reeded fronts machined in-house — vertical texture without breaking the flush-front language.",
+              "Fluted or reeded fronts machined by our suppliers — vertical texture without breaking the flush-front language.",
             ].map((item) => (
               <li key={item} className="flex gap-3">
                 <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />

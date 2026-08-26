@@ -115,10 +115,11 @@ const Footer = () => {
               </li>
               <li>
                 <address className="not-italic">
-                  10 Montieth St<br />
-                  Bushwick, Brooklyn, NY 11206
+                  Serving Brooklyn, Manhattan &amp; Queens<br />
+                  By appointment only
                 </address>
               </li>
+
             </ul>
           </div>
         </div>
@@ -130,7 +131,7 @@ const Footer = () => {
         </div>
         
         <div className="pt-6 sm:pt-8 border-t border-gray-800 text-center text-xs sm:text-sm text-primary-foreground/90">
-          <p>&copy; 2025 Green Cabinets. All rights reserved.</p>
+          <p>&copy; 2026 Green Cabinets. All rights reserved.</p>
         </div>
       </div>
     </footer>
