@@ -64,8 +64,7 @@ export const PEOPLE = [
     description:
       "Founder of Green Cabinets NY (2009). Master cabinetmaker specializing in custom kitchen cabinets, bathroom vanities, and architectural millwork built for NYC homeowners, architects, and developers.",
     sameAs: [
-      "https://www.instagram.com/greencabinetsny",
-      "https://www.instagram.com/green_cabinets_",
+      "https://instagram.com/green_cabinets_",
     ],
   },
   {

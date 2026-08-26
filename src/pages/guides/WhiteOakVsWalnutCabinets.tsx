@@ -130,8 +130,7 @@ const WhiteOakVsWalnutCabinets = () => (
           architectural, the other warm and dramatic.
         </p>
         <p className="text-lg text-[#555555]">
-          Here's how we walk clients through the choice at our Bushwick
-          workshop: hardness, grain behavior, how each species ages in a NYC
+          Here's how we walk clients through the choice: hardness, grain behavior, how each species ages in a NYC
           apartment, and what each actually costs installed.
         </p>
         <div className="mt-8 flex justify-center">
@@ -209,7 +208,7 @@ const WhiteOakVsWalnutCabinets = () => (
               "Solid-wood 5-piece doors with mortise-and-tenon joinery in both species — no veneered MDF frames.",
               "Rift-sawn white oak is specified for slab and slim-shaker fronts where grain uniformity matters most.",
               "Walnut doors are laid out and numbered off a single flitch so the figure sequences across the run.",
-              "Both get a UV-inhibiting hardwax oil or conversion varnish, sprayed and cured by our suppliers in Bushwick.",
+              "Both get a UV-inhibiting hardwax oil or conversion varnish, sprayed and cured by our suppliers to spec.",
               "Panel float is engineered per species — walnut moves less seasonally than white oak, and the joint tolerances reflect that.",
             ].map((item) => (
               <li key={item} className="flex gap-3">

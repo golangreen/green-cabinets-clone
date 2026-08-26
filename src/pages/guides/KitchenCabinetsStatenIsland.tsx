@@ -148,8 +148,8 @@ const KitchenCabinetsStatenIsland = () => (
         <p className="text-lg text-[#555555]">
           North Shore colonials, Mid-Island splits, South Shore
           semi-attached rows — every Staten Island kitchen has a layout
-          that stock cabinets can't quite hit. Here's what a Bushwick
-          cabinet shop that ships across the bridges wants you to know.
+          that stock cabinets can't quite hit. Here's what a Brooklyn-based
+          cabinet company that ships across the bridges wants you to know.
         </p>
         <div className="mt-8 flex justify-center">
           <AuthorByline author="golan" label="Written by" />
@@ -190,7 +190,7 @@ const KitchenCabinetsStatenIsland = () => (
           <div className="flex items-center gap-3 mb-4">
             <Truck className="w-6 h-6 text-primary" />
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
-              Delivery logistics from Bushwick to Staten Island
+              Delivery logistics to Staten Island
             </h2>
           </div>
           <ul className="space-y-2 text-[#555555]">
@@ -219,7 +219,7 @@ const KitchenCabinetsStatenIsland = () => (
           <ul className="space-y-3 text-[#555555]">
             {[
               ["Week 0", "Design consult, measure, finish selection, deposit."],
-              ["Weeks 1–4", "Cabinets in production at Bushwick — mill, sand, spray, cure."],
+              ["Weeks 1–4", "Cabinets in production at our suppliers — mill, sand, spray, cure."],
               ["Week 5", "Delivery over the bridge. Install (1–2 days). Countertop template same day."],
               ["Weeks 6–8", "Countertops fabricated and installed. Backsplash, hardware, plumbing hookup."],
             ].map(([when, what]) => (

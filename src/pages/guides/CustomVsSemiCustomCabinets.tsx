@@ -140,8 +140,8 @@ const CustomVsSemiCustomCabinets = () => (
           Manhattan apartment, a Brooklyn brownstone, or a Queens co-op.
         </p>
         <p className="text-lg text-[#555555]">
-          Semi-custom looks good in a showroom. Custom looks good in your
-          kitchen. Here's the honest breakdown a Bushwick millwork shop
+          Semi-custom looks good in a catalog photo. Custom looks good in your
+          kitchen. Here's the honest breakdown a Brooklyn-based millwork company
           gives clients before they sign anything.
         </p>
         <div className="mt-8 flex justify-center">

@@ -135,8 +135,7 @@ const ShakerVsSlimShakerCabinets = () => (
           brownstone-classic kitchen and a Williamsburg-loft kitchen.
         </p>
         <p className="text-lg text-[#555555]">
-          Here's how we help clients pick between the two at our Bushwick
-          workshop — with actual proportions, joinery specs, and hardware
+          Here's how we help clients pick between the two — with actual proportions, joinery specs, and hardware
           pairings that hold up in NYC apartments.
         </p>
         <div className="mt-8 flex justify-center">
@@ -214,7 +213,7 @@ const ShakerVsSlimShakerCabinets = () => (
             {[
               'Both profiles use 5-piece solid-wood door construction — no MDF veneer, no stapled panels.',
               'Mortise-and-tenon joinery is standard on both; slim shaker demands a tighter joint tolerance because there\'s less material to hide seasonal movement.',
-              'We spray and cure by our suppliers in Bushwick — the finish batch stays consistent across every door in your order.',
+              'Our suppliers spray and cure to our spec — the finish batch stays consistent across every door in your order.',
               'Panel float is engineered per species — quartersawn white oak, walnut, maple, and painted poplar all behave differently in a narrow rail.',
             ].map((item) => (
               <li key={item} className="flex gap-3">

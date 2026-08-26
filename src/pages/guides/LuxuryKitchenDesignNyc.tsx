@@ -14,7 +14,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/luxury-kitchen-design-nyc";
 const TITLE = "Luxury Kitchen Design NYC — 2026 High-End Trends & Millwork";
 const DESC =
-  "Luxury kitchen design in NYC: marble waterfall islands, integrated wood dining, hidden appliances, and full-height millwork from a Bushwick high-end custom cabinet shop.";
+  "Luxury kitchen design in NYC: marble waterfall islands, integrated wood dining, hidden appliances, and full-height millwork from a Brooklyn-based high-end kitchen design studio.";
 
 const FAQS = [
   {
@@ -151,8 +151,8 @@ const LuxuryKitchenDesignNyc = () => (
         </h1>
         <p className="text-xl text-[#555555] mb-6">
           Marble waterfalls, integrated wood dining, hidden appliances, and
-          full-height flush millwork — what a Bushwick custom cabinet shop
-          builds for Manhattan townhouses, Brooklyn brownstones, and Hamptons
+          full-height flush millwork — what a Brooklyn-based custom kitchen studio
+          designs for Manhattan townhouses, Brooklyn brownstones, and Hamptons
           getaways in 2026.
         </p>
         <div className="mt-8 flex justify-center">
