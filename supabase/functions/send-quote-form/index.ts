@@ -104,6 +104,9 @@ serve(async (req) => {
         ${name ? `<p><strong>From:</strong> ${escapeHtml(name)}</p>` : ""}
         ${email ? `<p><strong>Email:</strong> ${escapeHtml(email)}</p>` : ""}
         <h3 style="margin-top:18px">Quote &amp; Build Measurements</h3>
+        ${phone ? `<p><strong>Phone:</strong> ${escapeHtml(phone)}</p>` : ""}
+        ${borough ? `<p><strong>Borough:</strong> ${escapeHtml(borough)}</p>` : ""}
+        <h3 style="margin-top:18px">Quote &amp; Build Measurements</h3>
         <pre style="white-space:pre-wrap;font-family:inherit;background:#f6f6f6;padding:12px;border-radius:6px;font-size:13px">${escapeHtml(quote)}</pre>
         ${inlineCids.design_image ? `<h3 style="margin-top:22px">Design preview</h3>${inlineImg(inlineCids.design_image, "3D design preview")}` : ""}
         ${inlineCids.ucut_plan || inlineCids.ucut_trap ? `<h3 style="margin-top:22px">U-cut shop drawing</h3>` : ""}
