@@ -106,7 +106,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
       {
         heading: "Cost breakdown",
-        body: "Cabinetry (paint-grade maple, sprayed in-shop): $11,900. Soapstone counters + custom hood surround: $13,800. Appliance package (Wolf range, Sub-Zero fridge, Miele DW): $19,500. Plumbing/electrical incl. gas line move: $9,400. Demo + framing + plaster: $7,800. Subway tile backsplash + zellige accent: $4,200. Project management + DOB filing: $5,400. Total delivered: $72,000.",
+        body: "Cabinetry (paint-grade maple, sprayed by our supplier): $11,900. Soapstone counters + custom hood surround: $13,800. Appliance package (Wolf range, Sub-Zero fridge, Miele DW): $19,500. Plumbing/electrical incl. gas line move: $9,400. Demo + framing + plaster: $7,800. Subway tile backsplash + zellige accent: $4,200. Project management + DOB filing: $5,400. Total delivered: $72,000.",
       },
       {
         heading: "Timeline",

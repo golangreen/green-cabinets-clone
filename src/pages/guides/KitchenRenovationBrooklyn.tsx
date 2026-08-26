@@ -15,7 +15,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/kitchen-renovation-brooklyn";
 const TITLE = "Kitchen Renovation Brooklyn — Costs, Permits, Timeline 2026";
 const DESC =
-  "Brooklyn kitchen renovation guide from a local Bushwick cabinet shop: 2026 costs, NYC permit rules, timelines, and what makes Brooklyn different.";
+  "Brooklyn kitchen renovation guide from a local Brooklyn-based cabinet company: 2026 costs, NYC permit rules, timelines, and what makes Brooklyn different.";
 
 const FAQS = [
   {
@@ -48,7 +48,7 @@ const FAQS = [
   },
   {
     q: "Are you actually based in Brooklyn?",
-    a: "Yes. Our shop has been in Bushwick (10 Montieth St) since 2009. Every cabinet we ship is milled, sanded, sprayed, and crated in Brooklyn before installation. You're welcome to visit while your cabinets are in raw wood.",
+    a: "Yes. We're Brooklyn-based and have worked from Bushwick since 2009. Cabinets are built to our specifications by vetted millwork suppliers, and we bring finish samples and door styles to you by appointment for your consultation.",
   },
 ];
 
@@ -207,7 +207,7 @@ const KitchenRenovationBrooklyn = () => (
         <div className="inline-flex items-center gap-2 text-primary mb-4">
           <MapPin className="w-5 h-5" />
           <span className="font-semibold uppercase tracking-wide text-sm">
-            Bushwick · Serving all of Brooklyn
+            Brooklyn-based · Serving all of Brooklyn
           </span>
         </div>
         <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">

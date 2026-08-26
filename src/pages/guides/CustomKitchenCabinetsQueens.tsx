@@ -148,7 +148,7 @@ const CustomKitchenCabinetsQueens = () => (
         <p className="text-lg text-[#555555]">
           Astoria walk-ups, LIC towers, Forest Hills Tudors, Bayside
           colonials — every Queens kitchen has a layout stock cabinets
-          can't quite hit. Here's what a Bushwick cabinet shop that ships
+          can't quite hit. Here's what a Brooklyn-based cabinet company that ships
           into Queens weekly wants you to know.
         </p>
         <div className="mt-8 flex justify-center">
