@@ -142,6 +142,8 @@ const App = () => {
             <Route path="/kitchen-cabinets-staten-island" element={<KitchenCabinetsStatenIsland />} />
             <Route path="/staten-island-kitchen-cabinets" element={<Navigate to="/kitchen-cabinets-staten-island" replace />} />
             <Route path="/custom-kitchen-cabinets-queens" element={<CustomKitchenCabinetsQueens />} />
+            <Route path="/custom-kitchen-cabinets-brooklyn" element={<CustomKitchenCabinetsBrooklyn />} />
+            <Route path="/custom-kitchen-cabinets-manhattan" element={<CustomKitchenCabinetsManhattan />} />
 
             <Route path="/custom-vs-semi-custom-cabinets" element={<CustomVsSemiCustomCabinets />} />
             <Route path="/shaker-vs-slim-shaker-cabinets" element={<ShakerVsSlimShakerCabinets />} />
