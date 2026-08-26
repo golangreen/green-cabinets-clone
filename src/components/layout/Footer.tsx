@@ -115,10 +115,11 @@ const Footer = () => {
               </li>
               <li>
                 <address className="not-italic">
-                  10 Montieth St<br />
-                  Bushwick, Brooklyn, NY 11206
+                  Serving Brooklyn, Manhattan &amp; Queens<br />
+                  By appointment only
                 </address>
               </li>
+
             </ul>
           </div>
         </div>
