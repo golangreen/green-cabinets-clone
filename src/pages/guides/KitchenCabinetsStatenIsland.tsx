@@ -15,7 +15,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/kitchen-cabinets-staten-island";
 const TITLE = "Kitchen Cabinets Staten Island — Insider Buyer's Guide 2026";
 const DESC =
-  "Insider guide to buying custom kitchen cabinets in Staten Island: 2026 pricing, delivery from our Bushwick shop, borough-specific layouts, and install logistics.";
+  "Insider guide to buying custom kitchen cabinets in Staten Island: 2026 pricing, delivery from our vetted suppliers, borough-specific layouts, and install logistics.";
 
 const FAQS = [
   {
@@ -24,11 +24,11 @@ const FAQS = [
   },
   {
     q: "Do you deliver and install in Staten Island?",
-    a: "Yes. We build every cabinet at our Bushwick shop and truck them to Staten Island — Verrazzano-Narrows Bridge for South Shore installs (Tottenville, Great Kills, Eltingville), Goethals or Bayonne Bridge for North Shore (St. George, New Brighton, Port Richmond). Delivery adds a bridge-toll line item; install crews stage from the shop the morning of the drop.",
+    a: "Yes. We build every cabinet at our vetted suppliers and truck them to Staten Island — Verrazzano-Narrows Bridge for South Shore installs (Tottenville, Great Kills, Eltingville), Goethals or Bayonne Bridge for North Shore (St. George, New Brighton, Port Richmond). Delivery adds a bridge-toll line item; install crews stage from the shop the morning of the drop.",
   },
   {
     q: "What's the lead time for Staten Island kitchens?",
-    a: "Plan on 4–6 weeks from signed design to install day. Cabinets are milled, sprayed, and cured in Bushwick, then delivered and installed in 1–2 days depending on kitchen size. Countertop templating happens the day cabinets land; stone fabrication adds another 2–3 weeks.",
+    a: "Plan on 4–6 weeks from signed design to install day. Cabinets are milled, sprayed, and cured by our suppliers to spec, then delivered and installed in 1–2 days depending on kitchen size. Countertop templating happens the day cabinets land; stone fabrication adds another 2–3 weeks.",
   },
   {
     q: "Do I need permits for a kitchen remodel in Staten Island?",
@@ -48,7 +48,7 @@ const FAQS = [
   },
   {
     q: "Where can I see your cabinets before ordering?",
-    a: "Visit our Bushwick shop at 10 Montieth St, Brooklyn — about 45 minutes from the Staten Island Ferry terminal or 30 minutes from the Verrazzano off-hours. You'll see finish samples, door styles, hardware, and cabinets in raw wood on the production floor. Most Staten Island clients come once for finish selection and skip the second trip.",
+    a: "Visit our vetted suppliers at 10 Montieth St, Brooklyn — about 45 minutes from the Staten Island Ferry terminal or 30 minutes from the Verrazzano off-hours. You'll see finish samples, door styles, hardware, and cabinets in raw wood on the production floor. Most Staten Island clients come once for finish selection and skip the second trip.",
   },
 ];
 
@@ -263,7 +263,7 @@ const KitchenCabinetsStatenIsland = () => (
           Staten Island neighborhoods we install in
         </h2>
         <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
-          Every Staten Island install routes from our Bushwick shop — same
+          Every Staten Island install routes from our vetted suppliers — same
           cabinets, same install crew, same finish samples you'd see in
           Brooklyn or Manhattan.
         </p>

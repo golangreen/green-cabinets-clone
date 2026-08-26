@@ -200,7 +200,7 @@ const DoubleSinkVanityGuide = () => (
             <DollarSign className="h-6 w-6 text-accent-foreground" /> What it costs in NYC
           </h2>
           <p className="text-base text-muted-foreground mb-3 leading-relaxed">
-            Custom double vanities at our Bushwick shop, painted MDF doors with hardwood drawer
+            Custom double vanities at our vetted suppliers, painted MDF doors with hardwood drawer
             boxes, soft-close Blum hardware, U-cut around P-trap. Stone, faucets, and install
             quoted separately by your contractor or our partner trades.
           </p>

@@ -177,7 +177,7 @@ const FloatingBathroomVanity = () => (
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">What it costs</h2>
           <p className="text-base text-muted-foreground mb-3 leading-relaxed">
-            Custom floating vanities at our Bushwick shop, painted MDF or hardwood veneer,
+            Custom floating vanities at our vetted suppliers, painted MDF or hardwood veneer,
             soft-close Blum slides, U-cut around the P-trap, mounting hardware included:
           </p>
           <ul className="list-disc pl-5 space-y-2 text-base text-muted-foreground mb-12">

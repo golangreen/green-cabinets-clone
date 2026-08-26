@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "How long does a Manhattan kitchen renovation take?",
-    a: "6–14 weeks from board approval to final punch-list. Cabinets are milled in Bushwick during the 4-week board-review window so they land the week demo finishes. Countertops template the day cabinets install, add 2–3 weeks for stone fabrication. Appliance integration, backsplash, and paint close out the last 2–4 weeks. Buildings with strict work-hour restrictions (some Fifth Avenue co-ops cap noise to 9am–4pm) can add a week.",
+    a: "6–14 weeks from board approval to final punch-list. Cabinets are milled by our suppliers to spec during the 4-week board-review window so they land the week demo finishes. Countertops template the day cabinets install, add 2–3 weeks for stone fabrication. Appliance integration, backsplash, and paint close out the last 2–4 weeks. Buildings with strict work-hour restrictions (some Fifth Avenue co-ops cap noise to 9am–4pm) can add a week.",
   },
   {
     q: "What paperwork does the co-op board actually want?",
@@ -146,7 +146,7 @@ const KitchenRenovationManhattan = () => (
           the demo hammer swings in 2026.
         </p>
         <p className="text-lg text-[#555555]">
-          We build every cabinet at our Bushwick shop and install across
+          We build every cabinet at our vetted suppliers and install across
           Manhattan from the Battery to Inwood. Here's how a specialist
           millwork shop navigates the borough's peculiar rules.
         </p>
@@ -286,7 +286,7 @@ const KitchenRenovationManhattan = () => (
           Manhattan neighborhoods we install in
         </h2>
         <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
-          Every Manhattan install routes from our Bushwick shop — same
+          Every Manhattan install routes from our vetted suppliers — same
           cabinets, same install crew, same finish samples you'd see in
           Brooklyn or Staten Island.
         </p>

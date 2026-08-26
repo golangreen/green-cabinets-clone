@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     q: "How long does a luxury kitchen renovation take?",
-    a: "14–24 weeks from design lock to final punch-list. Design and finish selection take 4–6 weeks; cabinets are milled in Bushwick over 8–10 weeks; stone templating and fabrication add 3–4 weeks; integrated appliance install and final trim take another 3–4 weeks. Board approval in a Manhattan co-op adds 4–8 weeks in parallel.",
+    a: "14–24 weeks from design lock to final punch-list. Design and finish selection take 4–6 weeks; cabinets are milled by our suppliers to spec over 8–10 weeks; stone templating and fabrication add 3–4 weeks; integrated appliance install and final trim take another 3–4 weeks. Board approval in a Manhattan co-op adds 4–8 weeks in parallel.",
   },
 ];
 
@@ -194,7 +194,7 @@ const LuxuryKitchenDesignNyc = () => (
               "Shinnoki real wood veneers — grain-matched across full runs, book-matched on tall pantries.",
               "Hand-painted MDF in deep saturated colors — charcoal, forest green, oxblood, midnight blue.",
               "Tafisa and Egger PerfectSense matte — budget-luxury when a full walnut package isn't in scope.",
-              "Fluted or reeded fronts machined in-house — vertical texture without breaking the flush-front language.",
+              "Fluted or reeded fronts machined by our suppliers — vertical texture without breaking the flush-front language.",
             ].map((item) => (
               <li key={item} className="flex gap-3">
                 <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />

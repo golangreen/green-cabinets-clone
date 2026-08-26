@@ -208,7 +208,7 @@ const NaturalWoodKitchenCabinets = () => (
           <p className="text-base sm:text-lg text-[#444] mb-6">
             Natural wood is back in NYC kitchens — but only some species look right unstained,
             and the finish you put on top decides how the cabinets look in five years. Here's how
-            we pick, finish, and price natural wood at our Bushwick shop.
+            we pick, finish, and price natural wood at our vetted suppliers.
           </p>
           <div className="flex justify-center">
             <AuthorByline author="golan" label="Written by" />
@@ -324,7 +324,7 @@ const NaturalWoodKitchenCabinets = () => (
 
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">What natural wood kitchens cost in NYC</h2>
           <p className="text-base text-muted-foreground mb-3 leading-relaxed">
-            Pricing at our Bushwick shop, blended baseline of $350 per linear foot for solid
+            Pricing at our vetted suppliers, blended baseline of $350 per linear foot for solid
             hardwood doors and dovetail boxes. Premiums apply on top of base:
           </p>
           <ul className="list-disc pl-5 space-y-2 text-base text-muted-foreground mb-12">

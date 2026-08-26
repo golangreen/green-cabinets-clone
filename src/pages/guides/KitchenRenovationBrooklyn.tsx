@@ -28,7 +28,7 @@ const FAQS = [
   },
   {
     q: "How long does a Brooklyn kitchen remodel take?",
-    a: "From signed contract to functional kitchen, plan on 8–14 weeks. Custom cabinet build is 4–6 weeks (we mill in Bushwick), demo and rough-in is 1–2 weeks, install is 1 week, countertop template + fab + install adds 2–3 weeks, and punch list is the final week. Co-op approval can add 4–8 weeks before any work begins.",
+    a: "From signed contract to functional kitchen, plan on 8–14 weeks. Custom cabinet build is 4–6 weeks (we have our suppliers mill to spec), demo and rough-in is 1–2 weeks, install is 1 week, countertop template + fab + install adds 2–3 weeks, and punch list is the final week. Co-op approval can add 4–8 weeks before any work begins.",
   },
   {
     q: "Can you renovate a railroad apartment kitchen?",
@@ -44,7 +44,7 @@ const FAQS = [
   },
   {
     q: "Do you handle the full renovation or just the cabinets?",
-    a: "We design and build the cabinetry in-house and partner with vetted Brooklyn GCs, plumbers, electricians, and countertop fabricators we've worked with for years. You can hire us for cabinetry only and bring your own GC, or we'll quarterback the whole project. Either way, the cabinet design starts the conversation.",
+    a: "We design and build the cabinetry by our suppliers and partner with vetted Brooklyn GCs, plumbers, electricians, and countertop fabricators we've worked with for years. You can hire us for cabinetry only and bring your own GC, or we'll quarterback the whole project. Either way, the cabinet design starts the conversation.",
   },
   {
     q: "Are you actually based in Brooklyn?",
@@ -120,7 +120,7 @@ const howToJsonLd = {
       "@type": "HowToStep",
       position: 4,
       name: "Build the cabinets (4–6 weeks)",
-      text: "Custom cabinets are milled, sanded, and sprayed at our Bushwick shop in 4–6 weeks. While cabinets build, demo and rough-in plumbing/electrical happen on site (1–2 weeks).",
+      text: "Custom cabinets are milled, sanded, and sprayed at our vetted suppliers in 4–6 weeks. While cabinets build, demo and rough-in plumbing/electrical happen on site (1–2 weeks).",
       url: "https://greencabinetsny.com/wood-species",
     },
     {
@@ -266,7 +266,7 @@ const KitchenRenovationBrooklyn = () => (
           <ul className="space-y-3 text-[#555555]">
             {[
               ["Weeks 0–2", "Design, measure, sign-off, deposit. Co-op board package if needed."],
-              ["Weeks 2–6", "Cabinets in production at our Bushwick shop. Stone slab selected."],
+              ["Weeks 2–6", "Cabinets in production at our vetted suppliers. Stone slab selected."],
               ["Weeks 6–7", "Demo + rough-in (plumbing, electrical, gas if applicable). DOB inspections if permitted work."],
               ["Weeks 7–8", "Cabinet install. Countertop template the day cabinets land."],
               ["Weeks 9–11", "Counters fabricated and installed. Backsplash, plumbing fixtures, appliance hookup."],

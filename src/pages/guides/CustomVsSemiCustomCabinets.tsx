@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "What about lead times?",
-    a: "Stock cabinets: 1–2 weeks. Semi-custom: 6–10 weeks (built overseas or in the Midwest, then shipped). Full custom from our Bushwick shop: 4–6 weeks — faster than most semi-custom because we mill, spray, and cure in-house without a shipping leg.",
+    a: "Stock cabinets: 1–2 weeks. Semi-custom: 6–10 weeks (built overseas or in the Midwest, then shipped). Full custom from our vetted suppliers: 4–6 weeks — faster than most semi-custom because we mill, spray, and cure by our suppliers without a shipping leg.",
   },
   {
     q: "Does custom actually pay back at resale?",

@@ -33,7 +33,7 @@ const FAQS = [
   },
   {
     q: "What's the price difference in NYC?",
-    a: "In our Bushwick shop walnut typically runs 20–35% above white oak for the same layout, driven by lumber cost and yield. For a 20 lf kitchen expect roughly $7,000–$9,000 in white oak versus $9,000–$12,000 in walnut, installed.",
+    a: "In our vetted suppliers walnut typically runs 20–35% above white oak for the same layout, driven by lumber cost and yield. For a 20 lf kitchen expect roughly $7,000–$9,000 in white oak versus $9,000–$12,000 in walnut, installed.",
   },
   {
     q: "Which species grain-matches better across a run?",
@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: "Which holds a natural finish better?",
-    a: "Both take a hardwax oil or conversion varnish well. White oak needs a UV-inhibiting topcoat to stay pale rather than yellowing; walnut needs one to slow fading. We spray and cure both in-house so the batch stays consistent.",
+    a: "Both take a hardwax oil or conversion varnish well. White oak needs a UV-inhibiting topcoat to stay pale rather than yellowing; walnut needs one to slow fading. We spray and cure both by our suppliers so the batch stays consistent.",
   },
 ];
 
@@ -209,7 +209,7 @@ const WhiteOakVsWalnutCabinets = () => (
               "Solid-wood 5-piece doors with mortise-and-tenon joinery in both species — no veneered MDF frames.",
               "Rift-sawn white oak is specified for slab and slim-shaker fronts where grain uniformity matters most.",
               "Walnut doors are laid out and numbered off a single flitch so the figure sequences across the run.",
-              "Both get a UV-inhibiting hardwax oil or conversion varnish, sprayed and cured in-house in Bushwick.",
+              "Both get a UV-inhibiting hardwax oil or conversion varnish, sprayed and cured by our suppliers in Bushwick.",
               "Panel float is engineered per species — walnut moves less seasonally than white oak, and the joint tolerances reflect that.",
             ].map((item) => (
               <li key={item} className="flex gap-3">
@@ -231,7 +231,7 @@ const WhiteOakVsWalnutCabinets = () => (
             {[
               "Pick white oak for a bright, modern kitchen, a family with kids, or long uninterrupted cabinet runs.",
               "Pick walnut for a warm, high-contrast luxury kitchen, a feature island, or a dark-and-moody Manhattan apartment.",
-              "Pick both when you want a white oak perimeter grounded by a walnut island — the most requested combination in our shop.",
+              "Pick both when you want a white oak perimeter grounded by a walnut island — the most requested combination in our designs.",
               "Pick white oak if budget is the deciding factor; the same layout typically lands 20–35% lower than walnut.",
             ].map((item) => (
               <li key={item} className="flex gap-3">

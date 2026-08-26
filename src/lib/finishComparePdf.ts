@@ -7,7 +7,7 @@
  *  - One US Letter page, max 4 panels side by side.
  *  - Brand-coloured header bar (Green Cabinets green #5C7650).
  *  - Each column shows: color swatch, brand, name, code, color family, finish.
- *  - Footer: showroom address + contact + the shareable URL.
+ *  - Footer: service area + contact + the shareable URL.
  */
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -41,8 +41,8 @@ export function buildCompareText(panels: MaterialPanel[], shareUrl: string): str
     "",
     `Shareable link: ${shareUrl}`,
     "",
-    "Bring these codes to our Bushwick showroom for live samples,",
-    "or reply with this list and we'll quote pricing & availability.",
+    "Reply with this list and we'll quote pricing & availability,",
+    "or book an appointment and we'll bring live samples to you.",
     "",
     "Green Cabinets NY · orders@greencabinetsny.com",
   ].join("\n");
@@ -201,8 +201,8 @@ export async function downloadComparePdf(
   doc.setFont("helvetica", "normal");
   doc.setTextColor(...TEXT_DARK);
   doc.setFontSize(8);
-  doc.text("Bushwick Showroom · orders@greencabinetsny.com", margin, footerY + 26);
-  doc.text("Bring these codes in to see live samples, or reply with this PDF for a quote.", margin, footerY + 38);
+  doc.text("Brooklyn, NY · By appointment · orders@greencabinetsny.com", margin, footerY + 26);
+  doc.text("Reply with this PDF for a quote, or book an appointment for live samples at your home.", margin, footerY + 38);
 
   doc.setTextColor(...MUTED);
   doc.setFontSize(7);

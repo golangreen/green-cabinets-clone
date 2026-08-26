@@ -14,7 +14,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/custom-kitchen-cabinets-queens";
 const TITLE = "Custom Kitchen Cabinets Queens — Insider Buyer's Guide 2026";
 const DESC =
-  "Insider guide to custom kitchen cabinets in Queens: 2026 pricing, Astoria/LIC/Forest Hills logistics, co-op vs. single-family install notes, and lead times from our Bushwick shop.";
+  "Insider guide to custom kitchen cabinets in Queens: 2026 pricing, Astoria/LIC/Forest Hills logistics, co-op vs. single-family install notes, and lead times from our vetted suppliers.";
 
 const FAQS = [
   {
@@ -23,11 +23,11 @@ const FAQS = [
   },
   {
     q: "Do you deliver and install in Queens?",
-    a: "Yes. Every cabinet is built at our Bushwick shop and driven to Queens — a 15–35 minute run depending on neighborhood. Astoria and Long Island City installs route over the Kosciuszko or Pulaski Bridge, Forest Hills and Rego Park via the LIE, Flushing and Bayside via Northern Blvd or Grand Central. Same crew, same day.",
+    a: "Yes. Every cabinet is built at our vetted suppliers and driven to Queens — a 15–35 minute run depending on neighborhood. Astoria and Long Island City installs route over the Kosciuszko or Pulaski Bridge, Forest Hills and Rego Park via the LIE, Flushing and Bayside via Northern Blvd or Grand Central. Same crew, same day.",
   },
   {
     q: "What's the lead time for Queens kitchens?",
-    a: "Plan on 4–6 weeks from signed design to install day. Cabinets are milled, sprayed, and cured in Bushwick, then delivered and installed in 1–2 days. Countertop templating happens the day cabinets land; stone fabrication adds another 2–3 weeks.",
+    a: "Plan on 4–6 weeks from signed design to install day. Cabinets are milled, sprayed, and cured by our suppliers to spec, then delivered and installed in 1–2 days. Countertop templating happens the day cabinets land; stone fabrication adds another 2–3 weeks.",
   },
   {
     q: "Do I need co-op board approval in Queens?",
@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     q: "Where can I see your cabinets before ordering?",
-    a: "Visit our Bushwick shop at 10 Montieth St, Brooklyn — 10 minutes from the Queens border, 15–20 minutes from Astoria or LIC on the L or off the BQE. You'll see finish samples, door styles, hardware, and cabinets in raw wood on the production floor. Most Queens clients come once for finish selection and finalize the rest by email.",
+    a: "Visit our vetted suppliers at 10 Montieth St, Brooklyn — 10 minutes from the Queens border, 15–20 minutes from Astoria or LIC on the L or off the BQE. You'll see finish samples, door styles, hardware, and cabinets in raw wood on the production floor. Most Queens clients come once for finish selection and finalize the rest by email.",
   },
 ];
 
@@ -262,7 +262,7 @@ const CustomKitchenCabinetsQueens = () => (
           Queens neighborhoods we install in
         </h2>
         <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
-          Every Queens install routes from our Bushwick shop — same
+          Every Queens install routes from our vetted suppliers — same
           cabinets, same install crew, same finish samples you'd see in
           Brooklyn or Manhattan.
         </p>
