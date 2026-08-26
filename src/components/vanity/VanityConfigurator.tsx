@@ -95,12 +95,8 @@ export const VanityConfigurator = ({ product }: VanityConfiguratorProps) => {
             state={c.state}
           />
 
-          <VanityActions
-            isProcessing={c.isProcessing}
-            onAddToCart={c.handleAddToCart}
-            onCheckout={c.handleCheckout}
-            onRequestQuote={c.handleRequestQuote}
-          />
+          <VanityActions onRequestQuote={c.handleRequestQuote} />
+
         </div>
       </div>
 
