@@ -24,10 +24,6 @@ function chunk<T>(items: T[], size: number): T[][] {
 }
 const today = new Date().toISOString().slice(0, 10);
 
-const SHOPIFY_STORE = "green-cabinets-clone-5eeb3.myshopify.com";
-const SHOPIFY_API_VERSION = "2025-07";
-const SHOPIFY_STOREFRONT_TOKEN = "585dda31c3bbc355eb6f937d3307f76b";
-
 const SUPABASE_URL = "https://mczagaaiyzbhjvtrojia.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jemFnYWFpeXpiaGp2dHJvamlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODcxOTMsImV4cCI6MjA3NzE2MzE5M30.j7Cg7ULJklrohMgYZ1BqYurgR01eUHYHFWHwI9_zae0";
@@ -52,47 +48,8 @@ interface SitemapEntry {
   priority?: string;
 }
 
-async function fetchShopifyProductHandles(): Promise<{ handle: string; updatedAt: string }[]> {
-  try {
-    const response = await fetch(
-      `https://${SHOPIFY_STORE}/api/${SHOPIFY_API_VERSION}/graphql.json`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
-        },
-        body: JSON.stringify({
-          query: `
-            query GetProductHandles($first: Int!) {
-              products(first: $first) {
-                edges { node { handle updatedAt } }
-              }
-            }
-          `,
-          variables: { first: 250 },
-        }),
-      }
-    );
-    if (!response.ok) {
-      console.warn(`Shopify API returned ${response.status}; skipping product sitemap entries.`);
-      return [];
-    }
-    const data = await response.json();
-    const edges = data?.data?.products?.edges || [];
-    return edges.map((e: { node: { handle: string; updatedAt: string } }) => ({
-      handle: e.node.handle,
-      updatedAt: e.node.updatedAt,
-    }));
-  } catch (err) {
-    console.warn("Failed to fetch Shopify products for sitemap:", err);
-    return [];
-  }
-}
-
 const core: SitemapEntry[] = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/shop", changefreq: "weekly", priority: "0.9" },
   { path: "/designer", changefreq: "monthly", priority: "0.7" },
   { path: "/gallery", changefreq: "weekly", priority: "0.8" },
   { path: "/finishes-colors", changefreq: "monthly", priority: "0.8" },
@@ -200,14 +157,6 @@ function maxLastmod(entries: SitemapEntry[]): string | undefined {
 }
 
 async function main() {
-  const shopifyProducts = await fetchShopifyProductHandles();
-  const products: SitemapEntry[] = shopifyProducts.map((p) => ({
-    path: `/product/${p.handle}`,
-    changefreq: "weekly",
-    priority: "0.8",
-    lastmod: p.updatedAt.slice(0, 10),
-  }));
-
   const blogArticles = await fetchBlogArticles();
   const blog: SitemapEntry[] = blogArticles.map((b) => ({
     path: `/blog/${b.slug}`,
@@ -222,7 +171,6 @@ async function main() {
     { name: "locations", entries: locations },
     { name: "wood-species", entries: woodSpecies },
     { name: "case-studies", entries: caseStudies },
-    { name: "products", entries: products },
     { name: "blog", entries: blog },
   ];
 

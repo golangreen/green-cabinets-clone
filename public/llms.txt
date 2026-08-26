@@ -2,7 +2,7 @@
 
 > Custom kitchen cabinets, bathroom vanities, closets, and millwork built in Bushwick, Brooklyn for homeowners, architects, and developers across NYC since 2009.
 
-Green Cabinets NY designs, manufactures, and installs premium custom cabinetry from a 10 Montieth St shop in Brooklyn. Specialties: shaker and slim-shaker kitchens, sustainable bathroom vanities, walk-in closet systems, and architectural millwork. Pricing is transparent — see /shop for linear-foot rates. Free in-home consultations across Brooklyn, Manhattan, Queens, the Bronx, and Staten Island.
+Green Cabinets NY designs, manufactures, and installs premium custom cabinetry from a 10 Montieth St shop in Brooklyn. Specialties: shaker and slim-shaker kitchens, sustainable bathroom vanities, walk-in closet systems, and architectural millwork. Free in-home consultations across Brooklyn, Manhattan, Queens, the Bronx, and Staten Island.
 
 ## Contact
 - Address: 10 Montieth St, Brooklyn, NY 11206
@@ -20,7 +20,6 @@ Green Cabinets NY designs, manufactures, and installs premium custom cabinetry f
 
 ## Core pages
 - [Home](https://greencabinetsny.com/): company overview and featured kitchens
-- [Shop](https://greencabinetsny.com/shop): cabinet products and pricing
 - [Designer](https://greencabinetsny.com/designer): free interactive kitchen and vanity designer
 - [Gallery](https://greencabinetsny.com/gallery): completed projects across NYC
 - [Finishes & Colors](https://greencabinetsny.com/finishes-colors): paint, stain, and door styles with side-by-side comparison

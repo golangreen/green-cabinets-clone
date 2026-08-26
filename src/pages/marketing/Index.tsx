@@ -23,7 +23,6 @@ import FinishesColorsSection from "@/components/home/FinishesColorsSection";
 
 // Lazy load heavy components
 const Gallery = lazy(() => import("@/components/home/Gallery"));
-const ShopProducts = lazy(() => import("@/components/shop/ShopProducts").then(m => ({ default: m.ShopProducts })));
 
 const Index = () => {
   useEffect(() => {
@@ -92,13 +91,6 @@ const Index = () => {
         <WoodSpeciesTeaser />
         <NeighborhoodsServed />
         <Testimonials />
-        <Suspense fallback={
-          <div className="py-20 flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-        }>
-          <ShopProducts />
-        </Suspense>
         <FAQ />
         <Contact />
         <CTA />

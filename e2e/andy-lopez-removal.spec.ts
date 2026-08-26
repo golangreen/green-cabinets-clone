@@ -15,7 +15,7 @@ const FORBIDDEN = [
   "OTE3NjkzMzc2Nw==",
 ];
 
-const ROUTES = ["/", "/shop", "/designer", "/landing"];
+const ROUTES = ["/", "/gallery", "/designer", "/landing"];
 
 const VIEWPORTS = [
   { name: "mobile", ...devices["iPhone 13"] },

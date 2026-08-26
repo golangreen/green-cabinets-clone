@@ -75,8 +75,8 @@ export default function VanityConfiguratorPage() {
               <Package className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
               <h1 className="text-2xl font-bold mb-4">Vanity Configurator Unavailable</h1>
               <p className="text-muted-foreground mb-8">{error}</p>
-              <Link to="/shop">
-                <Button>Visit Shop</Button>
+              <Link to="/">
+                <Button>Back to Home</Button>
               </Link>
             </div>
           )}

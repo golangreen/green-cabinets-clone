@@ -173,7 +173,7 @@ Sitemap: https://greencabinetsny.com/sitemap.xml
 
 describe("makeGuideLike", () => {
   const isGuide = makeGuideLike({
-    corePages: ["/", "/about", "/shop", "/case-studies"],
+    corePages: ["/", "/about", "/gallery", "/case-studies"],
     excludePrefixes: ["/custom-kitchen-cabinets-"],
   });
 

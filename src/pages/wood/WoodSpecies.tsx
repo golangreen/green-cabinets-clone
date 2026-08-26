@@ -117,7 +117,7 @@ const WoodSpecies = () => {
         position: 4,
         name: "Confirm the budget tier",
         text: "Budget-friendly: maple, birch, red oak, alder. Mid-tier: white oak, hickory, ash, cherry. Premium: walnut, mahogany, rift-cut and quartersawn white oak. Species can shift a 20-linear-foot kitchen by $1,500–$5,000.",
-        url: "https://greencabinetsny.com/shop",
+        url: "https://greencabinetsny.com/wood-species",
       },
       {
         "@type": "HowToStep",
