@@ -89,7 +89,6 @@ const App = () => {
             <Route path="/estimator/quotes" element={<EstimatorSavedQuotes />} />
             <Route path="/vanity-configurator" element={<Navigate to="/designer" replace />} />
             <Route path="/vanity-designer" element={<Navigate to="/designer" replace />} />
-            <Route path="/vanity-designer.html" element={<Navigate to="/designer" replace />} />
             <Route path="/product/:handle" element={<Navigate to="/" replace />} />
             <Route path="/performance" element={
               <AdminRoute>
