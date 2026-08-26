@@ -364,7 +364,7 @@ function FinishOverridesSection({
       <h2 className="text-xl font-semibold mb-1">Per-Finish Overrides</h2>
       <p className="text-sm text-muted-foreground mb-3">
         Highest priority — overrides both brand and tier rules. Use sparingly for
-        one-off exceptions (e.g. a specific colorway you fabricate in-house).
+        one-off exceptions (e.g. a specific colorway fabricated by one of our suppliers).
         Search to add new ones; empty rules inherit from brand/tier.
       </p>
 

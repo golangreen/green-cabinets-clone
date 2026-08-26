@@ -12,7 +12,7 @@ import QuoteForm from "@/components/marketing/QuoteForm";
 const faqs = [
   {
     q: "What makes your custom kitchen cabinets in Brooklyn, Manhattan, and Queens different?",
-    a: "Every project starts with a free in-home consultation across Brooklyn, Manhattan, Queens, and the wider New York area. Our custom kitchen cabinetry — from classic shaker and modern slim shaker to flat-panel — is designed, built, and finished in our Bushwick shop using FSC-certified hardwoods, low-VOC finishes, and European hardware, so you get a true one-of-a-kind kitchen that fits your space exactly.",
+    a: "Every project starts with a free in-home consultation across Brooklyn, Manhattan, Queens, and the wider New York area. Our custom kitchen cabinetry — from classic shaker and modern slim shaker to flat-panel — is designed by us and built to our specifications by vetted millwork suppliers using FSC-certified hardwoods, low-VOC finishes, and European hardware, so you get a true one-of-a-kind kitchen that fits your space exactly.",
   },
   {
     q: "Do you build shaker and slim shaker cabinet doors?",
@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     q: "How long does a custom kitchen cabinetry project take in NYC?",
-    a: "Most projects take 4–6 weeks from design approval to installation: 1–2 weeks for design and material selection, 2–3 weeks of in-shop fabrication, and 3–7 days for installation in your Brooklyn, Manhattan, or Queens home. We provide a clear timeline up front and keep you updated at every stage.",
+    a: "Most projects take 4–6 weeks from design approval to installation: 1–2 weeks for design and material selection, 2–3 weeks of fabrication by our millwork suppliers, and 3–7 days for installation in your Brooklyn, Manhattan, or Queens home. We provide a clear timeline up front and keep you updated at every stage.",
   },
   {
     q: "Do you handle both kitchens and bathroom vanities?",
@@ -36,7 +36,7 @@ const faqs = [
   },
   {
     q: "What does the fabrication timeline look like week by week?",
-    a: "Week 1–2: design, material selection, and shop drawings. Week 3: CNC cutting of cabinet boxes and door components in our Bushwick shop. Week 4: assembly, sanding, and joinery. Week 5: spray finishing, drying, and final QC inspection. Week 6: delivery and installation in your Brooklyn, Manhattan, or Queens home. Most kitchens are complete 4–6 weeks from approved drawings.",
+    a: "Week 1–2: design, material selection, and shop drawings. Week 3: CNC cutting of cabinet boxes and door components by our vetted millwork suppliers, to our specifications. Week 4: assembly, sanding, and joinery. Week 5: spray finishing, drying, and final QC inspection. Week 6: delivery and installation in your Brooklyn, Manhattan, or Queens home. Most kitchens are complete 4–6 weeks from approved drawings.",
   },
   {
     q: "Do you provide Certificates of Insurance (COIs) for condo and co-op buildings?",

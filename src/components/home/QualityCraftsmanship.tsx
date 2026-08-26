@@ -44,7 +44,7 @@ const pillars = [
     icon: Factory,
     title: "Fabrication Process",
     description:
-      "CNC-cut precision combined with hand-finishing in our Bushwick shop — every panel inspected before it ships.",
+      "CNC-cut precision combined with hand-finishing by our vetted millwork suppliers, built to our specifications — every panel inspected before it ships.",
   },
   {
     icon: Ruler,

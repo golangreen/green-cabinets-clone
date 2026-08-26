@@ -380,8 +380,8 @@ const WoodSpecies = () => {
               Still not sure which wood is right for your kitchen?
             </h2>
             <p className="text-base sm:text-lg text-primary-foreground">
-              Bring your inspiration photos and we will hand you actual wood samples in our
-              Bushwick showroom. Most clients find their wood within 15 minutes of touching them.
+              Bring your inspiration photos and we will bring actual wood samples to your home by
+              appointment. Most clients find their wood within 15 minutes of touching them.
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
               <Button asChild size="lg" className="bg-white text-accent-foreground hover:bg-white/90 hover:scale-105 transition-all">

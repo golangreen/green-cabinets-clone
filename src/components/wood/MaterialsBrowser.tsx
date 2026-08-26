@@ -1,7 +1,7 @@
 /**
  * MaterialsBrowser — browse real laminate/TFL panels from partner brands.
  * Lives inside the /wood-species page. Read-only: clients browse, click a
- * swatch to zoom, see codes, and bring the code(s) to the showroom.
+ * swatch to zoom, see codes, and mention the code(s) when booking a home sample visit.
  *
  * POC scope: Tafisa fully populated (117 panels, hot-linked from tafisa.ca).
  * Other brands stubbed — same component renders them once data lands.
@@ -154,10 +154,10 @@ function PanelModal({
               </div>
             </div>
             <div className="rounded-lg bg-[#5C7650]/10 border border-[#5C7650]/30 p-3 text-[#1a1a1a]">
-              <p className="font-semibold mb-1">In our Bushwick showroom</p>
+              <p className="font-semibold mb-1">See it in person</p>
               <p className="text-xs text-muted-foreground">
-                Bring this code to see the actual sample, or mention it when
-                you book a consultation and we will pull it for you.
+                Mention this code when you book a consultation and we will
+                bring the actual sample to your home.
               </p>
             </div>
 

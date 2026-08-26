@@ -35,7 +35,7 @@ const Index = () => {
         {/* Primary Meta Tags */}
         <title>Bespoke European Cabinetry NYC | Green Cabinets NY</title>
         <meta name="title" content="Bespoke European Cabinetry & Luxury Kitchens NYC | Green Cabinets" />
-        <meta name="description" content="Bespoke European cabinetry and luxury custom kitchens for Brooklyn, Manhattan & Queens. Handcrafted in Bushwick since 2009 — vanities, closets, millwork. Free design consult." />
+        <meta name="description" content="Bespoke European cabinetry and luxury custom kitchens for Brooklyn, Manhattan & Queens. Designed in Bushwick since 2009 — vanities, closets, millwork. Free design consult." />
 
         <meta name="keywords" content="custom kitchen cabinets in Brooklyn, custom kitchen cabinets Manhattan, custom kitchen cabinets Queens, shaker cabinets NYC, slim shaker cabinets, shaker kitchen cabinets Brooklyn, bathroom vanities NYC, custom cabinetry Brooklyn, kitchen cabinets New York, closet systems Brooklyn, cabinet maker Brooklyn, sustainable cabinets NYC" />
 
@@ -45,7 +45,7 @@ const Index = () => {
         <meta property="og:locale" content="en_US" />
         <meta property="og:url" content="https://greencabinetsny.com/" />
         <meta property="og:title" content="Bespoke European Cabinetry & Luxury Kitchens in NYC | Green Cabinets NY" />
-        <meta property="og:description" content="Bespoke European cabinetry, luxury custom kitchens, vanities and millwork handcrafted in Bushwick for Brooklyn, Manhattan and Queens homes since 2009." />
+        <meta property="og:description" content="Bespoke European cabinetry, luxury custom kitchens, vanities and millwork designed in Bushwick for Brooklyn, Manhattan and Queens homes since 2009." />
         <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
         <meta property="og:image:secure_url" content="https://greencabinetsny.com/og-image.jpg" />
         <meta property="og:image:type" content="image/jpeg" />
@@ -60,7 +60,7 @@ const Index = () => {
         <meta name="twitter:domain" content="greencabinetsny.com" />
         <meta name="twitter:url" content="https://greencabinetsny.com/" />
         <meta name="twitter:title" content="Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY" />
-        <meta name="twitter:description" content="Custom shaker & slim shaker kitchen cabinets, bathroom vanities & millwork built in Bushwick for NYC homes since 2009." />
+        <meta name="twitter:description" content="Custom shaker & slim shaker kitchen cabinets, bathroom vanities & millwork designed in Bushwick for NYC homes since 2009." />
         <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
         <meta name="twitter:image:alt" content="Sage green shaker kitchen cabinets with marble countertops in a Brooklyn brownstone — Green Cabinets NY" />
 

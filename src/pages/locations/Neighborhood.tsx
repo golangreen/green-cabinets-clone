@@ -249,7 +249,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
             </h2>
             <p className="text-center text-[#555555] mb-10 max-w-2xl mx-auto">
               A small sample of cabinetry styles we build for {n.name} kitchens — each
-              one designed, milled, and hand-finished in our Bushwick shop.
+              one designed by us and milled and hand-finished by our vetted millwork suppliers.
             </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {lightboxImages.map((item, idx) => (

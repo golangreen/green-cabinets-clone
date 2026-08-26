@@ -15,9 +15,9 @@ import { ArrowRight, MapPin, Hammer, Award } from "lucide-react";
 import { PEOPLE, ORG_ID, AUTHOR_IDS } from "@/data/authors";
 
 const URL = "https://greencabinetsny.com/about";
-const TITLE = "About Green Cabinets NY — Bushwick Cabinet Shop Since 2009";
+const TITLE = "About Green Cabinets NY — Brooklyn Custom Cabinetry Since 2009";
 const DESC =
-  "Meet the team behind Green Cabinets NY — custom kitchens, vanities & millwork built in our Bushwick, Brooklyn shop since 2009.";
+  "Meet the team behind Green Cabinets NY — custom kitchens, vanities & millwork designed in Bushwick, Brooklyn since 2009.";
 
 const aboutSchema = {
   "@context": "https://schema.org",
@@ -70,8 +70,8 @@ const About = () => (
             About Green Cabinets NY
           </h1>
           <p className="text-base sm:text-lg text-[#444] max-w-2xl mx-auto">
-            We're a small Brooklyn cabinet shop building custom kitchens, vanities, closets, and
-            millwork for NYC homes — milled, sprayed, and crated at 10 Montieth St since 2009.
+            We're a small Brooklyn design-and-build team creating custom kitchens, vanities, closets, and
+            millwork for NYC homes — designed by us, built to our specifications by vetted millwork suppliers since 2009.
           </p>
         </div>
       </section>
@@ -83,8 +83,8 @@ const About = () => (
               <Hammer className="h-6 w-6 text-accent-foreground mb-3" />
               <h2 className="font-semibold text-lg mb-1">Built in Brooklyn</h2>
               <p className="text-sm text-muted-foreground">
-                Every cabinet is milled, sanded, and sprayed in our Bushwick shop. You're welcome
-                to visit while yours is in raw wood.
+                Every cabinet is designed and specified by us, then milled, sanded, and sprayed by
+                our vetted millwork suppliers to our exact standards.
               </p>
             </div>
             <div className="p-6 border border-border rounded-lg">
