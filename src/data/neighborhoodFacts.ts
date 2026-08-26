@@ -51,7 +51,7 @@ export const NEIGHBORHOOD_FACTS: Record<string, NeighborhoodInfo> = {
   Bushwick: make(
     "Bushwick",
     "Brooklyn",
-    "Bushwick is home to our shop. Founded by the Dutch in 1638, today it's NYC's mural capital — and the place every Green Cabinets cabinet is hand-built before installation.",
+    "Bushwick is our home base. Founded by the Dutch in 1638, today it's NYC's mural capital — and the neighborhood where Green Cabinets NY designs and specifies every kitchen before installation.",
   ),
   Greenpoint: make(
     "Greenpoint",

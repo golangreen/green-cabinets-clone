@@ -78,7 +78,7 @@ export const PEOPLE = [
     worksFor: { "@id": ORG_ID },
     affiliation: { "@id": ORG_ID },
     url: "https://greencabinetsny.com/about",
-    telephone: "+1-917-819-5538",
+    telephone: "+1-718-804-5488",
     email: "orders@greencabinetsny.com",
     knowsAbout: [
       "Cabinet installation in NYC apartments",
@@ -87,6 +87,6 @@ export const PEOPLE = [
       "Co-op board approvals and alteration agreements",
     ],
     description:
-      "Runs install crews and project management for Green Cabinets NY across the five boroughs.",
+      "Runs install crews and project management for Green Cabinets NY across Brooklyn, Manhattan, and Queens.",
   },
 ] as const;

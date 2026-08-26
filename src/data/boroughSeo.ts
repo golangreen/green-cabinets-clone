@@ -30,9 +30,9 @@ export const BOROUGHS: Record<BoroughSlug, BoroughSeo> = {
     title:
       "Custom Kitchen Cabinets in Brooklyn, NY | Green Cabinets NY",
     description:
-      "Custom kitchen cabinets in Brooklyn, handcrafted in our Bushwick shop since 2009. FSC hardwoods, free in-home consultation.",
+      "Custom kitchen cabinets in Brooklyn, designed by our Bushwick-based team since 2009 and built by vetted millwork suppliers. FSC hardwoods, free in-home consultation.",
     keywords:
-      "custom kitchen cabinets Brooklyn, Brooklyn cabinet maker, kitchen cabinetry Brooklyn NY, Bushwick cabinet shop, sustainable cabinets Brooklyn, bathroom vanities Brooklyn",
+      "custom kitchen cabinets Brooklyn, Brooklyn cabinet maker, kitchen cabinetry Brooklyn NY, Bushwick cabinet maker, sustainable cabinets Brooklyn, bathroom vanities Brooklyn",
     heroTagline:
       "Brooklyn-built custom kitchen cabinets, designed to last generations.",
     intro:
@@ -70,7 +70,7 @@ export const BOROUGHS: Record<BoroughSlug, BoroughSeo> = {
         question:
           "How long does a Brooklyn kitchen cabinet project take?",
         answer:
-          "Most Brooklyn projects take 4–6 weeks: 1–2 weeks for design, 2–3 weeks of in-shop fabrication in Bushwick, and 3–7 days for installation in your home.",
+          "Most Brooklyn projects take 4–6 weeks: 1–2 weeks for design, 2–3 weeks of fabrication by our vetted millwork suppliers, and 3–7 days for installation in your home.",
       },
       {
         question:
@@ -210,7 +210,7 @@ export const BOROUGHS: Record<BoroughSlug, BoroughSeo> = {
         question:
           "How long does installation take in Queens?",
         answer:
-          "Plan on 4–6 weeks total: 1–2 weeks design, 2–3 weeks fabrication in our Bushwick shop, and 3–7 days for on-site installation in your Queens home.",
+          "Plan on 4–6 weeks total: 1–2 weeks design, 2–3 weeks fabrication by our vetted millwork suppliers, and 3–7 days for on-site installation in your Queens home.",
       },
     ],
   },
