@@ -16,12 +16,6 @@ test.describe('Homepage', () => {
     await expect(page.getByTestId('hero-carousel')).toBeVisible();
   });
 
-  test('should navigate to shop page', async ({ page }) => {
-    await page.goto('/shop');
-    await expect(page).toHaveURL(/.*shop/);
-    await expect(page.locator('h1')).toContainText(/shop/i);
-  });
-
   test('chatbot launcher on content pages sends signed-out users to /auth', async ({ page }) => {
     // The assistant is mounted on guide/location pages (not the homepage) and
     // requires a session, so an anonymous click routes to the auth page.

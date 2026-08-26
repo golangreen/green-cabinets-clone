@@ -54,7 +54,6 @@ const EXPECTED_SITEMAP = `${HOST}/sitemap.xml`;
 const CORE_PAGES = [
   "/",
   "/about",
-  "/shop",
   "/gallery",
   "/wood-species",
   "/finishes-colors",
