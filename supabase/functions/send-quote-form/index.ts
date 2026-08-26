@@ -103,7 +103,6 @@ serve(async (req) => {
       <div style="font-family:Arial,sans-serif;color:#222;line-height:1.5;max-width:720px">
         ${name ? `<p><strong>From:</strong> ${escapeHtml(name)}</p>` : ""}
         ${email ? `<p><strong>Email:</strong> ${escapeHtml(email)}</p>` : ""}
-        <h3 style="margin-top:18px">Quote &amp; Build Measurements</h3>
         ${phone ? `<p><strong>Phone:</strong> ${escapeHtml(phone)}</p>` : ""}
         ${borough ? `<p><strong>Borough:</strong> ${escapeHtml(borough)}</p>` : ""}
         <h3 style="margin-top:18px">Quote &amp; Build Measurements</h3>
