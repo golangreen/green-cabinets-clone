@@ -14,8 +14,14 @@ const contactFormSchema = z.object({
   phone: z.string().trim().min(10).max(20).optional(),
   message: z.string().trim().min(10).max(1000),
   projectType: z.string().optional(),
-  recaptchaToken: z.string().min(1),
+  recaptchaToken: z.string().min(1).optional(),
+  // Keyless fallback proof used when no reCAPTCHA secret is configured.
+  spamGuard: z
+    .object({ hp: z.string().max(200), elapsedMs: z.number() })
+    .optional(),
 });
+
+const MIN_DWELL_MS = 3000;
 
 // Rate limiting
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -120,13 +126,26 @@ const handler = async (req: Request): Promise<Response> => {
 
     const formData = validationResult.data;
 
-    // Verify reCAPTCHA
-    const isRecaptchaValid = await verifyRecaptcha(formData.recaptchaToken, clientIp);
-    if (!isRecaptchaValid) {
-      console.warn(`reCAPTCHA verification failed for IP: ${clientIp}`);
+    // Spam verification: reCAPTCHA when a real secret is configured,
+    // otherwise the keyless honeypot + dwell-time guard (plus rate limiting).
+    const captchaConfigured =
+      Boolean(RECAPTCHA_SECRET_KEY) && RECAPTCHA_SECRET_KEY !== GOOGLE_TEST_SECRET_KEY;
+
+    let spamOk = false;
+    if (captchaConfigured) {
+      spamOk = formData.recaptchaToken
+        ? await verifyRecaptcha(formData.recaptchaToken, clientIp)
+        : false;
+    } else {
+      const g = formData.spamGuard;
+      spamOk = Boolean(g) && g!.hp.trim() === "" && g!.elapsedMs >= MIN_DWELL_MS;
+    }
+
+    if (!spamOk) {
+      console.warn(`Spam verification failed for IP: ${clientIp}`);
       return new Response(
-        JSON.stringify({ 
-          error: "reCAPTCHA verification failed. Please try again." 
+        JSON.stringify({
+          error: "Spam verification failed. Please try again.",
         }),
         {
           status: 400,

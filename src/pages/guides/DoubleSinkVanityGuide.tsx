@@ -101,7 +101,7 @@ const DoubleSinkVanityGuide = () => (
     <BreadcrumbSchema
       items={[
         { name: "Home", url: "/" },
-        { name: "Vanities", url: "/vanity-designer" },
+        { name: "Vanities", url: "/designer" },
         { name: "Double Sink Vanity Guide", url: URL },
       ]}
     />
@@ -112,7 +112,7 @@ const DoubleSinkVanityGuide = () => (
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
-          { label: "Vanities", to: "/vanity-designer" },
+          { label: "Vanities", to: "/designer" },
           { label: "Double Sink Vanity Guide" },
         ]}
       />
@@ -216,7 +216,7 @@ const DoubleSinkVanityGuide = () => (
               Configure your double vanity, pick a finish, and get a price in under two minutes.
             </p>
             <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
-              <Link to="/vanity-designer">Open the vanity designer <ArrowRight className="h-4 w-4 ml-2" /></Link>
+              <Link to="/designer">Open the vanity designer <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>
 
