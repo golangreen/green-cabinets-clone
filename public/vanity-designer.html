@@ -6351,18 +6351,26 @@
         async function sendQuoteEmail() {
             const inp = $("clientEmail"),
                 nameInp = $("clientName"),
+                phoneInp = $("clientPhone"),
+                boroughInp = $("clientBorough"),
                 hint = $("emailHint"),
                 btn = $("emailQuote");
             const email = (inp.value || "").trim();
             const nm = (nameInp.value || "").trim();
-            if (email && !isEmail(email)) {
-                inp.classList.add("bad");
+            const phone = (phoneInp.value || "").trim();
+            const borough = (boroughInp.value || "").trim();
+            const fail = (el, msg) => {
+                [inp, nameInp, phoneInp, boroughInp].forEach(e => e.classList.remove("bad"));
+                el.classList.add("bad");
                 hint.classList.add("err");
-                hint.textContent = "That email doesn't look right \u2014 check it, or leave it blank.";
-                inp.focus();
-                return;
-            }
-            inp.classList.remove("bad");
+                hint.textContent = msg;
+                el.focus();
+            };
+            if (nm.length < 2) return fail(nameInp, "Please enter your full name.");
+            if (!email || !isEmail(email)) return fail(inp, "Please enter a valid email address.");
+            if (phone.replace(/\D/g, "").length < 10) return fail(phoneInp, "Please enter a valid phone number.");
+            if (!borough) return fail(boroughInp, "Please select your borough \u2014 Brooklyn, Manhattan or Queens.");
+            [inp, nameInp, phoneInp, boroughInp].forEach(e => e.classList.remove("bad"));
             hint.classList.remove("err");
             const s = modalSpec || {
                 subject: "Quote request",
@@ -6370,10 +6378,9 @@
             };
             let body = s.body,
                 subject = s.subject;
-            if (nm) {
-                body = body.replace(/Thank you!$/, `Thank you!\n\n\u2014 ${nm}`);
-                subject = `${subject} \u2014 ${nm}`;
-            }
+            body += `\n\nContact:\nName: ${nm}\nEmail: ${email}\nPhone: ${phone}\nBorough: ${borough}`;
+            subject = `${subject} \u2014 ${nm} (${borough})`;
+
 
             /* ---- Path A: backend configured -> POST everything incl. the image, hands-off ---- */
             if (QUOTE_ENDPOINT) {
