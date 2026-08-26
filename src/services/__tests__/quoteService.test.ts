@@ -62,6 +62,7 @@ describe('QuoteService', () => {
   });
 
   it('accepts the keyless spam guard when no captcha token is present', async () => {
+    mockSupabase.functions.invoke.mockResolvedValueOnce({ data: { success: true }, error: null });
     const { recaptchaToken, ...noToken } = validRequest;
     const result = await service.submitQuote({
       ...noToken,
@@ -69,6 +70,7 @@ describe('QuoteService', () => {
     });
     expect(result.success).toBe(true);
   });
+
 
 
   it('rejects message that is too short', async () => {
