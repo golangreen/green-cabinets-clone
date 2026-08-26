@@ -131,7 +131,7 @@ const Footer = () => {
         </div>
         
         <div className="pt-6 sm:pt-8 border-t border-gray-800 text-center text-xs sm:text-sm text-primary-foreground/90">
-          <p>&copy; 2025 Green Cabinets. All rights reserved.</p>
+          <p>&copy; 2026 Green Cabinets. All rights reserved.</p>
         </div>
       </div>
     </footer>
