@@ -39,11 +39,13 @@ export default function Blog() {
           </p>
         </header>
 
-        {loading && <p className="text-center text-muted-foreground">Loading…</p>}
-        {error && <p className="text-center text-destructive">{error}</p>}
-        {!loading && !error && articles.length === 0 && (
+        {error && articles.length === 0 && (
+          <p className="text-center text-destructive">{error}</p>
+        )}
+        {articles.length === 0 && !error && (
           <p className="text-center text-muted-foreground">No articles yet — check back soon.</p>
         )}
+
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {articles.map((a) => (
