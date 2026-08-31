@@ -35,8 +35,10 @@ export default function Blog() {
         <header className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Design ideas, project stories, and craft notes from our Brooklyn shop.
+            Design ideas, project stories, and craft notes from Green Cabinets NY — custom
+            millwork by appointment in Brooklyn, Manhattan, and Queens.
           </p>
+
         </header>
 
         {error && articles.length === 0 && (
