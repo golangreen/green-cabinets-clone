@@ -4,18 +4,24 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Seo from "@/components/Seo";
 import { listBlogArticles, type BlogArticle } from "@/services/blogService";
+import { STATIC_BLOG_POSTS, STATIC_BLOG_SLUGS } from "@/data/staticBlogPosts";
 
 export default function Blog() {
-  const [articles, setArticles] = useState<BlogArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [articles, setArticles] = useState<BlogArticle[]>(STATIC_BLOG_POSTS);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     listBlogArticles()
-      .then(setArticles)
-      .catch((e) => setError(e.message ?? "Failed to load"))
-      .finally(() => setLoading(false));
+      .then((remote) => {
+        const merged = [
+          ...STATIC_BLOG_POSTS,
+          ...remote.filter((a) => !STATIC_BLOG_SLUGS.has(a.slug)),
+        ].sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
+        setArticles(merged);
+      })
+      .catch((e) => setError(e?.message ?? "Failed to load"));
   }, []);
+
 
   return (
     <div className="min-h-screen flex flex-col">
