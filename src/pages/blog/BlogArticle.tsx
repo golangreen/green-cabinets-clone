@@ -5,16 +5,25 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Seo from "@/components/Seo";
 import { getBlogArticleBySlug, type BlogArticle } from "@/services/blogService";
+import { getStaticBlogPost } from "@/data/staticBlogPosts";
 import { normalizeArticleHtml } from "@/lib/normalizeArticleHtml";
 
 export default function BlogArticlePage() {
   const { slug } = useParams<{ slug: string }>();
-  const [article, setArticle] = useState<BlogArticle | null>(null);
-  const [loading, setLoading] = useState(true);
+  const staticArticle = getStaticBlogPost(slug);
+  const [article, setArticle] = useState<BlogArticle | null>(staticArticle);
+  const [loading, setLoading] = useState(!staticArticle);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
+    const preset = getStaticBlogPost(slug);
+    setArticle(preset);
+    setNotFound(false);
+    if (preset) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     getBlogArticleBySlug(slug)
       .then((a) => {
@@ -24,6 +33,7 @@ export default function BlogArticlePage() {
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
   }, [slug]);
+
 
   return (
     <div className="min-h-screen flex flex-col">
