@@ -4,18 +4,24 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Seo from "@/components/Seo";
 import { listBlogArticles, type BlogArticle } from "@/services/blogService";
+import { STATIC_BLOG_POSTS, STATIC_BLOG_SLUGS } from "@/data/staticBlogPosts";
 
 export default function Blog() {
-  const [articles, setArticles] = useState<BlogArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [articles, setArticles] = useState<BlogArticle[]>(STATIC_BLOG_POSTS);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     listBlogArticles()
-      .then(setArticles)
-      .catch((e) => setError(e.message ?? "Failed to load"))
-      .finally(() => setLoading(false));
+      .then((remote) => {
+        const merged = [
+          ...STATIC_BLOG_POSTS,
+          ...remote.filter((a) => !STATIC_BLOG_SLUGS.has(a.slug)),
+        ].sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
+        setArticles(merged);
+      })
+      .catch((e) => setError(e?.message ?? "Failed to load"));
   }, []);
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -29,15 +35,19 @@ export default function Blog() {
         <header className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Design ideas, project stories, and craft notes from our Brooklyn shop.
+            Design ideas, project stories, and craft notes from Green Cabinets NY — custom
+            millwork by appointment in Brooklyn, Manhattan, and Queens.
           </p>
+
         </header>
 
-        {loading && <p className="text-center text-muted-foreground">Loading…</p>}
-        {error && <p className="text-center text-destructive">{error}</p>}
-        {!loading && !error && articles.length === 0 && (
+        {error && articles.length === 0 && (
+          <p className="text-center text-destructive">{error}</p>
+        )}
+        {articles.length === 0 && !error && (
           <p className="text-center text-muted-foreground">No articles yet — check back soon.</p>
         )}
+
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {articles.map((a) => (
