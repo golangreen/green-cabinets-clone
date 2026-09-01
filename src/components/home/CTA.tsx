@@ -1,44 +1,85 @@
-import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
-import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import QuoteForm from "@/components/marketing/QuoteForm";
+import ContactGateDialog from "@/components/privacy/ContactGateDialog";
+import { useContactUnlock } from "@/components/privacy/contactUnlock";
 
 const CTA = () => {
+  const [contactMethod, setContactMethod] = useState<"email" | "text">("email");
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [gateOpen, setGateOpen] = useState(false);
+  const { unlocked } = useContactUnlock();
+
+  const openContact = () => {
+    if (contactMethod === "email") {
+      // Decode email client-side to protect from bots
+      const encoded = 'b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20='; // Base64 encoded: orders@greencabinetsny.com
+      window.location.href = `mailto:${atob(encoded)}`;
+    } else {
+      // Decode phone number client-side to protect from bots
+      const encoded = 'NzE4ODA0NTQ4OA=='; // Base64 encoded: 7188045488
+      window.location.href = `sms:+1${atob(encoded)}`;
+    }
+  };
+
+  const handleConsultation = () => {
+    if (!unlocked) {
+      setGateOpen(true);
+      return;
+    }
+    openContact();
+  };
+
   return (
     <section className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-[#0a0a0a]">
+      {/* Content */}
       <div className="container relative z-10 mx-auto px-4 sm:px-6 text-center">
-        <div className="max-w-3xl mx-auto space-y-6 sm:space-y-8">
-          <p className="text-base sm:text-lg md:text-xl text-primary-foreground/90">
-            Green Cabinets NY is appointment-only. There is no walk-in shop, showroom, or factory. We bring finish and door samples to your home in Brooklyn, Manhattan, and Queens.
+        <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            All your storage needs,
+            <br />
+            in one place.
+          </h2>
+          
+          <p className="text-base sm:text-lg md:text-xl text-primary-foreground max-w-2xl mx-auto px-4">
+            Join thousands of happy homeowners who transformed their spaces with Green Cabinets.
           </p>
           
-          <p className="text-base sm:text-lg md:text-xl text-primary-foreground/90">
-            <ObfuscatedPhone 
-              encoded="NzE4ODA0NTQ4OA==" 
-              alwaysReveal 
-              className="hover:text-white transition-colors"
-              type="tel"
-            />
-            <span className="mx-2">·</span>
-            <ObfuscatedEmail 
-              encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=" 
-              alwaysReveal 
-              className="hover:text-white transition-colors"
-            />
-          </p>
-          
-          <p className="text-sm sm:text-base text-primary-foreground/80">
-            Follow:{" "}
-            <a 
-              href="https://instagram.com/green_cabinets_" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-2 hover:text-white transition-colors"
+          <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 pt-6 sm:pt-8 max-w-md mx-auto">
+            <Button 
+              size="lg" 
+              className="text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 w-full bg-primary hover:bg-primary/90 text-white border-2 border-primary"
+              onClick={() => setShowQuoteForm(true)}
             >
-              instagram.com/green_cabinets_
-            </a>{" "}
-            only.
-          </p>
+              Get Your Free Quote
+            </Button>
+            
+            <div className="w-full space-y-3">
+              <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
+                <SelectTrigger aria-label="Choose contact method" className="w-full border-gray-700 text-white bg-[#1a1a1a]">
+                  <SelectValue placeholder="Choose contact method" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="email">Email</SelectItem>
+                  <SelectItem value="text">Text Message</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6 w-full bg-primary hover:bg-primary/90 text-white border-2 border-primary"
+                onClick={handleConsultation}
+              >
+                Schedule Consultation
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
+
+      <QuoteForm isOpen={showQuoteForm} onClose={() => setShowQuoteForm(false)} />
+      <ContactGateDialog open={gateOpen} onOpenChange={setGateOpen} onVerified={openContact} />
     </section>
   );
 };
