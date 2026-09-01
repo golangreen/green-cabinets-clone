@@ -36,8 +36,34 @@ const Footer = () => {
             <img src={logo} alt="Green Cabinets Logo" className="h-12 sm:h-16 w-auto" />
             <span className="font-display text-lg sm:text-xl font-bold text-white">Green Cabinets</span>
           </div>
+          <p className="text-sm sm:text-base text-primary-foreground/90 px-4 max-w-2xl mx-auto">
+            Green Cabinets NY is appointment-only. There is no walk-in shop, showroom, or factory. We bring finish and door samples to your home in Brooklyn, Manhattan, and Queens.
+          </p>
           <p className="text-sm sm:text-base text-primary-foreground/90 px-4">
-            Premium custom cabinetry for modern living.
+            <ObfuscatedPhone 
+              encoded="NzE4ODA0NTQ4OA==" 
+              alwaysReveal 
+              className="hover:text-white transition-colors"
+              type="tel"
+            />
+            <span className="mx-2">·</span>
+            <ObfuscatedEmail 
+              encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=" 
+              alwaysReveal 
+              className="hover:text-white transition-colors"
+            />
+          </p>
+          <p className="text-sm sm:text-base text-primary-foreground/90 px-4">
+            Follow:{" "}
+            <a 
+              href="https://instagram.com/green_cabinets_" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-white transition-colors"
+            >
+              instagram.com/green_cabinets_
+            </a>{" "}
+            only.
           </p>
           <div className="flex justify-center gap-4">
             <a 
