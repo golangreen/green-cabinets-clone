@@ -93,7 +93,7 @@ const Index = () => {
         <Testimonials />
         <FAQ />
         <Contact />
-        <CTA />
+        <AppointmentBand />
       </main>
       <Footer />
       
