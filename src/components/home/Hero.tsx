@@ -80,17 +80,23 @@ const Hero = () => {
       <section className="bg-background pt-28 pb-16 sm:py-24 md:py-36 min-h-[360px] sm:min-h-[420px] md:min-h-[560px] flex items-center">
         <div className="container mx-auto px-4 text-center w-full">
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-6 text-foreground min-h-[3em] sm:min-h-[2.4em] md:min-h-[2.4em] flex items-center justify-center">
-            <span>Green Cabinets NY — Custom Kitchen &amp; Bathroom Millwork in Brooklyn</span>
+            <span>Most NYC kitchens were never designed for stock cabinets.</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
-            Premier sustainable custom kitchen cabinets in Brooklyn, Manhattan, and Queens. Designed in Bushwick and built to spec by vetted millwork suppliers for homeowners and developers across NYC.
+            Designed in Bushwick. Built to spec. Installed across Brooklyn, Manhattan, and Queens — including the co-op with the freight elevator and the brownstone with the crooked walls.
           </p>
-          <div className="flex justify-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="/designer"
+              href="/estimator"
               className="inline-flex items-center justify-center bg-[#5C7650] hover:bg-[#445339] text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-full shadow-2xl transition-all hover:scale-105"
             >
-              Design Your Vanity
+              Get a kitchen quote
+            </a>
+            <a
+              href="/designer"
+              className="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-[#0a0a0a] font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-full shadow-2xl transition-all hover:scale-105"
+            >
+              Design a vanity
             </a>
           </div>
         </div>

@@ -8,7 +8,7 @@ import Features from "@/components/home/Features";
 import About from "@/components/home/About";
 import Suppliers from "@/components/home/Suppliers";
 import Contact from "@/components/home/Contact";
-import CTA from "@/components/home/CTA";
+import AppointmentBand from "@/components/home/AppointmentBand";
 import Footer from "@/components/layout/Footer";
 
 import FAQ from "@/components/home/FAQ";
@@ -93,7 +93,7 @@ const Index = () => {
         <Testimonials />
         <FAQ />
         <Contact />
-        <CTA />
+        <AppointmentBand />
       </main>
       <Footer />
       
