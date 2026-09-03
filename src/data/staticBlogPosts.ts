@@ -6,6 +6,34 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-brooklyn-brownstone-kitchen-millwork",
+    external_id: null,
+    slug: "brooklyn-brownstone-kitchen-millwork",
+    title: "Brooklyn Brownstone Kitchen Millwork (Park Slope to Bed-Stuy)",
+    excerpt:
+      "Custom kitchen cabinets for Brooklyn brownstones in Park Slope, Fort Greene, Bed-Stuy, and Boerum Hill. Green Cabinets NY installs by appointment. Call (718) 804-5488.",
+    meta_title: "Brooklyn Brownstone Kitchen Millwork (Park Slope to Bed-Stuy)",
+    meta_description:
+      "Custom kitchen cabinets for Brooklyn brownstones in Park Slope, Fort Greene, Bed-Stuy, and Boerum Hill. Green Cabinets NY installs by appointment. Call (718) 804-5488.",
+    tags: [
+      "brooklyn",
+      "brownstone",
+      "park slope",
+      "fort greene",
+      "bed-stuy",
+      "boerum hill",
+      "kitchen millwork",
+      "custom cabinets",
+      "by appointment",
+    ],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/brooklyn-brownstone-kitchen-millwork",
+    created_at: "2026-09-03T12:00:00-04:00",
+    updated_at: "2026-09-03T12:00:00-04:00",
+    content_html: "",
+  },
+  {
     id: "static-queens-apartment-kitchen-millwork",
     external_id: null,
     slug: "queens-apartment-kitchen-millwork",
