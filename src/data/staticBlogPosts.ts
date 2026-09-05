@@ -6,6 +6,45 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-nyc-kitchen-cabinet-installation",
+    external_id: null,
+    slug: "nyc-kitchen-cabinet-installation",
+    title: "How Custom Kitchen Cabinet Installation Works in NYC",
+    excerpt:
+      "Freight elevators, COI paperwork, and tight stairwells — how Green Cabinets NY installs custom kitchens by appointment in Brooklyn, Manhattan, and Queens. Call (718) 804-5488.",
+    meta_title: "How Custom Kitchen Cabinet Installation Works in NYC",
+    meta_description:
+      "Freight elevators, COI paperwork, and tight stairwells — how Green Cabinets NY installs custom kitchens by appointment in Brooklyn, Manhattan, and Queens. Call (718) 804-5488.",
+    tags: [
+      "kitchen cabinet installation",
+      "nyc kitchens",
+      "brooklyn",
+      "manhattan",
+      "queens",
+      "co-op installation",
+      "freight elevator",
+      "custom cabinets",
+      "by appointment",
+    ],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/nyc-kitchen-cabinet-installation",
+    created_at: "2026-09-05T12:00:00-04:00",
+    updated_at: "2026-09-05T12:00:00-04:00",
+    content_html: [
+      "<p>A custom kitchen in New York is not finished when the boxes leave the shop. The hard part is getting them into a walk-up, a co-op freight elevator, or a Queens elevator building with a three-hour reservation window &mdash; then hanging them level on walls that are not square. Stock install crews treat every apartment like a suburban new-build. Custom millwork install is planned for the building you actually live in.</p>",
+      "<p>Green Cabinets NY is home-based in Bushwick and works by appointment only. There is no walk-in shop, showroom, or factory. We design, spec, and install custom kitchen millwork across Brooklyn, Manhattan, and Queens. This post explains how we handle the installation phase once your cabinets are ready.</p>",
+      "<h2>Measuring the building, not just the room</h2>",
+      "<p>Before any box is built, we measure the path from curb to cabinet. That means doorways, stairwells, elevator dimensions, loading dock hours, and any COI the building requires. A 96-inch pantry that fits the kitchen may not fit the hallway turn. We catch that in the planning stage, not on install day.</p>",
+      "<h2>COI, elevator reservations, and quiet hours</h2>",
+      "<p>Most co-op and condo buildings in Manhattan and Brooklyn require a certificate of insurance, elevator reservations, and restricted work hours. We coordinate that paperwork with your building management before delivery. In Queens elevator buildings, the reservation window is often short, so we schedule around it.</p>",
+      "<h2>Hanging level on walls that are not square</h2>",
+      "<p>NYC walls are rarely flat. Scribe fills, shims, and careful layout are part of every install. Custom cabinets are cut to accommodate the actual conditions of your apartment, not a perfect CAD drawing.</p>",
+      "<h2>Get a quote for your kitchen</h2>",
+      "<p>If you are planning a kitchen renovation in Brooklyn, Manhattan, or Queens, <a href=\"/estimator\">start with the kitchen quote form</a> or email <a href=\"mailto:orders@greencabinetsny.com\">orders@greencabinetsny.com</a>. You can also call <a href=\"tel:+17188045488\">(718) 804-5488</a>. We work by appointment only and bring finish and door samples to your home.</p>",
+    ].join("\n"),
+  },
+  {
     id: "static-shaker-vs-slim-shaker-nyc",
     external_id: null,
     slug: "shaker-vs-slim-shaker-nyc",
