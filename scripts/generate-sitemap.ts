@@ -8,6 +8,8 @@ import { NEIGHBORHOODS } from "../src/data/neighborhoodSeo";
 import { BOROUGHS } from "../src/data/boroughSeo";
 import { WOOD_SPECIES } from "../src/data/woodSpecies";
 import { CASE_STUDIES } from "../src/data/caseStudies";
+import { STATIC_BLOG_POSTS } from "../src/data/staticBlogPosts";
+
 
 const BASE_URL = "https://greencabinetsny.com";
 
