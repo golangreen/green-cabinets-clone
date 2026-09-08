@@ -8,6 +8,8 @@ import { NEIGHBORHOODS } from "../src/data/neighborhoodSeo";
 import { BOROUGHS } from "../src/data/boroughSeo";
 import { WOOD_SPECIES } from "../src/data/woodSpecies";
 import { CASE_STUDIES } from "../src/data/caseStudies";
+import { STATIC_BLOG_POSTS } from "../src/data/staticBlogPosts";
+
 
 const BASE_URL = "https://greencabinetsny.com";
 
@@ -158,12 +160,41 @@ function maxLastmod(entries: SitemapEntry[]): string | undefined {
 
 async function main() {
   const blogArticles = await fetchBlogArticles();
-  const blog: SitemapEntry[] = blogArticles.map((b) => ({
-    path: `/blog/${b.slug}`,
-    changefreq: "weekly",
-    priority: "0.7",
-    lastmod: b.updated_at ? b.updated_at.slice(0, 10) : undefined,
-  }));
+
+  // Static posts are bundled in the app and must appear in the sitemap even
+  // though they are not stored in the blog_articles table.
+  const staticBySlug = new Map(
+    STATIC_BLOG_POSTS.map((p) => [
+      p.slug,
+      {
+        path: `/blog/${p.slug}`,
+        changefreq: "weekly" as const,
+        priority: "0.7",
+        lastmod: p.updated_at ? p.updated_at.slice(0, 10) : undefined,
+      },
+    ])
+  );
+
+  const dynamicBySlug = new Map(
+    blogArticles.map((b) => [
+      b.slug,
+      {
+        path: `/blog/${b.slug}`,
+        changefreq: "weekly" as const,
+        priority: "0.7",
+        lastmod: b.updated_at ? b.updated_at.slice(0, 10) : undefined,
+      },
+    ])
+  );
+
+  // Static posts take precedence (authoritative source for bundled content).
+  const merged = new Map<string, SitemapEntry>(dynamicBySlug);
+  for (const [slug, entry] of staticBySlug) {
+    merged.set(slug, entry);
+  }
+
+  const blog: SitemapEntry[] = Array.from(merged.values());
+
 
   const sections: { name: string; entries: SitemapEntry[] }[] = [
     { name: "core", entries: core },
