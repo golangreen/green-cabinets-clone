@@ -6,6 +6,37 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-manhattan-coop-kitchen-alteration-agreement",
+    external_id: null,
+    slug: "manhattan-coop-kitchen-alteration-agreement",
+    title: "Manhattan Co-op Kitchen Cabinets and Alteration Agreements",
+    excerpt:
+      "How Manhattan co-op kitchen cabinet projects work with alteration agreements, COI, and board rules — Green Cabinets NY by appointment. (718) 804-5488.",
+    meta_title: "Manhattan Co-op Kitchen Cabinets and Alteration Agreements",
+    meta_description:
+      "How Manhattan co-op kitchen cabinet projects work with alteration agreements, COI, and board rules — Green Cabinets NY by appointment. (718) 804-5488.",
+    tags: [
+      "manhattan",
+      "co-op",
+      "alteration agreement",
+      "kitchen cabinets",
+      "board approval",
+      "nyc",
+      "by appointment",
+    ],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/manhattan-coop-kitchen-alteration-agreement",
+    created_at: "2026-09-09T12:00:00-04:00",
+    updated_at: "2026-09-09T12:00:00-04:00",
+    content_html: [
+      "<p>If you live in a Manhattan co-op, the kitchen cabinets are only half the project. The other half is paperwork: the alteration agreement, Certificate of Insurance, work hours, elevator reservations, and whatever your board still wants after the architect stamps the drawings. Cabinetry that fits the apartment still has to fit the building&rsquo;s rules.</p>",
+      "<p>Green Cabinets NY designs and installs custom kitchen millwork by appointment in Brooklyn, Manhattan, and Queens. We are home-based in Bushwick &mdash; not a walk-in shop or showroom. For Manhattan kitchen context, see our <a href=\"/custom-kitchen-cabinets-manhattan\">Manhattan custom kitchen cabinets</a> page and <a href=\"/blog/manhattan-condo-coop-kitchen-millwork\">condo/co-op millwork notes</a>.</p>",
+      "<h2>Get a quote</h2>",
+      "<p>Ready to plan co-op kitchen cabinets that clear board paperwork? Email <a href=\"mailto:orders@greencabinetsny.com\">orders@greencabinetsny.com</a> or call <a href=\"tel:+17188045488\">(718) 804-5488</a>. Include your building&rsquo;s borough, board requirements if known, and photos of the existing kitchen. We reply with next steps for a by-appointment measure in Brooklyn, Manhattan, or Queens. Browse the <a href=\"/blog\">blog</a> or learn more <a href=\"/about\">about us</a>.</p>",
+    ].join("\n"),
+  },
+  {
     id: "static-custom-media-wall-built-ins-nyc",
     external_id: null,
     slug: "custom-media-wall-built-ins-nyc",
