@@ -102,6 +102,19 @@ const GUIDES = [
   },
 ];
 
+/** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
+const BLOG_POSTS = [
+  {
+    slug: "home-office-built-ins-nyc",
+    title: "Home Office Built-Ins for NYC Apartments",
+    description:
+      "Custom home office built-ins and desk millwork for Brooklyn, Manhattan, and Queens apartments — Green Cabinets NY by appointment. (718) 804-5488.",
+    datePublished: "2026-09-10",
+    keywords:
+      "home office built-ins nyc, custom desk millwork, home office cabinets, built-in desk brooklyn, manhattan home office, queens apartment office",
+  },
+];
+
 function buildArticleSchema({ slug, title, description, datePublished, keywords }) {
   const url = `https://greencabinetsny.com/${slug}`;
   return {
