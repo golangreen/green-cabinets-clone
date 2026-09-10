@@ -102,8 +102,21 @@ const GUIDES = [
   },
 ];
 
-function buildArticleSchema({ slug, title, description, datePublished, keywords }) {
-  const url = `https://greencabinetsny.com/${slug}`;
+/** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
+const BLOG_POSTS = [
+  {
+    slug: "home-office-built-ins-nyc",
+    title: "Home Office Built-Ins for NYC Apartments",
+    description:
+      "Custom home office built-ins and desk millwork for Brooklyn, Manhattan, and Queens apartments — Green Cabinets NY by appointment. (718) 804-5488.",
+    datePublished: "2026-09-10",
+    keywords:
+      "home office built-ins nyc, custom desk millwork, home office cabinets, built-in desk brooklyn, manhattan home office, queens apartment office",
+  },
+];
+
+function buildArticleSchema({ slug, title, description, datePublished, keywords, isBlog = false }) {
+  const url = isBlog ? `https://greencabinetsny.com/blog/${slug}` : `https://greencabinetsny.com/${slug}`;
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -133,14 +146,13 @@ if (!shellHtml.includes(HEAD_CLOSE)) {
   process.exit(1);
 }
 
-let count = 0;
-for (const guide of GUIDES) {
-  const schema = buildArticleSchema(guide);
-  const url = `https://greencabinetsny.com/${guide.slug}`;
+function writeRouteHtml(slug, title, description, datePublished, keywords, isBlog = false) {
+  const schema = buildArticleSchema({ slug, title, description, datePublished, keywords, isBlog });
+  const url = isBlog ? `https://greencabinetsny.com/blog/${slug}` : `https://greencabinetsny.com/${slug}`;
   const tag =
     `\n    <link rel="canonical" href="${url}" />\n` +
-    `    <title>${guide.title.replace(/</g, "&lt;")}</title>\n` +
-    `    <meta name="description" content="${guide.description.replace(/"/g, "&quot;")}" />\n` +
+    `    <title>${title.replace(/</g, "&lt;")}</title>\n` +
+    `    <meta name="description" content="${description.replace(/"/g, "&quot;")}" />\n` +
     `    <script type="application/ld+json" data-static-article>` +
     JSON.stringify(schema) +
     `</script>\n  `;
@@ -155,9 +167,18 @@ for (const guide of GUIDES) {
 
   html = html.replace(HEAD_CLOSE, `${tag}${HEAD_CLOSE}`);
 
-  const outDir = resolve(DIST, guide.slug);
+  const outDir = isBlog ? resolve(DIST, "blog", slug) : resolve(DIST, slug);
   mkdirSync(outDir, { recursive: true });
   writeFileSync(resolve(outDir, "index.html"), html);
+}
+
+let count = 0;
+for (const guide of GUIDES) {
+  writeRouteHtml(guide.slug, guide.title, guide.description, guide.datePublished, guide.keywords);
+  count++;
+}
+for (const post of BLOG_POSTS) {
+  writeRouteHtml(post.slug, post.title, post.description, post.datePublished, post.keywords, true);
   count++;
 }
 
