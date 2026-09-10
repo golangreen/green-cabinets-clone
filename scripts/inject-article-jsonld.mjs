@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "freight-elevator-kitchen-cabinet-delivery-nyc",
+    title: "Freight Elevator Kitchen Cabinet Delivery in NYC",
+    description:
+      "How freight elevators, COI, and building logistics shape custom kitchen cabinet delivery in Brooklyn, Manhattan, and Queens — Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-10",
+    keywords:
+      "freight elevator kitchen cabinet delivery nyc, kitchen cabinet delivery manhattan co-op, cabinet delivery brooklyn, cabinet delivery queens, coi kitchen renovation nyc",
+  },
+  {
     slug: "home-office-built-ins-nyc",
     title: "Home Office Built-Ins for NYC Apartments",
     description:
