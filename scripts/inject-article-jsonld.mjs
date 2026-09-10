@@ -147,7 +147,7 @@ if (!shellHtml.includes(HEAD_CLOSE)) {
 }
 
 function writeRouteHtml(slug, title, description, datePublished, keywords, isBlog = false) {
-  const schema = buildArticleSchema({ slug, title, description, datePublished, keywords });
+  const schema = buildArticleSchema({ slug, title, description, datePublished, keywords, isBlog });
   const url = isBlog ? `https://greencabinetsny.com/blog/${slug}` : `https://greencabinetsny.com/${slug}`;
   const tag =
     `\n    <link rel="canonical" href="${url}" />\n` +
