@@ -31,7 +31,6 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
     created_at: "2026-09-10T12:00:00-04:00",
     updated_at: "2026-09-10T12:00:00-04:00",
     content_html: [
-      "<h1>Home Office Built-Ins for NYC Apartments</h1>",
       "<p>In a New York apartment, a &ldquo;home office&rdquo; is often a wall, not a room. A bedroom corner, a living-room niche, or the leftover strip beside a window has to hold a desk, filing, monitors, and enough closed storage that cables and paper do not spill into dinner. Custom home office built-ins turn that leftover space into a planned elevation instead of a folding table and a plastic drawer tower.</p>",
       "<p>Green Cabinets NY designs and installs custom desk and office millwork by appointment in Brooklyn, Manhattan, and Queens. We are home-based in Bushwick &mdash; not a walk-in shop. Measure and sample visits happen in your apartment.</p>",
     ].join("\n"),
