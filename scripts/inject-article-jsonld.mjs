@@ -115,8 +115,8 @@ const BLOG_POSTS = [
   },
 ];
 
-function buildArticleSchema({ slug, title, description, datePublished, keywords }) {
-  const url = `https://greencabinetsny.com/${slug}`;
+function buildArticleSchema({ slug, title, description, datePublished, keywords, isBlog = false }) {
+  const url = isBlog ? `https://greencabinetsny.com/blog/${slug}` : `https://greencabinetsny.com/${slug}`;
   return {
     "@context": "https://schema.org",
     "@type": "Article",
