@@ -146,14 +146,13 @@ if (!shellHtml.includes(HEAD_CLOSE)) {
   process.exit(1);
 }
 
-let count = 0;
-for (const guide of GUIDES) {
-  const schema = buildArticleSchema(guide);
-  const url = `https://greencabinetsny.com/${guide.slug}`;
+function writeRouteHtml(slug, title, description, datePublished, keywords, isBlog = false) {
+  const schema = buildArticleSchema({ slug, title, description, datePublished, keywords });
+  const url = isBlog ? `https://greencabinetsny.com/blog/${slug}` : `https://greencabinetsny.com/${slug}`;
   const tag =
     `\n    <link rel="canonical" href="${url}" />\n` +
-    `    <title>${guide.title.replace(/</g, "&lt;")}</title>\n` +
-    `    <meta name="description" content="${guide.description.replace(/"/g, "&quot;")}" />\n` +
+    `    <title>${title.replace(/</g, "&lt;")}</title>\n` +
+    `    <meta name="description" content="${description.replace(/"/g, "&quot;")}" />\n` +
     `    <script type="application/ld+json" data-static-article>` +
     JSON.stringify(schema) +
     `</script>\n  `;
@@ -168,9 +167,18 @@ for (const guide of GUIDES) {
 
   html = html.replace(HEAD_CLOSE, `${tag}${HEAD_CLOSE}`);
 
-  const outDir = resolve(DIST, guide.slug);
+  const outDir = isBlog ? resolve(DIST, "blog", slug) : resolve(DIST, slug);
   mkdirSync(outDir, { recursive: true });
   writeFileSync(resolve(outDir, "index.html"), html);
+}
+
+let count = 0;
+for (const guide of GUIDES) {
+  writeRouteHtml(guide.slug, guide.title, guide.description, guide.datePublished, guide.keywords);
+  count++;
+}
+for (const post of BLOG_POSTS) {
+  writeRouteHtml(post.slug, post.title, post.description, post.datePublished, post.keywords, true);
   count++;
 }
 
