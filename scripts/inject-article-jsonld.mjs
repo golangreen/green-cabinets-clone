@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-bathroom-vanity-upper-west-side",
+    title: "Custom Bathroom Vanity for Upper West Side Apartments",
+    description:
+      "Custom bathroom vanities for Upper West Side co-ops and condos — measured to the inch, by appointment. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-11",
+    keywords:
+      "custom bathroom vanity upper west side, upper west side bathroom vanity, co-op bathroom vanity nyc, condo bathroom vanity nyc, custom vanity upper west side",
+  },
+  {
     slug: "freight-elevator-kitchen-cabinet-delivery-nyc",
     title: "Freight Elevator Kitchen Cabinet Delivery in NYC",
     description:

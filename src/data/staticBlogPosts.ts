@@ -6,6 +6,34 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-custom-bathroom-vanity-upper-west-side",
+    external_id: null,
+    slug: "custom-bathroom-vanity-upper-west-side",
+    title: "Custom Bathroom Vanity for Upper West Side Apartments",
+    excerpt:
+      "Custom bathroom vanities for Upper West Side co-ops and condos — measured to the inch, by appointment. Green Cabinets NY. (718) 804-5488.",
+    meta_title: "Custom Bathroom Vanity for Upper West Side Apartments",
+    meta_description:
+      "Custom bathroom vanities for Upper West Side co-ops and condos — measured to the inch, by appointment. Green Cabinets NY. (718) 804-5488.",
+    tags: [
+      "bathroom vanity",
+      "upper west side",
+      "co-op",
+      "condo",
+      "custom vanity",
+      "nyc",
+      "by appointment",
+    ],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/custom-bathroom-vanity-upper-west-side",
+    created_at: "2026-09-11T12:00:00-04:00",
+    updated_at: "2026-09-11T12:00:00-04:00",
+    content_html: [
+      "<p>Upper West Side bathrooms are rarely a blank rectangle. Prewar co-ops along Broadway, West End, and Central Park West keep original tile niches, radiator returns, and bulkheads that eat the wall where a stock vanity wants to sit. A catalog box that looked perfect online leaves a gap beside the tub, fights the medicine cabinet, or blocks the door swing. A custom bathroom vanity built to the measured opening solves that without pretending the room is square.</p>",
+    ].join("\n"),
+  },
+  {
     id: "static-freight-elevator-kitchen-cabinet-delivery-nyc",
     external_id: null,
     slug: "freight-elevator-kitchen-cabinet-delivery-nyc",
