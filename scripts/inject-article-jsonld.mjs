@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "reach-in-closet-millwork-manhattan-coops",
+    title: "Reach-In Closet Millwork for Manhattan Co-ops",
+    description:
+      "Custom reach-in closet millwork for Manhattan co-ops — measured to the inch, COI-ready, by appointment. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-11",
+    keywords:
+      "reach in closet millwork manhattan co-op, custom closet manhattan apartment, co-op closet renovation upper east side, manhattan hallway closet cabinets, custom reach in closet nyc",
+  },
+  {
     slug: "custom-bathroom-vanity-upper-west-side",
     title: "Custom Bathroom Vanity for Upper West Side Apartments",
     description:
