@@ -79,6 +79,7 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       "<p><strong>Walk-up with no freight elevator &mdash; can you still install?</strong><br />Yes. We section boxes for stair carry and plan the path before delivery day.</p>",
       "<p><strong>Are designer-tool images finished Astoria kitchens?</strong><br />No. They are layout previews. Real installs are photographed after the job when the client allows.</p>",
       "<h2>Get a quote</h2>",
+      "<p>Ready to plan custom kitchen cabinets for your Astoria kitchen? Email <a href=\"mailto:orders@greencabinetsny.com\">orders@greencabinetsny.com</a> or call <a href=\"tel:+17188045488\">(718) 804-5488</a>. Include your cross-streets or zip (11102 / 11103 / 11105 / 11106), rowhouse vs co-op vs condo, photos of the kitchen walls, and any board rules you already know. Browse the <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-astoria\">Astoria page</a>, try a vanity layout in the <a href=\"https://greencabinetsny.com/designer\">designer</a> if bath millwork is in the same scope, or read more <a href=\"https://greencabinetsny.com/about\">about us</a> and the <a href=\"https://greencabinetsny.com/blog\">blog</a>. We reply with next steps for a by-appointment measure.</p>",
     ].join("\n"),
   },
   {
