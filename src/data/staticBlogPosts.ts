@@ -32,6 +32,15 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
     content_html: [
       "<p>Astoria kitchens earn their keep. A Ditmars rowhouse feeds extended family on weekends. A Steinway walk-up galley packs two cooks into nine feet. Stock 36-inch boxes leave fillers and a fridge that never sits flush. Custom kitchen cabinets for Astoria start from the measured opening &mdash; width, height under the bulkhead, and the radiator that stole a bay.</p>",
       "<p>Green Cabinets NY designs and installs custom kitchen cabinets in Astoria by appointment. We are home-based in Bushwick &mdash; about twenty minutes away &mdash; not a walk-in shop. Measure and sample visits happen in your kitchen. See the neighborhood page for <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-astoria\">custom kitchen cabinets in Astoria</a>, the broader <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-queens\">Queens kitchen cabinets</a> map, and our earlier <a href=\"https://greencabinetsny.com/blog/queens-apartment-kitchen-millwork\">Queens apartment millwork</a> overview. This article goes deeper on Astoria alone: housing types, cooking storage, board logistics, and how we spec the boxes.</p>",
+      "<h2>Astoria housing types that shape the cabinets</h2>",
+      "<p><strong>Brick rowhouses and two-families (often 1920s&ndash;1940s).</strong> Common off Ditmars, Steinway, and the side streets between Broadway and 30th Avenue. Long, narrow kitchens toward the rear; plaster that is not square; sometimes a chimney breast or stack chase. Opening the kitchen to dining is a frequent ask &mdash; peninsula or small island when the footprint allows, floor-to-ceiling pantry when it does not.</p>",
+      "<p><strong>Pre-war and post-war co-ops.</strong> Shorter clear heights, shared stacks that pin the wet wall, and boards that want COI and work hours. Painted <a href=\"https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc\">shaker or slim shaker</a> reads clean here. Soft-close drawers matter when party walls are thin.</p>",
+      "<p><strong>Newer condos and gut renovations.</strong> Slab or handle-less looks show up more often. Bulkheads and freight rules still decide how we section the boxes. We cover 11102, 11103, 11105, and 11106 &mdash; Old Astoria, Ditmars&ndash;Steinway, Astoria Heights, and nearby condo blocks.</p>",
+      "<h2>Why stock cabinets fail in Astoria</h2>",
+      "<ul>",
+      "<li>Nine- to eleven-foot galleys where a 3-inch filler looks like a mistake, not a trim piece</li>",
+      "<li>Out-of-square plaster and floors after a century of settlement</li>",
+      "<li>Radiators, pipe chases, and chimney breasts that eat fixed cabinet modules</li>",
     ].join("\n"),
   },
   {
