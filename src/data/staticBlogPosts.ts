@@ -6,6 +6,35 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-custom-kitchen-cabinets-astoria-queens",
+    external_id: null,
+    slug: "custom-kitchen-cabinets-astoria-queens",
+    title: "Custom Kitchen Cabinets for Astoria Queens Rowhouses and Co-ops",
+    excerpt:
+      "Custom kitchen cabinets for Astoria Queens — Ditmars, Steinway, Broadway walk-ups and co-ops, by appointment. Green Cabinets NY. (718) 804-5488.",
+    meta_title: "Custom Kitchen Cabinets for Astoria Queens Rowhouses and Co-ops",
+    meta_description:
+      "Custom kitchen cabinets for Astoria Queens — Ditmars, Steinway, Broadway walk-ups and co-ops, by appointment. Green Cabinets NY. (718) 804-5488.",
+    tags: [
+      "astoria",
+      "queens",
+      "kitchen cabinets",
+      "custom millwork",
+      "rowhouses",
+      "co-ops",
+      "by appointment",
+    ],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/custom-kitchen-cabinets-astoria-queens",
+    created_at: "2026-09-12T15:30:00-04:00",
+    updated_at: "2026-09-12T15:30:00-04:00",
+    content_html: [
+      "<p>Astoria kitchens earn their keep. A Ditmars rowhouse feeds extended family on weekends. A Steinway walk-up galley packs two cooks into nine feet. Stock 36-inch boxes leave fillers and a fridge that never sits flush. Custom kitchen cabinets for Astoria start from the measured opening &mdash; width, height under the bulkhead, and the radiator that stole a bay.</p>",
+      "<p>Green Cabinets NY designs and installs custom kitchen cabinets in Astoria by appointment. We are home-based in Bushwick &mdash; about twenty minutes away &mdash; not a walk-in shop. Measure and sample visits happen in your kitchen. See the neighborhood page for <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-astoria\">custom kitchen cabinets in Astoria</a>, the broader <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-queens\">Queens kitchen cabinets</a> map, and our earlier <a href=\"https://greencabinetsny.com/blog/queens-apartment-kitchen-millwork\">Queens apartment millwork</a> overview. This article goes deeper on Astoria alone: housing types, cooking storage, board logistics, and how we spec the boxes.</p>",
+    ].join("\n"),
+  },
+  {
     id: "static-custom-kitchen-cabinets-park-slope-brownstones",
     external_id: null,
     slug: "custom-kitchen-cabinets-park-slope-brownstones",

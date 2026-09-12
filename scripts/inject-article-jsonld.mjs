@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-astoria-queens",
+    title: "Custom Kitchen Cabinets for Astoria Queens Rowhouses and Co-ops",
+    description:
+      "Custom kitchen cabinets for Astoria Queens — Ditmars, Steinway, Broadway walk-ups and co-ops, by appointment. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-12",
+    keywords:
+      "custom kitchen cabinets astoria, astoria queens kitchen cabinets, kitchen cabinets ditmars, steinway street kitchen renovation, astoria co-op kitchen, queens custom millwork",
+  },
+  {
     slug: "custom-kitchen-cabinets-park-slope-brownstones",
     title: "Custom Kitchen Cabinets for Park Slope Brownstones",
     description:
