@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-park-slope-brownstones",
+    title: "Custom Kitchen Cabinets for Park Slope Brownstones",
+    description:
+      "Custom kitchen cabinets for Park Slope brownstones — parlor and garden floors, out-of-square walls, by appointment. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-12",
+    keywords:
+      "custom kitchen cabinets park slope, park slope brownstone kitchen, brownstone kitchen renovation brooklyn, custom cabinets park slope, kitchen millwork brooklyn brownstone",
+  },
+  {
     slug: "reach-in-closet-millwork-manhattan-coops",
     title: "Reach-In Closet Millwork for Manhattan Co-ops",
     description:

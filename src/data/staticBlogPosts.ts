@@ -6,6 +6,35 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-custom-kitchen-cabinets-park-slope-brownstones",
+    external_id: null,
+    slug: "custom-kitchen-cabinets-park-slope-brownstones",
+    title: "Custom Kitchen Cabinets for Park Slope Brownstones",
+    excerpt:
+      "Custom kitchen cabinets for Park Slope brownstones — parlor and garden floors, out-of-square walls, by appointment. Green Cabinets NY. (718) 804-5488.",
+    meta_title: "Custom Kitchen Cabinets for Park Slope Brownstones",
+    meta_description:
+      "Custom kitchen cabinets for Park Slope brownstones — parlor and garden floors, out-of-square walls, by appointment. Green Cabinets NY. (718) 804-5488.",
+    tags: [
+      "park slope",
+      "brooklyn brownstone",
+      "kitchen cabinets",
+      "custom millwork",
+      "out-of-square walls",
+      "by appointment",
+    ],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/custom-kitchen-cabinets-park-slope-brownstones",
+    created_at: "2026-09-12T12:00:00-04:00",
+    updated_at: "2026-09-12T12:00:00-04:00",
+    content_html: [
+      "<p>Park Slope brownstones rarely give you a square kitchen. Parlor-floor extensions lean, garden-floor ceilings drop under the joist bays, and plaster walls settle out of plumb after a century of use. A custom kitchen built to the measured room — not the catalog box — is what makes cabinetry look intentional in a brownstone. Green Cabinets NY designs and installs custom kitchen cabinets by appointment in Brooklyn, Manhattan, and Queens. We are home-based in Bushwick — not a walk-in shop. Full article body coming shortly.</p>",
+    ].join("\n"),
+
+  },
+
+  {
     id: "static-reach-in-closet-millwork-manhattan-coops",
     external_id: null,
     slug: "reach-in-closet-millwork-manhattan-coops",
