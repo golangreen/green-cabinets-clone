@@ -6,6 +6,24 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-soft-close-blum-vs-hettich-nyc",
+    external_id: null,
+    slug: "soft-close-blum-vs-hettich-nyc",
+    title: "Soft-Close Hardware Blum vs Hettich for NYC Millwork",
+    excerpt: "Blum vs Hettich soft-close for NYC kitchens and built-ins — co-ops, brownstones, by appointment. Green Cabinets NY. (718) 804-5488.",
+    meta_title: "Soft-Close Hardware Blum vs Hettich for NYC Millwork",
+    meta_description: "Blum vs Hettich soft-close for NYC kitchens and built-ins — co-ops, brownstones, by appointment. Green Cabinets NY. (718) 804-5488.",
+    tags: ["soft-close", "blum", "hettich", "hardware", "drawer slides", "hinges", "kitchen cabinets", "custom millwork", "by appointment"],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/soft-close-blum-vs-hettich-nyc",
+    created_at: "2026-09-13T15:30:00-04:00",
+    updated_at: "2026-09-13T15:30:00-04:00",
+    content_html: [
+      "<p>Soft-close is not a vibe. In an NYC kitchen it is the difference between a drawer that settles quietly against a party wall and one that wakes the neighbor. Blum and Hettich are the two soft-close families clients ask about most on custom millwork quotes. Both can be excellent. Neither is &ldquo;better&rdquo; in the abstract &mdash; the right choice follows slide type, door weight, clear opening, and how the building actually lives.</p>",
+    ].join("\n"),
+  },
+  {
     id: "static-dovetail-drawer-boxes-nyc-kitchens",
     external_id: null,
     slug: "dovetail-drawer-boxes-nyc-kitchens",

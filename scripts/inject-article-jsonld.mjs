@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "soft-close-blum-vs-hettich-nyc",
+    title: "Soft-Close Hardware Blum vs Hettich for NYC Millwork",
+    description: "Blum vs Hettich soft-close for NYC kitchens and built-ins — co-ops, brownstones, by appointment. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-13",
+    keywords: "blum vs hettich, soft close hinges nyc, soft close drawer slides, blum blumotion, hettich quadro, cabinet hardware nyc, custom millwork hardware",
+  },
+  {
     slug: "dovetail-drawer-boxes-nyc-kitchens",
     title: "Dovetail Drawer Boxes for NYC Kitchen Cabinets",
     description: "Dovetail drawer boxes for NYC kitchens — why joinery matters in co-ops and brownstones. Green Cabinets NY. (718) 804-5488.",
