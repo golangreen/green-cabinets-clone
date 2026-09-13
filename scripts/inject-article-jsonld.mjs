@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "dovetail-drawer-boxes-nyc-kitchens",
+    title: "Dovetail Drawer Boxes for NYC Kitchen Cabinets",
+    description: "Dovetail drawer boxes for NYC kitchens — why joinery matters in co-ops and brownstones. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-13",
+    keywords: "dovetail drawer boxes, dovetail drawers nyc, drawer joinery, kitchen cabinet drawers, custom drawer boxes brooklyn, co-op kitchen cabinets",
+  },
+  {
     slug: "custom-kitchen-cabinets-astoria-queens",
     title: "Custom Kitchen Cabinets for Astoria Queens Rowhouses and Co-ops",
     description:
