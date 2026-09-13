@@ -6,6 +6,24 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-dovetail-drawer-boxes-nyc-kitchens",
+    external_id: null,
+    slug: "dovetail-drawer-boxes-nyc-kitchens",
+    title: "Dovetail Drawer Boxes for NYC Kitchen Cabinets",
+    excerpt: "Dovetail drawer boxes for NYC kitchens — why joinery matters in co-ops and brownstones. Green Cabinets NY. (718) 804-5488.",
+    meta_title: "Dovetail Drawer Boxes for NYC Kitchen Cabinets",
+    meta_description: "Dovetail drawer boxes for NYC kitchens — why joinery matters in co-ops and brownstones. Green Cabinets NY. (718) 804-5488.",
+    tags: ["dovetail drawers", "drawer boxes", "joinery", "kitchen cabinets", "custom millwork", "by appointment"],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/dovetail-drawer-boxes-nyc-kitchens",
+    created_at: "2026-09-13T12:00:00-04:00",
+    updated_at: "2026-09-13T12:00:00-04:00",
+    content_html: [
+      "<p>Most NYC kitchen remodels get judged by door style and paint color. The drawer box is what you live with every day. A stapled or glued butt joint that looks fine at install can rack after a year of cast-iron pans, kids yanking the utensil drawer, and the humidity swing between a steam radiator and summer AC. Dovetail drawer boxes are the joinery detail that keeps those boxes square when the building is not.</p>",
+    ].join("\n"),
+  },
+  {
     id: "static-custom-kitchen-cabinets-astoria-queens",
     external_id: null,
     slug: "custom-kitchen-cabinets-astoria-queens",
