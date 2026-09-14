@@ -6,6 +6,24 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-certificate-of-insurance-kitchen-remodel-nyc",
+    external_id: null,
+    slug: "certificate-of-insurance-kitchen-remodel-nyc",
+    title: "Certificate of Insurance (COI) for NYC Kitchen Remodels",
+    excerpt: "Need a COI for a NYC kitchen remodel? What co-ops and condos ask, what millwork covers. Green Cabinets NY. (718) 804-5488.",
+    meta_title: "Certificate of Insurance (COI) for NYC Kitchen Remodels",
+    meta_description: "Need a COI for a NYC kitchen remodel? What co-ops and condos ask, what millwork covers. Green Cabinets NY. (718) 804-5488.",
+    tags: ["COI", "certificate of insurance", "co-op", "condo", "kitchen remodel", "custom millwork", "by appointment"],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/certificate-of-insurance-kitchen-remodel-nyc",
+    created_at: "2026-09-14T12:00:00-04:00",
+    updated_at: "2026-09-14T12:00:00-04:00",
+    content_html: [
+      "<p>If you are remodeling a kitchen in a Brooklyn co-op, a Manhattan condo, or a Queens apartment building, the board or managing agent will almost always ask for a Certificate of Insurance before cabinets come off the wall. The COI is not optional paperwork. It is how the building proves that people working in your unit carry liability coverage that protects the common areas, neighbors, and the co-op or condo corporation.</p>",
+    ].join("\n"),
+  },
+  {
     id: "static-soft-close-blum-vs-hettich-nyc",
     external_id: null,
     slug: "soft-close-blum-vs-hettich-nyc",
