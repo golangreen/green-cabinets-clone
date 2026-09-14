@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "occupied-unit-kitchen-install-logistics-nyc",
+    title: "Occupied-Unit Kitchen Install Logistics in NYC",
+    description: "Kitchen cabinet install while you still live there — dust, hours, freight, staging for NYC co-ops and apartments. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-14",
+    keywords: "occupied apartment kitchen remodel nyc, live-in kitchen cabinet install brooklyn, kitchen renovation while living in apartment, dust control kitchen cabinets queens, occupied unit millwork install nyc",
+  },
+  {
     slug: "certificate-of-insurance-kitchen-remodel-nyc",
     title: "Certificate of Insurance (COI) for NYC Kitchen Remodels",
     description: "Need a COI for a NYC kitchen remodel? What co-ops and condos ask, what millwork covers. Green Cabinets NY. (718) 804-5488.",
