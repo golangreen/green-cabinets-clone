@@ -21,6 +21,16 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
     updated_at: "2026-09-14T12:00:00-04:00",
     content_html: [
       "<p>If you are remodeling a kitchen in a Brooklyn co-op, a Manhattan condo, or a Queens apartment building, the board or managing agent will almost always ask for a Certificate of Insurance before cabinets come off the wall. The COI is not optional paperwork. It is how the building proves that people working in your unit carry liability coverage that protects the common areas, neighbors, and the co-op or condo corporation.</p>",
+      "<p>Boards care about COI because a dropped cabinet in a freight elevator, a scratched hallway floor, or a water claim from plumbing can spill into common-area liability. The certificate is their checklist before work starts; the millwork quote and the board package are separate tracks.</p>",
+      "<h2>Why NYC kitchen jobs trigger COI requests</h2>",
+      "<p>Apartment kitchens share elevators, halls, and loading docks. Delivery and install touch common areas:</p>",
+      "<ul>",
+      "<li><strong>Freight and service paths.</strong> Cabinets move through lobbies and reserved elevators. See <a href=\"https://greencabinetsny.com/blog/freight-elevator-kitchen-cabinet-delivery-nyc\">freight elevator kitchen delivery</a>.</li>",
+      "<li><strong>Hallway protection.</strong> Buildings require floor covers and corner guards.</li>",
+      "<li><strong>Occupied buildings.</strong> Neighbors are home during installs.</li>",
+      "<li><strong>Co-op and condo rules.</strong> Alteration agreements list liability limits and additional-insured wording.</li>",
+      "</ul>",
+      "<p>Whether you are in a <a href=\"https://greencabinetsny.com/blog/brooklyn-brownstone-kitchen-millwork\">Brooklyn brownstone kitchen</a>, a <a href=\"https://greencabinetsny.com/blog/custom-kitchen-cabinets-park-slope-brownstones\">Park Slope row house</a>, an <a href=\"https://greencabinetsny.com/blog/custom-kitchen-cabinets-astoria-queens\">Astoria apartment</a>, or a Manhattan high-rise, measure and design first, then package drawings + COI when the board asks.</p>",
     ].join("\n"),
   },
   {
