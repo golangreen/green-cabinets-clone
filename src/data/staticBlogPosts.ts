@@ -81,6 +81,8 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       "<p><strong>Is a COI the same as board approval?</strong> No. The alteration agreement is board approval of scope and rules. The COI proves insurance coverage for people working in the building.</p>",
       "<p><strong>Can I reuse one COI across every NYC building?</strong> Usually no. Certificate holders, additional insured names, and dates are job-specific. Expect a fresh cert per building and work window.</p>",
       "<p><strong>How early should I start the COI process?</strong> As soon as management sends written insurance requirements and your install week is roughly set. Do not wait until the freight elevator is booked for tomorrow morning.</p>",
+      "<h2>Get a quote</h2>",
+      "<p>Planning a kitchen remodel that needs a COI in Brooklyn, Manhattan, or Queens? Email <a href=\"mailto:orders@greencabinetsny.com\">orders@greencabinetsny.com</a> or call <a href=\"tel:+17188045488\">(718) 804-5488</a>. Include your borough and neighborhood, building type (co-op, condo, rental, brownstone), photos of the current kitchen, and any COI or alteration instructions from management. Browse <a href=\"https://greencabinetsny.com/about\">about us</a>, the <a href=\"https://greencabinetsny.com/blog\">blog</a>, or sketch a vanity in the <a href=\"https://greencabinetsny.com/designer\">designer</a> if bath millwork is in the same package. We reply with next steps for a by-appointment measure.</p>",
     ].join("\n"),
   },
   {
