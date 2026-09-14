@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "certificate-of-insurance-kitchen-remodel-nyc",
+    title: "Certificate of Insurance (COI) for NYC Kitchen Remodels",
+    description: "Need a COI for a NYC kitchen remodel? What co-ops and condos ask, what millwork covers. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-14",
+    keywords: "certificate of insurance kitchen remodel, COI kitchen renovation nyc, co-op renovation insurance, condo alteration agreement insurance, nyc kitchen remodel COI",
+  },
+  {
     slug: "soft-close-blum-vs-hettich-nyc",
     title: "Soft-Close Hardware Blum vs Hettich for NYC Millwork",
     description: "Blum vs Hettich soft-close for NYC kitchens and built-ins — co-ops, brownstones, by appointment. Green Cabinets NY. (718) 804-5488.",
