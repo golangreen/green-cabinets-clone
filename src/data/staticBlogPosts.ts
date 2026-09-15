@@ -22,7 +22,7 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
     content_html: [
       "<p>Most NYC apartments do not have a spa bath. They have a 5&times;7 box, a galley powder room, or a gut-renovated co-op bath where the tub, toilet, and door swing leave about 28&ndash;42 inches for a vanity. Stock boxes stop at neat catalog widths. Your wall, stack, and medicine cabinet do not.</p>",
       "<p>Green Cabinets NY builds custom bathroom vanities by appointment in Brooklyn, Manhattan, and Queens. We are home-based in Bushwick &mdash; not a walk-in showroom at 10 Montieth. For small baths, the <a href=\"https://greencabinetsny.com/designer\">online vanity designer</a> is the fastest way to see a layout and live price before we schedule a measure. Related: <a href=\"https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc\">custom bathroom vanities for NYC apartments</a> and <a href=\"https://greencabinetsny.com/blog/custom-bathroom-vanity-upper-west-side\">Upper West Side vanity installs</a>.</p>",
-    ],
+    ].join("\n"),
   },
   {
     id: "static-occupied-unit-kitchen-install-logistics-nyc",
