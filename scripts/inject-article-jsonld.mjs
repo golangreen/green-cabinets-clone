@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "window-seat-banquette-millwork-brooklyn",
+    title: "Window Seat and Banquette Millwork in Brooklyn",
+    description: "Built-in window seats and banquettes for Brooklyn brownstones and apartments — storage, cushions, NYC install. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-15",
+    keywords: "window seat brooklyn, banquette brooklyn, built in window seat nyc, banquette seating brownstone, custom bench millwork brooklyn, storage bench nyc, built in seating nyc",
+  },
+  {
     slug: "custom-vanity-small-nyc-bathrooms",
     title: "Custom Vanity for Small NYC Bathrooms",
     description: "Tiny NYC bath? Custom vanity to the inch — drawers, trap cuts, live price in the designer. Green Cabinets NY. (718) 804-5488.",
