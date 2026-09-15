@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-vanity-small-nyc-bathrooms",
+    title: "Custom Vanity for Small NYC Bathrooms",
+    description: "Tiny NYC bath? Custom vanity to the inch — drawers, trap cuts, live price in the designer. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-15",
+    keywords: "small bathroom vanity nyc, custom vanity small bathroom, tiny bathroom vanity brooklyn, powder room vanity manhattan, custom bathroom vanity queens",
+  },
+  {
     slug: "occupied-unit-kitchen-install-logistics-nyc",
     title: "Occupied-Unit Kitchen Install Logistics in NYC",
     description: "Kitchen cabinet install while you still live there — dust, hours, freight, staging for NYC co-ops and apartments. Green Cabinets NY. (718) 804-5488.",
