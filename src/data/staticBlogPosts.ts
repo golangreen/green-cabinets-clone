@@ -6,6 +6,25 @@ import type { BlogArticle } from "@/services/blogService";
  */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
   {
+    id: "static-custom-vanity-small-nyc-bathrooms",
+    external_id: null,
+    slug: "custom-vanity-small-nyc-bathrooms",
+    title: "Custom Vanity for Small NYC Bathrooms",
+    excerpt: "Tiny NYC bath? Custom vanity to the inch — drawers, trap cuts, live price in the designer. Green Cabinets NY. (718) 804-5488.",
+    meta_title: "Custom Vanity for Small NYC Bathrooms",
+    meta_description: "Tiny NYC bath? Custom vanity to the inch — drawers, trap cuts, live price in the designer. Green Cabinets NY. (718) 804-5488.",
+    tags: ["small bathroom vanity", "custom vanity", "nyc bathrooms", "vanity designer", "co-op bathroom", "powder room", "by appointment"],
+    image_url: null,
+    content_image_urls: [],
+    canonical_url: "https://greencabinetsny.com/blog/custom-vanity-small-nyc-bathrooms",
+    created_at: "2026-09-15T12:00:00-04:00",
+    updated_at: "2026-09-15T12:00:00-04:00",
+    content_html: [
+      "<p>Most NYC apartments do not have a spa bath. They have a 5&times;7 box, a galley powder room, or a gut-renovated co-op bath where the tub, toilet, and door swing leave about 28&ndash;42 inches for a vanity. Stock boxes stop at neat catalog widths. Your wall, stack, and medicine cabinet do not.</p>",
+      "<p>Green Cabinets NY builds custom bathroom vanities by appointment in Brooklyn, Manhattan, and Queens. We are home-based in Bushwick &mdash; not a walk-in showroom at 10 Montieth. For small baths, the <a href=\"https://greencabinetsny.com/designer\">online vanity designer</a> is the fastest way to see a layout and live price before we schedule a measure. Related: <a href=\"https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc\">custom bathroom vanities for NYC apartments</a> and <a href=\"https://greencabinetsny.com/blog/custom-bathroom-vanity-upper-west-side\">Upper West Side vanity installs</a>.</p>",
+    ].join("\n"),
+  },
+  {
     id: "static-occupied-unit-kitchen-install-logistics-nyc",
     external_id: null,
     slug: "occupied-unit-kitchen-install-logistics-nyc",
