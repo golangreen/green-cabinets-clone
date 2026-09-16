@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "library-bookcase-wall-millwork-manhattan",
+    title: "Library and Bookcase Wall Millwork for Manhattan Apartments",
+    description: "Floor-to-ceiling bookcase walls for Manhattan co-ops and condos — measured to the inch, board-ready. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-16",
+    keywords: "library wall manhattan, bookcase wall nyc, floor to ceiling bookcases apartment, custom built in bookcases nyc, book nook millwork, built in desk bookcase wall",
+  },
+  {
     slug: "window-seat-banquette-millwork-brooklyn",
     title: "Window Seat and Banquette Millwork in Brooklyn",
     description: "Built-in window seats and banquettes for Brooklyn brownstones and apartments — storage, cushions, NYC install. Green Cabinets NY. (718) 804-5488.",
