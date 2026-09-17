@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "condo-board-kitchen-renovation-rules-nyc",
+    title: "Condo Board Kitchen Renovation Rules in NYC",
+    description: "How NYC condo board kitchen renovation rules work — house rules, alteration agreements, COI, work hours. Green Cabinets NY by appointment. (718) 804-5488.",
+    datePublished: "2026-09-17",
+    keywords: "condo board kitchen renovation rules nyc, nyc condo kitchen remodel board approval, condo alteration agreement kitchen cabinets nyc, condo house rules kitchen remodel, custom kitchen cabinets manhattan condo",
+  },
+  {
     slug: "reception-desk-commercial-millwork-brooklyn-retail",
     title: "Reception Desk and Light Commercial Millwork for Brooklyn Retail",
     description: "Custom reception desks and light commercial millwork for Brooklyn retail — measured for real storefronts, landlord COIs, after-hours install. Green Cabinets NY. (718) 804-5488.",
