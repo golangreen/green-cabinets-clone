@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "reception-desk-commercial-millwork-brooklyn-retail",
+    title: "Reception Desk and Light Commercial Millwork for Brooklyn Retail",
+    description: "Custom reception desks and light commercial millwork for Brooklyn retail — measured for real storefronts, landlord COIs, after-hours install. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-17",
+    keywords: "reception desk millwork brooklyn, custom retail reception desk brooklyn, light commercial millwork brooklyn retail, cash wrap millwork brooklyn, commercial casework brooklyn, after hours install nyc",
+  },
+  {
     slug: "library-bookcase-wall-millwork-manhattan",
     title: "Library and Bookcase Wall Millwork for Manhattan Apartments",
     description: "Floor-to-ceiling bookcase walls for Manhattan co-ops and condos — measured to the inch, board-ready. Green Cabinets NY. (718) 804-5488.",
