@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "painted-vs-wood-veneer-cabinets-nyc-humidity",
+    title: "Painted vs Wood Veneer Cabinets in NYC Humidity",
+    description: "Painted vs wood veneer cabinets in NYC humidity — steam heat, AC cycles, coastal moisture. Honest millwork tradeoffs by appointment. (718) 804-5488.",
+    datePublished: "2026-09-18",
+    keywords: "painted vs wood veneer cabinets nyc, painted mdf vs veneer kitchen cabinets nyc, laminate vs painted cabinets apartment humidity, nyc kitchen cabinet humidity, tafisa egger shinnoki wilsonart agt cabinets",
+  },
+  {
     slug: "custom-closet-systems-long-island-city",
     title: "Custom Closet Systems for Long Island City Apartments",
     description: "Custom closet systems for Long Island City condos and rentals — measured walk-ins and reach-ins, COI-ready install. Green Cabinets NY. (718) 804-5488.",
