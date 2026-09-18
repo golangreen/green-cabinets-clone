@@ -105,6 +105,13 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-closet-systems-long-island-city",
+    title: "Custom Closet Systems for Long Island City Apartments",
+    description: "Custom closet systems for Long Island City condos and rentals — measured walk-ins and reach-ins, COI-ready install. Green Cabinets NY. (718) 804-5488.",
+    datePublished: "2026-09-18",
+    keywords: "custom closet systems long island city, closet millwork lic, custom closets long island city queens, walk-in closet long island city, reach-in closet condo coi",
+  },
+  {
     slug: "condo-board-kitchen-renovation-rules-nyc",
     title: "Condo Board Kitchen Renovation Rules in NYC",
     description: "How NYC condo board kitchen renovation rules work — house rules, alteration agreements, COI, work hours. Green Cabinets NY by appointment. (718) 804-5488.",
