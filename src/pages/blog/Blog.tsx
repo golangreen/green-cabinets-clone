@@ -4,7 +4,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Seo from "@/components/Seo";
 import { listBlogArticles, type BlogArticle } from "@/services/blogService";
-import { STATIC_BLOG_POSTS, STATIC_BLOG_SLUGS } from "@/data/staticBlogPosts";
+import { STATIC_BLOG_POSTS, STATIC_BLOG_SLUGS } from "@/data/blogIndex";
 
 export default function Blog() {
   const [articles, setArticles] = useState<BlogArticle[]>(STATIC_BLOG_POSTS);
