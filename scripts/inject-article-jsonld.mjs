@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-fort-greene-brooklyn",
+    title: "Custom Kitchen Cabinets for Fort Greene Brooklyn",
+    description:
+      "Custom kitchen cabinets for Fort Greene Brooklyn — brownstones, co-ops, and newer condos near the park. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-19",
+    keywords:
+      "fort greene, brooklyn kitchen cabinets, fort greene brownstone kitchen, fort greene condo kitchen, fort greene park, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-williamsburg-brooklyn",
     title: "Custom Kitchen Cabinets for Williamsburg Brooklyn",
     description:
