@@ -5,7 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Seo from "@/components/Seo";
 import { getBlogArticleBySlug, type BlogArticle } from "@/services/blogService";
-import { getStaticBlogPost } from "@/data/staticBlogPosts";
+import { getStaticBlogPost } from "@/data/blogIndex";
 import { normalizeArticleHtml } from "@/lib/normalizeArticleHtml";
 
 export default function BlogArticlePage() {
