@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-williamsburg-brooklyn",
+    title: "Custom Kitchen Cabinets for Williamsburg Brooklyn",
+    description:
+      "Custom kitchen cabinets for Williamsburg Brooklyn — lofts, condos, townhouses. Northside, Southside, East Williamsburg. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-19",
+    keywords:
+      "williamsburg, brooklyn kitchen cabinets, williamsburg loft kitchen, condo kitchen, townhouse kitchen, east williamsburg, custom millwork, by appointment",
+  },
+  {
     slug: "painted-vs-wood-veneer-cabinets-nyc-humidity",
     title: "Painted vs Wood Veneer Cabinets in NYC Humidity",
     description: "Painted vs wood veneer cabinets in NYC humidity — steam heat, AC cycles, coastal moisture. Honest millwork tradeoffs by appointment. (718) 804-5488.",
