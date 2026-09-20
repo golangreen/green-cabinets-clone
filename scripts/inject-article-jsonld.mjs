@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "appliance-panel-integrated-fridge-cabinets-nyc",
+    title: "Appliance Panel and Integrated Fridge Cabinets for NYC Kitchens",
+    description:
+      "Appliance panel and integrated fridge cabinets for NYC kitchens — co-ops, condos, and townhouses. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-20",
+    keywords:
+      "appliance panel cabinets, integrated fridge cabinets, panel-ready fridge, nyc kitchen cabinets, co-op kitchen, condo kitchen, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-greenpoint-brooklyn",
     title: "Custom Kitchen Cabinets for Greenpoint Brooklyn",
     description:
