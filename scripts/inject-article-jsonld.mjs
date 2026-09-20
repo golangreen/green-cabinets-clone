@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-greenpoint-brooklyn",
+    title: "Custom Kitchen Cabinets for Greenpoint Brooklyn",
+    description:
+      "Custom kitchen cabinets for Greenpoint Brooklyn — loft conversions, townhouses, and newer condos. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-20",
+    keywords:
+      "greenpoint, brooklyn kitchen cabinets, greenpoint loft kitchen, greenpoint townhouse kitchen, greenpoint condo kitchen, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-fort-greene-brooklyn",
     title: "Custom Kitchen Cabinets for Fort Greene Brooklyn",
     description:
