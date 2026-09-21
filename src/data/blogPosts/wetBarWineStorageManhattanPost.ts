@@ -75,7 +75,7 @@ export const wetBarWineStorageManhattanPost: BlogArticle = {
   content_image_urls: [],
   canonical_url:
     "https://greencabinetsny.com/blog/custom-wet-bar-wine-storage-manhattan",
-  created_at: "2026-09-21T09:30:00-04:00",
-  updated_at: "2026-09-21T09:30:00-04:00",
+  created_at: "2026-09-21T15:30:00-04:00",
+  updated_at: "2026-09-21T15:30:00-04:00",
   content_html: BODY.join("\n"),
 };
