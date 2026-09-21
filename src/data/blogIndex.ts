@@ -7,9 +7,11 @@ import { williamsburgKitchenPost } from "@/data/blogPosts/williamsburgKitchenPos
 import { fortGreeneKitchenPost } from "@/data/blogPosts/fortGreeneKitchenPost";
 import { greenpointKitchenPost } from "@/data/blogPosts/greenpointKitchenPost";
 import { appliancePanelPost } from "@/data/blogPosts/appliancePanelPost";
+import { wetBarWineStorageManhattanPost } from "@/data/blogPosts/wetBarWineStorageManhattanPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  wetBarWineStorageManhattanPost,
   appliancePanelPost,
   greenpointKitchenPost,
   fortGreeneKitchenPost,
@@ -19,7 +21,8 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== williamsburgKitchenPost.slug &&
       p.slug !== fortGreeneKitchenPost.slug &&
       p.slug !== greenpointKitchenPost.slug &&
-      p.slug !== appliancePanelPost.slug,
+      p.slug !== appliancePanelPost.slug &&
+      p.slug !== wetBarWineStorageManhattanPost.slug,
   ),
 ];
 
@@ -27,6 +30,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === wetBarWineStorageManhattanPost.slug) return wetBarWineStorageManhattanPost;
   if (slug === appliancePanelPost.slug) return appliancePanelPost;
   if (slug === greenpointKitchenPost.slug) return greenpointKitchenPost;
   if (slug === fortGreeneKitchenPost.slug) return fortGreeneKitchenPost;
