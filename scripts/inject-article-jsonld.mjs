@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-wet-bar-wine-storage-manhattan",
+    title: "Custom Wet Bar and Wine Storage Millwork for Manhattan Apartments",
+    description:
+      "Custom wet bar and wine storage millwork for Manhattan apartments, co-ops, and condos. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-21",
+    keywords:
+      "custom wet bar Manhattan, wine storage millwork Manhattan, wet bar millwork NYC, built-in wine cabinet NYC, Manhattan co-op millwork, Manhattan condo millwork, custom millwork, by appointment",
+  },
+  {
     slug: "appliance-panel-integrated-fridge-cabinets-nyc",
     title: "Appliance Panel and Integrated Fridge Cabinets for NYC Kitchens",
     description:
