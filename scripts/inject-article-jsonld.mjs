@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-upper-east-side-coops",
+    title: "Custom Kitchen Cabinets for Upper East Side Co-ops",
+    description:
+      "Custom kitchen cabinets for Upper East Side co-ops — alteration agreements, COI, freight, measured millwork. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-21",
+    keywords:
+      "custom kitchen cabinets Upper East Side, UES co-op kitchen renovation, Upper East Side co-op cabinets, custom kitchen millwork Carnegie Hill, Manhattan co-op millwork, custom millwork, by appointment",
+  },
+  {
     slug: "custom-wet-bar-wine-storage-manhattan",
     title: "Custom Wet Bar and Wine Storage Millwork for Manhattan Apartments",
     description:
