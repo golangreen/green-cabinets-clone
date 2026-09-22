@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-entry-foyer-closet-millwork-manhattan",
+    title: "Custom Entry and Foyer Closet Millwork for Manhattan Apartments",
+    description:
+      "Custom entry and foyer closet millwork for Manhattan apartments — co-ops, condos, measured reach-in storage. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-22",
+    keywords:
+      "custom entry closet manhattan, foyer closet millwork nyc, manhattan apartment coat closet, custom reach in closet co-op, custom millwork, by appointment",
+  },
+  {
     slug: "toe-kick-drawers-pantry-pull-outs-nyc-kitchens",
     title: "Toe-Kick Drawers and Pantry Pull-Outs for NYC Kitchens",
     description:
