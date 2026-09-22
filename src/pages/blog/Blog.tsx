@@ -4,19 +4,19 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Seo from "@/components/Seo";
 import { listBlogArticles, type BlogArticle } from "@/services/blogService";
-import { STATIC_BLOG_POSTS, STATIC_BLOG_SLUGS } from "@/data/blogIndex";
+import { STATIC_BLOG_POSTS, STATIC_BLOG_SLUGS, orderBlogPosts } from "@/data/blogIndex";
 
 export default function Blog() {
-  const [articles, setArticles] = useState<BlogArticle[]>(STATIC_BLOG_POSTS);
+  const [articles, setArticles] = useState<BlogArticle[]>(orderBlogPosts(STATIC_BLOG_POSTS));
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     listBlogArticles()
       .then((remote) => {
-        const merged = [
+        const merged = orderBlogPosts([
           ...STATIC_BLOG_POSTS,
           ...remote.filter((a) => !STATIC_BLOG_SLUGS.has(a.slug)),
-        ].sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
+        ]);
         setArticles(merged);
       })
       .catch((e) => setError(e?.message ?? "Failed to load"));
