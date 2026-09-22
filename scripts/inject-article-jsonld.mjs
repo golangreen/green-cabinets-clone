@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "toe-kick-drawers-pantry-pull-outs-nyc-kitchens",
+    title: "Toe-Kick Drawers and Pantry Pull-Outs for NYC Kitchens",
+    description:
+      "Toe-kick drawers and pantry pull-outs for NYC kitchens in Brooklyn, Manhattan, and Queens. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-22",
+    keywords:
+      "toe kick drawers NYC, pantry pull-outs NYC, custom pantry pull-out Brooklyn, toe kick storage Manhattan co-op, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-upper-east-side-coops",
     title: "Custom Kitchen Cabinets for Upper East Side Co-ops",
     description:
