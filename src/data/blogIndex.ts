@@ -34,6 +34,21 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
 
 export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
+/** Slugs pinned to the top of /blog, in order, regardless of published date. */
+export const PINNED_BLOG_SLUGS: string[] = [toeKickPantryPullOutsPost.slug];
+
+/** Newest-first ordering with pinned posts forced to the top. */
+export function orderBlogPosts<T extends { slug: string; created_at: string }>(posts: T[]): T[] {
+  const rank = (slug: string) => {
+    const i = PINNED_BLOG_SLUGS.indexOf(slug);
+    return i === -1 ? PINNED_BLOG_SLUGS.length : i;
+  };
+  return [...posts].sort(
+    (a, b) =>
+      rank(a.slug) - rank(b.slug) || +new Date(b.created_at) - +new Date(a.created_at),
+  );
+}
+
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
   if (slug === toeKickPantryPullOutsPost.slug) return toeKickPantryPullOutsPost;
