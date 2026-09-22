@@ -58,6 +58,10 @@ const BODY = [
 
 export const entryFoyerClosetManhattanPost: BlogArticle = {
   id: "static-custom-entry-foyer-closet-millwork-manhattan",
+  external_id: null,
   ...META,
+  excerpt: META.meta_description,
+  meta_title: META.title,
+  image_url: null,
   content_html: BODY.join("\n"),
 };
