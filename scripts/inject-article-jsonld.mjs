@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-cobble-hill-carroll-gardens",
+    title: "Custom Kitchen Cabinets for Cobble Hill and Carroll Gardens",
+    description:
+      "Custom kitchen cabinets for Cobble Hill and Carroll Gardens brownstones and condos. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-23",
+    keywords:
+      "custom kitchen cabinets Cobble Hill, Carroll Gardens kitchen cabinets, Cobble Hill brownstone kitchen millwork, custom cabinets 11231, custom millwork, by appointment",
+  },
+  {
     slug: "custom-entry-foyer-closet-millwork-manhattan",
     title: "Custom Entry and Foyer Closet Millwork for Manhattan Apartments",
     description:
