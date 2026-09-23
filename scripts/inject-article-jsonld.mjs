@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-prospect-heights-brooklyn",
+    title: "Custom Kitchen Cabinets for Prospect Heights Brooklyn",
+    description:
+      "Custom kitchen cabinets for Prospect Heights Brooklyn brownstones and condos. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-23",
+    keywords:
+      "custom kitchen cabinets Prospect Heights, Prospect Heights Brooklyn kitchen cabinets, Prospect Heights brownstone kitchen millwork, custom cabinets 11238, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-cobble-hill-carroll-gardens",
     title: "Custom Kitchen Cabinets for Cobble Hill and Carroll Gardens",
     description:
