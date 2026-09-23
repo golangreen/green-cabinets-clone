@@ -12,9 +12,11 @@ import { upperEastSideCoopsPost } from "@/data/blogPosts/upperEastSideCoopsPost"
 import { toeKickPantryPullOutsPost } from "@/data/blogPosts/toeKickPantryPullOutsPost";
 import { entryFoyerClosetManhattanPost } from "@/data/blogPosts/entryFoyerClosetManhattanPost";
 import { cobbleHillCarrollGardensPost } from "@/data/blogPosts/cobbleHillCarrollGardensPost";
+import { prospectHeightsBrooklynPost } from "@/data/blogPosts/prospectHeightsBrooklynPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  prospectHeightsBrooklynPost,
   cobbleHillCarrollGardensPost,
   entryFoyerClosetManhattanPost,
   toeKickPantryPullOutsPost,
@@ -34,7 +36,8 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== upperEastSideCoopsPost.slug &&
       p.slug !== toeKickPantryPullOutsPost.slug &&
       p.slug !== entryFoyerClosetManhattanPost.slug &&
-      p.slug !== cobbleHillCarrollGardensPost.slug,
+      p.slug !== cobbleHillCarrollGardensPost.slug &&
+      p.slug !== prospectHeightsBrooklynPost.slug,
   ),
 ];
 
@@ -42,6 +45,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  prospectHeightsBrooklynPost.slug,
   cobbleHillCarrollGardensPost.slug,
   entryFoyerClosetManhattanPost.slug,
   toeKickPantryPullOutsPost.slug,
@@ -61,6 +65,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === prospectHeightsBrooklynPost.slug) return prospectHeightsBrooklynPost;
   if (slug === cobbleHillCarrollGardensPost.slug) return cobbleHillCarrollGardensPost;
   if (slug === entryFoyerClosetManhattanPost.slug) return entryFoyerClosetManhattanPost;
   if (slug === toeKickPantryPullOutsPost.slug) return toeKickPantryPullOutsPost;
