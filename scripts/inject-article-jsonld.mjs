@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-walk-in-closet-millwork-brooklyn-brownstones",
+    title: "Custom Walk-In Closet Millwork for Brooklyn Brownstones",
+    description:
+      "Custom walk-in closet millwork for Brooklyn brownstones. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-24",
+    keywords:
+      "walk-in closet Brooklyn brownstone, custom closet millwork Brooklyn, Park Slope walk-in closet, Fort Greene closet, custom millwork, by appointment",
+  },
+  {
     slug: "floor-to-ceiling-bulkhead-kitchen-cabinets-prewar-nyc",
     title: "Floor-to-Ceiling and Bulkhead Kitchen Cabinets for Prewar NYC Apartments",
     description:
