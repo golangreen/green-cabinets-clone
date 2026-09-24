@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "floor-to-ceiling-bulkhead-kitchen-cabinets-prewar-nyc",
+    title: "Floor-to-Ceiling and Bulkhead Kitchen Cabinets for Prewar NYC Apartments",
+    description:
+      "Floor-to-ceiling and bulkhead kitchen cabinets for prewar NYC apartments. Custom millwork by appointment. (718) 804-5488.",
+    datePublished: "2026-09-24",
+    keywords:
+      "floor to ceiling kitchen cabinets NYC, bulkhead kitchen cabinets, prewar kitchen cabinets, soffit cabinets NYC, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-prospect-heights-brooklyn",
     title: "Custom Kitchen Cabinets for Prospect Heights Brooklyn",
     description:
