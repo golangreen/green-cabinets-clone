@@ -15,9 +15,11 @@ import { cobbleHillCarrollGardensPost } from "@/data/blogPosts/cobbleHillCarroll
 import { prospectHeightsBrooklynPost } from "@/data/blogPosts/prospectHeightsBrooklynPost";
 import { floorToCeilingBulkheadPost } from "@/data/blogPosts/floorToCeilingBulkheadPost";
 import { brooklynBrownstoneWalkInClosetPost } from "@/data/blogPosts/brooklynBrownstoneWalkInClosetPost";
+import { parkSlopeBathroomVanityPost } from "@/data/blogPosts/parkSlopeBathroomVanityPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  parkSlopeBathroomVanityPost,
   brooklynBrownstoneWalkInClosetPost,
   floorToCeilingBulkheadPost,
   prospectHeightsBrooklynPost,
@@ -43,7 +45,8 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== cobbleHillCarrollGardensPost.slug &&
       p.slug !== floorToCeilingBulkheadPost.slug &&
       p.slug !== prospectHeightsBrooklynPost.slug &&
-      p.slug !== brooklynBrownstoneWalkInClosetPost.slug,
+      p.slug !== brooklynBrownstoneWalkInClosetPost.slug &&
+      p.slug !== parkSlopeBathroomVanityPost.slug,
   ),
 ];
 
@@ -51,6 +54,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  parkSlopeBathroomVanityPost.slug,
   brooklynBrownstoneWalkInClosetPost.slug,
   floorToCeilingBulkheadPost.slug,
   prospectHeightsBrooklynPost.slug,
@@ -72,6 +76,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === parkSlopeBathroomVanityPost.slug) return parkSlopeBathroomVanityPost;
   if (slug === brooklynBrownstoneWalkInClosetPost.slug) return brooklynBrownstoneWalkInClosetPost;
   if (slug === floorToCeilingBulkheadPost.slug) return floorToCeilingBulkheadPost;
   if (slug === prospectHeightsBrooklynPost.slug) return prospectHeightsBrooklynPost;

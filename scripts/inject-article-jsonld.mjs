@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-bathroom-vanity-park-slope-brownstones",
+    title: "Custom Bathroom Vanity for Park Slope Brownstones",
+    description:
+      "Custom bathroom vanity for Park Slope brownstones — measured to the inch, live price in the designer. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-25",
+    keywords:
+      "custom bathroom vanity Park Slope, Park Slope brownstone vanity, bathroom vanity Brooklyn brownstone, custom vanity designer NYC, custom millwork, by appointment",
+  },
+  {
     slug: "custom-walk-in-closet-millwork-brooklyn-brownstones",
     title: "Custom Walk-In Closet Millwork for Brooklyn Brownstones",
     description:
