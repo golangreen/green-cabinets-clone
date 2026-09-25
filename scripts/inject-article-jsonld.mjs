@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-boerum-hill-brooklyn",
+    title: "Custom Kitchen Cabinets for Boerum Hill Brooklyn",
+    description:
+      "Custom kitchen cabinets for Boerum Hill Brooklyn brownstones and condos. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-25",
+    keywords:
+      "custom kitchen cabinets Boerum Hill, Boerum Hill Brooklyn kitchen cabinets, Boerum Hill brownstone kitchen millwork, custom cabinets 11217, custom millwork, by appointment",
+  },
+  {
     slug: "custom-bathroom-vanity-park-slope-brownstones",
     title: "Custom Bathroom Vanity for Park Slope Brownstones",
     description:
