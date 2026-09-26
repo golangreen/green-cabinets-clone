@@ -17,9 +17,11 @@ import { floorToCeilingBulkheadPost } from "@/data/blogPosts/floorToCeilingBulkh
 import { brooklynBrownstoneWalkInClosetPost } from "@/data/blogPosts/brooklynBrownstoneWalkInClosetPost";
 import { boerumHillBrooklynPost } from "@/data/blogPosts/boerumHillBrooklynPost";
 import { parkSlopeBathroomVanityPost } from "@/data/blogPosts/parkSlopeBathroomVanityPost";
+import { underStairStorageBrooklynPost } from "@/data/blogPosts/underStairStorageBrooklynPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  underStairStorageBrooklynPost,
   boerumHillBrooklynPost,
   parkSlopeBathroomVanityPost,
   brooklynBrownstoneWalkInClosetPost,
@@ -49,7 +51,8 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== prospectHeightsBrooklynPost.slug &&
       p.slug !== brooklynBrownstoneWalkInClosetPost.slug &&
       p.slug !== parkSlopeBathroomVanityPost.slug &&
-      p.slug !== boerumHillBrooklynPost.slug,
+      p.slug !== boerumHillBrooklynPost.slug &&
+      p.slug !== underStairStorageBrooklynPost.slug,
   ),
 ];
 
@@ -57,6 +60,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  underStairStorageBrooklynPost.slug,
   boerumHillBrooklynPost.slug,
   parkSlopeBathroomVanityPost.slug,
   brooklynBrownstoneWalkInClosetPost.slug,
@@ -80,6 +84,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === underStairStorageBrooklynPost.slug) return underStairStorageBrooklynPost;
   if (slug === boerumHillBrooklynPost.slug) return boerumHillBrooklynPost;
   if (slug === parkSlopeBathroomVanityPost.slug) return parkSlopeBathroomVanityPost;
   if (slug === brooklynBrownstoneWalkInClosetPost.slug) return brooklynBrownstoneWalkInClosetPost;
