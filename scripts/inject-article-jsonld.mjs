@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "under-stair-storage-millwork-brooklyn-brownstones",
+    title: "Under-Stair Storage Millwork for Brooklyn Brownstones",
+    description:
+      "Under-stair storage millwork for Brooklyn brownstones — coat, shoe, and pantry hybrids cut to the void. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-26",
+    keywords:
+      "under stair storage Brooklyn, understairs millwork brownstone, custom under stair storage NYC, under stair cabinets Brooklyn brownstone, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-boerum-hill-brooklyn",
     title: "Custom Kitchen Cabinets for Boerum Hill Brooklyn",
     description:
