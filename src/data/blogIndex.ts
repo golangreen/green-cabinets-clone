@@ -18,9 +18,11 @@ import { brooklynBrownstoneWalkInClosetPost } from "@/data/blogPosts/brooklynBro
 import { boerumHillBrooklynPost } from "@/data/blogPosts/boerumHillBrooklynPost";
 import { parkSlopeBathroomVanityPost } from "@/data/blogPosts/parkSlopeBathroomVanityPost";
 import { underStairStorageBrooklynPost } from "@/data/blogPosts/underStairStorageBrooklynPost";
+import { forestHillsQueensPost } from "@/data/blogPosts/forestHillsQueensPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  forestHillsQueensPost,
   underStairStorageBrooklynPost,
   boerumHillBrooklynPost,
   parkSlopeBathroomVanityPost,
@@ -52,7 +54,8 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== brooklynBrownstoneWalkInClosetPost.slug &&
       p.slug !== parkSlopeBathroomVanityPost.slug &&
       p.slug !== boerumHillBrooklynPost.slug &&
-      p.slug !== underStairStorageBrooklynPost.slug,
+      p.slug !== underStairStorageBrooklynPost.slug &&
+      p.slug !== forestHillsQueensPost.slug,
   ),
 ];
 
@@ -60,6 +63,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  forestHillsQueensPost.slug,
   underStairStorageBrooklynPost.slug,
   boerumHillBrooklynPost.slug,
   parkSlopeBathroomVanityPost.slug,
@@ -84,6 +88,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === forestHillsQueensPost.slug) return forestHillsQueensPost;
   if (slug === underStairStorageBrooklynPost.slug) return underStairStorageBrooklynPost;
   if (slug === boerumHillBrooklynPost.slug) return boerumHillBrooklynPost;
   if (slug === parkSlopeBathroomVanityPost.slug) return parkSlopeBathroomVanityPost;

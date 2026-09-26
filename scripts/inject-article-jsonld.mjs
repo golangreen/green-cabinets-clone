@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-forest-hills-queens",
+    title: "Custom Kitchen Cabinets for Forest Hills Queens",
+    description:
+      "Custom kitchen cabinets for Forest Hills Queens — Tudor homes, co-ops, and condos by appointment. (718) 804-5488.",
+    datePublished: "2026-09-26",
+    keywords:
+      "custom kitchen cabinets Forest Hills, Forest Hills Queens kitchen cabinets, Forest Hills Tudor kitchen millwork, custom cabinets 11375, custom millwork, by appointment",
+  },
+  {
     slug: "under-stair-storage-millwork-brooklyn-brownstones",
     title: "Under-Stair Storage Millwork for Brooklyn Brownstones",
     description:
