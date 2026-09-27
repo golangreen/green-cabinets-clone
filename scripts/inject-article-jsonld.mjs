@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "kitchen-island-millwork-nyc-loft-apartments",
+    title: "Kitchen Island Millwork for NYC Loft Apartments",
+    description:
+      "Custom kitchen island millwork for NYC loft apartments  open plans, freestanding islands, and seating by appointment. (718) 804-5488.",
+    datePublished: "2026-09-27",
+    keywords:
+      "kitchen island millwork NYC loft, custom kitchen island loft apartment, loft kitchen island Brooklyn, loft kitchen island Manhattan, freestanding kitchen island, custom millwork, by appointment",
+  },
+  {
     slug: "custom-linen-closet-millwork-manhattan-coops",
     title: "Custom Linen Closet Millwork for Manhattan Co-ops",
     description:
