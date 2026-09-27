@@ -1,5 +1,6 @@
 # Roadmap
 
+- [x] Publish baked-in blog article `/blog/kitchen-island-millwork-nyc-loft-apartments` (static post, listed first on /blog, sitemap entry, ready for publish)
 - [x] Publish baked-in blog article `/blog/under-stair-storage-millwork-brooklyn-brownstones` (static post, listed first on /blog, sitemap entry, ready for publish)
 - [x] Publish blog article `/blog/custom-closet-millwork-brooklyn` (DB insert, listed on /blog, sitemap entry, verify)
 - [x] Publish baked-in blog article `/blog/manhattan-condo-coop-kitchen-millwork` (static post, listed on /blog, sitemap entry)
