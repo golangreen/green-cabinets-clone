@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-linen-closet-millwork-manhattan-coops",
+    title: "Custom Linen Closet Millwork for Manhattan Co-ops",
+    description:
+      "Custom linen closet millwork for Manhattan co-ops — towel, sheet, and utility storage cut to the chase. By appointment. (718) 804-5488.",
+    datePublished: "2026-09-27",
+    keywords:
+      "linen closet millwork Manhattan, custom linen closet NYC co-op, hallway linen cabinet Manhattan apartment, built-in linen closet Upper West Side, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-forest-hills-queens",
     title: "Custom Kitchen Cabinets for Forest Hills Queens",
     description:
