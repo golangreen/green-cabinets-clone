@@ -52,7 +52,24 @@ Zip context: 11201 (Brooklyn Heights core) — by appointment only. Cobble Hill,
 
 Custom millwork starts from the clear opening. We scribe fillers on site so the run looks built into the plaster, not parked against it.
 
-## Boards, COI, and occupied-unit installs`,
+## Boards, COI, and occupied-unit installs
+
+Brooklyn Heights mixes fee-simple brownstones, pre-war co-ops, and mid-rise condos near the park. Boards typically ask for COI, work-hour windows, hallway protection, and a freight reservation when the building has one. This is not legal advice. You own board submissions; we support with drawings and COI when asked — same culture in [condo board kitchen renovation rules](https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc), [Manhattan co-op alteration agreements](https://greencabinetsny.com/blog/manhattan-coop-kitchen-alteration-agreement), and [occupied-unit install logistics](https://greencabinetsny.com/blog/occupied-unit-kitchen-install-logistics-nyc). Delivery follows [kitchen installation in NYC](https://greencabinetsny.com/blog/nyc-kitchen-cabinet-installation). Stair-only brownstones get panel sizes planned for the stoop before fabrication. There is no showroom at 10 Montieth — samples come to your apartment by appointment.
+
+## How a Brooklyn Heights kitchen usually runs
+
+1. **Photos and rough dimensions** — galley or L, fridge and range clearances, bulkhead height, freight or stair notes if known.
+
+2. **By-appointment measure** in your kitchen — samples come to you; no walk-in shop at 10 Montieth.
+
+3. **Layout and elevations** with appliance clearances, chimney and radiator workarounds, and notes for tall ceilings or bulkheads.
+
+4. **Finish and door selection** — [shaker vs slim shaker](https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc), [wood species](https://greencabinetsny.com/wood-species), painted or veneer for steam and AC cycles.
+
+5. **Building package support** when a board asks for COI or alteration drawings.
+
+6. **Fabrication and install** — typically 4–6 weeks from signed design, then install inside approved work hours.`,
+
 
 ];
 
