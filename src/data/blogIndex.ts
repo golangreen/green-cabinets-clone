@@ -66,7 +66,8 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== forestHillsQueensPost.slug &&
       p.slug !== linenClosetManhattanCoopsPost.slug &&
       p.slug !== kitchenIslandNycLoftsPost.slug &&
-      p.slug !== jacksonHeightsQueensPost.slug,
+    p.slug !== jacksonHeightsQueensPost.slug &&
+    p.slug !== brooklynHeightsPost.slug,
   ),
 ];
 
