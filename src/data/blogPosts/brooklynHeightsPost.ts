@@ -20,7 +20,14 @@ const META = {
 };
 
 /** Body is appended section by section from the client's pasted article. */
-const BODY: string[] = [];
+const BODY: string[] = [
+  `# Custom Kitchen Cabinets for Brooklyn Heights
+
+Brooklyn Heights kitchens sit inside one of the borough's oldest residential grids — and none of them share one floor plan. A brownstone near the Promenade or Cadman Plaza often has a garden-floor wet wall, a narrow galley, and plaster that bows off square after a century of settlement. A pre-war co-op on Pierrepont or Montague fights a board that wants COI, a freight reservation, and work-hour windows before the first panel rolls in. A newer condo near Brooklyn Bridge Park or a Pierhouse-type building has cleaner slabs — and developer boxes that leave a dead bay under the soffit. Stock packs leave fillers, a crooked fridge line, and uppers that never meet the wall you own.
+
+Green Cabinets NY designs and installs custom kitchen cabinets for Brooklyn Heights by appointment. We are home-based in Bushwick — not a walk-in shop. Measure and sample visits happen in your kitchen. Start with the [Brooklyn kitchen cabinets](https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn) map. Nearby Brooklyn depth: [Park Slope brownstones](https://greencabinetsny.com/blog/custom-kitchen-cabinets-park-slope-brownstones), [Cobble Hill and Carroll Gardens](https://greencabinetsny.com/blog/custom-kitchen-cabinets-cobble-hill-carroll-gardens), [Boerum Hill](https://greencabinetsny.com/blog/custom-kitchen-cabinets-boerum-hill-brooklyn), [Fort Greene](https://greencabinetsny.com/blog/custom-kitchen-cabinets-fort-greene-brooklyn), and [Prospect Heights](https://greencabinetsny.com/blog/custom-kitchen-cabinets-prospect-heights-brooklyn).`,
+  `## Brownstones, pre-war co-ops, and Bridge Park condos`,
+];
 
 export const brooklynHeightsPost: BlogArticle = {
   id: "static-custom-kitchen-cabinets-brooklyn-heights",
