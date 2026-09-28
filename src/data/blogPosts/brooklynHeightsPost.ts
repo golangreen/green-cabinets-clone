@@ -92,7 +92,19 @@ Often yes when we measure the clear opening under the bulkhead first. Catalog 48
 
 **Can you deliver to a brownstone with no freight elevator?**
 
-Yes. We section panels for the stoop and stair before fabrication so stock-sized boxes never get stuck on a landing.`,
+Yes. We section panels for the stoop and stair before fabrication so stock-sized boxes never get stuck on a landing.
+
+**How long does a Brooklyn Heights kitchen take?**
+
+Typically 4–6 weeks from signed design to cabinet install, then countertop template and stone on a separate clock. Board windows can extend the calendar without changing on-site labor days.
+
+**Can I combine a kitchen with a vanity or closet in one package?**
+
+Yes — one alteration package is cleaner for COI and freight. Browse the [designer](https://greencabinetsny.com/designer) and related [vanity](https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc) or [closet](https://greencabinetsny.com/blog/custom-closet-millwork-brooklyn) posts.
+
+## Get a quote for Brooklyn Heights kitchen cabinets
+
+Ready to replace developer boxes or a tired brownstone galley with millwork cut to your walls? Call (718) 804-5488 or email orders@greencabinetsny.com. Green Cabinets NY — custom kitchen cabinets for Brooklyn Heights and the rest of Brooklyn, Manhattan, and Queens, by appointment only.`,
 ];
 
 
