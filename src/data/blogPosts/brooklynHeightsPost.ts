@@ -30,7 +30,30 @@ Green Cabinets NY designs and installs custom kitchen cabinets for Brooklyn Heig
 
 **Brownstones and townhouses near the Promenade and Cadman Plaza.** Garden floors sit low with thicker original walls and wet walls that were never square. Parlor kitchens run long toward the rear; tall ceilings help until a bulkhead cuts the upper run. Chimney breasts and radiator niches eat fixed modules. Classic [shaker or slim shaker](https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc) with careful scribe is a common ask. Soft-close: [Blum vs Hettich](https://greencabinetsny.com/blog/soft-close-blum-vs-hettich-nyc). Drawer banks and [dovetail drawer boxes](https://greencabinetsny.com/blog/dovetail-drawer-boxes-nyc-kitchens) beat deep shelves you never see. Finish: [wood species](https://greencabinetsny.com/wood-species) and [painted vs wood veneer in NYC humidity](https://greencabinetsny.com/blog/painted-vs-wood-veneer-cabinets-nyc-humidity).
 
-**Pre-war co-ops and mid-rises on Pierrepont, Montague, and nearby blocks.** Short clear heights, shared stacks, and boards that want a [Certificate of Insurance](https://greencabinetsny.com/blog/certificate-of-insurance-kitchen-remodel-nyc) before demo day. Freight elevators need a reservation; stair-only buildings need panels sized for the stair before fabrication — see [freight elevator delivery](https://greencabinetsny.com/blog/freight-elevator-kitchen-cabinet-delivery-nyc). Custom millwork reclaims unused height under the bulkhead with taller wall cabinets and [floor-to-ceiling / bulkhead kitchen cabinets](https://greencabinetsny.com/blog/floor-to-ceiling-bulkhead-kitchen-cabinets-prewar-nyc) logic.`,
+**Pre-war co-ops and mid-rises on Pierrepont, Montague, and nearby blocks.** Short clear heights, shared stacks, and boards that want a [Certificate of Insurance](https://greencabinetsny.com/blog/certificate-of-insurance-kitchen-remodel-nyc) before demo day. Freight elevators need a reservation; stair-only buildings need panels sized for the stair before fabrication — see [freight elevator delivery](https://greencabinetsny.com/blog/freight-elevator-kitchen-cabinet-delivery-nyc). Custom millwork reclaims unused height under the bulkhead with taller wall cabinets and [floor-to-ceiling / bulkhead kitchen cabinets](https://greencabinetsny.com/blog/floor-to-ceiling-bulkhead-kitchen-cabinets-prewar-nyc) logic.
+
+**Newer condos near Brooklyn Bridge Park and Pierhouse-type buildings.** Cleaner slabs, shallower galleys, and developer boxes that leave a dead bay under the soffit. We reclaim that bay with taller wall cabinets, [appliance-panel integrated fridges](https://greencabinetsny.com/blog/appliance-panel-integrated-fridge-cabinets-nyc), and [toe-kick drawers or pantry pull-outs](https://greencabinetsny.com/blog/toe-kick-drawers-pantry-pull-outs-nyc-kitchens). Condo boards still ask for COI, hallway protection, and approved work hours — same culture as [condo board kitchen renovation rules](https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc).
+
+Zip context: 11201 (Brooklyn Heights core) — by appointment only. Cobble Hill, Downtown Brooklyn, and Dumbo sit next door; we measure each kitchen separately.
+
+## Why stock cabinets fail in Brooklyn Heights
+
+- Out-of-square plaster and sloping garden-floor slabs that bind a rigid module
+
+- Chimney breasts and radiator niches that refuse a 36-inch catalog bay
+
+- Tall ceilings cut by bulkheads where catalog uppers still miss the clear opening
+
+- Condo bulkheads, sprinkler heads, and returns that cut upper height
+
+- Narrow stoops and stair-only access that will not take oversized stock panels
+
+- Boards that want COI, work-hour windows, and hallway protection before install day
+
+Custom millwork starts from the clear opening. We scribe fillers on site so the run looks built into the plaster, not parked against it.
+
+## Boards, COI, and occupied-unit installs`,
+
 ];
 
 export const brooklynHeightsPost: BlogArticle = {
