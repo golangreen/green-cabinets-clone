@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-brooklyn-heights",
+    title: "Custom Kitchen Cabinets for Brooklyn Heights",
+    description:
+      "Custom kitchen cabinets for Brooklyn Heights — brownstones, co-ops, and condos by appointment. (718) 804-5488.",
+    datePublished: "2026-09-28",
+    keywords:
+      "custom kitchen cabinets Brooklyn Heights, Brooklyn Heights brownstone kitchen cabinets, Brooklyn Heights co-op kitchen remodel cabinets, brownstone kitchen millwork Brooklyn, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-jackson-heights-queens",
     title: "Custom Kitchen Cabinets for Jackson Heights Queens",
     description:
