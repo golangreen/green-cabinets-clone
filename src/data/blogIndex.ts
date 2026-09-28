@@ -21,10 +21,12 @@ import { underStairStorageBrooklynPost } from "@/data/blogPosts/underStairStorag
 import { forestHillsQueensPost } from "@/data/blogPosts/forestHillsQueensPost";
 import { linenClosetManhattanCoopsPost } from "@/data/blogPosts/linenClosetManhattanCoopsPost";
 import { kitchenIslandNycLoftsPost } from "@/data/blogPosts/kitchenIslandNycLoftsPost";
+import { brooklynHeightsPost } from "@/data/blogPosts/brooklynHeightsPost";
 import { jacksonHeightsQueensPost } from "@/data/blogPosts/jacksonHeightsQueensPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  brooklynHeightsPost,
   jacksonHeightsQueensPost,
   kitchenIslandNycLoftsPost,
   linenClosetManhattanCoopsPost,
