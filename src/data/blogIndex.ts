@@ -74,6 +74,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  brooklynHeightsPost.slug,
   jacksonHeightsQueensPost.slug,
   kitchenIslandNycLoftsPost.slug,
   linenClosetManhattanCoopsPost.slug,
@@ -102,6 +103,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === brooklynHeightsPost.slug) return brooklynHeightsPost;
   if (slug === jacksonHeightsQueensPost.slug) return jacksonHeightsQueensPost;
   if (slug === kitchenIslandNycLoftsPost.slug) return kitchenIslandNycLoftsPost;
   if (slug === linenClosetManhattanCoopsPost.slug) return linenClosetManhattanCoopsPost;
