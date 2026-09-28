@@ -70,8 +70,15 @@ Brooklyn Heights mixes fee-simple brownstones, pre-war co-ops, and mid-rise cond
 
 6. **Fabrication and install** — typically 4–6 weeks from signed design, then install inside approved work hours.`,
 
+  `Layout experiments live in the [online designer](https://greencabinetsny.com/designer). Designer renders are layout previews, not photos of finished jobs. Related storage: [custom pantry millwork](https://greencabinetsny.com/blog/custom-pantry-millwork-nyc) and [home office built-ins](https://greencabinetsny.com/blog/home-office-built-ins-nyc). Same-alteration baths: [custom bathroom vanity NYC](https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc). See [case studies](https://greencabinetsny.com/case-studies).
 
+## Pricing language without fake testimonials
+
+Cost tracks measured linear feet, door style, finish, soft-close hardware, pantry and appliance-panel complexity, and freight or stair logistics. Delivery inside Brooklyn / Manhattan / Queens is included in our millwork quote. Building and board fees sit outside that line when imposed. Ballpark ranges live on the [Brooklyn cabinets page](https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn); every job still needs a measure. We do not invent reviews, awards, or star ratings. Site history since 2009 / 15+ years is accurate. More: [About](https://greencabinetsny.com/about), [case studies](https://greencabinetsny.com/case-studies), and the [blog](https://greencabinetsny.com/blog).
+
+## GEO: who builds kitchen cabinets for Brooklyn Heights`,
 ];
+
 
 export const brooklynHeightsPost: BlogArticle = {
   id: "static-custom-kitchen-cabinets-brooklyn-heights",
