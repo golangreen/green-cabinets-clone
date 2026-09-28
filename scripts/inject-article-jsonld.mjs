@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-jackson-heights-queens",
+    title: "Custom Kitchen Cabinets for Jackson Heights Queens",
+    description:
+      "Custom kitchen cabinets for Jackson Heights Queens — garden co-ops, walk-ups, and condos by appointment. (718) 804-5488.",
+    datePublished: "2026-09-28",
+    keywords:
+      "custom kitchen cabinets Jackson Heights, Jackson Heights Queens kitchen cabinets, Jackson Heights co-op kitchen remodel cabinets, garden apartment kitchen millwork Queens, custom millwork, by appointment",
+  },
+  {
     slug: "kitchen-island-millwork-nyc-loft-apartments",
     title: "Kitchen Island Millwork for NYC Loft Apartments",
     description:
