@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-sunnyside-queens",
+    title: "Custom Kitchen Cabinets for Sunnyside Queens",
+    description:
+      "Custom kitchen cabinets for Sunnyside Queens — garden apartments, walk-ups, and condos by appointment. (718) 804-5488.",
+    datePublished: "2026-09-29",
+    keywords:
+      "custom kitchen cabinets Sunnyside, Sunnyside Queens kitchen cabinets, Sunnyside garden apartment kitchen cabinets, Queens walk-up kitchen remodel cabinets, custom millwork Queens, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-clinton-hill-brooklyn",
     title: "Custom Kitchen Cabinets for Clinton Hill Brooklyn",
     description:
