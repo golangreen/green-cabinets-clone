@@ -20,7 +20,11 @@ const META = {
 };
 
 // Article body is appended below as HTML strings, in order.
-const BODY: string[] = [];
+const BODY: string[] = [
+  `<p>Sunnyside kitchens sit between Long Island City and Woodside on a grid that mixes historic garden apartments with walk-ups and corridor condos. A unit in Sunnyside Gardens often has an 8-foot ceiling, a shared wet wall that pins the sink, and a board that wants COI before demo day. A walk-up near Skillman Avenue or Queens Boulevard fights a narrow galley, a radiator niche, and stairs that will not take an oversized stock box. A newer condo near the 7 train or the Court Square edge has cleaner slabs — and developer boxes that leave a dead bay under the soffit. Stock packs leave fillers, a crooked fridge line, and uppers that never meet the wall you own.</p>`,
+  `<p>Green Cabinets NY designs and installs custom kitchen cabinets for Sunnyside by appointment. We are home-based in Bushwick — not a walk-in shop. Measure and sample visits happen in your kitchen. Start with the <a href="https://greencabinetsny.com/custom-kitchen-cabinets-queens">Queens kitchen cabinets</a> map and our <a href="https://greencabinetsny.com/blog/queens-apartment-kitchen-millwork">Queens apartment millwork</a> overview. Nearby Queens depth: <a href="https://greencabinetsny.com/blog/custom-kitchen-cabinets-astoria-queens">Astoria</a>, <a href="https://greencabinetsny.com/blog/custom-kitchen-cabinets-jackson-heights-queens">Jackson Heights</a>, <a href="https://greencabinetsny.com/blog/custom-kitchen-cabinets-forest-hills-queens">Forest Hills</a>, and <a href="https://greencabinetsny.com/blog/custom-closet-systems-long-island-city">Long Island City closets</a>.</p>`,
+  `<h2>Garden apartments, walk-ups, and corridor condos</h2>`,
+];
 
 export const sunnysideQueensPost: BlogArticle = {
   id: "static-custom-kitchen-cabinets-sunnyside-queens",
