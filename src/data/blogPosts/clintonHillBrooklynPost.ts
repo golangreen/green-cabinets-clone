@@ -19,8 +19,12 @@ const META = {
   canonical_url: "https://greencabinetsny.com/blog/custom-kitchen-cabinets-clinton-hill-brooklyn",
 };
 
-// Article body will be appended here as HTML strings, in order.
-const BODY: string[] = [];
+// Article body is appended below as HTML strings, in order.
+const BODY = [
+  `<p>Clinton Hill kitchens sit between Fort Greene and Bed-Stuy on blocks that never settled into one housing type. A brownstone near Vanderbilt, Clinton, or Washington Avenue often has a garden-floor wet wall, a parlor galley that runs long toward the rear, and plaster that bows off square after a century of settlement. A Pratt-adjacent co-op or walk-up fights a board that wants COI, a freight reservation, and work-hour windows before the first panel rolls in. A newer condo on Myrtle or Classon has cleaner slabs — and developer boxes that leave a dead bay under the soffit. Stock packs leave fillers, a crooked fridge line, and uppers that never meet the wall you own.</p>`,
+  `<p>Green Cabinets NY designs and installs custom kitchen cabinets for Clinton Hill by appointment. We are home-based in Bushwick — not a walk-in shop. Measure and sample visits happen in your kitchen. Start with the <a href="https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn">Brooklyn kitchen cabinets</a> map. Nearby Brooklyn depth: <a href="https://greencabinetsny.com/blog/custom-kitchen-cabinets-fort-greene-brooklyn">Fort Greene</a>, <a href="https://greencabinetsny.com/blog/custom-kitchen-cabinets-prospect-heights-brooklyn">Prospect Heights</a>, <a href="https://greencabinetsny.com/blog/custom-kitchen-cabinets-park-slope-brownstones">Park Slope brownstones</a>, <a href="https://greencabinetsny.com/blog/custom-kitchen-cabinets-boerum-hill-brooklyn">Boerum Hill</a>, <a href="https://greencabinetsny.com/blog/custom-kitchen-cabinets-brooklyn-heights">Brooklyn Heights</a>, and <a href="https://greencabinetsny.com/blog/custom-kitchen-cabinets-williamsburg-brooklyn">Williamsburg</a>.</p>`,
+  `<h2>Brownstones, Pratt-adjacent co-ops, and newer condos</h2>`,
+];
 
 export const clintonHillBrooklynPost: BlogArticle = {
   id: "static-custom-kitchen-cabinets-clinton-hill-brooklyn",
