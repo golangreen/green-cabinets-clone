@@ -61,6 +61,12 @@ const BODY: string[] = [
   <p>Often yes; 48-inch wall cabinets usually do not when clear height is 8'–8'6". We measure bulkhead and ceiling before locking upper heights.</p>`,
   `<p><strong>Can you deliver to a walk-up with no freight elevator?</strong></p>
   <p>Yes. We section panels for the stair before fabrication so stock-sized boxes never get stuck on a landing.</p>`,
+  `<p><strong>How long does a Sunnyside kitchen take?</strong></p>
+  <p>Typically 4–6 weeks from signed design to cabinet install, then countertop template and stone on a separate clock. Board windows can extend the calendar without changing on-site labor days.</p>`,
+  `<p><strong>Can I combine a kitchen with a vanity or closet in one package?</strong></p>
+  <p>Yes — one alteration package is cleaner for COI and freight. Browse the <a href="https://greencabinetsny.com/designer">designer</a> and related <a href="https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc">vanity</a> or <a href="https://greencabinetsny.com/blog/custom-closet-millwork-brooklyn">closet</a> posts.</p>`,
+  `<h2>Get a quote for Sunnyside kitchen cabinets</h2>`,
+  `<p>Ready to replace developer boxes or a tired garden-apartment galley with millwork cut to your walls? Call (718) 804-5488 or email orders@greencabinetsny.com. Green Cabinets NY — custom kitchen cabinets for Sunnyside and the rest of Queens, Brooklyn, and Manhattan, by appointment only.</p>`,
 ];
 
 export const sunnysideQueensPost: BlogArticle = {
