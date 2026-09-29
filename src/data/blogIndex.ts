@@ -27,6 +27,7 @@ import { jacksonHeightsQueensPost } from "@/data/blogPosts/jacksonHeightsQueensP
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  clintonHillBrooklynPost,
   brooklynHeightsPost,
   jacksonHeightsQueensPost,
   kitchenIslandNycLoftsPost,
