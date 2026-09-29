@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-clinton-hill-brooklyn",
+    title: "Custom Kitchen Cabinets for Clinton Hill Brooklyn",
+    description:
+      "Custom kitchen cabinets for Clinton Hill Brooklyn — brownstones, co-ops, and condos by appointment. (718) 804-5488.",
+    datePublished: "2026-09-29",
+    keywords:
+      "custom kitchen cabinets Clinton Hill, Clinton Hill Brooklyn kitchen cabinets, Clinton Hill brownstone kitchen cabinets, Clinton Hill co-op kitchen remodel cabinets, brownstone kitchen millwork Brooklyn, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-brooklyn-heights",
     title: "Custom Kitchen Cabinets for Brooklyn Heights",
     description:
