@@ -39,6 +39,16 @@ const BODY: string[] = [
   </ul>`,
   `<p>Custom millwork starts from the clear opening. We scribe fillers on site so the run looks built into the plaster, not parked against it.</p>`,
   `<h2>Boards, COI, and occupied-unit installs</h2>`,
+  `<p>Sunnyside mixes garden-apartment campuses, walk-up multifamily, and mid-rise condos near the subway. Boards typically ask for COI, work-hour windows, hallway protection, and a freight reservation when the building has one. This is not legal advice. You own board submissions; we support with drawings and COI when asked — same culture in <a href="https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc">condo board kitchen renovation rules</a>, <a href="https://greencabinetsny.com/blog/manhattan-coop-kitchen-alteration-agreement">Manhattan co-op alteration agreements</a>, and <a href="https://greencabinetsny.com/blog/occupied-unit-kitchen-install-logistics-nyc">occupied-unit install logistics</a>. Stair-only buildings get panel sizes planned for the stair before fabrication. There is no showroom at 10 Montieth — samples come to your apartment by appointment.</p>`,
+  `<h2>How a Sunnyside kitchen usually runs</h2>`,
+  `<ol>
+    <li><strong>Photos and rough dimensions</strong> — galley or L, fridge and range clearances, bulkhead height, freight or stair notes if known.</li>
+    <li><strong>By-appointment measure</strong> in your kitchen — samples come to you; no walk-in shop at 10 Montieth.</li>
+    <li><strong>Layout and elevations</strong> with appliance clearances, radiator and stack workarounds, and notes for short ceilings.</li>
+    <li><strong>Finish and door selection</strong> — <a href="https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc">shaker vs slim shaker</a>, <a href="https://greencabinetsny.com/wood-species">wood species</a>, painted or veneer for steam and AC cycles.</li>
+    <li><strong>Building package support</strong> when a board asks for COI or alteration drawings.</li>
+    <li><strong>Fabrication and install</strong> — typically 4–6 weeks from signed design, then install inside approved work hours.</li>
+  </ol>`,
 ];
 
 export const sunnysideQueensPost: BlogArticle = {
