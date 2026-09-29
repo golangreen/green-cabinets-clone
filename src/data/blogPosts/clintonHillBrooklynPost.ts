@@ -26,6 +26,19 @@ const BODY = [
   `<h2>Brownstones, Pratt-adjacent co-ops, and newer condos</h2>`,
   `<p><strong>Brownstones and townhouses near Vanderbilt, Clinton, and Washington Avenues.</strong> Garden floors sit low with thicker original walls and wet walls that were never square. Parlor kitchens run long toward the rear; tall ceilings help until a bulkhead or chimney breast cuts the upper run. Radiator niches eat fixed modules. Classic <a href="https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc">shaker or slim shaker</a> with careful scribe is a common ask. Soft-close: <a href="https://greencabinetsny.com/blog/soft-close-blum-vs-hettich-nyc">Blum vs Hettich</a>. Drawer banks and <a href="https://greencabinetsny.com/blog/dovetail-drawer-boxes-nyc-kitchens">dovetail drawer boxes</a> beat deep shelves you never see. Finish: <a href="https://greencabinetsny.com/wood-species">wood species</a> and <a href="https://greencabinetsny.com/blog/painted-vs-wood-veneer-cabinets-nyc-humidity">painted vs wood veneer in NYC humidity</a>.</p>`,
   `<p><strong>Pratt-adjacent co-ops, walk-ups, and pre-war multifamily.</strong> Short clear heights, shared stacks, and boards that want a <a href="https://greencabinetsny.com/blog/certificate-of-insurance-kitchen-remodel-nyc">Certificate of Insurance</a> before demo day. Freight elevators need a reservation; stair-only buildings need panels sized for the stoop and stair before fabrication — see <a href="https://greencabinetsny.com/blog/freight-elevator-kitchen-cabinet-delivery-nyc">freight elevator delivery</a>. Custom millwork reclaims unused height under the bulkhead with taller wall cabinets and <a href="https://greencabinetsny.com/blog/floor-to-ceiling-bulkhead-kitchen-cabinets-prewar-nyc">floor-to-ceiling / bulkhead kitchen cabinets</a> logic.</p>`,
+  `<p><strong>Newer condos near Myrtle Avenue, Classon, and the Navy Yard edge.</strong> Cleaner slabs, shallower galleys, and developer boxes that leave a dead bay under the soffit. We reclaim that bay with taller wall cabinets, <a href="https://greencabinetsny.com/blog/appliance-panel-integrated-fridge-cabinets-nyc">appliance-panel integrated fridges</a>, and <a href="https://greencabinetsny.com/blog/toe-kick-drawers-pantry-pull-outs-nyc-kitchens">toe-kick drawers or pantry pull-outs</a>. Condo boards still ask for COI, hallway protection, and approved work hours — same culture as <a href="https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc">condo board kitchen renovation rules</a>.</p>`,
+  `<p>Zip context: 11205 (Clinton Hill / Pratt side) and 11238 (toward Prospect Heights) — by appointment only. Fort Greene, Bed-Stuy, and Prospect Heights sit next door; we measure each kitchen separately.</p>`,
+  `<h2>Why stock cabinets fail in Clinton Hill</h2>`,
+  `<ul>
+    <li>Out-of-square plaster and sloping garden-floor slabs that bind a rigid module</li>
+    <li>Chimney breasts and radiator niches that refuse a 36-inch catalog bay</li>
+    <li>Tall ceilings cut by bulkheads where catalog uppers still miss the clear opening</li>
+    <li>Condo bulkheads, sprinkler heads, and returns that cut upper height</li>
+    <li>Narrow stoops and stair-only access that will not take oversized stock panels</li>
+    <li>Boards that want COI, work-hour windows, and hallway protection before install day</li>
+  </ul>`,
+  `<p>Custom millwork starts from the clear opening. We scribe fillers on site so the run looks built into the plaster, not parked against it.</p>`,
+  `<h2>Boards, COI, and occupied-unit installs</h2>`,
 ];
 
 export const clintonHillBrooklynPost: BlogArticle = {
