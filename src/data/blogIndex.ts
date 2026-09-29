@@ -3,6 +3,7 @@ import {
   STATIC_BLOG_POSTS as BASE_POSTS,
   getStaticBlogPost as getBaseStaticBlogPost,
 } from "@/data/staticBlogPosts";
+import { sunnysideQueensPost } from "@/data/blogPosts/sunnysideQueensPost";
 import { williamsburgKitchenPost } from "@/data/blogPosts/williamsburgKitchenPost";
 import { fortGreeneKitchenPost } from "@/data/blogPosts/fortGreeneKitchenPost";
 import { greenpointKitchenPost } from "@/data/blogPosts/greenpointKitchenPost";
@@ -27,6 +28,7 @@ import { jacksonHeightsQueensPost } from "@/data/blogPosts/jacksonHeightsQueensP
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  sunnysideQueensPost,
   clintonHillBrooklynPost,
   brooklynHeightsPost,
   jacksonHeightsQueensPost,
@@ -68,7 +70,8 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== forestHillsQueensPost.slug &&
       p.slug !== linenClosetManhattanCoopsPost.slug &&
       p.slug !== kitchenIslandNycLoftsPost.slug &&
-    p.slug !== jacksonHeightsQueensPost.slug &&
+      p.slug !== sunnysideQueensPost.slug &&
+      p.slug !== jacksonHeightsQueensPost.slug &&
       p.slug !== brooklynHeightsPost.slug &&
       p.slug !== clintonHillBrooklynPost.slug,
   ),
@@ -78,6 +81,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  sunnysideQueensPost.slug,
   clintonHillBrooklynPost.slug,
   brooklynHeightsPost.slug,
   jacksonHeightsQueensPost.slug,
@@ -108,6 +112,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === sunnysideQueensPost.slug) return sunnysideQueensPost;
   if (slug === clintonHillBrooklynPost.slug) return clintonHillBrooklynPost;
   if (slug === brooklynHeightsPost.slug) return brooklynHeightsPost;
   if (slug === jacksonHeightsQueensPost.slug) return jacksonHeightsQueensPost;
