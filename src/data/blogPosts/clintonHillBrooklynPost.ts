@@ -39,6 +39,8 @@ const BODY = [
   </ul>`,
   `<p>Custom millwork starts from the clear opening. We scribe fillers on site so the run looks built into the plaster, not parked against it.</p>`,
   `<h2>Boards, COI, and occupied-unit installs</h2>`,
+  `<p>Clinton Hill mixes fee-simple brownstones, Pratt-adjacent co-ops, walk-ups, and mid-rise condos. Boards typically ask for COI, work-hour windows, hallway protection, and a freight reservation when the building has one. This is not legal advice. You own board submissions; we support with drawings and COI when asked — same culture in <a href="https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc">condo board kitchen renovation rules</a>, <a href="https://greencabinetsny.com/blog/manhattan-coop-kitchen-alteration-agreement">Manhattan co-op alteration agreements</a>, and <a href="https://greencabinetsny.com/blog/occupied-unit-kitchen-install-logistics-nyc">occupied-unit install logistics</a>. Delivery follows <a href="https://greencabinetsny.com/blog/nyc-kitchen-cabinet-installation">kitchen installation in NYC</a>. Stair-only brownstones get panel sizes planned for the stoop before fabrication. There is no showroom at 10 Montieth — samples come to your apartment by appointment.</p>`,
+  `<h2>How a Clinton Hill kitchen usually runs</h2>`,
 ];
 
 export const clintonHillBrooklynPost: BlogArticle = {
