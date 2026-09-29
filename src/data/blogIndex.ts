@@ -3,6 +3,7 @@ import {
   STATIC_BLOG_POSTS as BASE_POSTS,
   getStaticBlogPost as getBaseStaticBlogPost,
 } from "@/data/staticBlogPosts";
+import { sunnysideQueensPost } from "@/data/blogPosts/sunnysideQueensPost";
 import { williamsburgKitchenPost } from "@/data/blogPosts/williamsburgKitchenPost";
 import { fortGreeneKitchenPost } from "@/data/blogPosts/fortGreeneKitchenPost";
 import { greenpointKitchenPost } from "@/data/blogPosts/greenpointKitchenPost";
