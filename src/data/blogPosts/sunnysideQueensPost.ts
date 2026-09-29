@@ -26,6 +26,19 @@ const BODY: string[] = [
   `<h2>Garden apartments, walk-ups, and corridor condos</h2>`,
   `<p><strong>Sunnyside Gardens and nearby garden campuses.</strong> Courtyard blocks mean short clear heights, shared stacks, and kitchens that share wet walls with the neighbor. Expect plaster that is not square and a bulkhead over the fridge. Painted <a href="https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc">shaker or slim shaker</a> reads clean here. Soft-close drawers matter when party walls are thin — see <a href="https://greencabinetsny.com/blog/soft-close-blum-vs-hettich-nyc">Blum vs Hettich</a>. Drawer banks and <a href="https://greencabinetsny.com/blog/dovetail-drawer-boxes-nyc-kitchens">dovetail drawer boxes</a> often beat deep shelves you never see. Finish: <a href="https://greencabinetsny.com/wood-species">wood species</a> and <a href="https://greencabinetsny.com/blog/painted-vs-wood-veneer-cabinets-nyc-humidity">painted vs wood veneer in NYC humidity</a>.</p>`,
   `<p><strong>Walk-ups near Skillman Avenue, 46th Street, and Queens Boulevard.</strong> Galley kitchens, narrow hall turns, and stair-only access dominate. Catalog 36-inch bases leave ugly fillers; stock tall panels will not clear the stair. We measure the run and the stair, then section panels for the building you live in — same discipline as <a href="https://greencabinetsny.com/blog/freight-elevator-kitchen-cabinet-delivery-nyc">freight elevator delivery</a> and <a href="https://greencabinetsny.com/blog/nyc-kitchen-cabinet-installation">kitchen installation in NYC</a>.</p>`,
+  `<p><strong>Newer and mid-rise condos near the 7 train and the Court Square / LIC edge.</strong> Cleaner slabs, shallower galleys, and freight elevators that need a reservation and a <a href="https://greencabinetsny.com/blog/certificate-of-insurance-kitchen-remodel-nyc">Certificate of Insurance</a>. Developer boxes often leave unused height under the bulkhead. Custom millwork reclaims that bay with taller wall cabinets, <a href="https://greencabinetsny.com/blog/appliance-panel-integrated-fridge-cabinets-nyc">appliance-panel integrated fridges</a>, and <a href="https://greencabinetsny.com/blog/toe-kick-drawers-pantry-pull-outs-nyc-kitchens">toe-kick drawers or pantry pull-outs</a>. Same height logic as <a href="https://greencabinetsny.com/blog/floor-to-ceiling-bulkhead-kitchen-cabinets-prewar-nyc">floor-to-ceiling / bulkhead kitchen cabinets</a>.</p>`,
+  `<p>Zip context: 11377 (Sunnyside core) and the 11104 edge toward Long Island City — by appointment only. Astoria, Woodside, and LIC sit next door; we measure each kitchen separately.</p>`,
+  `<h2>Why stock cabinets fail in Sunnyside</h2>`,
+  `<ul>
+    <li>Short clear heights (often 8'–8'6") where 48-inch wall cabinets do not fit</li>
+    <li>Shared stacks and radiator niches that refuse a fixed catalog bay</li>
+    <li>Out-of-square plaster after decades of settlement in garden campuses</li>
+    <li>Narrow galleys where every inch of custom width matters against stock fillers</li>
+    <li>Walk-ups that will not take oversized stock panels</li>
+    <li>Boards that want COI, work-hour windows, and hallway protection before install day</li>
+  </ul>`,
+  `<p>Custom millwork starts from the clear opening. We scribe fillers on site so the run looks built into the plaster, not parked against it.</p>`,
+  `<h2>Boards, COI, and occupied-unit installs</h2>`,
 ];
 
 export const sunnysideQueensPost: BlogArticle = {
