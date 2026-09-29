@@ -60,6 +60,14 @@ const BODY = [
   `<p>Yes. We measure and install by appointment in brownstones, townhouses, co-ops, and condos across Clinton Hill. Boards often want COI and work-hour windows; you own submissions, we support with drawings when asked.</p>`,
   `<p><strong>Will tall wall cabinets fit my Clinton Hill kitchen with a bulkhead?</strong></p>`,
   `<p>Often yes when we measure the clear opening under the bulkhead first. Catalog 48-inch uppers still fail when a beam or return cuts the bay — we lock upper heights from the site measure, not the brochure.</p>`,
+  `<p><strong>Can you deliver to a brownstone with no freight elevator?</strong></p>`,
+  `<p>Yes. We section panels for the stoop and stair before fabrication so stock-sized boxes never get stuck on a landing.</p>`,
+  `<p><strong>How long does a Clinton Hill kitchen take?</strong></p>`,
+  `<p>Typically 4–6 weeks from signed design to cabinet install, then countertop template and stone on a separate clock. Board windows can extend the calendar without changing on-site labor days.</p>`,
+  `<p><strong>Can I combine a kitchen with a vanity or closet in one package?</strong></p>`,
+  `<p>Yes — one alteration package is cleaner for COI and freight. Browse the <a href="https://greencabinetsny.com/designer">designer</a> and related <a href="https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc">vanity</a> or <a href="https://greencabinetsny.com/blog/custom-closet-millwork-brooklyn">closet</a> posts.</p>`,
+  `<h2>Get a quote for Clinton Hill kitchen cabinets</h2>`,
+  `<p>Ready to replace developer boxes or a tired brownstone galley with millwork cut to your walls? Call (718) 804-5488 or email orders@greencabinetsny.com. Green Cabinets NY — custom kitchen cabinets for Clinton Hill and the rest of Brooklyn, Manhattan, and Queens, by appointment only.</p>`,
 ];
 
 export const clintonHillBrooklynPost: BlogArticle = {
