@@ -52,7 +52,7 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
   greenpointKitchenPost,
   fortGreeneKitchenPost,
   williamsburgKitchenPost,
-  ...BASE_POSTS.filter(
+    ...BASE_POSTS.filter(
     (p) =>
       p.slug !== williamsburgKitchenPost.slug &&
       p.slug !== fortGreeneKitchenPost.slug &&
@@ -75,7 +75,8 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== sunnysideQueensPost.slug &&
       p.slug !== jacksonHeightsQueensPost.slug &&
       p.slug !== brooklynHeightsPost.slug &&
-      p.slug !== clintonHillBrooklynPost.slug,
+      p.slug !== clintonHillBrooklynPost.slug &&
+      p.slug !== bayRidgeBrooklynPost.slug,
   ),
 ];
 
