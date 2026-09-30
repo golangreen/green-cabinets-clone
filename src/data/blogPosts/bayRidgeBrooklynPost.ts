@@ -58,6 +58,10 @@ const BODY: string[] = [
   `<p><strong>Do you install kitchen cabinets in Bay Ridge pre-war apartments?</strong><br />Yes. We measure and install by appointment in pre-war apartments, walk-ups, attached houses, and co-ops across Bay Ridge. Boards often want COI and work-hour windows; you own submissions, we support with drawings when asked.</p>`,
   `<p><strong>Will tall wall cabinets fit my Bay Ridge kitchen with a bulkhead?</strong><br />Often yes when we measure the clear opening under the bulkhead first. Catalog 48-inch uppers still fail when a beam or return cuts the bay — we lock upper heights from the site measure, not the brochure.</p>`,
   `<p><strong>Can you deliver to a walk-up with no freight elevator?</strong><br />Yes. We section panels for the stoop and stair before fabrication so stock-sized boxes never get stuck on a landing. Delivery from Bushwick typically runs through the Sunset Park corridor.</p>`,
+  `<p><strong>How long does a Bay Ridge kitchen take?</strong><br />Typically 4–6 weeks from signed design to cabinet install, then countertop template and stone on a separate clock. Board windows and the longer haul from Bushwick can extend the calendar without changing on-site labor days.</p>`,
+  `<p><strong>Can I combine a kitchen with a vanity or closet in one package?</strong><br />Yes — one alteration package is cleaner for COI and freight. Browse the <a href="https://greencabinetsny.com/designer">designer</a> and related <a href="https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc">vanity</a> or <a href="https://greencabinetsny.com/blog/custom-closet-millwork-brooklyn">closet</a> posts.</p>`,
+  `<h2>Get a quote for Bay Ridge kitchen cabinets</h2>`,
+  `<p>Ready to replace a tired pre-war galley or builder boxes with millwork cut to your walls? Call (718) 804-5488 or email orders@greencabinetsny.com. Green Cabinets NY — custom kitchen cabinets for Bay Ridge and the rest of Brooklyn, Manhattan, and Queens, by appointment only.</p>`,
 ];
 
 export const bayRidgeBrooklynPost: BlogArticle = {
