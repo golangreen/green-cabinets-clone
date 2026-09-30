@@ -20,7 +20,9 @@ const META = {
 };
 
 // Article body is appended below as HTML strings, in order.
-const BODY: string[] = [];
+const BODY: string[] = [
+  `<p>Ditmas Park kitchens sit on the porch-row Victorian grid of central Brooklyn — freestanding houses with wraparound porches along Ocean Avenue and Beverly Road, Cortelyou Road corridor storefronts that tip into apartment kitchens upstairs, and Newkirk Avenue blocks that mix landmarked houses with smaller walk-ups on the 11218 / 11226 edge. A Victorian parlor-floor kitchen often has tall plaster, a chimney breast that eats a bay, and a porch-side window that pins the sink run. An upstairs apartment or condo conversion fights a shorter galley, a radiator niche, and a stair that will not take an oversized stock panel. Stock packs leave fillers, a crooked fridge line, and uppers that never meet the wall you own.</p>`,
+];
 
 export const ditmasParkBrooklynPost: BlogArticle = {
   id: META.slug,
