@@ -41,6 +41,16 @@ const BODY: string[] = [
   `<h2>Boards, COI, and occupied-unit installs</h2>`,
   `<p>Ditmas Park mixes fee-simple Victorian houses, porch-row multifamily, walk-up apartments, and mid-rise condos. Boards typically ask for COI, work-hour windows, hallway protection, and a freight reservation when the building has one. This is not legal advice. You own board submissions; we support with drawings and COI when asked — same culture in <a href="https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc">condo board kitchen renovation rules</a>, <a href="https://greencabinetsny.com/blog/manhattan-coop-kitchen-alteration-agreement">Manhattan co-op alteration agreements</a>, and <a href="https://greencabinetsny.com/blog/occupied-unit-kitchen-install-logistics-nyc">occupied-unit install logistics</a>. Delivery follows <a href="https://greencabinetsny.com/blog/nyc-kitchen-cabinet-installation">kitchen installation in NYC</a>. Stair-only buildings and Victorian stoops get panel sizes planned before fabrication. There is no showroom at 10 Montieth — samples come to your kitchen by appointment.</p>`,
   `<h2>How a Ditmas Park kitchen usually runs</h2>`,
+  `<ol>
+    <li><strong>Photos and rough dimensions</strong> — galley, L, or parlor-floor layout; fridge and range clearances; bulkhead or tall-ceiling notes; freight or stair notes if known.</li>
+    <li><strong>By-appointment measure</strong> in your kitchen — samples come to you; no walk-in shop at 10 Montieth.</li>
+    <li><strong>Layout and elevations</strong> with appliance clearances, chimney and radiator workarounds, and notes for porch windows or tall plaster.</li>
+    <li><strong>Finish and door selection</strong> — <a href="https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc">shaker vs slim shaker</a>, <a href="https://greencabinetsny.com/wood-species">wood species</a>, painted or veneer for steam and AC cycles.</li>
+    <li><strong>Building package support</strong> when a board asks for COI or alteration drawings.</li>
+    <li><strong>Fabrication and install</strong> — typically 4–6 weeks from signed design, then install inside approved work hours. Layout experiments live in the <a href="https://greencabinetsny.com/designer">online designer</a>. Designer renders are layout previews, not photos of finished jobs.</li>
+  </ol>`,
+  `<p>Related storage: <a href="https://greencabinetsny.com/blog/custom-pantry-millwork-nyc">custom pantry millwork</a> and <a href="https://greencabinetsny.com/blog/home-office-built-ins-nyc">home office built-ins</a>. Same-alteration baths: <a href="https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc">custom bathroom vanity NYC</a>. See <a href="https://greencabinetsny.com/case-studies">case studies</a>.</p>`,
+  `<h2>Pricing language without fake testimonials</h2>`,
 ];
 
 
