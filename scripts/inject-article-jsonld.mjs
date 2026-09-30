@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-ditmas-park-brooklyn",
+    title: "Custom Kitchen Cabinets for Ditmas Park Brooklyn",
+    description:
+      "Custom kitchen cabinets for Ditmas Park Brooklyn — Victorian houses and apartments by appointment. (718) 804-5488.",
+    datePublished: "2026-09-30",
+    keywords:
+      "custom kitchen cabinets Ditmas Park, Ditmas Park Brooklyn kitchen cabinets, Ditmas Park Victorian kitchen cabinets, Ditmas Park kitchen remodel cabinets, Victorian house kitchen millwork Brooklyn, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-bay-ridge-brooklyn",
     title: "Custom Kitchen Cabinets for Bay Ridge Brooklyn",
     description:
