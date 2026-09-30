@@ -30,6 +30,7 @@ import { jacksonHeightsQueensPost } from "@/data/blogPosts/jacksonHeightsQueensP
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  ditmasParkBrooklynPost,
   bayRidgeBrooklynPost,
   sunnysideQueensPost,
   clintonHillBrooklynPost,
@@ -55,6 +56,7 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
   williamsburgKitchenPost,
     ...BASE_POSTS.filter(
     (p) =>
+      p.slug !== ditmasParkBrooklynPost.slug &&
       p.slug !== williamsburgKitchenPost.slug &&
       p.slug !== fortGreeneKitchenPost.slug &&
       p.slug !== greenpointKitchenPost.slug &&
@@ -85,6 +87,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  ditmasParkBrooklynPost.slug,
   bayRidgeBrooklynPost.slug,
   sunnysideQueensPost.slug,
   clintonHillBrooklynPost.slug,
@@ -117,6 +120,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === ditmasParkBrooklynPost.slug) return ditmasParkBrooklynPost;
   if (slug === bayRidgeBrooklynPost.slug) return bayRidgeBrooklynPost;
   if (slug === sunnysideQueensPost.slug) return sunnysideQueensPost;
   if (slug === clintonHillBrooklynPost.slug) return clintonHillBrooklynPost;
