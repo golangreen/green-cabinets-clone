@@ -65,6 +65,7 @@ const BODY: string[] = [
   <p>Typically 4–6 weeks from signed design to cabinet install, then countertop template and stone on a separate clock. Board windows and house access logistics can extend the calendar without changing on-site labor days.</p>`,
   `<h3>Can I combine a kitchen with a vanity, closet, or under-stair storage in one package?</h3>
   <p>Yes — one alteration package is cleaner for COI and freight. Browse the <a href="https://greencabinetsny.com/designer">designer</a> and related <a href="https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc">vanity</a>, <a href="https://greencabinetsny.com/blog/custom-closet-millwork-brooklyn">closet</a>, or <a href="https://greencabinetsny.com/blog/under-stair-storage-millwork-brooklyn-brownstones">under-stair</a> posts.</p>`,
+  `<h2>Get a quote for Ditmas Park kitchen cabinets</h2>`,
 ];
 
 
