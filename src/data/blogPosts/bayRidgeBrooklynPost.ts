@@ -26,6 +26,19 @@ const BODY: string[] = [
   `<h2>Pre-war apartments, attached houses, and Shore Road blocks</h2>`,
   `<p><strong>Pre-war brick apartments and walk-ups near Third Avenue and Fifth Avenue.</strong> Short clear heights, shared stacks, and galleys that were never square. Radiator niches refuse a 36-inch catalog bay. Boards often want a <a href="https://greencabinetsny.com/blog/certificate-of-insurance-kitchen-remodel-nyc">Certificate of Insurance</a> before demo day. Freight elevators need a reservation when the building has one; walk-ups need panels sized for the stoop and stair before fabrication — see <a href="https://greencabinetsny.com/blog/freight-elevator-kitchen-cabinet-delivery-nyc">freight elevator delivery</a>. Custom millwork reclaims unused height under the bulkhead with taller wall cabinets and <a href="https://greencabinetsny.com/blog/floor-to-ceiling-bulkhead-kitchen-cabinets-prewar-nyc">floor-to-ceiling / bulkhead kitchen cabinets</a> logic. Classic <a href="https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc">shaker or slim shaker</a> with careful scribe is a common ask. Soft-close: <a href="https://greencabinetsny.com/blog/soft-close-blum-vs-hettich-nyc">Blum vs Hettich</a>. Drawer banks and <a href="https://greencabinetsny.com/blog/dovetail-drawer-boxes-nyc-kitchens">dovetail drawer boxes</a> beat deep shelves you never see.</p>`,
   `<p><strong>Attached and semi-detached houses toward Shore Road, Colonial, and the Narrows-facing blocks.</strong> Longer runs, sometimes an eat-in corner, and wet walls that still sit off plumb after decades of settlement. Stair carries from the stoop matter as much as layout. Finish: <a href="https://greencabinetsny.com/wood-species">wood species</a> and <a href="https://greencabinetsny.com/blog/painted-vs-wood-veneer-cabinets-nyc-humidity">painted vs wood veneer in NYC humidity</a>.</p>`,
+  `<p><strong>Co-ops and mid-rise multifamily on quieter side streets.</strong> Cleaner slabs in some newer conversions, but boards still ask for COI, hallway protection, and approved work hours — same culture as <a href="https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc">condo board kitchen renovation rules</a>. Developer boxes leave a dead bay under the soffit; we reclaim it with taller wall cabinets, <a href="https://greencabinetsny.com/blog/appliance-panel-integrated-fridge-cabinets-nyc">appliance-panel integrated fridges</a>, and <a href="https://greencabinetsny.com/blog/toe-kick-drawers-pantry-pull-outs-nyc-kitchens">toe-kick drawers or pantry pull-outs</a>.</p>`,
+  `<p>Zip context: 11209 (core Bay Ridge) and the 11220 edge toward Sunset Park — by appointment only. Sunset Park sits next door on the delivery route from Bushwick; we measure each kitchen separately.</p>`,
+  `<h2>Why stock cabinets fail in Bay Ridge</h2>`,
+  `<ul>
+    <li>Out-of-square plaster and sloping slabs that bind a rigid module</li>
+    <li>Radiator niches and chimney breasts that refuse a catalog bay</li>
+    <li>Bulkheads and returns that cut upper height short of a brochure 42- or 48-inch upper</li>
+    <li>Narrow stoops and stair-only walk-ups that will not take oversized stock panels</li>
+    <li>Longer haul from Bushwick through Sunset Park — panel sizes still planned before fabrication</li>
+    <li>Boards that want COI, work-hour windows, and hallway protection before install day</li>
+  </ul>`,
+  `<p>Custom millwork starts from the clear opening. We scribe fillers on site so the run looks built into the plaster, not parked against it.</p>`,
+  `<h2>Boards, COI, and occupied-unit installs</h2>`,
 ];
 
 export const bayRidgeBrooklynPost: BlogArticle = {
