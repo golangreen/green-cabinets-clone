@@ -29,6 +29,18 @@ const BODY: string[] = [
   `<p><strong>Mid-rise multifamily and quieter side-street co-ops.</strong> Cleaner slabs in some newer conversions, but boards still ask for COI, hallway protection, and approved work hours — same culture as <a href="https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc">condo board kitchen renovation rules</a>. Developer boxes leave a dead bay under the soffit; we reclaim it from the site measure, not the brochure.</p>`,
   `<p>Zip context: 11218 (Ditmas Park / Kensington edge) and 11226 toward Flatbush — by appointment only. Prospect Heights and Park Slope sit north; we measure each kitchen separately.</p>`,
   `<h2>Why stock cabinets fail in Ditmas Park</h2>`,
+  `<ul>
+    <li>Out-of-square plaster and sloping slabs in Victorian houses that bind a rigid module</li>
+    <li>Chimney breasts, radiator niches, and porch-side windows that refuse a catalog bay</li>
+    <li>Tall parlor ceilings next to bulkheads and returns that cut upper height short of a brochure 42- or 48-inch upper</li>
+    <li>Narrow stoops and stair-only walk-ups that will not take oversized stock panels</li>
+    <li>Longer house runs where every filler inch shows against painted Victorian trim</li>
+    <li>Boards that want COI, work-hour windows, and hallway protection before install day</li>
+  </ul>`,
+  `<p>Custom millwork starts from the clear opening. We scribe fillers on site so the run looks built into the plaster, not parked against it.</p>`,
+  `<h2>Boards, COI, and occupied-unit installs</h2>`,
+  `<p>Ditmas Park mixes fee-simple Victorian houses, porch-row multifamily, walk-up apartments, and mid-rise condos. Boards typically ask for COI, work-hour windows, hallway protection, and a freight reservation when the building has one. This is not legal advice. You own board submissions; we support with drawings and COI when asked — same culture in <a href="https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc">condo board kitchen renovation rules</a>, <a href="https://greencabinetsny.com/blog/manhattan-coop-kitchen-alteration-agreement">Manhattan co-op alteration agreements</a>, and <a href="https://greencabinetsny.com/blog/occupied-unit-kitchen-install-logistics-nyc">occupied-unit install logistics</a>. Delivery follows <a href="https://greencabinetsny.com/blog/nyc-kitchen-cabinet-installation">kitchen installation in NYC</a>. Stair-only buildings and Victorian stoops get panel sizes planned before fabrication. There is no showroom at 10 Montieth — samples come to your kitchen by appointment.</p>`,
+  `<h2>How a Ditmas Park kitchen usually runs</h2>`,
 ];
 
 
