@@ -22,6 +22,7 @@ import { underStairStorageBrooklynPost } from "@/data/blogPosts/underStairStorag
 import { forestHillsQueensPost } from "@/data/blogPosts/forestHillsQueensPost";
 import { linenClosetManhattanCoopsPost } from "@/data/blogPosts/linenClosetManhattanCoopsPost";
 import { kitchenIslandNycLoftsPost } from "@/data/blogPosts/kitchenIslandNycLoftsPost";
+import { ditmasParkBrooklynPost } from "@/data/blogPosts/ditmasParkBrooklynPost";
 import { bayRidgeBrooklynPost } from "@/data/blogPosts/bayRidgeBrooklynPost";
 import { brooklynHeightsPost } from "@/data/blogPosts/brooklynHeightsPost";
 import { clintonHillBrooklynPost } from "@/data/blogPosts/clintonHillBrooklynPost";
