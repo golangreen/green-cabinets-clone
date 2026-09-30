@@ -66,6 +66,7 @@ const BODY: string[] = [
   `<h3>Can I combine a kitchen with a vanity, closet, or under-stair storage in one package?</h3>
   <p>Yes — one alteration package is cleaner for COI and freight. Browse the <a href="https://greencabinetsny.com/designer">designer</a> and related <a href="https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc">vanity</a>, <a href="https://greencabinetsny.com/blog/custom-closet-millwork-brooklyn">closet</a>, or <a href="https://greencabinetsny.com/blog/under-stair-storage-millwork-brooklyn-brownstones">under-stair</a> posts.</p>`,
   `<h2>Get a quote for Ditmas Park kitchen cabinets</h2>`,
+  `<p>Ready to replace a tired Victorian galley or builder boxes with millwork cut to your walls? Call (718) 804-5488 or email orders@greencabinetsny.com. Green Cabinets NY — custom kitchen cabinets for Ditmas Park and the rest of Brooklyn, Manhattan, and Queens, by appointment only.</p>`,
 ];
 
 
