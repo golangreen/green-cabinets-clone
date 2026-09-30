@@ -22,12 +22,14 @@ import { underStairStorageBrooklynPost } from "@/data/blogPosts/underStairStorag
 import { forestHillsQueensPost } from "@/data/blogPosts/forestHillsQueensPost";
 import { linenClosetManhattanCoopsPost } from "@/data/blogPosts/linenClosetManhattanCoopsPost";
 import { kitchenIslandNycLoftsPost } from "@/data/blogPosts/kitchenIslandNycLoftsPost";
+import { bayRidgeBrooklynPost } from "@/data/blogPosts/bayRidgeBrooklynPost";
 import { brooklynHeightsPost } from "@/data/blogPosts/brooklynHeightsPost";
 import { clintonHillBrooklynPost } from "@/data/blogPosts/clintonHillBrooklynPost";
 import { jacksonHeightsQueensPost } from "@/data/blogPosts/jacksonHeightsQueensPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  bayRidgeBrooklynPost,
   sunnysideQueensPost,
   clintonHillBrooklynPost,
   brooklynHeightsPost,
