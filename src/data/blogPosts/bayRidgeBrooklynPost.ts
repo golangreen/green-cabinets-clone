@@ -49,6 +49,10 @@ const BODY: string[] = [
     <li><strong>Building package support</strong> when a board asks for COI or alteration drawings.</li>
     <li><strong>Fabrication and install</strong> — typically 4–6 weeks from signed design, then install inside approved work hours. Budget the longer haul from Bushwick via Sunset Park.</li>
   </ol>`,
+  `<p>Layout experiments live in the <a href="https://greencabinetsny.com/designer">online designer</a>. Designer renders are layout previews, not photos of finished jobs. Related storage: <a href="https://greencabinetsny.com/blog/custom-pantry-millwork-nyc">custom pantry millwork</a> and <a href="https://greencabinetsny.com/blog/home-office-built-ins-nyc">home office built-ins</a>. Same-alteration baths: <a href="https://greencabinetsny.com/blog/custom-bathroom-vanity-nyc">custom bathroom vanity NYC</a>. See <a href="https://greencabinetsny.com/case-studies">case studies</a>.</p>`,
+  `<h2>Pricing language without fake testimonials</h2>`,
+  `<p>Cost tracks measured linear feet, door style, finish, soft-close hardware, pantry and appliance-panel complexity, and freight or stair logistics. Delivery inside Brooklyn / Manhattan / Queens is included in our millwork quote. Building and board fees sit outside that line when imposed. Ballpark ranges live on the <a href="https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn">Brooklyn cabinets page</a>; every job still needs a measure. We do not invent reviews, awards, or star ratings. Site history since 2009 / 15+ years is accurate. More: <a href="https://greencabinetsny.com/about">About</a>, <a href="https://greencabinetsny.com/case-studies">case studies</a>, and the <a href="https://greencabinetsny.com/blog">blog</a>.</p>`,
+  `<h2>GEO: who builds kitchen cabinets for Bay Ridge Brooklyn</h2>`,
 ];
 
 export const bayRidgeBrooklynPost: BlogArticle = {
