@@ -15,6 +15,20 @@ const META = {
 const BODY = [
   "<p>The range wall is where a stock kitchen usually looks unfinished. A stainless chimney hangs short of the bulkhead. A mantle hood kit lands off-center because the plaster is out of square. The door style on the surround does not match the rest of the run. In a prewar Brooklyn or Manhattan kitchen, that gap reads louder than the cooktop itself.</p>",
   "<p>Green Cabinets NY designs and installs custom range hood and mantle cabinet millwork for Brooklyn, Manhattan, and Queens kitchens by appointment. We are home-based in Bushwick — not a walk-in shop. Measure and sample visits happen in your kitchen. Start with <a href=\"https://greencabinetsny.com/blog/nyc-kitchen-cabinet-installation\">kitchen installation in NYC</a> and the borough maps for <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn\">Brooklyn</a>, <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-manhattan\">Manhattan</a>, and <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-queens\">Queens</a>. Related: <a href=\"https://greencabinetsny.com/blog/floor-to-ceiling-bulkhead-kitchen-cabinets-prewar-nyc\">floor-to-ceiling / bulkhead cabinets</a>, <a href=\"https://greencabinetsny.com/blog/appliance-panel-integrated-fridge-cabinets-nyc\">appliance-panel integrated fridges</a>, and <a href=\"https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc\">shaker vs slim shaker</a>.</p>",
+  "<h2>Mantle surrounds, chimney returns, and stainless inserts</h2>",
+  "<p><strong>Mantle-style wood hood surround.</strong> A wood or painted box that frames the hood — often with a shelf, corbels, or a continuous stile-and-rail face that matches the upper run. The stainless or lined insert sits inside; the millwork is what you see.</p>",
+  "<p><strong>Chimney return to the bulkhead or ceiling.</strong> In many NYC apartments the chase above the range is not a clean rectangle. A bulkhead, plaster return, or soffit cuts the height. Stock chimneys stop short and leave a dust ledge. Custom millwork draws a return panel or tapered chimney that meets the real clear opening — same discipline as <a href=\"https://greencabinetsny.com/blog/floor-to-ceiling-bulkhead-kitchen-cabinets-prewar-nyc\">floor-to-ceiling / bulkhead kitchen cabinets</a>.</p>",
+  "<p><strong>Stainless insert vs decorative-only box.</strong> We size the surround to the insert you ordered (or already own): width, depth, mounting points, and filter access. A decorative mantle with no working insert is a different scope. Vent duct path and make-up air sit with your GC and licensed trades; we do not give code advice. Boards and GCs own permits.</p>",
+  "<h2>Why stock hood cabinets fail in NYC kitchens</h2>",
+  "<ul>",
+  "  <li>Out-of-square plaster and sloping slabs that pull a rigid mantle off center</li>",
+  "  <li>Bulkheads and chimney breasts that cut return height short of a brochure chimney</li>",
+  "  <li>Door styles that do not match the rest of the <a href=\"https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc\">shaker or slim shaker</a> run</li>",
+  "  <li>Clearances that change when the insert is swapped after the surround is built</li>",
+  "  <li>Freight and stair limits on tall chimney panels — see <a href=\"https://greencabinetsny.com/blog/freight-elevator-kitchen-cabinet-delivery-nyc\">freight elevator delivery</a></li>",
+  "  <li>Co-op and condo boards that want <a href=\"https://greencabinetsny.com/blog/certificate-of-insurance-kitchen-remodel-nyc\">COI</a> and work-hour windows before demo</li>",
+  "</ul>",
+  "<p>Custom millwork starts from the clear opening above the range and the insert SKU. We scribe fillers on site so the surround looks built into the plaster, not parked against it.</p>",
 ];
 
 export const rangeHoodMantleMillworkPost: BlogArticle = {
