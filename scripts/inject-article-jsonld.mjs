@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "range-hood-mantle-cabinet-millwork-nyc",
+    title: "Range Hood and Mantle Cabinet Millwork for NYC Kitchens",
+    description:
+      "Custom range hood and mantle cabinet millwork for NYC kitchens — by appointment in Brooklyn, Manhattan, Queens. (718) 804-5488.",
+    datePublished: "2026-10-02",
+    keywords:
+      "range hood millwork NYC, mantle cabinet hood, custom range hood surround Brooklyn, cabinet hood prewar kitchen NYC, wood range hood Manhattan, custom millwork, by appointment",
+  },
+  {
     slug: "custom-kitchen-cabinets-ditmas-park-brooklyn",
     title: "Custom Kitchen Cabinets for Ditmas Park Brooklyn",
     description:
