@@ -21,6 +21,7 @@ import { parkSlopeBathroomVanityPost } from "@/data/blogPosts/parkSlopeBathroomV
 import { underStairStorageBrooklynPost } from "@/data/blogPosts/underStairStorageBrooklynPost";
 import { forestHillsQueensPost } from "@/data/blogPosts/forestHillsQueensPost";
 import { linenClosetManhattanCoopsPost } from "@/data/blogPosts/linenClosetManhattanCoopsPost";
+import { rangeHoodMantleMillworkPost } from "@/data/blogPosts/rangeHoodMantleMillworkPost";
 import { kitchenIslandNycLoftsPost } from "@/data/blogPosts/kitchenIslandNycLoftsPost";
 import { ditmasParkBrooklynPost } from "@/data/blogPosts/ditmasParkBrooklynPost";
 import { bayRidgeBrooklynPost } from "@/data/blogPosts/bayRidgeBrooklynPost";
@@ -30,6 +31,7 @@ import { jacksonHeightsQueensPost } from "@/data/blogPosts/jacksonHeightsQueensP
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  rangeHoodMantleMillworkPost,
   ditmasParkBrooklynPost,
   bayRidgeBrooklynPost,
   sunnysideQueensPost,
@@ -74,6 +76,7 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== underStairStorageBrooklynPost.slug &&
       p.slug !== forestHillsQueensPost.slug &&
       p.slug !== linenClosetManhattanCoopsPost.slug &&
+      p.slug !== rangeHoodMantleMillworkPost.slug &&
       p.slug !== kitchenIslandNycLoftsPost.slug &&
       p.slug !== sunnysideQueensPost.slug &&
       p.slug !== jacksonHeightsQueensPost.slug &&
@@ -87,6 +90,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  rangeHoodMantleMillworkPost.slug,
   ditmasParkBrooklynPost.slug,
   bayRidgeBrooklynPost.slug,
   sunnysideQueensPost.slug,
@@ -120,6 +124,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === rangeHoodMantleMillworkPost.slug) return rangeHoodMantleMillworkPost;
   if (slug === ditmasParkBrooklynPost.slug) return ditmasParkBrooklynPost;
   if (slug === bayRidgeBrooklynPost.slug) return bayRidgeBrooklynPost;
   if (slug === sunnysideQueensPost.slug) return sunnysideQueensPost;
