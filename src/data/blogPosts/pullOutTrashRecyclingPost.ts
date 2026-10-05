@@ -19,6 +19,7 @@ const BODY = [
   "<p><strong>Single pull-out trash.</strong> One full-height or half-height bin on a soft-close slide, usually 15\" or 18\" wide. Works when recycling lives elsewhere — a hallway closet, a building chute, or a separate <a href=\"https://greencabinetsny.com/blog/custom-linen-closet-millwork-manhattan-coops\">linen or utility closet</a>.</p>",
   "<p><strong>Dual-bin trash + recycling.</strong> Two bins side by side or stacked in one cabinet bay. Common ask in NYC where blue bags and landfill bags both leave the apartment weekly.</p>",
   "<p><strong>Dual-stream with compost.</strong> Some buildings now collect organics. A third slim bin or smaller insert sits beside trash and recycling. We measure the bags you actually buy, not a kit SKU alone.</p>",
+];
 
 export const pullOutTrashRecyclingPost: BlogArticle = {
   id: META.slug,
