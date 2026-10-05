@@ -105,6 +105,15 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "pull-out-trash-recycling-cabinets-nyc",
+    title: "Pull-Out Trash and Recycling Cabinets for NYC Kitchens",
+    description:
+      "Pull-out trash and recycling cabinets for NYC kitchens — custom millwork by appointment in Brooklyn, Manhattan, Queens. (718) 804-5488.",
+    datePublished: "2026-10-05",
+    keywords:
+      "pull-out trash cabinet NYC, recycling cabinet Brooklyn, pull-out waste bin kitchen NYC, under-sink trash pull-out Manhattan, trash and recycling millwork Queens, custom millwork, by appointment",
+  },
+  {
     slug: "range-hood-mantle-cabinet-millwork-nyc",
     title: "Range Hood and Mantle Cabinet Millwork for NYC Kitchens",
     description:
