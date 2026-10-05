@@ -92,6 +92,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  pullOutTrashRecyclingPost.slug,
   rangeHoodMantleMillworkPost.slug,
   ditmasParkBrooklynPost.slug,
   bayRidgeBrooklynPost.slug,
@@ -126,6 +127,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === pullOutTrashRecyclingPost.slug) return pullOutTrashRecyclingPost;
   if (slug === rangeHoodMantleMillworkPost.slug) return rangeHoodMantleMillworkPost;
   if (slug === ditmasParkBrooklynPost.slug) return ditmasParkBrooklynPost;
   if (slug === bayRidgeBrooklynPost.slug) return bayRidgeBrooklynPost;
