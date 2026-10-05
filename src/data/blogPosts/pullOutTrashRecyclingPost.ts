@@ -14,7 +14,11 @@ const META = {
 
 const BODY = [
   "<p>In a Brooklyn brownstone or Manhattan co-op kitchen, the trash can is often the ugliest thing in the room. A plastic bin sits in the toe-kick gap. Bags lean against the fridge. Recycling stacks on the counter because the under-sink cabinet already holds the scrubber and the compressor. Pull-out trash and recycling cabinets fix that by building the bins into the run — soft-close, measured, and out of sight when the door is shut.</p>",
-];
+  "<p>Green Cabinets NY designs and installs custom pull-out trash and recycling cabinets for Brooklyn, Manhattan, and Queens kitchens by appointment. We are home-based in Bushwick — not a walk-in shop. Measure and sample visits happen in your kitchen. Start with <a href=\"https://greencabinetsny.com/blog/nyc-kitchen-cabinet-installation\">kitchen installation in NYC</a> and the borough maps for <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn\">Brooklyn</a>, <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-manhattan\">Manhattan</a>, and <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-queens\">Queens</a>. Related: <a href=\"https://greencabinetsny.com/blog/toe-kick-drawers-pantry-pull-outs-nyc-kitchens\">toe-kick drawers and pantry pull-outs</a>, <a href=\"https://greencabinetsny.com/blog/custom-pantry-millwork-nyc\">custom pantry millwork</a>, and <a href=\"https://greencabinetsny.com/blog/soft-close-blum-vs-hettich-nyc\">soft-close Blum vs Hettich</a>.</p>",
+  "<h2>Single bin, dual bin, and dual-stream layouts</h2>",
+  "<p><strong>Single pull-out trash.</strong> One full-height or half-height bin on a soft-close slide, usually 15\" or 18\" wide. Works when recycling lives elsewhere — a hallway closet, a building chute, or a separate <a href=\"https://greencabinetsny.com/blog/custom-linen-closet-millwork-manhattan-coops\">linen or utility closet</a>.</p>",
+  "<p><strong>Dual-bin trash + recycling.</strong> Two bins side by side or stacked in one cabinet bay. Common ask in NYC where blue bags and landfill bags both leave the apartment weekly.</p>",
+  "<p><strong>Dual-stream with compost.</strong> Some buildings now collect organics. A third slim bin or smaller insert sits beside trash and recycling. We measure the bags you actually buy, not a kit SKU alone.</p>",
 
 export const pullOutTrashRecyclingPost: BlogArticle = {
   id: META.slug,
