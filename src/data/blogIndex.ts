@@ -60,6 +60,7 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
   williamsburgKitchenPost,
     ...BASE_POSTS.filter(
     (p) =>
+      p.slug !== pullOutTrashRecyclingPost.slug &&
       p.slug !== ditmasParkBrooklynPost.slug &&
       p.slug !== williamsburgKitchenPost.slug &&
       p.slug !== fortGreeneKitchenPost.slug &&
