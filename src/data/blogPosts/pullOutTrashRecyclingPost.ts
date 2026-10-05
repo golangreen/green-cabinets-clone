@@ -29,6 +29,11 @@ const BODY = [
   "<h2>Under-sink, beside the sink, or end-of-run</h2>",
   "<p><strong>Beside the sink.</strong> The most requested spot. Keeps prep scraps off the counter. Watch dishwasher swing and sink apron depth so the pull-out clears both.</p>",
   "<p><strong>Under the sink.</strong> Possible when the trap and disposal leave a clean bay. Often better as a half-height pull-out under a false drawer front, with cleaning supplies in a separate drawer.</p>",
+  "<p><strong>End of the run or island.</strong> Useful in open lofts and <a href=\"https://greencabinetsny.com/blog/kitchen-island-millwork-nyc-loft-apartments\">kitchen islands</a> where the sink wall is packed. Confirm guest traffic so the open pull-out does not block the walk path.</p>",
+  "<p><strong>Pantry or mudroom hybrid.</strong> In brownstones with a rear mudroom or under-stair void, recycling sometimes leaves the kitchen — see <a href=\"https://greencabinetsny.com/blog/under-stair-storage-millwork-brooklyn-brownstones\">under-stair storage</a> and <a href=\"https://greencabinetsny.com/blog/custom-laundry-mudroom-millwork-brooklyn\">laundry / mudroom millwork</a>.</p>",
+  "<h2>Boards, COI, and occupied-unit installs</h2>",
+  "<p>Adding or swapping a trash pull-out as part of a kitchen remodel is still an alteration in many Manhattan and Brooklyn buildings. Boards typically ask for COI, work-hour windows, hallway protection, and a freight reservation when the building has one. This is not legal advice. You own board submissions; we support with drawings and COI when asked — same culture in <a href=\"https://greencabinetsny.com/blog/condo-board-kitchen-renovation-rules-nyc\">condo board kitchen renovation rules</a>, <a href=\"https://greencabinetsny.com/blog/manhattan-coop-kitchen-alteration-agreement\">Manhattan co-op alteration agreements</a>, and <a href=\"https://greencabinetsny.com/blog/occupied-unit-kitchen-install-logistics-nyc\">occupied-unit install logistics</a>. Stair-only walk-ups get modules sized for the stoop before fabrication. There is no showroom at 10 Montieth — samples come to your apartment by appointment.</p>",
+  "<h2>How a pull-out trash millwork project usually runs</h2>",
 ];
 
 export const pullOutTrashRecyclingPost: BlogArticle = {
