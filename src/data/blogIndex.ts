@@ -28,9 +28,11 @@ import { bayRidgeBrooklynPost } from "@/data/blogPosts/bayRidgeBrooklynPost";
 import { brooklynHeightsPost } from "@/data/blogPosts/brooklynHeightsPost";
 import { clintonHillBrooklynPost } from "@/data/blogPosts/clintonHillBrooklynPost";
 import { jacksonHeightsQueensPost } from "@/data/blogPosts/jacksonHeightsQueensPost";
+import { pullOutTrashRecyclingPost } from "@/data/blogPosts/pullOutTrashRecyclingPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  pullOutTrashRecyclingPost,
   rangeHoodMantleMillworkPost,
   ditmasParkBrooklynPost,
   bayRidgeBrooklynPost,
