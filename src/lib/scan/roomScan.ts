@@ -101,7 +101,33 @@ export function sqft(m2: number): string {
   return `${Math.round(m2 * 10.7639).toLocaleString("en-US")} sq ft`;
 }
 
-function polygonArea(poly: [number, number][]): number {
+// ── Units the client can pick for the pictures ──
+
+export type Unit = "ftin" | "in" | "cm" | "none";
+
+export const UNITS: { key: Unit; label: string }[] = [
+  { key: "ftin", label: "Ft + in" },
+  { key: "in", label: "Inches" },
+  { key: "cm", label: "Cm" },
+  { key: "none", label: "None" },
+];
+
+/** A length in the chosen unit; "" when the picture should carry no sizes. */
+export function lengthIn(unit: Unit): (m: number) => string {
+  if (unit === "in") return (m) => `${Math.round(m * M_TO_IN).toLocaleString("en-US")}"`;
+  if (unit === "cm") return (m) => `${Math.round(m * 100).toLocaleString("en-US")} cm`;
+  if (unit === "none") return () => "";
+  return feet;
+}
+
+/** An area in the chosen unit's system. */
+export function areaIn(unit: Unit): (m2: number) => string {
+  if (unit === "cm") return (m2) => `${m2.toFixed(1)} m²`;
+  if (unit === "none") return () => "";
+  return sqft;
+}
+
+export function polygonArea(poly: [number, number][]): number {
   let s = 0;
   for (let i = 0; i < poly.length; i++) {
     const [x1, z1] = poly[i];
@@ -112,7 +138,7 @@ function polygonArea(poly: [number, number][]): number {
 }
 
 /** Floor outline from the walls when the scan has no floor polygon (iOS 16). */
-function wallLoopArea(walls: Segment[]): number {
+export function wallLoopArea(walls: Segment[]): number {
   if (walls.length < 3) return 0;
   return polygonArea(walls.map((w) => w.a));
 }
@@ -132,7 +158,9 @@ export interface RoomSummary {
 const APPLIANCES = ["fridge", "stove", "oven", "sink", "dishwasher", "washer"];
 
 /** The numbers Green Cabinets needs first, in words and feet. */
-export function summarize(room: ScannedRoom): RoomSummary {
+export function summarize(room: ScannedRoom, unit: Unit = "ftin"): RoomSummary {
+  const len = lengthIn(unit === "none" ? "ftin" : unit);
+  const area = areaIn(unit === "none" ? "ftin" : unit);
   const floorArea = room.floors?.length
     ? room.floors.reduce((s, f) => s + polygonArea(f.poly), 0)
     : wallLoopArea(room.walls);
@@ -142,9 +170,9 @@ export function summarize(room: ScannedRoom): RoomSummary {
   const appliances = [...new Set(room.objects.map((o) => o.cat).filter((c) => APPLIANCES.includes(c)))];
 
   const s: RoomSummary = {
-    area: sqft(floorArea),
-    ceiling: feet(ceilingM),
-    wallRun: feet(runM),
+    area: area(floorArea),
+    ceiling: len(ceilingM),
+    wallRun: len(runM),
     walls: room.walls.length,
     doors: room.doors.length,
     windows: room.windows.length,
@@ -159,7 +187,7 @@ export function summarize(room: ScannedRoom): RoomSummary {
     `Doors: ${s.doors} · Windows: ${s.windows}`,
     `Existing cabinets found: ${s.cabinets}`,
     ...(appliances.length ? [`Appliances found: ${appliances.join(", ")}`] : []),
-    "Walls: " + room.walls.map((w, i) => `${i + 1}) ${feet(w.len)}`).join("  "),
+    "Walls: " + room.walls.map((w, i) => `${i + 1}) ${len(w.len)}`).join("  "),
   ];
   return s;
 }

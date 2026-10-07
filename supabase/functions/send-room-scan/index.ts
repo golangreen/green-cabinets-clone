@@ -1,6 +1,7 @@
 // Receives a room scan from the Green Cabinets app and emails it to
 // orders@greencabinetsny.com: the client's details, the measurements in feet,
-// the branded (watermarked) picture and the raw scan file as attachments.
+// every branded picture the client chose (3D views, top view, floor plan) and
+// the raw scan file as attachments.
 // Same email path and spam rules as send-contact-form. The app runs in a
 // webview (capacitor://), where reCAPTCHA's domain check can't pass, so this
 // uses the keyless honeypot + dwell guard and a per-IP rate limit.
@@ -20,6 +21,9 @@ const escapeHtml = (s: unknown): string =>
 const MIN_DWELL_MS = 3000;
 const MAX_IMAGE_CHARS = 4_000_000; // ~3 MB JPEG as base64
 const MAX_ROOM_CHARS = 400_000;
+const MAX_IMAGES = 10;
+const MAX_TOTAL_CHARS = 20_000_000; // all pictures together, well under Resend's 40 MB
+const b64 = z.string().max(MAX_IMAGE_CHARS).regex(/^[A-Za-z0-9+/=]+$/);
 
 const schema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -29,7 +33,13 @@ const schema = z.object({
   scanId: z.string().regex(/^GC-[A-Z0-9]{6}$/),
   summary: z.array(z.string().max(600)).max(20),
   room: z.string().max(MAX_ROOM_CHARS),
-  image: z.string().max(MAX_IMAGE_CHARS).regex(/^[A-Za-z0-9+/=]+$/),
+  // One picture (app 1.0 build 2) or a set of named pictures
+  image: b64.optional(),
+  images: z
+    .array(z.object({ name: z.string().regex(/^[A-Za-z0-9 ._-]{1,120}\.jpg$/), data: b64 }))
+    .min(1)
+    .max(MAX_IMAGES)
+    .optional(),
   spamGuard: z.object({ hp: z.string().max(200), elapsedMs: z.number() }),
 });
 
@@ -66,6 +76,10 @@ serve(async (req) => {
     if (d.spamGuard.hp.trim() !== "" || d.spamGuard.elapsedMs < MIN_DWELL_MS) {
       return json({ error: "Spam verification failed. Please try again." }, 400);
     }
+    const pictures = d.images ?? (d.image ? [{ name: `${d.scanId}.jpg`, data: d.image }] : []);
+    if (!pictures.length || pictures.reduce((n, p) => n + p.data.length, 0) > MAX_TOTAL_CHARS) {
+      return json({ error: "Please check your pictures and try again." }, 400);
+    }
     try {
       JSON.parse(d.room);
     } catch {
@@ -94,11 +108,11 @@ serve(async (req) => {
           ${d.note ? `<h3>About the project</h3><p>${escapeHtml(d.note).replace(/\n/g, "<br>")}</p>` : ""}
           <h3>Measurements</h3>
           <ul>${d.summary.map((l) => `<li>${escapeHtml(l)}</li>`).join("")}</ul>
-          <p style="color:#666">Attached: the branded picture of the room, and the scan file (${escapeHtml(d.scanId)}.json)
+          <p style="color:#666">Attached: ${pictures.length === 1 ? "the branded picture of the room" : `${pictures.length} branded pictures of the room`}, and the scan file (${escapeHtml(d.scanId)}.json)
           for the measurements. Reply to this email to reach the client.</p>
         `,
         attachments: [
-          { filename: `${d.scanId}.jpg`, content: d.image },
+          ...pictures.map((p) => ({ filename: p.name, content: p.data })),
           { filename: `${d.scanId}.json`, content: roomB64 },
         ],
       }),

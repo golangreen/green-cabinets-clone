@@ -223,7 +223,7 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
   walls.forEach((w, wi) => {
     if (w.len < 0.3) return;
     const set = wallSets[wi];
-    labels.push({ el: mkLabel(fmt(w.len)), p: new THREE.Vector3((w.a[0] + w.b[0]) / 2 - cx, (typeof w.y === "number" ? w.y + w.h / 2 - fy : w.h) + 0.08, (w.a[1] + w.b[1]) / 2 - cz), set });
+    labels.push({ el: mkLabel(fmt(w.len)), len: w.len, p: new THREE.Vector3((w.a[0] + w.b[0]) / 2 - cx, (typeof w.y === "number" ? w.y + w.h / 2 - fy : w.h) + 0.08, (w.a[1] + w.b[1]) / 2 - cz), set });
   });
   let showSizes = true;
 
@@ -524,6 +524,13 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
       requestAnimationFrame(step);
     },
     sizes: (on) => { showSizes = on; dirty = true; },
+    // Rewrites every wall size in another unit; an empty string hides them.
+    units: (f) => {
+      fmt = f;
+      for (const l of labels) if (l.len != null) l.el.textContent = f(l.len);
+      showSizes = !!f(1);
+      dirty = true;
+    },
     // What is on screen as a picture: the 3D view plus the names, sizes and
     // pins drawn on top of it (those are page elements, not part of the 3D).
     snapshot: () => {

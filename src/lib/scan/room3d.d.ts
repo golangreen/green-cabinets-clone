@@ -16,6 +16,7 @@ export interface Room3DApi {
   view: (name: string) => void;
   zoom: (factor: number) => void;
   sizes: (on: boolean) => void;
+  units: (fmt: (m: number) => string) => void;
   snapshot: () => HTMLCanvasElement;
   still: () => void;
   pause: (on: boolean) => void;

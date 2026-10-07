@@ -1,14 +1,15 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { ArrowRight, Check, ScanLine } from "lucide-react";
+import { ArrowRight, Check, Plus, ScanLine, X } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import RoomViewer, { type RoomViewerHandle } from "@/components/scan/RoomViewer";
+import RoomViewer, { VIEW_TITLES, type RoomViewerHandle } from "@/components/scan/RoomViewer";
+import Lightbox from "@/components/lux/Lightbox";
 import { openQuote } from "@/lib/quote";
 import { useSpamGuard } from "@/lib/spamGuard";
 import { supabase } from "@/integrations/supabase/client";
-import { SAMPLE_ROOM, isApp, scanAvailable, scanRoom, summarize, type ScannedRoom } from "@/lib/scan/roomScan";
+import { SAMPLE_ROOM, UNITS, isApp, scanAvailable, scanRoom, summarize, type ScannedRoom, type Unit } from "@/lib/scan/roomScan";
 import { NOTICE_LONG, brandSnapshot, newScanId } from "@/lib/scan/watermark";
 
 type Stage = "intro" | "room" | "sent";
@@ -21,6 +22,14 @@ interface Current {
 
 const STORE = "gc_last_scan";
 const CONTACT = "gc_scan_contact";
+const PREFS = "gc_scan_prefs";
+const MAX_SHOTS = 10;
+
+interface Shot {
+  id: number;
+  url: string; // branded JPEG, ready to save or send
+  title: string;
+}
 
 const read = <T,>(k: string): T | null => {
   try {
@@ -56,7 +65,14 @@ const RoomScan = () => {
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState(() => read<{ name: string; email: string; phone: string }>(CONTACT) ?? { name: "", email: "", phone: "" });
   const [note, setNote] = useState("");
+  const [unit, setUnit] = useState<Unit>(() => read<{ unit: Unit }>(PREFS)?.unit ?? "ftin");
+  const [mark, setMark] = useState(() => read<{ mark: boolean }>(PREFS)?.mark ?? true);
+  const [shots, setShots] = useState<Shot[]>([]);
+  const [preview, setPreview] = useState<number | null>(null);
+  const [adding, setAdding] = useState(false);
   const viewer = useRef<RoomViewerHandle>(null);
+
+  useEffect(() => write(PREFS, { unit, mark }), [unit, mark]);
   const { getGuard, honeypotProps } = useSpamGuard();
   const app = isApp();
 
@@ -99,34 +115,73 @@ const RoomScan = () => {
     window.scrollTo(0, 0);
   };
 
-  const brandedPicture = async (): Promise<HTMLCanvasElement | null> => {
-    const shot = viewer.current?.snapshot();
-    if (!shot || !cur) return null;
-    return brandSnapshot(shot, {
+  /** The view exactly as framed now, with the logo, title and notice, as a JPEG at most 1600 px wide. */
+  const brandedPicture = async (): Promise<Shot | null> => {
+    const snap = viewer.current?.snapshot();
+    if (!snap || !cur) return null;
+    const title = VIEW_TITLES[snap.mode];
+    const pic = await brandSnapshot(snap.canvas, {
       scanId: cur.scanId === "GC-SAMPLE" ? "SAMPLE" : cur.scanId,
       date: today(),
       client: form.name || undefined,
       sample: cur.sample,
+      title,
+      mark,
     });
+    let out = pic;
+    if (pic.width > 1600) {
+      out = document.createElement("canvas");
+      out.width = 1600;
+      out.height = Math.round((pic.height / pic.width) * 1600);
+      out.getContext("2d")!.drawImage(pic, 0, 0, out.width, out.height);
+    }
+    return { id: Date.now(), url: out.toDataURL("image/jpeg", 0.88), title };
   };
 
+  const addShot = async () => {
+    if (shots.length >= MAX_SHOTS) return;
+    setAdding(true);
+    try {
+      const shot = await brandedPicture();
+      if (shot) setShots((s) => [...s, shot]);
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  /** The pictures to save or send: the set, or the current view when the set is empty. */
+  const outgoing = async (): Promise<Shot[]> => {
+    if (shots.length) return shots;
+    const one = await brandedPicture();
+    return one ? [one] : [];
+  };
+
+  const fileName = (s: Shot, i: number, n: number) =>
+    `Green-Cabinets-${cur?.scanId ?? "scan"}-${s.title.replace(/\s+/g, "-")}${n > 1 ? `-${i + 1}` : ""}.jpg`;
+
   const saveCopy = async () => {
-    const pic = await brandedPicture();
-    if (!pic || !cur) return;
-    const dataUrl = pic.toDataURL("image/jpeg", 0.9);
-    const name = `Green-Cabinets-${cur.scanId}.jpg`;
+    const list = await outgoing();
+    if (!list.length || !cur) return;
     if (app) {
       const [{ Filesystem, Directory }, { Share }] = await Promise.all([
         import("@capacitor/filesystem"),
         import("@capacitor/share"),
       ]);
-      const file = await Filesystem.writeFile({ path: name, data: dataUrl.split(",")[1], directory: Directory.Cache });
-      await Share.share({ title: "Room scan, Green Cabinets NY", files: [file.uri] }).catch(() => undefined);
+      const uris: string[] = [];
+      for (const [i, s] of list.entries()) {
+        const f = await Filesystem.writeFile({ path: fileName(s, i, list.length), data: s.url.split(",")[1], directory: Directory.Cache });
+        uris.push(f.uri);
+      }
+      await Share.share({ title: "Room scan, Green Cabinets NY", files: uris }).catch(() => undefined);
     } else {
-      const a = document.createElement("a");
-      a.href = dataUrl;
-      a.download = name;
-      a.click();
+      list.forEach((s, i) =>
+        setTimeout(() => {
+          const a = document.createElement("a");
+          a.href = s.url;
+          a.download = fileName(s, i, list.length);
+          a.click();
+        }, i * 250),
+      );
     }
   };
 
@@ -137,16 +192,8 @@ const RoomScan = () => {
     setError(null);
     write(CONTACT, form);
     try {
-      const pic = await brandedPicture();
-      if (!pic) throw new Error("no picture");
-      // Keep the email small: at most 1600 px wide
-      let out = pic;
-      if (pic.width > 1600) {
-        out = document.createElement("canvas");
-        out.width = 1600;
-        out.height = Math.round((pic.height / pic.width) * 1600);
-        out.getContext("2d")!.drawImage(pic, 0, 0, out.width, out.height);
-      }
+      const list = await outgoing();
+      if (!list.length) throw new Error("no picture");
       const { error: err } = await supabase.functions.invoke("send-room-scan", {
         body: {
           name: form.name.trim(),
@@ -156,7 +203,7 @@ const RoomScan = () => {
           scanId: cur.scanId,
           summary: summarize(cur.room).lines,
           room: JSON.stringify(cur.room),
-          image: out.toDataURL("image/jpeg", 0.85).split(",")[1],
+          images: list.map((s, i) => ({ name: fileName(s, i, list.length), data: s.url.split(",")[1] })),
           spamGuard: getGuard(),
         },
       });
@@ -178,13 +225,14 @@ const RoomScan = () => {
         encodeURIComponent(`Room scan ${cur.scanId} from ${form.name}`) +
         "&body=" +
         encodeURIComponent(body);
-      setError("We opened your email app with the measurements. Tap Save a copy to attach the picture too.");
+      setError("We opened your email app with the measurements. Tap Save to attach the pictures too.");
     } finally {
       setBusy(false);
     }
   };
 
-  const summary = cur ? summarize(cur.room) : null;
+  const summary = cur ? summarize(cur.room, unit) : null;
+  const saveLabel = shots.length > 1 ? `Save all ${shots.length}` : shots.length ? "Save the picture" : "Save this view";
 
   return (
     <div className="min-h-screen bg-ink text-ivory">
@@ -293,7 +341,80 @@ const RoomScan = () => {
               </button>
             </div>
 
-            <RoomViewer ref={viewer} room={cur.room} sample={cur.sample} />
+            <RoomViewer ref={viewer} room={cur.room} sample={cur.sample} unit={unit} />
+
+            {/* How the pictures look: units, the confidential mark, and the set to save or send */}
+            <div className="mt-4 flex flex-col gap-4 border-b border-white/10 pb-5 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+                <div role="radiogroup" aria-label="Measurements" className="flex rounded-full border border-white/15 p-1">
+                  {UNITS.map((u) => (
+                    <button
+                      key={u.key}
+                      type="button"
+                      role="radio"
+                      aria-checked={unit === u.key}
+                      onClick={() => setUnit(u.key)}
+                      className={`min-h-10 rounded-full px-3.5 font-display text-sm transition-colors duration-150 active:scale-[0.97] sm:px-4 ${
+                        unit === u.key ? "bg-ivory text-ink" : "text-ivory/75 hover:text-ivory"
+                      }`}
+                    >
+                      {u.label}
+                    </button>
+                  ))}
+                </div>
+                <label className="flex min-h-11 cursor-pointer items-center gap-2.5 font-display text-sm text-ivory/80">
+                  <input type="checkbox" checked={mark} onChange={(e) => setMark(e.target.checked)} className="h-5 w-5 accent-[#C6A15B]" />
+                  Confidential mark
+                </label>
+              </div>
+              <button
+                type="button"
+                onClick={addShot}
+                disabled={adding || shots.length >= MAX_SHOTS}
+                className="lux-btn-ghost self-start disabled:opacity-40 md:self-auto"
+              >
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                {shots.length >= MAX_SHOTS ? `${MAX_SHOTS} pictures, the most` : "Add this view to the set"}
+              </button>
+            </div>
+            <p className="mt-3 font-display text-xs text-stone">
+              Frame the room the way you want it (3D, Top or Plan, turn and zoom), pick the units, then add the view. Every
+              picture carries the Green Cabinets logo.
+            </p>
+
+            {shots.length > 0 && (
+              <ul aria-label="Pictures in the set" className="mt-5 flex gap-3 overflow-x-auto pb-2">
+                {shots.map((s, i) => (
+                  <li key={s.id} className="relative shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setPreview(i)}
+                      aria-label={`Preview picture ${i + 1}, ${s.title}`}
+                      className="block overflow-hidden border border-white/15 transition-colors hover:border-brass"
+                    >
+                      <img src={s.url} alt="" className="h-28 w-auto sm:h-32" />
+                    </button>
+                    <p className="mt-1.5 font-display text-xs text-stone">
+                      {i + 1}. {s.title}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setShots((all) => all.filter((x) => x.id !== s.id))}
+                      aria-label={`Remove picture ${i + 1}`}
+                      className="absolute right-1 top-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-ink/85 text-ivory backdrop-blur active:scale-95"
+                    >
+                      <X className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Lightbox
+              images={shots.map((s, i) => ({ src: s.url, alt: `${i + 1}. ${s.title}` }))}
+              index={preview}
+              onIndex={setPreview}
+              onClose={() => setPreview(null)}
+            />
 
             <dl className="mt-8 grid grid-cols-2 gap-x-6 md:grid-cols-4">
               {[
@@ -315,7 +436,7 @@ const RoomScan = () => {
                   Request a quote
                 </button>
                 <button type="button" onClick={saveCopy} className="lux-btn-ghost">
-                  Save the sample picture
+                  {saveLabel}
                 </button>
               </div>
             ) : (
@@ -323,7 +444,9 @@ const RoomScan = () => {
                 <div className="lg:col-span-4">
                   <h2 className="lux-display text-[2rem]">Send it to Green Cabinets</h2>
                   <p className="lux-body mt-3 text-sm text-ivory/70">
-                    We get the 3D room and every measurement, then reply within 24 hours.
+                    We get the 3D room and every measurement
+                    {shots.length ? `, plus your ${shots.length === 1 ? "picture" : `${shots.length} pictures`}` : ""}, then reply within 24
+                    hours.
                   </p>
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-8">
@@ -364,7 +487,7 @@ const RoomScan = () => {
                       {busy ? "Sending…" : "Send to Green Cabinets"} {!busy && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
                     </button>
                     <button type="button" onClick={saveCopy} className="lux-btn-ghost">
-                      Save a copy
+                      {saveLabel}
                     </button>
                   </div>
                   {error && (

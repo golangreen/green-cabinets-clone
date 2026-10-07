@@ -6,7 +6,8 @@
  */
 import logoUrl from "@/assets/logos/logo-white.svg";
 
-export const NOTICE_SHORT = "Confidential. Prepared for Green Cabinets NY only.";
+export const NOTICE_SHORT =
+  "Confidential. Prepared for Green Cabinets NY only.";
 export const NOTICE_LONG =
   "This room scan was made with the Green Cabinets app for a project with Green Cabinets NY. " +
   "It may not be shared with or used by other cabinet companies, contractors or designers.";
@@ -21,6 +22,10 @@ export interface WatermarkMeta {
   date: string;
   client?: string;
   sample?: boolean;
+  /** What the picture shows, e.g. "Floor plan" (defaults to "Room scan"). */
+  title?: string;
+  /** The faint diagonal confidential mark across the room (default on). */
+  mark?: boolean;
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -32,7 +37,11 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
-function wrap(g: CanvasRenderingContext2D, text: string, maxW: number): string[] {
+function wrap(
+  g: CanvasRenderingContext2D,
+  text: string,
+  maxW: number,
+): string[] {
   const words = text.split(" ");
   const lines: string[] = [];
   let line = "";
@@ -47,7 +56,10 @@ function wrap(g: CanvasRenderingContext2D, text: string, maxW: number): string[]
   return lines;
 }
 
-export async function brandSnapshot(shot: HTMLCanvasElement, meta: WatermarkMeta): Promise<HTMLCanvasElement> {
+export async function brandSnapshot(
+  shot: HTMLCanvasElement,
+  meta: WatermarkMeta,
+): Promise<HTMLCanvasElement> {
   await document.fonts?.ready;
   const W = shot.width;
   const u = W / 1000; // one design unit, so the layout scales with the picture
@@ -81,33 +93,49 @@ export async function brandSnapshot(shot: HTMLCanvasElement, meta: WatermarkMeta
   g.textAlign = "right";
   g.fillStyle = BRASS;
   g.font = `500 ${15 * u}px Outfit, Helvetica, Arial, sans-serif`;
-  g.fillText((meta.sample ? "SAMPLE ROOM SCAN" : "ROOM SCAN").split("").join(String.fromCharCode(8202)), W - 32 * u, head / 2 - 11 * u);
+  g.fillText(
+    ((meta.sample ? "Sample · " : "") + (meta.title || "Room scan"))
+      .toUpperCase()
+      .split("")
+      .join(String.fromCharCode(8202)),
+    W - 32 * u,
+    head / 2 - 11 * u,
+  );
   g.fillStyle = STONE;
   g.font = `400 ${15 * u}px Outfit, Helvetica, Arial, sans-serif`;
-  g.fillText(meta.client ? `${meta.client} · ${meta.date}` : meta.date, W - 32 * u, head / 2 + 13 * u);
+  g.fillText(
+    meta.client ? `${meta.client} · ${meta.date}` : meta.date,
+    W - 32 * u,
+    head / 2 + 13 * u,
+  );
   g.textAlign = "left";
 
   // The room
   g.drawImage(shot, 0, head);
 
   // Diagonal confidential mark, faint, tiled over the room only
-  g.save();
-  g.beginPath();
-  g.rect(0, head, W, shot.height);
-  g.clip();
-  g.translate(W / 2, head + shot.height / 2);
-  g.rotate(-Math.PI / 7);
-  g.font = `600 ${22 * u}px Outfit, Helvetica, Arial, sans-serif`;
-  g.fillStyle = "rgba(14, 13, 12, 0.07)";
-  g.textAlign = "center";
-  const mark = meta.sample ? "SAMPLE · GREEN CABINETS NY" : "CONFIDENTIAL · GREEN CABINETS NY";
-  const stepX = g.measureText(mark).width + 90 * u;
-  const stepY = 120 * u;
-  for (let y = -H; y < H; y += stepY) {
-    const shift = (Math.round(y / stepY) % 2) * (stepX / 2);
-    for (let x = -W * 1.5; x < W * 1.5; x += stepX) g.fillText(mark, x + shift, y);
+  if (meta.mark !== false) {
+    g.save();
+    g.beginPath();
+    g.rect(0, head, W, shot.height);
+    g.clip();
+    g.translate(W / 2, head + shot.height / 2);
+    g.rotate(-Math.PI / 7);
+    g.font = `600 ${22 * u}px Outfit, Helvetica, Arial, sans-serif`;
+    g.fillStyle = "rgba(14, 13, 12, 0.07)";
+    g.textAlign = "center";
+    const mark = meta.sample
+      ? "SAMPLE · GREEN CABINETS NY"
+      : "CONFIDENTIAL · GREEN CABINETS NY";
+    const stepX = g.measureText(mark).width + 90 * u;
+    const stepY = 120 * u;
+    for (let y = -H; y < H; y += stepY) {
+      const shift = (Math.round(y / stepY) % 2) * (stepX / 2);
+      for (let x = -W * 1.5; x < W * 1.5; x += stepX)
+        g.fillText(mark, x + shift, y);
+    }
+    g.restore();
   }
-  g.restore();
 
   // Footer: the notice and the scan ID
   const fy = head + shot.height;
@@ -119,9 +147,15 @@ export async function brandSnapshot(shot: HTMLCanvasElement, meta: WatermarkMeta
   g.fillText(NOTICE_SHORT, 32 * u, fy + 40 * u);
   g.fillStyle = STONE;
   g.font = `400 ${14 * u}px Outfit, Helvetica, Arial, sans-serif`;
-  wrap(g, NOTICE_LONG, W - 64 * u).forEach((l, i) => g.fillText(l, 32 * u, fy + 68 * u + i * 20 * u));
+  wrap(g, NOTICE_LONG, W - 64 * u).forEach((l, i) =>
+    g.fillText(l, 32 * u, fy + 68 * u + i * 20 * u),
+  );
   g.textAlign = "right";
-  g.fillText(`Scan ${meta.scanId} · greencabinetsny.com · © Green Cabinets NY`, W - 32 * u, fy + foot - 30 * u);
+  g.fillText(
+    `Scan ${meta.scanId} · greencabinetsny.com · © Green Cabinets NY`,
+    W - 32 * u,
+    fy + foot - 30 * u,
+  );
   return c;
 }
 
