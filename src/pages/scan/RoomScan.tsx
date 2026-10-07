@@ -53,8 +53,11 @@ const STEPS = [
   { k: "Send it to us", v: "We plan your cabinets from the real room and reply within 24 hours." },
 ];
 
-// Punchlee is a separate app; Google Play goes in once its listing is public.
-const PUNCHLEE_STORES = [{ label: "App Store", href: "https://apps.apple.com/app/id6803715111" }];
+// Punchlee is a separate app (com.greencabinetsny.punchlee on Google Play).
+const PUNCHLEE_STORES = [
+  { label: "App Store", href: "https://apps.apple.com/app/id6803715111" },
+  { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.greencabinetsny.punchlee" },
+];
 
 /** For people who want a room scanner of their own on their phone. */
 const OwnScanner = () => (
