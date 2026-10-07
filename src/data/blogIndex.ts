@@ -62,6 +62,7 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
   williamsburgKitchenPost,
     ...BASE_POSTS.filter(
     (p) =>
+      p.slug !== customKitchenCabinetsCostNycPost.slug &&
       p.slug !== pullOutTrashRecyclingPost.slug &&
       p.slug !== ditmasParkBrooklynPost.slug &&
       p.slug !== williamsburgKitchenPost.slug &&
@@ -131,6 +132,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === customKitchenCabinetsCostNycPost.slug) return customKitchenCabinetsCostNycPost;
   if (slug === pullOutTrashRecyclingPost.slug) return pullOutTrashRecyclingPost;
   if (slug === rangeHoodMantleMillworkPost.slug) return rangeHoodMantleMillworkPost;
   if (slug === ditmasParkBrooklynPost.slug) return ditmasParkBrooklynPost;
