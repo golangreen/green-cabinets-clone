@@ -42,14 +42,14 @@ const CTA = () => {
             in one place.
           </h2>
           
-          <p className="text-base sm:text-lg md:text-xl text-primary-foreground max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-lg md:text-xl text-ivory/80 max-w-2xl mx-auto px-4">
             Join thousands of happy homeowners who transformed their spaces with Green Cabinets.
           </p>
           
           <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 pt-6 sm:pt-8 max-w-md mx-auto">
             <Button 
               size="lg" 
-              className="text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 w-full bg-primary hover:bg-primary/90 text-white border-2 border-primary"
+              className="text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 w-full bg-primary hover:bg-primary/90 text-ink border-2 border-primary"
               onClick={() => setShowQuoteForm(true)}
             >
               Get Your Free Quote
@@ -57,7 +57,7 @@ const CTA = () => {
             
             <div className="w-full space-y-3">
               <Select value={contactMethod} onValueChange={(value: "email" | "text") => setContactMethod(value)}>
-                <SelectTrigger aria-label="Choose contact method" className="w-full border-gray-700 text-white bg-[#1a1a1a]">
+                <SelectTrigger aria-label="Choose contact method" className="w-full border-white/15 text-ivory bg-ink-3">
                   <SelectValue placeholder="Choose contact method" />
                 </SelectTrigger>
                 <SelectContent>
@@ -68,7 +68,7 @@ const CTA = () => {
               
               <Button 
                 size="lg" 
-                className="text-lg px-8 py-6 w-full bg-primary hover:bg-primary/90 text-white border-2 border-primary"
+                className="text-lg px-8 py-6 w-full bg-primary hover:bg-primary/90 text-ink border-2 border-primary"
                 onClick={handleConsultation}
               >
                 Schedule Consultation

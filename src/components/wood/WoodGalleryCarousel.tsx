@@ -59,11 +59,11 @@ const WoodGalleryCarousel = ({ speciesName, images }: WoodGalleryCarouselProps) 
           <>
             <CarouselPrevious
               aria-label="Previous wood panel"
-              className="left-3 bg-white/90 hover:bg-white text-[#1a1a1a] border-0 shadow-md"
+              className="left-3 bg-white/90 hover:bg-white text-ink border-0 shadow-md"
             />
             <CarouselNext
               aria-label="Next wood panel"
-              className="right-3 bg-white/90 hover:bg-white text-[#1a1a1a] border-0 shadow-md"
+              className="right-3 bg-white/90 hover:bg-white text-ink border-0 shadow-md"
             />
           </>
         )}
@@ -81,7 +81,7 @@ const WoodGalleryCarousel = ({ speciesName, images }: WoodGalleryCarouselProps) 
               onClick={() => api?.scrollTo(i)}
               className={cn(
                 "h-2 rounded-full transition-all",
-                current === i ? "w-6 bg-[#5C7650]" : "w-2 bg-[#5C7650]/30 hover:bg-[#5C7650]/60"
+                current === i ? "w-6 bg-brass" : "w-2 bg-brass/30 hover:bg-brass/60"
               )}
             />
           ))}

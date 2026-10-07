@@ -6,11 +6,11 @@ const AppointmentBand = () => {
     <section className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-[#0a0a0a]">
       <div className="container relative z-10 mx-auto px-4 sm:px-6 text-center">
         <div className="max-w-3xl mx-auto space-y-6 sm:space-y-8">
-          <p className="text-base sm:text-lg md:text-xl text-primary-foreground/90">
+          <p className="text-base sm:text-lg md:text-xl text-ivory/80">
             Green Cabinets NY is appointment-only. There is no walk-in shop, showroom, or factory. We bring finish and door samples to your home in Brooklyn, Manhattan, and Queens.
           </p>
           
-          <p className="text-base sm:text-lg md:text-xl text-primary-foreground/90">
+          <p className="text-base sm:text-lg md:text-xl text-ivory/80">
             <ObfuscatedPhone 
               encoded="NzE4ODA0NTQ4OA==" 
               alwaysReveal 
@@ -25,7 +25,7 @@ const AppointmentBand = () => {
             />
           </p>
           
-          <p className="text-sm sm:text-base text-primary-foreground/80">
+          <p className="text-sm sm:text-base text-ivory/70">
             Follow:{" "}
             <a 
               href="https://instagram.com/green_cabinets_" 

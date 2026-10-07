@@ -13,7 +13,7 @@ const WoodOverviewTable = () => {
       {/* Desktop table */}
       <div className="hidden md:block overflow-x-auto rounded-lg border border-border">
         <table className="w-full text-sm">
-          <thead className="bg-[#5C7650] text-white">
+          <thead className="bg-brass text-ink">
             <tr>
               <th className="text-left px-4 py-3 font-semibold">Species</th>
               <th className="text-left px-4 py-3 font-semibold">Color</th>
@@ -27,7 +27,7 @@ const WoodOverviewTable = () => {
           <tbody>
             {WOOD_SPECIES.map((w, i) => (
               <tr key={w.slug} className={i % 2 === 0 ? "bg-background" : "bg-muted/40"}>
-                <td className="px-4 py-3 font-semibold text-[#1a1a1a] flex items-center gap-3">
+                <td className="px-4 py-3 font-semibold text-ivory flex items-center gap-3">
                   <span
                     className="inline-block w-5 h-5 rounded-full border border-border shrink-0"
                     style={{ backgroundColor: w.swatch }}
@@ -35,16 +35,16 @@ const WoodOverviewTable = () => {
                   />
                   {w.name}
                 </td>
-                <td className="px-4 py-3 text-[#555555]">{w.color}</td>
-                <td className="px-4 py-3 text-[#555555]">{w.grain}</td>
+                <td className="px-4 py-3 text-ivory/70">{w.color}</td>
+                <td className="px-4 py-3 text-ivory/70">{w.grain}</td>
                 <td className="px-4 py-3 text-right tabular-nums">{w.jankaHardness.toLocaleString()} lbf</td>
                 <td className="px-4 py-3 text-center font-mono text-accent-foreground">{w.costTier}</td>
-                <td className="px-4 py-3 text-[#555555]">{w.uses[0]}</td>
+                <td className="px-4 py-3 text-ivory/70">{w.uses[0]}</td>
                 <td className="px-4 py-3 text-right">
                   <Link
                     to={`/wood-species/${w.slug}`}
                     aria-label={`Read the ${w.h1 ?? `${w.name} Cabinets`} guide`}
-                    className="inline-flex items-center gap-1 text-accent-foreground hover:text-[#445339] font-medium"
+                    className="inline-flex items-center gap-1 text-accent-foreground hover:text-ivory font-medium"
                   >
                     {w.h1 ?? `${w.name} Cabinets`} <ArrowRight className="w-4 h-4" />
                   </Link>
@@ -61,7 +61,7 @@ const WoodOverviewTable = () => {
           <Link
             key={w.slug}
             to={`/wood-species/${w.slug}`}
-            className="block rounded-lg border border-border bg-background p-4 hover:border-[#5C7650] transition-colors"
+            className="block rounded-lg border border-border bg-background p-4 hover:border-brass transition-colors"
           >
             <div className="flex items-center gap-3 mb-2">
               <span
@@ -70,12 +70,12 @@ const WoodOverviewTable = () => {
                 aria-hidden="true"
               />
               <div className="flex-1">
-                <h3 className="font-semibold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
+                <h3 className="font-semibold text-ivory">{w.h1 ?? `${w.name} Cabinets`}</h3>
                 <p className="text-xs text-muted-foreground">{w.tagline}</p>
               </div>
               <span className="font-mono text-sm text-accent-foreground">{w.costTier}</span>
             </div>
-            <dl className="grid grid-cols-2 gap-2 text-xs text-[#555555]">
+            <dl className="grid grid-cols-2 gap-2 text-xs text-ivory/70">
               <div><dt className="text-muted-foreground">Hardness</dt><dd>{w.jankaHardness.toLocaleString()} lbf</dd></div>
               <div><dt className="text-muted-foreground">Best for</dt><dd>{w.uses[0]}</dd></div>
             </dl>

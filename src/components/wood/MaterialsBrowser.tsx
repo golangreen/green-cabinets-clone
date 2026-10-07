@@ -44,7 +44,7 @@ function PanelCard({
   const { ids, toggle } = useFinishSelection();
   const selected = ids.includes(panel.id);
   return (
-    <div className="group relative rounded-lg overflow-hidden border border-border bg-background hover:border-[#5C7650] hover:shadow-lg transition-all">
+    <div className="group relative rounded-lg overflow-hidden border border-border bg-background hover:border-brass hover:shadow-lg transition-all">
       <button
         type="button"
         onClick={(e) => {
@@ -54,7 +54,7 @@ function PanelCard({
         aria-label={selected ? `Remove ${panel.name} from selection` : `Add ${panel.name} to selection`}
         className={`absolute top-2 right-2 z-10 h-8 w-8 rounded-full flex items-center justify-center shadow-md transition-all ${
           selected
-            ? "bg-[#5C7650] text-white scale-100"
+            ? "bg-brass text-ink scale-100"
             : "bg-white/90 text-accent-foreground opacity-0 group-hover:opacity-100 hover:scale-110"
         } ${selected ? "opacity-100" : ""}`}
       >
@@ -63,7 +63,7 @@ function PanelCard({
       <button
         type="button"
         onClick={onClick}
-        className="block w-full text-left focus:outline-none focus:ring-2 focus:ring-[#5C7650]"
+        className="block w-full text-left focus:outline-none focus:ring-2 focus:ring-brass"
       >
         <div className="aspect-square overflow-hidden bg-muted">
           {panel.thumb ? (
@@ -83,7 +83,7 @@ function PanelCard({
           )}
         </div>
         <div className="p-2.5 space-y-1">
-          <h4 className="text-sm font-semibold text-[#1a1a1a] line-clamp-1">
+          <h4 className="text-sm font-semibold text-ivory line-clamp-1">
             {panel.name}
           </h4>
           <p className="text-[11px] font-mono text-accent-foreground line-clamp-1">
@@ -153,7 +153,7 @@ function PanelModal({
                 ))}
               </div>
             </div>
-            <div className="rounded-lg bg-[#5C7650]/10 border border-[#5C7650]/30 p-3 text-[#1a1a1a]">
+            <div className="rounded-lg bg-brass/10 border border-white/20 p-3 text-ivory">
               <p className="font-semibold mb-1">See it in person</p>
               <p className="text-xs text-muted-foreground">
                 Mention this code when you book a consultation and we will
@@ -183,7 +183,7 @@ function PanelModal({
                         className="h-12 w-12 rounded object-cover flex-shrink-0"
                       />
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-[#1a1a1a] group-hover:text-accent-foreground truncate">
+                        <p className="text-xs font-semibold text-ivory group-hover:text-accent-foreground truncate">
                           {p.title}
                         </p>
                         <p className="text-[11px] text-muted-foreground flex items-center gap-1">
@@ -201,8 +201,8 @@ function PanelModal({
               onClick={() => toggle(panel.id)}
               className={`w-full ${
                 selected
-                  ? "bg-[#5C7650] hover:bg-[#445339] text-white"
-                  : "bg-white border border-[#5C7650] text-accent-foreground hover:bg-[#5C7650]/10"
+                  ? "bg-brass hover:bg-[#D4B272] text-ink"
+                  : "bg-ink-2 border border-brass text-accent-foreground hover:bg-brass/10"
               }`}
             >
               {selected ? (
@@ -276,14 +276,14 @@ export function BrandPanel({ brand }: { brand: MaterialBrand }) {
   return (
     <div className="space-y-4">
       {fullCatalogUrl && (
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-lg border border-[#5C7650]/30 bg-[#5C7650]/5 px-4 py-3">
-          <p className="text-sm text-[#1a1a1a]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-lg border border-white/20 bg-brass/5 px-4 py-3">
+          <p className="text-sm text-ivory">
             <span className="font-semibold">Curated picks below.</span>{" "}
             <span className="text-muted-foreground">
               These are the {brand} decors we order most for NYC kitchens — the brand offers many more.
             </span>
           </p>
-          <Button asChild variant="outline" size="sm" className="shrink-0 border-[#5C7650] text-accent-foreground hover:bg-[#5C7650] hover:text-white">
+          <Button asChild variant="outline" size="sm" className="shrink-0 border-brass text-accent-foreground hover:bg-brass hover:text-ink">
             <a href={fullCatalogUrl} target="_blank" rel="noopener noreferrer">
               Browse full {brand} catalog
               <ExternalLink className="ml-2 h-3.5 w-3.5" />

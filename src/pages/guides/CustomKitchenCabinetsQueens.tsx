@@ -120,7 +120,7 @@ const CustomKitchenCabinetsQueens = () => (
 
     <Header />
 
-    <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+    <div className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -137,15 +137,15 @@ const CustomKitchenCabinetsQueens = () => (
             Delivering & installing across Queens
           </span>
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
           Custom Kitchen Cabinets in Queens — Insider Buyer's Guide
         </h1>
-        <p className="text-xl text-[#555555] mb-6">
+        <p className="text-xl text-ivory/70 mb-6">
           Real pricing. Neighborhood-specific logistics. What Queens
           homeowners and co-op buyers actually get for their cabinet
           budget in 2026.
         </p>
-        <p className="text-lg text-[#555555]">
+        <p className="text-lg text-ivory/70">
           Astoria walk-ups, LIC towers, Forest Hills Tudors, Bayside
           colonials — every Queens kitchen has a layout stock cabinets
           can't quite hit. Here's what a Brooklyn-based cabinet company that ships
@@ -157,9 +157,9 @@ const CustomKitchenCabinetsQueens = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-5xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Queens cabinet pricing in 2026
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -170,13 +170,13 @@ const CustomKitchenCabinetsQueens = () => (
           ].map((t) => (
             <div key={t.tier} className="bg-background rounded-xl p-6 shadow-sm">
               <DollarSign className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-2">{t.tier}</h3>
+              <h3 className="font-display text-xl font-bold text-ivory mb-2">{t.tier}</h3>
               <p className="text-2xl font-bold text-primary mb-3">{t.range}</p>
-              <p className="text-sm text-[#555555]">{t.note}</p>
+              <p className="text-sm text-ivory/70">{t.note}</p>
             </div>
           ))}
         </div>
-        <p className="text-sm text-[#555555] text-center mt-6 max-w-2xl mx-auto">
+        <p className="text-sm text-ivory/70 text-center mt-6 max-w-2xl mx-auto">
           Cabinetry only. Countertops, appliances, tile, plumbing, and
           labor are separate. Delivery to Queens is included within our
           standard NYC radius.
@@ -189,11 +189,11 @@ const CustomKitchenCabinetsQueens = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Truck className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Delivery logistics to Queens
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Astoria, LIC, Sunnyside, Woodside route over the Kosciuszko or Pulaski Bridge — 15–25 minutes off-peak.",
               "Forest Hills, Rego Park, Kew Gardens via the LIE or Woodhaven Blvd — early-morning trucks avoid Queens Blvd traffic.",
@@ -212,11 +212,11 @@ const CustomKitchenCabinetsQueens = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Clock className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Realistic timeline (4–6 weeks)
             </h2>
           </div>
-          <ul className="space-y-3 text-[#555555]">
+          <ul className="space-y-3 text-ivory/70">
             {[
               ["Week 0", "Design consult, measure, finish selection, deposit."],
               ["Weeks 1–4", "Cabinets in production at our suppliers — mill, sand, spray, cure."],
@@ -234,11 +234,11 @@ const CustomKitchenCabinetsQueens = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               What makes a Queens kitchen different
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Pre-war Jackson Heights and Forest Hills co-ops have short ceilings (8'–8'6\") — 42-inch wall cabinets fit; 48s usually don't.",
               "LIC glass towers want integrated pulls and slab fronts to match modern interior architecture — Tafisa, Shinnoki, and Egger flat panels dominate.",
@@ -256,12 +256,12 @@ const CustomKitchenCabinetsQueens = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-4xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-6 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-6 text-center">
           Queens neighborhoods we install in
         </h2>
-        <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
+        <p className="text-center text-ivory/70 mb-8 max-w-2xl mx-auto">
           Every Queens install routes from our vetted suppliers — same
           cabinets, same install crew, same finish samples you'd see in
           Brooklyn or Manhattan.
@@ -276,7 +276,7 @@ const CustomKitchenCabinetsQueens = () => (
           ].map((label) => (
             <span
               key={label}
-              className="px-4 py-2 rounded-full bg-background text-[#1a1a1a] font-semibold text-sm shadow-sm"
+              className="px-4 py-2 rounded-full bg-background text-ivory font-semibold text-sm shadow-sm"
             >
               {label}
             </span>
@@ -295,16 +295,16 @@ const CustomKitchenCabinetsQueens = () => (
 
     <section className="py-16 sm:py-20 bg-background">
       <div className="container mx-auto px-6 max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Queens kitchen cabinet FAQs
         </h2>
         <div className="space-y-6">
           {FAQS.map((f) => (
-            <div key={f.q} className="bg-[#d5d5d5] rounded-xl p-6">
-              <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+            <div key={f.q} className="bg-ink-2 rounded-xl p-6">
+              <h3 className="font-display text-lg font-bold text-ivory mb-2">
                 {f.q}
               </h3>
-              <p className="text-[#555555]">{f.a}</p>
+              <p className="text-ivory/70">{f.a}</p>
             </div>
           ))}
         </div>

@@ -68,10 +68,10 @@ const QualityCraftsmanship = () => {
     >
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-ivory mb-4">
             Built Right, From Sourcing to Install
           </h2>
-          <p className="text-lg text-[#555555] leading-relaxed">
+          <p className="text-lg text-ivory/70 leading-relaxed">
             Eight pillars of craftsmanship behind every Green Cabinets project — engineered for NYC homes, buildings, and timelines.
           </p>
         </div>
@@ -85,7 +85,7 @@ const QualityCraftsmanship = () => {
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
                 <p.icon className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-2">
+              <h3 className="font-display text-xl font-bold text-ivory mb-2">
                 {p.title}
               </h3>
               <p className="text-muted-foreground text-sm leading-relaxed">

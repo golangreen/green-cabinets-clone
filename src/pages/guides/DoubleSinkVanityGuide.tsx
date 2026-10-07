@@ -108,7 +108,7 @@ const DoubleSinkVanityGuide = () => (
 
     <Header />
 
-    <main className="pt-32 sm:pt-36 md:pt-40">
+    <main className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -117,15 +117,15 @@ const DoubleSinkVanityGuide = () => (
         ]}
       />
 
-      <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
+      <section className="bg-ink-2 py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026 · NYC sizing & cost
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-4 leading-tight">
             Double Sink Vanity — Sizes, Layouts & NYC Cost
           </h1>
-          <p className="text-base sm:text-lg text-[#444] mb-6">
+          <p className="text-base sm:text-lg text-ivory/70 mb-6">
             Two-sink vanities solve more arguments than any other piece of cabinetry we build.
             Here's how to size one for your bathroom, the four layouts that actually work, and
             what custom double vanities cost in New York City.
@@ -175,7 +175,7 @@ const DoubleSinkVanityGuide = () => (
           </p>
           <div className="space-y-4 mb-12">
             {LAYOUTS.map((l, i) => (
-              <article key={i} className="border border-border rounded-lg p-5 hover:border-[#5C7650] transition-colors">
+              <article key={i} className="border border-border rounded-lg p-5 hover:border-brass transition-colors">
                 <h3 className="text-lg font-bold text-foreground mb-1">{i + 1}. {l.name}</h3>
                 <p className="text-sm text-muted-foreground"><strong className="text-foreground">Best for:</strong> {l.best}</p>
               </article>
@@ -215,7 +215,7 @@ const DoubleSinkVanityGuide = () => (
             <p className="text-sm text-muted-foreground mb-3">
               Configure your double vanity, pick a finish, and get a price in under two minutes.
             </p>
-            <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
               <Link to="/designer">Open the vanity designer <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

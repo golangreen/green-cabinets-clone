@@ -192,7 +192,7 @@ const KitchenRenovationBrooklyn = () => (
 
     <Header />
 
-    <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+    <div className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -210,14 +210,14 @@ const KitchenRenovationBrooklyn = () => (
             Brooklyn-based · Serving all of Brooklyn
           </span>
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
           Kitchen Renovation in Brooklyn — The 2026 Local Guide
         </h1>
-        <p className="text-xl text-[#555555] mb-6">
+        <p className="text-xl text-ivory/70 mb-6">
           Real costs. Real timelines. Honest answers from a Brooklyn cabinet
           shop that's been doing this since 2009.
         </p>
-        <p className="text-lg text-[#555555]">
+        <p className="text-lg text-ivory/70">
           Brownstones, lofts, walk-ups, co-ops, condos — every Brooklyn
           kitchen has its own quirks. This page is what we wish every client
           knew before signing a renovation contract.
@@ -228,9 +228,9 @@ const KitchenRenovationBrooklyn = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-5xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           What a Brooklyn kitchen renovation actually costs in 2026
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -241,13 +241,13 @@ const KitchenRenovationBrooklyn = () => (
           ].map((t) => (
             <div key={t.tier} className="bg-background rounded-xl p-6 shadow-sm">
               <DollarSign className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-2">{t.tier}</h3>
+              <h3 className="font-display text-xl font-bold text-ivory mb-2">{t.tier}</h3>
               <p className="text-2xl font-bold text-primary mb-3">{t.range}</p>
-              <p className="text-sm text-[#555555]">{t.note}</p>
+              <p className="text-sm text-ivory/70">{t.note}</p>
             </div>
           ))}
         </div>
-        <p className="text-sm text-[#555555] text-center mt-6 max-w-2xl mx-auto">
+        <p className="text-sm text-ivory/70 text-center mt-6 max-w-2xl mx-auto">
           Cabinetry is typically 30–40% of the total. Our custom cabinets run
           $350/lf for full kitchens, $225/lf for base, $125/lf for wall.
         </p>
@@ -259,11 +259,11 @@ const KitchenRenovationBrooklyn = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Clock className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Realistic timeline (8–14 weeks)
             </h2>
           </div>
-          <ul className="space-y-3 text-[#555555]">
+          <ul className="space-y-3 text-ivory/70">
             {[
               ["Weeks 0–2", "Design, measure, sign-off, deposit. Co-op board package if needed."],
               ["Weeks 2–6", "Cabinets in production at our vetted suppliers. Stone slab selected."],
@@ -283,11 +283,11 @@ const KitchenRenovationBrooklyn = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <FileCheck className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               NYC permits, DOB, and co-op boards
             </h2>
           </div>
-          <p className="text-[#555555] mb-3">
+          <p className="text-ivory/70 mb-3">
             Brooklyn kitchen renovations sit under NYC Department of
             Buildings rules. Cosmetic work (cabinets, counters, fixtures
             in the same location) doesn't require a permit. Anything that
@@ -295,7 +295,7 @@ const KitchenRenovationBrooklyn = () => (
             openings does — and needs a licensed contractor with a
             DOB-filed alteration.
           </p>
-          <p className="text-[#555555]">
+          <p className="text-ivory/70">
             Co-ops and condos add another layer: most boards require an
             alteration agreement, contractor insurance certificates, and
             a 30–60 day review. Start the board package in parallel
@@ -306,11 +306,11 @@ const KitchenRenovationBrooklyn = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               What makes a Brooklyn kitchen different
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Out-of-square walls in pre-war buildings — every cabinet needs custom scribing.",
               "8 ft 6 in or 9 ft brownstone ceilings reward floor-to-ceiling uppers (free pantry storage).",
@@ -329,12 +329,12 @@ const KitchenRenovationBrooklyn = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-4xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-6 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-6 text-center">
           We work in every Brooklyn neighborhood
         </h2>
-        <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
+        <p className="text-center text-ivory/70 mb-8 max-w-2xl mx-auto">
           Local install pages with real project photos and pricing for your
           area:
         </p>
@@ -350,7 +350,7 @@ const KitchenRenovationBrooklyn = () => (
             <Link
               key={href}
               to={href}
-              className="px-4 py-2 rounded-full bg-background text-[#1a1a1a] hover:bg-primary hover:text-white transition-colors font-semibold text-sm shadow-sm"
+              className="px-4 py-2 rounded-full bg-background text-ivory hover:bg-primary hover:text-white transition-colors font-semibold text-sm shadow-sm"
             >
               {label}
             </Link>
@@ -361,16 +361,16 @@ const KitchenRenovationBrooklyn = () => (
 
     <section className="py-16 sm:py-20 bg-background">
       <div className="container mx-auto px-6 max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Brooklyn kitchen renovation FAQs
         </h2>
         <div className="space-y-6">
           {FAQS.map((f) => (
-            <div key={f.q} className="bg-[#d5d5d5] rounded-xl p-6">
-              <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+            <div key={f.q} className="bg-ink-2 rounded-xl p-6">
+              <h3 className="font-display text-lg font-bold text-ivory mb-2">
                 {f.q}
               </h3>
-              <p className="text-[#555555]">{f.a}</p>
+              <p className="text-ivory/70">{f.a}</p>
             </div>
           ))}
         </div>

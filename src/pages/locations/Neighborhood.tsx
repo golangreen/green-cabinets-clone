@@ -162,7 +162,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
 
       <Header />
 
-      <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+      <div className="pt-16 md:pt-20">
         <Breadcrumbs
           items={[
             { label: "Home", to: "/" },
@@ -181,12 +181,12 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
               Serving {n.name}, {n.boroughName}
             </span>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
             Custom Kitchen Cabinets in {n.name}
           </h1>
-          <p className="text-xl text-[#555555] mb-6">{n.heroTagline}</p>
-          <p className="text-lg text-[#555555]">{n.intro}</p>
-          <p className="text-sm text-[#555555] mt-6">
+          <p className="text-xl text-ivory/70 mb-6">{n.heroTagline}</p>
+          <p className="text-lg text-ivory/70">{n.intro}</p>
+          <p className="text-sm text-ivory/70 mt-6">
             Part of our{" "}
             <Link to={boroughHref} className="text-primary font-semibold hover:underline">
               {borough.name} cabinetry
@@ -200,16 +200,16 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
         </div>
       </section>
 
-      <section className="py-16 bg-[#d5d5d5]">
+      <section className="py-16 bg-ink-2">
         <div className="container mx-auto px-6 max-w-3xl space-y-12">
           {n.body.map((section) => (
             <div key={section.heading}>
-              <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-4">
+              <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory mb-4">
                 {section.heading}
               </h2>
               <div className="space-y-4">
                 {section.paragraphs.map((p, i) => (
-                  <p key={i} className="text-[#555555] leading-relaxed">
+                  <p key={i} className="text-ivory/70 leading-relaxed">
                     {p}
                   </p>
                 ))}
@@ -223,12 +223,12 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
         const featured = getProjectsByNeighborhood(n.slug);
         if (featured.length === 0) return null;
         return (
-          <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#f5f5f5]">
+          <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-ink-2">
             <div className="container mx-auto px-6 max-w-6xl">
-              <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-3 text-center">
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-3 text-center">
                 Featured {n.name} project{featured.length > 1 ? "s" : ""}
               </h2>
-              <p className="text-center text-[#555555] mb-10 max-w-2xl mx-auto">
+              <p className="text-center text-ivory/70 mb-10 max-w-2xl mx-auto">
                 Real installs in {n.name} — with the exact materials and product codes we used, so you can replicate the look or order samples.
               </p>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -244,10 +244,10 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
       {hasGallery && (
         <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
           <div className="container mx-auto px-6 max-w-6xl">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-3 text-center">
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-3 text-center">
               Recent Green Cabinets projects
             </h2>
-            <p className="text-center text-[#555555] mb-10 max-w-2xl mx-auto">
+            <p className="text-center text-ivory/70 mb-10 max-w-2xl mx-auto">
               A small sample of cabinetry styles we build for {n.name} kitchens — each
               one designed by us and milled and hand-finished by our vetted millwork suppliers.
             </p>
@@ -258,7 +258,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
                     type="button"
                     onClick={() => setLightboxIndex(idx)}
                     aria-label={`View larger: ${item.caption}`}
-                    className="group block w-full text-left bg-[#d5d5d5] rounded-xl overflow-hidden shadow-sm transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    className="group block w-full text-left bg-ink-2 rounded-xl overflow-hidden shadow-sm transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   >
                     <div className="aspect-[4/3] w-full overflow-hidden">
                       <img
@@ -268,7 +268,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
-                    <p className="text-sm text-[#1a1a1a] px-4 py-3">
+                    <p className="text-sm text-ivory px-4 py-3">
                       {item.caption}
                     </p>
                   </button>
@@ -278,7 +278,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
             <div className="mt-10 text-center">
               <Link
                 to="/#gallery"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-[#445339] transition-colors"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-ivory transition-colors"
               >
                 See the full project gallery →
               </Link>
@@ -296,21 +296,21 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
 
       <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
         <div className="container mx-auto px-6 max-w-3xl">
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
             {n.name} Custom Cabinetry FAQs
           </h2>
           <div className="space-y-6">
             {n.faqs.map((f) => (
-              <div key={f.question} className="bg-[#d5d5d5] rounded-xl p-6">
-                <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+              <div key={f.question} className="bg-ink-2 rounded-xl p-6">
+                <h3 className="font-display text-lg font-bold text-ivory mb-2">
                   {f.question}
                 </h3>
-                <p className="text-[#555555]">{f.answer}</p>
+                <p className="text-ivory/70">{f.answer}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-12 text-center text-sm text-[#555555]">
+          <div className="mt-12 text-center text-sm text-ivory/70">
             Explore more cabinetry in{" "}
             <Link to={boroughHref} className="text-primary font-semibold hover:underline">
               {borough.name}

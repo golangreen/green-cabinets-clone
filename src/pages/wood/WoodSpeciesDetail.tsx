@@ -8,7 +8,8 @@ import { Helmet } from "react-helmet-async";
 import { useParams, Link, Navigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import ContactCta from "@/components/home/lux/ContactCta";
+import { useLuxPage } from "@/hooks/useLuxPage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +29,7 @@ const WoodSpeciesDetail = () => {
     typeof window === "undefined" ? true : window.matchMedia("(min-width: 768px)").matches
   );
   const wood = slug ? getWoodSpecies(slug) : undefined;
+  useLuxPage(slug);
 
   // Slugify FAQ questions for stable anchor IDs (e.g. "How much do maple cabinets cost?" -> "how-much-do-maple-cabinets-cost")
   const faqSlug = (q: string) =>
@@ -94,7 +96,7 @@ const WoodSpeciesDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-ink text-ivory">
       <Helmet>
         <title>{wood.metaTitle ?? `${wood.name} Cabinets — Grain, Cost & Finishes | Green Cabinets NY`}</title>
         <meta
@@ -120,38 +122,32 @@ const WoodSpeciesDetail = () => {
 
       <Header />
 
-      <Breadcrumbs
-        items={[
-          { label: "Home", to: "/" },
-          { label: "Wood Species", to: "/wood-species" },
-          { label: wood.name },
-        ]}
-      />
 
-      <main className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+      <main>
         {/* Hero */}
-        <section className="py-12 sm:py-16 md:py-20">
-          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+        <section className="pb-14 pt-32 md:pb-20 md:pt-44">
+          <div className="mx-auto px-4 sm:px-6 max-w-6xl">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div className="space-y-4">
-                <Link
-                  to="/wood-species"
-                  className="inline-flex items-center gap-1 text-sm text-accent-foreground hover:text-[#445339]"
-                >
-                  <ArrowLeft className="w-4 h-4" /> All wood species
-                </Link>
+                <nav aria-label="Breadcrumb" className="mb-6 font-display text-xs text-stone">
+                  <Link to="/" className="hover:text-ivory">Home</Link>
+                  <span aria-hidden="true"> / </span>
+                  <Link to="/wood-species" className="hover:text-ivory">Materials</Link>
+                  <span aria-hidden="true"> / </span>
+                  <span className="text-ivory/80">{wood.name}</span>
+                </nav>
                 <div className="flex items-center gap-3">
                   <span
                     className="inline-block w-10 h-10 rounded-full border-2 border-border shrink-0"
                     style={{ backgroundColor: wood.swatch }}
                     aria-hidden="true"
                   />
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
+                  <h1 className="lux-display text-[clamp(2.6rem,6vw,5rem)] text-ivory">
                     {wood.h1 ?? wood.name}
                   </h1>
                 </div>
-                <p className="text-lg text-accent-foreground italic">{wood.tagline}</p>
-                <p className="text-base text-[#555555] leading-relaxed">{wood.shortDescription}</p>
+                <p className="font-lux text-2xl italic text-brass">{wood.tagline}</p>
+                <p className="text-base text-ivory/70 leading-relaxed">{wood.shortDescription}</p>
                 <p className="text-xs text-muted-foreground">
                   <em>{wood.scientificName}</em> · {wood.origin}
                 </p>
@@ -166,8 +162,8 @@ const WoodSpeciesDetail = () => {
         </section>
 
         {/* Spec table */}
-        <section className="py-10 bg-muted/40 border-y border-border">
-          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+        <section className="py-10 bg-ink-2 border-y border-border">
+          <div className="mx-auto px-4 sm:px-6 max-w-5xl">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <Spec label="Janka Hardness" value={`${wood.jankaHardness.toLocaleString()} lbf`} />
               <Spec label="Cost Tier" value={wood.costTier} />
@@ -183,8 +179,8 @@ const WoodSpeciesDetail = () => {
 
         {/* Long-form */}
         <section className="py-12 sm:py-16 md:py-20">
-          <div className="container mx-auto px-4 sm:px-6 max-w-3xl prose prose-neutral dark:prose-invert max-w-none">
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
+          <div className="mx-auto px-4 sm:px-6 max-w-3xl prose prose-neutral dark:prose-invert max-w-none">
+            <h2 className="lux-display text-[clamp(2rem,3.6vw,3.25rem)] text-ivory mb-6">
               {wood.aboutHeading ?? `About ${wood.name}`}
             </h2>
             <div className="space-y-5 text-foreground leading-relaxed">
@@ -197,7 +193,7 @@ const WoodSpeciesDetail = () => {
 
         {/* Grain image */}
         <section className="pb-12 sm:pb-16">
-          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+          <div className="mx-auto px-4 sm:px-6 max-w-5xl">
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img
                 src={wood.grainImage}
@@ -213,9 +209,9 @@ const WoodSpeciesDetail = () => {
         </section>
 
         {/* Pros & Cons */}
-        <section className="py-12 sm:py-16 bg-muted/40">
-          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8 text-center">
+        <section className="py-12 sm:py-16 bg-ink-2">
+          <div className="mx-auto px-4 sm:px-6 max-w-5xl">
+            <h2 className="lux-display text-[clamp(2rem,3.6vw,3.25rem)] text-ivory mb-8 text-center">
               The Honest Tradeoffs
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -255,7 +251,7 @@ const WoodSpeciesDetail = () => {
 
         {/* Best uses / finishes / styles */}
         <section className="py-12 sm:py-16">
-          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+          <div className="mx-auto px-4 sm:px-6 max-w-5xl">
             <div className="grid md:grid-cols-3 gap-6">
               <DetailList title="Common Uses" items={wood.uses} />
               <DetailList title="Best Finishes" items={wood.bestFinishes} />
@@ -266,9 +262,9 @@ const WoodSpeciesDetail = () => {
 
         {/* FAQ */}
         {faqsWithIds.length > 0 && (
-          <section id="faq" className="py-12 sm:py-16 bg-muted/40 scroll-mt-24">
-            <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6 text-center">
+          <section id="faq" className="py-12 sm:py-16 bg-ink-2 scroll-mt-24">
+            <div className="mx-auto px-4 sm:px-6 max-w-3xl">
+              <h2 className="lux-display text-[clamp(2rem,3.6vw,3.25rem)] text-ivory mb-6 text-center">
                 {wood.faqHeading ?? "Frequently Asked Questions"}
               </h2>
 
@@ -335,7 +331,7 @@ const WoodSpeciesDetail = () => {
                         <li key={`toc-${f.id}`}>
                           <a
                             href={`#faq-${f.id}`}
-                            className="text-sm text-accent-foreground hover:text-[#445339] hover:underline leading-snug"
+                            className="text-sm text-accent-foreground hover:text-ivory hover:underline leading-snug"
                           >
                             <HighlightedText text={f.question} query={faqQuery} />
                           </a>
@@ -348,7 +344,7 @@ const WoodSpeciesDetail = () => {
 
               {filteredFaqs.length === 0 ? (
                 <div className="text-center py-12 rounded-lg border border-dashed border-border bg-background">
-                  <p className="text-[#555555] mb-3">
+                  <p className="text-ivory/70 mb-3">
                     No FAQs match <span className="font-semibold">"{faqQuery}"</span>.
                   </p>
                   <Button variant="outline" size="sm" onClick={() => setFaqQuery("")}>
@@ -366,12 +362,12 @@ const WoodSpeciesDetail = () => {
                         <a
                           href={`#faq-${f.id}`}
                           aria-label={`Link to: ${f.question}`}
-                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-accent-foreground hover:text-[#445339] transition-opacity mt-1 shrink-0"
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-accent-foreground hover:text-ivory transition-opacity mt-1 shrink-0"
                         >
                           <Link2 className="w-4 h-4" />
                         </a>
                       </dt>
-                      <dd className="text-[#555555] leading-relaxed">
+                      <dd className="text-ivory/70 leading-relaxed">
                         <HighlightedText text={f.answer} query={faqQuery} />
                       </dd>
                     </div>
@@ -384,12 +380,12 @@ const WoodSpeciesDetail = () => {
 
         {/* Direct head-to-head comparisons (internal linking for topical authority) */}
         {comparisons.length > 0 && (
-          <section className="py-12 sm:py-16 bg-muted/40">
-            <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 text-center">
+          <section className="py-12 sm:py-16 bg-ink-2">
+            <div className="mx-auto px-4 sm:px-6 max-w-5xl">
+              <h2 className="lux-display text-[clamp(2rem,3.6vw,3.25rem)] text-ivory mb-3 text-center">
                 {wood.name} Comparisons
               </h2>
-              <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
+              <p className="text-center text-ivory/70 mb-8 max-w-2xl mx-auto">
                 Choosing between species or cuts? These head-to-head guides break down grain, cost, durability, and best use.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -399,7 +395,7 @@ const WoodSpeciesDetail = () => {
                     <Link
                       key={c.slug}
                       to={`/wood-species/${c.slug}`}
-                      className="group flex flex-col rounded-lg border border-border bg-background p-5 hover:border-[#5C7650] hover:shadow-lg transition-all"
+                      className="group flex flex-col rounded-lg border border-border bg-background p-5 hover:border-brass hover:shadow-lg transition-all"
                     >
                       <div className="flex items-center gap-3 mb-3">
                         <span
@@ -417,7 +413,7 @@ const WoodSpeciesDetail = () => {
                       <h3 className="font-semibold text-foreground group-hover:text-accent-foreground transition-colors">
                         {c.title}
                       </h3>
-                      <p className="text-sm text-[#555555] mt-2 leading-relaxed flex-1">{c.blurb}</p>
+                      <p className="text-sm text-ivory/70 mt-2 leading-relaxed flex-1">{c.blurb}</p>
                       <span className="inline-flex items-center text-accent-foreground text-sm font-medium mt-4">
                         Read the comparison <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                       </span>
@@ -431,8 +427,8 @@ const WoodSpeciesDetail = () => {
 
         {/* Related */}
         <section className="py-12 sm:py-16">
-          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8 text-center">
+          <div className="mx-auto px-4 sm:px-6 max-w-5xl">
+            <h2 className="lux-display text-[clamp(2rem,3.6vw,3.25rem)] text-ivory mb-8 text-center">
               Compare with Other Species
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -440,7 +436,7 @@ const WoodSpeciesDetail = () => {
                 <Link
                   key={w.slug}
                   to={`/wood-species/${w.slug}`}
-                  className="group block rounded-lg border border-border overflow-hidden hover:border-[#5C7650] hover:shadow-lg transition-all"
+                  className="group block rounded-lg border border-border overflow-hidden hover:border-brass hover:shadow-lg transition-all"
                 >
                   <img
                     src={w.image}
@@ -450,13 +446,13 @@ const WoodSpeciesDetail = () => {
                   />
                   <div className="p-4">
                     <h3 className="font-semibold text-foreground">{w.h1 ?? `${w.name} Cabinets`}</h3>
-                    <p className="text-xs text-[#555555] mt-1 line-clamp-2">{w.tagline}</p>
+                    <p className="text-xs text-ivory/70 mt-1 line-clamp-2">{w.tagline}</p>
                   </div>
                 </Link>
               ))}
             </div>
             <div className="text-center mt-8">
-              <Button asChild variant="outline" className="border-[#5C7650] text-accent-foreground hover:bg-[#5C7650] hover:text-white">
+              <Button asChild variant="outline" className="border-brass text-accent-foreground hover:bg-brass hover:text-ink">
                 <Link to="/wood-species">
                   See all wood species <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
@@ -465,25 +461,7 @@ const WoodSpeciesDetail = () => {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-12 sm:py-16 bg-[#5C7650] text-white">
-          <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center space-y-5">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-              Want a real {wood.name.toLowerCase()} sample in your hand?
-            </h2>
-            <p className="text-base sm:text-lg text-primary-foreground">
-              We'll bring samples to your home anywhere in Brooklyn, Manhattan, or Queens by appointment.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <Button asChild size="lg" className="bg-white text-accent-foreground hover:bg-white/90 hover:scale-105 transition-all">
-                <Link to="/#contact">Book a free consultation</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-accent-foreground hover:scale-105 transition-all">
-                <Link to="/designer">Launch the designer</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+        <ContactCta />
       </main>
 
       <Footer />
@@ -499,7 +477,7 @@ const Spec = ({ label, value, small }: { label: string; value: string; small?: b
 );
 
 const DetailList = ({ title, items }: { title: string; items: string[] }) => (
-  <div className="bg-muted/40 rounded-lg p-5 border border-border">
+  <div className="bg-ink-2 rounded-lg p-5 border border-border">
     <h3 className="font-semibold text-accent-foreground mb-3">{title}</h3>
     <ul className="space-y-1.5">
       {items.map((it) => (
@@ -520,7 +498,7 @@ const HighlightedText = ({ text, query }: { text: string; query: string }) => {
     <>
       {parts.map((part, i) =>
         part.toLowerCase() === q.toLowerCase() ? (
-          <mark key={i} className="bg-[#5C7650]/20 text-foreground rounded px-0.5">
+          <mark key={i} className="bg-brass/25 text-foreground rounded px-0.5">
             {part}
           </mark>
         ) : (

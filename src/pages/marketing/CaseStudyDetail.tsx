@@ -104,7 +104,7 @@ const CaseStudyDetail = () => {
 
       <Header />
 
-      <main className="pt-32 sm:pt-36 md:pt-40">
+      <main className="pt-16 md:pt-20">
         <Breadcrumbs
           items={[
             { label: "Home", to: "/" },
@@ -116,7 +116,7 @@ const CaseStudyDetail = () => {
         <article className="container mx-auto px-4 sm:px-6 max-w-3xl py-10 sm:py-14">
           <Link
             to="/case-studies"
-            className="inline-flex items-center gap-2 text-sm text-accent-foreground hover:text-[#445339] font-medium mb-6"
+            className="inline-flex items-center gap-2 text-sm text-accent-foreground hover:text-ivory font-medium mb-6"
           >
             <ArrowLeft className="h-4 w-4" /> All case studies
           </Link>
@@ -157,7 +157,7 @@ const CaseStudyDetail = () => {
           ))}
 
           <div className="flex flex-wrap gap-3 my-10">
-            <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
               <Link to="/#contact">Get a quote like this <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="hover:scale-105 transition-all">
@@ -168,13 +168,13 @@ const CaseStudyDetail = () => {
           {(prev || next) && (
             <nav className="grid sm:grid-cols-2 gap-4 mt-10 pt-8 border-t border-border" aria-label="More case studies">
               {prev ? (
-                <Link to={`/case-studies/${prev.slug}`} className="group p-4 border border-border rounded-lg hover:border-[#5C7650] transition-colors">
+                <Link to={`/case-studies/${prev.slug}`} className="group p-4 border border-border rounded-lg hover:border-brass transition-colors">
                   <span className="text-xs text-muted-foreground">Previous</span>
                   <p className="font-semibold text-foreground group-hover:text-accent-foreground transition-colors">{prev.title}</p>
                 </Link>
               ) : <span />}
               {next ? (
-                <Link to={`/case-studies/${next.slug}`} className="group p-4 border border-border rounded-lg hover:border-[#5C7650] transition-colors text-right">
+                <Link to={`/case-studies/${next.slug}`} className="group p-4 border border-border rounded-lg hover:border-brass transition-colors text-right">
                   <span className="text-xs text-muted-foreground">Next</span>
                   <p className="font-semibold text-foreground group-hover:text-accent-foreground transition-colors">{next.title}</p>
                 </Link>

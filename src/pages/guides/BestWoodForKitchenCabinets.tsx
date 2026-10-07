@@ -150,7 +150,7 @@ const BestWoodForKitchenCabinets = () => (
 
     <Header />
 
-    <main className="pt-32 sm:pt-36 md:pt-40">
+    <main className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -159,15 +159,15 @@ const BestWoodForKitchenCabinets = () => (
         ]}
       />
 
-      <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
+      <section className="bg-ink-2 py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-4 leading-tight">
             Best Wood for Kitchen Cabinets — Honest Picks by Use Case
           </h1>
-          <p className="text-base sm:text-lg text-[#444] mb-6">
+          <p className="text-base sm:text-lg text-ivory/70 mb-6">
             There is no single best wood for kitchen cabinets. There is a best wood for{" "}
             <em>your</em> kitchen — once you know whether you're painting or staining, how hard the
             cabinets will get hit, and where you sit on cost. Here's how a Brooklyn-based cabinet company
@@ -193,7 +193,7 @@ const BestWoodForKitchenCabinets = () => (
             {PICKS.map((p) => (
               <article
                 key={p.slug}
-                className="border border-border rounded-lg p-6 hover:border-[#5C7650] transition-colors"
+                className="border border-border rounded-lg p-6 hover:border-brass transition-colors"
               >
                 <div className="flex items-start gap-3 mb-2">
                   <Trophy className="h-5 w-5 text-accent-foreground mt-1 flex-shrink-0" />
@@ -249,7 +249,7 @@ const BestWoodForKitchenCabinets = () => (
           <h2 className="text-2xl sm:text-3xl font-bold mt-16 mb-3">Frequently asked questions</h2>
           <div className="space-y-5">
             {FAQ.map((f) => (
-              <div key={f.q} className="border-l-2 border-[#5C7650] pl-4 py-1">
+              <div key={f.q} className="border-l-2 border-brass pl-4 py-1">
                 <h3 className="font-bold text-foreground mb-1">{f.q}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{f.a}</p>
               </div>
@@ -261,7 +261,7 @@ const BestWoodForKitchenCabinets = () => (
               Want the full spec on any species above — Janka, grain, cost tier, finish behavior,
               pros and cons?
             </p>
-            <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
               <Link to="/wood-species">Open the full wood species guide <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

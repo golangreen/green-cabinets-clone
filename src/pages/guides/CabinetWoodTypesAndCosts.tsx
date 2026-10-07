@@ -128,7 +128,7 @@ const CabinetWoodTypesAndCosts = () => (
 
     <Header />
 
-    <main className="pt-32 sm:pt-36 md:pt-40">
+    <main className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -137,15 +137,15 @@ const CabinetWoodTypesAndCosts = () => (
         ]}
       />
 
-      <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
+      <section className="bg-ink-2 py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             14 species · Janka hardness · Per-lf premiums · 2026
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-4 leading-tight">
             Cabinet Wood Types and Costs
           </h1>
-          <p className="text-base sm:text-lg text-[#444] mb-6">
+          <p className="text-base sm:text-lg text-ivory/70 mb-6">
             Every hardwood we mill at our vetted suppliers, with real cost premiums over our $350 per
             linear foot blended baseline. Use this to triage species before reading the
             individual deep-dives.
@@ -231,7 +231,7 @@ const CabinetWoodTypesAndCosts = () => (
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Frequently asked questions</h2>
           <div className="space-y-5 mb-10">
             {FAQ.map((f) => (
-              <div key={f.q} className="border-l-2 border-[#5C7650] pl-4 py-1">
+              <div key={f.q} className="border-l-2 border-brass pl-4 py-1">
                 <h3 className="font-bold text-foreground mb-1">{f.q}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{f.a}</p>
               </div>
@@ -244,7 +244,7 @@ const CabinetWoodTypesAndCosts = () => (
               Send us your linear footage, preferred species, and door style — we quote in 24 hours.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
+              <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
                 <Link to="/#contact">Get a quote <ArrowRight className="h-4 w-4 ml-2" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="hover:scale-105 transition-all">

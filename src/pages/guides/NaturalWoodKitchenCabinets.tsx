@@ -188,7 +188,7 @@ const NaturalWoodKitchenCabinets = () => (
 
     <Header />
 
-    <main className="pt-32 sm:pt-36 md:pt-40">
+    <main className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -197,15 +197,15 @@ const NaturalWoodKitchenCabinets = () => (
         ]}
       />
 
-      <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
+      <section className="bg-ink-2 py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026 · Species, finishes, costs
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-4 leading-tight">
             Natural Wood Kitchen Cabinets — A Cabinetmaker's Guide
           </h1>
-          <p className="text-base sm:text-lg text-[#444] mb-6">
+          <p className="text-base sm:text-lg text-ivory/70 mb-6">
             Natural wood is back in NYC kitchens — but only some species look right unstained,
             and the finish you put on top decides how the cabinets look in five years. Here's how
             we pick, finish, and price natural wood at our vetted suppliers.
@@ -243,7 +243,7 @@ const NaturalWoodKitchenCabinets = () => (
             {NATURAL_PICKS.map((p) => (
               <article
                 key={p.slug}
-                className="border border-border rounded-lg p-6 hover:border-[#5C7650] transition-colors"
+                className="border border-border rounded-lg p-6 hover:border-brass transition-colors"
               >
                 <div className="flex items-start justify-between gap-4 mb-2">
                   <h3 className="text-xl sm:text-2xl font-bold text-foreground">
@@ -339,7 +339,7 @@ const NaturalWoodKitchenCabinets = () => (
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">FAQ</h2>
           <div className="space-y-5 mb-12">
             {FAQ.map((f) => (
-              <div key={f.q} className="border-l-2 border-[#5C7650] pl-4 py-1">
+              <div key={f.q} className="border-l-2 border-brass pl-4 py-1">
                 <h3 className="font-bold text-foreground mb-1">{f.q}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{f.a}</p>
               </div>
@@ -350,7 +350,7 @@ const NaturalWoodKitchenCabinets = () => (
             <p className="text-sm text-muted-foreground mb-3">
               Browse all {WOOD_SPECIES.length} species we mill — Janka, grain, cost, and finish notes per species.
             </p>
-            <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
               <Link to="/wood-species">Open the full wood species guide <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

@@ -194,7 +194,7 @@ const Suppliers = () => {
     <section id="suppliers" className="py-16 sm:py-20 md:py-24 bg-background">
       <div className="container mx-auto px-6">
         <div className="text-center mb-8 sm:mb-12">
-          <h2 className="font-display text-4xl sm:text-5xl font-bold text-[#1a1a1a] mb-4">
+          <h2 className="font-display text-4xl sm:text-5xl font-bold text-ivory mb-4">
             Our Trusted Partners
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -212,7 +212,7 @@ const Suppliers = () => {
         {suppliers.map((supplier) => (
           <div
             key={supplier.id}
-            className="snap-start shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[24vw] max-w-[340px] p-6 rounded-2xl bg-[#5C7650]/10 hover:bg-[#5C7650]/20 transition-all duration-300 cursor-pointer relative group"
+            className="snap-start shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[24vw] max-w-[340px] p-6 rounded-2xl bg-brass/10 hover:bg-brass/20 transition-all duration-300 cursor-pointer relative group"
             onClick={() => {
               if (supplier.website === "catalog") {
                 setShowCatalogSlideshow(true);
@@ -227,7 +227,7 @@ const Suppliers = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="absolute top-3 right-3 text-muted-foreground hover:text-[#1a1a1a] transition-colors z-10"
+                className="absolute top-3 right-3 text-muted-foreground hover:text-ivory transition-colors z-10"
                 aria-label={`Visit ${supplier.name} website`}
               >
                 <ExternalLink className="h-5 w-5" />
@@ -236,7 +236,7 @@ const Suppliers = () => {
               <button
                 type="button"
                 onClick={(e) => e.stopPropagation()}
-                className="absolute top-3 right-3 text-muted-foreground hover:text-[#1a1a1a] transition-colors z-10"
+                className="absolute top-3 right-3 text-muted-foreground hover:text-ivory transition-colors z-10"
                 aria-label={`View ${supplier.name} catalog`}
               >
                 <Image className="h-5 w-5" />
@@ -251,7 +251,7 @@ const Suppliers = () => {
                   className="max-w-full max-h-full object-contain"
                 />
               ) : (
-                <span className="text-2xl font-bold text-[#1a1a1a]">{supplier.name}</span>
+                <span className="text-2xl font-bold text-ivory">{supplier.name}</span>
               )}
             </div>
 

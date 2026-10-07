@@ -54,9 +54,9 @@ const VanityDesignerEmbed = () => {
         <meta name="robots" content="index,follow" />
       </Helmet>
 
-      <div className="min-h-screen flex flex-col bg-[#d5d5d5]">
+      <div className="min-h-screen flex flex-col bg-ink-2">
         <Header />
-        <main className="flex-1 pt-[96px] sm:pt-[128px] md:pt-[160px] pb-10">
+        <main className="flex-1 pt-28 md:pt-36 pb-10">
           <div className="container mx-auto px-4">
             {/* Crawlable intro */}
             <section className="mx-auto max-w-3xl text-center">

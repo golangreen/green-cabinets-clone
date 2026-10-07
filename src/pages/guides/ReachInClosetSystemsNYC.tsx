@@ -100,7 +100,7 @@ const ReachInClosetSystemsNYC = () => (
 
     <Header />
 
-    <main className="pt-32 sm:pt-36 md:pt-40">
+    <main className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -108,15 +108,15 @@ const ReachInClosetSystemsNYC = () => (
         ]}
       />
 
-      <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
+      <section className="bg-ink-2 py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026 · NYC apartment closets
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-4 leading-tight">
             Reach-In Closet Systems for NYC Apartments
           </h1>
-          <p className="text-base sm:text-lg text-[#444] mb-6">
+          <p className="text-base sm:text-lg text-ivory/70 mb-6">
             Most NYC closets are wire-shelf disasters with one rod and a hat shelf. A custom
             reach-in system, built right, doubles the capacity in the same square footage. Here's
             how we design, build, and install them.
@@ -146,7 +146,7 @@ const ReachInClosetSystemsNYC = () => (
           </p>
           <div className="space-y-4 mb-12">
             {ZONES.map((z) => (
-              <article key={z.name} className="border border-border rounded-lg p-5 hover:border-[#5C7650] transition-colors">
+              <article key={z.name} className="border border-border rounded-lg p-5 hover:border-brass transition-colors">
                 <h3 className="text-lg font-bold text-foreground mb-1">{z.name}</h3>
                 <p className="text-xs text-muted-foreground mb-2"><strong className="text-foreground">{z.depth}</strong> · {z.width}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">{z.note}</p>
@@ -187,7 +187,7 @@ const ReachInClosetSystemsNYC = () => (
               Want a custom reach-in quote for your apartment? Send dimensions and a photo and
               we'll come back with a layout and a number.
             </p>
-            <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
               <Link to="/#contact">Get a closet quote <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

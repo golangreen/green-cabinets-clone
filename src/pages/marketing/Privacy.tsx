@@ -65,7 +65,6 @@ const SECTIONS: { h: string; p: string[] }[] = [
 const Privacy = () => {
   useLayoutEffect(() => {
     document.documentElement.classList.add("theme-lux");
-    return () => document.documentElement.classList.remove("theme-lux");
   }, []);
 
   return (

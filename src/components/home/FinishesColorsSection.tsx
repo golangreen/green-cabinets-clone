@@ -30,17 +30,17 @@ const FinishesColorsSection = () => {
   return (
     <section
       id="finishes-colors"
-      className="py-16 sm:py-20 md:py-28 lg:py-32 bg-[#d5d5d5]"
+      className="py-16 sm:py-20 md:py-28 lg:py-32 bg-ink-2"
     >
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         <div className="text-center mb-8 sm:mb-10">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Real Panels · Real Codes · Real Samples
           </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-4">
             Finishes &amp; Colors
           </h2>
-          <p className="text-base sm:text-lg text-[#444] max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-ivory/70 max-w-2xl mx-auto">
             Browse the actual laminate, melamine, and veneer panels we order
             from our partner brands. Pick a brand, then swipe through a
             preview of our most-ordered decors.
@@ -48,7 +48,7 @@ const FinishesColorsSection = () => {
         </div>
 
         {/* Brand breadcrumb slider */}
-        <div className="sticky top-24 sm:top-32 md:top-40 z-30 -mx-4 sm:-mx-6 mb-6 bg-[#d5d5d5]/85 backdrop-blur-md border-b border-border/40">
+        <div className="sticky top-24 sm:top-32 md:top-40 z-30 -mx-4 sm:-mx-6 mb-6 bg-ink-2/85 backdrop-blur-md border-b border-border/40">
           <div className="relative">
             <div
               className="flex flex-nowrap items-center gap-2 overflow-x-auto scrollbar-none px-6 py-2 md:justify-center [-webkit-overflow-scrolling:touch] [scroll-padding-inline:1.8rem]"
@@ -72,8 +72,8 @@ const FinishesColorsSection = () => {
                       onClick={() => setActive(b.key)}
                       className={`shrink-0 text-base md:text-lg transition-all active:scale-95 ${
                         isActive
-                          ? "text-[#1a1a1a] font-semibold"
-                          : "text-muted-foreground font-normal hover:text-[#1a1a1a]"
+                          ? "text-ivory font-semibold"
+                          : "text-muted-foreground font-normal hover:text-ivory"
                       }`}
                     >
                       {b.label}
@@ -103,7 +103,7 @@ const FinishesColorsSection = () => {
                 >
                   <Link
                     to="/finishes-colors"
-                    className="group block rounded-lg overflow-hidden border border-border bg-background hover:border-[#5C7650] hover:shadow-lg transition-all"
+                    className="group block rounded-lg overflow-hidden border border-border bg-background hover:border-brass hover:shadow-lg transition-all"
                   >
                     <div className="aspect-square overflow-hidden bg-muted">
                       {panel.thumb ? (
@@ -123,7 +123,7 @@ const FinishesColorsSection = () => {
                       )}
                     </div>
                     <div className="p-2.5 space-y-1">
-                      <h4 className="text-sm font-semibold text-[#1a1a1a] line-clamp-1">
+                      <h4 className="text-sm font-semibold text-ivory line-clamp-1">
                         {panel.name}
                       </h4>
                       <p className="text-[11px] font-mono text-accent-foreground line-clamp-1">
@@ -141,7 +141,7 @@ const FinishesColorsSection = () => {
           <Button
             asChild
             variant="outline"
-            className="border-[#5C7650] text-accent-foreground hover:bg-[#5C7650] hover:text-white"
+            className="border-brass text-accent-foreground hover:bg-brass hover:text-ink"
           >
             <Link to="/finishes-colors">
               See all {active} finishes

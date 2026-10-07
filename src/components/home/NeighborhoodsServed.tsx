@@ -22,10 +22,10 @@ const NeighborhoodsServed = () => {
     >
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
-          <h2 className="font-display text-4xl sm:text-5xl font-bold text-[#1a1a1a] mb-4">
+          <h2 className="font-display text-4xl sm:text-5xl font-bold text-ivory mb-4">
             Neighborhoods We Serve
           </h2>
-          <p className="text-base sm:text-lg text-[#555555]">
+          <p className="text-base sm:text-lg text-ivory/70">
             Designed in Bushwick, installed across NYC. Explore our dedicated
             service areas for{" "}
             {BOROUGH_LIST.map((b, i) => (
@@ -59,11 +59,11 @@ const NeighborhoodsServed = () => {
             <div
               key={borough.slug}
               id={`borough-${borough.slug}`}
-              className="snap-start shrink-0 w-[82vw] sm:w-[55vw] md:w-[42vw] lg:w-[32vw] max-w-[440px] scroll-mt-24 bg-[#d5d5d5] rounded-xl p-6 sm:p-7 flex flex-col transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl"
+              className="snap-start shrink-0 w-[82vw] sm:w-[55vw] md:w-[42vw] lg:w-[32vw] max-w-[440px] scroll-mt-24 bg-ink-2 rounded-xl p-6 sm:p-7 flex flex-col transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl"
             >
               <div className="flex items-center gap-3 mb-3">
                 <MapPin className="w-6 h-6 text-accent-foreground" />
-                <h3 className="font-display text-2xl font-bold text-[#1a1a1a]">
+                <h3 className="font-display text-2xl font-bold text-ivory">
                   <Link
                     to={boroughHref}
                     className="hover:text-accent-foreground transition-colors"
@@ -72,7 +72,7 @@ const NeighborhoodsServed = () => {
                   </Link>
                 </h3>
               </div>
-              <p className="text-sm text-[#555555] mb-5">
+              <p className="text-sm text-ivory/70 mb-5">
                 Custom kitchen cabinets in {borough.name}
               </p>
 
@@ -88,7 +88,7 @@ const NeighborhoodsServed = () => {
                     <button
                       type="button"
                       onClick={() => setActive({ name: n, boroughSlug: borough.slug })}
-                      className="w-full text-left text-[#1a1a1a] text-sm hover:text-accent-foreground transition-colors"
+                      className="w-full text-left text-ivory text-sm hover:text-accent-foreground transition-colors"
                     >
                       {n}
                     </button>
@@ -123,7 +123,7 @@ const NeighborhoodsServed = () => {
                 </Link>
                 <button
                   onClick={scrollToContact}
-                  className="inline-flex items-center justify-center text-sm font-semibold text-[#1a1a1a] hover:text-accent-foreground transition-colors"
+                  className="inline-flex items-center justify-center text-sm font-semibold text-ivory hover:text-accent-foreground transition-colors"
                 >
                   Get a free quote
                 </button>

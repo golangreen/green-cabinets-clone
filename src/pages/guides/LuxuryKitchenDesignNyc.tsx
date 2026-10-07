@@ -129,7 +129,7 @@ const LuxuryKitchenDesignNyc = () => (
 
     <Header />
 
-    <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+    <div className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -146,10 +146,10 @@ const LuxuryKitchenDesignNyc = () => (
             High-end custom millwork for NYC
           </span>
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
           Luxury Kitchen Design in NYC — 2026 Trends & Bespoke Millwork
         </h1>
-        <p className="text-xl text-[#555555] mb-6">
+        <p className="text-xl text-ivory/70 mb-6">
           Marble waterfalls, integrated wood dining, hidden appliances, and
           full-height flush millwork — what a Brooklyn-based custom kitchen studio
           designs for Manhattan townhouses, Brooklyn brownstones, and Hamptons
@@ -161,17 +161,17 @@ const LuxuryKitchenDesignNyc = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-6xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Six luxury kitchen trends defining 2026
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {TRENDS.map(({ icon: Icon, title, body }) => (
             <div key={title} className="bg-background rounded-xl p-6 shadow-sm">
               <Icon className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-2">{title}</h3>
-              <p className="text-sm text-[#555555]">{body}</p>
+              <h3 className="font-display text-xl font-bold text-ivory mb-2">{title}</h3>
+              <p className="text-sm text-ivory/70">{body}</p>
             </div>
           ))}
         </div>
@@ -183,11 +183,11 @@ const LuxuryKitchenDesignNyc = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Gem className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Materials that read as luxury
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Rift-cut white oak — tight vertical grain, minimal cathedraling. Reads bespoke in flat panel or reeded fronts.",
               "Quarter-sawn walnut — rich brown with ray-fleck figure. Signature material for cantilevered island dining.",
@@ -207,11 +207,11 @@ const LuxuryKitchenDesignNyc = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Sparkles className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Integrated appliance package
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Sub-Zero column refrigerator and freezer behind matched veneer panels with grain continuous across doors.",
               "Miele or Bosch dishwasher panels aligned to the surrounding drawer fronts, hidden hinges.",
@@ -230,11 +230,11 @@ const LuxuryKitchenDesignNyc = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Utensils className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Where luxury kitchens live in NYC
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Tribeca and Soho cast-iron lofts with 12–14 ft ceilings — full-height pantries, oversized flat-panel islands.",
               "Brooklyn Heights, Cobble Hill, and Park Slope brownstones — parlor-floor kitchens opened to garden dining rooms.",
@@ -253,9 +253,9 @@ const LuxuryKitchenDesignNyc = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-4xl text-center">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-6">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-6">
           Related guides
         </h2>
         <div className="flex flex-wrap justify-center gap-3">
@@ -269,7 +269,7 @@ const LuxuryKitchenDesignNyc = () => (
             <Link
               key={l.to}
               to={l.to}
-              className="px-4 py-2 rounded-full bg-background text-[#1a1a1a] font-semibold text-sm shadow-sm hover:bg-primary hover:text-primary-foreground transition-colors"
+              className="px-4 py-2 rounded-full bg-background text-ivory font-semibold text-sm shadow-sm hover:bg-primary hover:text-primary-foreground transition-colors"
             >
               {l.label}
             </Link>
@@ -288,16 +288,16 @@ const LuxuryKitchenDesignNyc = () => (
 
     <section className="py-16 sm:py-20 bg-background">
       <div className="container mx-auto px-6 max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Luxury kitchen design FAQs
         </h2>
         <div className="space-y-6">
           {FAQS.map((f) => (
-            <div key={f.q} className="bg-[#d5d5d5] rounded-xl p-6">
-              <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+            <div key={f.q} className="bg-ink-2 rounded-xl p-6">
+              <h3 className="font-display text-lg font-bold text-ivory mb-2">
                 {f.q}
               </h3>
-              <p className="text-[#555555]">{f.a}</p>
+              <p className="text-ivory/70">{f.a}</p>
             </div>
           ))}
         </div>

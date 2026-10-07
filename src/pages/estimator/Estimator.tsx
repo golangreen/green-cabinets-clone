@@ -9,6 +9,7 @@ import QuoteStep from '@/components/estimator/QuoteStep';
 import OrderStep from '@/components/estimator/OrderStep';
 import { useEstimator } from '@/hooks/useEstimator';
 import { isApp } from '@/lib/platform';
+import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
 
 const Estimator = () => {
   const {
@@ -198,9 +199,7 @@ const Estimator = () => {
         <div className="mt-6 sm:mt-10 text-center text-xs sm:text-sm text-muted-foreground">
           <p>
             Questions? Call{' '}
-            <a href="tel:+17188045488" className="text-primary font-medium hover:underline">
-              (718) 804-5488
-            </a>
+            <ObfuscatedPhone encoded="NzE4ODA0NTQ4OA==" type="tel" className="text-primary font-medium hover:underline" />
           </p>
           <p className="mt-1">Green Cabinets NY — Brooklyn, NY · Serving Brooklyn, Manhattan &amp; Queens by appointment</p>
         </div>

@@ -110,7 +110,7 @@ const ShakerVsSlimShakerCabinets = () => (
 
     <Header />
 
-    <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+    <div className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -127,14 +127,14 @@ const ShakerVsSlimShakerCabinets = () => (
             NYC design guide — 2026
           </span>
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
           Shaker vs Slim Shaker Cabinets
         </h1>
-        <p className="text-xl text-[#555555] mb-6">
+        <p className="text-xl text-ivory/70 mb-6">
           A half-inch of rail width is the difference between a
           brownstone-classic kitchen and a Williamsburg-loft kitchen.
         </p>
-        <p className="text-lg text-[#555555]">
+        <p className="text-lg text-ivory/70">
           Here's how we help clients pick between the two — with actual proportions, joinery specs, and hardware
           pairings that hold up in NYC apartments.
         </p>
@@ -144,9 +144,9 @@ const ShakerVsSlimShakerCabinets = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-5xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Side-by-side comparison
         </h2>
         <div className="bg-background rounded-xl overflow-hidden shadow-sm">
@@ -159,15 +159,15 @@ const ShakerVsSlimShakerCabinets = () => (
             <div
               key={row.label}
               className={`grid grid-cols-3 text-sm sm:text-base ${
-                i % 2 ? "bg-[#f5f5f5]" : "bg-background"
+                i % 2 ? "bg-ink-2" : "bg-background"
               }`}
             >
-              <div className="p-4 font-semibold text-[#1a1a1a]">{row.label}</div>
-              <div className="p-4 border-l border-[#e5e5e5] text-[#1a1a1a]">
+              <div className="p-4 font-semibold text-ivory">{row.label}</div>
+              <div className="p-4 border-l border-white/10 text-ivory">
                 <Check className="inline w-4 h-4 text-primary mr-2" />
                 {row.classic}
               </div>
-              <div className="p-4 border-l border-[#e5e5e5] text-[#1a1a1a]">
+              <div className="p-4 border-l border-white/10 text-ivory">
                 <Check className="inline w-4 h-4 text-primary mr-2" />
                 {row.slim}
               </div>
@@ -182,18 +182,18 @@ const ShakerVsSlimShakerCabinets = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Ruler className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               How rail width changes the room
             </h2>
           </div>
-          <p className="text-[#555555] mb-4">
+          <p className="text-ivory/70 mb-4">
             Classic shaker's 2"+ rail carries visual weight — it plays well
             with 8"+ baseboards, plaster crown, and casement window trim
             typical of pre-war Brooklyn brownstones and Upper West Side
             classic-sixes. The frame gives the door a defined edge that
             balances the ornament around it.
           </p>
-          <p className="text-[#555555]">
+          <p className="text-ivory/70">
             Slim shaker's 1" rail nearly disappears at a distance. In a
             modern Williamsburg loft or a new Long Island City condo with
             flat trim and floor-to-ceiling windows, that restraint reads as
@@ -205,11 +205,11 @@ const ShakerVsSlimShakerCabinets = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Construction from our vetted suppliers
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               'Both profiles use 5-piece solid-wood door construction — no MDF veneer, no stapled panels.',
               'Mortise-and-tenon joinery is standard on both; slim shaker demands a tighter joint tolerance because there\'s less material to hide seasonal movement.',
@@ -227,11 +227,11 @@ const ShakerVsSlimShakerCabinets = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Award className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Hardware pairings that work
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               'Classic shaker + polished nickel or unlacquered brass cup pulls — signature brownstone kitchen look.',
               'Classic shaker + matte black knobs — transitional, works in Park Slope and Cobble Hill.',
@@ -248,12 +248,12 @@ const ShakerVsSlimShakerCabinets = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-3xl text-center">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-4">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-4">
           See both profiles in the designer
         </h2>
-        <p className="text-[#555555] mb-8">
+        <p className="text-ivory/70 mb-8">
           Configure a classic shaker or slim shaker kitchen with real
           finishes, real hardware, and real pricing before you commit.
         </p>
@@ -268,16 +268,16 @@ const ShakerVsSlimShakerCabinets = () => (
 
     <section className="py-16 sm:py-20 bg-background">
       <div className="container mx-auto px-6 max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Shaker vs slim shaker FAQs
         </h2>
         <div className="space-y-6">
           {FAQS.map((f) => (
-            <div key={f.q} className="bg-[#d5d5d5] rounded-xl p-6">
-              <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+            <div key={f.q} className="bg-ink-2 rounded-xl p-6">
+              <h3 className="font-display text-lg font-bold text-ivory mb-2">
                 {f.q}
               </h3>
-              <p className="text-[#555555]">{f.a}</p>
+              <p className="text-ivory/70">{f.a}</p>
             </div>
           ))}
         </div>

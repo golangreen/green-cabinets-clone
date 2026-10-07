@@ -71,10 +71,10 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
                     {info.borough}, NY
                   </span>
                 </div>
-                <DialogTitle className="font-display text-2xl text-[#1a1a1a]">
+                <DialogTitle className="font-display text-2xl text-ivory">
                   {info.name}
                 </DialogTitle>
-                <DialogDescription className="text-[#555555] leading-relaxed">
+                <DialogDescription className="text-ivory/70 leading-relaxed">
                   {info.fact}
                 </DialogDescription>
               </DialogHeader>
@@ -83,7 +83,7 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
                 <Link
                   to={`/custom-kitchen-cabinets-${dedicatedPage.slug}`}
                   onClick={onClose}
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-[#445339] transition-colors"
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-ivory transition-colors"
                 >
                   Read more about cabinetry in {dedicatedPage.name}
                   <ArrowRight className="w-4 h-4" />
@@ -101,7 +101,7 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
                         ?.scrollIntoView({ behavior: "smooth", block: "start" });
                     }, 50);
                   }}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:bg-[#445339] transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:bg-[#D4B272] transition-colors"
                 >
                   <Images className="w-4 h-4" />
                   See recent {info.borough} kitchens
@@ -116,7 +116,7 @@ const NeighborhoodDialog = ({ neighborhood, boroughSlug, onClose }: Props) => {
                         ?.scrollIntoView({ behavior: "smooth", block: "start" });
                     }, 50);
                   }}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md border border-[#1a1a1a]/15 text-sm font-semibold text-[#1a1a1a] hover:border-primary hover:text-primary transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md border border-[#1a1a1a]/15 text-sm font-semibold text-ivory hover:border-primary hover:text-primary transition-colors"
                 >
                   <MessageSquare className="w-4 h-4" />
                   Get a free quote

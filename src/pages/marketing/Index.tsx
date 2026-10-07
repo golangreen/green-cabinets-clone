@@ -21,7 +21,6 @@ const Index = () => {
   useLayoutEffect(() => {
     const root = document.documentElement;
     root.classList.add("theme-lux");
-    return () => root.classList.remove("theme-lux");
   }, []);
   useReveal();
   return (

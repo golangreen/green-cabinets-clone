@@ -10,6 +10,8 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import AuthorByline from "@/components/marketing/AuthorByline";
 import { buildArticleSchema } from "@/lib/articleSchema";
+import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
+import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
 
 const URL = "https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn";
 const TITLE = "Custom Kitchen Cabinets Brooklyn — Buyer's Guide 2026";
@@ -177,7 +179,7 @@ const CustomKitchenCabinetsBrooklyn = () => (
 
     <Header />
 
-    <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+    <div className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -194,15 +196,15 @@ const CustomKitchenCabinetsBrooklyn = () => (
             Designed in Bushwick · installed across Brooklyn by appointment
           </span>
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
           Custom Kitchen Cabinets in Brooklyn — Buyer's Guide
         </h1>
-        <p className="text-xl text-[#555555] mb-6">
+        <p className="text-xl text-ivory/70 mb-6">
           What a Brooklyn kitchen actually costs in 2026, what your board
           will ask for before the truck shows up, and how brownstones,
           condos, and lofts each change the cabinet plan.
         </p>
-        <p className="text-lg text-[#555555]">
+        <p className="text-lg text-ivory/70">
           Designed in Bushwick, cabinets are
           built by vetted millwork suppliers, and installs are scheduled
           by appointment. There is no walk-in shop — finish samples come
@@ -214,22 +216,22 @@ const CustomKitchenCabinetsBrooklyn = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-5xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Brooklyn cabinet pricing in 2026
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {PRICING.map((t) => (
             <div key={t.tier} className="bg-background rounded-xl p-6 shadow-sm">
               <DollarSign className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-2">{t.tier}</h3>
+              <h3 className="font-display text-xl font-bold text-ivory mb-2">{t.tier}</h3>
               <p className="text-2xl font-bold text-primary mb-3">{t.range}</p>
-              <p className="text-sm text-[#555555]">{t.note}</p>
+              <p className="text-sm text-ivory/70">{t.note}</p>
             </div>
           ))}
         </div>
-        <p className="text-sm text-[#555555] text-center mt-6 max-w-2xl mx-auto">
+        <p className="text-sm text-ivory/70 text-center mt-6 max-w-2xl mx-auto">
           Baseline rates: $350 per linear foot for a full kitchen, $225/lf
           base-only, $125/lf wall-only. Cabinetry only — countertops,
           appliances, tile, plumbing, and electrical are separate.
@@ -242,11 +244,11 @@ const CustomKitchenCabinetsBrooklyn = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <FileText className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Co-op and condo rules that control your schedule
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {BUILDING_RULES.map((item) => (
               <li key={item} className="flex gap-3">
                 <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
@@ -259,15 +261,15 @@ const CustomKitchenCabinetsBrooklyn = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Brownstone vs. condo vs. loft
             </h2>
           </div>
           <div className="space-y-8">
             {BUILDING_TYPES.map((b) => (
               <div key={b.title}>
-                <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-3">{b.title}</h3>
-                <ul className="space-y-2 text-[#555555]">
+                <h3 className="font-display text-xl font-bold text-ivory mb-3">{b.title}</h3>
+                <ul className="space-y-2 text-ivory/70">
                   {b.points.map((p) => (
                     <li key={p} className="flex gap-3">
                       <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
@@ -283,16 +285,16 @@ const CustomKitchenCabinetsBrooklyn = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Shaker or slim shaker in a Brooklyn kitchen
             </h2>
           </div>
-          <p className="text-[#555555] mb-4">
+          <p className="text-ivory/70 mb-4">
             Door style is the single biggest driver of how a Brooklyn
             kitchen reads. Both options are built to the same construction
             spec — the difference is proportion.
           </p>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Classic shaker, 2.25–2.5 inch stile: right for brownstones and pre-war townhouses where original casing and picture rails set the scale.",
               "Slim shaker, 1.5 inch stile: more visible panel on narrow doors, which matters in a galley; the default in condos and converted lofts.",
@@ -305,7 +307,7 @@ const CustomKitchenCabinetsBrooklyn = () => (
               </li>
             ))}
           </ul>
-          <p className="text-[#555555] mt-4">
+          <p className="text-ivory/70 mt-4">
             Full comparison:{" "}
             <Link to="/shaker-vs-slim-shaker-cabinets" className="text-primary font-semibold hover:underline">
               shaker vs. slim shaker cabinets
@@ -317,11 +319,11 @@ const CustomKitchenCabinetsBrooklyn = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Clock className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Realistic timeline (4–6 weeks)
             </h2>
           </div>
-          <ul className="space-y-3 text-[#555555]">
+          <ul className="space-y-3 text-ivory/70">
             {[
               ["Week 0", "In-home consult, measure, finish selection, deposit. Board paperwork starts the same week."],
               ["Weeks 1–4", "Production at our vetted millwork suppliers — mill, sand, spray, cure."],
@@ -339,11 +341,11 @@ const CustomKitchenCabinetsBrooklyn = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Truck className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Delivery across Brooklyn
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Bushwick, Bed-Stuy, Crown Heights, Greenpoint and Williamsburg are short runs — early-morning drops beat the BQE.",
               "DUMBO, Downtown Brooklyn, and Fort Greene towers need dock reservations and a COI on file before the truck is allowed in.",
@@ -360,12 +362,12 @@ const CustomKitchenCabinetsBrooklyn = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-4xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-6 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-6 text-center">
           Brooklyn neighborhoods we install in
         </h2>
-        <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
+        <p className="text-center text-ivory/70 mb-8 max-w-2xl mx-auto">
           Same cabinets, same install crew, same finish samples brought to
           your apartment by appointment.
         </p>
@@ -379,7 +381,7 @@ const CustomKitchenCabinetsBrooklyn = () => (
           ].map((label) => (
             <span
               key={label}
-              className="px-4 py-2 rounded-full bg-background text-[#1a1a1a] font-semibold text-sm shadow-sm"
+              className="px-4 py-2 rounded-full bg-background text-ivory font-semibold text-sm shadow-sm"
             >
               {label}
             </span>
@@ -390,10 +392,10 @@ const CustomKitchenCabinetsBrooklyn = () => (
 
     <section className="py-16 sm:py-20 bg-background">
       <div className="container mx-auto px-6 max-w-3xl text-center">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-4">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-4">
           Price your Brooklyn project
         </h2>
-        <p className="text-[#555555] mb-8">
+        <p className="text-ivory/70 mb-8">
           Doing a bathroom in the same renovation? Size a custom vanity to
           the inch and get a live price in the 3D designer. For the
           kitchen, send measurements or a rough sketch through the quote
@@ -413,8 +415,8 @@ const CustomKitchenCabinetsBrooklyn = () => (
             Get a kitchen quote
           </a>
         </div>
-        <p className="text-sm text-[#555555] mt-6">
-          Or call (718) 804-5488 · orders@greencabinetsny.com · by appointment in Brooklyn, Manhattan, and{" "}
+        <p className="text-sm text-ivory/70 mt-6">
+          Or call <ObfuscatedPhone encoded="NzE4ODA0NTQ4OA==" type="tel" className="text-ivory hover:underline" /> · <ObfuscatedEmail encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=" className="text-ivory hover:underline" /> · by appointment in Brooklyn, Manhattan, and{" "}
           <Link to="/custom-kitchen-cabinets-queens" className="text-primary font-semibold hover:underline">
             Queens
           </Link>
@@ -423,20 +425,20 @@ const CustomKitchenCabinetsBrooklyn = () => (
       </div>
     </section>
 
-    <section className="py-16 sm:py-20 bg-[#d5d5d5]">
+    <section className="py-16 sm:py-20 bg-ink-2">
       <div className="container mx-auto px-6 max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Brooklyn kitchen cabinet FAQs
         </h2>
         <div className="space-y-6">
           {FAQS.map((f) => (
             <div key={f.q} className="bg-background rounded-xl p-6">
-              <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">{f.q}</h3>
-              <p className="text-[#555555]">{f.a}</p>
+              <h3 className="font-display text-lg font-bold text-ivory mb-2">{f.q}</h3>
+              <p className="text-ivory/70">{f.a}</p>
             </div>
           ))}
         </div>
-        <p className="text-center text-sm text-[#555555] mt-10">
+        <p className="text-center text-sm text-ivory/70 mt-10">
           Also serving{" "}
           <Link to="/custom-kitchen-cabinets-manhattan" className="text-primary font-semibold hover:underline">
             Manhattan

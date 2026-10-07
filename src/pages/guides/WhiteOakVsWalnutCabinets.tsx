@@ -108,7 +108,7 @@ const WhiteOakVsWalnutCabinets = () => (
 
     <Header />
 
-    <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+    <div className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[{ label: "Home", to: "/" }, { label: "White Oak vs Walnut Cabinets" }]}
       />
@@ -122,14 +122,14 @@ const WhiteOakVsWalnutCabinets = () => (
             NYC wood species guide — 2026
           </span>
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
           White Oak vs Walnut Cabinets
         </h1>
-        <p className="text-xl text-[#555555] mb-6">
+        <p className="text-xl text-ivory/70 mb-6">
           Two premium hardwoods, two very different kitchens — one pale and
           architectural, the other warm and dramatic.
         </p>
-        <p className="text-lg text-[#555555]">
+        <p className="text-lg text-ivory/70">
           Here's how we walk clients through the choice: hardness, grain behavior, how each species ages in a NYC
           apartment, and what each actually costs installed.
         </p>
@@ -139,9 +139,9 @@ const WhiteOakVsWalnutCabinets = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-5xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Side-by-side comparison
         </h2>
         <div className="bg-background rounded-xl overflow-hidden shadow-sm">
@@ -154,15 +154,15 @@ const WhiteOakVsWalnutCabinets = () => (
             <div
               key={row.label}
               className={`grid grid-cols-3 text-sm sm:text-base ${
-                i % 2 ? "bg-[#f5f5f5]" : "bg-background"
+                i % 2 ? "bg-ink-2" : "bg-background"
               }`}
             >
-              <div className="p-4 font-semibold text-[#1a1a1a]">{row.label}</div>
-              <div className="p-4 border-l border-[#e5e5e5] text-[#1a1a1a]">
+              <div className="p-4 font-semibold text-ivory">{row.label}</div>
+              <div className="p-4 border-l border-white/10 text-ivory">
                 <Check className="inline w-4 h-4 text-primary mr-2" />
                 {row.oak}
               </div>
-              <div className="p-4 border-l border-[#e5e5e5] text-[#1a1a1a]">
+              <div className="p-4 border-l border-white/10 text-ivory">
                 <Check className="inline w-4 h-4 text-primary mr-2" />
                 {row.walnut}
               </div>
@@ -177,18 +177,18 @@ const WhiteOakVsWalnutCabinets = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Ruler className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Grain matching across a long run
             </h2>
           </div>
-          <p className="text-[#555555] mb-4">
+          <p className="text-ivory/70 mb-4">
             Rift-sawn white oak is the workhorse of modern NYC kitchens because
             the grain is close to identical door to door. On a 14-foot
             Williamsburg loft run with full-height pantry doors, that
             consistency is what makes the wall read as one piece of millwork
             instead of eight separate doors.
           </p>
-          <p className="text-[#555555]">
+          <p className="text-ivory/70">
             Walnut is the opposite proposition: you buy figure, not uniformity.
             When we sequence doors from a single flitch, the grain flows
             continuously across the run — spectacular on an island face or a
@@ -199,11 +199,11 @@ const WhiteOakVsWalnutCabinets = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               How we build each species
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Solid-wood 5-piece doors with mortise-and-tenon joinery in both species — no veneered MDF frames.",
               "Rift-sawn white oak is specified for slab and slim-shaker fronts where grain uniformity matters most.",
@@ -222,11 +222,11 @@ const WhiteOakVsWalnutCabinets = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Award className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Which one should you pick?
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Pick white oak for a bright, modern kitchen, a family with kids, or long uninterrupted cabinet runs.",
               "Pick walnut for a warm, high-contrast luxury kitchen, a feature island, or a dark-and-moody Manhattan apartment.",
@@ -239,7 +239,7 @@ const WhiteOakVsWalnutCabinets = () => (
               </li>
             ))}
           </ul>
-          <p className="text-[#555555] mt-4">
+          <p className="text-ivory/70 mt-4">
             Want the full species breakdown? See our{" "}
             <Link to="/wood-species" className="text-primary underline">
               wood species library
@@ -254,12 +254,12 @@ const WhiteOakVsWalnutCabinets = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-3xl text-center">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-4">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-4">
           Compare both species in the designer
         </h2>
-        <p className="text-[#555555] mb-8">
+        <p className="text-ivory/70 mb-8">
           Configure a white oak or walnut kitchen with real finishes, real
           hardware, and real pricing before you commit.
         </p>
@@ -274,16 +274,16 @@ const WhiteOakVsWalnutCabinets = () => (
 
     <section className="py-16 sm:py-20 bg-background">
       <div className="container mx-auto px-6 max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           White oak vs walnut FAQs
         </h2>
         <div className="space-y-6">
           {FAQS.map((f) => (
-            <div key={f.q} className="bg-[#d5d5d5] rounded-xl p-6">
-              <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+            <div key={f.q} className="bg-ink-2 rounded-xl p-6">
+              <h3 className="font-display text-lg font-bold text-ivory mb-2">
                 {f.q}
               </h3>
-              <p className="text-[#555555]">{f.a}</p>
+              <p className="text-ivory/70">{f.a}</p>
             </div>
           ))}
         </div>

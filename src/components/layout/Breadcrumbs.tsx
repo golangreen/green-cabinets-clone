@@ -5,7 +5,6 @@
  */
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
 
 export interface BreadcrumbItem {
   label: string;
@@ -34,12 +33,12 @@ const Breadcrumbs = ({ items }: Props) => {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="sticky top-[96px] sm:top-[128px] md:top-[160px] z-30 bg-background/95 backdrop-blur border-b border-border"
+      className="lux-material sticky top-[calc(4rem+env(safe-area-inset-top,0px))] md:top-[calc(5rem+env(safe-area-inset-top,0px))] z-30 border-b border-white/10"
     >
       <div className="container mx-auto px-4 sm:px-6 max-w-5xl py-2 sm:py-3">
         <ol
           ref={scrollerRef}
-          className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#555555] overflow-x-auto whitespace-nowrap scrollbar-none scroll-smooth touch-pan-x overscroll-x-contain"
+          className="flex items-center gap-1 sm:gap-1.5 font-display text-xs text-stone overflow-x-auto whitespace-nowrap scrollbar-none scroll-smooth touch-pan-x overscroll-x-contain"
           style={{
             scrollbarWidth: "none",
             WebkitOverflowScrolling: "touch",
@@ -56,7 +55,7 @@ const Breadcrumbs = ({ items }: Props) => {
                 {item.to && !isLast ? (
                   <Link
                     to={item.to}
-                    className="hover:text-primary transition-colors inline-flex items-center min-h-[40px] px-1 -mx-1"
+                    className="hover:text-ivory transition-colors inline-flex items-center min-h-[40px] px-1 -mx-1"
                   >
                     {item.label}
                   </Link>
@@ -64,17 +63,16 @@ const Breadcrumbs = ({ items }: Props) => {
                   <span
                     aria-current={isLast ? "page" : undefined}
                     className={`inline-flex items-center min-h-[40px] px-1 -mx-1 ${
-                      isLast ? "font-semibold text-[#1a1a1a]" : ""
+                      isLast ? "text-ivory/85" : ""
                     }`}
                   >
                     {item.label}
                   </span>
                 )}
                 {!isLast && (
-                  <ChevronRight
-                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0"
-                    aria-hidden="true"
-                  />
+                  <span className="text-stone/60" aria-hidden="true">
+                    /
+                  </span>
                 )}
               </li>
             );

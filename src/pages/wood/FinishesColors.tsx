@@ -10,12 +10,14 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MaterialsBrowser from "@/components/wood/MaterialsBrowser";
 import SelectionDrawer from "@/components/wood/SelectionDrawer";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import PageHero from "@/components/lux/PageHero";
+import ContactCta from "@/components/home/lux/ContactCta";
+import { useLuxPage } from "@/hooks/useLuxPage";
 
 const FinishesColors = () => {
+  useLuxPage();
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-ink text-ivory">
       <Helmet>
         <title>Finishes & Colors — Real Cabinet Panels | Green Cabinets NY</title>
         <meta
@@ -79,62 +81,36 @@ const FinishesColors = () => {
 
       <Header />
 
-      <main className="pt-32 sm:pt-36 md:pt-40">
-        {/* Back link — sticky on mobile so it's always reachable */}
-        <div className="sticky top-24 sm:top-32 md:top-40 z-40 bg-background/85 backdrop-blur-md border-b border-border/40">
-          <div className="container mx-auto px-4 sm:px-6 max-w-7xl py-2 md:py-3">
-            <button
-              type="button"
-              onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")}
-              className="inline-flex items-center gap-2 text-sm text-accent-foreground hover:text-[#445339] font-medium transition-colors active:scale-95"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </button>
-          </div>
-        </div>
+      <main>
+        <PageHero
+          crumbs={[{ label: "Home", to: "/" }, { label: "Materials", to: "/wood-species" }, { label: "Finishes & colors" }]}
+          eyebrow="Real panels · real codes · real samples"
+          title={
+            <>
+              Finishes you can <em className="italic text-brass">hold</em>.
+            </>
+          }
+          lede={
+            <>
+              <p>
+                The actual laminate, melamine and veneer panels we order from. Tap{" "}
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-brass align-[-3px] text-xs text-ink">+</span>{" "}
+                to save favorites, share the list with anyone, or send it to us for pricing. We bring the physical samples to you.
+              </p>
+              <p className="mt-5 text-sm">
+                <Link to="/wood-species" className="lux-link text-ivory">Looking for solid hardwood? See the wood library</Link>
+              </p>
+            </>
+          }
+        />
 
-        {/* Hero */}
-        <section className="bg-[#d5d5d5] py-12 sm:py-16 md:py-20">
-          <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
-            <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
-              Real Panels · Real Codes · Real Samples
-            </p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-              Finishes &amp; Colors
-            </h1>
-            <p className="text-base sm:text-lg text-[#444] max-w-2xl mx-auto">
-              Browse the actual laminate, melamine, and veneer panels we order from. Tap{" "}
-              <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-[#5C7650] text-white text-xs">+</span>{" "}
-              to save favorites, then share the link with anyone — or send your picks to us for pricing.
-            </p>
-          </div>
-        </section>
-
-        {/* Browser */}
-        <section className="py-12 sm:py-16 md:py-20">
-          <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+        <section aria-label="Finish panels" className="border-t border-white/10">
+          <div className="mx-auto max-w-[1440px] px-4 py-14 sm:px-6 md:py-20 lg:px-10" data-reveal="up">
             <MaterialsBrowser />
           </div>
         </section>
 
-        {/* Cross-link to wood species */}
-        <section className="py-12 sm:py-16 bg-[#f5f5f5]">
-          <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
-            <h2 className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-3">
-              Looking for solid hardwood?
-            </h2>
-            <p className="text-muted-foreground mb-5">
-              See our full guide to oak, maple, walnut and other solid wood species.
-            </p>
-            <Button asChild className="bg-[#5C7650] hover:bg-[#445339]">
-              <Link to="/wood-species">
-                Explore Wood Species
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </section>
+        <ContactCta />
       </main>
 
       <SelectionDrawer />

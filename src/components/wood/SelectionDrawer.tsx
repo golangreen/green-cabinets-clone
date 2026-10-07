@@ -128,7 +128,7 @@ export const SelectionDrawer = () => {
       <SheetTrigger asChild>
         <button
           type="button"
-          className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full bg-[#5C7650] px-5 py-3 text-white shadow-2xl hover:bg-[#445339] hover:scale-105 transition-all"
+          className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full bg-brass px-5 py-3 text-ink shadow-2xl hover:bg-[#D4B272] hover:scale-105 transition-all"
           aria-label={`My selection, ${ids.length} finishes`}
         >
           <Heart className="h-5 w-5 fill-white" />
@@ -187,7 +187,7 @@ export const SelectionDrawer = () => {
               setOpen(false);
               setCompareOpen(true);
             }}
-            className="border-[#5C7650] text-accent-foreground hover:bg-[#5C7650] hover:text-white disabled:opacity-50"
+            className="border-brass text-accent-foreground hover:bg-brass hover:text-ink disabled:opacity-50"
           >
             <Columns3 className="h-4 w-4 mr-1.5" />
             Compare {picks.length >= 2 ? `(${Math.min(picks.length, 4)})` : ""}
@@ -217,7 +217,7 @@ export const SelectionDrawer = () => {
                 {copied ? <Check className="h-4 w-4 text-accent-foreground" /> : <Copy className="h-4 w-4" />}
               </Button>
             </div>
-            <Button onClick={handleNativeShare} className="w-full bg-[#5C7650] hover:bg-[#445339]">
+            <Button onClick={handleNativeShare} className="w-full bg-brass hover:bg-[#D4B272]">
               <Send className="h-4 w-4 mr-2" />
               Share with friends
             </Button>
@@ -235,7 +235,7 @@ export const SelectionDrawer = () => {
             <Button
               onClick={() => sendEmail("self")}
               disabled={sending !== null}
-              className="w-full bg-[#5C7650] hover:bg-[#445339]"
+              className="w-full bg-brass hover:bg-[#D4B272]"
             >
               <Mail className="h-4 w-4 mr-2" />
               {sending === "self" ? "Sending..." : "Email me my picks"}
@@ -288,7 +288,7 @@ export const SelectionDrawer = () => {
             <Button
               onClick={() => sendEmail("shop")}
               disabled={sending !== null}
-              className="w-full bg-[#5C7650] hover:bg-[#445339]"
+              className="w-full bg-brass hover:bg-[#D4B272]"
             >
               <Send className="h-4 w-4 mr-2" />
               {sending === "shop" ? "Sending..." : "Send to Green Cabinets"}

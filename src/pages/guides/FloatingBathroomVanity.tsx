@@ -109,7 +109,7 @@ const FloatingBathroomVanity = () => (
 
     <Header />
 
-    <main className="pt-32 sm:pt-36 md:pt-40">
+    <main className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -118,15 +118,15 @@ const FloatingBathroomVanity = () => (
         ]}
       />
 
-      <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
+      <section className="bg-ink-2 py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026 · NYC install notes
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-4 leading-tight">
             Floating Bathroom Vanity — The NYC Install Guide
           </h1>
-          <p className="text-base sm:text-lg text-[#444] mb-6">
+          <p className="text-base sm:text-lg text-ivory/70 mb-6">
             Wall-hung vanities make small bathrooms look bigger and modern bathrooms look better.
             They also fail spectacularly when the wall isn't ready. Here's everything we tell
             clients before we build one.
@@ -192,7 +192,7 @@ const FloatingBathroomVanity = () => (
             <p className="text-sm text-muted-foreground mb-3">
               Spec a floating vanity in your size and finish — instant price.
             </p>
-            <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
               <Link to="/designer">Open the vanity designer <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

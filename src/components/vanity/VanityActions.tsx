@@ -8,7 +8,7 @@ interface VanityActionsProps {
 export const VanityActions = ({ onRequestQuote }: VanityActionsProps) => (
   <Button
     onClick={onRequestQuote}
-    className="w-full touch-manipulation bg-[#5C7650] hover:bg-[#5C7650]/80"
+    className="w-full touch-manipulation bg-brass hover:bg-[#D4B272]"
     size="lg"
   >
     <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />

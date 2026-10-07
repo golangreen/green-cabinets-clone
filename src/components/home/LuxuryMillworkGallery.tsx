@@ -58,19 +58,19 @@ const LuxuryMillworkGallery = () => {
   return (
     <section
       id="luxury-millwork-gallery"
-      className="py-16 sm:py-20 md:py-24 bg-[#d5d5d5]"
+      className="py-16 sm:py-20 md:py-24 bg-ink-2"
     >
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-ivory mb-4">
             Luxury Millwork Gallery
           </h2>
-          <p className="text-lg text-[#555555] leading-relaxed">
+          <p className="text-lg text-ivory/70 leading-relaxed">
             Explore our recent work across kitchens, closets, built-ins, and commercial millwork in NYC.
           </p>
         </div>
 
-        <div className="sticky top-24 sm:top-32 md:top-40 z-30 -mx-6 mb-10 py-3 bg-[#d5d5d5]/85 supports-[backdrop-filter]:bg-[#d5d5d5]/70 backdrop-blur-md border-b border-border/40">
+        <div className="sticky top-24 sm:top-32 md:top-40 z-30 -mx-6 mb-10 py-3 bg-ink-2/85 supports-[backdrop-filter]:bg-ink-2/70 backdrop-blur-md border-b border-border/40">
           <div className="relative">
             <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#d5d5d5] to-transparent z-10" aria-hidden="true" />
             <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#d5d5d5] to-transparent z-10" aria-hidden="true" />
@@ -93,8 +93,8 @@ const LuxuryMillworkGallery = () => {
                       className={[
                         "shrink-0 whitespace-nowrap text-base md:text-lg tracking-wide transition-colors duration-300 active:scale-95 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm px-1",
                         isActive
-                          ? "text-[#1a1a1a] font-semibold"
-                          : "text-muted-foreground font-normal hover:text-[#1a1a1a]",
+                          ? "text-ivory font-semibold"
+                          : "text-muted-foreground font-normal hover:text-ivory",
                       ].join(" ")}
                     >
                       {c}
@@ -151,8 +151,8 @@ const LuxuryMillworkGallery = () => {
               >
                 <ChevronRight className="w-6 h-6" />
               </button>
-              <div className="p-4 text-center text-sm text-[#555555]">
-                {current.alt} — <span className="font-medium text-[#1a1a1a]">{current.category}</span>
+              <div className="p-4 text-center text-sm text-ivory/70">
+                {current.alt} — <span className="font-medium text-ivory">{current.category}</span>
               </div>
             </div>
           )}

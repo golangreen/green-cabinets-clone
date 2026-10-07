@@ -120,7 +120,7 @@ const KitchenRenovationManhattan = () => (
 
     <Header />
 
-    <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+    <div className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -137,15 +137,15 @@ const KitchenRenovationManhattan = () => (
             Custom cabinetry for every Manhattan co-op, condo & loft
           </span>
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
           Kitchen Renovation in Manhattan — Co-op, Condo & Loft Guide
         </h1>
-        <p className="text-xl text-[#555555] mb-6">
+        <p className="text-xl text-ivory/70 mb-6">
           Board alterations, freight-elevator logistics, pre-war galleys, and
           Soho loft millwork — everything a Manhattan homeowner needs before
           the demo hammer swings in 2026.
         </p>
-        <p className="text-lg text-[#555555]">
+        <p className="text-lg text-ivory/70">
           We build every cabinet at our vetted suppliers and install across
           Manhattan from the Battery to Inwood. Here's how a specialist
           millwork shop navigates the borough's peculiar rules.
@@ -156,9 +156,9 @@ const KitchenRenovationManhattan = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-5xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Manhattan kitchen renovation pricing in 2026
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -169,13 +169,13 @@ const KitchenRenovationManhattan = () => (
           ].map((t) => (
             <div key={t.tier} className="bg-background rounded-xl p-6 shadow-sm">
               <DollarSign className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-2">{t.tier}</h3>
+              <h3 className="font-display text-xl font-bold text-ivory mb-2">{t.tier}</h3>
               <p className="text-2xl font-bold text-primary mb-3">{t.range}</p>
-              <p className="text-sm text-[#555555]">{t.note}</p>
+              <p className="text-sm text-ivory/70">{t.note}</p>
             </div>
           ))}
         </div>
-        <p className="text-sm text-[#555555] text-center mt-6 max-w-2xl mx-auto">
+        <p className="text-sm text-ivory/70 text-center mt-6 max-w-2xl mx-auto">
           All-in ranges (cabinets + counters + appliances + labor + permits +
           board fees). Cabinetry alone is $350/lf for a full kitchen at our
           shop — the rest of the budget is trades, stone, and appliances.
@@ -188,11 +188,11 @@ const KitchenRenovationManhattan = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Building2 className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Co-op board alteration agreements
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Every Manhattan co-op requires an executed Alteration Agreement before demo — no exceptions.",
               "Standard submission: signed agreement, contractor COI naming the corporation and managing agent, licensed plumber/electrician letters, DOB permits if applicable, drawings, and finish schedule.",
@@ -211,11 +211,11 @@ const KitchenRenovationManhattan = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Freight elevator & loading dock logistics
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Freight windows reserved through the building manager — usually a single 9am–4pm slot on a weekday.",
               "Cabinets pad-wrapped individually so they clear the freight cab without dinging the finish.",
@@ -234,11 +234,11 @@ const KitchenRenovationManhattan = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Clock className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Realistic Manhattan timeline (6–14 weeks)
             </h2>
           </div>
-          <ul className="space-y-3 text-[#555555]">
+          <ul className="space-y-3 text-ivory/70">
             {[
               ["Weeks 0–2", "Design consult, measure, finish selection, drawings for board package."],
               ["Weeks 2–8", "Board review in parallel with cabinet production at our suppliers."],
@@ -257,11 +257,11 @@ const KitchenRenovationManhattan = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               What makes a Manhattan kitchen different
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Space is measured in inches — every filler, spacer, and appliance panel matters. Custom cabinetry recovers 8–14 inches over stock in a typical galley.",
               "Pre-war UES/UWS apartments (built 1900–1940) have plaster walls up to 2 inches out of plumb over an 8-ft run — cabinets scribe on-site.",
@@ -280,12 +280,12 @@ const KitchenRenovationManhattan = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-4xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-6 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-6 text-center">
           Manhattan neighborhoods we install in
         </h2>
-        <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
+        <p className="text-center text-ivory/70 mb-8 max-w-2xl mx-auto">
           Every Manhattan install routes from our vetted suppliers — same
           cabinets, same install crew, same finish samples you'd see in
           Brooklyn or Staten Island.
@@ -300,7 +300,7 @@ const KitchenRenovationManhattan = () => (
           ].map((label) => (
             <span
               key={label}
-              className="px-4 py-2 rounded-full bg-background text-[#1a1a1a] font-semibold text-sm shadow-sm"
+              className="px-4 py-2 rounded-full bg-background text-ivory font-semibold text-sm shadow-sm"
             >
               {label}
             </span>
@@ -319,16 +319,16 @@ const KitchenRenovationManhattan = () => (
 
     <section className="py-16 sm:py-20 bg-background">
       <div className="container mx-auto px-6 max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Manhattan kitchen renovation FAQs
         </h2>
         <div className="space-y-6">
           {FAQS.map((f) => (
-            <div key={f.q} className="bg-[#d5d5d5] rounded-xl p-6">
-              <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+            <div key={f.q} className="bg-ink-2 rounded-xl p-6">
+              <h3 className="font-display text-lg font-bold text-ivory mb-2">
                 {f.q}
               </h3>
-              <p className="text-[#555555]">{f.a}</p>
+              <p className="text-ivory/70">{f.a}</p>
             </div>
           ))}
         </div>

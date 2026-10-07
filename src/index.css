@@ -235,9 +235,9 @@ All colors MUST be HSL.
 }
 
 /* ───────────────────────── Dark luxury theme ─────────────────────────
-   html.theme-lux is set by pages that use the redesigned look (the
-   homepage first). It re-points the shadcn tokens, so dialogs, the quote
-   form and accordions follow, including ones portaled to <body>. */
+   html.theme-lux is on <html> site-wide (index.html). It re-points the
+   shadcn tokens, so every page, dialog, form and accordion follows,
+   including ones portaled to <body>. */
 html.theme-lux {
   --background: 30 8% 5%;
   --foreground: 38 36% 92%;
@@ -468,4 +468,28 @@ html.reveal-armed [data-reveal="print"]:not([data-in]) {
    it. In Safari portrait the inset is 0, so the website is unchanged. */
 body {
   padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Photo viewer: backdrop fades, the photo settles in from 97%. Occasional
+   action, so a standard 220ms ease-out; reduced motion keeps only the fade. */
+@keyframes lux-fade-in { from { opacity: 0; } }
+@keyframes lux-fade-out { to { opacity: 0; } }
+@keyframes lux-settle-in { from { opacity: 0; transform: scale(0.97); } }
+.lux-lightbox-backdrop[data-state="open"] { animation: lux-fade-in 220ms var(--ease-out); }
+.lux-lightbox-backdrop[data-state="closed"] { animation: lux-fade-out 160ms var(--ease-out); }
+.lux-lightbox[data-state="closed"] { animation: lux-fade-out 160ms var(--ease-out); }
+.lux-lightbox-img { animation: lux-settle-in 260ms var(--ease-out); }
+@media (prefers-reduced-motion: reduce) {
+  .lux-lightbox-img { animation: lux-fade-in 200ms ease; }
+}
+
+/* Older pages (guides, locations, tools) still set h1/h2 in bold sans.
+   Give every page headline the same serif voice as the homepage. Section
+   sizes stay as each page set them; h3 and below stay sans for scanning. */
+html.theme-lux #root :is(h1, h2):not(.lux-display):not(.font-lux) {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+  text-wrap: balance;
 }

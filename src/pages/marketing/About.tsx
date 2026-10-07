@@ -58,18 +58,18 @@ const About = () => (
 
     <Header />
 
-    <main className="pt-32 sm:pt-36 md:pt-40">
+    <main className="pt-16 md:pt-20">
       <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "About" }]} />
 
-      <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
+      <section className="bg-ink-2 py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Bushwick · Since 2009
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-4">
             About Green Cabinets NY
           </h1>
-          <p className="text-base sm:text-lg text-[#444] max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-ivory/70 max-w-2xl mx-auto">
             We're a small Brooklyn design-and-build team creating custom kitchens, vanities, closets, and
             millwork for NYC homes — designed by us, built to our specifications by vetted millwork suppliers since 2009.
           </p>
@@ -105,12 +105,12 @@ const About = () => (
             </div>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-8">The team</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-ivory mb-8">The team</h2>
 
           <article id="golan-achdary" className="mb-12 scroll-mt-32">
-            <h3 className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-1">Golan Achdary</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-ivory mb-1">Golan Achdary</h3>
             <p className="text-accent-foreground font-semibold mb-3">Founder & Master Cabinetmaker</p>
-            <p className="text-base text-[#444] leading-relaxed mb-3">
+            <p className="text-base text-ivory/70 leading-relaxed mb-3">
               Golan founded Green Cabinets NY in 2009 after years on NYC job sites. He runs design,
               millwork, and finish QC personally — every door, drawer, and panel gets eyes on
               before it ships. Specialty: shaker and slim-shaker construction, FSC-certified
@@ -123,9 +123,9 @@ const About = () => (
           </article>
 
           <article id="andy-lopez" className="mb-12 scroll-mt-32">
-            <h3 className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-1">Andy Lopez</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-ivory mb-1">Andy Lopez</h3>
             <p className="text-accent-foreground font-semibold mb-3">Project Manager & Installation Lead</p>
-            <p className="text-base text-[#444] leading-relaxed mb-3">
+            <p className="text-base text-ivory/70 leading-relaxed mb-3">
               Andy schedules installs, coordinates GCs and trades, and runs walkthroughs. If your
               kitchen lands clean and on schedule in a 4th-floor Bushwick walk-up, that's Andy.
             </p>
@@ -136,7 +136,7 @@ const About = () => (
           </article>
 
           <div className="flex flex-wrap gap-3">
-            <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
               <Link to="/#contact">Get in touch <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="hover:scale-105 transition-all">

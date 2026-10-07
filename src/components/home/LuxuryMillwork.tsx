@@ -47,7 +47,7 @@ const LuxuryMillwork = () => {
     >
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="font-display text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+          <h2 className="font-display text-5xl md:text-6xl font-bold text-ivory mb-6">
             Luxury Custom Cabinets &amp; Millwork in NYC
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed">
@@ -66,7 +66,7 @@ const LuxuryMillwork = () => {
               <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
                 <item.icon className="w-7 h-7 text-primary" />
               </div>
-              <h3 className="font-display text-2xl font-bold text-[#1a1a1a] mb-3">
+              <h3 className="font-display text-2xl font-bold text-ivory mb-3">
                 {item.title}
               </h3>
               <p className="text-muted-foreground leading-relaxed">

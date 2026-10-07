@@ -90,7 +90,7 @@ const Borough = () => {
 
       <Header />
 
-      <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+      <div className="pt-16 md:pt-20">
         <Breadcrumbs
           items={[
             { label: "Home", to: "/" },
@@ -108,12 +108,12 @@ const Borough = () => {
               Serving {borough.name}, NY
             </span>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
             Custom Kitchen Cabinets in {borough.name}
           </h1>
-          <p className="text-xl text-[#555555] mb-8">{borough.heroTagline}</p>
-          <p className="text-lg text-[#555555]">{borough.intro}</p>
-          <p className="text-sm text-[#555555] mt-6">
+          <p className="text-xl text-ivory/70 mb-8">{borough.heroTagline}</p>
+          <p className="text-lg text-ivory/70">{borough.intro}</p>
+          <p className="text-sm text-ivory/70 mt-6">
             Browse all{" "}
             <Link to="/#neighborhoods" className="text-primary font-semibold hover:underline">
               neighborhoods we serve
@@ -127,9 +127,9 @@ const Borough = () => {
         </div>
       </section>
 
-      <section className="py-16 bg-[#d5d5d5]">
+      <section className="py-16 bg-ink-2">
         <div className="container mx-auto px-6 max-w-5xl">
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-8 text-center">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-8 text-center">
             {borough.name} Neighborhoods We Serve
           </h2>
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -138,7 +138,7 @@ const Borough = () => {
                 <button
                   type="button"
                   onClick={() => setActiveNeighborhood(n)}
-                  className="w-full block bg-background rounded-lg px-4 py-3 text-center text-[#1a1a1a] font-medium hover:text-primary transition-colors"
+                  className="w-full block bg-background rounded-lg px-4 py-3 text-center text-ivory font-medium hover:text-primary transition-colors"
                 >
                   {n}
                 </button>
@@ -150,21 +150,21 @@ const Borough = () => {
 
       <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-background">
         <div className="container mx-auto px-6 max-w-3xl">
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
             {borough.name} Custom Cabinetry FAQs
           </h2>
           <div className="space-y-6">
             {borough.faqs.map((f) => (
-              <div key={f.question} className="bg-[#d5d5d5] rounded-xl p-6">
-                <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+              <div key={f.question} className="bg-ink-2 rounded-xl p-6">
+                <h3 className="font-display text-lg font-bold text-ivory mb-2">
                   {f.question}
                 </h3>
-                <p className="text-[#555555]">{f.answer}</p>
+                <p className="text-ivory/70">{f.answer}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-12 text-center text-sm text-[#555555]">
+          <div className="mt-12 text-center text-sm text-ivory/70">
             Also serving{" "}
             {Object.values(BOROUGHS)
               .filter((b) => b.slug !== borough.slug)

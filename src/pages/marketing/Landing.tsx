@@ -11,6 +11,8 @@ import { RECAPTCHA_SITE_KEY, RECAPTCHA_ENABLED } from "@/config/recaptcha";
 import { useSpamGuard } from "@/lib/spamGuard";
 import logo from "@/assets/logos/logo-color.svg";
 import modernKitchenIslandBarStools from "@/assets/gallery/modern-kitchen-island-bar-stools.jpeg";
+import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
+import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -65,12 +67,7 @@ const Landing = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <img src={logo} alt="Green Cabinets" className="h-12 sm:h-14" />
-          <a 
-            href="tel:+17188045488"
-            className="text-primary font-semibold hover:text-primary/80 transition-colors"
-          >
-            (718) 804-5488
-          </a>
+          <ObfuscatedPhone encoded="NzE4ODA0NTQ4OA==" type="tel" className="text-primary font-semibold hover:text-primary/80 transition-colors" />
         </div>
       </header>
 
@@ -273,26 +270,20 @@ const Landing = () => {
           <div className="max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-center mb-8 text-foreground">Or Contact Us Directly</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <a 
-                href="tel:+17188045488"
-                className="flex flex-col items-center gap-3 p-4 rounded-lg hover:bg-muted/50 transition-colors group"
-              >
-                <Phone className="w-8 h-8 text-primary group-hover:scale-110 transition-transform" />
+              <div className="flex flex-col items-center gap-3 p-4 rounded-lg">
+                <Phone className="w-8 h-8 text-primary" />
                 <div>
                   <div className="font-semibold text-foreground">Call Us</div>
-                  <div className="text-sm text-muted-foreground">(718) 804-5488</div>
+                  <ObfuscatedPhone encoded="NzE4ODA0NTQ4OA==" type="tel" className="text-sm text-muted-foreground hover:text-ivory" />
                 </div>
-              </a>
-              <a 
-                href="mailto:orders@greencabinetsny.com"
-                className="flex flex-col items-center gap-3 p-4 rounded-lg hover:bg-muted/50 transition-colors group"
-              >
-                <Mail className="w-8 h-8 text-primary group-hover:scale-110 transition-transform" />
+              </div>
+              <div className="flex flex-col items-center gap-3 p-4 rounded-lg">
+                <Mail className="w-8 h-8 text-primary" />
                 <div>
                   <div className="font-semibold text-foreground">Email Us</div>
-                  <div className="text-sm text-muted-foreground">orders@greencabinetsny.com</div>
+                  <ObfuscatedEmail encoded="b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=" className="text-sm text-muted-foreground hover:text-ivory" />
                 </div>
-              </a>
+              </div>
               <div className="flex flex-col items-center gap-3 p-4">
                 <MapPin className="w-8 h-8 text-primary" />
                 <div>

@@ -11,15 +11,14 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import WoodCompare from "@/components/wood/WoodCompare";
-
-
+import PageHero from "@/components/lux/PageHero";
+import ContactCta from "@/components/home/lux/ContactCta";
+import { useLuxPage } from "@/hooks/useLuxPage";
 import { WOOD_SPECIES } from "@/data/woodSpecies";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft } from "lucide-react";
 
 const WoodSpecies = () => {
+  useLuxPage();
   const navigate = useNavigate();
   const goToSpecies = (slug: string) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -30,7 +29,7 @@ const WoodSpecies = () => {
   // Scrollspy: track which species card is currently in view and highlight its chip.
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   useEffect(() => {
-    const headerOffset = 160; // approximate fixed-header + chip-bar height
+    const headerOffset = 140; // fixed header + sticky species bar
     const visible = new Map<string, number>();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -137,7 +136,7 @@ const WoodSpecies = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-ink text-ivory">
       <Helmet>
         <title>Cabinet Wood Species Guide | Green Cabinets NY</title>
         <meta
@@ -163,236 +162,151 @@ const WoodSpecies = () => {
 
       <Header />
 
-      <Breadcrumbs
-        items={[
-          { label: "Home", to: "/" },
-          { label: "Wood Species Guide" },
-        ]}
-      />
+      <main>
+        <PageHero
+          crumbs={[{ label: "Home", to: "/" }, { label: "Materials" }]}
+          eyebrow="Materials · The wood library"
+          title={
+            <>
+              Choose the wood <em className="italic text-brass">first</em>.
+            </>
+          }
+          lede={
+            <>
+              <p>
+                It decides how the kitchen looks, how it ages, how it takes a knock, and what it costs.
+                Here is every species we build with, side by side, with the tradeoffs spelled out plainly.
+              </p>
+              <p className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <Link to="/best-wood-for-kitchen-cabinets" className="lux-link text-ivory">Best wood for kitchens</Link>
+                <Link to="/cabinet-wood-types-and-costs" className="lux-link text-ivory">Costs per linear foot</Link>
+                <Link to="/finishes-colors" className="lux-link text-ivory">Finishes &amp; colors</Link>
+              </p>
+            </>
+          }
+        />
 
-      <main className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
-        {/* Sticky back button */}
-        <div className="sticky top-24 sm:top-32 md:top-40 z-40 bg-background/85 backdrop-blur-md border-b border-border/40">
-          <div className="container mx-auto px-4 sm:px-6 max-w-7xl py-2 md:py-3">
-            <button
-              type="button"
-              onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign("/")}
-              className="inline-flex items-center gap-2 text-sm text-accent-foreground hover:text-[#445339] font-medium transition-colors active:scale-95"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </button>
-          </div>
-        </div>
-
-        {/* Hero / intro */}
-        <section className="bg-[#d5d5d5]/40 py-16 sm:py-20 md:py-24">
-          <div className="container mx-auto px-4 sm:px-6 max-w-5xl text-center space-y-4">
-            <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold">
-              The Material Library
-            </p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a]">
-              Cabinet Wood Species — A Complete Guide
-            </h1>
-            <p className="text-base sm:text-lg text-[#555555] max-w-3xl mx-auto leading-relaxed">
-              Choosing a wood is the single biggest decision in a custom cabinet project. It
-              determines how your kitchen looks, how it ages, how it stands up to daily life, and
-              what it costs. Below is everything we have learned in 15 years of building custom
-              cabinets in Brooklyn — every species we work with, head-to-head, with the tradeoffs
-              spelled out plainly. Need help narrowing it down? Start with our{" "}
-              <Link to="/best-wood-for-kitchen-cabinets" className="text-accent-foreground underline underline-offset-2 hover:text-[#445339] font-medium">best wood for kitchen cabinets</Link>{" "}
-              picks, see full{" "}
-              <Link to="/cabinet-wood-types-and-costs" className="text-accent-foreground underline underline-offset-2 hover:text-[#445339] font-medium">wood types and costs per linear foot</Link>, or
-              browse{" "}
-              <Link to="/natural-wood-kitchen-cabinets" className="text-accent-foreground underline underline-offset-2 hover:text-[#445339] font-medium">natural wood kitchen cabinets</Link>.
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center pt-2">
-              <Link
-                to="/best-wood-for-kitchen-cabinets"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-accent-foreground hover:text-[#445339] underline underline-offset-4"
-              >
-                Best wood for kitchen cabinets — picks by use case
-              </Link>
-              <span className="text-muted-foreground hidden sm:inline">·</span>
-              <Link
-                to="/cabinet-wood-types-and-costs"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-accent-foreground hover:text-[#445339] underline underline-offset-4"
-              >
-                All wood types and costs (per lf)
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Interactive compare */}
-        <section className="py-12 sm:py-16 md:py-20">
-          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-3">
-                Solid Wood Side-by-Side Comparison
+        {/* Compare */}
+        <section aria-labelledby="compare-title" className="border-t border-white/10 bg-ink-2">
+          <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 md:py-28 lg:px-10">
+            <div className="mb-12 max-w-3xl" data-reveal="up">
+              <p className="lux-eyebrow mb-5">Side by side</p>
+              <h2 id="compare-title" className="lux-display text-[clamp(2.3rem,4.6vw,4.25rem)] text-ivory">
+                Put two to four woods next to each other.
               </h2>
-              <p className="text-[#555555] max-w-2xl mx-auto">
-                Pick two to four species and we will lay out their hardness, grain, cost tier, and
-                finishing behavior in a single view.
+              <p className="lux-body mt-5 text-base text-ivory/70 sm:text-lg">
+                Hardness, grain, cost tier and how each one takes a finish, in one view.
               </p>
             </div>
-            <WoodCompare />
+            <div data-reveal="up" style={{ "--d": "100ms" } as React.CSSProperties}>
+              <WoodCompare />
+            </div>
           </div>
         </section>
 
-
-
-        {/* Species cards */}
-        <section className="py-12 sm:py-16 md:py-20">
-          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 text-center">
-              Browse Every Species
-            </h2>
-            <div className="sticky top-[136px] sm:top-[168px] md:top-[200px] z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 mb-8 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-y border-[#5C7650]/15">
-              <div className="flex flex-wrap justify-center gap-2">
-                {WOOD_SPECIES.map((w) => {
-                  const isActive = activeSlug === w.slug;
-                  return (
-                    <a
-                      key={w.slug}
-                      href={`#${w.slug}`}
-                      onClick={goToSpecies(w.slug)}
-                      aria-current={isActive ? "true" : undefined}
-                      className={`text-xs sm:text-sm px-3 py-1.5 rounded-full border transition-colors ${
-                        isActive
-                          ? "bg-[#5C7650] text-white border-[#5C7650] shadow-sm"
-                          : "border-[#5C7650]/40 text-accent-foreground hover:bg-[#5C7650] hover:text-white"
-                      }`}
-                    >
-                      {w.name}
-                    </a>
-                  );
-                })}
-              </div>
+        {/* Every species */}
+        <section aria-labelledby="species-title" className="border-t border-white/10">
+          <div className="mx-auto max-w-[1440px] px-4 pt-20 sm:px-6 md:pt-28 lg:px-10">
+            <div className="max-w-3xl" data-reveal="up">
+              <p className="lux-eyebrow mb-5">Every species</p>
+              <h2 id="species-title" className="lux-display text-[clamp(2.3rem,4.6vw,4.25rem)] text-ivory">
+                {WOOD_SPECIES.length} woods we build with.
+              </h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {WOOD_SPECIES.map((w) => (
-                <Link
-                  key={w.slug}
-                  to={`/wood-species/${w.slug}`}
-                  id={w.slug}
-                  className="group block rounded-xl overflow-hidden border border-border bg-background hover:border-[#5C7650] hover:shadow-xl transition-all"
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+          </div>
+
+          <nav
+            aria-label="Jump to a species"
+            className="lux-material sticky top-[calc(4rem+env(safe-area-inset-top,0px))] z-30 mt-10 border-y border-white/10 md:top-[calc(5rem+env(safe-area-inset-top,0px))]"
+          >
+            <div className="mx-auto flex max-w-[1440px] gap-6 overflow-x-auto px-4 scrollbar-none sm:px-6 lg:px-10">
+              {WOOD_SPECIES.map((w) => {
+                const on = activeSlug === w.slug;
+                return (
+                  <a
+                    key={w.slug}
+                    href={`#${w.slug}`}
+                    onClick={goToSpecies(w.slug)}
+                    aria-current={on ? "true" : undefined}
+                    className={`relative flex shrink-0 items-center gap-2 whitespace-nowrap py-4 font-display text-sm transition-colors duration-200 ${
+                      on ? "text-ivory" : "text-stone hover:text-ivory"
+                    }`}
+                  >
+                    <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: w.swatch }} aria-hidden="true" />
+                    {w.name}
+                    <span
+                      aria-hidden="true"
+                      className={`absolute inset-x-0 bottom-0 h-px origin-left bg-brass transition-transform duration-300 [transition-timing-function:var(--ease-out)] ${
+                        on ? "scale-x-100" : "scale-x-0"
+                      }`}
+                    />
+                  </a>
+                );
+              })}
+            </div>
+          </nav>
+
+          <ul className="mx-auto grid max-w-[1440px] grid-cols-1 gap-x-6 gap-y-14 px-4 py-14 sm:grid-cols-2 sm:px-6 md:py-20 lg:grid-cols-3 lg:px-10">
+            {WOOD_SPECIES.map((w, i) => (
+              <li key={w.slug} id={w.slug} className="scroll-mt-40" data-reveal="up" style={{ "--d": `${(i % 3) * 70}ms` } as React.CSSProperties}>
+                <Link to={`/wood-species/${w.slug}`} className="group block">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-ink-3">
                     <img
                       src={w.image}
-                      alt={`${w.name} cabinet wood — ${w.tagline}`}
+                      alt={`${w.name} cabinet wood, ${w.tagline}`}
                       loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <span
-                      className="absolute top-3 left-3 inline-block w-8 h-8 rounded-full border-2 border-white shadow-lg"
-                      style={{ backgroundColor: w.swatch }}
-                      aria-hidden="true"
+                      decoding="async"
+                      className="h-full w-full object-cover transition-transform duration-700 [transition-timing-function:var(--ease-out)] group-hover:scale-[1.04]"
                     />
                   </div>
-                  <div className="p-5 space-y-2">
-                    <div className="flex items-baseline justify-between gap-2">
-                      <h3 className="text-lg font-bold text-[#1a1a1a]">{w.h1 ?? `${w.name} Cabinets`}</h3>
-                      <span className="font-mono text-sm text-accent-foreground">{w.costTier}</span>
-                    </div>
-                    <p className="text-sm text-accent-foreground italic">{w.tagline}</p>
-                    <p className="text-sm text-[#555555] line-clamp-3">{w.shortDescription}</p>
-                    <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
-                      <span>Janka {w.jankaHardness.toLocaleString()} lbf</span>
-                      <span className="inline-flex items-center gap-1 text-accent-foreground font-medium group-hover:gap-2 transition-all">
-                        Read guide <ArrowRight className="w-3.5 h-3.5" />
-                      </span>
-                    </div>
+                  <div className="mt-5 flex items-baseline justify-between gap-4">
+                    <h3 className="flex items-center gap-3 font-lux text-[1.9rem] leading-none text-ivory">
+                      <span className="h-3 w-3 shrink-0 rounded-full ring-1 ring-white/20" style={{ backgroundColor: w.swatch }} aria-hidden="true" />
+                      {w.name}
+                    </h3>
+                    <span className="font-display text-sm tabular-nums text-brass">{w.costTier}</span>
+                  </div>
+                  <p className="mt-2 font-lux text-lg italic text-ivory/70">{w.tagline}</p>
+                  <p className="lux-body mt-2 line-clamp-3 text-sm text-ivory/60">{w.shortDescription}</p>
+                  <div className="mt-4 flex items-center justify-between font-display text-xs text-stone">
+                    <span className="tabular-nums">Janka {w.jankaHardness.toLocaleString()} lbf</span>
+                    <span className="lux-link text-ivory">Read the guide</span>
                   </div>
                 </Link>
-              ))}
-            </div>
-          </div>
+              </li>
+            ))}
+          </ul>
         </section>
 
-        {/* Related deep-dive guides */}
-        <section className="py-12 sm:py-16 md:py-20 bg-[#d5d5d5]/30 border-y border-[#5C7650]/10">
-          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-            <div className="text-center mb-10">
-              <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-2">
-                Go Deeper
-              </p>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a]">
-                Related Long-Form Guides
+        {/* Longer reads */}
+        <section aria-labelledby="reads-title" className="border-t border-white/10 bg-ink-2">
+          <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 md:py-28 lg:px-10">
+            <div className="mb-12 max-w-3xl" data-reveal="up">
+              <p className="lux-eyebrow mb-5">Go deeper</p>
+              <h2 id="reads-title" className="lux-display text-[clamp(2.3rem,4.6vw,4.25rem)] text-ivory">
+                Three longer reads.
               </h2>
-              <p className="text-[#555555] max-w-2xl mx-auto mt-3">
-                Three pillar reads that pair with this species library — picks by use case,
-                full pricing per linear foot, and the natural-finish playbook.
-              </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <Link
-                to="/best-wood-for-kitchen-cabinets"
-                className="group block rounded-xl border border-border bg-background p-6 hover:border-[#5C7650] hover:shadow-lg transition-all"
-              >
-                <p className="text-xs uppercase tracking-wider text-accent-foreground font-semibold mb-2">Pillar guide</p>
-                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Best Wood for Kitchen Cabinets</h3>
-                <p className="text-sm text-[#555555] mb-4">
-                  Recommendations by use case — busy family kitchen, modern minimalist,
-                  paint-grade, luxury, and more.
-                </p>
-                <span className="inline-flex items-center gap-1 text-sm text-accent-foreground font-medium group-hover:gap-2 transition-all">
-                  Read guide <ArrowRight className="w-3.5 h-3.5" />
-                </span>
-              </Link>
-              <Link
-                to="/cabinet-wood-types-and-costs"
-                className="group block rounded-xl border border-border bg-background p-6 hover:border-[#5C7650] hover:shadow-lg transition-all"
-              >
-                <p className="text-xs uppercase tracking-wider text-accent-foreground font-semibold mb-2">Pillar guide</p>
-                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Cabinet Wood Types & Costs</h3>
-                <p className="text-sm text-[#555555] mb-4">
-                  Side-by-side cost comparison of every species we offer — budget, mid-tier,
-                  and premium, with $/linear-foot ranges for NYC.
-                </p>
-                <span className="inline-flex items-center gap-1 text-sm text-accent-foreground font-medium group-hover:gap-2 transition-all">
-                  See pricing <ArrowRight className="w-3.5 h-3.5" />
-                </span>
-              </Link>
-              <Link
-                to="/natural-wood-kitchen-cabinets"
-                className="group block rounded-xl border border-border bg-background p-6 hover:border-[#5C7650] hover:shadow-lg transition-all"
-              >
-                <p className="text-xs uppercase tracking-wider text-accent-foreground font-semibold mb-2">Pillar guide</p>
-                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Natural Wood Kitchen Cabinets</h3>
-                <p className="text-sm text-[#555555] mb-4">
-                  Which species look best with a clear or hardwax-oil finish, plus cuts
-                  (rift, quartersawn) and finish systems.
-                </p>
-                <span className="inline-flex items-center gap-1 text-sm text-accent-foreground font-medium group-hover:gap-2 transition-all">
-                  Explore naturals <ArrowRight className="w-3.5 h-3.5" />
-                </span>
-              </Link>
-            </div>
+            <ul className="grid grid-cols-1 gap-px bg-white/10 md:grid-cols-3">
+              {[
+                { to: "/best-wood-for-kitchen-cabinets", k: "Picks by use case", t: "Best wood for kitchen cabinets", d: "Busy family kitchen, modern minimalist, paint-grade, luxury: what we would pick for each." },
+                { to: "/cabinet-wood-types-and-costs", k: "Pricing", t: "Cabinet wood types and costs", d: "Every species we offer by budget, mid-tier and premium, with NYC prices per linear foot." },
+                { to: "/natural-wood-kitchen-cabinets", k: "Natural finishes", t: "Natural wood kitchen cabinets", d: "Which woods look best under a clear coat or hardwax oil, and the cuts that make them." },
+              ].map((r, i) => (
+                <li key={r.to} className="bg-ink-2" data-reveal="up" style={{ "--d": `${i * 80}ms` } as React.CSSProperties}>
+                  <Link to={r.to} className="group flex h-full flex-col p-8 transition-colors duration-300 hover:bg-ink-3">
+                    <p className="lux-eyebrow mb-6">{r.k}</p>
+                    <h3 className="font-lux text-[2rem] leading-tight text-ivory">{r.t}</h3>
+                    <p className="lux-body mt-4 flex-1 text-sm text-ivory/65">{r.d}</p>
+                    <span className="lux-link mt-8 self-start font-display text-sm text-ivory">Read</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-12 sm:py-16 md:py-20 bg-[#5C7650] text-white">
-          <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center space-y-5">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-              Still not sure which wood is right for your kitchen?
-            </h2>
-            <p className="text-base sm:text-lg text-primary-foreground">
-              Bring your inspiration photos and we will bring actual wood samples to your home by
-              appointment. Most clients find their wood within 15 minutes of touching them.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <Button asChild size="lg" className="bg-white text-accent-foreground hover:bg-white/90 hover:scale-105 transition-all">
-                <Link to="/#contact">Book a free consultation</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="bg-[#5C7650] border-white text-white hover:bg-white hover:text-accent-foreground hover:scale-105 transition-all">
-                <Link to="/designer">Launch the designer</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+        <ContactCta />
       </main>
 
       <Footer />

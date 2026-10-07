@@ -121,7 +121,7 @@ const KitchenCabinetsStatenIsland = () => (
 
     <Header />
 
-    <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+    <div className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -138,14 +138,14 @@ const KitchenCabinetsStatenIsland = () => (
             Delivering & installing across Staten Island
           </span>
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
           Kitchen Cabinets in Staten Island — Insider Buyer's Guide
         </h1>
-        <p className="text-xl text-[#555555] mb-6">
+        <p className="text-xl text-ivory/70 mb-6">
           Real pricing. Borough-specific logistics. What Staten Island
           homeowners actually get for their cabinet budget in 2026.
         </p>
-        <p className="text-lg text-[#555555]">
+        <p className="text-lg text-ivory/70">
           North Shore colonials, Mid-Island splits, South Shore
           semi-attached rows — every Staten Island kitchen has a layout
           that stock cabinets can't quite hit. Here's what a Brooklyn-based
@@ -157,9 +157,9 @@ const KitchenCabinetsStatenIsland = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-5xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Staten Island cabinet pricing in 2026
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -170,13 +170,13 @@ const KitchenCabinetsStatenIsland = () => (
           ].map((t) => (
             <div key={t.tier} className="bg-background rounded-xl p-6 shadow-sm">
               <DollarSign className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-display text-xl font-bold text-[#1a1a1a] mb-2">{t.tier}</h3>
+              <h3 className="font-display text-xl font-bold text-ivory mb-2">{t.tier}</h3>
               <p className="text-2xl font-bold text-primary mb-3">{t.range}</p>
-              <p className="text-sm text-[#555555]">{t.note}</p>
+              <p className="text-sm text-ivory/70">{t.note}</p>
             </div>
           ))}
         </div>
-        <p className="text-sm text-[#555555] text-center mt-6 max-w-2xl mx-auto">
+        <p className="text-sm text-ivory/70 text-center mt-6 max-w-2xl mx-auto">
           Cabinetry only. Countertops, appliances, tile, plumbing, and labor
           are separate. Delivery to Staten Island adds bridge tolls to the line
           item.
@@ -189,11 +189,11 @@ const KitchenCabinetsStatenIsland = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Truck className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Delivery logistics to Staten Island
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "South Shore installs (Tottenville, Great Kills, Eltingville, Annadale) route over the Verrazzano-Narrows — early-morning trucks avoid weekday BQE traffic.",
               "North Shore (St. George, Stapleton, Port Richmond, West Brighton) can route via the Goethals or Bayonne Bridge from NJ if delivery windows are tight.",
@@ -212,11 +212,11 @@ const KitchenCabinetsStatenIsland = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Clock className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Realistic timeline (4–6 weeks)
             </h2>
           </div>
-          <ul className="space-y-3 text-[#555555]">
+          <ul className="space-y-3 text-ivory/70">
             {[
               ["Week 0", "Design consult, measure, finish selection, deposit."],
               ["Weeks 1–4", "Cabinets in production at our suppliers — mill, sand, spray, cure."],
@@ -234,11 +234,11 @@ const KitchenCabinetsStatenIsland = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Hammer className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               What makes a Staten Island kitchen different
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "More linear footage than Manhattan or Brooklyn — full pantry walls, double islands, breakfast nooks all fit.",
               "Older North Shore Victorians (St. George, New Brighton) have out-of-square walls that stock cabinets can't scribe cleanly.",
@@ -257,12 +257,12 @@ const KitchenCabinetsStatenIsland = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-4xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-6 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-6 text-center">
           Staten Island neighborhoods we install in
         </h2>
-        <p className="text-center text-[#555555] mb-8 max-w-2xl mx-auto">
+        <p className="text-center text-ivory/70 mb-8 max-w-2xl mx-auto">
           Every Staten Island install routes from our vetted suppliers — same
           cabinets, same install crew, same finish samples you'd see in
           Brooklyn or Manhattan.
@@ -276,7 +276,7 @@ const KitchenCabinetsStatenIsland = () => (
           ].map((label) => (
             <span
               key={label}
-              className="px-4 py-2 rounded-full bg-background text-[#1a1a1a] font-semibold text-sm shadow-sm"
+              className="px-4 py-2 rounded-full bg-background text-ivory font-semibold text-sm shadow-sm"
             >
               {label}
             </span>
@@ -295,16 +295,16 @@ const KitchenCabinetsStatenIsland = () => (
 
     <section className="py-16 sm:py-20 bg-background">
       <div className="container mx-auto px-6 max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Staten Island kitchen cabinet FAQs
         </h2>
         <div className="space-y-6">
           {FAQS.map((f) => (
-            <div key={f.q} className="bg-[#d5d5d5] rounded-xl p-6">
-              <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+            <div key={f.q} className="bg-ink-2 rounded-xl p-6">
+              <h3 className="font-display text-lg font-bold text-ivory mb-2">
                 {f.q}
               </h3>
-              <p className="text-[#555555]">{f.a}</p>
+              <p className="text-ivory/70">{f.a}</p>
             </div>
           ))}
         </div>

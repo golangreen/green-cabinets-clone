@@ -265,7 +265,7 @@ export const VanityQuoteDialog = ({
               type="submit"
               disabled={isRequestingQuote || !validation.success}
               aria-busy={isRequestingQuote}
-              className="flex-1 bg-[#5C7650] hover:bg-[#5C7650]/80"
+              className="flex-1 bg-brass hover:bg-[#D4B272]"
             >
               {isRequestingQuote ? (
                 <>

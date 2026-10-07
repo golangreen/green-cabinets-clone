@@ -156,7 +156,7 @@ export default function Designer() {
   };
 
   return (
-    <div className="flex flex-col h-dvh bg-[#1a1a1a] text-white">
+    <div className="flex flex-col h-dvh bg-ink text-ivory">
       <Helmet>
         <title>Room Designer | Green Cabinets - Plan Your Kitchen Layout</title>
         <meta name="description" content="Design your dream kitchen layout with our interactive room designer. Draw walls, add doors and windows, and visualize your custom cabinet project." />
@@ -169,13 +169,13 @@ export default function Designer() {
       </Helmet>
       <BreadcrumbSchema items={[{ name: "Home", url: "/" }, { name: "Room Designer", url: "/designer" }]} />
       {/* Top Navigation Bar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#0d0d0d] border-b border-gray-800">
+      <div className="flex items-center justify-between px-4 py-3 bg-ink border-b border-white/10">
         <div className="flex items-center gap-6 flex-1">
           <Link to="/" className="flex-shrink-0">
             <img src={logoImage} alt="Green Cabinets" className="h-10 cursor-pointer transition-all duration-300 hover:scale-110 hover:opacity-80" />
           </Link>
 
-          <h1 className="hidden lg:block text-sm font-semibold tracking-wide text-white/90">
+          <h1 className="hidden lg:block text-sm font-semibold tracking-wide text-ivory/90">
             Kitchen Room Designer
           </h1>
 
@@ -185,31 +185,31 @@ export default function Designer() {
             <TabsList className="bg-transparent border-none h-auto p-0 gap-4">
               <TabsTrigger 
                 value="room" 
-                className="bg-primary text-primary-foreground data-[state=active]:bg-primary rounded-lg px-6 py-2 font-medium"
+                className="bg-transparent text-ivory/70 data-[state=active]:bg-brass data-[state=active]:text-ink rounded-full px-5 py-2 font-medium"
               >
                 ROOM
               </TabsTrigger>
               <TabsTrigger 
                 value="items" 
-                className="bg-transparent text-white data-[state=active]:bg-primary rounded-lg px-6 py-2 font-medium"
+                className="bg-transparent text-ivory/70 data-[state=active]:bg-brass data-[state=active]:text-ink rounded-full px-5 py-2 font-medium"
               >
                 ITEMS
               </TabsTrigger>
               <TabsTrigger 
                 value="design" 
-                className="bg-transparent text-white data-[state=active]:bg-primary rounded-lg px-6 py-2 font-medium"
+                className="bg-transparent text-ivory/70 data-[state=active]:bg-brass data-[state=active]:text-ink rounded-full px-5 py-2 font-medium"
               >
                 DESIGN
               </TabsTrigger>
               <TabsTrigger 
                 value="templates" 
-                className="bg-transparent text-white data-[state=active]:bg-primary rounded-lg px-6 py-2 font-medium"
+                className="bg-transparent text-ivory/70 data-[state=active]:bg-brass data-[state=active]:text-ink rounded-full px-5 py-2 font-medium"
               >
                 TEMPLATES
               </TabsTrigger>
               <TabsTrigger 
                 value="view" 
-                className="bg-transparent text-white data-[state=active]:bg-primary rounded-lg px-6 py-2 font-medium"
+                className="bg-transparent text-ivory/70 data-[state=active]:bg-brass data-[state=active]:text-ink rounded-full px-5 py-2 font-medium"
               >
                 VIEW
               </TabsTrigger>
@@ -218,11 +218,11 @@ export default function Designer() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" className="text-white hover:bg-gray-800 gap-2" onClick={handleSave}>
+          <Button variant="ghost" className="gap-2" onClick={handleSave}>
             <Save className="h-4 w-4" />
             Save
           </Button>
-          <Button variant="ghost" className="text-white hover:bg-gray-800 gap-2" onClick={handleExport}>
+          <Button variant="ghost" className="gap-2" onClick={handleExport}>
             <Download className="h-4 w-4" />
             Export
           </Button>
@@ -231,13 +231,13 @@ export default function Designer() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar - Tool Panel */}
-        <div className="w-72 bg-[#0d0d0d] border-r border-gray-800 flex flex-col">
+        <div className="w-72 bg-ink-2 border-r border-white/10 flex flex-col">
           {/* Tool Buttons Row */}
-          <div className="p-4 border-b border-gray-800">
+          <div className="p-4 border-b border-white/10">
             <div className="grid grid-cols-4 gap-2 mb-4">
               <Button
                 variant={selectedTool === "select" ? "default" : "ghost"}
-                className="flex-col h-20 bg-primary hover:bg-primary/90 text-white"
+                className="flex-col h-20 rounded-xl border border-white/10 px-1 text-[11px] leading-tight whitespace-normal"
                 onClick={() => setSelectedTool("select")}
               >
                 <Plus className="h-5 w-5 mb-1" />
@@ -245,7 +245,7 @@ export default function Designer() {
               </Button>
               <Button
                 variant={selectedTool === "draw" ? "default" : "ghost"}
-                className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                className="flex-col h-20 rounded-xl border border-white/10 px-1 text-[11px] leading-tight whitespace-normal"
                 onClick={() => setSelectedTool("draw")}
               >
                 <Minus className="h-5 w-5 mb-1" />
@@ -253,7 +253,7 @@ export default function Designer() {
               </Button>
               <Button
                 variant={selectedTool === "door" ? "default" : "ghost"}
-                className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                className="flex-col h-20 rounded-xl border border-white/10 px-1 text-[11px] leading-tight whitespace-normal"
                 onClick={() => setSelectedTool("door")}
               >
                 <DoorOpen className="h-5 w-5 mb-1" />
@@ -261,7 +261,7 @@ export default function Designer() {
               </Button>
               <Button
                 variant={selectedTool === "window" ? "default" : "ghost"}
-                className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                className="flex-col h-20 rounded-xl border border-white/10 px-1 text-[11px] leading-tight whitespace-normal"
                 onClick={() => setSelectedTool("window")}
               >
                 <SquareDashedBottom className="h-5 w-5 mb-1" />
@@ -272,7 +272,7 @@ export default function Designer() {
             <div className="grid grid-cols-4 gap-2">
               <Button
                 variant={selectedTool === "deleteWall" ? "default" : "ghost"}
-                className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                className="flex-col h-20 rounded-xl border border-white/10 px-1 text-[11px] leading-tight whitespace-normal"
                 onClick={() => setSelectedTool("deleteWall")}
               >
                 <Trash2 className="h-5 w-5 mb-1" />
@@ -280,7 +280,7 @@ export default function Designer() {
               </Button>
               <Button
                 variant="ghost"
-                className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                className="flex-col h-20 rounded-xl border border-white/10 px-1 text-[11px] leading-tight whitespace-normal"
                 onClick={() => setSelectedTool("deleteOpening")}
               >
                 <Trash2 className="h-5 w-5 mb-1" />
@@ -288,7 +288,7 @@ export default function Designer() {
               </Button>
               <Button
                 variant="ghost"
-                className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                className="flex-col h-20 rounded-xl border border-white/10 px-1 text-[11px] leading-tight whitespace-normal"
                 onClick={handleClearRoom}
               >
                 <Square className="h-5 w-5 mb-1" />
@@ -296,7 +296,7 @@ export default function Designer() {
               </Button>
               <Button
                 variant="ghost"
-                className="flex-col h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                className="flex-col h-20 rounded-xl border border-white/10 px-1 text-[11px] leading-tight whitespace-normal"
                 onClick={handleUndo}
               >
                 <RotateCcw className="h-5 w-5 mb-1" />
@@ -307,7 +307,7 @@ export default function Designer() {
             <div className="mt-2">
               <Button
                 variant="ghost"
-                className="w-full h-20 bg-[#1a1a1a] hover:bg-gray-800 text-white"
+                className="w-full h-12 rounded-xl border border-white/10"
                 onClick={handleRedo}
               >
                 <RotateCw className="h-5 w-5 mr-2" />
@@ -324,7 +324,7 @@ export default function Designer() {
             </div>
 
             <Tabs defaultValue="presets" className="w-full">
-              <TabsList className="w-full bg-transparent border-b border-gray-800 rounded-none h-auto p-0 mb-4">
+              <TabsList className="w-full bg-transparent border-b border-white/10 rounded-none h-auto p-0 mb-4">
                 <TabsTrigger 
                   value="presets" 
                   className="flex-1 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent"
@@ -344,14 +344,14 @@ export default function Designer() {
                   <h4 className="text-xs font-semibold mb-3">Quick Layouts</h4>
                   <div className="grid grid-cols-2 gap-3">
                     <Card 
-                      className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
+                      className="bg-ink-3 border-white/10 text-ivory hover:border-brass cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
                       onClick={() => handlePresetRoom('straight')}
                     >
                       <Square className="h-8 w-8" />
                       <span className="text-xs">Straight</span>
                     </Card>
                     <Card 
-                      className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
+                      className="bg-ink-3 border-white/10 text-ivory hover:border-brass cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
                       onClick={() => handlePresetRoom('l-shaped')}
                     >
                       <div className="rotate-90">
@@ -360,14 +360,14 @@ export default function Designer() {
                       <span className="text-xs">L-Shaped</span>
                     </Card>
                     <Card 
-                      className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
+                      className="bg-ink-3 border-white/10 text-ivory hover:border-brass cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
                       onClick={() => handlePresetRoom('u-shaped')}
                     >
                       <Square className="h-8 w-8" />
                       <span className="text-xs">U-Shaped</span>
                     </Card>
                     <Card 
-                      className="bg-[#1a1a1a] border-gray-800 hover:border-primary cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
+                      className="bg-ink-3 border-white/10 text-ivory hover:border-brass cursor-pointer transition-colors p-4 flex flex-col items-center justify-center gap-2"
                       onClick={() => handlePresetRoom('closed')}
                     >
                       <Square className="h-8 w-8" />
@@ -376,7 +376,7 @@ export default function Designer() {
                   </div>
                 </div>
 
-                <div className="mt-6 text-xs text-primary-foreground/90 space-y-2">
+                <div className="mt-6 text-xs text-ivory/80 space-y-2">
                   <p className="font-semibold">Tips:</p>
                   <ul className="space-y-1 pl-4">
                     <li>• Click twice to draw a wall</li>
@@ -387,7 +387,7 @@ export default function Designer() {
               </TabsContent>
 
               <TabsContent value="properties">
-                <div className="text-sm text-primary-foreground/90">
+                <div className="text-sm text-ivory/80">
                   <p>Select a room element to view properties</p>
                 </div>
               </TabsContent>

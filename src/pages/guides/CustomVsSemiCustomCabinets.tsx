@@ -115,7 +115,7 @@ const CustomVsSemiCustomCabinets = () => (
 
     <Header />
 
-    <div className="pt-[96px] sm:pt-[128px] md:pt-[160px]">
+    <div className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -132,14 +132,14 @@ const CustomVsSemiCustomCabinets = () => (
             NYC buyer's guide — 2026
           </span>
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-ivory mb-6">
           Custom vs Semi-Custom Cabinets
         </h1>
-        <p className="text-xl text-[#555555] mb-6">
+        <p className="text-xl text-ivory/70 mb-6">
           What the price difference actually buys you in a pre-war
           Manhattan apartment, a Brooklyn brownstone, or a Queens co-op.
         </p>
-        <p className="text-lg text-[#555555]">
+        <p className="text-lg text-ivory/70">
           Semi-custom looks good in a catalog photo. Custom looks good in your
           kitchen. Here's the honest breakdown a Brooklyn-based millwork company
           gives clients before they sign anything.
@@ -150,9 +150,9 @@ const CustomVsSemiCustomCabinets = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-5xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Side-by-side comparison
         </h2>
         <div className="bg-background rounded-xl overflow-hidden shadow-sm">
@@ -165,15 +165,15 @@ const CustomVsSemiCustomCabinets = () => (
             <div
               key={row.label}
               className={`grid grid-cols-3 text-sm sm:text-base ${
-                i % 2 ? "bg-[#f5f5f5]" : "bg-background"
+                i % 2 ? "bg-ink-2" : "bg-background"
               }`}
             >
-              <div className="p-4 font-semibold text-[#1a1a1a]">{row.label}</div>
-              <div className="p-4 border-l border-[#e5e5e5] text-[#1a1a1a]">
+              <div className="p-4 font-semibold text-ivory">{row.label}</div>
+              <div className="p-4 border-l border-white/10 text-ivory">
                 <Check className="inline w-4 h-4 text-primary mr-2" />
                 {row.custom}
               </div>
-              <div className="p-4 border-l border-[#e5e5e5] text-[#555555]">
+              <div className="p-4 border-l border-white/10 text-ivory/70">
                 {row.semi}
               </div>
             </div>
@@ -187,18 +187,18 @@ const CustomVsSemiCustomCabinets = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Ruler className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Fit in pre-war and out-of-square walls
             </h2>
           </div>
-          <p className="text-[#555555] mb-4">
+          <p className="text-ivory/70 mb-4">
             Every pre-war apartment in NYC has walls that bow, floors that
             slope, and ceilings that dip. Semi-custom lines close the gap
             with filler strips — usually 1.5" to 3" of blank painted wood
             between the last cabinet and the wall. It reads as builder-grade
             because it is.
           </p>
-          <p className="text-[#555555]">
+          <p className="text-ivory/70">
             Custom cabinets are built oversize on the scribe edge and cut on
             site so the case sits flush against a bowed wall. No filler, no
             visible seam. In a $2M UWS classic-six, that detail is what your
@@ -209,11 +209,11 @@ const CustomVsSemiCustomCabinets = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <DollarSign className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               Long-term ROI
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Custom lasts 25+ years — most semi-custom shows door sag, hinge failure, and delaminated MDF in 8–12.",
               "NAR's 2024 report puts kitchen ROI at 60–80% of cost; NYC custom lands at the top of that range.",
@@ -231,11 +231,11 @@ const CustomVsSemiCustomCabinets = () => (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Clock className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#1a1a1a]">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ivory">
               When semi-custom is the right call
             </h2>
           </div>
-          <ul className="space-y-2 text-[#555555]">
+          <ul className="space-y-2 text-ivory/70">
             {[
               "Rental units and flips — the extra durability doesn't pay back within your hold period.",
               "New-construction kitchens with perfectly square walls where fillers don't show.",
@@ -243,7 +243,7 @@ const CustomVsSemiCustomCabinets = () => (
               "Tight budgets where the delta isn't recoverable — a well-installed semi-custom kitchen beats a rushed custom one.",
             ].map((item) => (
               <li key={item} className="flex gap-3">
-                <X className="w-5 h-5 text-[#555555] flex-shrink-0 mt-0.5" />
+                <X className="w-5 h-5 text-ivory/70 flex-shrink-0 mt-0.5" />
                 <span>{item}</span>
               </li>
             ))}
@@ -252,12 +252,12 @@ const CustomVsSemiCustomCabinets = () => (
       </div>
     </section>
 
-    <section className="py-16 bg-[#d5d5d5]">
+    <section className="py-16 bg-ink-2">
       <div className="container mx-auto px-6 max-w-3xl text-center">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-4">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-4">
           Get a real custom quote before you decide
         </h2>
-        <p className="text-[#555555] mb-8">
+        <p className="text-ivory/70 mb-8">
           Design your kitchen with our online configurator — real finishes,
           real hardware, real pricing — before you commit to either lane.
         </p>
@@ -272,16 +272,16 @@ const CustomVsSemiCustomCabinets = () => (
 
     <section className="py-16 sm:py-20 bg-background">
       <div className="container mx-auto px-6 max-w-3xl">
-        <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-10 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl font-bold text-ivory mb-10 text-center">
           Custom vs semi-custom FAQs
         </h2>
         <div className="space-y-6">
           {FAQS.map((f) => (
-            <div key={f.q} className="bg-[#d5d5d5] rounded-xl p-6">
-              <h3 className="font-display text-lg font-bold text-[#1a1a1a] mb-2">
+            <div key={f.q} className="bg-ink-2 rounded-xl p-6">
+              <h3 className="font-display text-lg font-bold text-ivory mb-2">
                 {f.q}
               </h3>
-              <p className="text-[#555555]">{f.a}</p>
+              <p className="text-ivory/70">{f.a}</p>
             </div>
           ))}
         </div>

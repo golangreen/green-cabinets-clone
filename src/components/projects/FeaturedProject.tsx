@@ -37,12 +37,12 @@ export const FeaturedProject = ({ project, slim = false }: Props) => {
             {project.neighborhood}, {project.borough}
             {project.year && <span className="text-muted-foreground">· {project.year}</span>}
           </p>
-          <h3 className="text-base sm:text-lg font-bold text-[#1a1a1a] mt-1">
+          <h3 className="text-base sm:text-lg font-bold text-ivory mt-1">
             {project.title}
           </h3>
         </div>
 
-        <p className="text-sm text-[#444] leading-relaxed">{project.summary}</p>
+        <p className="text-sm text-ivory/70 leading-relaxed">{project.summary}</p>
 
         {materials.length > 0 && (
           <div>
@@ -69,7 +69,7 @@ export const FeaturedProject = ({ project, slim = false }: Props) => {
                     )}
                   </span>
                   <span className="text-xs">
-                    <span className="font-semibold text-[#1a1a1a]">{m.brand}</span>{" "}
+                    <span className="font-semibold text-ivory">{m.brand}</span>{" "}
                     <span className="text-muted-foreground">{m.codes[0]}</span>
                   </span>
                 </div>

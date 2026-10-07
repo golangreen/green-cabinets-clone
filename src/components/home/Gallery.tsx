@@ -106,7 +106,7 @@ const Gallery = () => {
                 >
                   <Link
                     to={seeAllHref}
-                    className="group block rounded-lg overflow-hidden border border-border bg-card hover:border-[#5C7650] hover:shadow-lg transition-all"
+                    className="group block rounded-lg overflow-hidden border border-border bg-card hover:border-brass hover:shadow-lg transition-all"
                   >
                     <div className="aspect-square overflow-hidden bg-muted">
                       <img
@@ -128,7 +128,7 @@ const Gallery = () => {
           <Button
             asChild
             variant="outline"
-            className="border-[#5C7650] text-accent-foreground hover:bg-[#5C7650] hover:text-white"
+            className="border-brass text-accent-foreground hover:bg-brass hover:text-ink"
           >
             <Link to={seeAllHref}>
               See all {activeLabel} projects

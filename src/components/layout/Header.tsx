@@ -8,7 +8,7 @@ import logoWhite from "@/assets/logos/logo-white.svg";
 
 const NAV = [
   { label: "Work", to: "/gallery" },
-  { label: "Services", to: "/#services" },
+  { label: "Services", to: "/services" },
   { label: "Process", to: "/#process" },
   { label: "Pricing", to: "/#pricing" },
   { label: "Materials", to: "/wood-species" },
@@ -29,6 +29,7 @@ const MENU_GROUPS = [
   {
     title: "Plan your project",
     links: [
+      { label: "Services", to: "/services" },
       { label: "Scan your room", to: "/scan" },
       { label: "How it works", to: "/#process" },
       { label: "Pricing", to: "/#pricing" },

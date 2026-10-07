@@ -101,7 +101,7 @@ const SmallBathroomVanityIdeas = () => (
 
     <Header />
 
-    <main className="pt-32 sm:pt-36 md:pt-40">
+    <main className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },
@@ -110,15 +110,15 @@ const SmallBathroomVanityIdeas = () => (
         ]}
       />
 
-      <section className="bg-[#d5d5d5] py-16 sm:py-20 md:py-28">
+      <section className="bg-ink-2 py-16 sm:py-20 md:py-28">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center">
           <p className="text-xs sm:text-sm uppercase tracking-widest text-accent-foreground font-semibold mb-3">
             Updated 2026 · 18"–36" layouts
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-4 leading-tight">
             Small Bathroom Vanity Ideas That Actually Work
           </h1>
-          <p className="text-base sm:text-lg text-[#444] mb-6">
+          <p className="text-base sm:text-lg text-ivory/70 mb-6">
             We build vanities for Brooklyn brownstones, Manhattan studios, and Queens pre-wars
             every week. Here are the small-bathroom layouts that earn their square footage,
             broken down by exact width.
@@ -139,7 +139,7 @@ const SmallBathroomVanityIdeas = () => (
 
           <div className="space-y-5 mb-16">
             {IDEAS.map((i) => (
-              <article key={i.width} className="border border-border rounded-lg p-6 hover:border-[#5C7650] transition-colors">
+              <article key={i.width} className="border border-border rounded-lg p-6 hover:border-brass transition-colors">
                 <div className="flex items-baseline gap-3 mb-2">
                   <span className="font-mono font-bold text-accent-foreground text-xl">{i.width}</span>
                   <h3 className="text-lg sm:text-xl font-bold text-foreground">{i.title}</h3>
@@ -155,7 +155,7 @@ const SmallBathroomVanityIdeas = () => (
           </h2>
           <div className="space-y-4 mb-16">
             {TRICKS.map((t) => (
-              <div key={t.title} className="border-l-2 border-[#5C7650] pl-4 py-1">
+              <div key={t.title} className="border-l-2 border-brass pl-4 py-1">
                 <h3 className="font-bold text-foreground mb-1">{t.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{t.body}</p>
               </div>
@@ -174,7 +174,7 @@ const SmallBathroomVanityIdeas = () => (
             <p className="text-sm text-muted-foreground mb-3">
               Configure a small vanity in your exact width and get a price right now.
             </p>
-            <Button asChild size="lg" className="bg-[#5C7650] hover:bg-[#445339] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
               <Link to="/designer">Open the vanity designer <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

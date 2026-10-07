@@ -130,7 +130,7 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
                 <button
                   type="button"
                   onClick={() => remove(p.id)}
-                  className="absolute top-2 right-2 z-10 h-7 w-7 rounded-full bg-white/90 text-[#1a1a1a] shadow flex items-center justify-center hover:bg-destructive hover:text-white transition-colors"
+                  className="absolute top-2 right-2 z-10 h-7 w-7 rounded-full bg-white/90 text-ink shadow flex items-center justify-center hover:bg-destructive hover:text-white transition-colors"
                   aria-label={`Remove ${p.name} from comparison`}
                 >
                   <X className="h-3.5 w-3.5" />
@@ -161,7 +161,7 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
                     <p className="text-[10px] uppercase tracking-wider text-accent-foreground font-semibold">
                       {p.brand}
                     </p>
-                    <h3 className="text-sm font-bold text-[#1a1a1a] leading-tight line-clamp-2">
+                    <h3 className="text-sm font-bold text-ivory leading-tight line-clamp-2">
                       {p.name}
                     </h3>
                   </div>
@@ -171,7 +171,7 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
                       <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">
                         Code
                       </dt>
-                      <dd className="font-mono text-[11px] text-[#1a1a1a] break-all">
+                      <dd className="font-mono text-[11px] text-ivory break-all">
                         {p.codes.join(", ")}
                       </dd>
                     </div>
@@ -213,10 +213,10 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
         )}
 
         {panels.length >= 1 && (
-          <div className="mt-6 rounded-lg border border-[#5C7650]/30 bg-[#5C7650]/5 p-4 space-y-3">
+          <div className="mt-6 rounded-lg border border-white/20 bg-brass/5 p-4 space-y-3">
             <div className="flex items-start justify-between gap-3 flex-wrap">
               <div>
-                <h3 className="text-sm font-bold text-[#1a1a1a]">Comparison summary</h3>
+                <h3 className="text-sm font-bold text-ivory">Comparison summary</h3>
                 <p className="text-xs text-muted-foreground">
                   One-page recap of your {panels.length} pick{panels.length === 1 ? "" : "s"} — copy as text or download as PDF to share.
                 </p>
@@ -227,7 +227,7 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
                   size="sm"
                   variant="outline"
                   onClick={handleCopy}
-                  className="border-[#5C7650] text-accent-foreground hover:bg-[#5C7650] hover:text-white"
+                  className="border-brass text-accent-foreground hover:bg-brass hover:text-ink"
                 >
                   {copied ? (
                     <>
@@ -244,14 +244,14 @@ export const CompareDialog = ({ open, onOpenChange }: Props) => {
                   size="sm"
                   onClick={handleDownload}
                   disabled={downloading}
-                  className="bg-[#5C7650] hover:bg-[#445339] text-white"
+                  className="bg-brass hover:bg-[#D4B272] text-ink"
                 >
                   <Download className="h-4 w-4 mr-1.5" />
                   {downloading ? "Generating..." : "Download PDF"}
                 </Button>
               </div>
             </div>
-            <pre className="text-[11px] font-mono text-[#333] bg-white border border-border rounded p-3 max-h-44 overflow-auto whitespace-pre-wrap">
+            <pre className="text-[11px] font-mono text-ivory/80 bg-ink-2 border border-border rounded p-3 max-h-44 overflow-auto whitespace-pre-wrap">
               {summaryText}
             </pre>
           </div>

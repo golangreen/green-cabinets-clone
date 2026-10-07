@@ -18,8 +18,8 @@ const COLUMNS = [
   {
     title: "Plan",
     links: [
-      { label: "Services", to: "/#services" },
-      { label: "How it works", to: "/#process" },
+      { label: "Services", to: "/services" },
+      { label: "How it works", to: "/services#steps-title" },
       { label: "Pricing", to: "/#pricing" },
       { label: "Cost estimator", to: "/estimator" },
       { label: "Design a vanity", to: "/designer" },

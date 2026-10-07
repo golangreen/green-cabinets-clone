@@ -139,7 +139,7 @@ const ScrollEnhancements = () => {
             title={s.label}
             className={`group relative block rounded-full transition-all duration-300 touch-manipulation ${
               isActive
-                ? "h-2.5 w-2.5 bg-[#5C7650] shadow-[0_0_10px_rgba(92,118,80,0.8)]"
+                ? "h-2.5 w-2.5 bg-brass shadow-[0_0_10px_rgba(198,161,91,0.7)]"
                 : "h-2 w-2 bg-foreground/30 hover:bg-foreground/60"
             }`}
           >

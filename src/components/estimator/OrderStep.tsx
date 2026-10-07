@@ -8,6 +8,7 @@ import FinishPicker from './FinishPicker';
 import { getFinishById, getDoorStyleById } from '@/lib/estimator/finishes-data';
 import { checkCompatibility, isFinishAllowedForDoor } from '@/lib/estimator/compatibility';
 import { logValidationFailure } from '@/services/validationFailuresService';
+import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
 
 interface OrderForm {
   name: string;
@@ -172,13 +173,7 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
 
         <div className="text-center space-y-2">
           <p className="text-sm text-muted-foreground">Questions in the meantime?</p>
-          <a
-            href="tel:+17188045488"
-            className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:underline"
-          >
-            <Phone size={14} />
-            (718) 804-5488
-          </a>
+          <ObfuscatedPhone encoded="NzE4ODA0NTQ4OA==" type="tel" className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:underline" />
         </div>
       </div>
     );

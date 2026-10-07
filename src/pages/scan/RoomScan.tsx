@@ -62,7 +62,6 @@ const RoomScan = () => {
 
   useLayoutEffect(() => {
     document.documentElement.classList.add("theme-lux");
-    return () => document.documentElement.classList.remove("theme-lux");
   }, []);
 
   useEffect(() => {

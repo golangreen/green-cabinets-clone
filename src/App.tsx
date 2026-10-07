@@ -18,6 +18,7 @@ const Index = lazy(() => import("./pages/marketing/Index"));
 const Landing = lazy(() => import("./pages/marketing/Landing"));
 const About = lazy(() => import("./pages/marketing/About"));
 const Privacy = lazy(() => import("./pages/marketing/Privacy"));
+const Services = lazy(() => import("./pages/marketing/Services"));
 const GalleryPage = lazy(() => import("./pages/marketing/Gallery"));
 const CaseStudies = lazy(() => import("./pages/marketing/CaseStudies"));
 const CaseStudyDetail = lazy(() => import("./pages/marketing/CaseStudyDetail"));
@@ -155,6 +156,7 @@ const App = () => {
             <Route path="/luxury-kitchen-design-nyc" element={<LuxuryKitchenDesignNyc />} />
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/services" element={<Services />} />
             <Route path="/case-studies" element={<CaseStudies />} />
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/blog" element={<Blog />} />

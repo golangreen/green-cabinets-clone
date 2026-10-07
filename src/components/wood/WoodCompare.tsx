@@ -105,14 +105,14 @@ const WoodCompare = () => {
                     style={{ backgroundColor: w.swatch }}
                     aria-hidden="true"
                   />
-                  <h3 className="font-semibold text-[#1a1a1a]">{w.name}</h3>
+                  <h3 className="font-semibold text-ivory">{w.name}</h3>
                 </div>
-                <p className="text-xs text-[#555555] italic">{w.tagline}</p>
+                <p className="text-xs text-ivory/70 italic">{w.tagline}</p>
 
                 <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
                   <div>
                     <dt className="text-muted-foreground">Hardness</dt>
-                    <dd className="font-medium text-[#1a1a1a]">{w.jankaHardness.toLocaleString()} lbf</dd>
+                    <dd className="font-medium text-ivory">{w.jankaHardness.toLocaleString()} lbf</dd>
                   </div>
                   <div>
                     <dt className="text-muted-foreground">Cost</dt>
@@ -120,26 +120,26 @@ const WoodCompare = () => {
                   </div>
                   <div>
                     <dt className="text-muted-foreground">Workability</dt>
-                    <dd className="text-[#1a1a1a]">{w.workability}</dd>
+                    <dd className="text-ivory">{w.workability}</dd>
                   </div>
                   <div>
                     <dt className="text-muted-foreground">Stain take</dt>
-                    <dd className="text-[#1a1a1a]">{w.stainTake}</dd>
+                    <dd className="text-ivory">{w.stainTake}</dd>
                   </div>
                   <div className="col-span-2">
                     <dt className="text-muted-foreground">Color</dt>
-                    <dd className="text-[#1a1a1a]">{w.color}</dd>
+                    <dd className="text-ivory">{w.color}</dd>
                   </div>
                   <div className="col-span-2">
                     <dt className="text-muted-foreground">Grain</dt>
-                    <dd className="text-[#1a1a1a]">{w.grain}</dd>
+                    <dd className="text-ivory">{w.grain}</dd>
                   </div>
                 </dl>
 
                 <div className="pt-2 border-t border-border space-y-2">
                   <div>
                     <p className="text-xs font-semibold text-accent-foreground mb-1">Pros</p>
-                    <ul className="text-xs text-[#555555] list-disc list-inside space-y-0.5">
+                    <ul className="text-xs text-ivory/70 list-disc list-inside space-y-0.5">
                       {w.pros.slice(0, 3).map((p) => (
                         <li key={p}>{p}</li>
                       ))}
@@ -147,7 +147,7 @@ const WoodCompare = () => {
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-destructive mb-1">Cons</p>
-                    <ul className="text-xs text-[#555555] list-disc list-inside space-y-0.5">
+                    <ul className="text-xs text-ivory/70 list-disc list-inside space-y-0.5">
                       {w.cons.slice(0, 2).map((c) => (
                         <li key={c}>{c}</li>
                       ))}
@@ -158,7 +158,7 @@ const WoodCompare = () => {
                 <Button
                   asChild
                   size="sm"
-                  className="w-full bg-[#5C7650] hover:bg-[#445339] text-white"
+                  className="w-full bg-brass hover:bg-[#D4B272] text-ink"
                 >
                   <Link to={`/wood-species/${w.slug}`}>
                     Read full guide <ArrowRight className="w-4 h-4 ml-1" />
