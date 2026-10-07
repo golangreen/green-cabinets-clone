@@ -4,6 +4,8 @@ export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
+  // hover: styles only on devices that can hover, so taps never leave them stuck
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     container: {
       center: true,
@@ -15,8 +17,14 @@ export default {
     extend: {
       fontFamily: {
         'display': ['Outfit', 'sans-serif'],
+        'lux': ['"Cormorant Garamond"', 'Georgia', 'serif'],
       },
       colors: {
+        // Dark luxury palette: warm black, ivory, one brass accent
+        ink: { DEFAULT: "#0E0D0C", 2: "#161412", 3: "#1F1C19" },
+        ivory: "#F2ECE2",
+        stone: "#A39C91",
+        brass: { DEFAULT: "#C6A15B", deep: "#A8843F" },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

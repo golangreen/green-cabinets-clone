@@ -233,3 +233,188 @@ All colors MUST be HSL.
 .dark .prose [style*="border-color:#e"] {
   border-color: hsl(var(--border)) !important;
 }
+
+/* ───────────────────────── Dark luxury theme ─────────────────────────
+   html.theme-lux is set by pages that use the redesigned look (the
+   homepage first). It re-points the shadcn tokens, so dialogs, the quote
+   form and accordions follow, including ones portaled to <body>. */
+html.theme-lux {
+  --background: 30 8% 5%;
+  --foreground: 38 36% 92%;
+  --card: 30 8% 8%;
+  --card-foreground: 38 36% 92%;
+  --popover: 30 8% 8%;
+  --popover-foreground: 38 36% 92%;
+  --primary: 39 47% 57%;
+  --primary-foreground: 30 20% 7%;
+  --secondary: 30 7% 12%;
+  --secondary-foreground: 38 36% 92%;
+  --muted: 30 7% 11%;
+  --muted-foreground: 36 8% 62%;
+  --accent: 30 7% 14%;
+  --accent-foreground: 38 36% 92%;
+  --border: 36 12% 18%;
+  --input: 30 7% 13%;
+  --ring: 39 47% 57%;
+  color-scheme: dark;
+}
+
+:root {
+  /* Motion: strong custom curves (ease-out to enter, ease-in-out to move) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Display type: large serif wants tight leading and negative tracking */
+.lux-display {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.lux-eyebrow {
+  font-family: Outfit, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #C6A15B;
+}
+.lux-body { font-family: Outfit, sans-serif; font-weight: 300; line-height: 1.65; }
+
+/* Buttons: instant press feedback, hover only on real pointers */
+.lux-btn,
+.lux-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0 1.6rem;
+  border-radius: 999px;
+  font-family: Outfit, sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  transition: transform 160ms var(--ease-out), background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.lux-btn { background: #C6A15B; color: #14110D; }
+.lux-btn-ghost { border: 1px solid rgba(242, 236, 226, 0.28); color: #F2ECE2; }
+.lux-btn:active,
+.lux-btn-ghost:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .lux-btn:hover { background: #D4B272; }
+  .lux-btn-ghost:hover { border-color: rgba(242, 236, 226, 0.6); background: rgba(242, 236, 226, 0.06); }
+}
+.lux-btn:focus-visible,
+.lux-btn-ghost:focus-visible,
+.lux-link:focus-visible {
+  outline: 2px solid #C6A15B;
+  outline-offset: 3px;
+}
+
+/* Text link with an underline that draws in from the left */
+.lux-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #F2ECE2;
+  padding-bottom: 2px;
+}
+.lux-link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  transform-origin: left;
+  transition: transform 300ms var(--ease-out), opacity 200ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .lux-link:hover::after { opacity: 1; }
+}
+/* Quiet variant (nav): no rule until hovered or current */
+.lux-link-quiet::after { transform: scaleX(0); opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+  .lux-link-quiet:hover::after { transform: scaleX(1); }
+}
+
+/* ── Hero entrance: plays once per visit (rare, so it can be cinematic) ── */
+@keyframes lux-settle { from { transform: scale(1.08); } to { transform: scale(1); } }
+@keyframes lux-line { from { transform: translateY(105%); } to { transform: translateY(0); } }
+@keyframes lux-fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.lux-hero-img { animation: lux-settle 2200ms var(--ease-out) both; }
+.lux-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.lux-line > span { display: block; animation: lux-line 1100ms var(--ease-out) both; animation-delay: var(--d, 0ms); }
+.lux-fade { animation: lux-fade 900ms var(--ease-out) both; animation-delay: var(--d, 0ms); }
+
+/* ── Scroll reveals (once). Hidden states apply only after JS arms them,
+   so content is never stuck invisible without JavaScript. ── */
+[data-reveal] { transition-delay: var(--d, 0ms); }
+[data-reveal="up"] { transition-property: opacity, transform; transition-duration: 800ms; transition-timing-function: var(--ease-out); }
+html.reveal-armed [data-reveal="up"]:not([data-in]) { opacity: 0; transform: translateY(18px); }
+
+[data-reveal="image"] { overflow: hidden; transition: clip-path 1200ms var(--ease-in-out); transition-delay: var(--d, 0ms); }
+[data-reveal="image"] img { transition: transform 1600ms var(--ease-out); transition-delay: var(--d, 0ms); }
+html.reveal-armed [data-reveal="image"]:not([data-in]) { clip-path: inset(100% 0 0 0); }
+html.reveal-armed [data-reveal="image"]:not([data-in]) img { transform: scale(1.12); }
+
+/* Photo hover: a slow, slight push-in, real pointers only */
+@media (hover: hover) and (pointer: fine) {
+  .lux-zoom img { transition: transform 900ms var(--ease-out); }
+  .lux-zoom:hover img { transform: scale(1.035); }
+}
+
+/* Reduced motion: no movement, only short fades that aid comprehension */
+@media (prefers-reduced-motion: reduce) {
+  .lux-hero-img, .lux-line > span { animation: none; }
+  .lux-fade { animation: lux-fade-only 300ms ease both; }
+  [data-reveal="up"], [data-reveal="image"], [data-reveal="image"] img { transition: opacity 300ms ease; transform: none !important; clip-path: none !important; }
+  html.reveal-armed [data-reveal]:not([data-in]) { opacity: 0; }
+  .lux-zoom img { transition: none; }
+}
+@keyframes lux-fade-only { from { opacity: 0; } to { opacity: 1; } }
+
+/* Translucent chrome over content (Apple-style material) */
+.lux-material {
+  background: rgba(14, 13, 12, 0.72);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  transition: background-color 300ms ease, -webkit-backdrop-filter 300ms ease, backdrop-filter 300ms ease;
+}
+@media (prefers-reduced-transparency: reduce) {
+  .lux-material { background: #0E0D0C; -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+/* Phone action bar: slide in/out; fade only when motion is reduced */
+.lux-bar[aria-hidden="true"] { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .lux-bar { transform: none !important; transition: opacity 200ms ease !important; }
+  .lux-bar[aria-hidden="true"] { opacity: 0; }
+}
+
+/* ── Native feel on phones (mobile-native baseline) ── */
+html {
+  -webkit-tap-highlight-color: transparent; /* no gray flash; every control has :active */
+  -webkit-text-size-adjust: 100%;           /* no font inflation in landscape */
+}
+button, a, [role="button"] {
+  touch-action: manipulation;               /* no double-tap-zoom wait */
+}
+button, [role="button"], .lux-btn, .lux-btn-ghost {
+  -webkit-user-select: none;                /* long-press never selects a control's label */
+  user-select: none;
+}
+@media (pointer: coarse) {
+  input, textarea, select { font-size: 16px; } /* iOS won't zoom into the field */
+}

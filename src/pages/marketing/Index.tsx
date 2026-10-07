@@ -1,36 +1,30 @@
-import { Suspense, useEffect } from "react";
-import { lazyWithReload as lazy } from "@/lib/lazyWithReload";
+import { useLayoutEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/layout/Header";
-import Hero from "@/components/home/Hero";
-import Services from "@/components/home/Services";
-import Features from "@/components/home/Features";
-import About from "@/components/home/About";
-import Suppliers from "@/components/home/Suppliers";
-import Contact from "@/components/home/Contact";
-import AppointmentBand from "@/components/home/AppointmentBand";
 import Footer from "@/components/layout/Footer";
-
+import Hero from "@/components/home/Hero";
 import FAQ from "@/components/home/FAQ";
-import NeighborhoodsServed from "@/components/home/NeighborhoodsServed";
-import LuxuryMillwork from "@/components/home/LuxuryMillwork";
-import LuxuryMillworkGallery from "@/components/home/LuxuryMillworkGallery";
-import QualityCraftsmanship from "@/components/home/QualityCraftsmanship";
-import Testimonials from "@/components/home/Testimonials";
-import WoodSpeciesTeaser from "@/components/home/WoodSpeciesTeaser";
-import FinishesColorsSection from "@/components/home/FinishesColorsSection";
-
-
-// Lazy load heavy components
-const Gallery = lazy(() => import("@/components/home/Gallery"));
+import SelectedWork from "@/components/home/lux/SelectedWork";
+import Audiences from "@/components/home/lux/Audiences";
+import Process from "@/components/home/lux/Process";
+import Pricing from "@/components/home/lux/Pricing";
+import Buildings from "@/components/home/lux/Buildings";
+import Materials from "@/components/home/lux/Materials";
+import Areas from "@/components/home/lux/Areas";
+import ContactCta from "@/components/home/lux/ContactCta";
+import MobileActionBar from "@/components/home/lux/MobileActionBar";
+import { useReveal } from "@/hooks/useReveal";
 
 const Index = () => {
-  useEffect(() => {
-    document.documentElement.classList.add("snap-home");
-    return () => document.documentElement.classList.remove("snap-home");
+  // Dark luxury theme for this page (layout effect: no light flash on load)
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("theme-lux");
+    return () => root.classList.remove("theme-lux");
   }, []);
+  useReveal();
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-ink text-ivory">
       <Helmet>
         {/* Primary Meta Tags */}
         <title>Bespoke European Cabinetry NYC | Green Cabinets NY</title>
@@ -73,30 +67,18 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
-        <Services />
-        <LuxuryMillwork />
-        <FinishesColorsSection />
-        <LuxuryMillworkGallery />
-        <QualityCraftsmanship />
-        <Features />
-        <About />
-        <Suspense fallback={
-          <div className="py-20 flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-        }>
-          <Gallery />
-        </Suspense>
-        <Suppliers />
-        <WoodSpeciesTeaser />
-        <NeighborhoodsServed />
-        <Testimonials />
+        <SelectedWork />
+        <Audiences />
+        <Process />
+        <Pricing />
+        <Buildings />
+        <Materials />
+        <Areas />
         <FAQ />
-        <Contact />
-        <AppointmentBand />
+        <ContactCta />
       </main>
       <Footer />
-      
+      <MobileActionBar />
     </div>
   );
 };

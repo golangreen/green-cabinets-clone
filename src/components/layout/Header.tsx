@@ -1,167 +1,173 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-import logoColor from "@/assets/logos/logo-color.svg";
-import logoBlack from "@/assets/logos/logo-black.svg";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import QuoteForm from "@/components/marketing/QuoteForm";
+import { QUOTE_EVENT, openQuote } from "@/lib/quote";
+import logoWhite from "@/assets/logos/logo-white.svg";
+
+const NAV = [
+  { label: "Work", to: "/gallery" },
+  { label: "Services", to: "/#services" },
+  { label: "Process", to: "/#process" },
+  { label: "Pricing", to: "/#pricing" },
+  { label: "Materials", to: "/wood-species" },
+  { label: "Guides", to: "/blog" },
+];
+
+const MENU_GROUPS = [
+  {
+    title: "Our work",
+    links: [
+      { label: "Kitchens", to: "/gallery?category=kitchens" },
+      { label: "Vanities", to: "/gallery?category=vanities" },
+      { label: "Closets", to: "/gallery?category=closets" },
+      { label: "Design to reality", to: "/gallery?category=design-to-reality" },
+      { label: "Case studies", to: "/case-studies" },
+    ],
+  },
+  {
+    title: "Plan your project",
+    links: [
+      { label: "How it works", to: "/#process" },
+      { label: "Pricing", to: "/#pricing" },
+      { label: "Cost estimator", to: "/estimator" },
+      { label: "Design a vanity", to: "/designer" },
+      { label: "Wood species", to: "/wood-species" },
+      { label: "Finishes & colors", to: "/finishes-colors" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", to: "/about" },
+      { label: "Guides & blog", to: "/blog" },
+      { label: "Contact", to: "/#contact" },
+    ],
+  },
+];
 
 const Header = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const isHome = pathname === "/";
+  const [atTop, setAtTop] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [quoteOpen, setQuoteOpen] = useState(false);
+
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setScrolled(scrollPosition > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setAtTop(window.scrollY < 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  const scrollToGallery = (category: string, event?: React.MouseEvent) => {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    const categoryEvent = new CustomEvent('categoryChange', {
-      detail: {
-        category
-      }
-    });
-    window.dispatchEvent(categoryEvent);
-    window.history.replaceState(null, '', `#gallery?category=${category}`);
-    setTimeout(() => {
-      setIsMobileMenuOpen(false);
-    }, 50);
-    setTimeout(() => {
-      const gallery = document.getElementById('gallery');
-      if (gallery) {
-        const rect = gallery.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const targetPosition = rect.top + scrollTop - 80;
-        window.scrollTo({
-          top: targetPosition,
-          behavior: 'smooth'
-        });
-      }
-    }, 400);
-  };
-  return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-in-out ${scrolled ? 'bg-background border-b border-border' : 'bg-[#0a0a0a] border-b border-gray-800'}`}>
-      <nav className="container mx-auto px-4 md:px-6 py-4 sm:py-6 md:py-8">
-        <div className="flex items-center justify-between relative">
-          {/* Centered Logo */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-all duration-500">
-            <a href="/" onClick={e => {
-            e.preventDefault();
-            navigate('/');
-          }} className="cursor-pointer flex flex-col items-center" aria-label="Green Cabinets NY — go to homepage">
-              <div className="relative h-16 sm:h-20 md:h-24 w-auto">
-                <img 
-                  src={logoColor} 
-                  alt="Green Cabinets NY"
-                  className={`h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-0' : 'opacity-100'}`}
-                />
-                <img 
-                  src={logoBlack} 
-                  alt=""
-                  aria-hidden="true"
-                  className={`absolute top-0 left-0 h-16 sm:h-20 md:h-24 w-auto transition-opacity duration-200 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
-                />
+
+  // One quote form for the whole site; any button can open it via openQuote()
+  useEffect(() => {
+    const open = () => setQuoteOpen(true);
+    window.addEventListener(QUOTE_EVENT, open);
+    return () => window.removeEventListener(QUOTE_EVENT, open);
+  }, []);
+
+  // Over the homepage hero the bar is clear; everywhere else it is a material
+  const clear = isHome && atTop;
+
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-300 ${
+        clear ? "bg-transparent border-b border-transparent" : "lux-material border-b border-white/10"
+      }`}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+    >
+      <nav
+        aria-label="Main"
+        className="mx-auto flex h-16 md:h-20 max-w-[1440px] items-center justify-between gap-6 px-[max(1rem,env(safe-area-inset-left))] sm:px-6 lg:px-10"
+      >
+        <Link to="/" aria-label="Green Cabinets NY, home" className="flex min-w-0 items-center gap-3">
+          <img src={logoWhite} alt="" className="h-10 md:h-12 w-auto" width={52} height={40} />
+          <span className="hidden min-[360px]:inline font-lux text-[1.35rem] md:text-2xl leading-none tracking-tight text-ivory whitespace-nowrap">
+            Green Cabinets
+          </span>
+        </Link>
+
+        <ul className="hidden lg:flex items-center gap-8 font-display text-[0.92rem] text-ivory/80">
+          {NAV.map((n) => (
+            <li key={n.label}>
+              <Link to={n.to} className="lux-link lux-link-quiet py-2 hover:text-ivory transition-colors">
+                {n.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex shrink-0 items-center gap-2">
+          <button type="button" onClick={openQuote} className="lux-btn !min-h-[44px] !px-5 text-sm">
+            <span className="sm:hidden">Quote</span>
+            <span className="hidden sm:inline">Request a quote</span>
+          </button>
+
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                aria-label="Open menu"
+                className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-full text-ivory transition-transform duration-150 active:scale-95"
+              >
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-[min(88vw,380px)] border-l border-white/10 bg-ink-2 p-0 text-ivory [&>button]:hidden data-[state=open]:duration-[350ms] data-[state=closed]:duration-200 [transition-timing-function:var(--ease-drawer)]"
+            >
+              <div className="flex h-16 items-center justify-between px-6" style={{ marginTop: "env(safe-area-inset-top, 0px)" }}>
+                <SheetTitle className="font-lux text-2xl font-medium text-ivory">Menu</SheetTitle>
+                <button
+                  type="button"
+                  onClick={() => setMenuOpen(false)}
+                  aria-label="Close menu"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full text-ivory/80 active:scale-95"
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </button>
               </div>
-              
-            </a>
-          </div>
-
-          {/* Right Side - Hamburger Menu */}
-          <div className="ml-auto flex items-center gap-2">
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className={`transition-all duration-300 hover:scale-110 ${scrolled ? 'hover:bg-muted' : 'hover:bg-white/10'}`} aria-label="Open menu">
-                  <Menu className={`h-6 w-6 text-accent-foreground`} />
-                </Button>
-              </SheetTrigger>
-              
-              <SheetContent side="right" className="w-[300px] sm:w-[400px] font-display">
-                <div className="flex flex-col gap-6 mt-8">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-muted-foreground">GALLERY</h3>
-                    <div className="flex flex-col gap-3">
-                      <button onClick={e => scrollToGallery('kitchens', e)} className="text-left text-xl hover:text-primary transition-colors">
-                        Kitchens
-                      </button>
-                      <button onClick={e => scrollToGallery('vanities', e)} className="text-left text-xl hover:text-primary transition-colors">
-                        Vanities
-                      </button>
-                      <button onClick={e => scrollToGallery('closets', e)} className="text-left text-xl hover:text-primary transition-colors">
-                        Closets
-                      </button>
-                      <button onClick={e => scrollToGallery('design-to-reality', e)} className="text-left text-xl hover:text-primary transition-colors">
-                        Design to Reality
-                      </button>
-                      <button onClick={e => {
-                      e.preventDefault();
-                      setIsMobileMenuOpen(false);
-                      setTimeout(() => {
-                        const suppliers = document.getElementById('suppliers');
-                        if (suppliers) {
-                          suppliers.scrollIntoView({
-                            behavior: 'smooth'
-                          });
-                        }
-                      }, 100);
-                    }} className="text-left text-xl hover:text-primary transition-colors">
-                        Suppliers
-                      </button>
-                    </div>
+              <div className="h-[calc(100dvh-4rem-env(safe-area-inset-top,0px))] overflow-y-auto overscroll-contain px-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]">
+                {MENU_GROUPS.map((g) => (
+                  <div key={g.title} className="border-t border-white/10 py-5">
+                    <p className="lux-eyebrow mb-3">{g.title}</p>
+                    <ul>
+                      {g.links.map((l) => (
+                        <li key={l.label}>
+                          <Link
+                            to={l.to}
+                            onClick={() => setMenuOpen(false)}
+                            className="block py-2 font-lux text-[1.6rem] leading-tight text-ivory/90 hover:text-ivory"
+                          >
+                            {l.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-
-                  <div className="border-t pt-4 space-y-3">
-                    <a href="/designer" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                      Design Your Vanity
-                    </a>
-                    <a href="/estimator" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                      Cost Estimator
-                    </a>
-                    <a href="/finishes-colors" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                      Finishes &amp; Colors
-                    </a>
-                    <a href="#services" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                      Services
-                    </a>
-                    <a href="#solutions" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                      Solutions
-                    </a>
-                    <a href="#about" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                      About
-                    </a>
-                    <a href="#contact" className="block text-xl hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                      Contact
-                    </a>
-                  </div>
-
-                  <div className="border-t pt-4">
-                    <Button size="lg" className="w-full" onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    const ctaSection = document.querySelector('section[class*="py-24"]');
-                    if (ctaSection) {
-                      ctaSection.scrollIntoView({
-                        behavior: 'smooth'
-                      });
-                      setTimeout(() => {
-                        const button = ctaSection.querySelector('button') as HTMLButtonElement;
-                        button?.click();
-                      }, 500);
-                    }
-                  }}>
-                      Get Quote
-                    </Button>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+                ))}
+                <button
+                  type="button"
+                  className="lux-btn mt-4 w-full"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    openQuote();
+                  }}
+                >
+                  Request a quote
+                </button>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </nav>
-    </header>;
+
+      <QuoteForm isOpen={quoteOpen} onClose={() => setQuoteOpen(false)} />
+    </header>
+  );
 };
+
 export default Header;

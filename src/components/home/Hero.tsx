@@ -1,139 +1,90 @@
-import { useState, useEffect } from "react";
-import luxuryKitchenMarbleDining from "@/assets/gallery/luxury-kitchen-marble-dining.jpeg";
-import modernBathroomWoodMarble from "@/assets/gallery/modern-bathroom-wood-marble.jpeg";
-import contemporaryPowderRoomWood from "@/assets/gallery/contemporary-powder-room-wood.jpeg";
-import luxuryMarbleBathroomShower from "@/assets/gallery/luxury-marble-bathroom-shower.jpeg";
-import modernBathroomFloatingWoodVanity from "@/assets/gallery/modern-bathroom-floating-wood-vanity.jpeg";
-import loftKitchenExposedBrickNaturalWood from "@/assets/gallery/loft-kitchen-exposed-brick-natural-wood.jpeg";
-import naturalWoodOpenConceptKitchen from "@/assets/gallery/natural-wood-open-concept-kitchen.jpeg";
-import woodKitchenOutdoorAccess from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
+import { openQuote } from "@/lib/quote";
 
-const heroImages = [
-  { src: "/hero-lcp.webp", alt: "Modern kitchen island with wood bar stools and marble waterfall edge" },
-  { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration" },
-  { src: modernBathroomWoodMarble, alt: "Modern bathroom with floating wood cabinets and marble vanity" },
-  { src: contemporaryPowderRoomWood, alt: "Contemporary powder room with wood vanity and marble countertop" },
-  { src: luxuryMarbleBathroomShower, alt: "Luxury marble bathroom with wood vanity and walk-in glass shower" },
-  { src: modernBathroomFloatingWoodVanity, alt: "Modern bathroom with floating wood vanity and marble walk-in shower" },
-  { src: loftKitchenExposedBrickNaturalWood, alt: "Loft kitchen with natural wood cabinetry, exposed brick wall, and pendant lighting" },
-  { src: naturalWoodOpenConceptKitchen, alt: "Natural wood open concept kitchen with dining area" },
-  { src: woodKitchenOutdoorAccess, alt: "Wood kitchen with marble countertops and outdoor patio access" },
+const LINES = [
+  { text: "Most NYC kitchens", em: false },
+  { text: "were never designed", em: false },
+  { text: "for stock cabinets.", em: true },
 ];
 
-// Shuffle array randomly
-const shuffleArray = <T,>(array: T[]): T[] => {
-  const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-};
+const FACTS = [
+  { k: "Since 2009", v: "Designed in Bushwick" },
+  { k: "4 to 6 weeks", v: "From approved drawings to install" },
+  { k: "COIs in 48 hours", v: "For co-op and condo boards" },
+];
 
-const Hero = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [shuffledImages] = useState(() => [heroImages[0], ...shuffleArray(heroImages.slice(1))]);
-  const [recentIndices, setRecentIndices] = useState<number[]>([0]);
-  const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
+const Hero = () => (
+  <section
+    id="top"
+    data-testid="hero-carousel"
+    className="relative flex min-h-[100svh] items-end overflow-hidden bg-ink text-ivory"
+  >
+    <img
+      src="/hero-lcp.webp"
+      alt="White oak kitchen with a marble waterfall island and walnut bar stools, built by Green Cabinets NY"
+      width={1920}
+      height={1080}
+      {...{ fetchpriority: "high" }}
+      loading="eager"
+      decoding="async"
+      className="lux-hero-img absolute inset-0 h-full w-full object-cover"
+    />
+    {/* Legibility: a deep floor gradient plus a soft left wash on wide screens */}
+    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-ink/35 to-ink/5" />
+    <div aria-hidden="true" className="absolute inset-0 hidden md:block bg-gradient-to-r from-ink/75 via-ink/15 to-transparent" />
+    {/* Phones: the headline sits over the brightest part of the photo, so dim it evenly */}
+    <div aria-hidden="true" className="absolute inset-0 md:hidden bg-ink/45" />
 
-  // Get a random index that hasn't been used recently
-  const getNextRandomIndex = () => {
-    const availableIndices = shuffledImages
-      .map((_, idx) => idx)
-      .filter(idx => !recentIndices.includes(idx));
-    
-    if (availableIndices.length === 0) {
-      // If all images have been shown recently, reset but keep current image excluded
-      const resetIndices = shuffledImages
-        .map((_, idx) => idx)
-        .filter(idx => idx !== currentImageIndex);
-      return resetIndices[Math.floor(Math.random() * resetIndices.length)];
-    }
-    
-    return availableIndices[Math.floor(Math.random() * availableIndices.length)];
-  };
+    <div className="relative mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10 pt-32 pb-10 md:pb-14">
+      <p className="lux-eyebrow lux-fade mb-6" style={{ "--d": "100ms" } as React.CSSProperties}>
+        Custom cabinetry · Brooklyn, Manhattan &amp; Queens
+      </p>
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const nextIdx = getNextRandomIndex();
-      setNextImageIndex(nextIdx);
-      setIsTransitioning(true);
-      
-      setTimeout(() => {
-        setCurrentImageIndex(nextIdx);
-        setRecentIndices(prev => {
-          const updated = [...prev, nextIdx];
-          // Keep only the last 5 indices
-          return updated.slice(-5);
-        });
-        setIsTransitioning(false);
-      }, 2500); // Half of transition time
-    }, 7000); // Change image every 7 seconds
+      <h1 className="lux-display text-[clamp(2.75rem,6.2vw,6.25rem)]">
+        {LINES.map((l, i) => (
+          <span key={l.text} className="lux-line md:whitespace-nowrap">
+            <span style={{ "--d": `${180 + i * 110}ms` } as React.CSSProperties}>
+              {l.em ? <em className="italic text-brass">{l.text}</em> : l.text}
+            </span>
+          </span>
+        ))}
+      </h1>
 
-    return () => clearInterval(interval);
-  }, [shuffledImages.length, currentImageIndex, recentIndices]);
+      <p
+        className="lux-body lux-fade mt-7 max-w-xl text-base sm:text-lg text-ivory/80"
+        style={{ "--d": "420ms" } as React.CSSProperties}
+      >
+        Designed in Bushwick, built to spec, installed across Brooklyn, Manhattan and Queens. Including
+        the co-op with the freight elevator and the brownstone with the crooked walls.
+      </p>
 
-  return (
-    <>
-      {/* Hero Text Section - min-heights reserve space to prevent CLS during font swap */}
-      <section className="bg-background pt-28 pb-16 sm:py-24 md:py-36 min-h-[360px] sm:min-h-[420px] md:min-h-[560px] flex items-center">
-        <div className="container mx-auto px-4 text-center w-full">
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-6 text-foreground min-h-[3em] sm:min-h-[2.4em] md:min-h-[2.4em] flex items-center justify-center">
-            <span>Most NYC kitchens were never designed for stock cabinets.</span>
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
-            Designed in Bushwick. Built to spec. Installed across Brooklyn, Manhattan, and Queens — including the co-op with the freight elevator and the brownstone with the crooked walls.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="/estimator"
-              className="inline-flex items-center justify-center bg-[#5C7650] hover:bg-[#445339] text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-full shadow-2xl transition-all hover:scale-105"
-            >
-              Get a kitchen quote
-            </a>
-            <a
-              href="/designer"
-              className="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-[#0a0a0a] font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-full shadow-2xl transition-all hover:scale-105"
-            >
-              Design a vanity
-            </a>
+      <div
+        className="lux-fade mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
+        style={{ "--d": "520ms" } as React.CSSProperties}
+      >
+        <button type="button" onClick={openQuote} className="lux-btn">
+          Request a quote
+        </button>
+        <a href="#work" className="lux-btn-ghost">
+          See the work
+        </a>
+      </div>
+
+      <dl
+        className="lux-fade mt-12 md:mt-20 grid grid-cols-3 border-t border-white/15"
+        style={{ "--d": "640ms" } as React.CSSProperties}
+      >
+        {FACTS.map((f, i) => (
+          <div
+            key={f.k}
+            className={`py-4 pr-3 sm:py-5 sm:pr-6 ${i > 0 ? "border-l border-white/15 pl-3 sm:pl-6" : ""}`}
+          >
+            <dt className="font-lux text-[1.15rem] sm:text-2xl md:text-[1.75rem] leading-tight sm:leading-none text-ivory">{f.k}</dt>
+            <dd className="mt-1.5 sm:mt-2 font-display text-xs sm:text-sm leading-snug text-stone">{f.v}</dd>
           </div>
-        </div>
-      </section>
+        ))}
+      </dl>
+    </div>
+  </section>
+);
 
-      {/* Hero Image Carousel */}
-      <section data-testid="hero-carousel" className="relative h-dvh min-h-[560px] w-full overflow-hidden">
-        {/* Background images with crossfade */}
-        <div className="absolute inset-0 bg-muted">
-          <img
-            src={shuffledImages[currentImageIndex].src}
-            alt={shuffledImages[currentImageIndex].alt}
-            width={1920}
-            height={1080}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
-              isTransitioning ? 'opacity-0' : 'opacity-100'
-            }`}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-          />
-          {nextImageIndex !== null && (
-            <img
-              src={shuffledImages[nextImageIndex].src}
-              alt={shuffledImages[nextImageIndex].alt}
-              width={1920}
-              height={1080}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[5000ms] ${
-                isTransitioning ? 'opacity-100' : 'opacity-0'
-              }`}
-              loading="lazy"
-              decoding="async"
-            />
-          )}
-        </div>
-      </section>
-    </>
-  );
-};
 export default Hero;
