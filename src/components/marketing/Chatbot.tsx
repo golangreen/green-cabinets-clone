@@ -1,3 +1,4 @@
+import { isApp } from "@/lib/platform";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { authService, chatService, ChatMessage } from "@/services";
@@ -287,4 +288,7 @@ const Chatbot = () => {
   );
 };
 
-export default Chatbot;
+// The chat needs an account, and the app has none, so it is website only.
+const ChatbotOnWeb = () => (isApp() ? null : <Chatbot />);
+
+export default ChatbotOnWeb;

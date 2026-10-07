@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { openQuote } from "@/lib/quote";
+import { isApp } from "@/lib/platform";
 
 /**
  * Phone-only bottom bar: one thumb-reach path to a quote. Slides in once the
@@ -42,9 +44,15 @@ const MobileActionBar = () => {
           <br />
           <span className="text-ivory/90">Brooklyn, Manhattan &amp; Queens</span>
         </p>
-        <button type="button" tabIndex={shown ? 0 : -1} onClick={openQuote} className="lux-btn">
-          Request a quote
-        </button>
+        {isApp() ? (
+          <Link to="/scan" tabIndex={shown ? 0 : -1} className="lux-btn">
+            Scan your room
+          </Link>
+        ) : (
+          <button type="button" tabIndex={shown ? 0 : -1} onClick={openQuote} className="lux-btn">
+            Request a quote
+          </button>
+        )}
       </div>
     </div>
   );

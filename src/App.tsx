@@ -12,10 +12,12 @@ import CanonicalManager from "@/components/seo/CanonicalManager";
 import LegacyRedirect from "@/components/layout/LegacyRedirect";
 import ScrollToTopButton from "@/components/layout/ScrollToTopButton";
 import ChunkErrorBoundary from "@/components/system/ChunkErrorBoundary";
+import { isApp } from "@/lib/platform";
 
 const Index = lazy(() => import("./pages/marketing/Index"));
 const Landing = lazy(() => import("./pages/marketing/Landing"));
 const About = lazy(() => import("./pages/marketing/About"));
+const Privacy = lazy(() => import("./pages/marketing/Privacy"));
 const GalleryPage = lazy(() => import("./pages/marketing/Gallery"));
 const CaseStudies = lazy(() => import("./pages/marketing/CaseStudies"));
 const CaseStudyDetail = lazy(() => import("./pages/marketing/CaseStudyDetail"));
@@ -27,6 +29,7 @@ const Auth = lazy(() => import("./pages/auth/Auth"));
 const Designer = lazy(() => import("./pages/designer/Designer"));
 const VanityDesignerEmbed = lazy(() => import("./pages/designer/VanityDesignerEmbed"));
 const Estimator = lazy(() => import("./pages/estimator/Estimator"));
+const RoomScan = lazy(() => import("./pages/scan/RoomScan"));
 const EstimatorSavedQuotes = lazy(() => import("./pages/estimator/SavedQuotes"));
 const NotFound = lazy(() => import("./pages/system/NotFound"));
 
@@ -84,11 +87,12 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/landing" element={<Landing />} />
             <Route path="/shop" element={<Navigate to="/" replace />} />
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={isApp() ? <Navigate to="/" replace /> : <Auth />} />
             <Route path="/designer" element={<VanityDesignerEmbed />} />
             <Route path="/room-designer" element={<Designer />} />
             <Route path="/estimator" element={<Estimator />} />
-            <Route path="/estimator/quotes" element={<EstimatorSavedQuotes />} />
+            <Route path="/scan" element={<RoomScan />} />
+            <Route path="/estimator/quotes" element={isApp() ? <Navigate to="/estimator" replace /> : <EstimatorSavedQuotes />} />
             <Route path="/vanity-configurator" element={<Navigate to="/designer" replace />} />
             <Route path="/vanity-designer" element={<Navigate to="/designer" replace />} />
             <Route path="/product/:handle" element={<Navigate to="/" replace />} />
@@ -150,6 +154,7 @@ const App = () => {
             <Route path="/white-oak-vs-walnut-cabinets" element={<WhiteOakVsWalnutCabinets />} />
             <Route path="/luxury-kitchen-design-nyc" element={<LuxuryKitchenDesignNyc />} />
             <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="/case-studies" element={<CaseStudies />} />
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/blog" element={<Blog />} />

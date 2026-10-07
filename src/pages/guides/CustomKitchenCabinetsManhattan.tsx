@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     q: "Do you have a Manhattan showroom?",
-    a: "No walk-in shop anywhere. Design runs from Golan's home base in Bushwick, cabinets are built by vetted millwork suppliers, and we come to your apartment by appointment with door samples, finish panels, and hardware. Call (718) 804-5488 or email orders@greencabinetsny.com to book a time.",
+    a: "No walk-in shop anywhere. Design is done in-house in Bushwick, cabinets are built by vetted millwork suppliers, and we come to your apartment by appointment with door samples, finish panels, and hardware. Call (718) 804-5488 or email orders@greencabinetsny.com to book a time.",
   },
 ];
 
@@ -204,7 +204,7 @@ const CustomKitchenCabinetsManhattan = () => (
           and how prewar, condo, and loft kitchens each change the plan.
         </p>
         <p className="text-lg text-[#555555]">
-          Design runs from Golan's home base in Bushwick, cabinets are
+          Design is done in-house in Bushwick, cabinets are
           built by vetted millwork suppliers, and installs are scheduled
           by appointment. There is no walk-in shop — samples come to your
           apartment.

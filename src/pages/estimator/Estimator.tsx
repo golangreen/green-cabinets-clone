@@ -8,6 +8,7 @@ import MaterialsStep from '@/components/estimator/MaterialsStep';
 import QuoteStep from '@/components/estimator/QuoteStep';
 import OrderStep from '@/components/estimator/OrderStep';
 import { useEstimator } from '@/hooks/useEstimator';
+import { isApp } from '@/lib/platform';
 
 const Estimator = () => {
   const {
@@ -93,7 +94,8 @@ const Estimator = () => {
                 <LogOut size={14} /> Sign out
               </button>
             </>
-          ) : (
+          ) : isApp() ? null : (
+            // The app has no accounts (Apple requires in-app deletion for those)
             <button
               onClick={() => navigate('/auth')}
               className="flex items-center gap-1.5 text-xs text-primary font-medium hover:underline min-h-[36px]"

@@ -29,6 +29,7 @@ const MENU_GROUPS = [
   {
     title: "Plan your project",
     links: [
+      { label: "Scan your room", to: "/scan" },
       { label: "How it works", to: "/#process" },
       { label: "Pricing", to: "/#pricing" },
       { label: "Cost estimator", to: "/estimator" },

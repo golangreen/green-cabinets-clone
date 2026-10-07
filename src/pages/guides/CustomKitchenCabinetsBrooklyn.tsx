@@ -43,7 +43,7 @@ const FAQS = [
   },
   {
     q: "Do you have a Brooklyn showroom I can visit?",
-    a: "No walk-in shop. Design is run from Golan's home base in Bushwick, cabinets are built by vetted millwork suppliers, and we meet you at your apartment by appointment with door samples, finish panels, and hardware. Most clients do one in-home session and finalize the rest by email.",
+    a: "No walk-in shop. Design is done in-house in Bushwick, cabinets are built by vetted millwork suppliers, and we meet you at your apartment by appointment with door samples, finish panels, and hardware. Most clients do one in-home session and finalize the rest by email.",
   },
   {
     q: "Which Brooklyn neighborhoods do you serve?",
@@ -203,7 +203,7 @@ const CustomKitchenCabinetsBrooklyn = () => (
           condos, and lofts each change the cabinet plan.
         </p>
         <p className="text-lg text-[#555555]">
-          Design is run from Golan's home base in Bushwick, cabinets are
+          Design is done in-house in Bushwick, cabinets are
           built by vetted millwork suppliers, and installs are scheduled
           by appointment. There is no walk-in shop — finish samples come
           to your apartment.

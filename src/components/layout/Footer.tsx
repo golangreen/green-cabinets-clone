@@ -100,7 +100,12 @@ const Footer = () => (
       </div>
 
       <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 font-display text-xs text-stone sm:flex-row sm:justify-between">
-        <p>&copy; {new Date().getFullYear()} Green Cabinets NY. All rights reserved.</p>
+        <p>
+          &copy; {new Date().getFullYear()} Green Cabinets NY. All rights reserved. ·{" "}
+          <Link to="/privacy" className="hover:text-ivory">
+            Privacy
+          </Link>
+        </p>
         <p>Serving Brooklyn, Manhattan &amp; Queens by appointment</p>
       </div>
     </div>

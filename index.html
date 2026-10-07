@@ -741,6 +741,9 @@
     <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <script>
       window.addEventListener('load', function () {
+        // Not inside the Green Cabinets iPhone app (no analytics there)
+        var inApp = location.protocol === 'capacitor:' || !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+        if (inApp) return;
         window.setTimeout(function () {
           var s = document.createElement('script');
           s.src = 'https://www.googletagmanager.com/gtag/js?id=G-NM6CTJXNWE';

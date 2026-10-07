@@ -1,4 +1,7 @@
+import { Link } from "react-router-dom";
+import { ScanLine } from "lucide-react";
 import { openQuote } from "@/lib/quote";
+import { isApp } from "@/lib/platform";
 
 const LINES = [
   { text: "Most NYC kitchens", em: false },
@@ -61,12 +64,26 @@ const Hero = () => (
         className="lux-fade mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
         style={{ "--d": "520ms" } as React.CSSProperties}
       >
-        <button type="button" onClick={openQuote} className="lux-btn">
-          Request a quote
-        </button>
-        <a href="#work" className="lux-btn-ghost">
-          See the work
-        </a>
+        {isApp() ? (
+          <>
+            {/* The app leads with what only the app can do */}
+            <Link to="/scan" className="lux-btn">
+              <ScanLine className="h-5 w-5" aria-hidden="true" /> Scan your room
+            </Link>
+            <button type="button" onClick={openQuote} className="lux-btn-ghost">
+              Request a quote
+            </button>
+          </>
+        ) : (
+          <>
+            <button type="button" onClick={openQuote} className="lux-btn">
+              Request a quote
+            </button>
+            <a href="#work" className="lux-btn-ghost">
+              See the work
+            </a>
+          </>
+        )}
       </div>
 
       <dl

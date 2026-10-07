@@ -48,3 +48,6 @@ verify_jwt = false
 [functions.meev-publish]
 verify_jwt = false
 
+
+[functions.send-room-scan]
+verify_jwt = false
