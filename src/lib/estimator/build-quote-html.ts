@@ -72,9 +72,9 @@ export function buildQuoteHtml({
     .join('');
 
   const logoWhiteBgUrl =
-    'https://rbuezktglzudxnafespc.supabase.co/storage/v1/object/public/email-assets/green-cabinets-logo-white-bg.png';
+    'https://cqkvrqkelzdctlloobos.supabase.co/storage/v1/object/public/email-assets/green-cabinets-logo-white-bg.png';
   const logoDarkBgUrl =
-    'https://rbuezktglzudxnafespc.supabase.co/storage/v1/object/public/email-assets/green-cabinets-logo-white-bg.png';
+    'https://cqkvrqkelzdctlloobos.supabase.co/storage/v1/object/public/email-assets/green-cabinets-logo-white-bg.png';
 
   const trimmedNotes = projectNotes?.trim() ?? '';
 

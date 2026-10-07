@@ -5,7 +5,6 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 const ALLOWED_ORIGINS = new Set([
   'https://greencabinetsny.com',
   'https://www.greencabinetsny.com',
-  'https://green-cabinets-clone.lovable.app',
 ]);
 
 type CheckResult = {

@@ -1,5 +1,6 @@
-// GSC URL Inspection via Lovable connector gateway.
-// No OAuth setup required — uses the linked Google Search Console connector.
+// GSC URL Inspection. It ran through Lovable's Search Console connector, which
+// does not exist on the self-hosted backend; it now answers "not connected"
+// until a direct Search Console service account is set up.
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
@@ -40,6 +41,9 @@ Deno.serve(async (req) => {
     return json({ error: "Admin access required" }, 403);
   }
 
+  return json({ error: "Google Search Console is not connected on this backend. Check indexing in Search Console directly." }, 501);
+
+  // deno-lint-ignore no-unreachable
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
   const GSC_KEY = Deno.env.get("GOOGLE_SEARCH_CONSOLE_API_KEY");
   if (!LOVABLE_API_KEY) return json({ error: "LOVABLE_API_KEY not configured" }, 500);

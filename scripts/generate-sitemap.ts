@@ -26,9 +26,9 @@ function chunk<T>(items: T[], size: number): T[][] {
 }
 const today = new Date().toISOString().slice(0, 10);
 
-const SUPABASE_URL = "https://mczagaaiyzbhjvtrojia.supabase.co";
+const SUPABASE_URL = "https://cqkvrqkelzdctlloobos.supabase.co";
 const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jemFnYWFpeXpiaGp2dHJvamlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODcxOTMsImV4cCI6MjA3NzE2MzE5M30.j7Cg7ULJklrohMgYZ1BqYurgR01eUHYHFWHwI9_zae0";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxa3ZycWtlbHpkY3RsbG9vYm9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNjc2NDUsImV4cCI6MjEwNjk0MzY0NX0.rM63zdRewZbq1Ix4XuJzEZBCUrvx6Tc_4GH8Dxud1pA";
 
 async function fetchBlogArticles(): Promise<{ slug: string; updated_at: string }[]> {
   try {

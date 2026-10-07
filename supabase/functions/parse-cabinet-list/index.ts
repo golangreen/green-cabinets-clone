@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { guardAiRequest, validateImagesInput } from "../_shared/aiGuard.ts";
+import { GEMINI_URL, geminiModel } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -74,8 +75,8 @@ serve(async (req) => {
     const sizeGuard = validateImagesInput(images);
     if (sizeGuard) return new Response(await sizeGuard.text(), { status: sizeGuard.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY not configured");
 
     const systemPrompt = `You are a cabinet order list parser for Green Cabinets NY. Your job is to extract every cabinet model number and quantity from the input — whether it is a typed list, a scanned document, a 2020 Design export, or a supplier quote. Accuracy is critical: every model and quantity must be correct.
 
@@ -211,15 +212,14 @@ Do NOT include appliances, fillers, labor, or non-cabinet items.`;
       });
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch(GEMINI_URL, {
       method: "POST",
       headers: {
-        "Lovable-API-Key": LOVABLE_API_KEY,
-        "X-Lovable-AIG-SDK": "direct-fetch",
+        Authorization: `Bearer ${GEMINI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-pro",
+        model: geminiModel("pro"),
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userContent },
@@ -230,7 +230,7 @@ Do NOT include appliances, fillers, labor, or non-cabinet items.`;
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("Lovable AI error:", response.status, errText);
+      console.error("AI error:", response.status, errText);
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit — try again shortly." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });

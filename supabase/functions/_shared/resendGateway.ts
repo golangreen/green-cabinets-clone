@@ -1,28 +1,24 @@
-// Routes Resend API calls through the Lovable connector gateway.
-// Replaces direct https://api.resend.com calls so credentials stay managed
-// by the Resend standard connector (LOVABLE_API_KEY + RESEND_API_KEY conn key).
+// Sends email through Resend with the project's own RESEND_API_KEY
+// (greencabinetsny.com is verified in the "greencabinets" Resend account).
 
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
+const RESEND_URL = "https://api.resend.com";
 
 function authHeaders(): Record<string, string> {
-  const lovableKey = Deno.env.get("LOVABLE_API_KEY");
   const resendKey = Deno.env.get("RESEND_API_KEY");
-  if (!lovableKey) throw new Error("LOVABLE_API_KEY is not configured");
   if (!resendKey) throw new Error("RESEND_API_KEY is not configured");
   return {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${lovableKey}`,
-    "X-Connection-Api-Key": resendKey,
+    Authorization: `Bearer ${resendKey}`,
   };
 }
 
 export async function sendResendEmail(payload: Record<string, unknown>): Promise<Response> {
-  return await fetch(`${GATEWAY_URL}/emails`, {
+  return await fetch(`${RESEND_URL}/emails`, {
     method: "POST",
     headers: authHeaders(),
     body: JSON.stringify(payload),
   });
 }
 
-export const RESEND_GATEWAY_URL = GATEWAY_URL;
+export const RESEND_GATEWAY_URL = RESEND_URL;
 export const resendAuthHeaders = authHeaders;

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { guardAiRequest, validateImagesInput } from "../_shared/aiGuard.ts";
+import { GEMINI_URL, geminiModel } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -378,8 +379,8 @@ serve(async (req) => {
     const sizeGuard = validateImagesInput(images);
     if (sizeGuard) return new Response(await sizeGuard.text(), { status: sizeGuard.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY not configured");
 
     const systemPrompt = `You are a precision cabinet code extraction specialist for Green Cabinets NY, a professional kitchen and bath cabinet company in Brooklyn. Your job is to read every single cabinet model code from architectural drawings with 100% accuracy. EVERY ERROR costs real money — wrong model = wrong cabinet ordered. Read slowly, carefully, and verify.
 
@@ -624,15 +625,14 @@ Use the extract_cabinets tool to return your findings. Fill every field carefull
         : "Scan every cabinet box and rectangle in this drawing. Read the text label inside or adjacent to each box — that is the model code. Call the extract_cabinets tool. One entry per physical cabinet location, qty:1 each. Do not infer codes from dimension numbers.",
     });
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch(GEMINI_URL, {
       method: "POST",
       headers: {
-        "Lovable-API-Key": LOVABLE_API_KEY,
-        "X-Lovable-AIG-SDK": "direct-fetch",
+        Authorization: `Bearer ${GEMINI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-pro",
+        model: geminiModel("pro"),
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userContent },
@@ -709,7 +709,7 @@ Use the extract_cabinets tool to return your findings. Fill every field carefull
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("Lovable AI error:", response.status, errText);
+      console.error("AI error:", response.status, errText);
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "Rate limit — please try again in a moment." }),
@@ -718,7 +718,7 @@ Use the extract_cabinets tool to return your findings. Fill every field carefull
       }
       if (response.status === 402) {
         return new Response(
-          JSON.stringify({ error: "AI credits exhausted. Add credits in Lovable Cloud settings." }),
+          JSON.stringify({ error: "The AI service is over its limit right now. Please try again later." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }

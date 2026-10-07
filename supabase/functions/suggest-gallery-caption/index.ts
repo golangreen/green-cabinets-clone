@@ -1,7 +1,8 @@
 // Suggest caption + alt text + neighborhood for an uploaded gallery image.
-// Admin-only: verifies the caller's JWT and admin role before calling Lovable AI.
+// Admin-only: verifies the caller's JWT and admin role before calling the AI model.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders, handleCorsRequest } from "../_shared/cors.ts";
+import { GEMINI_URL, geminiModel } from "../_shared/gemini.ts";
 
 const NEIGHBORHOODS = [
   "bushwick", "williamsburg", "park-slope", "soho", "long-island-city",
@@ -23,8 +24,8 @@ Deno.serve(async (req) => {
   try {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
     const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY not configured");
 
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
@@ -58,14 +59,14 @@ Deno.serve(async (req) => {
       ? `Filename hint (may contain a neighborhood): "${filenameHint}". Analyze the photo and return JSON.`
       : "Analyze this kitchen photo and return JSON.";
 
-    const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const aiResp = await fetch(GEMINI_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${GEMINI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: geminiModel("fast"),
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           {

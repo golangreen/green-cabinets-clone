@@ -8,7 +8,6 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -58,7 +57,7 @@ serve(async (req) => {
   if (!allow(ip)) return json({ error: "Too many scans sent. Please try again later." }, 429);
 
   try {
-    if (!RESEND_API_KEY || !LOVABLE_API_KEY) return json({ error: "Email not configured" }, 500);
+    if (!RESEND_API_KEY) return json({ error: "Email not configured" }, 500);
 
     const parsed = schema.safeParse(await req.json());
     if (!parsed.success) return json({ error: "Please check your details and try again." }, 400);
@@ -74,12 +73,11 @@ serve(async (req) => {
     }
 
     const roomB64 = btoa(unescape(encodeURIComponent(d.room)));
-    const res = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
+    const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "X-Connection-Api-Key": RESEND_API_KEY,
+        Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
         from: "Green Cabinets App <orders@greencabinetsny.com>",

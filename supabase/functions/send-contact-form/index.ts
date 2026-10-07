@@ -2,7 +2,6 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 const RECAPTCHA_SECRET_KEY = Deno.env.get("RECAPTCHA_SECRET_KEY");
 
 const escapeHtml = (s: unknown): string =>
@@ -157,12 +156,11 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Processing contact form from IP: ${clientIp}, Email: ${formData.email}`);
 
     // Send email to business owner
-    const ownerEmailResponse = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
+    const ownerEmailResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-        "X-Connection-Api-Key": RESEND_API_KEY,
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
         from: "Green Cabinets Contact <orders@greencabinetsny.com>",
