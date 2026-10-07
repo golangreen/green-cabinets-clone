@@ -105,6 +105,37 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-cost-nyc",
+    title: "How Much Do Custom Kitchen Cabinets Cost in NYC? What Drives the Price",
+    description:
+      "Custom kitchen cabinet cost in NYC: per-foot pricing, what drives the price, and how to get an accurate quote in Brooklyn, Manhattan, and Queens.",
+    datePublished: "2026-10-07",
+    keywords:
+      "custom kitchen cabinets cost NYC, custom cabinet cost per linear foot Brooklyn, kitchen cabinet pricing Manhattan, custom kitchen price Queens co-op, how much do custom cabinets cost NYC, custom millwork, by appointment",
+    faqs: [
+      {
+        q: "How much do custom kitchen cabinets cost per linear foot in NYC?",
+        a: "Our starting point is about $350 per linear foot for full kitchens, $225 per linear foot for base cabinets, and $125 per linear foot for wall cabinets. Door style, finish, and tall units move the final number.",
+      },
+      {
+        q: "What does a typical NYC kitchen cost in custom cabinets?",
+        a: "Most kitchens we quote land between $8,000 and $25,000+, depending on size, cabinet mix, finish, and building logistics.",
+      },
+      {
+        q: "Are countertops included?",
+        a: "No. Countertops, plumbing, electrical, and appliances are separate trades. We coordinate timing so the stone fabricator can template once cabinets are installed.",
+      },
+      {
+        q: "Is delivery included?",
+        a: "Yes, delivery inside Brooklyn, Manhattan, and Queens is included in our millwork quote. Building freight or board fees are separate.",
+      },
+      {
+        q: "Can I get a price without a site visit?",
+        a: "Photos and rough dimensions get you a ballpark. A by-appointment measure in your kitchen is what turns it into a firm quote.",
+      },
+    ],
+  },
+  {
     slug: "pull-out-trash-recycling-cabinets-nyc",
     title: "Pull-Out Trash and Recycling Cabinets for NYC Kitchens",
     description:
@@ -502,16 +533,31 @@ if (!shellHtml.includes(HEAD_CLOSE)) {
   process.exit(1);
 }
 
-function writeRouteHtml(slug, title, description, datePublished, keywords, isBlog = false) {
+function writeRouteHtml(slug, title, description, datePublished, keywords, isBlog = false, faqs = null) {
   const schema = buildArticleSchema({ slug, title, description, datePublished, keywords, isBlog });
   const url = isBlog ? `https://greencabinetsny.com/blog/${slug}` : `https://greencabinetsny.com/${slug}`;
+  const faqSchema = Array.isArray(faqs) && faqs.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }
+    : null;
   const tag =
     `\n    <link rel="canonical" href="${url}" />\n` +
     `    <title>${title.replace(/</g, "&lt;")}</title>\n` +
     `    <meta name="description" content="${description.replace(/"/g, "&quot;")}" />\n` +
     `    <script type="application/ld+json" data-static-article>` +
     JSON.stringify(schema) +
-    `</script>\n  `;
+    `</script>\n` +
+    (faqSchema
+      ? `    <script type="application/ld+json" data-static-faq>${JSON.stringify(faqSchema)}</script>\n`
+      : "") +
+    `  `;
 
   // Strip the existing default <title>/<meta description>/<link canonical> so
   // the per-route ones win on initial paint (Helmet still updates on hydrate).
@@ -534,7 +580,7 @@ for (const guide of GUIDES) {
   count++;
 }
 for (const post of BLOG_POSTS) {
-  writeRouteHtml(post.slug, post.title, post.description, post.datePublished, post.keywords, true);
+  writeRouteHtml(post.slug, post.title, post.description, post.datePublished, post.keywords, true, post.faqs ?? null);
   count++;
 }
 
