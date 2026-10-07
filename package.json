@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "predev": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-wood-links.ts && bun run scripts/validate-faq-slugs.ts",
+    "predev": "command -v bun >/dev/null || { echo 'predev: bun not installed, skipping sitemap and link checks'; exit 0; }; bun run scripts/generate-sitemap.ts && bun run scripts/validate-wood-links.ts && bun run scripts/validate-faq-slugs.ts",
     "dev": "vite",
     "prebuild": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-wood-links.ts && bun run scripts/validate-faq-slugs.ts",
     "build": "vite build && node scripts/inject-article-jsonld.mjs",
