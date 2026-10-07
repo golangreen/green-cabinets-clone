@@ -580,7 +580,7 @@ for (const guide of GUIDES) {
   count++;
 }
 for (const post of BLOG_POSTS) {
-  writeRouteHtml(post.slug, post.title, post.description, post.datePublished, post.keywords, true);
+  writeRouteHtml(post.slug, post.title, post.description, post.datePublished, post.keywords, true, post.faqs ?? null);
   count++;
 }
 
