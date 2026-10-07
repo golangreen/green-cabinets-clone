@@ -7,6 +7,7 @@ import Seo from "@/components/Seo";
 import { getBlogArticleBySlug, type BlogArticle } from "@/services/blogService";
 import { getStaticBlogPost } from "@/data/blogIndex";
 import { normalizeArticleHtml } from "@/lib/normalizeArticleHtml";
+import { buildFaqSchema } from "@/lib/articleSchema";
 
 export default function BlogArticlePage() {
   const { slug } = useParams<{ slug: string }>();
@@ -67,6 +68,11 @@ export default function BlogArticlePage() {
                 },
               })}
             </script>
+            {article.faqs && article.faqs.length > 0 && (
+              <script type="application/ld+json">
+                {JSON.stringify(buildFaqSchema(article.faqs))}
+              </script>
+            )}
           </Helmet>
         </>
       )}
