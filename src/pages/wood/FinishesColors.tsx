@@ -104,7 +104,8 @@ const FinishesColors = () => {
           }
         />
 
-        <section aria-label="Finish panels" className="border-t border-white/10">
+        <section aria-labelledby="panels-title" className="border-t border-white/10">
+          <h2 id="panels-title" className="sr-only">Finish panels</h2>
           <div className="mx-auto max-w-[1440px] px-4 py-14 sm:px-6 md:py-20 lg:px-10" data-reveal="up">
             <MaterialsBrowser />
           </div>

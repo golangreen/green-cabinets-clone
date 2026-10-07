@@ -338,7 +338,7 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
         <button
           onClick={handleSubmit}
           disabled={submitting}
-          className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-4 rounded-xl font-bold text-base hover:opacity-90 disabled:opacity-60 transition-all min-h-[52px] active:scale-[0.98]"
+          className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-4 rounded-xl font-bold text-base hover:opacity-90 disabled:opacity-60 transition-ui min-h-[52px] active:scale-[0.98]"
         >
           {submitting
             ? <><Loader2 size={18} className="animate-spin" /> Submitting…</>
@@ -347,7 +347,7 @@ const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, sele
         </button>
         <button
           onClick={onBack}
-          className="w-full bg-secondary text-secondary-foreground py-3.5 rounded-xl font-semibold hover:opacity-80 transition-all min-h-[48px] active:scale-[0.98]"
+          className="w-full bg-secondary text-secondary-foreground py-3.5 rounded-xl font-semibold hover:opacity-80 transition-ui min-h-[48px] active:scale-[0.98]"
         >
           ← Back to Quote
         </button>

@@ -160,13 +160,13 @@ const CabinetListPanel: React.FC<CabinetListPanelProps> = ({ selectedCabinets, s
       <div className="flex gap-1 bg-secondary/50 rounded-lg p-1">
         <button
           onClick={() => setMode('browse')}
-          className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${mode === 'browse' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+          className={`flex-1 min-h-11 md:min-h-8 text-xs font-medium py-1.5 rounded-md transition-colors ${mode === 'browse' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
         >
           Browse Catalog
         </button>
         <button
           onClick={() => setMode('import')}
-          className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors flex items-center justify-center gap-1 ${mode === 'import' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+          className={`flex-1 min-h-11 md:min-h-8 text-xs font-medium py-1.5 rounded-md transition-colors flex items-center justify-center gap-1 ${mode === 'import' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
         >
           <Upload size={12} /> Import List
         </button>
@@ -216,7 +216,7 @@ const CabinetListPanel: React.FC<CabinetListPanelProps> = ({ selectedCabinets, s
             onClick={() => importInputRef.current?.click()}
             onDrop={handleImportDrop}
             onDragOver={e => e.preventDefault()}
-            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
+            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-ui ${
               importFiles.length > 0 ? 'border-primary bg-accent' : 'border-border hover:border-primary/50 hover:bg-accent/50'
             }`}
           >
@@ -273,7 +273,7 @@ const CabinetListPanel: React.FC<CabinetListPanelProps> = ({ selectedCabinets, s
             <button
               onClick={() => handleImport('file')}
               disabled={importing}
-              className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all flex items-center justify-center gap-2"
+              className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-ui flex items-center justify-center gap-2"
             >
               {importing ? <><Loader2 size={14} className="animate-spin" /> Parsing…</> : `Extract Cabinets from ${importFiles.length} File${importFiles.length > 1 ? 's' : ''}`}
             </button>
@@ -297,7 +297,7 @@ const CabinetListPanel: React.FC<CabinetListPanelProps> = ({ selectedCabinets, s
             <button
               onClick={() => handleImport('text')}
               disabled={importing || !pasteText.trim()}
-              className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all flex items-center justify-center gap-2"
+              className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-ui flex items-center justify-center gap-2"
             >
               {importing ? <><Loader2 size={14} className="animate-spin" /> Parsing…</> : <><ClipboardPaste size={14} /> Extract from Text</>}
             </button>
@@ -388,7 +388,7 @@ const CabinetListPanel: React.FC<CabinetListPanelProps> = ({ selectedCabinets, s
           <Popover open={comboOpen} onOpenChange={setComboOpen}>
             <PopoverTrigger asChild>
               <button
-                className="w-full flex items-center justify-between bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:border-primary/50 transition-colors"
+                className="w-full min-h-11 flex items-center justify-between bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:border-primary/50 transition-colors"
               >
                 <span>Add cabinet from catalog…</span>
                 <ChevronsUpDown size={14} className="shrink-0 opacity-50" />

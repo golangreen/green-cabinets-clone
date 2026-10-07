@@ -30,7 +30,7 @@ const RoomChapter = () => (
             <div
               key={f.k}
               data-reveal="up"
-              style={{ "--d": `${i * 80}ms` } as React.CSSProperties}
+              style={{ "--d": `${i * 50}ms` } as React.CSSProperties}
               className="border-t border-white/15 py-5"
             >
               <dt className="font-lux text-2xl text-ivory">{f.k}</dt>

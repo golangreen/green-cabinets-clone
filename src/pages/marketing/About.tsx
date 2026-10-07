@@ -136,10 +136,10 @@ const About = () => (
           </article>
 
           <div className="flex flex-wrap gap-3">
-            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-ui">
               <Link to="/#contact">Get in touch <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="hover:scale-105 transition-all">
+            <Button asChild size="lg" variant="outline" className="hover:scale-105 transition-ui">
               <Link to="/gallery">See completed projects</Link>
             </Button>
           </div>

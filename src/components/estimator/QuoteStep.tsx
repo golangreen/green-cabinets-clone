@@ -113,7 +113,7 @@ const QuoteStep: React.FC<QuoteStepProps> = ({ costs, location, fileName, select
       {/* Place Order CTA */}
       <button
         onClick={onOrder}
-        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-4 rounded-2xl font-bold text-base hover:opacity-90 transition-all min-h-[56px] active:scale-[0.98] shadow-lg shadow-primary/20"
+        className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-4 rounded-2xl font-bold text-base hover:opacity-90 transition-ui min-h-[56px] active:scale-[0.98] shadow-lg shadow-primary/20"
       >
         <ShoppingBag size={20} />
         Place Order — {fmt(costs.grandTotal)}
@@ -145,7 +145,7 @@ const QuoteStep: React.FC<QuoteStepProps> = ({ costs, location, fileName, select
 
       {/* Actions */}
       <div className="space-y-3">
-        <button onClick={handleDownloadPDF} disabled={generating} className="w-full flex items-center justify-center gap-2 surface-card py-3.5 sm:py-4 rounded-xl font-semibold text-foreground hover:bg-accent disabled:opacity-60 transition-all min-h-[48px] active:scale-[0.98]">
+        <button onClick={handleDownloadPDF} disabled={generating} className="w-full flex items-center justify-center gap-2 surface-card py-3.5 sm:py-4 rounded-xl font-semibold text-foreground hover:bg-accent disabled:opacity-60 transition-ui min-h-[48px] active:scale-[0.98]">
           {generating ? <><Loader2 size={18} className="animate-spin" /> Generating...</> : <><Download size={18} /> Download PDF Quote</>}
         </button>
         <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
@@ -157,7 +157,7 @@ const QuoteStep: React.FC<QuoteStepProps> = ({ costs, location, fileName, select
               setEmailError(''); setConfirmOpen(true);
             }}
             disabled={sending}
-            className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-90 disabled:opacity-60 transition-all min-h-[48px] active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-90 disabled:opacity-60 transition-ui min-h-[48px] active:scale-[0.98]"
           >
             {sending ? <><Loader2 size={18} className="animate-spin" /> Sending...</> : <><Send size={18} /> Send to Green Cabinets</>}
           </button>
@@ -178,7 +178,7 @@ const QuoteStep: React.FC<QuoteStepProps> = ({ costs, location, fileName, select
         </AlertDialog>
       </div>
 
-      <button onClick={onBack} className="w-full bg-secondary text-secondary-foreground py-3 rounded-xl font-semibold hover:opacity-80 transition-all min-h-[48px] active:scale-[0.98]">
+      <button onClick={onBack} className="w-full bg-secondary text-secondary-foreground py-3 rounded-xl font-semibold hover:opacity-80 transition-ui min-h-[48px] active:scale-[0.98]">
         ← Back to Cabinet Selection
       </button>
 

@@ -152,7 +152,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                     <Label
                       key={type}
                       htmlFor={type}
-                      className={`flex flex-col items-center justify-center p-6 border-2 rounded-lg cursor-pointer transition-all hover:border-primary ${
+                      className={`flex flex-col items-center justify-center p-6 border-2 rounded-lg cursor-pointer transition-ui hover:border-primary ${
                         projectType === type ? "border-primary bg-primary/5" : "border-border"
                       }`}
                     >
@@ -271,6 +271,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                     <Label htmlFor="name">Full Name *</Label>
                     <Input
                       id="name"
+                      autoComplete="name"
                       {...register("name")}
                       placeholder="John Doe"
                       className="mt-1"
@@ -285,6 +286,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                     <Input
                       id="email"
                       type="email"
+                      autoComplete="email"
                       {...register("email")}
                       placeholder="john@example.com"
                       className="mt-1"
@@ -299,6 +301,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                     <Input
                       id="phone"
                       type="tel"
+                      autoComplete="tel"
                       {...register("phone")}
                       placeholder="(646) 549-3955"
                       className="mt-1"
@@ -312,6 +315,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                     <Label htmlFor="address">Project Address *</Label>
                     <Input
                       id="address"
+                      autoComplete="street-address"
                       {...register("address")}
                       placeholder="123 Main St, Brooklyn, NY 11206"
                       className="mt-1"

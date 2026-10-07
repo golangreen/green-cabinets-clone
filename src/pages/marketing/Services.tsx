@@ -166,7 +166,7 @@ const Services = () => {
             </div>
             <ol className="grid grid-cols-1 gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
               {STEPS.map((s, i) => (
-                <li key={s.t} className="bg-ink-2 p-8" data-reveal="up" style={{ "--d": `${i * 80}ms` } as React.CSSProperties}>
+                <li key={s.t} className="bg-ink-2 p-8" data-reveal="up" style={{ "--d": `${i * 50}ms` } as React.CSSProperties}>
                   <p className="font-lux text-5xl leading-none text-brass tabular-nums">{String(i + 1).padStart(2, "0")}</p>
                   <h3 className="mt-6 font-lux text-[1.9rem] leading-tight text-ivory">{s.t}</h3>
                   <p className="lux-body mt-3 text-sm text-ivory/65">{s.d}</p>
@@ -187,7 +187,7 @@ const Services = () => {
             </div>
             <ul className="grid grid-cols-1 gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
               {tools.map((t, i) => (
-                <li key={t.to} className="bg-ink" data-reveal="up" style={{ "--d": `${i * 80}ms` } as React.CSSProperties}>
+                <li key={t.to} className="bg-ink" data-reveal="up" style={{ "--d": `${i * 50}ms` } as React.CSSProperties}>
                   <Link to={t.to} className="group flex h-full flex-col p-8 transition-colors duration-300 hover:bg-ink-2">
                     <p className="lux-eyebrow mb-6">{t.k}</p>
                     <h3 className="font-lux text-[1.9rem] leading-tight text-ivory">{t.t}</h3>

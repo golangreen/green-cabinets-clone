@@ -174,7 +174,7 @@ const SmallBathroomVanityIdeas = () => (
             <p className="text-sm text-muted-foreground mb-3">
               Configure a small vanity in your exact width and get a price right now.
             </p>
-            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-ui">
               <Link to="/designer">Open the vanity designer <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

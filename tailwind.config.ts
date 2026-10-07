@@ -15,6 +15,11 @@ export default {
       },
     },
     extend: {
+      // "transition-ui": the properties UI states actually change. Used instead
+      // of transition-all so layout and focus outlines never animate.
+      transitionProperty: {
+        ui: "color, background-color, border-color, text-decoration-color, fill, stroke, box-shadow, transform, opacity",
+      },
       fontFamily: {
         'display': ['Outfit', 'sans-serif'],
         'lux': ['"Cormorant Garamond"', 'Georgia', 'serif'],

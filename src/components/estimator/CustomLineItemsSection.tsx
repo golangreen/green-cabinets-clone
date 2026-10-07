@@ -166,7 +166,7 @@ const CustomLineItemsSection: React.FC<CustomLineItemsSectionProps> = ({ customL
           <button
             key={preset.label}
             onClick={() => addPresetItem(preset)}
-            className="text-xs bg-accent text-foreground px-2.5 py-1 rounded-lg hover:bg-primary/10 transition-all border border-border"
+            className="text-xs bg-accent text-foreground px-2.5 py-1 rounded-lg hover:bg-primary/10 transition-ui border border-border"
           >
             {preset.label}
           </button>
@@ -182,7 +182,7 @@ const CustomLineItemsSection: React.FC<CustomLineItemsSectionProps> = ({ customL
               onDragStart={() => handleDragStart(idx)}
               onDragOver={(e) => handleDragOver(e, idx)}
               onDragEnd={handleDragEnd}
-              className={`flex items-center gap-2 p-2 rounded-xl transition-all ${
+              className={`flex items-center gap-2 p-2 rounded-xl transition-ui ${
                 dragIdx === idx ? 'opacity-40' : ''
               } ${overIdx === idx && dragIdx !== idx ? 'ring-2 ring-primary/40' : ''} ${
                 cl.needsPricing && cl.unitPrice === 0 ? 'bg-warning/10 ring-1 ring-warning/40' : 'bg-accent'

@@ -244,10 +244,10 @@ const CabinetWoodTypesAndCosts = () => (
               Send us your linear footage, preferred species, and door style — we quote in 24 hours.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
+              <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-ui">
                 <Link to="/#contact">Get a quote <ArrowRight className="h-4 w-4 ml-2" /></Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="hover:scale-105 transition-all">
+              <Button asChild size="lg" variant="outline" className="hover:scale-105 transition-ui">
                 <Link to="/best-wood-for-kitchen-cabinets">Best wood by use case</Link>
               </Button>
             </div>

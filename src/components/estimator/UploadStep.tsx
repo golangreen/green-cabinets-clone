@@ -138,7 +138,7 @@ const UploadStep: React.FC<UploadStepProps> = ({
             <button
               type="button"
               onClick={capturePhoto}
-              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl font-semibold text-sm active:opacity-80 transition-all"
+              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl font-semibold text-sm active:opacity-80 transition-ui"
             >
               <Camera size={18} />
               Take Photo
@@ -146,7 +146,7 @@ const UploadStep: React.FC<UploadStepProps> = ({
             <button
               type="button"
               onClick={pickFromGallery}
-              className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground py-3 rounded-xl font-semibold text-sm active:opacity-80 transition-all"
+              className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground py-3 rounded-xl font-semibold text-sm active:opacity-80 transition-ui"
             >
               <ImageIcon size={18} />
               Browse Files
@@ -157,7 +157,7 @@ const UploadStep: React.FC<UploadStepProps> = ({
             onClick={() => fileInputRef.current?.click()}
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
-            className={`relative border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center cursor-pointer transition-all duration-300 ${
+            className={`relative border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center cursor-pointer transition-ui duration-300 ${
               files.length > 0
                 ? 'border-primary bg-accent'
                 : 'border-border hover:border-primary/50 hover:bg-accent/50'
@@ -257,7 +257,7 @@ const UploadStep: React.FC<UploadStepProps> = ({
           {files.length > 0 && !analyzing && !reconciliation && (
             <button
               onClick={handleAnalyzeAll}
-              className="w-full bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold text-sm hover:opacity-90 transition-all flex items-center justify-center gap-2"
+              className="w-full bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold text-sm hover:opacity-90 transition-ui flex items-center justify-center gap-2"
             >
               <Eye size={16} />
               Analyze All ({files.length} file{files.length > 1 ? 's' : ''})
@@ -272,7 +272,7 @@ const UploadStep: React.FC<UploadStepProps> = ({
               </div>
               <div className="h-2 bg-secondary rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-primary rounded-full transition-all duration-700 ease-out"
+                  className="h-full bg-primary rounded-full transition-ui duration-700 ease-out"
                   style={{ width: `${(progress.current / progress.total) * 100}%` }}
                 />
               </div>
@@ -312,7 +312,7 @@ const UploadStep: React.FC<UploadStepProps> = ({
       <button
         onClick={onNext}
         disabled={files.length === 0 && selectedCabinets.length === 0}
-        className="w-full bg-primary text-primary-foreground py-3.5 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all min-h-[48px]"
+        className="w-full bg-primary text-primary-foreground py-3.5 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-ui min-h-[48px]"
       >
         Continue
       </button>

@@ -74,7 +74,7 @@ export default function FinishPicker({
               key={style.id}
               type="button"
               onClick={() => onDoorStyleChange(style.id)}
-              className={`text-left p-3 rounded-xl border transition-all active:scale-[0.98] ${
+              className={`text-left p-3 rounded-xl border transition-ui active:scale-[0.98] ${
                 selectedDoorStyle === style.id
                   ? 'border-primary bg-primary/5 ring-1 ring-primary'
                   : 'border-border hover:border-primary/40 hover:bg-accent/50'
@@ -128,7 +128,7 @@ export default function FinishPicker({
               key={cat}
               type="button"
               onClick={() => { setActiveCategory(cat); setQuery(''); }}
-              className={`shrink-0 px-3 py-2 text-xs font-medium border-b-2 -mb-px transition-all whitespace-nowrap ${
+              className={`shrink-0 px-3 py-2 text-xs font-medium border-b-2 -mb-px transition-ui whitespace-nowrap ${
                 activeCategory === cat
                   ? 'border-primary text-primary'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -172,14 +172,14 @@ export default function FinishPicker({
                     ? [finish.brand, finish.name, ...(finish.codes ?? [])].filter(Boolean).join(' — ')
                     : `${getTierLabel(getFinishTier(finish))} — only available as ${allowedDoorStylesForFinish(finish.id).map(d => getDoorStyleById(d)?.name ?? d).join(', ')}. Change door style to enable.`
                 }
-                className={`group flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all ${
+                className={`group flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-ui ${
                   !allowed
                     ? 'opacity-40 cursor-not-allowed'
                     : `active:scale-95 ${isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'hover:bg-accent/50'}`
                 }`}
               >
                 <div
-                  className={`relative w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 overflow-hidden flex items-center justify-center transition-all ${
+                  className={`relative w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 overflow-hidden flex items-center justify-center transition-ui ${
                     isSelected ? 'border-primary' : 'border-border group-hover:border-primary/40'
                   } ${finish.id === 'custom-paint' ? 'border-dashed' : ''}`}
                   style={!finish.thumb ? { background: finish.hex } : undefined}

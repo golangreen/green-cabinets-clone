@@ -28,10 +28,10 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep, onStepClick 
             type="button"
             onClick={() => onStepClick?.(s.num)}
             disabled={!onStepClick}
-            className="flex flex-col items-center gap-1.5 sm:gap-2 group cursor-pointer disabled:cursor-default"
+            className="flex min-w-11 flex-col items-center gap-1.5 sm:gap-2 group cursor-pointer disabled:cursor-default"
           >
             <div
-              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold transition-all duration-500 ${
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold transition-ui duration-500 ${
                 currentStep > s.num
                   ? 'bg-primary text-primary-foreground group-hover:opacity-80'
                   : currentStep === s.num

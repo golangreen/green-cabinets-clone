@@ -261,7 +261,7 @@ const BestWoodForKitchenCabinets = () => (
               Want the full spec on any species above — Janka, grain, cost tier, finish behavior,
               pros and cons?
             </p>
-            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-ui">
               <Link to="/wood-species">Open the full wood species guide <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

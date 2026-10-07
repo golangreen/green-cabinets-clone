@@ -166,7 +166,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
         <Breadcrumbs
           items={[
             { label: "Home", to: "/" },
-            { label: "Neighborhoods", to: "/#neighborhoods" },
+            { label: "Neighborhoods", to: "/#contact" },
             { label: borough.name, to: boroughHref },
             { label: n.name },
           ]}
@@ -192,7 +192,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
               {borough.name} cabinetry
             </Link>{" "}
             service area · See all{" "}
-            <Link to="/#neighborhoods" className="text-primary font-semibold hover:underline">
+            <Link to="/#contact" className="text-primary font-semibold hover:underline">
               NYC neighborhoods we serve
             </Link>
             .
@@ -277,8 +277,8 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
             </ul>
             <div className="mt-10 text-center">
               <Link
-                to="/#gallery"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-ivory transition-colors"
+                to="/gallery"
+                className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-primary hover:text-ivory transition-colors"
               >
                 See the full project gallery →
               </Link>

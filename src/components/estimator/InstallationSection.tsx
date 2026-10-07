@@ -18,7 +18,7 @@ const InstallationSection: React.FC<InstallationSectionProps> = ({ installation,
         </div>
         <button
           onClick={() => setInstallation({ ...installation, enabled: !installation.enabled })}
-          className={`text-xs font-medium px-3 py-1 rounded-full transition-all ${
+          className={`text-xs font-medium px-3 py-1 rounded-full transition-ui ${
             installation.enabled ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'
           }`}
         >
@@ -39,7 +39,7 @@ const InstallationSection: React.FC<InstallationSectionProps> = ({ installation,
                 <button
                   key={level.id}
                   onClick={() => setInstallation({ ...installation, complexityMultiplier: level.id })}
-                  className={`text-left p-2.5 rounded-xl border-2 transition-all ${
+                  className={`text-left p-2.5 rounded-xl border-2 transition-ui ${
                     installation.complexityMultiplier === level.id ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/40'
                   }`}
                 >

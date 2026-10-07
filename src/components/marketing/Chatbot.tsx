@@ -175,7 +175,7 @@ const Chatbot = () => {
       {!isOpen && !hideSectionNavArrows && (
         <Button
           onClick={scrollToTop}
-          className="fixed bottom-[140px] right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
+          className="fixed bottom-[140px] right-6 h-11 w-11 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
           size="icon"
         >
           <ChevronUp className="h-4 w-4" />
@@ -194,7 +194,7 @@ const Chatbot = () => {
           }}
           className={`fixed ${
             hideSectionNavArrows ? "bottom-6" : "bottom-[80px]"
-          } right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white`}
+          } right-6 h-11 w-11 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white`}
           size="icon"
           aria-label="Open chat assistant"
           data-testid="chatbot-toggle"
@@ -207,7 +207,7 @@ const Chatbot = () => {
       {!isOpen && !hideSectionNavArrows && (
         <Button
           onClick={scrollPageToBottom}
-          className="fixed bottom-6 right-6 h-10 w-10 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
+          className="fixed bottom-6 right-6 h-11 w-11 rounded-full shadow-elegant z-50 bg-black/40 backdrop-blur-md border border-white/30 hover:bg-black/50 text-white"
           size="icon"
         >
           <ChevronDown className="h-4 w-4" />

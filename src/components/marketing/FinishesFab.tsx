@@ -17,7 +17,7 @@ const FinishesFab = () => {
     <Link
       to="/finishes-colors"
       aria-label="Browse finishes and colors"
-      className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 inline-flex items-center gap-2 bg-brass hover:bg-[#D4B272] text-ink font-semibold px-4 py-3 sm:px-5 sm:py-3.5 rounded-full shadow-2xl transition-all hover:scale-105 hover:shadow-[0_10px_40px_-10px_rgba(92,118,80,0.6)]"
+      className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 inline-flex items-center gap-2 bg-brass hover:bg-[#D4B272] text-ink font-semibold px-4 py-3 sm:px-5 sm:py-3.5 rounded-full shadow-2xl transition-ui hover:scale-105 hover:shadow-[0_10px_40px_-10px_rgba(92,118,80,0.6)]"
     >
       <Palette className="h-5 w-5" aria-hidden />
       <span className="text-sm sm:text-base">Finishes &amp; Colors</span>

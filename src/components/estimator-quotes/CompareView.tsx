@@ -108,13 +108,13 @@ const CompareView: React.FC<CompareViewProps> = ({ quotes, onClose }) => {
           <div className="flex items-center gap-2">
             <button
               onClick={async () => await generateComparisonPDF(quotes)}
-              className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-all"
+              className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-ui"
             >
               <Download size={16} /> Export PDF
             </button>
             <button
               onClick={onClose}
-              className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-xl text-sm font-medium hover:opacity-80 transition-all"
+              className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-xl text-sm font-medium hover:opacity-80 transition-ui"
             >
               <X size={16} /> Close
             </button>

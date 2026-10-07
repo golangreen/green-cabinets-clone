@@ -70,7 +70,7 @@ const LocationStep: React.FC<LocationStepProps> = ({
                     if (!f) setSelectedFinish('');
                   }
                 }}
-                className={`w-full p-5 border-2 rounded-2xl text-left transition-all duration-200 ${
+                className={`w-full p-5 border-2 rounded-2xl text-left transition-ui duration-200 ${
                   isSelected ? 'border-primary bg-accent' : 'border-border hover:border-primary/30'
                 }`}
               >
@@ -128,14 +128,14 @@ const LocationStep: React.FC<LocationStepProps> = ({
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex-1 bg-secondary text-secondary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-80 transition-all min-h-[48px] active:scale-[0.98]"
+          className="flex-1 bg-secondary text-secondary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-80 transition-ui min-h-[48px] active:scale-[0.98]"
         >
           Back
         </button>
         <button
           onClick={onNext}
           disabled={!location}
-          className="flex-1 bg-primary text-primary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all min-h-[48px] active:scale-[0.98]"
+          className="flex-1 bg-primary text-primary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-ui min-h-[48px] active:scale-[0.98]"
         >
           Analyze Blueprint
         </button>

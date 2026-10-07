@@ -137,7 +137,7 @@ const ScrollEnhancements = () => {
             aria-label={`Jump to ${s.label}`}
             aria-current={isActive ? "true" : undefined}
             title={s.label}
-            className={`group relative block rounded-full transition-all duration-300 touch-manipulation ${
+            className={`group relative block rounded-full transition-ui duration-300 touch-manipulation ${
               isActive
                 ? "h-2.5 w-2.5 bg-brass shadow-[0_0_10px_rgba(198,161,91,0.7)]"
                 : "h-2 w-2 bg-foreground/30 hover:bg-foreground/60"

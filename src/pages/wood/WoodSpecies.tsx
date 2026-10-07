@@ -248,7 +248,7 @@ const WoodSpecies = () => {
 
           <ul className="mx-auto grid max-w-[1440px] grid-cols-1 gap-x-6 gap-y-14 px-4 py-14 sm:grid-cols-2 sm:px-6 md:py-20 lg:grid-cols-3 lg:px-10">
             {WOOD_SPECIES.map((w, i) => (
-              <li key={w.slug} id={w.slug} className="scroll-mt-40" data-reveal="up" style={{ "--d": `${(i % 3) * 70}ms` } as React.CSSProperties}>
+              <li key={w.slug} id={w.slug} className="scroll-mt-40" data-reveal="up" style={{ "--d": `${(i % 3) * 50}ms` } as React.CSSProperties}>
                 <Link to={`/wood-species/${w.slug}`} className="group block">
                   <div className="relative aspect-[4/3] overflow-hidden bg-ink-3">
                     <img
@@ -293,7 +293,7 @@ const WoodSpecies = () => {
                 { to: "/cabinet-wood-types-and-costs", k: "Pricing", t: "Cabinet wood types and costs", d: "Every species we offer by budget, mid-tier and premium, with NYC prices per linear foot." },
                 { to: "/natural-wood-kitchen-cabinets", k: "Natural finishes", t: "Natural wood kitchen cabinets", d: "Which woods look best under a clear coat or hardwax oil, and the cuts that make them." },
               ].map((r, i) => (
-                <li key={r.to} className="bg-ink-2" data-reveal="up" style={{ "--d": `${i * 80}ms` } as React.CSSProperties}>
+                <li key={r.to} className="bg-ink-2" data-reveal="up" style={{ "--d": `${i * 50}ms` } as React.CSSProperties}>
                   <Link to={r.to} className="group flex h-full flex-col p-8 transition-colors duration-300 hover:bg-ink-3">
                     <p className="lux-eyebrow mb-6">{r.k}</p>
                     <h3 className="font-lux text-[2rem] leading-tight text-ivory">{r.t}</h3>

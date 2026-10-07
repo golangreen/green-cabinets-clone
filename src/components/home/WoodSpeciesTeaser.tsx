@@ -39,7 +39,7 @@ const WoodSpeciesTeaser = () => {
               >
                 <Link
                   to={`/wood-species/${w.slug}`}
-                  className="group block rounded-lg overflow-hidden border border-border bg-background hover:border-brass hover:shadow-lg transition-all"
+                  className="group block rounded-lg overflow-hidden border border-border bg-background hover:border-brass hover:shadow-lg transition-ui"
                 >
                   <div className="aspect-square overflow-hidden bg-muted">
                     <img

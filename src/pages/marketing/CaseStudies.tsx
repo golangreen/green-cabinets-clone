@@ -103,7 +103,7 @@ const CaseStudies = () => (
               <Link
                 key={c.slug}
                 to={`/case-studies/${c.slug}`}
-                className="group block border border-border rounded-lg overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition-all bg-card"
+                className="group block border border-border rounded-lg overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition-[transform,box-shadow] duration-300 [transition-timing-function:var(--ease-out)] bg-card"
               >
                 <div className="aspect-[16/10] bg-muted overflow-hidden">
                   <img

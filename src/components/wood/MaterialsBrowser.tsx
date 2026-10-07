@@ -44,7 +44,7 @@ function PanelCard({
   const { ids, toggle } = useFinishSelection();
   const selected = ids.includes(panel.id);
   return (
-    <div className="group relative rounded-lg overflow-hidden border border-border bg-background hover:border-brass hover:shadow-lg transition-all">
+    <div className="group relative rounded-lg overflow-hidden border border-border bg-background hover:border-brass hover:shadow-lg transition-ui">
       <button
         type="button"
         onClick={(e) => {
@@ -52,7 +52,7 @@ function PanelCard({
           toggle(panel.id);
         }}
         aria-label={selected ? `Remove ${panel.name} from selection` : `Add ${panel.name} to selection`}
-        className={`absolute top-2 right-2 z-10 h-8 w-8 rounded-full flex items-center justify-center shadow-md transition-all ${
+        className={`absolute top-2 right-2 z-10 h-8 w-8 rounded-full flex items-center justify-center shadow-md transition-ui ${
           selected
             ? "bg-brass text-ink scale-100"
             : "bg-white/90 text-accent-foreground opacity-0 group-hover:opacity-100 hover:scale-110"
@@ -83,9 +83,9 @@ function PanelCard({
           )}
         </div>
         <div className="p-2.5 space-y-1">
-          <h4 className="text-sm font-semibold text-ivory line-clamp-1">
+          <h3 className="text-sm font-semibold text-ivory line-clamp-1">
             {panel.name}
-          </h4>
+          </h3>
           <p className="text-[11px] font-mono text-accent-foreground line-clamp-1">
             {panel.codes[0] ?? panel.brand}
           </p>
@@ -294,18 +294,20 @@ export function BrandPanel({ brand }: { brand: MaterialBrand }) {
 
       <div className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by name or code..."
+            aria-label="Search finishes by name or code"
+            type="search"
             className="pl-9"
           />
         </div>
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+          className="h-11 md:h-10 rounded-md border border-input bg-background px-3 text-base md:text-sm"
           aria-label="Filter by color family"
         >
           {categories.map((c) => (
@@ -317,7 +319,7 @@ export function BrandPanel({ brand }: { brand: MaterialBrand }) {
         <select
           value={finish}
           onChange={(e) => setFinish(e.target.value)}
-          className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+          className="h-11 md:h-10 rounded-md border border-input bg-background px-3 text-base md:text-sm"
           aria-label="Filter by finish"
         >
           {finishes.map((f) => (

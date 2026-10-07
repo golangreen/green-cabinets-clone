@@ -212,7 +212,7 @@ const Suppliers = () => {
         {suppliers.map((supplier) => (
           <div
             key={supplier.id}
-            className="snap-start shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[24vw] max-w-[340px] p-6 rounded-2xl bg-brass/10 hover:bg-brass/20 transition-all duration-300 cursor-pointer relative group"
+            className="snap-start shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[24vw] max-w-[340px] p-6 rounded-2xl bg-brass/10 hover:bg-brass/20 transition-ui duration-300 cursor-pointer relative group"
             onClick={() => {
               if (supplier.website === "catalog") {
                 setShowCatalogSlideshow(true);

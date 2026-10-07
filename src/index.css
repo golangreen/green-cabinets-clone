@@ -328,6 +328,7 @@ html.theme-lux {
   align-items: center;
   gap: 0.5rem;
   color: #F2ECE2;
+  min-height: 24px; /* WCAG 2.2 target size for standalone links */
   padding-bottom: 2px;
 }
 .lux-link::after {
@@ -345,6 +346,7 @@ html.theme-lux {
 }
 /* Quiet variant (nav): no rule until hovered or current */
 .lux-link-quiet::after { transform: scaleX(0); opacity: 1; }
+.lux-link-quiet[aria-current="page"]::after { transform: scaleX(1); background: #C6A15B; }
 @media (hover: hover) and (pointer: fine) {
   .lux-link-quiet:hover::after { transform: scaleX(1); }
 }
@@ -492,4 +494,22 @@ html.theme-lux #root :is(h1, h2):not(.lux-display):not(.font-lux) {
   letter-spacing: -0.01em;
   line-height: 1.08;
   text-wrap: balance;
+}
+
+/* Keyboard focus: one brass ring everywhere a component doesn't draw its own,
+   and anchors land below the fixed header (WCAG 2.2 focus not obscured). */
+html { scroll-padding-top: calc(6rem + env(safe-area-inset-top, 0px)); }
+html.theme-lux :focus-visible { outline: 2px solid #C6A15B; outline-offset: 3px; }
+.skip-link {
+  position: fixed; left: 1rem; top: calc(0.75rem + env(safe-area-inset-top, 0px)); z-index: 100;
+  padding: 0.75rem 1.25rem; border-radius: 999px; background: #C6A15B; color: #14110D;
+  font-family: Outfit, sans-serif; font-weight: 500; transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+[tabindex="-1"]:focus { outline: none; }
+
+/* Touch: standalone text links and tab triggers get a 44px tap height. */
+@media (pointer: coarse) {
+  .lux-link { min-height: 44px; }
+  [role="tab"] { min-height: 44px; }
 }

@@ -350,7 +350,7 @@ const NaturalWoodKitchenCabinets = () => (
             <p className="text-sm text-muted-foreground mb-3">
               Browse all {WOOD_SPECIES.length} species we mill — Janka, grain, cost, and finish notes per species.
             </p>
-            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-ui">
               <Link to="/wood-species">Open the full wood species guide <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

@@ -209,7 +209,7 @@ const InvoiceComparisonPanel: React.FC<InvoiceComparisonPanelProps> = ({ selecte
             onClick={() => inputRef.current?.click()}
             onDrop={handleDrop}
             onDragOver={e => e.preventDefault()}
-            className={`border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all ${
+            className={`border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-ui ${
               importFiles.length > 0 ? 'border-primary bg-accent' : 'border-border hover:border-primary/50 hover:bg-accent/50'
             }`}
           >
@@ -260,7 +260,7 @@ const InvoiceComparisonPanel: React.FC<InvoiceComparisonPanelProps> = ({ selecte
               <button
                 onClick={() => handleImport('file')}
                 disabled={importing}
-                className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all flex items-center justify-center gap-2"
+                className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-ui flex items-center justify-center gap-2"
               >
                 {importing ? <><Loader2 size={14} className="animate-spin" /> Comparing…</> : 'Compare with Blueprint'}
               </button>
@@ -283,7 +283,7 @@ const InvoiceComparisonPanel: React.FC<InvoiceComparisonPanelProps> = ({ selecte
           <button
             onClick={() => handleImport('text')}
             disabled={importing || !pasteText.trim()}
-            className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all flex items-center justify-center gap-2"
+            className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-ui flex items-center justify-center gap-2"
           >
             {importing ? <><Loader2 size={14} className="animate-spin" /> Comparing…</> : <><ClipboardPaste size={14} /> Compare from Text</>}
           </button>
@@ -350,7 +350,7 @@ const InvoiceComparisonPanel: React.FC<InvoiceComparisonPanelProps> = ({ selecte
                     <button
                       onClick={() => !isMatch && row.blueprintQty > 0 && toggleSource(row.model)}
                       disabled={isMatch || row.blueprintQty === 0}
-                      className={`w-16 text-center font-medium py-1 rounded-md transition-all ${
+                      className={`w-16 text-center font-medium py-1 rounded-md transition-ui ${
                         row.blueprintQty === 0
                           ? 'text-muted-foreground/30 cursor-default'
                           : picked === 'blueprint' && !isMatch
@@ -367,7 +367,7 @@ const InvoiceComparisonPanel: React.FC<InvoiceComparisonPanelProps> = ({ selecte
                     <button
                       onClick={() => !isMatch && row.invoiceQty > 0 && toggleSource(row.model)}
                       disabled={isMatch || row.invoiceQty === 0}
-                      className={`w-16 text-center font-medium py-1 rounded-md transition-all ${
+                      className={`w-16 text-center font-medium py-1 rounded-md transition-ui ${
                         row.invoiceQty === 0
                           ? 'text-muted-foreground/30 cursor-default'
                           : picked === 'invoice' && !isMatch
@@ -430,7 +430,7 @@ const InvoiceComparisonPanel: React.FC<InvoiceComparisonPanelProps> = ({ selecte
           <div className="space-y-2">
             <button
               onClick={handleApplySelection}
-              className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-all flex items-center justify-center gap-2"
+              className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-ui flex items-center justify-center gap-2"
             >
               <Check size={14} /> Apply Selection · ${resolvedTotal.toLocaleString()}
             </button>

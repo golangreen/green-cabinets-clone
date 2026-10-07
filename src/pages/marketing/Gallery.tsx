@@ -8,6 +8,14 @@ import Lightbox from "@/components/lux/Lightbox";
 import ContactCta from "@/components/home/lux/ContactCta";
 import { useLuxPage } from "@/hooks/useLuxPage";
 import { galleryImages, type GalleryCategory } from "@/data/galleryImages";
+import galleryDims from "@/data/galleryDims.json";
+
+const DIMS: Record<string, number[]> = galleryDims;
+/** Real pixel size of a gallery photo from its URL (dev path or hashed build path). */
+const dimsFor = (src: string): number[] | undefined => {
+  const name = src.split("/").pop()?.replace(/\.[^.]+$/, "") ?? "";
+  return DIMS[name] ?? DIMS[name.replace(/-[A-Za-z0-9_-]{8}$/, "")];
+};
 
 const CATEGORIES: { key: GalleryCategory; label: string }[] = [
   { key: "all", label: "All" },
@@ -106,7 +114,7 @@ const GalleryPage = () => {
                   role="tab"
                   aria-selected={on}
                   onClick={() => setActive(c.key)}
-                  className={`relative shrink-0 whitespace-nowrap py-4 font-display text-sm transition-colors duration-200 ${
+                  className={`relative min-w-11 shrink-0 whitespace-nowrap py-4 font-display text-sm transition-colors duration-200 ${
                     on ? "text-ivory" : "text-stone hover:text-ivory"
                   }`}
                 >
@@ -131,7 +139,7 @@ const GalleryPage = () => {
                 key={image.src}
                 className="break-inside-avoid"
                 data-reveal="up"
-                style={{ "--d": `${(idx % 3) * 70}ms` } as React.CSSProperties}
+                style={{ "--d": `${(idx % 3) * 50}ms` } as React.CSSProperties}
               >
                 <button
                   type="button"
@@ -143,6 +151,8 @@ const GalleryPage = () => {
                     <img
                       src={image.src}
                       alt={image.alt}
+                      width={dimsFor(image.src)?.[0]}
+                      height={dimsFor(image.src)?.[1]}
                       loading={idx < 6 ? "eager" : "lazy"}
                       decoding="async"
                       className="h-auto w-full transition-transform duration-700 [transition-timing-function:var(--ease-out)] group-hover:scale-[1.03]"

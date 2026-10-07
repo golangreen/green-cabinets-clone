@@ -187,7 +187,7 @@ const ReachInClosetSystemsNYC = () => (
               Want a custom reach-in quote for your apartment? Send dimensions and a photo and
               we'll come back with a layout and a number.
             </p>
-            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-ui">
               <Link to="/#contact">Get a closet quote <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>

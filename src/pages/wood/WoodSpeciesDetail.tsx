@@ -130,9 +130,9 @@ const WoodSpeciesDetail = () => {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div className="space-y-4">
                 <nav aria-label="Breadcrumb" className="mb-6 font-display text-xs text-stone">
-                  <Link to="/" className="hover:text-ivory">Home</Link>
+                  <Link to="/" className="inline-flex min-h-6 items-center hover:text-ivory">Home</Link>
                   <span aria-hidden="true"> / </span>
-                  <Link to="/wood-species" className="hover:text-ivory">Materials</Link>
+                  <Link to="/wood-species" className="inline-flex min-h-6 items-center hover:text-ivory">Materials</Link>
                   <span aria-hidden="true"> / </span>
                   <span className="text-ivory/80">{wood.name}</span>
                 </nav>
@@ -395,7 +395,7 @@ const WoodSpeciesDetail = () => {
                     <Link
                       key={c.slug}
                       to={`/wood-species/${c.slug}`}
-                      className="group flex flex-col rounded-lg border border-border bg-background p-5 hover:border-brass hover:shadow-lg transition-all"
+                      className="group flex flex-col rounded-lg border border-border bg-background p-5 hover:border-brass hover:shadow-lg transition-ui"
                     >
                       <div className="flex items-center gap-3 mb-3">
                         <span
@@ -436,7 +436,7 @@ const WoodSpeciesDetail = () => {
                 <Link
                   key={w.slug}
                   to={`/wood-species/${w.slug}`}
-                  className="group block rounded-lg border border-border overflow-hidden hover:border-brass hover:shadow-lg transition-all"
+                  className="group block rounded-lg border border-border overflow-hidden hover:border-brass hover:shadow-lg transition-ui"
                 >
                   <img
                     src={w.image}

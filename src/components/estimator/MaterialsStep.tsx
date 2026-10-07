@@ -147,7 +147,7 @@ const MaterialsStep: React.FC<MaterialsStepProps> = ({
             <button
               key={c}
               onClick={() => setCollection(c)}
-              className={`flex-1 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all ${
+              className={`flex-1 py-2.5 px-3 rounded-xl text-sm font-semibold transition-ui ${
                 collection === c
                   ? 'bg-background shadow-sm text-foreground'
                   : 'text-muted-foreground hover:text-foreground'
@@ -165,7 +165,7 @@ const MaterialsStep: React.FC<MaterialsStepProps> = ({
       <div className="flex border-b border-border">
         <button
           onClick={() => setActiveTab('catalog')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-ui ${
             activeTab === 'catalog'
               ? 'border-primary text-primary'
               : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -179,7 +179,7 @@ const MaterialsStep: React.FC<MaterialsStepProps> = ({
         </button>
         <button
           onClick={() => setActiveTab('linear-foot')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-all ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-ui ${
             activeTab === 'linear-foot'
               ? 'border-primary text-primary'
               : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -198,7 +198,7 @@ const MaterialsStep: React.FC<MaterialsStepProps> = ({
         <>
           {/* Suggestion banner */}
           {hasRooms && !suggestionsApplied && totalItems === 0 && (
-            <button onClick={handleLoadSuggestions} className="w-full flex items-center gap-3 bg-primary/10 border border-primary/20 rounded-2xl p-4 hover:bg-primary/15 transition-all text-left">
+            <button onClick={handleLoadSuggestions} className="w-full flex items-center gap-3 bg-primary/10 border border-primary/20 rounded-2xl p-4 hover:bg-primary/15 transition-ui text-left">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0"><Sparkles size={20} className="text-primary" /></div>
               <div>
                 <p className="text-sm font-semibold text-foreground">Auto-fill from analysis</p>
@@ -224,7 +224,7 @@ const MaterialsStep: React.FC<MaterialsStepProps> = ({
                   const roomQty = room.items.reduce((s, sc) => s + sc.qty, 0);
                   return (
                     <div key={idx} className="border border-border rounded-xl overflow-hidden">
-                      <button onClick={() => setExpandedRooms((prev) => ({ ...prev, [idx]: !prev[idx] }))} className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-accent/50 transition-all text-left">
+                      <button onClick={() => setExpandedRooms((prev) => ({ ...prev, [idx]: !prev[idx] }))} className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-accent/50 transition-ui text-left">
                         <div className="flex items-center gap-2 min-w-0">
                           <span className="text-primary">{roomIcon(room.roomType)}</span>
                           <span className="text-sm font-semibold text-foreground truncate">{room.roomName}</span>
@@ -276,7 +276,7 @@ const MaterialsStep: React.FC<MaterialsStepProps> = ({
                 <span className="text-lg font-bold text-primary">{fmt(totalPrice)}</span>
               </div>
               {!showComparison && (
-                <button onClick={() => setShowComparison(true)} className="w-full flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground border border-border rounded-xl py-2 hover:bg-accent/50 transition-all">
+                <button onClick={() => setShowComparison(true)} className="w-full flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground border border-border rounded-xl py-2 hover:bg-accent/50 transition-ui">
                   <ArrowLeftRight size={14} /> Compare with Vendor Invoice
                 </button>
               )}
@@ -353,8 +353,8 @@ const MaterialsStep: React.FC<MaterialsStepProps> = ({
       )}
 
       <div className="flex gap-3">
-        <button onClick={onBack} className="flex-1 bg-secondary text-secondary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-80 transition-all min-h-[48px] active:scale-[0.98]">Back</button>
-        <button onClick={onNext} disabled={allItems === 0} className="flex-1 bg-primary text-primary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all min-h-[48px] active:scale-[0.98]">
+        <button onClick={onBack} className="flex-1 bg-secondary text-secondary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-80 transition-ui min-h-[48px] active:scale-[0.98]">Back</button>
+        <button onClick={onNext} disabled={allItems === 0} className="flex-1 bg-primary text-primary-foreground py-3.5 sm:py-4 rounded-xl font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-ui min-h-[48px] active:scale-[0.98]">
           View Quote — {fmt(totalPrice)}
         </button>
       </div>

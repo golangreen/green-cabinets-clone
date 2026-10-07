@@ -8,6 +8,7 @@ import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { useCompatibilityRulesSync } from "@/hooks/useCompatibilityRulesSync";
 import AdminRoute from "@/components/auth/AdminRoute";
 import HashScrollHandler from "@/components/layout/HashScrollHandler";
+import SkipLink from "@/components/layout/SkipLink";
 import CanonicalManager from "@/components/seo/CanonicalManager";
 import LegacyRedirect from "@/components/layout/LegacyRedirect";
 import ScrollToTopButton from "@/components/layout/ScrollToTopButton";
@@ -80,6 +81,7 @@ const App = () => {
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <SkipLink />
         <HashScrollHandler />
         <CanonicalManager />
         <ChunkErrorBoundary fallback={<RouteFallback />}>

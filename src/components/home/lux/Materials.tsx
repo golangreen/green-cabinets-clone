@@ -47,7 +47,7 @@ const Materials = () => (
         />
         <ul className="mt-10">
           {LINKS.map((l, i) => (
-            <li key={l.to} data-reveal="up" style={{ "--d": `${i * 80}ms` } as React.CSSProperties}>
+            <li key={l.to} data-reveal="up" style={{ "--d": `${i * 50}ms` } as React.CSSProperties}>
               <Link to={l.to} className="group flex items-center justify-between gap-6 border-t border-white/15 py-6">
                 <span>
                   <span className="block font-lux text-[1.75rem] leading-tight text-ivory">{l.title}</span>

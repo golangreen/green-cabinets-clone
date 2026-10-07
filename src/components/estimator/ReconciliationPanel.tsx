@@ -166,13 +166,13 @@ const ReconciliationPanel: React.FC<ReconciliationPanelProps> = ({ data, onApply
       <div className="flex gap-3">
         <button
           onClick={onDismiss}
-          className="flex-1 bg-secondary text-secondary-foreground py-3 rounded-xl font-semibold text-sm hover:opacity-80 transition-all"
+          className="flex-1 bg-secondary text-secondary-foreground py-3 rounded-xl font-semibold text-sm hover:opacity-80 transition-ui"
         >
           Cancel
         </button>
         <button
           onClick={handleApply}
-          className="flex-1 bg-primary text-primary-foreground py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition-all flex items-center justify-center gap-2"
+          className="flex-1 bg-primary text-primary-foreground py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition-ui flex items-center justify-center gap-2"
         >
           <Check size={16} />
           Apply {Object.values(resolved).filter(q => q > 0).length} Models

@@ -70,7 +70,7 @@ const FinishesColorsSection = () => {
                       role="tab"
                       aria-selected={isActive}
                       onClick={() => setActive(b.key)}
-                      className={`shrink-0 text-base md:text-lg transition-all active:scale-95 ${
+                      className={`shrink-0 text-base md:text-lg transition-ui active:scale-95 ${
                         isActive
                           ? "text-ivory font-semibold"
                           : "text-muted-foreground font-normal hover:text-ivory"
@@ -103,7 +103,7 @@ const FinishesColorsSection = () => {
                 >
                   <Link
                     to="/finishes-colors"
-                    className="group block rounded-lg overflow-hidden border border-border bg-background hover:border-brass hover:shadow-lg transition-all"
+                    className="group block rounded-lg overflow-hidden border border-border bg-background hover:border-brass hover:shadow-lg transition-ui"
                   >
                     <div className="aspect-square overflow-hidden bg-muted">
                       {panel.thumb ? (

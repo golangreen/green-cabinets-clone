@@ -116,7 +116,7 @@ const CaseStudyDetail = () => {
         <article className="container mx-auto px-4 sm:px-6 max-w-3xl py-10 sm:py-14">
           <Link
             to="/case-studies"
-            className="inline-flex items-center gap-2 text-sm text-accent-foreground hover:text-ivory font-medium mb-6"
+            className="inline-flex min-h-11 items-center gap-2 text-sm text-accent-foreground hover:text-ivory font-medium mb-6"
           >
             <ArrowLeft className="h-4 w-4" /> All case studies
           </Link>
@@ -157,10 +157,10 @@ const CaseStudyDetail = () => {
           ))}
 
           <div className="flex flex-wrap gap-3 my-10">
-            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-all">
+            <Button asChild size="lg" className="bg-brass hover:bg-[#D4B272] hover:scale-105 transition-ui">
               <Link to="/#contact">Get a quote like this <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="hover:scale-105 transition-all">
+            <Button asChild size="lg" variant="outline" className="hover:scale-105 transition-ui">
               <Link to="/designer">Launch the designer</Link>
             </Button>
           </div>

@@ -80,7 +80,7 @@ const WoodGalleryCarousel = ({ speciesName, images }: WoodGalleryCarouselProps) 
               aria-label={`Show ${speciesName} panel ${i + 1}`}
               onClick={() => api?.scrollTo(i)}
               className={cn(
-                "h-2 rounded-full transition-all",
+                "h-2 rounded-full transition-ui",
                 current === i ? "w-6 bg-brass" : "w-2 bg-brass/30 hover:bg-brass/60"
               )}
             />

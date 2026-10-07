@@ -28,7 +28,7 @@ const PageHero = ({ eyebrow, title, lede, crumbs, aside, children }: PageHeroPro
             <li key={c.label} className="flex items-center gap-2">
               {i > 0 && <span aria-hidden="true">/</span>}
               {c.to ? (
-                <Link to={c.to} className="transition-colors hover:text-ivory">
+                <Link to={c.to} className="inline-flex min-h-6 items-center transition-colors hover:text-ivory">
                   {c.label}
                 </Link>
               ) : (

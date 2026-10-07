@@ -29,7 +29,7 @@ const DiscountSection: React.FC<DiscountSectionProps> = ({ discount, setDiscount
         <div className="flex gap-2">
           <button
             onClick={() => setDiscount(d => ({ ...d, type: 'percentage' }))}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-ui ${
               discount.type === 'percentage'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-accent'
@@ -39,7 +39,7 @@ const DiscountSection: React.FC<DiscountSectionProps> = ({ discount, setDiscount
           </button>
           <button
             onClick={() => setDiscount(d => ({ ...d, type: 'fixed' }))}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-ui ${
               discount.type === 'fixed'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-accent'

@@ -27,7 +27,7 @@ const CabinetCard: React.FC<CabinetCardProps> = ({ cabinet: sc, collection = 'lu
   const shelfCount = sc.pullOutShelves || 0;
 
   return (
-    <div className="p-3 border border-primary bg-accent rounded-xl transition-all">
+    <div className="p-3 border border-primary bg-accent rounded-xl transition-ui">
       <div className="flex items-center justify-between">
         <div className="min-w-0 flex-1 mr-3">
           <div className="flex items-center gap-2">
@@ -38,14 +38,14 @@ const CabinetCard: React.FC<CabinetCardProps> = ({ cabinet: sc, collection = 'lu
           <p className="text-xs text-muted-foreground mt-0.5 truncate">{item.description}</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => onSetQty(sc.model, qty - 1)} className="w-9 h-9 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg border border-border hover:bg-accent transition-all active:scale-95">
+          <button onClick={() => onSetQty(sc.model, qty - 1)} className="w-9 h-9 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg border border-border hover:bg-accent transition-ui active:scale-95">
             <Minus size={14} className="text-muted-foreground" />
           </button>
           <span className="text-sm font-semibold w-6 text-center text-foreground">{qty}</span>
-          <button onClick={() => onSetQty(sc.model, qty + 1)} className="w-9 h-9 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-all active:scale-95">
+          <button onClick={() => onSetQty(sc.model, qty + 1)} className="w-9 h-9 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-ui active:scale-95">
             <Plus size={14} />
           </button>
-          <button onClick={() => onSetQty(sc.model, 0)} className="w-9 h-9 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg text-destructive hover:bg-destructive/10 transition-all ml-1 active:scale-95">
+          <button onClick={() => onSetQty(sc.model, 0)} className="w-9 h-9 sm:w-7 sm:h-7 flex items-center justify-center rounded-lg text-destructive hover:bg-destructive/10 transition-ui ml-1 active:scale-95">
             <Trash2 size={14} />
           </button>
         </div>
@@ -57,7 +57,7 @@ const CabinetCard: React.FC<CabinetCardProps> = ({ cabinet: sc, collection = 'lu
           <button
             key={side}
             onClick={() => onSetFinishSide(sc.model, side)}
-            className={`px-2.5 py-1.5 sm:px-2 sm:py-0.5 rounded-md transition-all capitalize min-h-[32px] sm:min-h-0 ${
+            className={`px-2.5 py-1.5 sm:px-2 sm:py-0.5 rounded-md transition-ui capitalize min-h-[32px] sm:min-h-0 ${
               finish === side
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-secondary text-secondary-foreground hover:bg-accent'
@@ -75,7 +75,7 @@ const CabinetCard: React.FC<CabinetCardProps> = ({ cabinet: sc, collection = 'lu
         {item.doors > 0 && (
           <button
             onClick={() => onSetGlassDoors(sc.model, !hasGlass)}
-            className={`flex items-center gap-1.5 px-3 py-2 sm:px-2.5 sm:py-1 rounded-lg transition-all min-h-[36px] sm:min-h-0 ${
+            className={`flex items-center gap-1.5 px-3 py-2 sm:px-2.5 sm:py-1 rounded-lg transition-ui min-h-[36px] sm:min-h-0 ${
               hasGlass ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground hover:bg-accent'
             }`}
           >

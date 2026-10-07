@@ -47,7 +47,7 @@ const Estimator = () => {
         <div className="mb-4">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex min-h-11 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft size={16} /> Back to site
           </Link>
@@ -85,7 +85,7 @@ const Estimator = () => {
                   <button
                     onClick={handleSaveQuote}
                     disabled={saving}
-                    className="flex items-center gap-1.5 text-xs bg-primary text-primary-foreground px-3 py-2 rounded-lg font-medium hover:opacity-90 disabled:opacity-60 transition-all min-h-[36px]"
+                    className="flex items-center gap-1.5 text-xs bg-primary text-primary-foreground px-3 py-2 rounded-lg font-medium hover:opacity-90 disabled:opacity-60 transition-ui min-h-[36px]"
                   >
                     <Save size={14} /> {saving ? 'Saving…' : loadedQuoteId ? 'Update' : 'Save'}
                   </button>
@@ -99,7 +99,7 @@ const Estimator = () => {
             // The app has no accounts (Apple requires in-app deletion for those)
             <button
               onClick={() => navigate('/auth')}
-              className="flex items-center gap-1.5 text-xs text-primary font-medium hover:underline min-h-[36px]"
+              className="flex items-center gap-1.5 text-xs text-primary font-medium hover:underline min-h-11"
             >
               <LogIn size={14} /> Sign in to save quotes
             </button>

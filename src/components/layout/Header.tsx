@@ -52,6 +52,13 @@ const MENU_GROUPS = [
 const Header = () => {
   const { pathname } = useLocation();
   const isHome = pathname === "/";
+  // Which top-level section the current page belongs to (anchors on the homepage never are)
+  const sectionOf = (to: string) => {
+    if (to.includes("#")) return false;
+    if (to === "/wood-species") return pathname.startsWith("/wood-species") || pathname === "/finishes-colors";
+    if (to === "/blog") return pathname.startsWith("/blog");
+    return pathname === to || pathname.startsWith(to + "/");
+  };
   const [atTop, setAtTop] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [quoteOpen, setQuoteOpen] = useState(false);
@@ -94,7 +101,11 @@ const Header = () => {
         <ul className="hidden lg:flex items-center gap-8 font-display text-[0.92rem] text-ivory/80">
           {NAV.map((n) => (
             <li key={n.label}>
-              <Link to={n.to} className="lux-link lux-link-quiet py-2 hover:text-ivory transition-colors">
+              <Link
+                to={n.to}
+                aria-current={sectionOf(n.to) ? "page" : undefined}
+                className="lux-link lux-link-quiet py-2 transition-colors hover:text-ivory aria-[current=page]:text-ivory"
+              >
                 {n.label}
               </Link>
             </li>
@@ -147,7 +158,8 @@ const Header = () => {
                           <Link
                             to={l.to}
                             onClick={() => setMenuOpen(false)}
-                            className="block py-2 font-lux text-[1.6rem] leading-tight text-ivory/90 hover:text-ivory"
+                            aria-current={l.to === pathname ? "page" : undefined}
+                            className="block py-2 font-lux text-[1.6rem] leading-tight text-ivory/90 hover:text-ivory aria-[current=page]:text-brass"
                           >
                             {l.label}
                           </Link>

@@ -108,7 +108,7 @@ export default function LinearFootCalculator({ collection }: LinearFootCalculato
           <button
             key={type}
             onClick={() => addRoom(type)}
-            className="flex items-center gap-2 border border-border rounded-xl px-3 py-3 text-sm text-foreground hover:border-primary/60 hover:bg-accent/50 transition-all active:scale-[0.98] text-left"
+            className="flex items-center gap-2 border border-border rounded-xl px-3 py-3 text-sm text-foreground hover:border-primary/60 hover:bg-accent/50 transition-ui active:scale-[0.98] text-left"
           >
             <span className="text-primary">{roomIcon(type)}</span>
             <span className="font-medium">+ {roomLabel(type)}</span>
@@ -128,7 +128,7 @@ export default function LinearFootCalculator({ collection }: LinearFootCalculato
                 {/* Header */}
                 <button
                   onClick={() => setExpanded(prev => ({ ...prev, [room.id]: !prev[room.id] }))}
-                  className="w-full flex items-center justify-between px-3 py-3 hover:bg-accent/40 transition-all text-left"
+                  className="w-full flex items-center justify-between px-3 py-3 hover:bg-accent/40 transition-ui text-left"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-primary">{roomIcon(room.roomType)}</span>
@@ -141,7 +141,7 @@ export default function LinearFootCalculator({ collection }: LinearFootCalculato
                     <span className="text-sm font-bold text-primary">{fmt(calc.total)}</span>
                     <button
                       onClick={(e) => { e.stopPropagation(); removeRoom(room.id); }}
-                      className="text-destructive hover:bg-destructive/10 rounded p-1 transition-all"
+                      className="text-destructive hover:bg-destructive/10 rounded p-1 transition-ui"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -190,7 +190,7 @@ export default function LinearFootCalculator({ collection }: LinearFootCalculato
                             <button
                               key={h}
                               onClick={() => updateRoom(room.id, { wallHeight: h })}
-                              className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                              className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-ui ${
                                 room.wallHeight === h
                                   ? 'bg-primary text-primary-foreground'
                                   : 'bg-secondary text-secondary-foreground hover:bg-accent'
@@ -208,7 +208,7 @@ export default function LinearFootCalculator({ collection }: LinearFootCalculato
                       {room.roomType !== 'vanity' && (
                         <button
                           onClick={() => updateRoom(room.id, { includeUppers: !room.includeUppers })}
-                          className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${
+                          className={`flex-1 py-2 rounded-lg text-xs font-medium transition-ui ${
                             room.includeUppers
                               ? 'bg-primary text-primary-foreground'
                               : 'bg-secondary text-secondary-foreground hover:bg-accent'
@@ -219,7 +219,7 @@ export default function LinearFootCalculator({ collection }: LinearFootCalculato
                       )}
                       <button
                         onClick={() => updateRoom(room.id, { includeLowers: !room.includeLowers })}
-                        className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${
+                        className={`flex-1 py-2 rounded-lg text-xs font-medium transition-ui ${
                           room.includeLowers
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-secondary text-secondary-foreground hover:bg-accent'

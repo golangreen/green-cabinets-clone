@@ -98,7 +98,7 @@ const Landing = () => {
               <Button 
                 size="lg"
                 onClick={() => document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 w-full sm:w-auto min-w-[200px] shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 w-full sm:w-auto min-w-[200px] shadow-xl hover:shadow-2xl transition-ui duration-300 hover:scale-105"
               >
                 Get Free Quote
               </Button>
@@ -106,7 +106,7 @@ const Landing = () => {
                 size="lg"
                 variant="outline"
                 onClick={() => navigate('/designer')}
-                className="border-2 text-lg px-8 py-6 w-full sm:w-auto min-w-[200px] hover:bg-primary/10 transition-all duration-300"
+                className="border-2 text-lg px-8 py-6 w-full sm:w-auto min-w-[200px] hover:bg-primary/10 transition-ui duration-300"
               >
                 Try Our Designer
               </Button>
@@ -252,7 +252,7 @@ const Landing = () => {
                 type="submit"
                 size="lg"
                 disabled={isSubmitting}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6 shadow-lg hover:shadow-xl transition-ui duration-300"
               >
                 {isSubmitting ? "Sending..." : "Get My Free Quote"}
               </Button>

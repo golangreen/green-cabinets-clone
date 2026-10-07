@@ -94,7 +94,7 @@ const Borough = () => {
         <Breadcrumbs
           items={[
             { label: "Home", to: "/" },
-            { label: "Neighborhoods", to: "/#neighborhoods" },
+            { label: "Neighborhoods", to: "/#contact" },
             { label: borough.name },
           ]}
         />
@@ -115,7 +115,7 @@ const Borough = () => {
           <p className="text-lg text-ivory/70">{borough.intro}</p>
           <p className="text-sm text-ivory/70 mt-6">
             Browse all{" "}
-            <Link to="/#neighborhoods" className="text-primary font-semibold hover:underline">
+            <Link to="/#contact" className="text-primary font-semibold hover:underline">
               neighborhoods we serve
             </Link>{" "}
             across NYC, or jump straight to our{" "}

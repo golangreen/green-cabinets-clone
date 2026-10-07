@@ -22,7 +22,7 @@ const HardwareSection: React.FC<HardwareSectionProps> = ({ hardware, setHardware
         <div className="flex items-center gap-2">
           <button
             onClick={() => setHardware({ ...hardware, applyAll: true })}
-            className={`text-xs font-medium px-2.5 py-1 rounded-lg transition-all ${
+            className={`text-xs font-medium px-2.5 py-1 rounded-lg transition-ui ${
               hardware.applyAll ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground hover:bg-accent'
             }`}
           >
@@ -30,7 +30,7 @@ const HardwareSection: React.FC<HardwareSectionProps> = ({ hardware, setHardware
           </button>
           <button
             onClick={() => setHardware({ ...hardware, applyAll: false })}
-            className={`text-xs font-medium px-2.5 py-1 rounded-lg transition-all ${
+            className={`text-xs font-medium px-2.5 py-1 rounded-lg transition-ui ${
               !hardware.applyAll ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground hover:bg-accent'
             }`}
           >
@@ -45,7 +45,7 @@ const HardwareSection: React.FC<HardwareSectionProps> = ({ hardware, setHardware
             <button
               key={key}
               onClick={() => setHardware({ ...hardware, type: key })}
-              className={`text-left p-3 rounded-xl border-2 transition-all ${
+              className={`text-left p-3 rounded-xl border-2 transition-ui ${
                 hardware.type === key ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/40'
               }`}
             >
@@ -74,7 +74,7 @@ const HardwareSection: React.FC<HardwareSectionProps> = ({ hardware, setHardware
                     <button
                       key={key}
                       onClick={() => setHardware({ ...hardware, perCabinet: { ...hardware.perCabinet, [sc.model]: key } })}
-                      className={`text-xs px-2 py-0.5 rounded-md transition-all ${
+                      className={`text-xs px-2 py-0.5 rounded-md transition-ui ${
                         hwType === key ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground hover:bg-accent'
                       }`}
                     >

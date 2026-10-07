@@ -61,7 +61,7 @@ const LuxuryMillwork = () => {
           {offerings.map((item) => (
             <div
               key={item.title}
-              className="p-8 rounded-2xl bg-card border border-border hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="p-8 rounded-2xl bg-card border border-border hover:shadow-lg hover:-translate-y-1 transition-ui duration-300"
             >
               <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
                 <item.icon className="w-7 h-7 text-primary" />

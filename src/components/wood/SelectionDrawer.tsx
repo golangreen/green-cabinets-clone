@@ -128,7 +128,7 @@ export const SelectionDrawer = () => {
       <SheetTrigger asChild>
         <button
           type="button"
-          className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full bg-brass px-5 py-3 text-ink shadow-2xl hover:bg-[#D4B272] hover:scale-105 transition-all"
+          className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full bg-brass px-5 py-3 text-ink shadow-2xl hover:bg-[#D4B272] hover:scale-105 transition-ui"
           aria-label={`My selection, ${ids.length} finishes`}
         >
           <Heart className="h-5 w-5 fill-white" />

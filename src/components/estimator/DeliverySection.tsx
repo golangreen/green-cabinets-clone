@@ -20,7 +20,7 @@ const DeliverySection: React.FC<DeliverySectionProps> = ({ delivery, setDelivery
           <button
             key={key}
             onClick={() => setDelivery({ ...delivery, option: key })}
-            className={`text-left p-3 rounded-xl border-2 transition-all ${
+            className={`text-left p-3 rounded-xl border-2 transition-ui ${
               delivery.option === key ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/40'
             }`}
           >

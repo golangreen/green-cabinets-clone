@@ -22,7 +22,7 @@ const AddOnsSection: React.FC<AddOnsSectionProps> = ({ addOns, setAddOns, totalA
           const existing = addOns.find(a => a.id === opt.id);
           const lf = existing?.linearFeet || 0;
           return (
-            <div key={opt.id} className={`flex items-center justify-between gap-3 p-3 rounded-xl border-2 transition-all ${lf > 0 ? 'border-primary bg-primary/5' : 'border-border'}`}>
+            <div key={opt.id} className={`flex items-center justify-between gap-3 p-3 rounded-xl border-2 transition-ui ${lf > 0 ? 'border-primary bg-primary/5' : 'border-border'}`}>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-foreground">{opt.name}</span>

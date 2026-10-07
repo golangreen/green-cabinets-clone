@@ -45,7 +45,7 @@ export default function ObfuscatedPhone({
         <button
           type="button"
           onClick={() => setGateOpen(true)}
-          className={`${className} underline underline-offset-2`}
+          className={`${className} inline-flex min-h-11 md:min-h-6 items-center py-0.5 underline underline-offset-2`}
           aria-label="Verify you are human to reveal our phone number"
         >
           {masked} <span className="whitespace-nowrap">(show)</span>
