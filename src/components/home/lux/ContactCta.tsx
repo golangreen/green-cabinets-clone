@@ -55,7 +55,7 @@ const ContactCta = () => {
             Request a quote
           </button>
           <button type="button" onClick={() => go("text")} className="lux-btn-ghost">
-            <MessageSquare className="h-4 w-4" aria-hidden="true" /> Text Golan
+            <MessageSquare className="h-4 w-4" aria-hidden="true" /> Text us
           </button>
           <button type="button" onClick={() => go("email")} className="lux-btn-ghost">
             <Mail className="h-4 w-4" aria-hidden="true" /> Email us

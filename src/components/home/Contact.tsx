@@ -28,7 +28,7 @@ const Contact = () => {
 
   const contactOptions = {
     "email-golan": { href: `mailto:${atob('b3JkZXJzQGdyZWVuY2FiaW5ldHNueS5jb20=')}`, label: "Email Us" },
-    "text-golan": { href: `sms:+1${atob('NzE4ODA0NTQ4OA==')}`, label: "Text Golan" },
+    "text-golan": { href: `sms:+1${atob('NzE4ODA0NTQ4OA==')}`, label: "Text us" },
   };
 
   const openContact = () => {
@@ -76,7 +76,7 @@ const Contact = () => {
             </div>
             <h3 className="font-display text-lg md:text-xl font-bold text-[#1a1a1a] mb-3">Call Us</h3>
             <div className="flex gap-1 items-center">
-              <span className="text-sm md:text-base text-muted-foreground">Golan Achdary:</span>
+              <span className="text-sm md:text-base text-muted-foreground">Office:</span>
               <ObfuscatedPhone 
                 encoded="NzE4ODA0NTQ4OA=="
                 className="text-sm md:text-base text-muted-foreground hover:text-[#1a1a1a] transition-colors"
@@ -139,7 +139,7 @@ const Contact = () => {
             </SelectTrigger>
             <SelectContent className="bg-white z-50">
               <SelectItem value="email-golan">Email Us</SelectItem>
-              <SelectItem value="text-golan">Text Golan</SelectItem>
+              <SelectItem value="text-golan">Text us</SelectItem>
             </SelectContent>
           </Select>
           
