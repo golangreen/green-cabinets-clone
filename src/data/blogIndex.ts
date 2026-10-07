@@ -33,6 +33,7 @@ import { customKitchenCabinetsCostNycPost } from "@/data/blogPosts/customKitchen
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  customKitchenCabinetsCostNycPost,
   pullOutTrashRecyclingPost,
   rangeHoodMantleMillworkPost,
   ditmasParkBrooklynPost,
@@ -94,6 +95,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  customKitchenCabinetsCostNycPost.slug,
   pullOutTrashRecyclingPost.slug,
   rangeHoodMantleMillworkPost.slug,
   ditmasParkBrooklynPost.slug,
