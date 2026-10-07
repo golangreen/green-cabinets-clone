@@ -15,6 +15,7 @@ export interface BlogArticle {
   canonical_url: string | null;
   created_at: string;
   updated_at: string;
+  faqs?: { q: string; a: string }[] | null;
 }
 
 export async function listBlogArticles(): Promise<BlogArticle[]> {
