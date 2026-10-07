@@ -26,6 +26,7 @@ const EXPECTED_DISALLOW = [
   "/checkout",
   "/payment-success",
   "/performance",
+  "/vanity-designer.html", // the designer embed; the page that frames it is what gets indexed
 ];
 
 const EXPECTED_ALLOW = [
