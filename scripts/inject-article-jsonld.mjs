@@ -533,16 +533,31 @@ if (!shellHtml.includes(HEAD_CLOSE)) {
   process.exit(1);
 }
 
-function writeRouteHtml(slug, title, description, datePublished, keywords, isBlog = false) {
+function writeRouteHtml(slug, title, description, datePublished, keywords, isBlog = false, faqs = null) {
   const schema = buildArticleSchema({ slug, title, description, datePublished, keywords, isBlog });
   const url = isBlog ? `https://greencabinetsny.com/blog/${slug}` : `https://greencabinetsny.com/${slug}`;
+  const faqSchema = Array.isArray(faqs) && faqs.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }
+    : null;
   const tag =
     `\n    <link rel="canonical" href="${url}" />\n` +
     `    <title>${title.replace(/</g, "&lt;")}</title>\n` +
     `    <meta name="description" content="${description.replace(/"/g, "&quot;")}" />\n` +
     `    <script type="application/ld+json" data-static-article>` +
     JSON.stringify(schema) +
-    `</script>\n  `;
+    `</script>\n` +
+    (faqSchema
+      ? `    <script type="application/ld+json" data-static-faq>${JSON.stringify(faqSchema)}</script>\n`
+      : "") +
+    `  `;
 
   // Strip the existing default <title>/<meta description>/<link canonical> so
   // the per-route ones win on initial paint (Helmet still updates on hydrate).
