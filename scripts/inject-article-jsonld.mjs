@@ -105,6 +105,37 @@ const GUIDES = [
 /** @type {Array<{slug:string,title:string,description:string,datePublished:string,keywords?:string}>} */
 const BLOG_POSTS = [
   {
+    slug: "custom-kitchen-cabinets-cost-nyc",
+    title: "How Much Do Custom Kitchen Cabinets Cost in NYC? What Drives the Price",
+    description:
+      "Custom kitchen cabinet cost in NYC: per-foot pricing, what drives the price, and how to get an accurate quote in Brooklyn, Manhattan, and Queens.",
+    datePublished: "2026-10-07",
+    keywords:
+      "custom kitchen cabinets cost NYC, custom cabinet cost per linear foot Brooklyn, kitchen cabinet pricing Manhattan, custom kitchen price Queens co-op, how much do custom cabinets cost NYC, custom millwork, by appointment",
+    faqs: [
+      {
+        q: "How much do custom kitchen cabinets cost per linear foot in NYC?",
+        a: "Our starting point is about $350 per linear foot for full kitchens, $225 per linear foot for base cabinets, and $125 per linear foot for wall cabinets. Door style, finish, and tall units move the final number.",
+      },
+      {
+        q: "What does a typical NYC kitchen cost in custom cabinets?",
+        a: "Most kitchens we quote land between $8,000 and $25,000+, depending on size, cabinet mix, finish, and building logistics.",
+      },
+      {
+        q: "Are countertops included?",
+        a: "No. Countertops, plumbing, electrical, and appliances are separate trades. We coordinate timing so the stone fabricator can template once cabinets are installed.",
+      },
+      {
+        q: "Is delivery included?",
+        a: "Yes, delivery inside Brooklyn, Manhattan, and Queens is included in our millwork quote. Building freight or board fees are separate.",
+      },
+      {
+        q: "Can I get a price without a site visit?",
+        a: "Photos and rough dimensions get you a ballpark. A by-appointment measure in your kitchen is what turns it into a firm quote.",
+      },
+    ],
+  },
+  {
     slug: "pull-out-trash-recycling-cabinets-nyc",
     title: "Pull-Out Trash and Recycling Cabinets for NYC Kitchens",
     description:
