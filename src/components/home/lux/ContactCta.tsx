@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { MessageSquare, Mail } from "lucide-react";
 import { openQuote } from "@/lib/quote";
 import ContactGateDialog from "@/components/privacy/ContactGateDialog";
@@ -24,7 +25,7 @@ const ContactCta = () => {
   };
 
   return (
-    <section id="contact" aria-labelledby="contact-title" className="relative scroll-mt-20 overflow-hidden bg-ink">
+    <section id="contact" aria-labelledby="contact-title" data-chapter="Start yours" className="relative scroll-mt-20 overflow-hidden bg-ink">
       <img
         src={photo}
         alt=""
@@ -62,7 +63,11 @@ const ContactCta = () => {
         </div>
 
         <p data-reveal="up" className="mt-8 font-display text-sm text-stone">
-          By appointment only · Brooklyn, Manhattan &amp; Queens
+          By appointment only in{" "}
+          <Link to="/custom-kitchen-cabinets-brooklyn" className="text-ivory/85 underline-offset-4 hover:underline">Brooklyn</Link>,{" "}
+          <Link to="/custom-kitchen-cabinets-manhattan" className="text-ivory/85 underline-offset-4 hover:underline">Manhattan</Link>,{" "}
+          <Link to="/custom-kitchen-cabinets-queens" className="text-ivory/85 underline-offset-4 hover:underline">Queens</Link> and{" "}
+          <Link to="/kitchen-cabinets-staten-island" className="text-ivory/85 underline-offset-4 hover:underline">Staten Island</Link>.
         </p>
       </div>
 

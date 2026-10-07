@@ -418,3 +418,47 @@ button, [role="button"], .lux-btn, .lux-btn-ghost {
 @media (pointer: coarse) {
   input, textarea, select { font-size: 16px; } /* iOS won't zoom into the field */
 }
+
+/* ── Story: prints settle into their tilt as they enter ── */
+[data-reveal="print"] {
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 1100ms var(--ease-out), opacity 700ms ease;
+  transition-delay: var(--d, 0ms);
+}
+html.reveal-armed [data-reveal="print"]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(48px) rotate(calc(var(--tilt, 0deg) * 2.4));
+}
+.lux-print { transition: transform 300ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  a:hover .lux-print, .lux-print:hover { transform: rotate(calc(var(--tilt, 0deg) * -1)) translateY(-6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal="print"] { transition: opacity 300ms ease; }
+  html.reveal-armed [data-reveal="print"]:not([data-in]) { transform: rotate(var(--tilt, 0deg)); }
+  .lux-print { transition: none; }
+}
+
+/* ── Story: chapter rail ── */
+.lux-rail, .lux-rail-pill {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease;
+}
+.lux-rail[data-shown], .lux-rail-pill[data-shown] { opacity: 1; pointer-events: auto; }
+.lux-rail-pill { pointer-events: none !important; }
+.lux-rail-tick { width: 14px; opacity: 0.35; transition: width 250ms var(--ease-out), opacity 200ms ease, background-color 200ms ease; }
+.lux-rail-label { opacity: 0; transform: translateX(6px); transition: opacity 200ms ease, transform 250ms var(--ease-out); }
+.lux-rail-stop[aria-current] .lux-rail-tick { width: 32px; opacity: 1; background: #C6A15B; }
+.lux-rail-stop[aria-current] .lux-rail-label { opacity: 1; transform: none; }
+@media (hover: hover) and (pointer: fine) {
+  .lux-rail:hover .lux-rail-label { opacity: 0.7; transform: none; }
+  .lux-rail:hover .lux-rail-stop[aria-current] .lux-rail-label { opacity: 1; }
+  .lux-rail-stop:hover .lux-rail-tick { opacity: 0.8; }
+}
+.lux-rail-stop:focus-visible { outline: 2px solid #C6A15B; outline-offset: 4px; border-radius: 4px; }
+.lux-rail-stop:focus-visible .lux-rail-label { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .lux-rail-tick, .lux-rail-label { transition: opacity 200ms ease; }
+  .lux-rail-label { transform: none; }
+}

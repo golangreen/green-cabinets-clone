@@ -1,14 +1,11 @@
 import Shell from "./Shell";
+import ChapterHead from "./ChapterHead";
 import photo from "@/assets/gallery/wood-kitchen-outdoor-access.jpeg";
 
 const RULES = [
   {
-    title: "Certificates of insurance",
-    text: "Naming the building, managing agent and board as additional insureds, usually within 48 hours.",
-  },
-  {
-    title: "Alteration agreements",
-    text: "Contractor registrations and every document your building asks for, handled for you.",
+    title: "Paperwork",
+    text: "COIs naming the building, agent and board, usually within 48 hours, plus alteration agreements and registrations.",
   },
   {
     title: "Freight elevator",
@@ -25,14 +22,14 @@ const RULES = [
 ];
 
 const Buildings = () => (
-  <Shell id="buildings" labelledBy="buildings-title" className="bg-ink">
+  <Shell id="buildings" labelledBy="buildings-title" className="bg-ink-2" chapter="Install day">
     <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
       <div className="lg:col-span-5">
         <div className="lg:sticky lg:top-28">
           <div data-reveal="image" className="relative aspect-[4/5] bg-ink-3">
             <img
               src={photo}
-              alt="Wood kitchen with marble countertops opening onto an outdoor patio"
+              alt="Finished white oak kitchen opening onto a terrace"
               loading="lazy"
               decoding="async"
               className="absolute inset-0 h-full w-full object-cover"
@@ -42,16 +39,17 @@ const Buildings = () => (
       </div>
 
       <div className="lg:col-span-7">
-        <div data-reveal="up">
-          <p className="lux-eyebrow mb-5">Co-ops, condos &amp; brownstones</p>
-          <h2 id="buildings-title" className="lux-display text-[clamp(2.3rem,4.6vw,4.25rem)] text-ivory">
-            We know what the board will ask before you do.
-          </h2>
-          <p className="lux-body mt-5 max-w-2xl text-base sm:text-lg text-ivory/70">
-            In New York the building sets the schedule. We plan around it from the first visit, so the
-            install day is the easy part.
-          </p>
-        </div>
+        <ChapterHead
+          n="04"
+          when="Week 6"
+          id="buildings-title"
+          title={
+            <>
+              Install day. <em className="italic text-brass">The paperwork is already done.</em>
+            </>
+          }
+          lede="Most installs take 3 to 7 days. In New York the building sets the schedule, so we plan around it from the first visit."
+        />
 
         <dl className="mt-12">
           {RULES.map((r, i) => (

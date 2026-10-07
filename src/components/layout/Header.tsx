@@ -100,7 +100,12 @@ const Header = () => {
         </ul>
 
         <div className="flex shrink-0 items-center gap-2">
-          <button type="button" onClick={openQuote} className="lux-btn !min-h-[44px] !px-5 text-sm">
+          {/* Homepage phones already have the bottom quote bar; don't show the action twice */}
+          <button
+            type="button"
+            onClick={openQuote}
+            className={`lux-btn !min-h-[44px] !px-5 text-sm ${isHome ? "max-md:!hidden" : ""}`}
+          >
             <span className="sm:hidden">Quote</span>
             <span className="hidden sm:inline">Request a quote</span>
           </button>

@@ -4,13 +4,14 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/home/Hero";
 import FAQ from "@/components/home/FAQ";
-import SelectedWork from "@/components/home/lux/SelectedWork";
-import Audiences from "@/components/home/lux/Audiences";
-import Process from "@/components/home/lux/Process";
-import Pricing from "@/components/home/lux/Pricing";
-import Buildings from "@/components/home/lux/Buildings";
+import RoomChapter from "@/components/home/lux/RoomChapter";
+import DrawingChapter from "@/components/home/lux/DrawingChapter";
 import Materials from "@/components/home/lux/Materials";
-import Areas from "@/components/home/lux/Areas";
+import Buildings from "@/components/home/lux/Buildings";
+import LivingChapter from "@/components/home/lux/LivingChapter";
+import Pricing from "@/components/home/lux/Pricing";
+import Audiences from "@/components/home/lux/Audiences";
+import ChapterRail from "@/components/home/lux/ChapterRail";
 import ContactCta from "@/components/home/lux/ContactCta";
 import MobileActionBar from "@/components/home/lux/MobileActionBar";
 import { useReveal } from "@/hooks/useReveal";
@@ -67,17 +68,19 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
-        <SelectedWork />
-        <Audiences />
-        <Process />
-        <Pricing />
-        <Buildings />
+        {/* The story of a Green Cabinets kitchen, told in chapters */}
+        <RoomChapter />
+        <DrawingChapter />
         <Materials />
-        <Areas />
+        <Buildings />
+        <LivingChapter />
+        <Pricing />
+        <Audiences />
         <FAQ />
         <ContactCta />
       </main>
       <Footer />
+      <ChapterRail />
       <MobileActionBar />
     </div>
   );

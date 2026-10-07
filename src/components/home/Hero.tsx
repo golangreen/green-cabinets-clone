@@ -36,7 +36,7 @@ const Hero = () => (
 
     <div className="relative mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10 pt-32 pb-10 md:pb-14">
       <p className="lux-eyebrow lux-fade mb-6" style={{ "--d": "100ms" } as React.CSSProperties}>
-        Custom cabinetry · Brooklyn, Manhattan &amp; Queens
+        From a crooked wall to a finished kitchen
       </p>
 
       <h1 className="lux-display text-[clamp(2.75rem,6.2vw,6.25rem)]">

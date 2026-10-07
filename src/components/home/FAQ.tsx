@@ -63,7 +63,7 @@ const FAQ = () => {
   };
 
   return (
-    <section id="faq" aria-labelledby="faq-title" className="scroll-mt-20 bg-ink-2 py-24 md:py-36">
+    <section id="faq" aria-labelledby="faq-title" className="scroll-mt-20 bg-ink py-24 md:py-36">
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>

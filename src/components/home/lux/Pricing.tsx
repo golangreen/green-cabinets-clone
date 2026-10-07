@@ -33,7 +33,7 @@ const RATES = [
 ];
 
 const Pricing = () => (
-  <Shell id="pricing" labelledBy="pricing-title" className="bg-ink-2">
+  <Shell id="pricing" labelledBy="pricing-title" className="bg-ink-2" chapter="Pricing">
     <SectionHead
       id="pricing-title"
       eyebrow="Pricing"
