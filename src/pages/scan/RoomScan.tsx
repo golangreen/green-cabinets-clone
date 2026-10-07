@@ -53,6 +53,29 @@ const STEPS = [
   { k: "Send it to us", v: "We plan your cabinets from the real room and reply within 24 hours." },
 ];
 
+// Punchlee is a separate app; Google Play goes in once its listing is public.
+const PUNCHLEE_STORES = [{ label: "App Store", href: "https://apps.apple.com/app/id6803715111" }];
+
+/** For people who want a room scanner of their own on their phone. */
+const OwnScanner = () => (
+  <aside aria-labelledby="own-scanner" className="mt-16 max-w-2xl border-t border-white/15 pt-8">
+    <p className="lux-eyebrow mb-3">Your own scanner</p>
+    <h2 id="own-scanner" className="lux-display text-[1.9rem]">
+      Want a room scanner on your phone?
+    </h2>
+    <p className="lux-body mt-3 text-ivory/70">
+      Punchlee is a separate app with a 3D room scan and punch lists, for your own projects. It's free to download.
+    </p>
+    <div className="mt-5 flex flex-wrap gap-x-7 gap-y-3 font-display text-sm">
+      {PUNCHLEE_STORES.map((s) => (
+        <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" className="lux-link text-ivory">
+          Punchlee on the {s.label}
+        </a>
+      ))}
+    </div>
+  </aside>
+);
+
 const today = () => new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 const RoomScan = () => {
@@ -316,6 +339,7 @@ const RoomScan = () => {
                 </div>
               </div>
             )}
+            <OwnScanner />
           </section>
         )}
 
@@ -499,6 +523,7 @@ const RoomScan = () => {
                 </div>
               </form>
             )}
+            <OwnScanner />
           </section>
         )}
 
