@@ -4,7 +4,7 @@
 set -e
 cd "${0:A:h}/.."
 export PATH="$HOME/.bun/bin:$PATH"
-export DEVELOPER_DIR=~/Downloads/Xcode.app/Contents/Developer
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer  # release Xcode only: App Review rejects beta-built apps
 npm run build >/dev/null && npx cap sync ios >/dev/null
 OUT=$(mktemp -d)
 K=~/Downloads/store/asc-key.json
