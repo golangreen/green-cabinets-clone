@@ -28,6 +28,11 @@ public class RoomScanPlugin: CAPPlugin, CAPBridgedPlugin {
     ]
 
     @objc func available(_ call: CAPPluginCall) {
+        #if DEBUG
+        // Store screenshots from the Simulator (no LiDAR): `-fakeLidar` shows the
+        // screen a LiDAR iPhone sees. Compiled out of App Store builds.
+        if ProcessInfo.processInfo.arguments.contains("-fakeLidar") { call.resolve(["ok": true, "multi": true]); return }
+        #endif
         #if canImport(RoomPlan) && !targetEnvironment(macCatalyst)
         if #available(iOS 17.0, *) { call.resolve(["ok": RoomCaptureSession.isSupported, "multi": RoomCaptureSession.isSupported]); return }
         if #available(iOS 16.0, *) { call.resolve(["ok": RoomCaptureSession.isSupported, "multi": false]); return }

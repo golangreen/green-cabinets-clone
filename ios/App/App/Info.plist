@@ -33,7 +33,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Green Cabinets uses the camera and LiDAR scanner to measure your room in 3D, so we can plan your cabinets from the real walls.</string>
+	<string>Green Cabinets uses the camera to scan your room in 3D with the LiDAR scanner, and to photograph drawings you choose to send us for a quote.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

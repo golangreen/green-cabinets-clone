@@ -16,7 +16,7 @@ const SECTIONS: { h: string; p: string[] }[] = [
     h: "What we collect, and when",
     p: [
       "Contact and quote requests: your name, email, phone number, address and the project details you type, when you send a form.",
-      "Drawings and files: blueprints, elevations or cabinet lists you upload to the cost estimator.",
+      "Drawings and files: blueprints, elevations, cabinet lists or photos of them that you upload or take in the cost estimator.",
       "Room scans (app): when you scan a room, Apple's RoomPlan builds an outline of the room on your iPhone: walls, doors, windows and fixed items such as cabinets, with their sizes. No photos or video of your home are saved or sent. The scan stays on your iPhone unless you tap Send to Green Cabinets; then we receive the room outline, a picture of the 3D room, and the name, email, phone and note you enter.",
       "Website analytics: on the website (not in the app) we use Google Analytics to understand which pages are useful. It uses cookies and collects device and usage information such as pages viewed.",
       "On your device: the website and app remember a few things in your browser storage, such as your last scan and the contact details you typed, so you don't have to enter them again. You can clear them at any time.",
@@ -25,7 +25,7 @@ const SECTIONS: { h: string; p: string[] }[] = [
   {
     h: "Camera",
     p: [
-      "The app asks for the camera only to scan a room. Apple's RoomPlan uses the camera and LiDAR scanner on your iPhone to measure the room. Camera frames are processed on the device and are not stored or sent by us.",
+      "The app asks for the camera for two things you start yourself: scanning a room, and photographing drawings for a quote. For a room scan, Apple's RoomPlan uses the camera and LiDAR scanner to measure the room; those camera frames are processed on your iPhone and are not stored or sent. A photo of a drawing is sent only when you upload it.",
     ],
   },
   {

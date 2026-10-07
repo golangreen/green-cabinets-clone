@@ -229,7 +229,8 @@ const RoomScan = () => {
                     className="mt-1 h-5 w-5 shrink-0 accent-[#C6A15B]"
                   />
                   <span className="lux-body text-sm text-ivory/80">
-                    I understand this scan is made for my project with Green Cabinets NY. {NOTICE_LONG}
+                    This scan is for my project with Green Cabinets NY. I won't share it with other cabinet
+                    companies, contractors or designers.
                   </span>
                 </label>
                 {lidar.multi && (

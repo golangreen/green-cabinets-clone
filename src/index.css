@@ -462,3 +462,10 @@ html.reveal-armed [data-reveal="print"]:not([data-in]) {
   .lux-rail-tick, .lux-rail-label { transition: opacity 200ms ease; }
   .lux-rail-label { transform: none; }
 }
+
+/* The fixed header grows by the status bar inset (notch / Dynamic Island) in
+   the iPhone app; push the page down by the same amount so nothing hides under
+   it. In Safari portrait the inset is 0, so the website is unchanged. */
+body {
+  padding-top: env(safe-area-inset-top, 0px);
+}

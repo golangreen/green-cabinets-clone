@@ -1,0 +1,26 @@
+{
+  "bundleId": "com.greencabinetsny.app",
+  "sku": "GCNY-APP-001",
+  "name": "Green Cabinets NY",
+  "nameBackup": "Green Cabinets: Room Scan",
+  "subtitle": "Custom cabinets + room scan",
+  "primaryCategory": "LIFESTYLE",
+  "secondaryCategory": "PRODUCTIVITY",
+  "price": "Free",
+  "copyright": "2026 Green Cabinets NY",
+  "supportUrl": "https://greencabinetsny.com/#contact",
+  "marketingUrl": "https://greencabinetsny.com",
+  "privacyUrl": "https://greencabinetsny.com/privacy",
+  "keywords": "kitchen,cabinets,custom,cabinetry,brooklyn,nyc,lidar,room scan,vanity,closet,millwork,measure,3d",
+  "promotionalText": "Scan your kitchen with your iPhone and send Green Cabinets the measured room. We plan your custom cabinets from the real walls and reply within 24 hours.",
+  "description": "Custom kitchen cabinets, vanities, closets and millwork for New York homes, designed in Bushwick since 2009.\n\nSCAN YOUR ROOM\nOn an iPhone or iPad with LiDAR, walk your kitchen for about two minutes. The app measures every wall, door, window and existing cabinet, then shows the room in 3D in feet and inches. Send it to Green Cabinets and we plan your cabinets from the real room, not a guess. Every scan and picture is marked confidential and made for your project with Green Cabinets NY.\n\nNo LiDAR? Open the sample scan to see what we receive, upload your drawings to the cost estimator, or request a quote.\n\nSEE THE WORK\nKitchens, vanities, walk-in closets and built-ins from Brooklyn, Manhattan and Queens, from the first drawing to the finished room.\n\nREAL PRICES UP FRONT\nWhat NYC kitchens cost with us, by size, before the first visit.\n\nBUILT FOR NEW YORK BUILDINGS\nCo-op and condo paperwork, certificates of insurance, freight elevators, quiet hours, crooked pre-war walls. We plan around your building from day one.\n\nMATERIALS\nCompare 14 hardwoods and browse real panel decors from Tafisa, Egger, Shinnoki, Wilsonart and AGT, with product codes.\n\nBy appointment only. We bring door and finish samples to your home in Brooklyn, Manhattan and Queens.",
+  "reviewNotes": "Thank you for reviewing Green Cabinets NY.\n\nGreen Cabinets NY is a custom cabinetry business in New York. The app's native feature is a LiDAR room scan built on Apple RoomPlan (RoomCaptureSession), in ios/App/App/RoomScanPlugin.swift.\n\nHOW TO TEST\n1. Home screen: tap \"Scan your room\".\n2. On an iPhone/iPad with LiDAR (iPhone 12 Pro or newer Pro models, iPad Pro): tick the consent box, tap \"Start the scan\" and walk the room; tap Done. The room appears in 3D with measurements in feet and inches. \"Send to Green Cabinets\" emails the scan to our office; \"Save a copy\" shares a watermarked picture.\n3. On a device without LiDAR the app says so and offers \"See a sample scan\", which opens the same 3D viewer with a sample room, so every screen can be reviewed on any device.\n\nThere are no accounts, sign-in, purchases or ads in the app. The camera is used only for the room scan (and, if the user chooses, to photograph drawings in the cost estimator). Contact forms send the user's own details to our office so we can reply.\n\nContact: orders@greencabinetsny.com, (718) 804-5488.",
+  "reviewContact": {
+    "firstName": "Golan",
+    "lastName": "Achdary",
+    "email": "orders@greencabinetsny.com",
+    "phone": "+1 718 804 5488"
+  },
+  "ageRating": "4+ (all content questions: None; unrestricted web access: No)",
+  "whatToTest": "First release: scan a room (LiDAR iPhone) or open the sample scan, send it, request a quote."
+}
