@@ -101,11 +101,11 @@ const CustomKitchenCabinetsQueens = () => (
       <meta property="og:url" content={URL} />
       <meta property="og:title" content={TITLE} />
       <meta property="og:description" content={DESC} />
-      <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
+      <meta property="og:image" content="https://greencabinetsny.com/og-cover.jpg" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={TITLE} />
       <meta name="twitter:description" content={DESC} />
-      <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
+      <meta name="twitter:image" content="https://greencabinetsny.com/og-cover.jpg" />
       <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
       <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       <script type="application/ld+json">{JSON.stringify(serviceJsonLd)}</script>

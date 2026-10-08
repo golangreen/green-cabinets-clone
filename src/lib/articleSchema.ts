@@ -35,7 +35,7 @@ export interface ArticleSchemaInput {
   type?: "Article" | "BlogPosting" | "NewsArticle" | "TechArticle";
 }
 
-const DEFAULT_IMAGE = "https://greencabinetsny.com/og-image.jpg";
+const DEFAULT_IMAGE = "https://greencabinetsny.com/og-cover.jpg";
 
 export function buildArticleSchema(input: ArticleSchemaInput) {
   const {

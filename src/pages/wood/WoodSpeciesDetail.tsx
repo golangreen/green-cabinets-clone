@@ -78,7 +78,7 @@ const WoodSpeciesDetail = () => {
       "@type": "Organization",
       "@id": ORG_ID,
       name: "Green Cabinets NY",
-      logo: { "@type": "ImageObject", url: "https://greencabinetsny.com/og-image.jpg" },
+      logo: { "@type": "ImageObject", url: "https://greencabinetsny.com/og-cover.jpg" },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
   };

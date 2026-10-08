@@ -40,8 +40,8 @@ const Index = () => {
         <meta property="og:url" content="https://greencabinetsny.com/" />
         <meta property="og:title" content="Bespoke European Cabinetry & Luxury Kitchens in NYC | Green Cabinets NY" />
         <meta property="og:description" content="Bespoke European cabinetry, luxury custom kitchens, vanities and millwork designed in Bushwick for Brooklyn, Manhattan and Queens homes since 2009." />
-        <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
-        <meta property="og:image:secure_url" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta property="og:image" content="https://greencabinetsny.com/og-cover.jpg" />
+        <meta property="og:image:secure_url" content="https://greencabinetsny.com/og-cover.jpg" />
         <meta property="og:image:type" content="image/jpeg" />
         <meta property="og:image:width" content="1216" />
         <meta property="og:image:height" content="640" />
@@ -55,7 +55,7 @@ const Index = () => {
         <meta name="twitter:url" content="https://greencabinetsny.com/" />
         <meta name="twitter:title" content="Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens | Green Cabinets NY" />
         <meta name="twitter:description" content="Custom shaker & slim shaker kitchen cabinets, bathroom vanities & millwork designed in Bushwick for NYC homes since 2009." />
-        <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta name="twitter:image" content="https://greencabinetsny.com/og-cover.jpg" />
         <meta name="twitter:image:alt" content="Sage green shaker kitchen cabinets with marble countertops in a Brooklyn brownstone — Green Cabinets NY" />
 
         {/* Canonical URL */}

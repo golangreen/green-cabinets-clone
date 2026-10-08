@@ -155,7 +155,7 @@ const WoodSpecies = () => {
           property="og:description"
           content="Compare 11 cabinet hardwoods side-by-side: maple, walnut, oak, birch, cherry, hickory, ash, mahogany, alder, beech. Grain, hardness, cost, finishes."
         />
-        <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta property="og:image" content="https://greencabinetsny.com/og-cover.jpg" />
         <script type="application/ld+json">{JSON.stringify(itemListSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(howToJsonLd)}</script>
       </Helmet>

@@ -82,7 +82,7 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
     url: n.url,
     telephone: APP_CONFIG.structuredData.telephone,
     email: APP_CONFIG.structuredData.email,
-    image: "https://greencabinetsny.com/og-image.jpg",
+    image: "https://greencabinetsny.com/og-cover.jpg",
     priceRange: "$$$",
     address: {
       "@type": "PostalAddress",
@@ -137,13 +137,13 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
         <meta property="og:url" content={n.url} />
         <meta property="og:title" content={n.title} />
         <meta property="og:description" content={n.description} />
-        <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta property="og:image" content="https://greencabinetsny.com/og-cover.jpg" />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={n.url} />
         <meta property="twitter:title" content={n.title} />
         <meta property="twitter:description" content={n.description} />
-        <meta name="twitter:image" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta name="twitter:image" content="https://greencabinetsny.com/og-cover.jpg" />
 
         <link rel="canonical" href={n.url} />
 

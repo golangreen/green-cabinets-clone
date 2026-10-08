@@ -63,7 +63,7 @@ const GalleryPage = () => {
         <meta property="og:description" content="Real Brooklyn and NYC projects: custom kitchens, bathroom vanities, and closet systems designed by us and built by vetted millwork suppliers." />
         <meta property="og:url" content="https://greencabinetsny.com/gallery" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta property="og:image" content="https://greencabinetsny.com/og-cover.jpg" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "CollectionPage",

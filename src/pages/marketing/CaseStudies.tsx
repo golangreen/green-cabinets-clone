@@ -67,7 +67,7 @@ const CaseStudies = () => (
       <meta property="og:url" content={URL} />
       <meta property="og:title" content={TITLE} />
       <meta property="og:description" content={DESC} />
-      <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
+      <meta property="og:image" content="https://greencabinetsny.com/og-cover.jpg" />
       <meta name="twitter:card" content="summary_large_image" />
       <script type="application/ld+json">{JSON.stringify(itemListSchema)}</script>
       <script type="application/ld+json">{JSON.stringify(collectionPageSchema)}</script>

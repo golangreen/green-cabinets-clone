@@ -83,7 +83,7 @@ const ReachInClosetSystemsNYC = () => (
       <meta property="og:url" content={URL} />
       <meta property="og:title" content={TITLE} />
       <meta property="og:description" content={DESC} />
-      <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
+      <meta property="og:image" content="https://greencabinetsny.com/og-cover.jpg" />
       <meta property="article:author" content="Golan Achdary" />
       <meta name="twitter:card" content="summary_large_image" />
       <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>

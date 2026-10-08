@@ -88,7 +88,7 @@ const Services = () => {
         <meta property="og:title" content="Services | Green Cabinets NY" />
         <meta property="og:description" content="Custom kitchens, vanities, closets, built-ins and commercial millwork across NYC." />
         <meta property="og:url" content="https://greencabinetsny.com/services" />
-        <meta property="og:image" content="https://greencabinetsny.com/og-image.jpg" />
+        <meta property="og:image" content="https://greencabinetsny.com/og-cover.jpg" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "ItemList",
