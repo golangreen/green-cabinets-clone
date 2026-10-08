@@ -14,6 +14,8 @@ const LINE = "#5E574D";
 const DIM = "#8A6A2F";
 const CAB = "#DCC9A3";
 const APPL = "#FBFAF7";
+const BRASS = "#C6A15B";
+const FADED = "#B9B1A4";
 
 const NAMES: Record<string, string> = {
   fridge: "Fridge", stove: "Range", oven: "Oven", dishwasher: "DW", washer: "Washer", sink: "Sink", toilet: "WC",
@@ -22,7 +24,16 @@ const NAMES: Record<string, string> = {
 
 type P = [number, number];
 
-export function drawFloorPlan(room: ScannedRoom, unit: Unit, width = 2000, aspect = 0.72): HTMLCanvasElement {
+export interface PlanCanvas extends HTMLCanvasElement {
+  /** The wall under a point in canvas pixels, or -1. */
+  wallAt: (px: number, py: number) => number;
+}
+
+export function drawFloorPlan(
+  room: ScannedRoom,
+  unit: Unit,
+  { width = 2000, aspect = 0.72, selected = [] as number[], tags = false } = {},
+): PlanCanvas {
   const len = lengthIn(unit);
   const area = areaIn(unit);
   const dims = unit !== "none";
@@ -40,7 +51,7 @@ export function drawFloorPlan(room: ScannedRoom, unit: Unit, width = 2000, aspec
   const Y = (z: number) => H / 2 + (z - cz) * s;
   const u = width / 1000; // one design unit
 
-  const c = document.createElement("canvas");
+  const c = document.createElement("canvas") as PlanCanvas;
   c.width = width;
   c.height = H;
   const g = c.getContext("2d")!;
@@ -109,12 +120,15 @@ export function drawFloorPlan(room: ScannedRoom, unit: Unit, width = 2000, aspec
   g.strokeStyle = WALL;
   g.lineCap = "square";
   g.lineWidth = wallW;
-  for (const w of walls) {
+  const picked = new Set(selected);
+  walls.forEach((w, i) => {
+    g.strokeStyle = picked.has(i) ? BRASS : picked.size ? FADED : WALL;
     g.beginPath();
     g.moveTo(X(w.a[0]), Y(w.a[1]));
     g.lineTo(X(w.b[0]), Y(w.b[1]));
     g.stroke();
-  }
+  });
+  g.strokeStyle = WALL;
 
   const centre: P = [cx, cz];
   const inward = (a: P, b: P): P => {
@@ -235,5 +249,33 @@ export function drawFloorPlan(room: ScannedRoom, unit: Unit, width = 2000, aspec
       g.fillText(`Ceiling ${len(ceiling)}`, width / 2, H / 2 + 14 * u);
     }
   }
+  // Wall numbers, while walls are being picked: a numbered dot just inside each wall
+  if (tags) {
+    g.textAlign = "center";
+    g.textBaseline = "middle";
+    g.font = `600 ${15 * u}px Outfit, Helvetica, Arial, sans-serif`;
+    walls.forEach((w, i) => {
+      const n = inward(w.a, w.b), off = wallW * 0.5 + 20 * u;
+      const mx = X((w.a[0] + w.b[0]) / 2) + n[0] * off, my = Y((w.a[1] + w.b[1]) / 2) + n[1] * off;
+      g.fillStyle = picked.has(i) ? BRASS : WALL;
+      g.beginPath();
+      g.arc(mx, my, 15 * u, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = picked.has(i) ? WALL : PAPER;
+      g.fillText(String(i + 1), mx, my + 1 * u);
+    });
+  }
+
+  c.wallAt = (px, py) => {
+    let best = -1, bd = Math.max(28 * u, wallW * 1.5);
+    walls.forEach((w, i) => {
+      const ax = X(w.a[0]), ay = Y(w.a[1]), bx = X(w.b[0]), by = Y(w.b[1]);
+      const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy || 1;
+      const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l2));
+      const d = Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+      if (d < bd) { bd = d; best = i; }
+    });
+    return best;
+  };
   return c;
 }

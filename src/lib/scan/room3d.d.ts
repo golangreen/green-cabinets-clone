@@ -10,6 +10,8 @@ export interface Room3DOptions {
   light?: boolean;
   onPerf?: (msPerFrame: number) => void;
   transparent?: boolean;
+  /** Colour of picked walls (hex number). */
+  accent?: number;
 }
 
 export interface Room3DApi {
@@ -17,6 +19,9 @@ export interface Room3DApi {
   zoom: (factor: number) => void;
   sizes: (on: boolean) => void;
   units: (fmt: (m: number) => string) => void;
+  selectMode: (on: boolean, onSelect?: ((walls: number[]) => void) | null) => void;
+  setSelected: (walls: number[]) => void;
+  snapshotWall: (wall: number) => HTMLCanvasElement | null;
   snapshot: () => HTMLCanvasElement;
   still: () => void;
   pause: (on: boolean) => void;

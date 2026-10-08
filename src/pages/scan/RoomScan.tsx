@@ -96,6 +96,7 @@ const RoomScan = () => {
   const [shots, setShots] = useState<Shot[]>([]);
   const [preview, setPreview] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
+  const [walls, setWalls] = useState<number[]>([]);
   const viewer = useRef<RoomViewerHandle>(null);
 
   useEffect(() => write(PREFS, { unit, mark }), [unit, mark]);
@@ -141,12 +142,10 @@ const RoomScan = () => {
     window.scrollTo(0, 0);
   };
 
-  /** The view exactly as framed now, with the logo, title and notice, as a JPEG at most 1600 px wide. */
-  const brandedPicture = async (): Promise<Shot | null> => {
-    const snap = viewer.current?.snapshot();
-    if (!snap || !cur) return null;
-    const title = VIEW_TITLES[snap.mode];
-    const pic = await brandSnapshot(snap.canvas, {
+  /** A picture with the logo, title and notice, as a JPEG at most 1600 px wide. */
+  const brand = async (canvas: HTMLCanvasElement, title: string, id: number): Promise<Shot | null> => {
+    if (!cur) return null;
+    const pic = await brandSnapshot(canvas, {
       scanId: cur.scanId === "GC-SAMPLE" ? "SAMPLE" : cur.scanId,
       date: today(),
       client: form.name || undefined,
@@ -161,15 +160,32 @@ const RoomScan = () => {
       out.height = Math.round((pic.height / pic.width) * 1600);
       out.getContext("2d")!.drawImage(pic, 0, 0, out.width, out.height);
     }
-    return { id: Date.now(), url: out.toDataURL("image/jpeg", 0.88), title };
+    return { id, url: out.toDataURL("image/jpeg", 0.88), title };
+  };
+
+  /** The view exactly as framed now. */
+  const brandedPicture = async (): Promise<Shot | null> => {
+    const snap = viewer.current?.snapshot();
+    return snap ? brand(snap.canvas, VIEW_TITLES[snap.mode], Date.now()) : null;
   };
 
   const addShot = async () => {
     if (shots.length >= MAX_SHOTS) return;
     setAdding(true);
     try {
-      const shot = await brandedPicture();
-      if (shot) setShots((s) => [...s, shot]);
+      if (walls.length) {
+        // each picked wall: its flat drawing and its 3D view
+        const made: Shot[] = [];
+        const t0 = Date.now();
+        for (const [i, w] of (viewer.current?.wallShots() ?? []).entries()) {
+          const shot = await brand(w.canvas, w.title, t0 + i);
+          if (shot) made.push(shot);
+        }
+        setShots((s) => [...s, ...made].slice(0, MAX_SHOTS));
+      } else {
+        const shot = await brandedPicture();
+        if (shot) setShots((s) => [...s, shot]);
+      }
     } finally {
       setAdding(false);
     }
@@ -368,7 +384,7 @@ const RoomScan = () => {
               </button>
             </div>
 
-            <RoomViewer ref={viewer} room={cur.room} sample={cur.sample} unit={unit} />
+            <RoomViewer ref={viewer} room={cur.room} sample={cur.sample} unit={unit} onWallsChange={setWalls} />
 
             {/* How the pictures look: units, the confidential mark, and the set to save or send */}
             <div className="mt-4 flex flex-col gap-4 border-b border-white/10 pb-5 md:flex-row md:items-center md:justify-between">
@@ -401,12 +417,16 @@ const RoomScan = () => {
                 className="lux-btn-ghost self-start disabled:opacity-40 md:self-auto"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
-                {shots.length >= MAX_SHOTS ? `${MAX_SHOTS} pictures, the most` : "Add this view to the set"}
+                {shots.length >= MAX_SHOTS
+                  ? `${MAX_SHOTS} pictures, the most`
+                  : walls.length
+                    ? walls.length > 1 ? "Add these walls" : "Add this wall"
+                    : "Add this view to the set"}
               </button>
             </div>
             <p className="mt-3 font-display text-xs text-stone">
-              Frame the room the way you want it (3D, Top or Plan, turn and zoom), pick the units, then add the view. Every
-              picture carries the Green Cabinets logo.
+              Frame the room the way you want it (3D, Top or Plan, turn and zoom), pick the units, then add the view. For one
+              wall, tap Select and tap it. Every picture carries the Green Cabinets logo.
             </p>
 
             {shots.length > 0 && (

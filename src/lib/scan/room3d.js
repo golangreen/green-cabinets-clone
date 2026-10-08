@@ -54,7 +54,7 @@ function holesIn(w, room, fy) {
   return out.sort((p, q) => p.s0 - q.s0);
 }
 
-export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${m.toFixed(2)} m`, area = (a) => `${a.toFixed(1)} m²`, onPick, onLost, light = false, onPerf, transparent = false } = {}) {
+export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${m.toFixed(2)} m`, area = (a) => `${a.toFixed(1)} m²`, onPick, onLost, light = false, onPerf, transparent = false, accent = 0xc6a15b } = {}) {
   // light: for weaker phones - no smoothing, no outlines, simpler shading,
   // lower sharpness. Every size and name is the same.
   const fy = floorLevel(room);
@@ -150,7 +150,7 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
     if (n[0] * (mid[0] - centre[0]) + n[1] * (mid[1] - centre[1]) < 0) n = [uz, -ux];
     const mat = Mat({ color: 0xece8df, roughness: 0.9, transparent: true });
     const em = edgeMat();
-    const set = { mats: [mat, em], n, mid, glass: [] };
+    const set = { mats: [mat, em], n, mid, glass: [], wi, len, h: H, base: 0xece8df };
     wallSets[wi] = set;
     const at = (s) => [w.a[0] + ux * s, w.a[1] + uz * s];
     const info = { kind: "wall", len, h: H, wall: wi };
@@ -167,7 +167,7 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
       piece(s0, hole.s1, 0, hole.bot);
       piece(s0, hole.s1, hole.top, H);
       const p = at((s0 + hole.s1) / 2), hw = hole.s1 - s0, hh = hole.top - hole.bot;
-      const hinfo = { kind: hole.kind === "doors" ? "door" : hole.kind === "windows" ? "window" : "opening", w: hole.o.len, h: hole.o.h, off: hole.bot, open: hole.o.open };
+      const hinfo = { kind: hole.kind === "doors" ? "door" : hole.kind === "windows" ? "window" : "opening", w: hole.o.len, h: hole.o.h, off: hole.bot, open: hole.o.open, wall: wi };
       if (hole.kind === "windows") {
         const gm = Mat({ color: 0x8ec9ec, transparent: true, opacity: 0.38, roughness: 0.1, metalness: 0.1 });
         const fm = new THREE.LineBasicMaterial({ color: 0x3b7fb0, transparent: true });
@@ -195,12 +195,27 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
     piece(cur, len, 0, H);
   });
 
+  // Which wall an object stands against (its back within a hand's width of the wall, and parallel to it), or -1.
+  function wallAgainst(o) {
+    let best = -1, bd = Infinity;
+    walls.forEach((w, wi) => {
+      const len = Math.hypot(w.b[0] - w.a[0], w.b[1] - w.a[1]) || 1, ux = (w.b[0] - w.a[0]) / len, uz = (w.b[1] - w.a[1]) / len;
+      if (Math.abs(o.ax[0] * ux + o.ax[1] * uz) < 0.8) return; // not parallel
+      const mx = o.c[0] - w.a[0], mz = o.c[1] - w.a[1], s = mx * ux + mz * uz, off = Math.abs(mx * uz - mz * ux);
+      if (s < -0.2 || s > len + 0.2 || off > o.d / 2 + 0.25) return;
+      if (off < bd) { bd = off; best = wi; }
+    });
+    return best;
+  }
+  const objMats = [];
+
   // Fixed things as simple blocks.
   (room.objects || []).forEach((o) => {
     const rot = Math.atan2(-o.ax[1], o.ax[0]);
     const bot = typeof o.y === "number" ? Math.max(0, o.y - o.h / 2 - fy) : 0;
-    const mat = Mat({ color: OBJ_COLOR[o.cat] ?? 0xcfc7ba, roughness: 0.75 });
-    addBox(world, o.w, o.h, o.d, o.c[0], bot + o.h / 2, o.c[1], rot, mat, { kind: "object", cat: o.cat, w: o.w, d: o.d, h: o.h });
+    const mat = Mat({ color: OBJ_COLOR[o.cat] ?? 0xcfc7ba, roughness: 0.75, transparent: true });
+    const mesh = addBox(world, o.w, o.h, o.d, o.c[0], bot + o.h / 2, o.c[1], rot, mat, { kind: "object", cat: o.cat, w: o.w, d: o.d, h: o.h });
+    objMats.push({ mat, edge: mesh.userData.edge?.material, wall: wallAgainst(o) });
   });
 
   // Room names floating over each floor, and wall lengths on the walls you can see.
@@ -223,9 +238,18 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
   walls.forEach((w, wi) => {
     if (w.len < 0.3) return;
     const set = wallSets[wi];
-    labels.push({ el: mkLabel(fmt(w.len)), len: w.len, p: new THREE.Vector3((w.a[0] + w.b[0]) / 2 - cx, (typeof w.y === "number" ? w.y + w.h / 2 - fy : w.h) + 0.08, (w.a[1] + w.b[1]) / 2 - cz), set });
+    labels.push({ el: mkLabel(fmt(w.len)), len: w.len, wi, p: new THREE.Vector3((w.a[0] + w.b[0]) / 2 - cx, (typeof w.y === "number" ? w.y + w.h / 2 - fy : w.h) + 0.08, (w.a[1] + w.b[1]) / 2 - cz), set });
   });
   let showSizes = true;
+  // Picking walls: in select mode a tap toggles a wall; the picked walls take the
+  // accent colour and everything else fades, so the picture shows only them.
+  let selecting = false, onSelect = null;
+  const selected = new Set();
+  const labelText = (l) => {
+    const size = fmt(l.len);
+    return selecting ? (size ? `${l.wi + 1} · ${size}` : `${l.wi + 1}`) : size;
+  };
+  const relabel = () => { for (const l of labels) if (l.len != null) l.el.textContent = labelText(l); };
 
   // Picking: a tap (not a drag) on something reports it and outlines it.
   const ray = new THREE.Raycaster();
@@ -302,7 +326,15 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
     const r = renderer.domElement.getBoundingClientRect();
     ray.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), camera);
     // Faded front walls let the tap through to what is behind them.
-    const hit = ray.intersectObjects(pickables, false).find((h) => h.object.userData.info.kind === "opening" || (h.object.material.opacity ?? 1) > 0.3);
+    const hit = ray.intersectObjects(pickables, false).find((h) => h.object.userData.info.kind === "opening" || (h.object.material.opacity ?? 1) > 0.3 || (selecting && h.object.userData.info.wall != null && !wallSets[h.object.userData.info.wall]?.faded));
+    if (selecting) {
+      const wi = hit?.object.userData.info.wall;
+      if (wi == null) return;
+      if (selected.has(wi)) selected.delete(wi); else selected.add(wi);
+      dirty = true;
+      onSelect?.([...selected].sort((a, b) => a - b));
+      return;
+    }
     if (!hit) { highlight(null); onPick?.(null); return; }
     highlight(hit.object);
     onPick?.(hit.object.userData.info);
@@ -355,11 +387,19 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
     for (const s of wallSets) {
       if (!s) continue;
       const front = !steep && s.n[0] * vx + s.n[1] * vz > 0.25 && (s.mid[0] - cx) * vx + (s.mid[1] - cz) * vz > 0;
-      const k = front ? 0.12 : 1;
+      const picked = selected.has(s.wi), others = selected.size > 0 && !picked;
+      const k = (front ? 0.12 : 1) * (others ? 0.14 : 1);
       s.faded = front;
-      s.mats[0].opacity = k; s.mats[1].opacity = front ? 0.25 : 1;
-      s.mats[0].depthWrite = !front;
-      for (const [m, o] of s.glass) m.opacity = o * (front ? 0.3 : 1);
+      s.mats[0].color.setHex(picked ? accent : s.base);
+      s.mats[0].opacity = k; s.mats[1].opacity = (front ? 0.25 : 1) * (others ? 0.12 : 1);
+      s.mats[0].depthWrite = !front && !others;
+      for (const [m, o] of s.glass) m.opacity = o * (front ? 0.3 : 1) * (others ? 0.08 : 1);
+    }
+    for (const o of objMats) {
+      const keep = !selected.size || selected.has(o.wall);
+      o.mat.opacity = keep ? 1 : 0.06;
+      o.mat.depthWrite = keep;
+      if (o.edge) o.edge.opacity = keep ? 1 : 0.06;
     }
   };
 
@@ -421,7 +461,7 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
     if (labelBottom > 0) placed.push({ x: -9999, y: h - labelBottom, w: 99999, h: 9999 });
     const rooms = [];
     for (const l of labels) {
-      const hide = (!l.room && (!showSizes || l.set?.faded));
+      const hide = !l.room && !selecting && (!showSizes || l.set?.faded || (selected.size > 0 && !selected.has(l.wi)));
       v.copy(l.p).project(camera);
       if (hide || v.z > 1 || v.x < -1.1 || v.x > 1.1 || v.y < -1.1 || v.y > 1.1) { l.el.style.display = "none"; continue; }
       l.el.style.display = "";
@@ -504,7 +544,7 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
   };
   raf = requestAnimationFrame(loop);
 
-  return {
+  const api = {
     view,
     // The buttons glide in and out, like a pinch, instead of jumping.
     zoom: (f) => {
@@ -527,9 +567,44 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
     // Rewrites every wall size in another unit; an empty string hides them.
     units: (f) => {
       fmt = f;
-      for (const l of labels) if (l.len != null) l.el.textContent = f(l.len);
+      relabel();
       showSizes = !!f(1);
       dirty = true;
+    },
+    // Wall picking: on shows each wall's number and makes a tap toggle that wall.
+    selectMode: (on, cb) => {
+      selecting = !!on;
+      if (cb !== undefined) onSelect = cb;
+      highlight(null);
+      relabel();
+      dirty = true;
+    },
+    setSelected: (list) => {
+      selected.clear();
+      for (const i of list || []) selected.add(i);
+      dirty = true;
+    },
+    // A picture of one wall seen straight from inside the room, the rest faded;
+    // the view the person had is put back afterwards.
+    snapshotWall: (wi) => {
+      const s = wallSets[wi];
+      if (!s) return null;
+      const keepPos = camera.position.clone(), keepTarget = controls.target.clone(), keepSel = [...selected], keepSelecting = selecting;
+      selected.clear(); selected.add(wi); selecting = false; relabel();
+      const vf = (camera.fov * Math.PI) / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);
+      const dist = Math.max((s.len / 2 + 0.35) / Math.tan(hf / 2), (s.h / 2 + 0.35) / Math.tan(vf / 2));
+      const t = new THREE.Vector3(s.mid[0] - cx, s.h / 2, s.mid[1] - cz);
+      controls.target.copy(t);
+      // from the room's side of the wall (n points out of the room), a little above eye level
+      camera.position.set(t.x - s.n[0] * dist, t.y + dist * 0.18, t.z - s.n[1] * dist);
+      camera.lookAt(t);
+      controls.update();
+      cutaway();
+      const c = api.snapshot();
+      selected.clear(); for (const i of keepSel) selected.add(i); selecting = keepSelecting; relabel();
+      camera.position.copy(keepPos); controls.target.copy(keepTarget); camera.lookAt(keepTarget); controls.update();
+      dirty = true;
+      return c;
     },
     // What is on screen as a picture: the 3D view plus the names, sizes and
     // pins drawn on top of it (those are page elements, not part of the 3D).
@@ -623,4 +698,5 @@ export function mountRoom3D(el, room, { names = [], parts = [], fmt = (m) => `${
       labelLayer.remove();
     },
   };
+  return api;
 }
