@@ -4,7 +4,7 @@ android {
     namespace = "com.greencabinetsny.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.greencabinetsny.app"
+        applicationId "com.greencabinetsny.myapp" // the Play listing was created with this name; iOS stays com.greencabinetsny.app
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 4
