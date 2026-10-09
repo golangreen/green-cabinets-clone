@@ -11,7 +11,10 @@ const config: CapacitorConfig = {
     contentInset: "never",
     scheme: "Green Cabinets",
   },
+  android: { backgroundColor: "#0E0D0C" },
   plugins: {
+    // Dark site, so Android's status and gesture bars use light icons.
+    SystemBars: { style: "DARK" },
     // Keep the branded launch screen until the page has drawn, so a cold start
     // never shows an empty dark screen. main.tsx hides it as soon as content
     // is on screen; the 6 s auto-hide is the safety net if the page never loads.

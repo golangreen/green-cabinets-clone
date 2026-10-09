@@ -26,6 +26,7 @@
     "deploy": "npm run build && npx wrangler deploy"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
     "@capacitor/core": "^8.5.2",
     "@capacitor/filesystem": "^8.1.4",
     "@capacitor/haptics": "^8.0.2",
