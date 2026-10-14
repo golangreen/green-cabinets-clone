@@ -30,9 +30,15 @@ import { clintonHillBrooklynPost } from "@/data/blogPosts/clintonHillBrooklynPos
 import { jacksonHeightsQueensPost } from "@/data/blogPosts/jacksonHeightsQueensPost";
 import { pullOutTrashRecyclingPost } from "@/data/blogPosts/pullOutTrashRecyclingPost";
 import { customKitchenCabinetsCostNycPost } from "@/data/blogPosts/customKitchenCabinetsCostNycPost";
+import { radiatorCoversBuiltInsPrewarNycPost } from "@/data/blogPosts/radiatorCoversBuiltInsPrewarNycPost";
+import { customKitchenTimelineNycPost } from "@/data/blogPosts/customKitchenTimelineNycPost";
+import { plywoodVsMdfCabinetBoxesNycPost } from "@/data/blogPosts/plywoodVsMdfCabinetBoxesNycPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  radiatorCoversBuiltInsPrewarNycPost,
+  customKitchenTimelineNycPost,
+  plywoodVsMdfCabinetBoxesNycPost,
   customKitchenCabinetsCostNycPost,
   pullOutTrashRecyclingPost,
   rangeHoodMantleMillworkPost,
@@ -62,6 +68,9 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
   williamsburgKitchenPost,
     ...BASE_POSTS.filter(
     (p) =>
+      p.slug !== radiatorCoversBuiltInsPrewarNycPost.slug &&
+      p.slug !== customKitchenTimelineNycPost.slug &&
+      p.slug !== plywoodVsMdfCabinetBoxesNycPost.slug &&
       p.slug !== customKitchenCabinetsCostNycPost.slug &&
       p.slug !== pullOutTrashRecyclingPost.slug &&
       p.slug !== ditmasParkBrooklynPost.slug &&
@@ -96,6 +105,9 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  radiatorCoversBuiltInsPrewarNycPost.slug,
+  customKitchenTimelineNycPost.slug,
+  plywoodVsMdfCabinetBoxesNycPost.slug,
   customKitchenCabinetsCostNycPost.slug,
   pullOutTrashRecyclingPost.slug,
   rangeHoodMantleMillworkPost.slug,
@@ -132,6 +144,9 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === radiatorCoversBuiltInsPrewarNycPost.slug) return radiatorCoversBuiltInsPrewarNycPost;
+  if (slug === customKitchenTimelineNycPost.slug) return customKitchenTimelineNycPost;
+  if (slug === plywoodVsMdfCabinetBoxesNycPost.slug) return plywoodVsMdfCabinetBoxesNycPost;
   if (slug === customKitchenCabinetsCostNycPost.slug) return customKitchenCabinetsCostNycPost;
   if (slug === pullOutTrashRecyclingPost.slug) return pullOutTrashRecyclingPost;
   if (slug === rangeHoodMantleMillworkPost.slug) return rangeHoodMantleMillworkPost;
