@@ -33,9 +33,11 @@ import { customKitchenCabinetsCostNycPost } from "@/data/blogPosts/customKitchen
 import { radiatorCoversBuiltInsPrewarNycPost } from "@/data/blogPosts/radiatorCoversBuiltInsPrewarNycPost";
 import { customKitchenTimelineNycPost } from "@/data/blogPosts/customKitchenTimelineNycPost";
 import { plywoodVsMdfCabinetBoxesNycPost } from "@/data/blogPosts/plywoodVsMdfCabinetBoxesNycPost";
+import { cornerCabinetsLazySusanNycKitchensPost } from "@/data/blogPosts/cornerCabinetsLazySusanNycKitchensPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  cornerCabinetsLazySusanNycKitchensPost,
   radiatorCoversBuiltInsPrewarNycPost,
   customKitchenTimelineNycPost,
   plywoodVsMdfCabinetBoxesNycPost,
@@ -68,6 +70,7 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
   williamsburgKitchenPost,
     ...BASE_POSTS.filter(
     (p) =>
+      p.slug !== cornerCabinetsLazySusanNycKitchensPost.slug &&
       p.slug !== radiatorCoversBuiltInsPrewarNycPost.slug &&
       p.slug !== customKitchenTimelineNycPost.slug &&
       p.slug !== plywoodVsMdfCabinetBoxesNycPost.slug &&
@@ -105,6 +108,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  cornerCabinetsLazySusanNycKitchensPost.slug,
   radiatorCoversBuiltInsPrewarNycPost.slug,
   customKitchenTimelineNycPost.slug,
   plywoodVsMdfCabinetBoxesNycPost.slug,
@@ -144,6 +148,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  if (slug === cornerCabinetsLazySusanNycKitchensPost.slug) return cornerCabinetsLazySusanNycKitchensPost;
   if (slug === radiatorCoversBuiltInsPrewarNycPost.slug) return radiatorCoversBuiltInsPrewarNycPost;
   if (slug === customKitchenTimelineNycPost.slug) return customKitchenTimelineNycPost;
   if (slug === plywoodVsMdfCabinetBoxesNycPost.slug) return plywoodVsMdfCabinetBoxesNycPost;
