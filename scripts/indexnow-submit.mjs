@@ -7,7 +7,7 @@
  *   node scripts/indexnow-submit.mjs                     # submit every URL in sitemap
  *   node scripts/indexnow-submit.mjs https://...url1 ... # submit specific URLs
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
 const HOST = "greencabinetsny.com";
@@ -15,9 +15,17 @@ const KEY = "6d814a9d1f84d4072a1a4fbd8844710f";
 const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 const ENDPOINT = "https://api.indexnow.org/IndexNow";
 
+// public/sitemap.xml is a sitemap index: expand each child sitemap to its
+// page URLs (submitting the child sitemap URLs themselves does nothing).
 function urlsFromSitemap() {
-  const xml = readFileSync(resolve("public/sitemap.xml"), "utf8");
-  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+  const locs = (file) => [...readFileSync(file, "utf8").matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+  const urls = [];
+  for (const loc of locs(resolve("public/sitemap.xml"))) {
+    const child = loc.match(/^https:\/\/greencabinetsny\.com\/(sitemaps\/[^/]+\.xml)$/);
+    if (child && existsSync(resolve("public", child[1]))) urls.push(...locs(resolve("public", child[1])));
+    else if (!loc.endsWith(".xml")) urls.push(loc);
+  }
+  return [...new Set(urls)].slice(0, 10000);
 }
 
 const cliUrls = process.argv.slice(2).filter(Boolean);

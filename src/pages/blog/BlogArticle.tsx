@@ -76,6 +76,8 @@ export default function BlogArticlePage() {
             image={article.image_url || undefined}
           />
           <Helmet>
+            {/* The cover photo is the LCP element: start loading it with the HTML. */}
+            {article.image_url && <link rel="preload" as="image" href={article.image_url} {...{ fetchpriority: "high" }} />}
             <script type="application/ld+json">
               {JSON.stringify({
                 "@context": "https://schema.org",
@@ -167,6 +169,10 @@ export default function BlogArticlePage() {
               <img
                 src={article.image_url}
                 alt={article.title}
+                width={1280}
+                height={720}
+                decoding="async"
+                {...{ fetchpriority: "high" }}
                 className="w-full rounded-lg mb-8 aspect-video object-cover"
               />
             )}

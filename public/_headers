@@ -5,6 +5,50 @@
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Images are not content-hashed, so cache for 30 days (not immutable) and let
+# Cloudflare serve a stale copy while it revalidates.
+/img/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+/hero-lcp.webp
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+/spring-promotion-poster.webp
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+/spring-promotion-optimized.mp4
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+/og-cover.jpg
+  Cache-Control: public, max-age=604800
+
+/og-image.jpg
+  Cache-Control: public, max-age=604800
+
+/logo.png
+  Cache-Control: public, max-age=604800
+
+/favicon.png
+  Cache-Control: public, max-age=604800
+
+/favicon.ico
+  Cache-Control: public, max-age=604800
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=604800
+
+/icon-192.png
+  Cache-Control: public, max-age=604800
+
+/icon-512.png
+  Cache-Control: public, max-age=604800
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+
 /index.html
   Cache-Control: no-cache
 
@@ -15,3 +59,4 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: SAMEORIGIN
+  Strict-Transport-Security: max-age=31536000
