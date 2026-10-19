@@ -282,13 +282,13 @@ const RoomScan = () => {
         <title>Scan Your Room | Green Cabinets NY</title>
         <meta
           name="description"
-          content="Scan your kitchen with the Green Cabinets iPhone app and send us the measured room. We plan your custom cabinets from the real walls, in Brooklyn, Manhattan and Queens."
+          content="Scan your kitchen with the Green Cabinets iPhone app and send us the measured room. We plan custom cabinets from the real walls in Brooklyn, Manhattan & Queens."
         />
         <link rel="canonical" href="https://greencabinetsny.com/scan" />
       </Helmet>
       <Header />
 
-      <main className="mx-auto max-w-[1200px] px-4 pb-24 pt-28 sm:px-6 md:pt-36 lg:px-10">
+      <main id="main" tabIndex={-1} className="mx-auto max-w-[1200px] px-4 pb-24 pt-28 sm:px-6 md:pt-36 lg:px-10">
         {stage === "intro" && (
           <section aria-labelledby="scan-title">
             <p className="lux-eyebrow lux-fade mb-5">Room scan</p>

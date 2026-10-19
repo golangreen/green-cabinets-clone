@@ -35,7 +35,7 @@ class ChunkErrorBoundary extends Component<ChunkErrorBoundaryProps, ChunkErrorBo
     }
 
     return (
-      <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-6" role="alert">
+      <main id="main" tabIndex={-1} className="min-h-screen bg-background text-foreground flex items-center justify-center p-6" role="alert">
         <div className="max-w-md text-center space-y-4">
           <h1 className="text-2xl font-semibold">Something went wrong</h1>
           <p className="text-muted-foreground">Refresh the page to continue.</p>

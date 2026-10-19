@@ -15,6 +15,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CASE_STUDIES, getCaseStudy } from "@/data/caseStudies";
 import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/marketing/AuthorByline";
+import { fitDescription, fitTitle } from "@/lib/metaText";
 
 const BASE = "https://greencabinetsny.com/case-studies";
 
@@ -76,8 +77,8 @@ const CaseStudyDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>{study.title} | Green Cabinets NY Case Study</title>
-        <meta name="description" content={study.summary} />
+        <title>{fitTitle(study.title, [" | Green Cabinets NY Case Study", " | Green Cabinets NY"])}</title>
+        <meta name="description" content={fitDescription(study.summary)} />
         <link rel="canonical" href={url} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={url} />
@@ -104,7 +105,7 @@ const CaseStudyDetail = () => {
 
       <Header />
 
-      <main className="pt-16 md:pt-20">
+      <main id="main" tabIndex={-1} className="pt-16 md:pt-20">
         <Breadcrumbs
           items={[
             { label: "Home", to: "/" },

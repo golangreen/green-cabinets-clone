@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabaseLazy";
 import type {
   AiSuggestion,
   NeighborhoodGalleryItem,
@@ -11,7 +11,7 @@ const FOLDER = "neighborhoods";
 export const neighborhoodGalleryService = {
   /** Public read — only published items, no address_note. */
   async listPublishedBySlug(slug: string): Promise<PublicNeighborhoodGalleryItem[]> {
-    const { data, error } = await supabase
+    const { data, error } = await (await getSupabase())
       .from("neighborhood_gallery")
       .select("id, neighborhood_slug, image_url, caption, alt_text, sort_order")
       .eq("neighborhood_slug", slug)
@@ -24,7 +24,7 @@ export const neighborhoodGalleryService = {
 
   /** Admin: list everything. */
   async listAllForAdmin(): Promise<NeighborhoodGalleryItem[]> {
-    const { data, error } = await supabase
+    const { data, error } = await (await getSupabase())
       .from("neighborhood_gallery")
       .select("*")
       .order("neighborhood_slug", { ascending: true })
@@ -39,18 +39,18 @@ export const neighborhoodGalleryService = {
     const safeExt = ext || "jpg";
     const id = (crypto as Crypto).randomUUID();
     const storage_path = `${FOLDER}/${id}.${safeExt}`;
-    const { error } = await supabase.storage.from(BUCKET).upload(storage_path, file, {
+    const { error } = await (await getSupabase()).storage.from(BUCKET).upload(storage_path, file, {
       cacheControl: "31536000",
       upsert: false,
       contentType: file.type || undefined,
     });
     if (error) throw error;
-    const { data } = supabase.storage.from(BUCKET).getPublicUrl(storage_path);
+    const { data } = (await getSupabase()).storage.from(BUCKET).getPublicUrl(storage_path);
     return { storage_path, image_url: data.publicUrl };
   },
 
   async suggest(image_url: string, filename_hint?: string): Promise<AiSuggestion> {
-    const { data, error } = await supabase.functions.invoke("suggest-gallery-caption", {
+    const { data, error } = await (await getSupabase()).functions.invoke("suggest-gallery-caption", {
       body: { image_url, filename_hint },
     });
     if (error) throw error;
@@ -71,8 +71,8 @@ export const neighborhoodGalleryService = {
     is_published?: boolean;
     ai_suggested?: boolean;
   }): Promise<NeighborhoodGalleryItem> {
-    const { data: userData } = await supabase.auth.getUser();
-    const { data, error } = await supabase
+    const { data: userData } = await (await getSupabase()).auth.getUser();
+    const { data, error } = await (await getSupabase())
       .from("neighborhood_gallery")
       .insert({
         ...input,
@@ -96,7 +96,7 @@ export const neighborhoodGalleryService = {
       >
     >,
   ): Promise<NeighborhoodGalleryItem> {
-    const { data, error } = await supabase
+    const { data, error } = await (await getSupabase())
       .from("neighborhood_gallery")
       .update(patch)
       .eq("id", id)
@@ -115,7 +115,7 @@ export const neighborhoodGalleryService = {
     if (ids.length === 0) return { succeeded, failed };
     const results = await Promise.all(
       ids.map(async (id) => {
-        const { error } = await supabase
+        const { error } = await (await getSupabase())
           .from("neighborhood_gallery")
           .update({ is_published })
           .eq("id", id);
@@ -132,19 +132,19 @@ export const neighborhoodGalleryService = {
   async bulkRemove(items: Pick<NeighborhoodGalleryItem, "id" | "storage_path">[]): Promise<void> {
     if (items.length === 0) return;
     const ids = items.map((i) => i.id);
-    const { error } = await supabase.from("neighborhood_gallery").delete().in("id", ids);
+    const { error } = await (await getSupabase()).from("neighborhood_gallery").delete().in("id", ids);
     if (error) throw error;
     const paths = items.map((i) => i.storage_path).filter(Boolean);
     if (paths.length > 0) {
-      await supabase.storage.from(BUCKET).remove(paths);
+      await (await getSupabase()).storage.from(BUCKET).remove(paths);
     }
   },
 
   async remove(item: Pick<NeighborhoodGalleryItem, "id" | "storage_path">): Promise<void> {
-    const { error } = await supabase.from("neighborhood_gallery").delete().eq("id", item.id);
+    const { error } = await (await getSupabase()).from("neighborhood_gallery").delete().eq("id", item.id);
     if (error) throw error;
     if (item.storage_path) {
-      await supabase.storage.from(BUCKET).remove([item.storage_path]);
+      await (await getSupabase()).storage.from(BUCKET).remove([item.storage_path]);
     }
   },
 };

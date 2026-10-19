@@ -10,6 +10,7 @@ import kitchen from "@/assets/gallery/modern-kitchen-marble-waterfall-wood-base.
 import vanity from "@/assets/gallery/contemporary-bathroom-wood-vanity-double-sink.webp";
 import builtIns from "@/assets/gallery/natural-wood-hallway-cabinets.jpeg";
 import commercial from "@/assets/gallery/modern-workspace-wood-desk-brick.jpeg";
+import AreaLinks from "@/components/seo/AreaLinks";
 
 const MAKE = [
   {
@@ -63,7 +64,7 @@ const MAKE = [
 const STEPS = [
   { t: "Measure", d: "A free in-home consultation, or scan the room yourself with the Green Cabinets app. We bring the samples." },
   { t: "Draw", d: "CAD plans and 3D views of your room. For designers and architects, shop drawings for approval." },
-  { t: "Build", d: "CNC-cut boxes and doors, Blum and Hettich hardware, low-VOC spray finishes and a quality check before anything ships." },
+  { t: "Build", d: "Boxes and doors CNC-cut by our vetted millwork suppliers to our specifications, Blum and Hettich hardware, low-VOC spray finishes and a quality check before anything ships." },
   { t: "Install", d: "Most installs take 3 to 7 days. COIs, elevator bookings and building paperwork are handled before delivery day." },
 ];
 
@@ -79,7 +80,7 @@ const Services = () => {
   return (
     <div className="min-h-dvh bg-ink text-ivory">
       <Helmet>
-        <title>Services: Custom Kitchens, Vanities, Closets & Millwork | Green Cabinets NY</title>
+        <title>Services: Custom Kitchens, Vanities, Closets & Millwork</title>
         <meta
           name="description"
           content="Custom kitchen cabinets, bathroom vanities, closets, built-ins and commercial millwork for Brooklyn, Manhattan and Queens. Designed in Bushwick since 2009."
@@ -99,11 +100,18 @@ const Services = () => {
             item: { "@type": "Service", name: m.title, description: m.body, provider: { "@id": "https://greencabinetsny.com/#localbusiness" }, areaServed: ["Brooklyn", "Manhattan", "Queens"] },
           })),
         })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          "@id": "https://greencabinetsny.com/services#process",
+          name: "How a Green Cabinets NY custom cabinetry project works",
+          step: STEPS.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.t, text: s.d })),
+        })}</script>
       </Helmet>
 
       <Header />
 
-      <main>
+      <main id="main" tabIndex={-1} className="focus:outline-none">
         <PageHero
           crumbs={[{ label: "Home", to: "/" }, { label: "Services" }]}
           eyebrow="Services"
@@ -199,6 +207,8 @@ const Services = () => {
             </ul>
           </div>
         </section>
+
+        <AreaLinks heading="Custom cabinets by borough" current="/services" />
 
         <ContactCta />
       </main>

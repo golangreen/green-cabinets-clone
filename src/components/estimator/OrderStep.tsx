@@ -9,6 +9,7 @@ import { getFinishById, getDoorStyleById } from '@/lib/estimator/finishes-data';
 import { checkCompatibility, isFinishAllowedForDoor } from '@/lib/estimator/compatibility';
 import { logValidationFailure } from '@/services/validationFailuresService';
 import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
+import { useCompatibilityRulesSync } from "@/hooks/useCompatibilityRulesSync";
 
 interface OrderForm {
   name: string;
@@ -41,6 +42,7 @@ function FieldLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
 }
 
 const OrderStep: React.FC<OrderStepProps> = ({ costs, collection, location, selectedFinish, onFinishChange, onBack }) => {
+  useCompatibilityRulesSync();
   const [form, setForm] = useState<OrderForm>({
     name: '', phone: '', email: '', address: '', installDate: '', notes: '',
     doorStyle: '', finish: selectedFinish ?? '',

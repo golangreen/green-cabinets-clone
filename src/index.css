@@ -351,14 +351,13 @@ html.theme-lux {
   .lux-link-quiet:hover::after { transform: scaleX(1); }
 }
 
-/* ── Hero entrance: plays once per visit (rare, so it can be cinematic) ── */
-@keyframes lux-settle { from { transform: scale(1.08); } to { transform: scale(1); } }
-@keyframes lux-line { from { transform: translateY(105%); } to { transform: translateY(0); } }
-@keyframes lux-fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-.lux-hero-img { animation: lux-settle 2200ms var(--ease-out) both; }
-.lux-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
-.lux-line > span { display: block; animation: lux-line 1100ms var(--ease-out) both; animation-delay: var(--d, 0ms); }
-.lux-fade { animation: lux-fade 900ms var(--ease-out) both; animation-delay: var(--d, 0ms); }
+/* ── Hero entrance. Headline and photo are fully visible on the first frame
+   (they are the LCP candidates); only the supporting copy drifts up a few
+   pixels. No opacity-0 start, no scale-in, no off-screen slide. ── */
+@keyframes lux-fade { from { transform: translateY(8px); } to { transform: none; } }
+.lux-line { display: block; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.lux-line > span { display: block; }
+.lux-fade { animation: lux-fade 700ms var(--ease-out) both; animation-delay: var(--d, 0ms); }
 
 /* ── Scroll reveals (once). Hidden states apply only after JS arms them,
    so content is never stuck invisible without JavaScript. ── */
@@ -379,8 +378,7 @@ html.reveal-armed [data-reveal="image"]:not([data-in]) img { transform: scale(1.
 
 /* Reduced motion: no movement, only short fades that aid comprehension */
 @media (prefers-reduced-motion: reduce) {
-  .lux-hero-img, .lux-line > span { animation: none; }
-  .lux-fade { animation: lux-fade-only 300ms ease both; }
+  .lux-fade { animation: none; }
   [data-reveal="up"], [data-reveal="image"], [data-reveal="image"] img { transition: opacity 300ms ease; transform: none !important; clip-path: none !important; }
   html.reveal-armed [data-reveal]:not([data-in]) { opacity: 0; }
   .lux-zoom img { transition: none; }
@@ -513,3 +511,27 @@ html.theme-lux :focus-visible { outline: 2px solid #C6A15B; outline-offset: 3px;
   .lux-link { min-height: 44px; }
   [role="tab"] { min-height: 44px; }
 }
+
+/* Article "Quick facts" box (see src/lib/quickFacts.ts) */
+.prose .quick-facts {
+  margin: 2.5rem 0;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid hsl(var(--primary) / 0.35);
+  border-radius: 0.75rem;
+  background: hsl(var(--primary) / 0.06);
+}
+.prose .quick-facts h2 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+}
+.prose .quick-facts ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.prose .quick-facts li {
+  margin: 0.25rem 0;
+}
+
+/* Skip-link target: focusable for keyboard users, no ring on the whole page */
+#main:focus { outline: none; }

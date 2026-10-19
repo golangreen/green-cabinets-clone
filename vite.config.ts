@@ -76,7 +76,7 @@ function earlyModuleLoadRecoveryPlugin(): Plugin {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode, isSsrBuild }) => ({
   server: {
     host: "::",
     port: 8080,
@@ -95,10 +95,15 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     earlyModuleLoadRecoveryPlugin(),
-    validateJsonLdPlugin(),
+    !isSsrBuild && validateJsonLdPlugin(),
     react(), 
     mode === "development" && componentTagger(),
   ].filter(Boolean),
+  // Only used by the build-time pre-render bundle: CommonJS packages that
+  // Node can't import by name are bundled instead of left external.
+  ssr: {
+    noExternal: ["react-helmet-async"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -108,13 +113,21 @@ export default defineConfig(({ mode }) => ({
     drop: mode === "production" ? ["console", "debugger"] : [],
   },
   build: {
-    rollupOptions: {
+    // The build-time pre-render bundle (vite build --ssr) keeps Vite's default
+    // chunking; vendor splitting only applies to the browser build.
+    rollupOptions: isSsrBuild ? {} : {
       output: {
-        manualChunks: {
-          // Vendor splitting for better caching
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'state-vendor': ['zustand', '@tanstack/react-query'],
-          'supabase-vendor': ['@supabase/supabase-js'],
+        // Vendor splitting for better caching. The supabase chunk holds only
+        // @supabase/* packages: the object form also pulled their shared
+        // helpers in, which made every page import the chunk.
+        manualChunks: (id: string) => {
+          if (!id.includes('/node_modules/')) return undefined;
+          if (/\/node_modules\/(react|react-dom|react-router|react-router-dom|scheduler|@remix-run\/router)\//.test(id)) return 'react-vendor';
+          if (/\/node_modules\/(zustand|@tanstack\/react-query|@tanstack\/query-core)\//.test(id)) return 'state-vendor';
+          if (id.includes('/node_modules/@supabase/')) return 'supabase-vendor';
+          // tslib is shared by supabase and the UI libraries; keep it out of the supabase chunk.
+          if (id.includes('/node_modules/tslib/')) return 'react-vendor';
+          return undefined;
         },
       },
     },

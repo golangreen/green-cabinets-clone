@@ -1,12 +1,12 @@
 import { isApp } from "@/lib/platform";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { authService, chatService, ChatMessage } from "@/services";
+import type { ChatMessage } from "@/services/chatService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, ChevronUp, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Session } from "@supabase/supabase-js";
+import type { Session } from "@supabase/supabase-js";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,18 +24,22 @@ const Chatbot = () => {
   const showSectionNavArrows = pathname.startsWith("/finishes-colors");
   const hideSectionNavArrows = !showSectionNavArrows;
 
+  // The session only matters once the chat is open, so the Supabase client
+  // is loaded then instead of on every page view.
   useEffect(() => {
-    // Check authentication status using authService
-    authService.getSession().then(({ session }) => {
-      setSession(session);
+    if (!isOpen) return;
+    let unsubscribe: (() => void) | undefined;
+    let cancelled = false;
+    void import("@/services/authService").then(({ authService }) => {
+      if (cancelled) return;
+      authService.getSession().then(({ session }) => setSession(session));
+      unsubscribe = authService.onAuthStateChange((_event, session) => setSession(session));
     });
-
-    const unsubscribe = authService.onAuthStateChange((event, session) => {
-      setSession(session);
-    });
-
-    return unsubscribe;
-  }, []);
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
+  }, [isOpen]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

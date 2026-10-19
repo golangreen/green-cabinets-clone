@@ -10,11 +10,12 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import AuthorByline from "@/components/marketing/AuthorByline";
 import { buildArticleSchema } from "@/lib/articleSchema";
+import AreaLinks from "@/components/seo/AreaLinks";
 
 const URL = "https://greencabinetsny.com/custom-kitchen-cabinets-queens";
 const TITLE = "Custom Kitchen Cabinets Queens — Insider Buyer's Guide 2026";
 const DESC =
-  "Insider guide to custom kitchen cabinets in Queens: 2026 pricing, Astoria/LIC/Forest Hills logistics, co-op vs. single-family install notes, and lead times from our vetted suppliers.";
+  "Custom kitchen cabinets in Queens: 2026 pricing, Astoria/LIC/Forest Hills logistics, co-op vs. single-family install notes and lead times from vetted suppliers.";
 
 const FAQS = [
   {
@@ -310,6 +311,13 @@ const CustomKitchenCabinetsQueens = () => (
         </div>
       </div>
     </section>
+
+    <AreaLinks
+      boroughHub="/custom-kitchen-cabinets-queens"
+      current="/custom-kitchen-cabinets-queens"
+      postKeywords={["queens"]}
+      heading="Queens neighborhoods and articles"
+    />
 
     <Contact />
     <CTA />

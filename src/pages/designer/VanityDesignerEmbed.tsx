@@ -38,7 +38,7 @@ const VanityDesignerEmbed = () => {
   return (
     <>
       <Helmet>
-        <title>Custom Bathroom Vanity Designer NYC | Live Price | Green Cabinets</title>
+        <title>Custom Bathroom Vanity Designer NYC | Live Price</title>
         <meta
           name="description"
           content="Design a custom bathroom vanity built to the inch, with a live price. Real panel finishes, plumbing U-cut specs. Brooklyn, Manhattan & Queens by appointment."
@@ -56,7 +56,7 @@ const VanityDesignerEmbed = () => {
 
       <div className="min-h-screen flex flex-col bg-ink-2">
         <Header />
-        <main className="flex-1 pt-28 md:pt-36 pb-10">
+        <main id="main" tabIndex={-1} className="flex-1 pt-28 md:pt-36 pb-10">
           <div className="container mx-auto px-4">
             {/* Crawlable intro */}
             <section className="mx-auto max-w-3xl text-center">

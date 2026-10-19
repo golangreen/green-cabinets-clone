@@ -162,7 +162,7 @@ const WoodSpecies = () => {
 
       <Header />
 
-      <main>
+      <main id="main" tabIndex={-1} className="focus:outline-none">
         <PageHero
           crumbs={[{ label: "Home", to: "/" }, { label: "Materials" }]}
           eyebrow="Materials · The wood library"

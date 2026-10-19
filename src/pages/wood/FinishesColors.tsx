@@ -81,7 +81,7 @@ const FinishesColors = () => {
 
       <Header />
 
-      <main>
+      <main id="main" tabIndex={-1} className="focus:outline-none">
         <PageHero
           crumbs={[{ label: "Home", to: "/" }, { label: "Materials", to: "/wood-species" }, { label: "Finishes & colors" }]}
           eyebrow="Real panels · real codes · real samples"

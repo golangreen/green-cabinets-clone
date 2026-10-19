@@ -1,63 +1,35 @@
 /**
- * ObfuscatedPhone protects phone numbers from bot scrapers.
- * Decoded client-side only and hidden behind a one-time "I'm not a robot"
- * check (session-scoped) unless `alwaysReveal`.
+ * Renders the business phone number as a plain, clickable tel:/sms: link.
+ *
+ * The number is still passed base64-encoded (existing call sites), but it is
+ * decoded synchronously and shown in full: (718) 804-5488 is the public
+ * business line and must be readable by customers, search engines and the
+ * build-time pre-render. `alwaysReveal` is kept for compatibility; numbers
+ * are always revealed now.
  */
-import { useEffect, useState } from 'react';
-import { useContactUnlock } from './contactUnlock';
-import ContactGateDialog from './ContactGateDialog';
-
 interface ObfuscatedPhoneProps {
   encoded: string; // Base64 encoded phone number
   className?: string;
   type?: 'tel' | 'sms';
-  alwaysReveal?: boolean; // Skip the human check (e.g. post-purchase pages)
+  alwaysReveal?: boolean;
 }
 
-export default function ObfuscatedPhone({
-  encoded,
-  className = '',
-  type = 'tel',
-  alwaysReveal = false,
-}: ObfuscatedPhoneProps) {
-  const [phone, setPhone] = useState<{ display: string; link: string } | null>(null);
-  const [gateOpen, setGateOpen] = useState(false);
-  const { unlocked } = useContactUnlock();
-
-  useEffect(() => {
-    try {
-      const decoded = atob(encoded);
-      const formatted = decoded.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
-      setPhone({ display: formatted, link: `${type}:+1${decoded}` });
-    } catch {
-      console.error('Failed to decode phone number');
-    }
-  }, [encoded, type]);
-
-  if (!phone) {
-    return <span className={className}>Loading...</span>;
+function decodePhone(encoded: string): string | null {
+  try {
+    const decoded = atob(encoded); // atob also exists in Node, so this works in the pre-render
+    return /^\d{10}$/.test(decoded) ? decoded : null;
+  } catch {
+    return null;
   }
+}
 
-  if (!alwaysReveal && !unlocked) {
-    const masked = phone.display.replace(/\d(?=\d{0,3}$)/g, '•').replace(/\d(?=.*\)\s)/g, '•');
-    return (
-      <>
-        <button
-          type="button"
-          onClick={() => setGateOpen(true)}
-          className={`${className} inline-flex min-h-11 md:min-h-6 items-center py-0.5 underline underline-offset-2`}
-          aria-label="Verify you are human to reveal our phone number"
-        >
-          {masked} <span className="whitespace-nowrap">(show)</span>
-        </button>
-        <ContactGateDialog open={gateOpen} onOpenChange={setGateOpen} />
-      </>
-    );
-  }
-
+export default function ObfuscatedPhone({ encoded, className = '', type = 'tel' }: ObfuscatedPhoneProps) {
+  const digits = decodePhone(encoded);
+  if (!digits) return null;
+  const display = digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
   return (
-    <a href={phone.link} className={className} aria-label={`Call ${phone.display}`}>
-      {phone.display}
+    <a href={`${type}:+1${digits}`} className={className} aria-label={`Call ${display}`}>
+      {display}
     </a>
   );
 }

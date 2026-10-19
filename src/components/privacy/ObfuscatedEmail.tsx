@@ -45,9 +45,9 @@ export default function ObfuscatedEmail({
           type="button"
           onClick={() => setGateOpen(true)}
           className={`${className} inline-flex min-h-11 md:min-h-6 items-center py-0.5 underline underline-offset-2`}
-          aria-label="Verify you are human to reveal our email address"
         >
           {masked} <span className="whitespace-nowrap">(show)</span>
+          <span className="sr-only">: verify you are human to reveal our email address</span>
         </button>
         <ContactGateDialog open={gateOpen} onOpenChange={setGateOpen} />
       </>
@@ -55,7 +55,7 @@ export default function ObfuscatedEmail({
   }
 
   return (
-    <a href={`mailto:${email}`} className={className} aria-label={`Email ${email}`}>
+    <a href={`mailto:${email}`} className={className} aria-label={children ? undefined : `Email ${email}`}>
       {children || email}
     </a>
   );

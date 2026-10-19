@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabaseLazy";
 
 export interface BlogArticle {
   id: string;
@@ -19,7 +19,7 @@ export interface BlogArticle {
 }
 
 export async function listBlogArticles(): Promise<BlogArticle[]> {
-  const { data, error } = await supabase
+  const { data, error } = await (await getSupabase())
     .from("blog_articles" as any)
     .select("*")
     .order("created_at", { ascending: false });
@@ -28,7 +28,7 @@ export async function listBlogArticles(): Promise<BlogArticle[]> {
 }
 
 export async function getBlogArticleBySlug(slug: string): Promise<BlogArticle | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (await getSupabase())
     .from("blog_articles" as any)
     .select("*")
     .eq("slug", slug)

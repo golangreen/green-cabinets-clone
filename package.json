@@ -7,7 +7,7 @@
     "predev": "node scripts/run-bun.mjs scripts/generate-sitemap.ts scripts/validate-wood-links.ts scripts/validate-faq-slugs.ts",
     "dev": "vite",
     "prebuild": "node scripts/run-bun.mjs scripts/generate-sitemap.ts scripts/validate-wood-links.ts scripts/validate-faq-slugs.ts",
-    "build": "vite build && node scripts/inject-article-jsonld.mjs",
+    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",

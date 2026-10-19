@@ -15,22 +15,34 @@ const FACTS = [
   { k: "COIs in 48 hours", v: "For co-op and condo boards" },
 ];
 
+/** Optimized copies from scripts/optimize-images.mjs (source is 1206×806). */
+const HERO_SRCSET = (fmt: "avif" | "webp") =>
+  [640, 960, 1206].map((w) => `/img/opt/hero-lcp-${w}.${fmt} ${w}w`).join(", ");
+// The photo covers a full-height section, so on portrait screens it renders
+// about 1.5× the viewport height wide.
+const HERO_SIZES = "(max-aspect-ratio: 3/2) 150vh, 100vw";
+
 const Hero = () => (
   <section
     id="top"
     data-testid="hero-carousel"
     className="relative flex min-h-[100svh] items-end overflow-hidden bg-ink text-ivory"
   >
-    <img
-      src="/hero-lcp.webp"
-      alt="White oak kitchen with a marble waterfall island and walnut bar stools, built by Green Cabinets NY"
-      width={1920}
-      height={1080}
-      {...{ fetchpriority: "high" }}
-      loading="eager"
-      decoding="async"
-      className="lux-hero-img absolute inset-0 h-full w-full object-cover"
-    />
+    <picture>
+      {/* Keep in step with the preload in index.html */}
+      <source type="image/avif" srcSet={HERO_SRCSET("avif")} sizes={HERO_SIZES} />
+      <source type="image/webp" srcSet={HERO_SRCSET("webp")} sizes={HERO_SIZES} />
+      <img
+        src="/hero-lcp.webp"
+        alt="White oak kitchen with a marble waterfall island and walnut bar stools, built by Green Cabinets NY"
+        width={1206}
+        height={806}
+        {...{ fetchpriority: "high" }}
+        loading="eager"
+        decoding="async"
+        className="lux-hero-img absolute inset-0 h-full w-full object-cover"
+      />
+    </picture>
     {/* Legibility: a deep floor gradient plus a soft left wash on wide screens */}
     <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-ink/35 to-ink/5" />
     <div aria-hidden="true" className="absolute inset-0 hidden md:block bg-gradient-to-r from-ink/75 via-ink/15 to-transparent" />

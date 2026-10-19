@@ -17,6 +17,7 @@ import {
   getTierIncompatibilityReason,
 } from '@/lib/estimator/compatibility';
 import { logValidationFailure } from '@/services/validationFailuresService';
+import { useCompatibilityRulesSync } from "@/hooks/useCompatibilityRulesSync";
 
 
 interface FinishPickerProps {
@@ -36,6 +37,7 @@ export default function FinishPicker({
   errorFinish,
   errorDoorStyle,
 }: FinishPickerProps) {
+  useCompatibilityRulesSync();
   const [activeCategory, setActiveCategory] = useState<FinishCategory>('painted');
   const [query, setQuery] = useState('');
 

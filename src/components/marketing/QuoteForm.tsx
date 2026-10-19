@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
-import { useQuoteForm } from "@/hooks";
+import { useQuoteForm } from "@/hooks/useQuoteForm";
 
 interface QuoteFormProps {
   isOpen: boolean;
@@ -303,7 +303,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                       type="tel"
                       autoComplete="tel"
                       {...register("phone")}
-                      placeholder="(646) 549-3955"
+                      placeholder="(718) 555-0123"
                       className="mt-1"
                     />
                     {errors.phone && (

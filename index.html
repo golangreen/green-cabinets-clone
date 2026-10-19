@@ -39,9 +39,11 @@
     <meta name="twitter:description" content="Custom shaker & slim shaker kitchen cabinets, bathroom vanities & millwork for Brooklyn, Manhattan &amp; Queens homes since 2009." />
     <meta name="twitter:image" content="https://greencabinetsny.com/og-cover.jpg" />
     <meta name="twitter:image:alt" content="White oak kitchen with a marble waterfall island, built by Green Cabinets NY" />
-    <link rel="preload" as="image" href="/hero-lcp.webp" type="image/webp" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/avif" imagesrcset="/img/opt/hero-lcp-640.avif 640w, /img/opt/hero-lcp-960.avif 960w, /img/opt/hero-lcp-1206.avif 1206w" imagesizes="(max-aspect-ratio: 3/2) 150vh, 100vw" fetchpriority="high" />
     
-    <!-- Organization + LocalBusiness Schema (site-wide) -->
+    <!-- Organization + HomeAndConstructionBusiness schema (site-wide). Page-specific
+         schema (FAQ, HowTo, Service, Article, Breadcrumb) lives on the page that shows it. -->
+    <!-- TODO(Golan): add the Google Business Profile URL to both sameAs lists below once it is confirmed. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -87,6 +89,7 @@
           ],
           "sameAs": [
             "https://instagram.com/green_cabinets_",
+            "https://www.houzz.com/professionals/cabinets-and-cabinetry/green-cabinets-pfvwus-pf~378651560",
             "https://twitter.com/GreenGr63406",
             "https://x.com/GreenGr63406"
           ],
@@ -94,11 +97,12 @@
             "@type": "PostalAddress",
             "addressLocality": "Brooklyn",
             "addressRegion": "NY",
-            "addressCountry": "US"
+            "addressCountry": "US",
+            "postalCode": "11206"
           }
         },
         {
-          "@type": "LocalBusiness",
+          "@type": "HomeAndConstructionBusiness",
           "@id": "https://greencabinetsny.com/#localbusiness",
           "name": "Green Cabinets NY",
           "image": "https://greencabinetsny.com/og-cover.jpg",
@@ -116,7 +120,8 @@
             "@type": "PostalAddress",
             "addressLocality": "Brooklyn",
             "addressRegion": "NY",
-            "addressCountry": "US"
+            "addressCountry": "US",
+            "postalCode": "11206"
           },
           "openingHoursSpecification": [
             {
@@ -141,42 +146,6 @@
             },
             {
               "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-new-years-day-2026",
-              "name": "New Year's Day",
-              "opens": "00:00",
-              "closes": "00:00",
-              "validFrom": "2026-01-01",
-              "validThrough": "2026-01-01"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-memorial-day-2026",
-              "name": "Memorial Day",
-              "opens": "00:00",
-              "closes": "00:00",
-              "validFrom": "2026-05-25",
-              "validThrough": "2026-05-25"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-independence-day-2026",
-              "name": "Independence Day",
-              "opens": "00:00",
-              "closes": "00:00",
-              "validFrom": "2026-07-04",
-              "validThrough": "2026-07-04"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-labor-day-2026",
-              "name": "Labor Day",
-              "opens": "00:00",
-              "closes": "00:00",
-              "validFrom": "2026-09-07",
-              "validThrough": "2026-09-07"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
               "@id": "https://greencabinetsny.com/#hours-thanksgiving-day-2026",
               "name": "Thanksgiving Day",
               "opens": "00:00",
@@ -192,326 +161,6 @@
               "closes": "00:00",
               "validFrom": "2026-12-24",
               "validThrough": "2026-12-25"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-purim-2026",
-              "name": "Purim",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-03-03",
-              "validThrough": "2026-03-03"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-passover-first-days-2026",
-              "name": "Passover (first days)",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-04-02",
-              "validThrough": "2026-04-03"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-passover-last-days-2026",
-              "name": "Passover (last days)",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-04-08",
-              "validThrough": "2026-04-09"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-shavuot-2026",
-              "name": "Shavuot",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-05-22",
-              "validThrough": "2026-05-23"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-rosh-hashanah-2026",
-              "name": "Rosh Hashanah",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-09-12",
-              "validThrough": "2026-09-13"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-yom-kippur-2026",
-              "name": "Yom Kippur",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-09-21",
-              "validThrough": "2026-09-21"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-sukkot-first-days-2026",
-              "name": "Sukkot (first days)",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-09-26",
-              "validThrough": "2026-09-27"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-shemini-atzeret-simchat-torah-2026",
-              "name": "Shemini Atzeret / Simchat Torah",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-10-03",
-              "validThrough": "2026-10-04"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-tisha-bav-2026",
-              "name": "Tisha B'Av",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-07-23",
-              "validThrough": "2026-07-23"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-chanukah-2026",
-              "name": "Chanukah",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2026-12-05",
-              "validThrough": "2026-12-12"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-purim-2027",
-              "name": "Purim",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-03-23",
-              "validThrough": "2027-03-23"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-passover-first-days-2027",
-              "name": "Passover (first days)",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-04-22",
-              "validThrough": "2027-04-23"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-passover-last-days-2027",
-              "name": "Passover (last days)",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-04-28",
-              "validThrough": "2027-04-29"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-shavuot-2027",
-              "name": "Shavuot",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-06-11",
-              "validThrough": "2027-06-12"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-tisha-bav-2027",
-              "name": "Tisha B'Av",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-08-12",
-              "validThrough": "2027-08-12"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-rosh-hashanah-2027",
-              "name": "Rosh Hashanah",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-10-02",
-              "validThrough": "2027-10-03"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-yom-kippur-2027",
-              "name": "Yom Kippur",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-10-11",
-              "validThrough": "2027-10-11"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-sukkot-first-days-2027",
-              "name": "Sukkot (first days)",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-10-16",
-              "validThrough": "2027-10-17"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-shemini-atzeret-simchat-torah-2027",
-              "name": "Shemini Atzeret / Simchat Torah",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-10-23",
-              "validThrough": "2027-10-24"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "@id": "https://greencabinetsny.com/#hours-chanukah-2027",
-              "name": "Chanukah",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
-              ],
-              "validFrom": "2027-12-25",
-              "validThrough": "2028-01-01"
             }
           ],
           "areaServed": [
@@ -530,6 +179,7 @@
           ],
           "sameAs": [
             "https://instagram.com/green_cabinets_",
+            "https://www.houzz.com/professionals/cabinets-and-cabinetry/green-cabinets-pfvwus-pf~378651560",
             "https://twitter.com/GreenGr63406",
             "https://x.com/GreenGr63406"
           ]
@@ -538,191 +188,7 @@
     }
     </script>
 
-    <!-- HowTo Schema: custom project workflow -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      "@id": "https://greencabinetsny.com/#howto-process",
-      "name": "How a Green Cabinets NY Custom Cabinetry Project Works",
-      "description": "Our four-step process for designing, fabricating, and installing custom kitchen cabinets and bathroom vanities in Brooklyn, Manhattan, and Queens.",
-      "image": "https://greencabinetsny.com/og-cover.jpg",
-      "totalTime": "P42D",
-      "estimatedCost": {
-        "@type": "MonetaryAmount",
-        "currency": "USD",
-        "value": "8000"
-      },
-      "supply": [
-        { "@type": "HowToSupply", "name": "FSC-certified hardwood" },
-        { "@type": "HowToSupply", "name": "Formaldehyde-free plywood cores" },
-        { "@type": "HowToSupply", "name": "Blum and Hettich hardware" },
-        { "@type": "HowToSupply", "name": "Low-VOC conversion varnish finish" }
-      ],
-      "tool": [
-        { "@type": "HowToTool", "name": "CNC router" },
-        { "@type": "HowToTool", "name": "Edge bander" },
-        { "@type": "HowToTool", "name": "Spray finishing booth" }
-      ],
-      "step": [
-        {
-          "@type": "HowToStep",
-          "@id": "https://greencabinetsny.com/#step-consult",
-          "position": 1,
-          "name": "Free in-home consultation",
-          "text": "We visit your Brooklyn, Manhattan, or Queens home to measure the space, discuss your style, workflow, and budget, and review material samples on-site.",
-          "url": "https://greencabinetsny.com/#consult",
-          "image": "https://greencabinetsny.com/og-cover.jpg"
-        },
-        {
-          "@type": "HowToStep",
-          "@id": "https://greencabinetsny.com/#step-design",
-          "position": 2,
-          "name": "Design and 3D rendering",
-          "text": "Our designers produce CAD plans and photorealistic 3D renderings, finalize materials, finishes, and hardware, and lock pricing before any wood is cut.",
-          "url": "https://greencabinetsny.com/#design",
-          "image": "https://greencabinetsny.com/og-cover.jpg"
-        },
-        {
-          "@type": "HowToStep",
-          "@id": "https://greencabinetsny.com/#step-fabricate",
-          "position": 3,
-          "name": "Fabrication",
-          "text": "Cabinets are built and finished to our specifications by vetted millwork suppliers using FSC-certified hardwoods, formaldehyde-free plywood, and low-VOC conversion varnish over 2–3 weeks.",
-          "url": "https://greencabinetsny.com/#fabricate",
-          "image": "https://greencabinetsny.com/og-cover.jpg"
-        },
-        {
-          "@type": "HowToStep",
-          "@id": "https://greencabinetsny.com/#step-install",
-          "position": 4,
-          "name": "White-glove installation",
-          "text": "Our insured install crew delivers, assembles, and installs your cabinets in 3–7 days, coordinates with your contractor, and provides COIs for NYC condos and co-ops.",
-          "url": "https://greencabinetsny.com/#install",
-          "image": "https://greencabinetsny.com/og-cover.jpg"
-        }
-      ]
-    }
-    </script>
-
-    <!-- FAQ Schema (static fallback for crawlers) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What makes your custom kitchen cabinets in Brooklyn, Manhattan, and Queens different?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Every project starts with a free in-home consultation across Brooklyn, Manhattan, and Queens, by appointment. We design and specify your cabinetry; it is built and finished to spec by our vetted millwork suppliers using FSC-certified hardwoods, low-VOC finishes, and European hardware." }
-        },
-        {
-          "@type": "Question",
-          "name": "How much do custom kitchen cabinets in Brooklyn, Manhattan, and Queens cost?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Pricing for our custom cabinetry solutions in Brooklyn, Manhattan, and Queens typically runs $350 per linear foot for full kitchens and vanities, $225/lf for base cabinets, and $125/lf for wall cabinets. A typical NYC kitchen ranges between $8,000 and $25,000+." }
-        },
-        {
-          "@type": "Question",
-          "name": "How long does a custom kitchen cabinetry project take in NYC?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Most projects take 4–6 weeks: 1–2 weeks for design, 2–3 weeks of fabrication, and 3–7 days for installation in your Brooklyn, Manhattan, or Queens home." }
-        },
-        {
-          "@type": "Question",
-          "name": "Do you handle both kitchens and bathroom vanities?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Many clients who renovate bathrooms also upgrade their kitchens with our custom cabinetry solutions in Brooklyn, Manhattan, and Queens, designed as a coordinated package." }
-        },
-        {
-          "@type": "Question",
-          "name": "Where do you source your materials?",
-          "acceptedAnswer": { "@type": "Answer", "text": "FSC-certified hardwoods from Northeast mills, formaldehyde-free plywood cores, NYC-area stone slabs, Blum and Hettich hardware, and low-VOC conversion varnish finishes." }
-        },
-        {
-          "@type": "Question",
-          "name": "Do you provide Certificates of Insurance (COIs) for condo and co-op buildings?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. We carry general liability, workers' comp, and umbrella coverage and routinely issue building-specific COIs and alteration agreements within 48 hours for NYC condos and co-ops." }
-        },
-        {
-          "@type": "Question",
-          "name": "Which Brooklyn, Manhattan, and Queens neighborhoods do you serve?",
-          "acceptedAnswer": { "@type": "Answer", "text": "We work throughout Brooklyn — Park Slope, Williamsburg, DUMBO, Brooklyn Heights, Carroll Gardens, Bushwick — across Manhattan (Tribeca, SoHo, West Village, Upper East Side, Upper West Side, Harlem), and Queens (Long Island City, Astoria, Forest Hills). All work is by appointment." }
-        }
-      ]
-    }
-    </script>
-
     <!-- BreadcrumbList is injected per-page via <BreadcrumbSchema /> -->
-
-    <!-- Service Schema (static for crawlers). Product schema lives on /product/:handle only. -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Service",
-          "@id": "https://greencabinetsny.com/#service-kitchen",
-          "serviceType": "Custom Kitchen Cabinets",
-          "name": "Custom Kitchen Cabinets in Brooklyn, Manhattan & Queens",
-          "description": "Bespoke kitchen cabinetry designed, built, and installed in NYC. Shaker, slim shaker, and modern styles using FSC-certified hardwoods and low-VOC finishes.",
-          "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" },
-          "areaServed": [
-            { "@type": "City", "name": "Brooklyn" },
-            { "@type": "City", "name": "Manhattan" },
-            { "@type": "City", "name": "Queens" }
-          ],
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "USD",
-            "price": "350",
-            "priceSpecification": {
-              "@type": "UnitPriceSpecification",
-              "price": "350",
-              "priceCurrency": "USD",
-              "unitText": "linear foot"
-            },
-            "url": "https://greencabinetsny.com/"
-          }
-        },
-        {
-          "@type": "Service",
-          "@id": "https://greencabinetsny.com/#service-vanity",
-          "serviceType": "Custom Bathroom Vanities",
-          "name": "Custom Bathroom Vanities NYC",
-          "description": "Made-to-measure bathroom vanities with premium materials and hardware, designed and installed throughout NYC.",
-          "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" },
-          "areaServed": [
-            { "@type": "City", "name": "Brooklyn" },
-            { "@type": "City", "name": "Manhattan" },
-            { "@type": "City", "name": "Queens" }
-          ],
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "USD",
-            "price": "350",
-            "priceSpecification": {
-              "@type": "UnitPriceSpecification",
-              "price": "350",
-              "priceCurrency": "USD",
-              "unitText": "linear foot"
-            },
-            "url": "https://greencabinetsny.com/"
-          }
-        },
-        {
-          "@type": "Service",
-          "@id": "https://greencabinetsny.com/#service-closets",
-          "serviceType": "Custom Closet Systems",
-          "name": "Custom Closet Systems Brooklyn & NYC",
-          "description": "Custom closet organization and built-in storage systems engineered for NYC apartments and brownstones.",
-          "provider": { "@type": "LocalBusiness", "@id": "https://greencabinetsny.com/#localbusiness" },
-          "areaServed": [
-            { "@type": "City", "name": "Brooklyn" },
-            { "@type": "City", "name": "Manhattan" },
-            { "@type": "City", "name": "Queens" }
-          ]
-        }
-      ]
-    }
-    </script>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/manifest.json" />
@@ -735,10 +201,16 @@
     <meta name="apple-mobile-web-app-title" content="Green Cabinets" />
     <meta name="application-name" content="Green Cabinets" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <!-- Fonts are self-hosted (latin subset, font-display: swap) so text paints
+         right away in the fallback font and the logo/headings never wait on a
+         third-party stylesheet. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/cormorant-garamond-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/outfit-latin.woff2" crossorigin />
+    <style>
+      @font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:500 500;font-display:swap;src:url(/fonts/cormorant-garamond-italic-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+      @font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:500 600;font-display:swap;src:url(/fonts/cormorant-garamond-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+      @font-face{font-family:'Outfit';font-style:normal;font-weight:300 800;font-display:swap;src:url(/fonts/outfit-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    </style>
     <script>
       window.addEventListener('load', function () {
         // Not inside the Green Cabinets iPhone app (no analytics there)

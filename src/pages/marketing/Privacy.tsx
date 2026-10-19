@@ -75,7 +75,7 @@ const Privacy = () => {
         <link rel="canonical" href="https://greencabinetsny.com/privacy" />
       </Helmet>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 pb-24 pt-28 sm:px-6 md:pt-36">
+      <main id="main" tabIndex={-1} className="mx-auto max-w-3xl px-4 pb-24 pt-28 sm:px-6 md:pt-36">
         <p className="lux-eyebrow mb-5">Privacy policy</p>
         <h1 className="lux-display text-[clamp(2.6rem,6vw,4.5rem)]">Your information, handled with care.</h1>
         <p className="mt-4 font-display text-sm text-stone">Last updated {UPDATED}</p>

@@ -14,7 +14,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/luxury-kitchen-design-nyc";
 const TITLE = "Luxury Kitchen Design NYC — 2026 High-End Trends & Millwork";
 const DESC =
-  "Luxury kitchen design in NYC: marble waterfall islands, integrated wood dining, hidden appliances, and full-height millwork from a Brooklyn-based high-end kitchen design studio.";
+  "Luxury kitchen design in NYC: marble waterfall islands, integrated wood dining, hidden appliances and full-height millwork from a Brooklyn high-end studio.";
 
 const FAQS = [
   {

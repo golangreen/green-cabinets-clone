@@ -1,21 +1,16 @@
 import { Link } from "react-router-dom";
 import { AUTHOR_IDS } from "@/data/authors";
 
-const META: Record<keyof typeof AUTHOR_IDS, { name: string; role: string; anchor: string }> = {
+const META: Record<keyof typeof AUTHOR_IDS, { name: string; role: string; href: string }> = {
   golan: {
     name: "Golan Achdary",
     role: "Founder & Master Cabinetmaker",
-    anchor: "#golan-achdary",
-  },
-  andy: {
-    name: "Andy Lopez",
-    role: "Project Manager & Installation Lead",
-    anchor: "#andy-lopez",
+    href: "/about/golan-achdary",
   },
   team: {
     name: "Green Cabinets NY Editorial Team",
     role: "Editorial",
-    anchor: "#team",
+    href: "/about#team",
   },
 };
 
@@ -53,7 +48,7 @@ const AuthorByline = ({
         <div>
           <span className="text-muted-foreground">{label} </span>
           <Link
-            to={`/about${meta.anchor}`}
+            to={meta.href}
             className="font-semibold text-foreground hover:text-primary underline-offset-2 hover:underline"
             itemProp="url"
           >

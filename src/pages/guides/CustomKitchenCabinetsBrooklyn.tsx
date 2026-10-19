@@ -12,11 +12,12 @@ import AuthorByline from "@/components/marketing/AuthorByline";
 import { buildArticleSchema } from "@/lib/articleSchema";
 import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
 import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
+import AreaLinks from "@/components/seo/AreaLinks";
 
 const URL = "https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn";
 const TITLE = "Custom Kitchen Cabinets Brooklyn — Buyer's Guide 2026";
 const DESC =
-  "Brooklyn custom kitchen cabinets in 2026: real pricing per linear foot, brownstone vs. condo vs. loft constraints, co-op COI and alteration agreements, shaker vs. slim shaker, and 4–6 week lead times.";
+  "Brooklyn custom kitchen cabinets in 2026: pricing per linear foot, brownstone vs. condo vs. loft limits, co-op COIs, shaker vs. slim shaker, 4–6 week lead times";
 
 const FAQS = [
   {
@@ -451,6 +452,13 @@ const CustomKitchenCabinetsBrooklyn = () => (
         </p>
       </div>
     </section>
+
+    <AreaLinks
+      boroughHub="/custom-kitchen-cabinets-brooklyn"
+      current="/custom-kitchen-cabinets-brooklyn"
+      postKeywords={["brooklyn"]}
+      heading="Brooklyn neighborhoods and articles"
+    />
 
     <Contact />
     <CTA />

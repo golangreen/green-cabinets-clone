@@ -44,7 +44,7 @@ const WoodSpeciesTeaser = () => {
                   <div className="aspect-square overflow-hidden bg-muted">
                     <img
                       src={w.image}
-                      alt={`${w.name} cabinet wood`}
+                      alt={`${w.name} wood grain sample: ${w.tagline}`}
                       loading="lazy"
                       decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
