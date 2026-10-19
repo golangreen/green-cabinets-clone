@@ -34,9 +34,11 @@ import { radiatorCoversBuiltInsPrewarNycPost } from "@/data/blogPosts/radiatorCo
 import { customKitchenTimelineNycPost } from "@/data/blogPosts/customKitchenTimelineNycPost";
 import { plywoodVsMdfCabinetBoxesNycPost } from "@/data/blogPosts/plywoodVsMdfCabinetBoxesNycPost";
 import { cornerCabinetsLazySusanNycKitchensPost } from "@/data/blogPosts/cornerCabinetsLazySusanNycKitchensPost";
+import { faceFrameVsFramelessCabinetsNycPost } from "@/data/blogPosts/faceFrameVsFramelessCabinetsNycPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 export const STATIC_BLOG_POSTS: BlogArticle[] = [
+  faceFrameVsFramelessCabinetsNycPost,
   cornerCabinetsLazySusanNycKitchensPost,
   radiatorCoversBuiltInsPrewarNycPost,
   customKitchenTimelineNycPost,
