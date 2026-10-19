@@ -186,6 +186,17 @@ function outFile(path) {
 }
 
 // ---------------------------------------------------------------- main
+// supabase-js creates its realtime client on import and, on Node < 22,
+// throws if there is no global WebSocket. The pre-render never opens a
+// socket, so a stub is enough (CI runs Node 20).
+if (typeof globalThis.WebSocket === "undefined") {
+  globalThis.WebSocket = class PrerenderNoWebSocket {
+    constructor() {
+      throw new Error("WebSocket is not available during pre-render");
+    }
+  };
+}
+
 const ssr = await import(pathToFileURL(SSR_ENTRY).href);
 const dbArticles = await fetchDbArticles();
 ssr.setPrerenderedArticles(dbArticles);
