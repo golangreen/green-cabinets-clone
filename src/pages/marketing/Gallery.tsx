@@ -9,12 +9,21 @@ import ContactCta from "@/components/home/lux/ContactCta";
 import { useLuxPage } from "@/hooks/useLuxPage";
 import { galleryImages, type GalleryCategory } from "@/data/galleryImages";
 import galleryDims from "@/data/galleryDims.json";
+import ResponsiveImage, { responsiveEntry } from "@/components/ui/ResponsiveImage";
 
 const DIMS: Record<string, number[]> = galleryDims;
 /** Real pixel size of a gallery photo from its URL (dev path or hashed build path). */
 const dimsFor = (src: string): number[] | undefined => {
   const name = src.split("/").pop()?.replace(/\.[^.]+$/, "") ?? "";
   return DIMS[name] ?? DIMS[name.replace(/-[A-Za-z0-9_-]{8}$/, "")];
+};
+
+const ORIGIN = "https://greencabinetsny.com";
+const GALLERY_SIZES = "(min-width: 1440px) 460px, (min-width: 1024px) 31vw, (min-width: 640px) 48vw, 100vw";
+/** Crawlable, stable URL for a photo (the optimized copy, not a hashed asset). */
+const publicUrl = (src: string) => {
+  const e = responsiveEntry(src);
+  return e ? `${ORIGIN}/img/opt/${e.name}-${e.widths[e.widths.length - 1]}.webp` : new URL(src, ORIGIN).href;
 };
 
 const CATEGORIES: { key: GalleryCategory; label: string }[] = [
@@ -74,19 +83,30 @@ const GalleryPage = () => {
           mainEntity: {
             "@type": "ItemList",
             numberOfItems: filtered.length,
-            itemListElement: filtered.slice(0, 30).map((img, i) => ({
-              "@type": "ImageObject",
-              position: i + 1,
-              contentUrl: img.src,
-              name: img.alt,
-            })),
+            itemListElement: filtered.map((img, i) => {
+              const d = dimsFor(img.src);
+              return {
+                "@type": "ListItem",
+                position: i + 1,
+                item: {
+                  "@type": "ImageObject",
+                  contentUrl: publicUrl(img.src),
+                  name: img.alt,
+                  caption: img.alt,
+                  ...(d ? { width: d[0], height: d[1] } : {}),
+                  creator: { "@id": "https://greencabinetsny.com/#organization" },
+                  copyrightHolder: { "@id": "https://greencabinetsny.com/#organization" },
+                  creditText: "Green Cabinets NY",
+                },
+              };
+            }),
           },
         })}</script>
       </Helmet>
 
       <Header />
 
-      <main>
+      <main id="main" tabIndex={-1} className="focus:outline-none">
         <PageHero
           crumbs={[{ label: "Home", to: "/" }, { label: "Work" }]}
           eyebrow="The work"
@@ -138,7 +158,7 @@ const GalleryPage = () => {
               <li
                 key={image.src}
                 className="break-inside-avoid"
-                data-reveal="up"
+                data-reveal={idx < 6 ? undefined : "up"}
                 style={{ "--d": `${(idx % 3) * 50}ms` } as React.CSSProperties}
               >
                 <button
@@ -148,12 +168,14 @@ const GalleryPage = () => {
                   aria-label={`View larger: ${image.alt}`}
                 >
                   <div className="overflow-hidden bg-ink-3">
-                    <img
+                    <ResponsiveImage
                       src={image.src}
                       alt={image.alt}
+                      sizes={GALLERY_SIZES}
                       width={dimsFor(image.src)?.[0]}
                       height={dimsFor(image.src)?.[1]}
-                      loading={idx < 6 ? "eager" : "lazy"}
+                      loading={idx < 3 ? "eager" : "lazy"}
+                      {...(idx === 0 ? { fetchpriority: "high" } : {})}
                       decoding="async"
                       className="h-auto w-full transition-transform duration-700 [transition-timing-function:var(--ease-out)] group-hover:scale-[1.03]"
                     />

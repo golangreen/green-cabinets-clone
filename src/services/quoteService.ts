@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabaseLazy";
 
 export interface QuoteRequest {
   name: string;
@@ -59,7 +59,7 @@ export class QuoteService {
       }
 
       // Send via edge function
-      const { error } = await supabase.functions.invoke('send-contact-form', {
+      const { error } = await (await getSupabase()).functions.invoke('send-contact-form', {
         body: {
           name: this.sanitizeString(request.name),
           email: request.email,

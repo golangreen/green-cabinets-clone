@@ -1,10 +1,9 @@
 import type { BlogArticle } from "@/services/blogService";
+import { MERGED_BLOG_POSTS, applyBlogSeo } from "@/data/blogSeo";
 import {
   STATIC_BLOG_POSTS as BASE_POSTS,
   getStaticBlogPost as getBaseStaticBlogPost,
 } from "@/data/staticBlogPosts";
-import { sunnysideQueensPost } from "@/data/blogPosts/sunnysideQueensPost";
-import { williamsburgKitchenPost } from "@/data/blogPosts/williamsburgKitchenPost";
 import { fortGreeneKitchenPost } from "@/data/blogPosts/fortGreeneKitchenPost";
 import { greenpointKitchenPost } from "@/data/blogPosts/greenpointKitchenPost";
 import { appliancePanelPost } from "@/data/blogPosts/appliancePanelPost";
@@ -16,7 +15,6 @@ import { cobbleHillCarrollGardensPost } from "@/data/blogPosts/cobbleHillCarroll
 import { prospectHeightsBrooklynPost } from "@/data/blogPosts/prospectHeightsBrooklynPost";
 import { floorToCeilingBulkheadPost } from "@/data/blogPosts/floorToCeilingBulkheadPost";
 import { brooklynBrownstoneWalkInClosetPost } from "@/data/blogPosts/brooklynBrownstoneWalkInClosetPost";
-import { boerumHillBrooklynPost } from "@/data/blogPosts/boerumHillBrooklynPost";
 import { parkSlopeBathroomVanityPost } from "@/data/blogPosts/parkSlopeBathroomVanityPost";
 import { underStairStorageBrooklynPost } from "@/data/blogPosts/underStairStorageBrooklynPost";
 import { forestHillsQueensPost } from "@/data/blogPosts/forestHillsQueensPost";
@@ -25,7 +23,6 @@ import { rangeHoodMantleMillworkPost } from "@/data/blogPosts/rangeHoodMantleMil
 import { kitchenIslandNycLoftsPost } from "@/data/blogPosts/kitchenIslandNycLoftsPost";
 import { ditmasParkBrooklynPost } from "@/data/blogPosts/ditmasParkBrooklynPost";
 import { bayRidgeBrooklynPost } from "@/data/blogPosts/bayRidgeBrooklynPost";
-import { brooklynHeightsPost } from "@/data/blogPosts/brooklynHeightsPost";
 import { clintonHillBrooklynPost } from "@/data/blogPosts/clintonHillBrooklynPost";
 import { jacksonHeightsQueensPost } from "@/data/blogPosts/jacksonHeightsQueensPost";
 import { pullOutTrashRecyclingPost } from "@/data/blogPosts/pullOutTrashRecyclingPost";
@@ -37,7 +34,7 @@ import { cornerCabinetsLazySusanNycKitchensPost } from "@/data/blogPosts/cornerC
 import { faceFrameVsFramelessCabinetsNycPost } from "@/data/blogPosts/faceFrameVsFramelessCabinetsNycPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
-export const STATIC_BLOG_POSTS: BlogArticle[] = [
+const ALL_STATIC_POSTS: BlogArticle[] = [
   faceFrameVsFramelessCabinetsNycPost,
   cornerCabinetsLazySusanNycKitchensPost,
   radiatorCoversBuiltInsPrewarNycPost,
@@ -48,15 +45,12 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
   rangeHoodMantleMillworkPost,
   ditmasParkBrooklynPost,
   bayRidgeBrooklynPost,
-  sunnysideQueensPost,
   clintonHillBrooklynPost,
-  brooklynHeightsPost,
   jacksonHeightsQueensPost,
   kitchenIslandNycLoftsPost,
   linenClosetManhattanCoopsPost,
   forestHillsQueensPost,
   underStairStorageBrooklynPost,
-  boerumHillBrooklynPost,
   parkSlopeBathroomVanityPost,
   brooklynBrownstoneWalkInClosetPost,
   floorToCeilingBulkheadPost,
@@ -69,7 +63,6 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
   appliancePanelPost,
   greenpointKitchenPost,
   fortGreeneKitchenPost,
-  williamsburgKitchenPost,
     ...BASE_POSTS.filter(
     (p) =>
       p.slug !== cornerCabinetsLazySusanNycKitchensPost.slug &&
@@ -79,7 +72,6 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== customKitchenCabinetsCostNycPost.slug &&
       p.slug !== pullOutTrashRecyclingPost.slug &&
       p.slug !== ditmasParkBrooklynPost.slug &&
-      p.slug !== williamsburgKitchenPost.slug &&
       p.slug !== fortGreeneKitchenPost.slug &&
       p.slug !== greenpointKitchenPost.slug &&
       p.slug !== appliancePanelPost.slug &&
@@ -92,19 +84,19 @@ export const STATIC_BLOG_POSTS: BlogArticle[] = [
       p.slug !== prospectHeightsBrooklynPost.slug &&
       p.slug !== brooklynBrownstoneWalkInClosetPost.slug &&
       p.slug !== parkSlopeBathroomVanityPost.slug &&
-      p.slug !== boerumHillBrooklynPost.slug &&
       p.slug !== underStairStorageBrooklynPost.slug &&
       p.slug !== forestHillsQueensPost.slug &&
       p.slug !== linenClosetManhattanCoopsPost.slug &&
       p.slug !== rangeHoodMantleMillworkPost.slug &&
       p.slug !== kitchenIslandNycLoftsPost.slug &&
-      p.slug !== sunnysideQueensPost.slug &&
       p.slug !== jacksonHeightsQueensPost.slug &&
-      p.slug !== brooklynHeightsPost.slug &&
       p.slug !== clintonHillBrooklynPost.slug &&
       p.slug !== bayRidgeBrooklynPost.slug,
   ),
 ];
+
+/** Every static post, minus merged-away ones, with title overrides applied. */
+export const STATIC_BLOG_POSTS: BlogArticle[] = ALL_STATIC_POSTS.filter((p) => !MERGED_BLOG_POSTS[p.slug]).map(applyBlogSeo);
 
 export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
@@ -119,15 +111,12 @@ export const PINNED_BLOG_SLUGS: string[] = [
   rangeHoodMantleMillworkPost.slug,
   ditmasParkBrooklynPost.slug,
   bayRidgeBrooklynPost.slug,
-  sunnysideQueensPost.slug,
   clintonHillBrooklynPost.slug,
-  brooklynHeightsPost.slug,
   jacksonHeightsQueensPost.slug,
   kitchenIslandNycLoftsPost.slug,
   linenClosetManhattanCoopsPost.slug,
   forestHillsQueensPost.slug,
   underStairStorageBrooklynPost.slug,
-  boerumHillBrooklynPost.slug,
   parkSlopeBathroomVanityPost.slug,
   brooklynBrownstoneWalkInClosetPost.slug,
   floorToCeilingBulkheadPost.slug,
@@ -151,7 +140,7 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
 const STATIC_BY_SLUG = new Map(STATIC_BLOG_POSTS.map((p) => [p.slug, p]));
 
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
-  if (!slug) return null;
+  if (!slug || MERGED_BLOG_POSTS[slug]) return null;
   // Every post listed in STATIC_BLOG_POSTS resolves here, so a new post can't
   // be in the index and sitemap yet show "Article not found".
   const listed = STATIC_BY_SLUG.get(slug);
@@ -165,15 +154,12 @@ export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (slug === rangeHoodMantleMillworkPost.slug) return rangeHoodMantleMillworkPost;
   if (slug === ditmasParkBrooklynPost.slug) return ditmasParkBrooklynPost;
   if (slug === bayRidgeBrooklynPost.slug) return bayRidgeBrooklynPost;
-  if (slug === sunnysideQueensPost.slug) return sunnysideQueensPost;
   if (slug === clintonHillBrooklynPost.slug) return clintonHillBrooklynPost;
-  if (slug === brooklynHeightsPost.slug) return brooklynHeightsPost;
   if (slug === jacksonHeightsQueensPost.slug) return jacksonHeightsQueensPost;
   if (slug === kitchenIslandNycLoftsPost.slug) return kitchenIslandNycLoftsPost;
   if (slug === linenClosetManhattanCoopsPost.slug) return linenClosetManhattanCoopsPost;
   if (slug === forestHillsQueensPost.slug) return forestHillsQueensPost;
   if (slug === underStairStorageBrooklynPost.slug) return underStairStorageBrooklynPost;
-  if (slug === boerumHillBrooklynPost.slug) return boerumHillBrooklynPost;
   if (slug === parkSlopeBathroomVanityPost.slug) return parkSlopeBathroomVanityPost;
   if (slug === brooklynBrownstoneWalkInClosetPost.slug) return brooklynBrownstoneWalkInClosetPost;
   if (slug === floorToCeilingBulkheadPost.slug) return floorToCeilingBulkheadPost;
@@ -186,6 +172,35 @@ export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (slug === appliancePanelPost.slug) return appliancePanelPost;
   if (slug === greenpointKitchenPost.slug) return greenpointKitchenPost;
   if (slug === fortGreeneKitchenPost.slug) return fortGreeneKitchenPost;
-  if (slug === williamsburgKitchenPost.slug) return williamsburgKitchenPost;
-  return getBaseStaticBlogPost(slug);
+  const base = getBaseStaticBlogPost(slug);
+  return base ? applyBlogSeo(base) : null;
 }
+
+const BOROUGH_WORDS = ["brooklyn", "manhattan", "queens", "staten"];
+const words = (s: string) => new Set(s.toLowerCase().split(/[^a-z]+/).filter((w) => w.length > 3));
+
+/**
+ * Related static posts for the bottom of an article: shared tags first,
+ * then shared slug/title words, same borough as a tie-breaker. Static posts
+ * only, so the pre-rendered HTML and the first browser render match.
+ */
+export function relatedBlogPosts(slug: string, tags: string[] = [], title = "", n = 4): BlogArticle[] {
+  const myTags = new Set(tags.map((t) => t.toLowerCase()));
+  const myWords = words(`${slug} ${title}`);
+  const myBorough = BOROUGH_WORDS.find((b) => slug.includes(b));
+  return STATIC_BLOG_POSTS.filter((p) => p.slug !== slug)
+    .map((p) => {
+      let score = 0;
+      for (const t of p.tags ?? []) if (myTags.has(t.toLowerCase())) score += 3;
+      for (const w of words(`${p.slug} ${p.title}`)) if (myWords.has(w)) score += 1;
+      if (myBorough && p.slug.includes(myBorough)) score += 2;
+      return { p, score };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score || a.p.slug.localeCompare(b.p.slug))
+    .slice(0, n)
+    .map((x) => x.p);
+}
+
+/** Posts per blog index page; scripts/prerender.mjs pre-renders every page. */
+export const BLOG_PAGE_SIZE = 24;

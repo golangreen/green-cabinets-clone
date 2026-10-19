@@ -117,11 +117,17 @@ export default defineConfig(({ mode, isSsrBuild }) => ({
     // chunking; vendor splitting only applies to the browser build.
     rollupOptions: isSsrBuild ? {} : {
       output: {
-        manualChunks: {
-          // Vendor splitting for better caching
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'state-vendor': ['zustand', '@tanstack/react-query'],
-          'supabase-vendor': ['@supabase/supabase-js'],
+        // Vendor splitting for better caching. The supabase chunk holds only
+        // @supabase/* packages: the object form also pulled their shared
+        // helpers in, which made every page import the chunk.
+        manualChunks: (id: string) => {
+          if (!id.includes('/node_modules/')) return undefined;
+          if (/\/node_modules\/(react|react-dom|react-router|react-router-dom|scheduler|@remix-run\/router)\//.test(id)) return 'react-vendor';
+          if (/\/node_modules\/(zustand|@tanstack\/react-query|@tanstack\/query-core)\//.test(id)) return 'state-vendor';
+          if (id.includes('/node_modules/@supabase/')) return 'supabase-vendor';
+          // tslib is shared by supabase and the UI libraries; keep it out of the supabase chunk.
+          if (id.includes('/node_modules/tslib/')) return 'react-vendor';
+          return undefined;
         },
       },
     },

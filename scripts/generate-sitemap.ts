@@ -57,6 +57,7 @@ const core: SitemapEntry[] = [
   { path: "/finishes-colors", changefreq: "monthly", priority: "0.8" },
   { path: "/wood-species", changefreq: "monthly", priority: "0.8" },
   { path: "/about", changefreq: "monthly", priority: "0.7" },
+  { path: "/about/golan-achdary", changefreq: "monthly", priority: "0.5" },
   { path: "/case-studies", changefreq: "monthly", priority: "0.8" },
   { path: "/blog", changefreq: "weekly", priority: "0.8" },
   { path: "/landing", changefreq: "monthly", priority: "0.7" },

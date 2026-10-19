@@ -14,6 +14,9 @@ export const AUTHOR_IDS = {
   team: "https://greencabinetsny.com/about#team",
 } as const;
 
+/** Author page for Golan (the Person @id above stays stable). */
+export const AUTHOR_PAGE_URL = "https://greencabinetsny.com/about/golan-achdary";
+
 export type AuthorRef = { "@type": "Person"; "@id": string; name: string; url: string };
 
 /** Lightweight author reference suitable as `author:` on Article/HowTo schema. */
@@ -26,7 +29,7 @@ export const authorRef = (id: keyof typeof AUTHOR_IDS = "golan"): AuthorRef => {
     "@type": "Person",
     "@id": AUTHOR_IDS[id],
     name: map[id].name,
-    url: AUTHOR_IDS[id],
+    url: id === "golan" ? AUTHOR_PAGE_URL : AUTHOR_IDS[id],
   };
 };
 
@@ -41,7 +44,8 @@ export const PEOPLE = [
     jobTitle: "Founder & Master Cabinetmaker",
     worksFor: { "@id": ORG_ID },
     affiliation: { "@id": ORG_ID },
-    url: "https://greencabinetsny.com/about",
+    url: AUTHOR_PAGE_URL,
+    mainEntityOfPage: AUTHOR_PAGE_URL,
     telephone: "+1-718-804-5488",
     email: "orders@greencabinetsny.com",
     address: {

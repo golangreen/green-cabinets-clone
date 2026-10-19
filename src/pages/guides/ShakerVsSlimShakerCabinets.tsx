@@ -14,7 +14,7 @@ import { buildArticleSchema } from "@/lib/articleSchema";
 const URL = "https://greencabinetsny.com/shaker-vs-slim-shaker-cabinets";
 const TITLE = "Shaker vs Slim Shaker Cabinets — NYC Design Guide 2026";
 const DESC =
-  "Shaker vs slim shaker kitchen cabinets in NYC: rail widths, construction, cost, and how each style reads in a Brooklyn brownstone versus a modern Manhattan loft.";
+  "Shaker vs slim shaker kitchen cabinets in NYC: rail widths, construction, cost, and how each reads in a Brooklyn brownstone vs a modern Manhattan loft.";
 
 const FAQS = [
   {

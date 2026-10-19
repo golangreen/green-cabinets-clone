@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { fitDescription } from "@/lib/metaText";
 
 interface Props {
   title: string;
@@ -8,7 +9,8 @@ interface Props {
   noindex?: boolean;
 }
 
-export default function Seo({ title, description, path, image, noindex }: Props) {
+export default function Seo({ title, description: rawDescription, path, image, noindex }: Props) {
+  const description = rawDescription ? fitDescription(rawDescription) : undefined;
   const url = path ? `https://greencabinetsny.com${path}` : undefined;
   return (
     <Helmet>

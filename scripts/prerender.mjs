@@ -68,7 +68,22 @@ if (!existsSync(resolve(DIST, "index.html")) || !existsSync(SSR_ENTRY)) {
   process.exit(0);
 }
 
-const SHELL = readFileSync(resolve(DIST, "index.html"), "utf8");
+// The page template. "/" is pre-rendered into dist/index.html itself, so the
+// first run saves the untouched Vite shell to dist-ssr/.shell.html and every run
+// reads that copy; re-running the script can never template from an already
+// pre-rendered page.
+const SHELL_COPY = resolve(ROOT, "dist-ssr/.shell.html"); // not deployed
+const rawIndex = readFileSync(resolve(DIST, "index.html"), "utf8");
+if (!rawIndex.includes("data-prerendered")) writeFileSync(SHELL_COPY, rawIndex);
+if (!existsSync(SHELL_COPY)) {
+  console.error("[prerender] dist/index.html is already pre-rendered and no dist-ssr/.shell.html exists — run `vite build` first.");
+  process.exit(1);
+}
+const SHELL = readFileSync(SHELL_COPY, "utf8");
+if (SHELL.includes("data-prerendered")) {
+  console.error("[prerender] template is not a clean Vite shell — run `vite build` first.");
+  process.exit(1);
+}
 
 // ---------------------------------------------------------------- routes
 function sitemapPaths() {
@@ -174,6 +189,10 @@ function buildPage({ path, html, helmet, noindex, status404 }) {
     return k && routeKeys.has(k) ? "" : tag;
   });
 
+  // The hero photo is only on the homepage; other pages must not spend
+  // bandwidth preloading it.
+  if (path !== "/") head = head.replace(/[ \t]*<link rel="preload" as="image"[^>]*hero-lcp[^>]*>\n?/, "");
+
   const inject = [...tags, ...extra].join("\n    ");
   // function replacements: "$" in page content must not be read as a pattern
   head = head.replace("</head>", () => `    ${inject}\n  </head>`);
@@ -212,6 +231,19 @@ function articleDataScript(path) {
   return `<script id="prerendered-article" type="application/json">${json}</script>`;
 }
 
+/** The blog index lists database posts too; ship their card data so the
+ *  browser hydrates the same list. */
+const MERGED = new Set(Object.keys(ssr.MERGED_BLOG_POSTS ?? {}));
+const dbCards = dbArticles
+  .filter((a) => !staticPaths.has(`/blog/${a.slug}`) && !MERGED.has(a.slug))
+  .map(({ id, slug, title, excerpt, image_url, created_at }) => ({ id, slug, title, excerpt, image_url, created_at }));
+function blogIndexDataScript(path) {
+  if (!/^\/blog(\/page\/\d+)?$/.test(path)) return "";
+  const json = JSON.stringify(dbCards).replace(/</g, "\\u003c");
+  return `<script id="prerendered-blog-index" type="application/json">${json}</script>`;
+}
+const blogPageCount = Math.max(1, Math.ceil((ssr.STATIC_BLOG_COUNT + dbCards.length) / ssr.BLOG_PAGE_SIZE));
+
 const routes = new Map();
 for (const p of sitemapPaths()) routes.set(p, { path: p });
 for (const p of ssr.dataRoutes()) {
@@ -221,6 +253,9 @@ for (const p of ssr.dataRoutes()) {
   }
 }
 for (const r of EXTRA_ROUTES) if (!routes.has(r.path)) routes.set(r.path, r);
+for (let n = 2; n <= blogPageCount; n++) routes.set(`/blog/page/${n}`, { path: `/blog/page/${n}` });
+// Merged posts are 301s now (worker/index.ts) — never write a page for them.
+for (const slug of MERGED) routes.delete(`/blog/${slug}`);
 // "/" is written last because it overwrites the shell template file.
 const ordered = [...routes.values()].sort((a, b) => (a.path === "/") - (b.path === "/"));
 
@@ -237,7 +272,7 @@ for (const r of ordered) {
     const text = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
     if (text.length < 400 && !r.noindex) thin.push(`${r.path} (${text.length} chars)`);
     page = buildPage({ path: r.path, html, helmet, noindex: r.noindex });
-    const data = articleDataScript(r.path);
+    const data = articleDataScript(r.path) + blogIndexDataScript(r.path);
     if (data) page = page.replace("</body>", () => `${data}\n</body>`);
     ok++;
   } catch (e) {

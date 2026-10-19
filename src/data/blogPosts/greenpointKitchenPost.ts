@@ -1,16 +1,23 @@
 import type { BlogArticle } from "@/services/blogService";
 
 const META =
-  "Custom kitchen cabinets for Greenpoint Brooklyn — loft conversions, townhouses, and newer condos. By appointment. (718) 804-5488.";
+  "Custom kitchen cabinets for Greenpoint and Williamsburg, Brooklyn — loft conversions, townhouses, and condos. By appointment. (718) 804-5488.";
 
 const BODY = [
 "<p>Greenpoint kitchens sit where the industrial waterfront meets townhouse blocks. A loft on West Street still carries steel columns and a ceiling that never lands square. A Franklin Street townhouse parlor kitchen leans like every other 19th-century plaster wall in North Brooklyn. A newer condo near McGuinness has a bulkhead, a reserved freight cab, and developer boxes that leave a dead bay under the soffit. A stock pack that looked fine in a catalog leaves fillers, a crooked fridge line, and an island that fights the chimney breast.</p>",
-"<p>Green Cabinets NY designs and installs custom kitchen cabinets for Greenpoint lofts, townhouses, and condos by appointment. We are home-based in Bushwick — not a walk-in shop. Measure and sample visits happen in your kitchen. Start with the <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn\">Brooklyn kitchen cabinets</a> map. This article deepens Greenpoint alone: loft conversions, townhouse parlor kitchens, condo freight, and how we spec the boxes. Nearby: <a href=\"https://greencabinetsny.com/blog/custom-kitchen-cabinets-williamsburg-brooklyn\">Williamsburg lofts and condos</a> and <a href=\"https://greencabinetsny.com/blog/custom-kitchen-cabinets-fort-greene-brooklyn\">Fort Greene brownstones</a>.</p>",
+"<p>Green Cabinets NY designs and installs custom kitchen cabinets for Greenpoint lofts, townhouses, and condos by appointment. We are home-based in Bushwick — not a walk-in shop. Measure and sample visits happen in your kitchen. Start with the <a href=\"https://greencabinetsny.com/custom-kitchen-cabinets-brooklyn\">Brooklyn kitchen cabinets</a> map. This article covers Greenpoint and, further down, Williamsburg next door: loft conversions, townhouse parlor kitchens, condo freight, and how we spec the boxes. Nearby: Williamsburg lofts and condos and <a href=\"https://greencabinetsny.com/blog/custom-kitchen-cabinets-fort-greene-brooklyn\">Fort Greene brownstones</a>.</p>",
 "<h2>Lofts, townhouses, and McGuinness-side condos</h2>",
 "<p><strong>Waterfront and industrial loft conversions (West, Quay, Commercial, and the old factory blocks).</strong> Converted warehouses often keep brick, exposed steel, and 10–14 foot ceilings. The kitchen may sit in an open loft plate with no true wet wall where a catalog island wants to live. We measure column spacing, beam drops, and clear height after any mezzanine or sprinkler line, then draw double-stacked uppers or a tall pantry tower that respects the architecture. Door language often leans <a href=\"https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc\">slim shaker or slab</a>; finishes follow the <a href=\"https://greencabinetsny.com/wood-species\">wood species guide</a> and <a href=\"https://greencabinetsny.com/blog/painted-vs-wood-veneer-cabinets-nyc-humidity\">painted vs wood veneer in NYC humidity</a>.</p>",
 "<p><strong>Townhouses and brownstone-adjacent blocks (Franklin, Manhattan Ave side streets, and the residential core).</strong> Parlor kitchens run long toward the rear. Walls and floors sit out of square. Chimney breasts and radiator niches eat fixed modules. Classic <a href=\"https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc\">shaker</a> with careful scribe to original base and cornice is a common ask — same discipline as Park Slope and Fort Greene, different street parking and stair habits. We do not pretend new cabinets are 1880 originals; we make them read with the house.</p>",
 "<p><strong>Newer condos and mixed-use near McGuinness and the waterfront towers.</strong> Cleaner slabs, shallower galleys, HVAC returns in the ceiling, and freight elevators that need a reservation and a <a href=\"https://greencabinetsny.com/blog/certificate-of-insurance-kitchen-remodel-nyc\">Certificate of Insurance</a>. Developer-grade boxes often leave unused height under the bulkhead. Custom millwork reclaim that bay with taller wall cabinets, integrated appliance panels, and pantry pull-outs sized to the real opening. Soft-close notes: <a href=\"https://greencabinetsny.com/blog/soft-close-blum-vs-hettich-nyc\">Blum vs Hettich</a>. Drawer banks and <a href=\"https://greencabinetsny.com/blog/dovetail-drawer-boxes-nyc-kitchens\">dovetail drawer boxes</a> often beat deep shelves you never see.</p>",
 "<p>Zip context we cover: 11222 — Greenpoint proper, the waterfront loft blocks, and the residential streets toward McCarren — by appointment only. Williamsburg next door shares many loft habits; we measure each kitchen separately.</p>",
+  // Merged 2026-10-19: /blog/custom-kitchen-cabinets-greenpoint-brooklyn now 301s here (see src/data/blogSeo.ts).
+  "<h2>Also covering Williamsburg</h2>",
+  "<p>Williamsburg kitchens are not one layout. A cast-iron loft on Wythe has steel columns and a ceiling that never lands square. A new condo near the waterfront has freight rules and a bulkhead that steals the top cabinet bay. A Southside townhouse parlor kitchen leans like every other 19th-century plaster wall in Brooklyn. A stock pack that looked fine in a catalog leaves fillers, a crooked island, and a fridge that never sits flush.</p>",
+  "<p><strong>Northside lofts (Wythe, Kent, Berry, and the old industrial blocks).</strong> Converted warehouses often keep brick, exposed steel, and 10&ndash;14 foot ceilings. The kitchen may sit in an open loft plate with no true wet wall where a catalog island wants to live. We measure column spacing, beam drops, and clear height after any mezzanine or sprinkler line, then draw double-stacked uppers or a tall pantry tower that respects the architecture. Door language often leans <a href=\"https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc\">slim shaker or slab</a>; finishes follow the <a href=\"https://greencabinetsny.com/wood-species\">wood species guide</a> and <a href=\"https://greencabinetsny.com/blog/painted-vs-wood-veneer-cabinets-nyc-humidity\">painted vs wood veneer in NYC humidity</a>.</p>",
+  "<p><strong>Southside townhouses and brownstone-adjacent blocks.</strong> Parlor kitchens run long toward the rear. Walls and floors sit out of square. Chimney breasts and radiator niches eat fixed modules. Classic <a href=\"https://greencabinetsny.com/blog/shaker-vs-slim-shaker-nyc\">shaker</a> with careful scribe to original base and cornice is a common ask &mdash; same discipline as Park Slope, different freight habits. We do not pretend new cabinets are 1880 originals; we make them read with the house.</p>",
+  "<p><strong>East Williamsburg and newer condo towers.</strong> Cleaner slabs, shallower galleys, HVAC returns in the ceiling, and freight elevators that need a reservation and a <a href=\"https://greencabinetsny.com/blog/certificate-of-insurance-kitchen-remodel-nyc\">Certificate of Insurance</a>. Developer-grade boxes often leave unused height under the bulkhead. Custom millwork reclaim that bay with taller wall cabinets, integrated appliance panels, and pantry pull-outs sized to the real opening.</p>",
+  "<p>Zip context we cover: 11211, 11206, and 11249 &mdash; Northside, Southside, East Williamsburg, and the waterfront &mdash; by appointment only.</p>",
 "<h2>Why stock cabinets fail in Greenpoint</h2>",
 "<ul>",
 "<li>Cast-iron loft ceilings and steel columns that refuse a standard 36-inch module</li>",
@@ -55,9 +62,9 @@ export const greenpointKitchenPost: BlogArticle = {
   id: "static-custom-kitchen-cabinets-greenpoint-brooklyn",
   external_id: null,
   slug: "custom-kitchen-cabinets-greenpoint-brooklyn",
-  title: "Custom Kitchen Cabinets for Greenpoint Brooklyn",
+  title: "Custom Kitchen Cabinets for Greenpoint & Williamsburg",
   excerpt: META,
-  meta_title: "Custom Kitchen Cabinets for Greenpoint Brooklyn",
+  meta_title: "Custom Kitchen Cabinets for Greenpoint & Williamsburg",
   meta_description: META,
   tags: [
     "greenpoint",
@@ -73,6 +80,6 @@ export const greenpointKitchenPost: BlogArticle = {
   canonical_url:
     "https://greencabinetsny.com/blog/custom-kitchen-cabinets-greenpoint-brooklyn",
   created_at: "2026-09-20T09:30:00-04:00",
-  updated_at: "2026-09-20T09:30:00-04:00",
+  updated_at: "2026-10-19T12:00:00-04:00",
   content_html: BODY.join("\n"),
 };

@@ -19,6 +19,16 @@ import { getComparisonsFor } from "@/data/woodComparisons";
 import WoodGalleryCarousel from "@/components/wood/WoodGalleryCarousel";
 import { authorRef, ORG_ID } from "@/data/authors";
 import AuthorByline from "@/components/marketing/AuthorByline";
+import { fitDescription, fitTitle, DESCRIPTION_MAX } from "@/lib/metaText";
+
+/** Keep the Janka figure in the snippet: first sentence + hardness when the full text is too long. */
+const woodDescription = (short: string, janka: number | string) => {
+  const janks = ` Janka hardness ${janka} lbf.`;
+  const full = `${short}${janks} Built in Brooklyn since 2009.`;
+  if (full.length <= DESCRIPTION_MAX) return full;
+  const first = short.match(/^[^.!?]+[.!?]/)?.[0] ?? short;
+  return (first + janks).length <= DESCRIPTION_MAX ? first + janks : fitDescription(short);
+};
 
 const WoodSpeciesDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -98,10 +108,10 @@ const WoodSpeciesDetail = () => {
   return (
     <div className="min-h-dvh bg-ink text-ivory">
       <Helmet>
-        <title>{wood.metaTitle ?? `${wood.name} Cabinets — Grain, Cost & Finishes | Green Cabinets NY`}</title>
+        <title>{wood.metaTitle ?? fitTitle(`${wood.name} Cabinets — Grain, Cost & Finishes`, [" | Green Cabinets NY", " | Green Cabinets"])}</title>
         <meta
           name="description"
-          content={wood.metaDescription ?? `${wood.shortDescription} Janka hardness ${wood.jankaHardness} lbf. Built in Brooklyn since 2009.`}
+          content={wood.metaDescription ?? woodDescription(wood.shortDescription, wood.jankaHardness)}
         />
         <meta name="keywords" content={wood.keywords.join(", ")} />
         <link rel="canonical" href={canonicalUrl} />
@@ -123,7 +133,7 @@ const WoodSpeciesDetail = () => {
       <Header />
 
 
-      <main>
+      <main id="main" tabIndex={-1} className="focus:outline-none">
         {/* Hero */}
         <section className="pb-14 pt-32 md:pb-20 md:pt-44">
           <div className="mx-auto px-4 sm:px-6 max-w-6xl">
@@ -440,7 +450,7 @@ const WoodSpeciesDetail = () => {
                 >
                   <img
                     src={w.image}
-                    alt={`${w.name} cabinet wood`}
+                    alt={`${w.name} wood grain sample: ${w.tagline}`}
                     loading="lazy"
                     className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500"
                   />

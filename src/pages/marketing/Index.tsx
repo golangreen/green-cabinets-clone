@@ -30,7 +30,7 @@ const Index = () => {
         {/* Primary Meta Tags */}
         <title>Bespoke European Cabinetry NYC | Green Cabinets NY</title>
         <meta name="title" content="Bespoke European Cabinetry & Luxury Kitchens NYC | Green Cabinets" />
-        <meta name="description" content="Bespoke European cabinetry and luxury custom kitchens for Brooklyn, Manhattan & Queens. Designed in Bushwick since 2009 — vanities, closets, millwork. Free design consult." />
+        <meta name="description" content="Bespoke European cabinetry and luxury custom kitchens for Brooklyn, Manhattan & Queens. Designed in Bushwick since 2009: vanities, closets, millwork." />
 
         <meta name="keywords" content="custom kitchen cabinets in Brooklyn, custom kitchen cabinets Manhattan, custom kitchen cabinets Queens, shaker cabinets NYC, slim shaker cabinets, shaker kitchen cabinets Brooklyn, bathroom vanities NYC, custom cabinetry Brooklyn, kitchen cabinets New York, closet systems Brooklyn, cabinet maker Brooklyn, sustainable cabinets NYC" />
 
@@ -69,7 +69,7 @@ const Index = () => {
 
       </Helmet>
       <Header />
-      <main>
+      <main id="main" tabIndex={-1} className="focus:outline-none">
         <Hero />
         {/* The story of a Green Cabinets kitchen, told in chapters */}
         <RoomChapter />

@@ -6,18 +6,22 @@
 
 import { useEffect } from 'react';
 import { initWebVitals } from '@/lib/performance';
-import { storePerformanceMetric } from '@/services/performanceService';
 
 /**
  * Initialize performance monitoring for the application
- * Tracks Core Web Vitals and stores them in the database
+ * Tracks Core Web Vitals. Writing them to the performance_metrics table is
+ * off by default: anonymous inserts are refused by the table's row-level
+ * security (HTTP 401 on every page view), so the beacon only cost a
+ * Supabase request. Set VITE_PERF_BEACON=true once the table accepts
+ * anonymous inserts (or an edge function takes them) to turn it back on.
  */
+const BEACON_ON = import.meta.env.VITE_PERF_BEACON === 'true';
+
 export function usePerformanceMonitor() {
   useEffect(() => {
     // Initialize Web Vitals tracking
     initWebVitals((metric) => {
-      // Store metric in database
-      storePerformanceMetric(metric);
+      if (BEACON_ON) void import('@/services/performanceService').then((m) => m.storePerformanceMetric(metric));
 
       // Log to console in development
       if (import.meta.env.DEV) {

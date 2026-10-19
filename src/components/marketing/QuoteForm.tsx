@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
-import { useQuoteForm } from "@/hooks";
+import { useQuoteForm } from "@/hooks/useQuoteForm";
 
 interface QuoteFormProps {
   isOpen: boolean;

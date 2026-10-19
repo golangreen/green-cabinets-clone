@@ -77,7 +77,7 @@ const CaseStudies = () => (
 
     <Header />
 
-    <main className="pt-16 md:pt-20">
+    <main id="main" tabIndex={-1} className="pt-16 md:pt-20">
       <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Case Studies" }]} />
 
       <section className="bg-ink-2 py-16 sm:py-20 md:py-28">

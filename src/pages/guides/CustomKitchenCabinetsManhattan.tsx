@@ -12,11 +12,12 @@ import AuthorByline from "@/components/marketing/AuthorByline";
 import { buildArticleSchema } from "@/lib/articleSchema";
 import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
 import ObfuscatedEmail from "@/components/privacy/ObfuscatedEmail";
+import AreaLinks from "@/components/seo/AreaLinks";
 
 const URL = "https://greencabinetsny.com/custom-kitchen-cabinets-manhattan";
 const TITLE = "Custom Kitchen Cabinets Manhattan — Buyer's Guide 2026";
 const DESC =
-  "Manhattan custom kitchen cabinets in 2026: pricing per linear foot, co-op alteration agreements and COIs, freight elevator and quiet-hour rules, prewar vs. condo vs. loft constraints, shaker vs. slim shaker.";
+  "Manhattan custom kitchen cabinets in 2026: pricing per linear foot, co-op alteration agreements, COIs, freight elevator rules, prewar vs. condo vs. loft limits.";
 
 const FAQS = [
   {
@@ -445,6 +446,13 @@ const CustomKitchenCabinetsManhattan = () => (
         </div>
       </div>
     </section>
+
+    <AreaLinks
+      boroughHub="/custom-kitchen-cabinets-manhattan"
+      current="/custom-kitchen-cabinets-manhattan"
+      postKeywords={["manhattan"]}
+      heading="Manhattan neighborhoods and articles"
+    />
 
     <Contact />
     <CTA />

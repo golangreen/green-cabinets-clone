@@ -29,3 +29,33 @@ export function getPrerenderedArticle(slug?: string): BlogArticle | null {
     return null;
   }
 }
+
+/** Fields the blog index cards need. */
+export type BlogCard = Pick<BlogArticle, "id" | "slug" | "title" | "excerpt" | "image_url" | "created_at">;
+
+export const toBlogCard = (a: BlogArticle): BlogCard => ({
+  id: a.id,
+  slug: a.slug,
+  title: a.title,
+  excerpt: a.excerpt,
+  image_url: a.image_url,
+  created_at: a.created_at,
+});
+
+/**
+ * Database posts for the blog index. At build time they come from
+ * setPrerenderedArticles; in the browser from <script id="prerendered-blog-index">,
+ * so /blog and /blog/page/N hydrate with every post already listed.
+ */
+export function getPrerenderedBlogCards(): BlogCard[] {
+  if (articles.size) return [...articles.values()].map(toBlogCard);
+  if (typeof document === "undefined") return [];
+  const el = document.getElementById("prerendered-blog-index");
+  if (!el?.textContent) return [];
+  try {
+    const list = JSON.parse(el.textContent);
+    return Array.isArray(list) ? (list as BlogCard[]) : [];
+  } catch {
+    return [];
+  }
+}

@@ -8,6 +8,8 @@
  *   3. everything else is served from the built files in dist/; unknown
  *      URLs get dist/404.html with a real 404 status.
  */
+import { MERGED_BLOG_POSTS } from "../src/data/blogSeo";
+
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
 }
@@ -19,6 +21,13 @@ const EXACT_REDIRECTS: Record<string, string> = {
   "/vanity-configurator": "/designer",
   "/vanity-designer": "/designer",
   "/staten-island-kitchen-cabinets": "/kitchen-cabinets-staten-island",
+  // Linked from old posts but never built; the service area for these is
+  // not decided, so they go to the closest existing page.
+  "/bathroom-vanities": "/blog/custom-bathroom-vanity-nyc",
+  "/custom-kitchen-cabinets-upper-west-side": "/custom-kitchen-cabinets-manhattan",
+  "/custom-kitchen-cabinets-chelsea": "/custom-kitchen-cabinets-manhattan",
+  // Near-duplicate neighborhood posts merged on 2026-10-19 (src/data/blogSeo.ts).
+  ...Object.fromEntries(Object.entries(MERGED_BLOG_POSTS).map(([from, to]) => [`/blog/${from}`, `/blog/${to}`])),
 };
 
 const PATTERN_REDIRECTS: Array<[RegExp, (m: RegExpMatchArray) => string]> = [

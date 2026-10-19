@@ -10,6 +10,7 @@ import kitchen from "@/assets/gallery/modern-kitchen-marble-waterfall-wood-base.
 import vanity from "@/assets/gallery/contemporary-bathroom-wood-vanity-double-sink.webp";
 import builtIns from "@/assets/gallery/natural-wood-hallway-cabinets.jpeg";
 import commercial from "@/assets/gallery/modern-workspace-wood-desk-brick.jpeg";
+import AreaLinks from "@/components/seo/AreaLinks";
 
 const MAKE = [
   {
@@ -79,7 +80,7 @@ const Services = () => {
   return (
     <div className="min-h-dvh bg-ink text-ivory">
       <Helmet>
-        <title>Services: Custom Kitchens, Vanities, Closets & Millwork | Green Cabinets NY</title>
+        <title>Services: Custom Kitchens, Vanities, Closets & Millwork</title>
         <meta
           name="description"
           content="Custom kitchen cabinets, bathroom vanities, closets, built-ins and commercial millwork for Brooklyn, Manhattan and Queens. Designed in Bushwick since 2009."
@@ -110,7 +111,7 @@ const Services = () => {
 
       <Header />
 
-      <main>
+      <main id="main" tabIndex={-1} className="focus:outline-none">
         <PageHero
           crumbs={[{ label: "Home", to: "/" }, { label: "Services" }]}
           eyebrow="Services"
@@ -206,6 +207,8 @@ const Services = () => {
             </ul>
           </div>
         </section>
+
+        <AreaLinks heading="Custom cabinets by borough" current="/services" />
 
         <ContactCta />
       </main>

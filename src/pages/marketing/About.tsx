@@ -15,7 +15,7 @@ import { ArrowRight, MapPin, Hammer, Award } from "lucide-react";
 import { PEOPLE, ORG_ID, AUTHOR_IDS } from "@/data/authors";
 
 const URL = "https://greencabinetsny.com/about";
-const TITLE = "About Green Cabinets NY — Brooklyn Custom Cabinetry Since 2009";
+const TITLE = "About Green Cabinets NY — Brooklyn Cabinetry Since 2009";
 const DESC =
   "Meet the team behind Green Cabinets NY — custom kitchens, vanities & millwork designed in Bushwick, Brooklyn since 2009.";
 
@@ -58,7 +58,7 @@ const About = () => (
 
     <Header />
 
-    <main className="pt-16 md:pt-20">
+    <main id="main" tabIndex={-1} className="pt-16 md:pt-20">
       <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "About" }]} />
 
       <section className="bg-ink-2 py-16 sm:py-20 md:py-28">
@@ -118,7 +118,8 @@ const About = () => (
             </p>
             <p className="text-sm text-muted-foreground">
               Knows: custom kitchens, bathroom vanities, walk-in closets, architectural millwork,
-              low-VOC finishes, NYC co-op approval workflows.
+              low-VOC finishes, NYC co-op approval workflows.{" "}
+              <Link to="/about/golan-achdary" className="underline hover:text-primary">Golan&rsquo;s guides and articles</Link>
             </p>
           </article>
 

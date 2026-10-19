@@ -19,6 +19,9 @@ import { CASE_STUDIES } from "@/data/caseStudies";
 import type { BlogArticle } from "@/services/blogService";
 
 export { setPrerenderedArticles };
+export { MERGED_BLOG_POSTS } from "@/data/blogSeo";
+export { BLOG_PAGE_SIZE } from "@/data/blogIndex";
+export const STATIC_BLOG_COUNT = STATIC_BLOG_POSTS.length;
 
 /** Route list built from the data files (cross-checked against the sitemap). */
 export function dataRoutes(): string[] {

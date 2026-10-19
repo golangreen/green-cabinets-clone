@@ -11,11 +11,12 @@ import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { authorRef } from "@/data/authors";
 import AuthorByline from "@/components/marketing/AuthorByline";
 import { buildArticleSchema } from "@/lib/articleSchema";
+import AreaLinks from "@/components/seo/AreaLinks";
 
 const URL = "https://greencabinetsny.com/kitchen-cabinets-staten-island";
 const TITLE = "Kitchen Cabinets Staten Island — Insider Buyer's Guide 2026";
 const DESC =
-  "Insider guide to buying custom kitchen cabinets in Staten Island: 2026 pricing, delivery from our vetted suppliers, borough-specific layouts, and install logistics.";
+  "Buying custom kitchen cabinets in Staten Island: 2026 pricing, delivery from our vetted suppliers, borough-specific layouts, and install logistics.";
 
 const FAQS = [
   {
@@ -313,6 +314,13 @@ const KitchenCabinetsStatenIsland = () => (
 
     <Contact />
     <CTA />
+    <AreaLinks
+      boroughHub="/kitchen-cabinets-staten-island"
+      current="/kitchen-cabinets-staten-island"
+      postKeywords={["staten-island"]}
+      heading="More areas and articles"
+    />
+
     <Footer />
     <Chatbot />
   </div>

@@ -109,7 +109,7 @@ const FloatingBathroomVanity = () => (
 
     <Header />
 
-    <main className="pt-16 md:pt-20">
+    <main id="main" tabIndex={-1} className="pt-16 md:pt-20">
       <Breadcrumbs
         items={[
           { label: "Home", to: "/" },

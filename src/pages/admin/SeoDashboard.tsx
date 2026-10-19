@@ -67,7 +67,7 @@ const SeoDashboard = () => {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <Header />
-      <main className="flex-1 container max-w-6xl py-10 space-y-8">
+      <main id="main" tabIndex={-1} className="flex-1 container max-w-6xl py-10 space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold">SEO &amp; Lighthouse Dashboard</h1>

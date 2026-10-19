@@ -4,13 +4,15 @@
  */
 import { lazyWithReload as lazy } from "@/lib/lazyWithReload";
 import { Routes, Route, Navigate } from "react-router-dom";
-import AdminRoute from "@/components/auth/AdminRoute";
+// Lazy so the Supabase client (role checks) stays out of the marketing-page bundle.
+const AdminRoute = lazy(() => import("@/components/auth/AdminRoute"));
 import LegacyRedirect from "@/components/layout/LegacyRedirect";
 import { isApp } from "@/lib/platform";
 
 const Index = lazy(() => import("./pages/marketing/Index"));
 const Landing = lazy(() => import("./pages/marketing/Landing"));
 const About = lazy(() => import("./pages/marketing/About"));
+const AuthorGolan = lazy(() => import("./pages/marketing/AuthorGolan"));
 const Privacy = lazy(() => import("./pages/marketing/Privacy"));
 const Services = lazy(() => import("./pages/marketing/Services"));
 const GalleryPage = lazy(() => import("./pages/marketing/Gallery"));
@@ -133,12 +135,14 @@ const AppRoutes = () => (
             <Route path="/white-oak-vs-walnut-cabinets" element={<WhiteOakVsWalnutCabinets />} />
             <Route path="/luxury-kitchen-design-nyc" element={<LuxuryKitchenDesignNyc />} />
             <Route path="/about" element={<About />} />
+            <Route path="/about/golan-achdary" element={<AuthorGolan />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/services" element={<Services />} />
             <Route path="/case-studies" element={<CaseStudies />} />
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogArticle />} />
+            <Route path="/blog/page/:page" element={<Blog />} />
             <Route path="/best-wood-for-kitchen-cabinets" element={<BestWoodForKitchenCabinets />} />
             <Route path="/cabinet-wood-types-and-costs" element={<CabinetWoodTypesAndCosts />} />
             <Route path="/natural-wood-kitchen-cabinets" element={<NaturalWoodKitchenCabinets />} />

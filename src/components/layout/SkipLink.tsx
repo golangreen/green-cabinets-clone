@@ -1,6 +1,6 @@
 /**
  * "Skip to content" for keyboard users: first tab stop on every page. Pages
- * don't all wrap content in <main>, so it focuses the first of main / h1.
+ * don't all wrap content in <main id="main" tabIndex={-1} className="focus:outline-none">, so it focuses the first of main / h1.
  */
 const SkipLink = () => (
   <a

@@ -18,6 +18,8 @@ import { BOROUGHS } from "@/data/boroughSeo";
 import { getProjectsByNeighborhood } from "@/data/projects";
 import FeaturedProject from "@/components/projects/FeaturedProject";
 import { APP_CONFIG } from "@/config/app";
+import AreaLinks from "@/components/seo/AreaLinks";
+import { fitDescription } from "@/lib/metaText";
 
 // Eagerly resolve every gallery asset URL once at build time.
 const GALLERY_ASSETS = import.meta.glob(
@@ -38,6 +40,7 @@ interface Props {
 
 const Neighborhood = ({ neighborhood: n }: Props) => {
   const borough = BOROUGHS[n.boroughSlug];
+  const metaDescription = fitDescription(n.description);
   const boroughHref = `/custom-kitchen-cabinets-${n.boroughSlug}`;
   const [activeNeighborhood, setActiveNeighborhood] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -130,19 +133,19 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
       <Helmet>
         <title>{n.title}</title>
         <meta name="title" content={n.title} />
-        <meta name="description" content={n.description} />
+        <meta name="description" content={metaDescription} />
         <meta name="keywords" content={n.keywords} />
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content={n.url} />
         <meta property="og:title" content={n.title} />
-        <meta property="og:description" content={n.description} />
+        <meta property="og:description" content={metaDescription} />
         <meta property="og:image" content="https://greencabinetsny.com/og-cover.jpg" />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={n.url} />
         <meta property="twitter:title" content={n.title} />
-        <meta property="twitter:description" content={n.description} />
+        <meta property="twitter:description" content={metaDescription} />
         <meta name="twitter:image" content="https://greencabinetsny.com/og-cover.jpg" />
 
         <link rel="canonical" href={n.url} />
@@ -327,6 +330,13 @@ const Neighborhood = ({ neighborhood: n }: Props) => {
           </div>
         </div>
       </section>
+
+      <AreaLinks
+        boroughHub={boroughHref}
+        current={`/custom-kitchen-cabinets-${n.slug}`}
+        postKeywords={[n.slug]}
+        heading={`Near ${n.name}`}
+      />
 
       <Contact />
       <CTA />
