@@ -7,31 +7,45 @@ import Seo from "@/components/Seo";
 import { getBlogArticleBySlug, type BlogArticle } from "@/services/blogService";
 import { getStaticBlogPost } from "@/data/blogIndex";
 import { normalizeArticleHtml } from "@/lib/normalizeArticleHtml";
+import { boxQuickFacts } from "@/lib/quickFacts";
 import { buildFaqSchema } from "@/lib/articleSchema";
+import { getPrerenderedArticle } from "@/lib/prerenderData";
 
 export default function BlogArticlePage() {
   const { slug } = useParams<{ slug: string }>();
-  const staticArticle = getStaticBlogPost(slug);
+  const staticArticle = getStaticBlogPost(slug) ?? getPrerenderedArticle(slug);
   const [article, setArticle] = useState<BlogArticle | null>(staticArticle);
   const [loading, setLoading] = useState(!staticArticle);
   const [notFound, setNotFound] = useState(false);
+  // normalizeArticleHtml needs the browser's DOMParser, so it runs after the
+  // first (hydrating) render; until then the HTML matches the pre-render.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (!slug) return;
     const preset = getStaticBlogPost(slug);
-    setArticle(preset);
     setNotFound(false);
     if (preset) {
+      setArticle(preset);
       setLoading(false);
       return;
     }
-    setLoading(true);
+    // A pre-rendered database article is shown right away and refreshed
+    // quietly; otherwise show the loading state while it is fetched.
+    const prerendered = getPrerenderedArticle(slug);
+    setArticle(prerendered);
+    setLoading(!prerendered);
     getBlogArticleBySlug(slug)
       .then((a) => {
-        if (!a) setNotFound(true);
-        else setArticle(a);
+        if (!a) {
+          setArticle(null);
+          setNotFound(true);
+        } else setArticle(a);
       })
-      .catch(() => setNotFound(true))
+      .catch(() => {
+        if (!prerendered) setNotFound(true);
+      })
       .finally(() => setLoading(false));
   }, [slug]);
 
@@ -82,9 +96,13 @@ export default function BlogArticlePage() {
           ← Back to Blog
         </Link>
 
-        {loading && <p className="mt-8 text-muted-foreground">Loading…</p>}
+        {loading && <p className="mt-8 text-muted-foreground" aria-busy="true">Loading…</p>}
         {notFound && (
           <div className="mt-8">
+            <Helmet>
+              <title>Article not found | Green Cabinets NY</title>
+              <meta name="robots" content="noindex, nofollow" />
+            </Helmet>
             <h1 className="text-3xl font-bold mb-2">Article not found</h1>
             <p className="text-muted-foreground">This post may have been removed.</p>
           </div>
@@ -128,7 +146,7 @@ export default function BlogArticlePage() {
 
             <div
               className="prose prose-neutral dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: normalizeArticleHtml(article.content_html) }}
+              dangerouslySetInnerHTML={{ __html: mounted ? normalizeArticleHtml(boxQuickFacts(article.content_html)) : boxQuickFacts(article.content_html) }}
             />
           </article>
         )}

@@ -1,6 +1,6 @@
 /**
  * /about — team & expertise page. Hosts the canonical Person nodes
- * (Golan Achdary, Andy Lopez) so other pages can reference them by @id
+ * (Golan Achdary) so other pages can reference them by @id
  * via the central src/data/authors.ts module — strengthens E-E-A-T
  * for both Google and AI-citation engines.
  */
@@ -30,7 +30,7 @@ const aboutSchema = {
       name: TITLE,
       description: DESC,
       mainEntity: { "@id": ORG_ID },
-      about: [{ "@id": AUTHOR_IDS.golan }, { "@id": AUTHOR_IDS.andy }],
+      about: [{ "@id": AUTHOR_IDS.golan }],
       isPartOf: { "@id": "https://greencabinetsny.com/#website" },
     },
   ],
@@ -105,7 +105,7 @@ const About = () => (
             </div>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-bold text-ivory mb-8">The team</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-ivory mb-8">Who you&rsquo;ll work with</h2>
 
           <article id="golan-achdary" className="mb-12 scroll-mt-32">
             <h3 className="text-xl sm:text-2xl font-bold text-ivory mb-1">Golan Achdary</h3>
@@ -119,19 +119,6 @@ const About = () => (
             <p className="text-sm text-muted-foreground">
               Knows: custom kitchens, bathroom vanities, walk-in closets, architectural millwork,
               low-VOC finishes, NYC co-op approval workflows.
-            </p>
-          </article>
-
-          <article id="andy-lopez" className="mb-12 scroll-mt-32">
-            <h3 className="text-xl sm:text-2xl font-bold text-ivory mb-1">Andy Lopez</h3>
-            <p className="text-accent-foreground font-semibold mb-3">Project Manager & Installation Lead</p>
-            <p className="text-base text-ivory/70 leading-relaxed mb-3">
-              Andy schedules installs, coordinates GCs and trades, and runs walkthroughs. If your
-              kitchen lands clean and on schedule in a 4th-floor Bushwick walk-up, that's Andy.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Knows: install in occupied apartments, brownstone logistics, board approvals,
-              alteration agreements.
             </p>
           </article>
 

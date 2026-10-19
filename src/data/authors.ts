@@ -11,7 +11,6 @@ export const LOCALBUSINESS_ID = "https://greencabinetsny.com/#localbusiness";
 
 export const AUTHOR_IDS = {
   golan: "https://greencabinetsny.com/about#golan-achdary",
-  andy: "https://greencabinetsny.com/about#andy-lopez",
   team: "https://greencabinetsny.com/about#team",
 } as const;
 
@@ -21,7 +20,6 @@ export type AuthorRef = { "@type": "Person"; "@id": string; name: string; url: s
 export const authorRef = (id: keyof typeof AUTHOR_IDS = "golan"): AuthorRef => {
   const map: Record<keyof typeof AUTHOR_IDS, { name: string }> = {
     golan: { name: "Golan Achdary" },
-    andy: { name: "Andy Lopez" },
     team: { name: "Green Cabinets NY Editorial Team" },
   };
   return {
@@ -66,26 +64,5 @@ export const PEOPLE = [
     sameAs: [
       "https://instagram.com/green_cabinets_",
     ],
-  },
-  {
-    "@type": "Person",
-    "@id": AUTHOR_IDS.andy,
-    name: "Andy Lopez",
-    givenName: "Andy",
-    familyName: "Lopez",
-    jobTitle: "Project Manager & Installation Lead",
-    worksFor: { "@id": ORG_ID },
-    affiliation: { "@id": ORG_ID },
-    url: "https://greencabinetsny.com/about",
-    telephone: "+1-718-804-5488",
-    email: "orders@greencabinetsny.com",
-    knowsAbout: [
-      "Cabinet installation in NYC apartments",
-      "Project scheduling and site coordination",
-      "Brownstone and pre-war kitchen renovations",
-      "Co-op board approvals and alteration agreements",
-    ],
-    description:
-      "Runs install crews and project management for Green Cabinets NY across Brooklyn, Manhattan, and Queens.",
   },
 ] as const;

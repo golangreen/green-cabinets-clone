@@ -513,3 +513,24 @@ html.theme-lux :focus-visible { outline: 2px solid #C6A15B; outline-offset: 3px;
   .lux-link { min-height: 44px; }
   [role="tab"] { min-height: 44px; }
 }
+
+/* Article "Quick facts" box (see src/lib/quickFacts.ts) */
+.prose .quick-facts {
+  margin: 2.5rem 0;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid hsl(var(--primary) / 0.35);
+  border-radius: 0.75rem;
+  background: hsl(var(--primary) / 0.06);
+}
+.prose .quick-facts h2 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+}
+.prose .quick-facts ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.prose .quick-facts li {
+  margin: 0.25rem 0;
+}

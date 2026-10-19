@@ -148,8 +148,14 @@ export function orderBlogPosts<T extends { slug: string; created_at: string }>(p
   );
 }
 
+const STATIC_BY_SLUG = new Map(STATIC_BLOG_POSTS.map((p) => [p.slug, p]));
+
 export function getStaticBlogPost(slug?: string): BlogArticle | null {
   if (!slug) return null;
+  // Every post listed in STATIC_BLOG_POSTS resolves here, so a new post can't
+  // be in the index and sitemap yet show "Article not found".
+  const listed = STATIC_BY_SLUG.get(slug);
+  if (listed) return listed;
   if (slug === cornerCabinetsLazySusanNycKitchensPost.slug) return cornerCabinetsLazySusanNycKitchensPost;
   if (slug === radiatorCoversBuiltInsPrewarNycPost.slug) return radiatorCoversBuiltInsPrewarNycPost;
   if (slug === customKitchenTimelineNycPost.slug) return customKitchenTimelineNycPost;

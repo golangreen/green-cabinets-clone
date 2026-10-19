@@ -63,7 +63,7 @@ const MAKE = [
 const STEPS = [
   { t: "Measure", d: "A free in-home consultation, or scan the room yourself with the Green Cabinets app. We bring the samples." },
   { t: "Draw", d: "CAD plans and 3D views of your room. For designers and architects, shop drawings for approval." },
-  { t: "Build", d: "CNC-cut boxes and doors, Blum and Hettich hardware, low-VOC spray finishes and a quality check before anything ships." },
+  { t: "Build", d: "Boxes and doors CNC-cut by our vetted millwork suppliers to our specifications, Blum and Hettich hardware, low-VOC spray finishes and a quality check before anything ships." },
   { t: "Install", d: "Most installs take 3 to 7 days. COIs, elevator bookings and building paperwork are handled before delivery day." },
 ];
 
@@ -98,6 +98,13 @@ const Services = () => {
             position: i + 1,
             item: { "@type": "Service", name: m.title, description: m.body, provider: { "@id": "https://greencabinetsny.com/#localbusiness" }, areaServed: ["Brooklyn", "Manhattan", "Queens"] },
           })),
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          "@id": "https://greencabinetsny.com/services#process",
+          name: "How a Green Cabinets NY custom cabinetry project works",
+          step: STEPS.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.t, text: s.d })),
         })}</script>
       </Helmet>
 

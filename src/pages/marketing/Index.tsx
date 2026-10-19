@@ -15,6 +15,7 @@ import ChapterRail from "@/components/home/lux/ChapterRail";
 import ContactCta from "@/components/home/lux/ContactCta";
 import MobileActionBar from "@/components/home/lux/MobileActionBar";
 import { useReveal } from "@/hooks/useReveal";
+import { HOME_SERVICE_SCHEMA } from "@/data/homeServiceSchema";
 
 const Index = () => {
   // Dark luxury theme for this page (layout effect: no light flash on load)
@@ -61,7 +62,10 @@ const Index = () => {
         {/* Canonical URL */}
         <link rel="canonical" href="https://greencabinetsny.com/" />
 
-        {/* LocalBusiness, Service, and Product schemas are provided site-wide via index.html */}
+        {/* Organization + LocalBusiness are site-wide (index.html). Service/Offer
+            schema lives here because this page shows the services and pricing;
+            the FAQ component adds its own FAQPage schema. */}
+        <script type="application/ld+json">{JSON.stringify(HOME_SERVICE_SCHEMA)}</script>
 
       </Helmet>
       <Header />

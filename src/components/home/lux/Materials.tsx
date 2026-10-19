@@ -43,7 +43,7 @@ const Materials = () => (
               Made to spec, <em className="italic text-brass">down to the hinge.</em>
             </>
           }
-          lede="CNC-cut boxes and doors, Blum and Hettich hardware, low-VOC spray finishes and a final quality inspection before anything ships."
+          lede="Boxes and doors CNC-cut by our vetted millwork suppliers to our specifications, Blum and Hettich hardware, low-VOC spray finishes and a final quality inspection before anything ships."
         />
         <ul className="mt-10">
           {LINKS.map((l, i) => (

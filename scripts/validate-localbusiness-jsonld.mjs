@@ -35,9 +35,12 @@ function extractJsonLdBlocks(html) {
   return out;
 }
 
+// LocalBusiness or one of the schema.org subtypes we use for it.
+const LOCAL_BUSINESS_TYPES = new Set(["LocalBusiness", "HomeAndConstructionBusiness", "GeneralContractor"]);
+
 function isLocalBusiness(node) {
   const t = node?.["@type"];
-  return t === "LocalBusiness" || (Array.isArray(t) && t.includes("LocalBusiness"));
+  return LOCAL_BUSINESS_TYPES.has(t) || (Array.isArray(t) && t.some((x) => LOCAL_BUSINESS_TYPES.has(x)));
 }
 
 function findLocalBusiness(blocks) {

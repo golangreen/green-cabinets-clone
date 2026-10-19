@@ -76,7 +76,7 @@ function earlyModuleLoadRecoveryPlugin(): Plugin {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode, isSsrBuild }) => ({
   server: {
     host: "::",
     port: 8080,
@@ -95,10 +95,15 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     earlyModuleLoadRecoveryPlugin(),
-    validateJsonLdPlugin(),
+    !isSsrBuild && validateJsonLdPlugin(),
     react(), 
     mode === "development" && componentTagger(),
   ].filter(Boolean),
+  // Only used by the build-time pre-render bundle: CommonJS packages that
+  // Node can't import by name are bundled instead of left external.
+  ssr: {
+    noExternal: ["react-helmet-async"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -108,7 +113,9 @@ export default defineConfig(({ mode }) => ({
     drop: mode === "production" ? ["console", "debugger"] : [],
   },
   build: {
-    rollupOptions: {
+    // The build-time pre-render bundle (vite build --ssr) keeps Vite's default
+    // chunking; vendor splitting only applies to the browser build.
+    rollupOptions: isSsrBuild ? {} : {
       output: {
         manualChunks: {
           // Vendor splitting for better caching

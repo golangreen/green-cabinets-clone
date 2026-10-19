@@ -7,11 +7,6 @@ const META: Record<keyof typeof AUTHOR_IDS, { name: string; role: string; anchor
     role: "Founder & Master Cabinetmaker",
     anchor: "#golan-achdary",
   },
-  andy: {
-    name: "Andy Lopez",
-    role: "Project Manager & Installation Lead",
-    anchor: "#andy-lopez",
-  },
   team: {
     name: "Green Cabinets NY Editorial Team",
     role: "Editorial",

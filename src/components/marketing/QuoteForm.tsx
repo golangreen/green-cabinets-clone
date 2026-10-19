@@ -303,7 +303,7 @@ ${data.message ? `\nAdditional Notes: ${data.message}` : ''}
                       type="tel"
                       autoComplete="tel"
                       {...register("phone")}
-                      placeholder="(646) 549-3955"
+                      placeholder="(718) 555-0123"
                       className="mt-1"
                     />
                     {errors.phone && (
