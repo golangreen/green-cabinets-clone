@@ -4,6 +4,11 @@
 
 Green Cabinets NY designs, specifies, and installs premium custom cabinetry, sourcing millwork through vetted suppliers and installing by appointment across Brooklyn, Manhattan, and Queens. Specialties: shaker and slim-shaker kitchens, sustainable bathroom vanities, walk-in closet systems, and architectural millwork. Free in-home consultations by appointment. There is no walk-in shop, showroom, or factory to visit.
 
+## Full text
+- [llms-full.txt](https://greencabinetsny.com/llms-full.txt): full text of the main service, location, guide, wood-species and case-study pages
+- [Blog](https://greencabinetsny.com/blog): kitchen, vanity and closet guides for NYC homes
+- [Author: Golan Achdary](https://greencabinetsny.com/about/golan-achdary)
+
 ## Contact
 - Location: Brooklyn, NY — appointment only, no public address or storefront
 - Phone: (718) 804-5488

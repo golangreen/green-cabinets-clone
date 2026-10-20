@@ -45,6 +45,14 @@ const faqs = [
     a: "We schedule all loud work (drilling, sawing, anchoring) within your building's permitted hours, typically 9 AM to 5 PM weekdays, and coordinate freight elevator reservations directly with your super or managing agent. Quiet finish work (hardware, alignment, touch-ups) is done outside loud-work hours so we keep neighbors happy and stay on schedule.",
   },
   {
+    q: "Do you have a showroom I can visit?",
+    a: "No. Green Cabinets NY is appointment-based, with no public showroom or storefront. Instead, the free in-home consultation comes to you: we bring door and finish samples to your home and measure the room in person.",
+  },
+  {
+    q: "Do you work with architects, designers, and developers?",
+    a: "Yes. We design, specify, and install custom cabinetry for homeowners, architects, and developers across Brooklyn, Manhattan, and Queens, and we issue building-specific COIs for condo and co-op boards, typically within 48 hours.",
+  },
+  {
     q: "Which Brooklyn, Manhattan, and Queens neighborhoods do you serve?",
     a: "We work throughout Brooklyn (Park Slope, Williamsburg, DUMBO, Brooklyn Heights, Carroll Gardens, Bushwick), across Manhattan (Tribeca, SoHo, West Village, Upper East Side, Upper West Side, Harlem), and Queens (Long Island City, Astoria, Forest Hills), plus the greater NYC metro area.",
   },

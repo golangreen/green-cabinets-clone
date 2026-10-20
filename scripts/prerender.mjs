@@ -48,6 +48,8 @@ const SUPABASE_ANON_KEY =
 const EXTRA_ROUTES = [
   { path: "/estimator" },
   { path: "/room-designer" },
+  // Paid-ad landing page: kept out of the sitemap and noindexed (Landing.tsx).
+  { path: "/landing", noindex: true },
   { path: "/estimator/quotes", noindex: true },
   { path: "/auth", noindex: true },
   { path: "/performance", noindex: true },

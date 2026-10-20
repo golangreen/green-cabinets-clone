@@ -50,6 +50,10 @@ const WoodGalleryCarousel = ({ speciesName, images }: WoodGalleryCarouselProps) 
                 src={src}
                 alt={`${speciesName} cabinet wood panel ${i + 1} of ${slides.length}`}
                 loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                width={1200}
+                height={900}
+                {...(i === 0 ? { fetchpriority: "high" } : {})}
                 className="w-full aspect-[4/3] object-cover"
               />
             </CarouselItem>
