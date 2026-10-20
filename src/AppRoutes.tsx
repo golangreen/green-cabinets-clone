@@ -27,6 +27,10 @@ const Designer = lazy(() => import("./pages/designer/Designer"));
 const VanityDesignerEmbed = lazy(() => import("./pages/designer/VanityDesignerEmbed"));
 const Estimator = lazy(() => import("./pages/estimator/Estimator"));
 const RoomScan = lazy(() => import("./pages/scan/RoomScan"));
+// App only: the native tools (AR cabinets, camera tape measure, drawing scanner)
+const ArCabinets = lazy(() => import("./pages/app/ArCabinets"));
+const Measure = lazy(() => import("./pages/app/Measure"));
+const SendDrawings = lazy(() => import("./pages/app/SendDrawings"));
 const EstimatorSavedQuotes = lazy(() => import("./pages/estimator/SavedQuotes"));
 const NotFound = lazy(() => import("./pages/system/NotFound"));
 
@@ -73,6 +77,9 @@ const AppRoutes = () => (
             <Route path="/room-designer" element={<Designer />} />
             <Route path="/estimator" element={<Estimator />} />
             <Route path="/scan" element={<RoomScan />} />
+            <Route path="/ar" element={isApp() ? <ArCabinets /> : <Navigate to="/scan" replace />} />
+            <Route path="/measure" element={isApp() ? <Measure /> : <Navigate to="/scan" replace />} />
+            <Route path="/drawings" element={isApp() ? <SendDrawings /> : <Navigate to="/estimator" replace />} />
             <Route path="/estimator/quotes" element={isApp() ? <Navigate to="/estimator" replace /> : <EstimatorSavedQuotes />} />
             <Route path="/vanity-configurator" element={<Navigate to="/designer" replace />} />
             <Route path="/vanity-designer" element={<Navigate to="/designer" replace />} />

@@ -535,3 +535,9 @@ html.theme-lux :focus-visible { outline: 2px solid #C6A15B; outline-offset: 3px;
 
 /* Skip-link target: focusable for keyboard users, no ring on the whole page */
 #main:focus { outline: none; }
+
+/* The app's bottom tab bar (components/app/AppTabBar.tsx): every page keeps
+   its last lines clear of it. */
+html.in-app body {
+  padding-bottom: calc(54px + env(safe-area-inset-bottom, 0px));
+}

@@ -7,6 +7,9 @@ import Capacitor
 class MainViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(RoomScanPlugin())
+        bridge?.registerPluginInstance(ARDesignPlugin())
+        bridge?.registerPluginInstance(ARMeasurePlugin())
+        bridge?.registerPluginInstance(DocScanPlugin())
         #if DEBUG
         installDebugStart()
         #endif

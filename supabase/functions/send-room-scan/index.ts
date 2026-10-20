@@ -32,7 +32,10 @@ const schema = z.object({
   note: z.string().trim().max(1000).optional(),
   scanId: z.string().regex(/^GC-[A-Z0-9]{6}$/),
   summary: z.array(z.string().max(600)).max(20),
-  room: z.string().max(MAX_ROOM_CHARS),
+  // What the app sends: a room scan (with its scan file), cabinets shown in
+  // AR, camera measurements, or scanned drawings. Only a scan has a room file.
+  kind: z.enum(["scan", "ar", "measure", "drawings"]).default("scan"),
+  room: z.string().max(MAX_ROOM_CHARS).optional(),
   // One picture (app 1.0 build 2) or a set of named pictures
   image: b64.optional(),
   images: z
@@ -80,13 +83,21 @@ serve(async (req) => {
     if (!pictures.length || pictures.reduce((n, p) => n + p.data.length, 0) > MAX_TOTAL_CHARS) {
       return json({ error: "Please check your pictures and try again." }, 400);
     }
-    try {
-      JSON.parse(d.room);
-    } catch {
-      return json({ error: "The scan file is damaged. Please scan again." }, 400);
+    if (d.kind === "scan") {
+      try {
+        JSON.parse(d.room ?? "");
+      } catch {
+        return json({ error: "The scan file is damaged. Please scan again." }, 400);
+      }
     }
 
-    const roomB64 = btoa(unescape(encodeURIComponent(d.room)));
+    const roomB64 = d.room ? btoa(unescape(encodeURIComponent(d.room))) : null;
+    const what = {
+      scan: { subject: "Room scan", title: "New room scan", pics: "branded pictures of the room", heading: "Measurements" },
+      ar: { subject: "AR cabinets", title: "Cabinets placed in AR in the client's room", pics: "pictures from the camera with the cabinets", heading: "Details" },
+      measure: { subject: "Measurements", title: "Measurements taken with the camera", pics: "pictures with the lengths written on them", heading: "Lengths" },
+      drawings: { subject: "Drawings", title: "Drawings scanned in the app", pics: "scanned pages", heading: "Details" },
+    }[d.kind];
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -97,23 +108,22 @@ serve(async (req) => {
         from: "Green Cabinets App <orders@greencabinetsny.com>",
         to: ["orders@greencabinetsny.com"],
         reply_to: d.email,
-        subject: `Room scan ${d.scanId} from ${escapeHtml(d.name)}`,
+        subject: `${what.subject} ${d.scanId} from ${escapeHtml(d.name)}`,
         html: `
-          <h2>New room scan from the Green Cabinets app</h2>
-          <p><strong>Scan:</strong> ${escapeHtml(d.scanId)}</p>
+          <h2>${what.title}, from the Green Cabinets app</h2>
+          <p><strong>Reference:</strong> ${escapeHtml(d.scanId)}</p>
           <h3>Client</h3>
           <p><strong>Name:</strong> ${escapeHtml(d.name)}<br>
           <strong>Email:</strong> ${escapeHtml(d.email)}<br>
           ${d.phone ? `<strong>Phone:</strong> ${escapeHtml(d.phone)}<br>` : ""}</p>
           ${d.note ? `<h3>About the project</h3><p>${escapeHtml(d.note).replace(/\n/g, "<br>")}</p>` : ""}
-          <h3>Measurements</h3>
-          <ul>${d.summary.map((l) => `<li>${escapeHtml(l)}</li>`).join("")}</ul>
-          <p style="color:#666">Attached: ${pictures.length === 1 ? "the branded picture of the room" : `${pictures.length} branded pictures of the room`}, and the scan file (${escapeHtml(d.scanId)}.json)
-          for the measurements. Reply to this email to reach the client.</p>
+          ${d.summary.length ? `<h3>${what.heading}</h3><ul>${d.summary.map((l) => `<li>${escapeHtml(l)}</li>`).join("")}</ul>` : ""}
+          <p style="color:#666">Attached: ${pictures.length} ${what.pics}${roomB64 ? `, and the scan file (${escapeHtml(d.scanId)}.json) for the measurements` : ""}.
+          Reply to this email to reach the client.</p>
         `,
         attachments: [
           ...pictures.map((p) => ({ filename: p.name, content: p.data })),
-          { filename: `${d.scanId}.json`, content: roomB64 },
+          ...(roomB64 ? [{ filename: `${d.scanId}.json`, content: roomB64 }] : []),
         ],
       }),
     });

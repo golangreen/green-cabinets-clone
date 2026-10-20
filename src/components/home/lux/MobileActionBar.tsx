@@ -58,4 +58,7 @@ const MobileActionBar = () => {
   );
 };
 
-export default MobileActionBar;
+// The app has its own tab bar; this is for the website
+const MobileActionBarOnWeb = () => (isApp() ? null : <MobileActionBar />);
+
+export default MobileActionBarOnWeb;

@@ -1,3 +1,4 @@
+import { isApp } from "@/lib/platform";
 /**
  * FinishesFab — sticky floating action button for /finishes-colors.
  * Always-visible entry point so the materials catalog is never buried
@@ -25,4 +26,7 @@ const FinishesFab = () => {
   );
 };
 
-export default FinishesFab;
+// The app has its own tab bar; this is for the website
+const FinishesFabOnWeb = () => (isApp() ? null : <FinishesFab />);
+
+export default FinishesFabOnWeb;

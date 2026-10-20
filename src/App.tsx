@@ -10,6 +10,7 @@ import CanonicalManager from "@/components/seo/CanonicalManager";
 import ScrollToTopButton from "@/components/layout/ScrollToTopButton";
 import ChunkErrorBoundary from "@/components/system/ChunkErrorBoundary";
 import AppRoutes from "./AppRoutes";
+import AppTabBar from "@/components/app/AppTabBar";
 
 const RouteFallback = () => (
   <div className="min-h-screen flex items-center justify-center" aria-busy="true" />
@@ -40,6 +41,7 @@ const App = ({ Router = BrowserRouter }: AppProps) => {
           </Suspense>
         </ChunkErrorBoundary>
         <ScrollToTopButton />
+        <AppTabBar />
       </Router>
     </TooltipProvider>
   );

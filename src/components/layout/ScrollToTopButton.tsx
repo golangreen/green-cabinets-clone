@@ -1,3 +1,4 @@
+import { isApp } from "@/lib/platform";
 /**
  * ScrollToTopButton — floating, mobile-friendly "back to top" button.
  *
@@ -49,4 +50,7 @@ const ScrollToTopButton = () => {
   );
 };
 
-export default ScrollToTopButton;
+// The app has its own tab bar; this is for the website
+const ScrollToTopButtonOnWeb = () => (isApp() ? null : <ScrollToTopButton />);
+
+export default ScrollToTopButtonOnWeb;

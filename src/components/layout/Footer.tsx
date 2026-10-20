@@ -1,3 +1,4 @@
+import { isApp } from "@/lib/platform";
 import { Link } from "react-router-dom";
 import { Instagram } from "lucide-react";
 import ObfuscatedPhone from "@/components/privacy/ObfuscatedPhone";
@@ -114,4 +115,7 @@ const Footer = () => (
   </footer>
 );
 
-export default Footer;
+// The app has its own tab bar; this is for the website
+const FooterOnWeb = () => (isApp() ? null : <Footer />);
+
+export default FooterOnWeb;

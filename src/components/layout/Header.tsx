@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import QuoteForm from "@/components/marketing/QuoteForm";
 import { QUOTE_EVENT, openQuote } from "@/lib/quote";
+import { isApp } from "@/lib/platform";
 import logoWhite from "@/assets/logos/logo-white.svg";
 
 const NAV = [
@@ -117,7 +118,7 @@ const Header = () => {
           <button
             type="button"
             onClick={openQuote}
-            className={`lux-btn !min-h-[44px] !px-5 text-sm ${isHome ? "max-md:!hidden" : ""}`}
+            className={`lux-btn !min-h-[44px] !px-5 text-sm ${isHome ? "max-md:!hidden" : ""} ${isApp() ? "!hidden" : ""}`}
           >
             <span className="sm:hidden">Quote</span>
             <span className="hidden sm:inline">Request a quote</span>

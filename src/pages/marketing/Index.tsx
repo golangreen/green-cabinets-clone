@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/home/Hero";
+import AppTools from "@/components/app/AppTools";
 import FAQ from "@/components/home/FAQ";
 import RoomChapter from "@/components/home/lux/RoomChapter";
 import DrawingChapter from "@/components/home/lux/DrawingChapter";
@@ -71,6 +72,7 @@ const Index = () => {
       <Header />
       <main id="main" tabIndex={-1} className="focus:outline-none">
         <Hero />
+        <AppTools />
         {/* The story of a Green Cabinets kitchen, told in chapters */}
         <RoomChapter />
         <DrawingChapter />
