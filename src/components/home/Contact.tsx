@@ -95,6 +95,8 @@ const Contact = () => {
               Brooklyn, Manhattan &amp; Queens
               <br />
               By appointment only
+              <br />
+              10 Montieth St, Brooklyn, NY 11206
             </p>
           </div>
         </div>

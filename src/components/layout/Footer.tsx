@@ -106,7 +106,9 @@ const Footer = () => (
             Privacy
           </Link>
         </p>
-        <p>Serving Brooklyn, Manhattan &amp; Queens by appointment</p>
+        <p>
+          <span translate="no">10 Montieth St, Brooklyn, NY 11206</span> · (718) 804-5488 · Serving Brooklyn, Manhattan &amp; Queens by appointment
+        </p>
       </div>
     </div>
   </footer>
