@@ -33,8 +33,9 @@ const schema = z.object({
   scanId: z.string().regex(/^GC-[A-Z0-9]{6}$/),
   summary: z.array(z.string().max(600)).max(20),
   // What the app sends: a room scan (with its scan file), cabinets shown in
-  // AR, camera measurements, or scanned drawings. Only a scan has a room file.
-  kind: z.enum(["scan", "ar", "measure", "drawings"]).default("scan"),
+  // AR, camera measurements, scanned drawings, or a quote from the iPhone app
+  // with any of those attached. A scan always has a room file.
+  kind: z.enum(["scan", "ar", "measure", "drawings", "quote"]).default("scan"),
   room: z.string().max(MAX_ROOM_CHARS).optional(),
   // One picture (app 1.0 build 2) or a set of named pictures
   image: b64.optional(),
@@ -80,7 +81,7 @@ serve(async (req) => {
       return json({ error: "Spam verification failed. Please try again." }, 400);
     }
     const pictures = d.images ?? (d.image ? [{ name: `${d.scanId}.jpg`, data: d.image }] : []);
-    if (!pictures.length || pictures.reduce((n, p) => n + p.data.length, 0) > MAX_TOTAL_CHARS) {
+    if ((!pictures.length && !d.room) || pictures.reduce((n, p) => n + p.data.length, 0) > MAX_TOTAL_CHARS) {
       return json({ error: "Please check your pictures and try again." }, 400);
     }
     if (d.kind === "scan") {
@@ -97,6 +98,7 @@ serve(async (req) => {
       ar: { subject: "AR cabinets", title: "Cabinets placed in AR in the client's room", pics: "pictures from the camera with the cabinets", heading: "Details" },
       measure: { subject: "Measurements", title: "Measurements taken with the camera", pics: "pictures with the lengths written on them", heading: "Lengths" },
       drawings: { subject: "Drawings", title: "Drawings scanned in the app", pics: "scanned pages", heading: "Details" },
+      quote: { subject: "Quote request", title: "Quote request", pics: "pictures (AR, measurements, drawings and photos)", heading: "Project" },
     }[d.kind];
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
