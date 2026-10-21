@@ -36,6 +36,7 @@ enum Sender {
 
         if r.basket.items.isEmpty && r.basket.room == nil {
             var lines = ["Project: \(r.projectType)"] + r.details
+            if !r.basket.picks.isEmpty { lines += ["", "Picked:"] + r.basket.picks.map { "- \($0)" } }
             lines += lengthLines(r)
             if !r.note.isEmpty { lines += ["", r.note] }
             // The office takes up to 1000 characters
@@ -57,7 +58,8 @@ enum Sender {
             return ["name": "\(i + 1) \(clean.prefix(60)) \(ref).jpg", "data": a.jpeg.base64EncodedString()]
         }
         // At most 20 lines: the lengths share lines so a long list can't push the room off
-        var summary = ["Project: \(r.projectType)"] + r.details + packed(lengthLines(r)) + r.basket.roomLines
+        let picks = packed(r.basket.picks).enumerated().map { $0.offset == 0 ? "Picked: " + $0.element : $0.element }
+        var summary = ["Project: \(r.projectType)"] + r.details + picks + packed(lengthLines(r)) + r.basket.roomLines
         summary = Array(summary.prefix(20)).map { String($0.prefix(600)) }
         var body: [String: Any] = [
             "kind": r.basket.room != nil ? "scan" : "quote",
@@ -80,7 +82,7 @@ enum Sender {
 
     /// Joins short lines into a few lines of at most 590 characters.
     private static func packed(_ items: [String]) -> [String] {
-        guard items.count > 3 else { return items }
+        guard items.count > 1 else { return items }
         var out: [String] = [], cur = ""
         for i in items {
             if !cur.isEmpty && cur.count + i.count + 3 > 590 { out.append(cur); cur = "" }

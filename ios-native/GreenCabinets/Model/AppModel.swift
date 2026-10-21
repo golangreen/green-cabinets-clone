@@ -47,9 +47,24 @@ struct ProjectBasket: Codable {
     var scanID: String?
     var room: ScannedRoom?
     var roomLines: [String] = []
+    /// Finishes, woods and looks the person liked ("Tafisa Cream Puff (TFL: M2034)")
+    var picks: [String] = []
 
-    var count: Int { items.count + lengths.count + (room == nil ? 0 : 1) }
+    var count: Int { items.count + lengths.count + picks.count + (room == nil ? 0 : 1) }
     var isEmpty: Bool { count == 0 }
+
+    init() {}
+
+    // Lenient, so a project saved by an older version still opens
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        items = try c.decodeIfPresent([Attachment].self, forKey: .items) ?? []
+        lengths = try c.decodeIfPresent([MeasuredLength].self, forKey: .lengths) ?? []
+        scanID = try c.decodeIfPresent(String.self, forKey: .scanID)
+        room = try c.decodeIfPresent(ScannedRoom.self, forKey: .room)
+        roomLines = try c.decodeIfPresent([String].self, forKey: .roomLines) ?? []
+        picks = try c.decodeIfPresent([String].self, forKey: .picks) ?? []
+    }
 }
 
 @Observable
@@ -57,10 +72,16 @@ final class AppModel {
     var tab: AppTab = .home
     var planPath: [String] = []
     var toast: String?
-    /// Prefilled note for the quote form ("Ask about this look")
-    var quoteNote = ""
+    /// "Match a color" is open
+    var showColorMatch = false
+    /// When the last request went to the office
+    var lastSent: Date? = UserDefaults.standard.object(forKey: "lastSent") as? Date {
+        didSet { UserDefaults.standard.set(lastSent, forKey: "lastSent") }
+    }
 
     var basket = ProjectBasket() { didSet { saveBasket() } }
+    /// The last board sent to the office, kept so it can still be saved or printed
+    var sentBasket: ProjectBasket? { didSet { save(sentBasket, "sent.json") } }
     var scans: [SavedScan] = [] { didSet { saveScans() } }
 
     /// Units for measurements and drawings, remembered
@@ -78,6 +99,15 @@ final class AppModel {
            let b = try? JSONDecoder().decode(ProjectBasket.self, from: d) { basket = b }
         if let d = try? Data(contentsOf: dir.appendingPathComponent("scans.json")),
            let s = try? JSONDecoder().decode([SavedScan].self, from: d) { scans = s }
+        if let d = try? Data(contentsOf: dir.appendingPathComponent("sent.json")),
+           let s = try? JSONDecoder().decode(ProjectBasket.self, from: d) { sentBasket = s }
+    }
+
+    private func save<T: Encodable>(_ value: T?, _ name: String) {
+        let url = dir.appendingPathComponent(name)
+        DispatchQueue.global(qos: .utility).async {
+            if let value { try? JSONEncoder().encode(value).write(to: url, options: .atomic) } else { try? FileManager.default.removeItem(at: url) }
+        }
     }
 
     private func saveBasket() {
@@ -92,13 +122,14 @@ final class AppModel {
 
     // MARK: Collecting
 
-    func add(images: [UIImage], kind: Attachment.Kind, title: String) {
+    func add(images: [UIImage], kind: Attachment.Kind, title: String, quiet: Bool = false) {
         let new = images.compactMap { img -> Attachment? in
             guard let data = img.scaledJPEG(maxSide: 1800, quality: 0.78) else { return nil }
             return Attachment(kind: kind, title: title, jpeg: data)
         }
         guard !new.isEmpty else { return }
         basket.items.append(contentsOf: new)
+        if quiet { return }
         say(new.count == 1 ? "1 picture added to your project" : "\(new.count) pictures added to your project")
     }
 
@@ -132,8 +163,24 @@ final class AppModel {
         return scans.first { $0.id == id }
     }
 
-    func say(_ text: String) {
-        Haptics.success()
+    // MARK: Picks
+
+    func isPicked(_ line: String) -> Bool { basket.picks.contains(line) }
+
+    /// "Add to quote": keeps the choice with the request, without leaving the page.
+    func togglePick(_ line: String) {
+        if let i = basket.picks.firstIndex(of: line) {
+            basket.picks.remove(at: i)
+            Haptics.light()
+            say("Removed from your quote", haptic: false)
+        } else {
+            basket.picks.append(line)
+            say("Added to your quote")
+        }
+    }
+
+    func say(_ text: String, haptic: Bool = true) {
+        if haptic { Haptics.success() }
         toast = text
         AccessibilityNotification.Announcement(text).post()
         let shown = text

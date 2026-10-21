@@ -4,9 +4,29 @@ import SwiftUI
 /// basket, which the Quote tab sends.
 @MainActor
 extension AppModel {
-    func openCabinets(wearing finish: Finish? = nil) {
-        Tools.openCabinets(finishes: Finish.arList(startingWith: finish)) { [weak self] photos in
-            self?.add(images: photos, kind: .ar, title: "Cabinets in AR")
+    func openCabinets(wearing finish: Finish? = nil, counter: Finish? = nil) {
+        Task { @MainActor in
+            // The decor or stone someone chose must be there; fetch it first
+            for finish in [finish, counter].compactMap({ $0 }) {
+                guard let url = finish.remote, !ARTexture.isReady(finish) else { continue }
+                let slow = Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(400))
+                    if !Task.isCancelled { self.say("Getting the \(finish.name) sample…", haptic: false) }
+                }
+                let img = await SwatchImages.shared.image(url, px: ARTexture.px)
+                slow.cancel()
+                if toast?.hasPrefix("Getting the") == true { toast = nil }
+                guard img != nil else {
+                    say("That sample didn't load. Check your connection and try again.", haptic: false)
+                    Haptics.warning()
+                    return
+                }
+            }
+            // Defaults that haven't arrived yet simply aren't offered
+            let list = Finish.arList(startingWith: finish).filter { ARTexture.isReady($0) }
+            Tools.openCabinets(finishes: list, counter: counter) { photos in
+                self.add(images: photos, kind: .ar, title: "Cabinets in AR")
+            }
         }
     }
 
@@ -38,19 +58,23 @@ extension AppModel {
         }
     }
 
+    func openBoard() {
+        tab = .plan
+        planPath = ["board"]
+    }
+
     func showSampleScan() {
         tab = .plan
         planPath = ["sample"]
     }
 
-    func askAbout(_ text: String) {
-        quoteNote = text
-        tab = .quote
+    /// A text to the office, already started; a picture from the app can go with it.
+    func textUs(_ body: String = "Hi Green Cabinets, ", image: String? = nil) {
+        textUs(body, picture: image.flatMap { UIImage(named: $0) })
     }
 
-    /// A text to the office, already started; a photo from the app can go with it.
-    func textUs(_ body: String = "Hi Green Cabinets, ", image: String? = nil) {
-        TextUs.open(body, image: image.flatMap { UIImage(named: $0) }) { [weak self] in
+    func textUs(_ body: String, picture: UIImage?) {
+        TextUs.open(body, image: picture) { [weak self] in
             self?.say("Message sent")
         }
     }

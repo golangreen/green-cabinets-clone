@@ -52,6 +52,43 @@ enum TextUs {
     }
 }
 
+/// Email the office from inside the app (Mail's own sheet), or through the
+/// person's own mail app when Mail isn't set up.
+@MainActor
+enum EmailUs {
+    private static var delegate: MailDelegate?
+
+    static func open(subject: String = "My project", body: String = "") {
+        guard let host = Tools.top() else { return }
+        guard MFMailComposeViewController.canSendMail() else {
+            var c = URLComponents()
+            c.scheme = "mailto"
+            c.path = Content.email
+            c.queryItems = [URLQueryItem(name: "subject", value: subject)] + (body.isEmpty ? [] : [URLQueryItem(name: "body", value: body)])
+            if let url = c.url { UIApplication.shared.open(url) }
+            return
+        }
+        let vc = MFMailComposeViewController()
+        vc.setToRecipients([Content.email])
+        vc.setSubject(subject)
+        if !body.isEmpty { vc.setMessageBody(body, isHTML: false) }
+        let d = MailDelegate { delegate = nil }
+        delegate = d
+        vc.mailComposeDelegate = d
+        host.present(vc, animated: true)
+    }
+}
+
+private final class MailDelegate: NSObject, MFMailComposeViewControllerDelegate {
+    private let finish: () -> Void
+    init(_ finish: @escaping () -> Void) { self.finish = finish }
+
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true)
+        finish()
+    }
+}
+
 private final class ComposeDelegate: NSObject, MFMessageComposeViewControllerDelegate {
     private let finish: (MessageComposeResult) -> Void
     init(_ finish: @escaping (MessageComposeResult) -> Void) { self.finish = finish }

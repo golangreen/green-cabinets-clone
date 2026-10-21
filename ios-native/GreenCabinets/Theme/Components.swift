@@ -92,29 +92,35 @@ struct ActionRow<Content: View>: View {
     }
 }
 
-/// Two ways to ask about something: a text now, or a line on the quote request.
+/// Two ways to ask about something: a text now, or keep it with the quote
+/// request (a second tap takes it out again).
 struct AskRow: View {
     @Environment(AppModel.self) private var model
     /// How the text starts
     let text: String
-    /// What goes on the quote request
-    let note: String
-    /// A photo from the app to send with the text
-    var image: String?
+    /// The line that goes on the quote request
+    let pick: String
+    /// A picture to send with the text
+    var picture: () -> UIImage? = { nil }
 
     var body: some View {
+        let picked = model.isPicked(pick)
         ActionRow {
-            Button { model.textUs(text, image: image) } label: {
+            Button { model.textUs(text, picture: picture()) } label: {
                 ActionLabel(title: "Text us", systemImage: "message")
             }
             .secondaryActionStyle()
             .accessibilityHint("Opens a message to Green Cabinets")
-            Button { model.askAbout(note) } label: {
-                ActionLabel(title: "Add to quote", systemImage: "text.badge.plus")
+            Button { model.togglePick(pick) } label: {
+                ActionLabel(title: picked ? "In your quote" : "Add to quote",
+                            systemImage: picked ? "checkmark.circle.fill" : "text.badge.plus")
+                    .contentTransition(.symbolEffect(.replace))
             }
             .secondaryActionStyle()
-            .accessibilityHint("Adds a note to your quote request")
+            .tint(picked ? Brand.brass : Brand.ivory)
+            .accessibilityHint(picked ? "Takes it out of your quote request" : "Keeps it with your quote request")
         }
+        .animation(Motion.snappy, value: picked)
     }
 }
 

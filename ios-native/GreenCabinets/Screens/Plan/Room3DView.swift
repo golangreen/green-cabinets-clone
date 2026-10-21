@@ -19,6 +19,8 @@ final class Room3DController: NSObject, SCNSceneRendererDelegate {
     private var objects: [(node: SCNNode, wall: Int?)] = []
     private var selected: Set<Int> = []
     private let lock = NSLock()
+    /// Off while a picture is taken, so the fades are already where they end
+    private var fades = true
 
     private struct WallInfo {
         var nodes: [SCNNode]
@@ -276,17 +278,32 @@ final class Room3DController: NSObject, SCNSceneRendererDelegate {
             var target: CGFloat = outside && p.y < Float(w.height) * 4 ? 0.13 : 1
             if anyPicked && !s.contains(i) { target = min(target, 0.25) }
             if anyPicked && s.contains(i) { target = 1 }
-            for n in w.nodes where abs(n.opacity - target) > 0.01 { n.opacity = target }
+            fade(w.nodes, to: target)
         }
         for o in objects {
             let target: CGFloat = anyPicked && !(o.wall.map { s.contains($0) } ?? false) ? 0.15 : 1
-            if abs(o.node.opacity - target) > 0.01 { o.node.opacity = target }
+            fade([o.node], to: target)
         }
+    }
+
+    /// Walls ease out of the way as the room turns, rather than popping.
+    private func fade(_ nodes: [SCNNode], to target: CGFloat) {
+        guard nodes.contains(where: { abs($0.opacity - target) > 0.01 }) else { return }
+        lock.lock(); let animate = fades; lock.unlock()
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = animate ? 0.18 : 0
+        SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeOut)
+        for n in nodes { n.opacity = target }
+        SCNTransaction.commit()
     }
 
     // MARK: Pictures
 
-    func snapshot() -> UIImage? { view?.snapshot() }
+    func snapshot() -> UIImage? {
+        lock.lock(); fades = false; lock.unlock()
+        defer { lock.lock(); fades = true; lock.unlock() }
+        return view?.snapshot()
+    }
 
     /// One wall framed straight on from inside the room.
     func snapshotWall(_ i: Int) -> UIImage? {
@@ -308,6 +325,8 @@ final class Room3DController: NSObject, SCNSceneRendererDelegate {
         cam.look(at: SCNVector3(w.mid.x, w.height / 2, w.mid.y))
         scene.rootNode.addChildNode(cam)
         let old = selected
+        lock.lock(); fades = false; lock.unlock()
+        defer { lock.lock(); fades = true; lock.unlock() }
         setSelected([i])
         view.pointOfView = cam
         let img = view.snapshot()

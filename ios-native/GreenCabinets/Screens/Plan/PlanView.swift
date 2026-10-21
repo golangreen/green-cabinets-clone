@@ -66,10 +66,13 @@ struct PlanView: View {
                 .padding(.bottom, Space.section)
             }
             .scrollIndicators(.hidden)
+            .debugScroll()
             .background(Brand.ink)
             .navigationTitle("Plan")
             .navigationDestination(for: String.self) { id in
-                if let scan = model.scan(id) {
+                if id == "board" {
+                    DesignBoardView()
+                } else if let scan = model.scan(id) {
                     ScanResultView(scan: scan)
                 } else {
                     ContentUnavailableView("Scan not found", systemImage: "viewfinder", description: Text("It may have been replaced by a newer scan."))
@@ -144,8 +147,12 @@ struct PlanView: View {
                     .fixedSize(horizontal: false, vertical: true)
             } else {
                 Text(summaryText(b)).bodyText()
-                Button { model.tab = .quote } label: { ActionLabel(title: "Review and send", systemImage: "paperplane") }
-                    .primaryActionStyle()
+                ActionRow {
+                    NavigationLink(value: "board") { ActionLabel(title: "Design board", systemImage: "rectangle.on.rectangle") }
+                        .secondaryActionStyle()
+                    Button { model.tab = .quote } label: { ActionLabel(title: "Send", systemImage: "paperplane") }
+                        .primaryActionStyle()
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -157,6 +164,7 @@ struct PlanView: View {
         let pics = b.items.count
         if pics > 0 { parts.append(pics == 1 ? "1 picture" : "\(pics) pictures") }
         if !b.lengths.isEmpty { parts.append(b.lengths.count == 1 ? "1 length" : "\(b.lengths.count) lengths") }
+        if !b.picks.isEmpty { parts.append(b.picks.count == 1 ? "1 favorite" : "\(b.picks.count) favorites") }
         if b.room != nil { parts.append("a room scan") }
         return ListFormatter.localizedString(byJoining: parts) + " ready to send."
     }

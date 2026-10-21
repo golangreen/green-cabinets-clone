@@ -11,10 +11,17 @@ enum Brand {
     /// Anything raised above a card (chips, wells)
     static let raised = Color(red: 34 / 255, green: 31 / 255, blue: 28 / 255)
     static let ivory = Color(red: 242 / 255, green: 236 / 255, blue: 226 / 255)
-    /// Secondary text: 7:1 on ink, 6.5:1 on surface
-    static let stone = Color(red: 168 / 255, green: 161 / 255, blue: 150 / 255)
+    /// Secondary text: 7:1 on ink, 6.5:1 on surface (lighter still with Increase Contrast)
+    static let stone = Color(UIColor { t in
+        t.accessibilityContrast == .high
+            ? UIColor(red: 206 / 255, green: 200 / 255, blue: 190 / 255, alpha: 1)
+            : UIColor(red: 168 / 255, green: 161 / 255, blue: 150 / 255, alpha: 1)
+    })
     static let brass = Color(red: 198 / 255, green: 161 / 255, blue: 91 / 255)
-    static let line = Color(red: 242 / 255, green: 236 / 255, blue: 226 / 255).opacity(0.13)
+    /// Hairlines and card edges (firmer with Increase Contrast)
+    static let line = Color(UIColor { t in
+        UIColor(red: 242 / 255, green: 236 / 255, blue: 226 / 255, alpha: t.accessibilityContrast == .high ? 0.38 : 0.13)
+    })
     /// The drawing paper behind plans and the 3D room
     static let paper = Color(red: 241 / 255, green: 239 / 255, blue: 234 / 255)
     static let error = Color(red: 236 / 255, green: 160 / 255, blue: 146 / 255)

@@ -47,6 +47,8 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
     private let finishes: [Finish]
     private var finishIndex = 0
     private var kind: CabinetKind = .base24
+    private var door: DoorStyle = .shaker
+    private let doorButton = UIButton(type: .system)
     private var arView: ARView!
     private let coaching = ARCoachingOverlayView()
     private let hint = UILabel()
@@ -67,8 +69,19 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
     private let ivory = UIColor(red: 242 / 255, green: 236 / 255, blue: 226 / 255, alpha: 1)
     private let brass = UIColor(red: 198 / 255, green: 161 / 255, blue: 91 / 255, alpha: 1)
 
-    init(finishes: [Finish]) {
+    /// The countertop stone, when someone opened AR from a Raphael Stone slab
+    private let counter: Finish?
+    private lazy var counterMaterial: RealityKit.Material? = counter.flatMap { f in
+        guard let img = ARTexture.image(for: f)?.cgImage,
+              let tex = try? TextureResource.generate(from: img, options: .init(semantic: .color)) else { return nil }
+        var m = SimpleMaterial(color: .white, roughness: 0.18, isMetallic: false)
+        m.color = .init(tint: .white, texture: .init(tex))
+        return m
+    }
+
+    init(finishes: [Finish], counter: Finish? = nil) {
         self.finishes = finishes.isEmpty ? Finish.arDefault : finishes
+        self.counter = counter
         super.init(nibName: nil, bundle: nil)
     }
     required init?(coder: NSCoder) { fatalError() }
@@ -145,9 +158,18 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
         closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
         pill(doneButton, "Done", filled: true)
         doneButton.addTarget(self, action: #selector(done), for: .touchUpInside)
-        [closeButton, doneButton].forEach(view.addSubview)
+        // Door style: a pull-down, like the system's own pop-up buttons
+        pill(doorButton, door.rawValue)
+        doorButton.showsMenuAsPrimaryAction = true
+        doorButton.changesSelectionAsPrimaryAction = true
+        doorButton.menu = UIMenu(title: "Door style", children: DoorStyle.allCases.map { d in
+            UIAction(title: d.rawValue, subtitle: d.detail, state: d == door ? .on : .off) { [weak self] _ in self?.pickDoor(d) }
+        })
+        doorButton.accessibilityLabel = "Door style"
+        [closeButton, doneButton, doorButton].forEach(view.addSubview)
 
-        hint.text = "Move the phone slowly, then tap the floor to place a cabinet"
+        hint.text = counter.map { "Move the phone slowly, then tap the floor. Base cabinets wear your \($0.name) counter." }
+            ?? "Move the phone slowly, then tap the floor to place a cabinet"
         hint.textColor = ivory
         hint.font = .systemFont(ofSize: 15, weight: .medium)
         hint.numberOfLines = 0
@@ -200,7 +222,7 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
             b.translatesAutoresizingMaskIntoConstraints = false
             b.widthAnchor.constraint(equalToConstant: 44).isActive = true
             b.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            if let t = f.texture, let img = UIImage(named: t) { b.setBackgroundImage(img, for: .normal) }
+            if let img = ARTexture.image(for: f) { b.setBackgroundImage(ARTexture.chip(img), for: .normal) }
             else { b.backgroundColor = UIColor(hex: f.hex) }
             b.addTarget(self, action: #selector(pickFinish(_:)), for: .touchUpInside)
             finishBar.addArrangedSubview(b)
@@ -228,6 +250,8 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
             closeButton.leadingAnchor.constraint(equalTo: g.leadingAnchor, constant: 16),
             doneButton.topAnchor.constraint(equalTo: g.topAnchor, constant: 12),
             doneButton.trailingAnchor.constraint(equalTo: g.trailingAnchor, constant: -16),
+            doorButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor),
+            doorButton.centerXAnchor.constraint(equalTo: g.centerXAnchor),
             hint.topAnchor.constraint(equalTo: closeButton.bottomAnchor, constant: 12),
             hint.centerXAnchor.constraint(equalTo: g.centerXAnchor),
             hint.widthAnchor.constraint(lessThanOrEqualTo: g.widthAnchor, constant: -48),
@@ -300,6 +324,30 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
         hint.text = finishes[finishIndex].name
     }
 
+    /// Every cabinet in the room switches to the new door, where it stands.
+    private func pickDoor(_ d: DoorStyle) {
+        door = d
+        style(doorButton, title: d.rawValue, on: false)
+        buzz()
+        let m = material(finishIndex)
+        let wasSelected = selected
+        var rebuilt: [CabinetEntity] = []
+        var newSelected: CabinetEntity?
+        for old in cabinets {
+            guard let parent = old.parent else { continue }
+            let new = CabinetEntity(kind: old.kind, finish: m, door: d, counter: counterMaterial)
+            new.transform = old.transform
+            parent.addChild(new)
+            old.removeFromParent()
+            arView.installGestures([.translation, .rotation], for: new)
+            rebuilt.append(new)
+            if old === wasSelected { newSelected = new }
+        }
+        cabinets = rebuilt
+        selected = newSelected
+        hint.text = d.rawValue + " doors"
+    }
+
     // MARK: - Placing
 
     @objc private func tapped(_ g: UITapGestureRecognizer) {
@@ -322,7 +370,7 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
     }
 
     private func place(at pos: SIMD3<Float>, yaw: Float) {
-        let cab = CabinetEntity(kind: kind, finish: material(finishIndex))
+        let cab = CabinetEntity(kind: kind, finish: material(finishIndex), door: door, counter: counterMaterial)
         let anchor = AnchorEntity(world: pos)
         cab.orientation = simd_quatf(angle: yaw, axis: [0, 1, 0])
         anchor.addChild(cab)
@@ -407,7 +455,7 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
         if let m = materials[i] { return m }
         let f = finishes[min(i, finishes.count - 1)]
         var m = SimpleMaterial(color: UIColor(hex: f.hex), roughness: 0.55, isMetallic: false)
-        if let t = f.texture, let img = UIImage(named: t)?.cgImage,
+        if let img = ARTexture.image(for: f)?.cgImage,
            let tex = try? TextureResource.generate(from: img, options: .init(semantic: .color)) {
             m.color = .init(tint: .white, texture: .init(tex))
         }
@@ -426,15 +474,17 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
 /// middle of the floor footprint, front facing +z.
 final class CabinetEntity: Entity, HasModel, HasCollision {
     let kind: CabinetKind
+    private(set) var door: DoorStyle = .shaker
     private var finishParts: [ModelEntity] = []
     private var outline: ModelEntity?
 
     required init() { kind = .base24; super.init() }
 
-    init(kind: CabinetKind, finish: RealityKit.Material) {
+    init(kind: CabinetKind, finish: RealityKit.Material, door: DoorStyle = .shaker, counter: RealityKit.Material? = nil) {
         self.kind = kind
+        self.door = door
         super.init()
-        build(finish)
+        build(finish, counter: counter)
         // One box for taps and drags, the cabinet's full size
         let sz = kind.size
         collision = CollisionComponent(shapes: [
@@ -442,14 +492,14 @@ final class CabinetEntity: Entity, HasModel, HasCollision {
         ])
     }
 
-    private func box(_ size: SIMD3<Float>, _ at: SIMD3<Float>, _ m: RealityKit.Material, finish: Bool = true) {
-        let e = ModelEntity(mesh: .generateBox(size: size), materials: [m])
+    private func box(_ size: SIMD3<Float>, _ at: SIMD3<Float>, _ m: RealityKit.Material, finish: Bool = true, corner: Float = 0) {
+        let e = ModelEntity(mesh: corner > 0 ? .generateBox(size: size, cornerRadius: corner) : .generateBox(size: size), materials: [m])
         e.position = at
         addChild(e)
         if finish { finishParts.append(e) }
     }
 
-    private func build(_ finish: RealityKit.Material) {
+    private func build(_ finish: RealityKit.Material, counter: RealityKit.Material?) {
         let s = kind.size
         let w = s.x, h = s.y, d = s.z
         let y0 = kind.lift
@@ -491,20 +541,31 @@ final class CabinetEntity: Entity, HasModel, HasCollision {
             }
         }
         if kind.hasCounter {
-            box([w + 0.002, 0.03, d + 0.025], [0, y0 + h + 0.015, 0.0125], stone, finish: false)
+            box([w + 0.002, 0.03, d + 0.025], [0, y0 + h + 0.015, 0.0125], counter ?? stone, finish: false)
         }
     }
 
-    /// A shaker front: a frame of four rails and a center panel set back.
+    /// One door or drawer front in the chosen style: a frame of four rails
+    /// around a center panel (shaker 2.25", slim shaker 1.5", raised panel
+    /// with the center standing proud), or one flat slab.
     private func shaker(_ size: SIMD2<Float>, _ c: SIMD3<Float>, _ m: RealityKit.Material) {
         let (w, h) = (size.x, size.y)
-        let rail = min(0.06, min(w, h) * 0.22)
         let t: Float = 0.019
+        if door == .flat {
+            box([w, h, t], c, m, corner: 0.0015)
+            return
+        }
+        let frame: Float = door == .slimShaker ? 1.5 * 0.0254 : 2.25 * 0.0254
+        let rail = min(frame, min(w, h) * 0.22)
         box([w, rail, t], [c.x, c.y + h / 2 - rail / 2, c.z], m)
         box([w, rail, t], [c.x, c.y - h / 2 + rail / 2, c.z], m)
         box([rail, h - 2 * rail, t], [c.x - w / 2 + rail / 2, c.y, c.z], m)
         box([rail, h - 2 * rail, t], [c.x + w / 2 - rail / 2, c.y, c.z], m)
-        box([w - 2 * rail, h - 2 * rail, 0.008], [c.x, c.y, c.z - 0.004], m)
+        if door == .raised {
+            box([w - 2 * rail - 0.01, h - 2 * rail - 0.01, 0.022], [c.x, c.y, c.z + 0.003], m, corner: 0.005)
+        } else {
+            box([w - 2 * rail, h - 2 * rail, 0.008], [c.x, c.y, c.z - 0.004], m)
+        }
     }
 
     func applyFinish(_ m: RealityKit.Material) {

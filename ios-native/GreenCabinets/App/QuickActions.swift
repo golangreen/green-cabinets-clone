@@ -17,6 +17,10 @@ enum QuickActions {
             model.openMeasure()
         case "quote":
             model.tab = .quote
+        case "match":
+            model.showColorMatch = true
+        case "board":
+            model.openBoard()
         default:
             break
         }

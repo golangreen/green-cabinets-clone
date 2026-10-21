@@ -15,6 +15,11 @@ extension View {
     }
 }
 
+extension WorkPhoto {
+    /// The line on the quote request: "Look: White oak with a marble waterfall island"
+    var requestLine: String { "Look: \(title)" }
+}
+
 /// Long-press a photo: text us about it, add it to the quote, or share it.
 extension View {
     func workPhotoMenu(_ p: WorkPhoto, model: AppModel) -> some View {
@@ -22,8 +27,10 @@ extension View {
             Button { model.textUs("Hi Green Cabinets, I like this look: \(p.title). ", image: p.id) } label: {
                 Label("Text us about it", systemImage: "message")
             }
-            Button { model.askAbout("I like this one: \(p.title).") } label: {
-                Label("Add to quote", systemImage: "text.badge.plus")
+            Button { model.togglePick(p.requestLine) } label: {
+                model.isPicked(p.requestLine)
+                    ? Label("Remove from quote", systemImage: "minus.circle")
+                    : Label("Add to quote", systemImage: "text.badge.plus")
             }
             ShareLink(item: Image(p.id), subject: Text(p.title), message: Text(Content.shareLine),
                       preview: SharePreview(p.title, image: Image(p.id)))
@@ -115,7 +122,7 @@ struct PhotoDetailView: View {
                     Text(photo.category.rawValue).eyebrow()
                     Text(photo.title).cardTitle().fixedSize(horizontal: false, vertical: true)
                     AskRow(text: "Hi Green Cabinets, I like this look: \(photo.title). ",
-                           note: "I like this one: \(photo.title).", image: photo.id)
+                           pick: photo.requestLine, picture: { UIImage(named: photo.id) })
                 }
                 .padding(Space.l)
                 .frame(maxWidth: .infinity, alignment: .leading)

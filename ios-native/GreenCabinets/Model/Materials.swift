@@ -40,39 +40,34 @@ struct WoodSpecies: Codable, Identifiable, Hashable {
     }
 }
 
-/// Anything a cabinet door can be: a wood or panel sample photo, or a paint color.
+/// Anything a cabinet door can be: a supplier decor, a wood, a paint or a stain.
 struct Finish: Identifiable, Hashable {
     let id: String
     let name: String
     let detail: String
-    /// Asset name of the sample photo, or nil for paint
-    let texture: String?
-    /// Paint color as hex, or the average tone of a texture
+    /// Bundled photo of the material
+    var texture: String? = nil
+    /// The supplier's own photo, fetched when needed
+    var remote: URL? = nil
+    /// Paint color, or the tone of a decor we only have as a color
     let hex: String
+    /// Draw the color as wood: grain tinted to `hex`
+    var grain = false
+    /// Only the middle of the photo is the material (a slab on a bench)
+    var cropCenter = false
 
     var color: Color { Color(hex: hex) }
 
-    static let paints: [Finish] = [
-        .init(id: "paint-white", name: "Painted white", detail: "Satin paint, soft white", texture: nil, hex: "#EEEBE3"),
-        .init(id: "paint-sage", name: "Sage green", detail: "Satin paint", texture: nil, hex: "#7F8C77"),
-        .init(id: "paint-grey", name: "Light grey", detail: "Satin paint", texture: nil, hex: "#B9B7B1"),
-        .init(id: "paint-navy", name: "Navy", detail: "Satin paint", texture: nil, hex: "#2F3A4A"),
-        .init(id: "paint-black", name: "Black", detail: "Satin paint", texture: nil, hex: "#1E1D1C"),
-    ]
-
-    static let panels: [Finish] = [
-        .init(id: "egger-white-oak", name: "White oak", detail: "Egger panel", texture: "finish-egger-white-oak", hex: "#C9A877"),
-        .init(id: "egger-walnut", name: "Walnut", detail: "Egger panel", texture: "finish-egger-walnut", hex: "#5B3A29"),
-        .init(id: "egger-casella-oak", name: "Casella oak", detail: "Egger panel", texture: "finish-egger-casella-oak", hex: "#B08A5E"),
-        .init(id: "tafisa-cream-puff", name: "Cream Puff", detail: "Tafisa panel", texture: "finish-tafisa-cream-puff", hex: "#E9E1D2"),
-        .init(id: "tafisa-white", name: "White", detail: "Tafisa panel", texture: "finish-tafisa-white", hex: "#F1F0EC"),
-    ]
-
-    /// What the AR camera offers, in order
-    static let arDefault: [Finish] = [paints[0]] + panels.prefix(3) + paints[1...]
-
     static func wood(_ w: WoodSpecies) -> Finish {
-        Finish(id: "wood-\(w.slug)", name: w.name, detail: "Solid wood", texture: w.image, hex: w.swatch)
+        Finish(id: "wood-\(w.slug)", name: w.name, detail: "Solid wood", texture: w.image, hex: w.swatch, cropCenter: true)
+    }
+
+    /// What the AR camera offers: our most used decors and paints
+    static var arDefault: [Finish] {
+        let ids = ["tafisa-cream-puff", "shinnoki-s4-ivory-oak", "egger-h3331-st10", "tafisa-natural-affinity", "shinnoki-s4-pure-walnut"]
+        let panels = ids.compactMap { Panel.find($0)?.arFinish }
+        let paints = ["paint-pure-white", "paint-sage", "paint-navy", "paint-matte-black"].compactMap { id in HouseColors.paints.first { $0.id == id } }
+        return [paints[0]] + panels + paints.dropFirst()
     }
 
     /// The AR list with this finish first (so "See it in your room" opens wearing it).

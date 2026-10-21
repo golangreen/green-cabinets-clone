@@ -1,6 +1,7 @@
 import UIKit
 import ARKit
 import AVFoundation
+import SafariServices
 import VisionKit
 
 /// Opens the camera tools full screen, the way the system presents its own
@@ -25,11 +26,29 @@ enum Tools {
         return vc
     }
 
+    /// A web page inside the app (a supplier's catalog), with Done to come back.
+    static func openWeb(_ url: URL) {
+        guard let host = top() else { return }
+        let vc = SFSafariViewController(url: url)
+        vc.preferredControlTintColor = Brand.uiBrass
+        vc.dismissButtonStyle = .done
+        host.present(vc, animated: true)
+    }
+
+    /// The system share sheet for pictures, presented the way the system does it.
+    static func share(_ items: [Any]) {
+        guard let host = top() else { return }
+        let vc = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        vc.popoverPresentationController?.sourceView = host.view
+        vc.popoverPresentationController?.sourceRect = CGRect(x: host.view.bounds.midX, y: host.view.bounds.midY, width: 1, height: 1)
+        host.present(vc, animated: true)
+    }
+
     // MARK: Camera access
 
     /// Every tool needs the camera. The first time, iOS asks; if it was turned
     /// off for the app, say so and offer Settings instead of a black screen.
-    private static func withCamera(_ go: @escaping () -> Void, otherwise: @escaping () -> Void = {}) {
+    static func withCamera(_ go: @escaping () -> Void, otherwise: @escaping () -> Void = {}) {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             go()
@@ -59,11 +78,11 @@ enum Tools {
 
     // MARK: AR
 
-    static func openCabinets(finishes: [Finish], done: @escaping ([UIImage]) -> Void) {
+    static func openCabinets(finishes: [Finish], counter: Finish? = nil, done: @escaping ([UIImage]) -> Void) {
         guard arSupported else { return }
         withCamera {
             guard let host = top() else { return }
-            let vc = ARDesignViewController(finishes: finishes)
+            let vc = ARDesignViewController(finishes: finishes, counter: counter)
             vc.onDone = done
             vc.modalPresentationStyle = .fullScreen
             host.present(vc, animated: true)

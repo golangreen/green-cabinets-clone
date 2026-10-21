@@ -23,6 +23,8 @@ struct PriceTier: Identifiable {
     let size: String
     let range: String
     let note: String
+    /// The kitchens this tier covers, in linear feet of cabinets
+    let feet: ClosedRange<Double>
 }
 
 struct Step: Identifiable {
@@ -83,7 +85,7 @@ enum Content {
               text: "Every wall, window and outlet goes into the drawing. You sign off on layout, materials and hardware before anything is cut.",
               image: "story-galley-kitchen-drawing"),
         .init(title: "Built to spec",
-              text: "Boxes and doors cut by our vetted millwork suppliers to our specifications, with Blum and Hettich hardware and low-VOC finishes.",
+              text: "Boxes and doors cut to our specifications by our vetted millwork suppliers, in Tafisa, Shinnoki and Egger panels, with Blum and Hettich hardware.",
               image: "story-oak-edge-brass-pull"),
         .init(title: "Installed in days",
               text: "Most installs take 3 to 7 days. In New York the building sets the schedule, so we plan around it from the first visit.",
@@ -92,11 +94,14 @@ enum Content {
 
     static let tiers: [PriceTier] = [
         .init(name: "Small kitchen", size: "10 to 14 linear feet", range: "$4,200 to $6,500",
-              note: "A co-op galley or a garden-floor rental. Painted shaker, soft-close hinges and slides, standard hardware."),
+              note: "A co-op galley or a garden-floor rental. Painted shaker, soft-close hinges and slides, standard hardware.",
+              feet: 0...15),
         .init(name: "Standard kitchen", size: "16 to 22 linear feet", range: "$6,000 to $9,500",
-              note: "L-shape or U-shape with a peninsula. Two-tone paint, or paint with wood veneer."),
+              note: "L-shape or U-shape with a peninsula. Two-tone paint, or paint with wood veneer.",
+              feet: 15...24),
         .init(name: "Brownstone gut", size: "26 to 36 linear feet", range: "$12,000 to $20,000+",
-              note: "Full-height pantry walls, an island with seating, appliance panels, specialty finishes and integrated pulls."),
+              note: "Full-height pantry walls, an island with seating, appliance panels, specialty finishes and integrated pulls.",
+              feet: 24...1000),
     ]
 
     static let rates: [(value: String, label: String)] = [
@@ -112,19 +117,30 @@ enum Content {
         .init(title: "Sized for the stairs", text: "In walk-ups and brownstones, boxes are sized to clear the stoop, the stair turn and the door.", symbol: "stairs"),
     ]
 
+    /// The questions from greencabinetsny.com, in plain words.
     static let faqs: [FAQ] = [
+        .init(question: "What makes your cabinets different?",
+              answer: "Every project starts with a free visit at your home. We design every kitchen ourselves, from classic shaker and slim shaker to flat panel, and our vetted millwork suppliers build it to our specifications with FSC-certified hardwoods, low-VOC finishes and European hardware. It fits your room exactly."),
+        .init(question: "How much do custom cabinets cost?",
+              answer: "$350 per linear foot for full kitchens and vanities, $225 per foot for base cabinets and $125 per foot for wall cabinets. A typical NYC kitchen runs $8,000 to $25,000 or more, depending on size, materials and finishes."),
         .init(question: "How long does a kitchen take?",
-              answer: "Most projects take 4 to 6 weeks from approved drawings to install: about 2 weeks of design and material choices, 2 to 3 weeks of fabrication, and 3 to 7 days of installation."),
+              answer: "Most projects take 4 to 6 weeks from approved drawings to install: 1 to 2 weeks of design and material choices, 2 to 3 weeks of fabrication, and 3 to 7 days of installation."),
+        .init(question: "Which materials do you use?",
+              answer: "Our panels and veneers come mostly from Tafisa, Shinnoki and Egger. Solid hardwoods like white oak, walnut, maple and cherry are FSC-certified, plywood cores are formaldehyde-free, hardware is Blum and Hettich, and finishes are low-VOC."),
         .init(question: "Do you build shaker and slim shaker doors?",
-              answer: "Yes. Classic shaker has a wider 2.25 inch frame; slim shaker uses a narrower frame of about 1.5 inches for a cleaner, more modern look. Both come painted, stained or in natural wood."),
+              answer: "Yes. Classic shaker has a 2.25 inch frame; slim shaker uses a narrower frame of about 1.5 inches for a cleaner, more modern look. We also build flat panel and raised panel doors, painted, stained or in natural wood."),
         .init(question: "Do you do bathroom vanities and closets too?",
               answer: "Yes. Vanities, walk-in closets and built-ins, often designed together with the kitchen so finishes and hardware match across the home."),
         .init(question: "Can you handle my co-op or condo board?",
-              answer: "Yes. We carry general liability, workers' comp and umbrella coverage and issue building-specific COIs, usually within 48 hours, plus alteration agreements and registrations."),
+              answer: "Yes. We carry general liability, workers' comp and umbrella coverage and issue building-specific COIs naming the building, managing agent and board, usually within 48 hours, plus alteration agreements and registrations."),
+        .init(question: "How do you handle noise rules and the freight elevator?",
+              answer: "Loud work happens only in your building's permitted hours, usually 9 AM to 5 PM on weekdays. We book the freight elevator with your super or managing agent, and do quiet finish work outside loud-work hours."),
         .init(question: "Do you have a showroom?",
               answer: "No. We work by appointment. The free consultation comes to you: we bring door and finish samples to your home and measure the room in person."),
+        .init(question: "Do you work with architects and designers?",
+              answer: "Yes. We design, specify and install for homeowners, architects, designers and developers, with shop drawings for approval and commercial millwork for buildings and businesses."),
         .init(question: "Where do you work?",
-              answer: "Throughout Brooklyn, Manhattan and Queens, plus the wider New York area."),
+              answer: "Throughout Brooklyn (Park Slope, Williamsburg, DUMBO, Brooklyn Heights, Carroll Gardens, Bushwick), Manhattan (Tribeca, SoHo, West Village, Upper East Side, Upper West Side, Harlem), Queens (Long Island City, Astoria, Forest Hills) and Staten Island, plus the greater New York area."),
     ]
 
     /// "Text us" goes here. Only the message sheet uses it; no screen shows it.

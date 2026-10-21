@@ -18,7 +18,6 @@ struct ScanResultView: View {
     @State private var selecting = false
     @State private var selected: Set<Int> = []
     @State private var controller = Room3DController()
-    @State private var share: SharePayload?
     @State private var working = false
     /// In the project with the walls and units picked now
     @State private var added = false
@@ -56,10 +55,10 @@ struct ScanResultView: View {
             .padding(.bottom, Space.section)
         }
         .scrollIndicators(.hidden)
+        .debugScroll()
         .background(Brand.ink)
         .navigationTitle(scan.sample ? "Sample room" : "Your room")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(item: $share) { ShareSheet(items: $0.images) }
         .onChange(of: selected) { added = false }
         .onChange(of: model.unit) { added = false }
         .onAppear {
@@ -112,6 +111,42 @@ struct ScanResultView: View {
     }
 
     private var pickBar: some View {
+        VStack(alignment: .leading, spacing: Space.m) {
+            pickStatus
+            if selecting { wallChips }
+        }
+    }
+
+    /// Every wall as a button too: easier than a small target in the drawing,
+    /// and the way to pick with VoiceOver.
+    private var wallChips: some View {
+        let u = model.unit.forText
+        return ScrollView(.horizontal) {
+            HStack(spacing: Space.s) {
+                ForEach(scan.room.walls.indices, id: \.self) { i in
+                    let on = selected.contains(i)
+                    Button { toggle(i) } label: {
+                        HStack(spacing: Space.xs) {
+                            if on { Image(systemName: "checkmark").font(.caption.weight(.bold)) }
+                            Text("Wall \(i + 1)").fontWeight(.semibold)
+                            Text(u.length(scan.room.walls[i].len)).monospacedDigit().opacity(0.8)
+                        }
+                        .font(.subheadline)
+                        .foregroundStyle(on ? Brand.ink : Brand.ivory)
+                        .padding(.horizontal, Space.m)
+                        .frame(minHeight: 44)
+                        .background(on ? Brand.brass : Brand.raised, in: Capsule())
+                    }
+                    .buttonStyle(PressableStyle())
+                    .accessibilityAddTraits(on ? .isSelected : [])
+                }
+            }
+        }
+        .scrollIndicators(.hidden)
+        .scrollClipDisabled()
+    }
+
+    private var pickStatus: some View {
         Group {
             if selecting || !selected.isEmpty {
                 HStack {
@@ -173,10 +208,27 @@ struct ScanResultView: View {
                 .frame(minHeight: 32)
                 .accessibilityElement(children: .combine)
             }
+            estimate
             Text("Each picked wall goes as a flat drawing with sizes and as a 3D view.")
                 .font(.footnote).foregroundStyle(Brand.stone)
         }
         .card()
+    }
+
+    /// What cabinets along the picked walls cost with us, from the published ranges
+    private var estimate: some View {
+        let feet = selected.reduce(0.0) { $0 + scan.room.walls[$1].len } / 0.3048
+        let tier = feet >= 10 ? Content.tiers.first { $0.feet.contains(feet) } : nil
+        let perFoot = Int((feet * 350 / 50).rounded()) * 50
+        return VStack(alignment: .leading, spacing: 2) {
+            Text("About \(Int(feet.rounded())) feet of cabinets along these walls")
+                .font(.subheadline).foregroundStyle(Brand.ivory)
+            Text(tier.map { "\($0.name): \($0.range)" } ?? "About $\(perFoot.formatted()) at $350 a foot")
+                .font(.headline).foregroundStyle(Brand.brass)
+                .contentTransition(.numericText())
+        }
+        .padding(.vertical, Space.s)
+        .accessibilityElement(children: .combine)
     }
 
     // MARK: Actions
@@ -202,9 +254,9 @@ struct ScanResultView: View {
                 .disabled(working)
             }
             Button {
-                prepare { share = SharePayload(images: $0.map(\.0)) }
+                prepare { Tools.share($0.map(\.0)) }
             } label: {
-                ActionLabel(title: "Share pictures", systemImage: "square.and.arrow.up")
+                ActionLabel(title: "Save, print or share", systemImage: "square.and.arrow.up")
             }
             .secondaryActionStyle()
             .disabled(working)
@@ -274,7 +326,9 @@ struct PlanCanvasView: View {
                 .contentShape(Rectangle())
                 .gesture(magnify(size))
                 .simultaneousGesture(zoom > 1.01 ? drag(size) : nil)
-                .onTapGesture(count: 2) { withAnimation(Motion.ui(reduceMotion)) { zoom = 1; offset = .zero } }
+                // Double-tap resets the zoom, but not while picking: a pick shouldn't wait to rule out a second tap
+                .gesture(TapGesture(count: 2).onEnded { withAnimation(Motion.ui(reduceMotion)) { zoom = 1; offset = .zero } },
+                         including: selecting ? .subviews : .all)
                 .gesture(
                     SpatialTapGesture().onEnded { e in
                         guard selecting else { return }
@@ -326,16 +380,3 @@ struct PlanCanvasView: View {
     }
 }
 
-struct SharePayload: Identifiable {
-    let id = UUID()
-    let images: [UIImage]
-}
-
-/// The system share sheet (Save Image, Messages, Mail, AirDrop...).
-struct ShareSheet: UIViewControllerRepresentable {
-    let items: [Any]
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: items, applicationActivities: nil)
-    }
-    func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
-}

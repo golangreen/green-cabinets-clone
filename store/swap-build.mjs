@@ -1,5 +1,5 @@
 // Pulls Green Cabinets NY out of App Review, attaches build N to the open
-// iOS version and submits it again.   node store/swap-build.mjs 3
+// iOS version and submits it again.   node store/swap-build.mjs 3 [--listing]
 import fs from "node:fs";
 import { call } from "./asc.mjs";
 
@@ -28,6 +28,9 @@ if (b?.attributes.processingState !== "VALID") throw new Error(`build ${BUILD} n
 const v = (await api("GET", `/apps/${app.id}/appStoreVersions?filter[platform]=IOS`)).data[0];
 await api("PATCH", `/appStoreVersions/${v.id}/relationships/build`, { data: { type: "builds", id: b.id } });
 console.log(`version ${v.attributes.versionString} now has build ${BUILD}`);
+
+// --listing: push the text and screenshots too, while nothing is in review
+if (process.argv.includes("--listing")) await import("./push-listing.mjs");
 
 const open = (await api("GET", subs + "READY_FOR_REVIEW")).data;
 const s = open[0] ?? (await api("POST", "/reviewSubmissions", { data: { type: "reviewSubmissions", attributes: { platform: "IOS" }, relationships: { app: { data: { type: "apps", id: app.id } } } } })).data;

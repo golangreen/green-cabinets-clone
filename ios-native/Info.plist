@@ -54,6 +54,14 @@
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemType</key>
+			<string>match</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Match a color</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>eyedropper.halffull</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
 			<string>quote</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Get a quote</string>
