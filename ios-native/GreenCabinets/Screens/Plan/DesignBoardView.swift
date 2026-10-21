@@ -170,7 +170,7 @@ struct DesignBoardView: View {
                         }
                         .font(.subheadline)
                     }
-                    ForEach(b.roomLines.prefix(3), id: \.self) { Text($0).font(.footnote).foregroundStyle(Brand.stone) }
+                    ForEach(b.roomLines.prefix(4), id: \.self) { Text($0).font(.footnote).foregroundStyle(Brand.stone) }
                 }
                 .card()
             }
@@ -285,7 +285,7 @@ struct BoardPoster: View {
         }
         let u = unit.forText
         var sizes = b.lengths.prefix(6).enumerated().map { i, l in (l.name.isEmpty ? "Length \(i + 1)" : l.name, u.length(l.meters)) }
-        for line in b.roomLines.prefix(3) {
+        for line in b.roomLines.prefix(4) {
             let parts = line.split(separator: ":", maxSplits: 1).map { $0.trimmingCharacters(in: .whitespaces) }
             if parts.count == 2 { sizes.append((parts[0], parts[1])) }
         }

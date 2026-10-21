@@ -37,6 +37,10 @@ struct SavedScan: Identifiable, Codable, Equatable {
     var room: ScannedRoom
     var date: Date
     var sample: Bool = false
+    /// Sizes typed in by the person instead of scanned: what they typed
+    var typed: String?
+    /// Walls to start with new cabinets on
+    var picked: [Int]?
 }
 
 /// Everything collected for one request: pictures, lengths and a scan.
@@ -138,11 +142,13 @@ final class AppModel {
         basket.lengths.append(contentsOf: lengths.map { MeasuredLength(meters: $0) })
     }
 
-    func attach(scan: SavedScan, pictures: [(UIImage, String)]) {
+    /// `lead` goes first (the new cabinets and their price), `tail` after the room's sizes
+    func attach(scan: SavedScan, pictures: [(UIImage, String)], lead: [String] = [], tail: [String] = []) {
         basket.items.removeAll { $0.kind == .scan }
         basket.scanID = scan.id
         basket.room = scan.room
-        basket.roomLines = scan.room.summaryLines(unit)
+        // Typed sizes are only what was typed: no made-up floor area or ceiling
+        basket.roomLines = lead + (scan.typed.map { [$0] } ?? scan.room.summaryLines(unit)) + tail
         for (img, title) in pictures {
             if let data = img.scaledJPEG(maxSide: 1800, quality: 0.8) {
                 basket.items.append(Attachment(kind: .scan, title: title, jpeg: data))
@@ -151,8 +157,8 @@ final class AppModel {
         say("Room scan added to your project")
     }
 
-    func keep(scan room: ScannedRoom) -> SavedScan {
-        let s = SavedScan(id: Self.newReference(), room: room, date: .now)
+    func keep(scan room: ScannedRoom, typed: String? = nil, picked: Set<Int>? = nil) -> SavedScan {
+        let s = SavedScan(id: Self.newReference(), room: room, date: .now, typed: typed, picked: picked?.sorted())
         scans.insert(s, at: 0)
         if scans.count > 5 { scans.removeLast(scans.count - 5) }
         return s

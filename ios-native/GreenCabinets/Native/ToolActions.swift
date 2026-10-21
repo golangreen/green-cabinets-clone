@@ -68,6 +68,12 @@ extension AppModel {
         planPath = ["sample"]
     }
 
+    /// The kitchen designer that works on every phone: shape and sizes
+    func designKitchen() {
+        tab = .plan
+        planPath = ["sizes"]
+    }
+
     /// A text to the office, already started; a picture from the app can go with it.
     func textUs(_ body: String = "Hi Green Cabinets, ", image: String? = nil) {
         textUs(body, picture: image.flatMap { UIImage(named: $0) })

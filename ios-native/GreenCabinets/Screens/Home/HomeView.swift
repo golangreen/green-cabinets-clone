@@ -100,8 +100,8 @@ struct HomeView: View {
             LazyVGrid(columns: [GridItem(.flexible(), spacing: Space.m), GridItem(.flexible())], spacing: Space.m) {
                 ToolTile(symbol: "cube.transparent", title: "Cabinets in AR", detail: "Place real-size cabinets in your kitchen") { model.openCabinets() }
                 ToolTile(symbol: "ruler", title: "Measure", detail: "Walls, gaps and windows with the camera") { model.openMeasure() }
-                ToolTile(symbol: "viewfinder", title: "Scan the room", detail: RoomCapture.isSupported ? "A measured 3D room in two minutes" : "See what a room scan looks like") {
-                    if RoomCapture.isSupported { model.tab = .plan } else { model.showSampleScan() }
+                ToolTile(symbol: "square.split.bottomrightquarter", title: "Design my kitchen", detail: "Your kitchen's shape and sizes, new cabinets and the price") {
+                    model.designKitchen()
                 }
                 ToolTile(symbol: "doc.viewfinder", title: "Scan drawings", detail: "Plans or a sketch, straightened") { model.openDrawings() }
                 ToolTile(symbol: "eyedropper.halffull", title: "Match a color", detail: "Find the real panel closest to any color") { model.showColorMatch = true }

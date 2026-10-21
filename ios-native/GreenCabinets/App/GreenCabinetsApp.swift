@@ -24,6 +24,13 @@ struct GreenCabinetsApp: App {
         default: break
         }
         if arg("-open") == "sample" { m.tab = .plan; m.planPath = ["sample"] }
+        if arg("-open") == "sizes" { m.tab = .plan; m.planPath = ["sizes"] }
+        //   -typed l|u|galley|one            a kitchen from typed sizes, opened
+        if let t = arg("-typed"), let shape = KitchenShape.allCases.first(where: { $0.rawValue.lowercased().hasPrefix(t) }) {
+            let (room, picked) = shape.room(shape.start, ceiling: 8, window: true)
+            let s = m.keep(scan: room, typed: shape.line(shape.start, ceiling: 8, window: true), picked: picked)
+            m.tab = .plan; m.planPath = [s.id]
+        }
         //   -quick text|measure|quote        as if picked from the app icon
         if let q = arg("-quick") { QuickActions.pending = q }
         //   -seed                            a sample project (pictures, picks, lengths)

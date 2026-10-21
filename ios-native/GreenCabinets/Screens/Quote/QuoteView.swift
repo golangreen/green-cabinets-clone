@@ -208,6 +208,12 @@ struct QuoteView: View {
             if model.basket.room != nil {
                 Label("Room scan \(model.basket.scanID ?? "") with all its measurements", systemImage: "cube.transparent")
                     .font(.subheadline)
+                // The cabinets laid out on it, and their price
+                ForEach(model.basket.roomLines.filter { $0.hasPrefix("New cabinets:") || $0.hasPrefix("Countertop:") }, id: \.self) { line in
+                    Label(line, systemImage: "cabinet")
+                        .font(.subheadline)
+                        .foregroundStyle(Brand.ivory)
+                }
             }
             ForEach($model.basket.lengths) { $l in
                 HStack {

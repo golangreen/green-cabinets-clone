@@ -72,6 +72,8 @@ struct PlanView: View {
             .navigationDestination(for: String.self) { id in
                 if id == "board" {
                     DesignBoardView()
+                } else if id == "sizes" {
+                    KitchenSizesView()
                 } else if let scan = model.scan(id) {
                     ScanResultView(scan: scan)
                 } else {
@@ -82,12 +84,12 @@ struct PlanView: View {
     }
 
     private var roomScanCard: some View {
-        ToolCard(image: "photo-natural-wood-galley-kitchen", symbol: "viewfinder",
-                 title: "Scan the whole room",
+        ToolCard(image: "photo-natural-wood-galley-kitchen", symbol: "square.split.bottomrightquarter",
+                 title: "Design your new kitchen",
                  text: RoomCapture.isSupported
-                    ? "Walk the room for about two minutes. Every wall, door, window and existing cabinet comes back measured, in 3D and as a floor plan."
-                    : "A measured 3D room and floor plan, made with the LiDAR scanner on iPhone Pro and iPad Pro.",
-                 note: RoomCapture.isSupported ? nil : "This device has no LiDAR scanner. Open the sample to see what we receive.") {
+                    ? "Scan the room in about two minutes, or just type your kitchen's sizes. We put new cabinets on your walls in 3D, check the plan against the NKBA kitchen guidelines and show you the price."
+                    : "Pick your kitchen's shape and type how long the walls are. We put new cabinets on them in 3D, check the plan against the NKBA kitchen guidelines and show you the price.",
+                 note: nil) {
             VStack(spacing: Space.m) {
                 if RoomCapture.isSupported {
                     if RoomCapture.supportsSeveral {
@@ -95,21 +97,23 @@ struct PlanView: View {
                             .font(.subheadline)
                             .tint(Brand.brass)
                     }
-                    Button { model.openRoomScan(several: several) } label: { ActionLabel(title: "Start the scan", systemImage: "viewfinder") }
+                    Button { model.openRoomScan(several: several) } label: { ActionLabel(title: "Scan the room", systemImage: "viewfinder") }
                         .primaryActionStyle()
-                    Button { model.showSampleScan() } label: { ActionLabel(title: "See a sample scan") }
+                    NavigationLink(value: "sizes") { ActionLabel(title: "Type the sizes instead", systemImage: "ruler") }
                         .secondaryActionStyle()
                 } else {
-                    Button { model.showSampleScan() } label: { ActionLabel(title: "See a sample scan", systemImage: "cube") }
+                    NavigationLink(value: "sizes") { ActionLabel(title: "Type my kitchen's sizes", systemImage: "ruler") }
                         .primaryActionStyle()
                 }
+                Button { model.showSampleScan() } label: { ActionLabel(title: "Try it on a sample room", systemImage: "cube") }
+                    .secondaryActionStyle()
             }
         }
     }
 
     private var savedScans: some View {
         VStack(alignment: .leading, spacing: Space.m) {
-            Text("Your scans").eyebrow()
+            Text("Your rooms").eyebrow()
             VStack(spacing: 0) {
                 ForEach(model.scans) { s in
                     NavigationLink(value: s.id) {
@@ -117,7 +121,7 @@ struct PlanView: View {
                             Image(systemName: "cube.transparent").foregroundStyle(Brand.brass).frame(width: 28)
                                 .accessibilityHidden(true)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("\(model.unit.forText.area(s.room.floorArea)) · \(s.room.walls.count) walls")
+                                Text(s.typed != nil ? "Kitchen from typed sizes" : "\(model.unit.forText.area(s.room.floorArea)) · \(s.room.walls.count) walls")
                                     .font(.headline).foregroundStyle(Brand.ivory)
                                 Text("\(s.id) · \(s.date.formatted(date: .abbreviated, time: .shortened))")
                                     .font(.footnote).foregroundStyle(Brand.stone)

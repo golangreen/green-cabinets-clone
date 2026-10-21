@@ -53,6 +53,8 @@ struct FloorPlanDrawing {
     let unit: LengthUnit
     var selected: Set<Int> = []
     var tags = false
+    /// New cabinets drawn in place of what the scan found on their walls
+    var layout: KitchenLayout? = nil
 
     private struct Frame {
         let s: Double
@@ -107,8 +109,9 @@ struct FloorPlanDrawing {
             ctx.fill(p, with: .color(Ink.floor))
         }
 
-        // Objects under the walls
-        for o in room.objects {
+        // Objects under the walls (not where new cabinets replace them)
+        let replaced = Set(layout?.pieces.map(\.wall) ?? [])
+        for o in room.objects where !(room.wallIndex(for: o).map { replaced.contains($0) } ?? false) {
             let ang = atan2(o.axis.y, o.axis.x)
             var c = ctx
             c.translateBy(x: CGFloat(f.X(o.c[0])), y: CGFloat(f.Y(o.c[1])))
@@ -138,6 +141,8 @@ struct FloorPlanDrawing {
                 c.draw(Text(label).font(.system(size: max(fs, 4), weight: .medium)).foregroundColor(Ink.line), at: .zero, anchor: .center)
             }
         }
+
+        if let layout { drawLayout(layout, ctx, f, u: u) }
 
         // Walls
         let wallW = CGFloat(max(5 * Double(u), 0.12 * s))
@@ -243,6 +248,45 @@ struct FloorPlanDrawing {
     }
 }
 
+extension FloorPlanDrawing {
+    /// The new cabinets from above: boxes on the floor filled, wall cabinets dashed over them.
+    private func drawLayout(_ layout: KitchenLayout, _ ctx: GraphicsContext, _ f: Frame, u: CGFloat) {
+        let floor = layout.pieces.filter { $0.kind != .wall && $0.kind != .hood }
+        let high = layout.pieces.filter { $0.kind == .wall }
+        for p in floor + high {
+            guard room.walls.indices.contains(p.wall) else { continue }
+            let w = room.walls[p.wall]
+            let len = max(simd_length(w.pb - w.pa), 1e-6)
+            let along = (w.pb - w.pa) / len
+            let n = room.outward(w) * -1
+            let a = w.pa + along * p.s0, b = w.pa + along * p.s1
+            var box = Path()
+            box.move(to: f.pt(a)); box.addLine(to: f.pt(b))
+            box.addLine(to: f.pt(b + n * p.depth)); box.addLine(to: f.pt(a + n * p.depth))
+            box.closeSubpath()
+            if p.kind == .wall {
+                ctx.stroke(box, with: .color(Ink.line), style: StrokeStyle(lineWidth: max(1, 1.1 * u), dash: [5 * u, 4 * u]))
+                continue
+            }
+            let appliance = [.fridge, .range, .dishwasher].contains(p.kind)
+            ctx.fill(box, with: .color(appliance ? Ink.appliance : Ink.cabinet))
+            ctx.stroke(box, with: .color(Ink.line), lineWidth: max(1, 1.4 * u))
+            let label = p.model.isEmpty ? p.kind.label : p.model
+            guard !label.isEmpty else { continue }
+            let c = f.pt((a + b) / 2 + n * (p.depth / 2))
+            let ang = uprightAngle(atan2(along.y, along.x))
+            var t = ctx
+            t.translateBy(x: c.x, y: c.y)
+            t.rotate(by: .radians(ang))
+            let text = t.resolve(Text(label).font(.system(size: 12 * u, weight: .semibold)).foregroundColor(Ink.wall))
+            let size = text.measure(in: CGSize(width: 400, height: 100))
+            if size.width < CGFloat(p.width * f.s) * 0.92 && size.height < CGFloat(p.depth * f.s) * 0.9 {
+                t.draw(text, at: .zero, anchor: .center)
+            }
+        }
+    }
+}
+
 // MARK: - One wall, seen straight on
 
 struct WallElevationDrawing {
@@ -250,6 +294,8 @@ struct WallElevationDrawing {
     let room: ScannedRoom
     let index: Int
     let unit: LengthUnit
+    /// New cabinets on this wall, drawn in place of what the scan found
+    var layout: KitchenLayout? = nil
 
     func draw(_ ctx: GraphicsContext, size: CGSize) {
         guard room.walls.indices.contains(index) else { return }
@@ -298,7 +344,11 @@ struct WallElevationDrawing {
             }
         }
 
-        for p in room.objects(against: w) {
+        let mine = layout?.pieces.filter { $0.wall == index } ?? []
+        if !mine.isEmpty {
+            drawCabinets(mine, ctx, X: X, Y: Y, k: k, u: u)
+        }
+        for p in room.objects(against: w) where mine.isEmpty {
             let (ox, ow) = span(p.s0, p.s1)
             let r = CGRect(x: ox, y: Y(p.top), width: ow, height: CGFloat((p.top - p.bottom) * k))
             let isCab = p.object.cat == "cabinet"
@@ -364,19 +414,98 @@ struct WallElevationDrawing {
     }
 }
 
+extension WallElevationDrawing {
+    /// The new cabinets straight on: every door and drawer, the stone top, the
+    /// appliances, and each box's catalog name.
+    private func drawCabinets(_ pieces: [KitchenLayout.Piece], _ ctx: GraphicsContext, X: @escaping (Double) -> CGFloat, Y: @escaping (Double) -> CGFloat, k: Double, u: CGFloat) {
+        let span: (Double, Double) -> (CGFloat, CGFloat) = { a, b in (min(X(a), X(b)), abs(X(b) - X(a))) }
+        let thin = max(1, 1.1 * u), mid = max(1, 1.6 * u)
+        let stone = Color(red: 228 / 255, green: 225 / 255, blue: 219 / 255)
+        for p in pieces {
+            let (x, wd) = span(p.s0, p.s1)
+            let r = CGRect(x: x, y: Y(p.top), width: wd, height: CGFloat((p.top - p.bottom) * k))
+            switch p.kind {
+            case .hood:
+                let canopy = CGRect(x: r.minX, y: r.maxY - CGFloat(0.12 * k), width: r.width, height: CGFloat(0.12 * k))
+                let chimney = CGRect(x: r.midX - CGFloat(0.15 * k), y: r.minY, width: CGFloat(0.3 * k), height: r.height - canopy.height)
+                for b in [chimney, canopy] {
+                    ctx.fill(Path(b), with: .color(Ink.appliance))
+                    ctx.stroke(Path(b), with: .color(Ink.line), lineWidth: mid)
+                }
+            case .fridge, .range, .dishwasher:
+                ctx.fill(Path(r), with: .color(Ink.appliance))
+                ctx.stroke(Path(r), with: .color(Ink.line), lineWidth: mid)
+                var d = Path()
+                if p.kind == .fridge {
+                    let y = Y(p.top * 0.34)
+                    d.move(to: CGPoint(x: r.minX, y: y)); d.addLine(to: CGPoint(x: r.maxX, y: y))
+                    d.move(to: CGPoint(x: r.midX, y: r.minY)); d.addLine(to: CGPoint(x: r.midX, y: y))
+                } else if p.kind == .range {
+                    d.addRect(CGRect(x: r.minX + r.width * 0.11, y: Y(0.62), width: r.width * 0.78, height: CGFloat(0.42 * k)))
+                }
+                ctx.stroke(d, with: .color(Ink.line), lineWidth: thin)
+                let fs = min(15 * u, r.width * 0.24, r.height * 0.3)
+                ctx.draw(Text(p.kind.label).font(.system(size: max(fs, 4), weight: .medium)).foregroundColor(Ink.line),
+                         at: CGPoint(x: r.midX, y: p.kind == .range ? Y(0.8) : r.midY), anchor: .center)
+            default:
+                ctx.fill(Path(r), with: .color(Ink.cabinet))
+                if p.kind.onFloor || p.kind == .tall {
+                    let kick = CGRect(x: r.minX, y: Y(KitchenLayout.toeKick), width: r.width, height: CGFloat(KitchenLayout.toeKick * k))
+                    ctx.fill(Path(kick), with: .color(Ink.line.opacity(0.55)))
+                }
+                ctx.stroke(Path(r), with: .color(Ink.line), lineWidth: mid)
+                var lines = Path(), pulls = Path()
+                for f in LayoutNodes.fronts(p) {
+                    let (fx, fw) = span(p.s0 + Double(f.x0), p.s0 + Double(f.x1))
+                    let fr = CGRect(x: fx, y: Y(Double(f.y1)), width: fw, height: CGFloat(Double(f.y1 - f.y0) * k))
+                    lines.addRect(fr)
+                    if f.drawer {
+                        let l = min(fr.width * 0.4, CGFloat(0.25 * k))
+                        pulls.move(to: CGPoint(x: fr.midX - l / 2, y: fr.midY)); pulls.addLine(to: CGPoint(x: fr.midX + l / 2, y: fr.midY))
+                    } else {
+                        let l = min(fr.height * 0.4, CGFloat(0.14 * k))
+                        let px = X(p.s0 + Double(f.pullRight ? f.x1 - 0.04 : f.x0 + 0.04))
+                        let y0 = f.pullHigh ? fr.minY + CGFloat(0.06 * k) : fr.maxY - CGFloat(0.06 * k) - l
+                        pulls.move(to: CGPoint(x: px, y: y0)); pulls.addLine(to: CGPoint(x: px, y: y0 + l))
+                    }
+                }
+                ctx.stroke(lines, with: .color(Ink.line), lineWidth: thin)
+                ctx.stroke(pulls, with: .color(Ink.wall), style: StrokeStyle(lineWidth: max(1.5, 2.4 * u), lineCap: .round))
+                if !p.model.isEmpty {
+                    let t = ctx.resolve(Text(p.model).font(.system(size: 12 * u, weight: .semibold)).foregroundColor(Ink.dim))
+                    let ts = t.measure(in: CGSize(width: 400, height: 100))
+                    if ts.width < r.width * 0.92 {
+                        let y = p.bottom < 0.01 ? Y(KitchenLayout.toeKick) - ts.height / 2 - 4 * u : r.maxY - ts.height / 2 - 4 * u
+                        ctx.fill(Path(roundedRect: CGRect(x: r.midX - ts.width / 2 - 3 * u, y: y - ts.height / 2 - u, width: ts.width + 6 * u, height: ts.height + 2 * u),
+                                      cornerRadius: 3 * u), with: .color(Ink.paper.opacity(0.85)))
+                        ctx.draw(t, at: CGPoint(x: r.midX, y: y), anchor: .center)
+                    }
+                }
+            }
+        }
+        // The stone top over the base run
+        for c in (layout?.counters ?? []) where c.wall == index {
+            let (x, wd) = span(c.s0, c.s1)
+            let r = CGRect(x: x - 2 * u, y: Y(KitchenLayout.counterTop), width: wd + 4 * u, height: CGFloat(KitchenLayout.counterThick * k))
+            ctx.fill(Path(r), with: .color(stone))
+            ctx.stroke(Path(r), with: .color(Ink.wall), lineWidth: mid)
+        }
+    }
+}
+
 // MARK: - Pictures for sending and sharing
 
 @MainActor
 enum DrawingRenderer {
     static let exportSize = CGSize(width: 1600, height: 1152)
 
-    static func plan(_ room: ScannedRoom, unit: LengthUnit, selected: Set<Int> = []) -> UIImage? {
-        let d = FloorPlanDrawing(room: room, unit: unit, selected: selected)
+    static func plan(_ room: ScannedRoom, unit: LengthUnit, selected: Set<Int> = [], layout: KitchenLayout? = nil) -> UIImage? {
+        let d = FloorPlanDrawing(room: room, unit: unit, selected: selected, layout: layout)
         return render { ctx, size in d.draw(ctx, size: size) }
     }
 
-    static func wall(_ room: ScannedRoom, index: Int, unit: LengthUnit) -> UIImage? {
-        let d = WallElevationDrawing(room: room, index: index, unit: unit)
+    static func wall(_ room: ScannedRoom, index: Int, unit: LengthUnit, layout: KitchenLayout? = nil) -> UIImage? {
+        let d = WallElevationDrawing(room: room, index: index, unit: unit, layout: layout)
         return render { ctx, size in d.draw(ctx, size: size) }
     }
 
