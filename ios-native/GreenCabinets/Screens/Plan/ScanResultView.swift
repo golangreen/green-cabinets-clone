@@ -20,6 +20,8 @@ struct ScanResultView: View {
     @State private var controller = Room3DController()
     @State private var share: SharePayload?
     @State private var working = false
+    /// In the project with the walls and units picked now
+    @State private var added = false
     @State private var topView = false
 
     var body: some View {
@@ -58,6 +60,8 @@ struct ScanResultView: View {
         .navigationTitle(scan.sample ? "Sample room" : "Your room")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $share) { ShareSheet(items: $0.images) }
+        .onChange(of: selected) { added = false }
+        .onChange(of: model.unit) { added = false }
         .onAppear {
             if DebugLaunch.value("-view") == "plan" { mode = .plan }
             if let w = DebugLaunch.value("-pick") { selecting = true; selected = Set(w.split(separator: ",").compactMap { Int($0) }) }
@@ -183,12 +187,14 @@ struct ScanResultView: View {
                 Text("This is a sample. On an iPhone Pro or iPad Pro, scan your own room from the Plan tab.")
                     .secondaryText().fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
+            } else if added {
+                Button { model.tab = .quote } label: {
+                    ActionLabel(title: "Review and send", systemImage: "paperplane")
+                }
+                .primaryActionStyle()
             } else {
                 Button {
-                    working = true
-                    let pics = pictures()
-                    model.attach(scan: scan, pictures: pics)
-                    working = false
+                    prepare { model.attach(scan: scan, pictures: $0); added = true }
                 } label: {
                     ActionLabel(title: working ? "Preparing…" : "Add to my project", systemImage: "plus")
                 }
@@ -196,14 +202,26 @@ struct ScanResultView: View {
                 .disabled(working)
             }
             Button {
-                share = SharePayload(images: pictures().map(\.0))
+                prepare { share = SharePayload(images: $0.map(\.0)) }
             } label: {
                 ActionLabel(title: "Share pictures", systemImage: "square.and.arrow.up")
             }
             .secondaryActionStyle()
+            .disabled(working)
             Text("Pictures carry the Green Cabinets name and reference \(scan.id).")
                 .font(.footnote).foregroundStyle(Brand.stone)
                 .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    /// Draws the pictures after "Preparing…" has had a frame to show.
+    private func prepare(_ then: @escaping ([(UIImage, String)]) -> Void) {
+        guard !working else { return }
+        working = true
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(60))
+            then(pictures())
+            working = false
         }
     }
 

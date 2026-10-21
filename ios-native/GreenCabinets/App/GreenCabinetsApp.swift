@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct GreenCabinetsApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var model: AppModel
 
     init() {
@@ -23,6 +24,8 @@ struct GreenCabinetsApp: App {
         default: break
         }
         if arg("-open") == "sample" { m.tab = .plan; m.planPath = ["sample"] }
+        //   -quick text|measure|quote        as if picked from the app icon
+        if let q = arg("-quick") { QuickActions.pending = q }
         #endif
     }
 
@@ -77,5 +80,6 @@ struct RootView: View {
         }
         .animation(Motion.ui(reduceMotion), value: model.toast)
         .background(Brand.ink.ignoresSafeArea())
+        .task { await QuickActions.attach(model) }
     }
 }

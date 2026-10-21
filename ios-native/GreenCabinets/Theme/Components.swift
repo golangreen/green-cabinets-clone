@@ -92,6 +92,32 @@ struct ActionRow<Content: View>: View {
     }
 }
 
+/// Two ways to ask about something: a text now, or a line on the quote request.
+struct AskRow: View {
+    @Environment(AppModel.self) private var model
+    /// How the text starts
+    let text: String
+    /// What goes on the quote request
+    let note: String
+    /// A photo from the app to send with the text
+    var image: String?
+
+    var body: some View {
+        ActionRow {
+            Button { model.textUs(text, image: image) } label: {
+                ActionLabel(title: "Text us", systemImage: "message")
+            }
+            .secondaryActionStyle()
+            .accessibilityHint("Opens a message to Green Cabinets")
+            Button { model.askAbout(note) } label: {
+                ActionLabel(title: "Add to quote", systemImage: "text.badge.plus")
+            }
+            .secondaryActionStyle()
+            .accessibilityHint("Adds a note to your quote request")
+        }
+    }
+}
+
 // MARK: - Headings
 
 struct SectionHeader: View {

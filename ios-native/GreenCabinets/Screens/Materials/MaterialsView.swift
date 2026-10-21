@@ -154,10 +154,8 @@ struct WoodDetailView: View {
                         }
                         .primaryActionStyle()
                         .disabled(!Tools.arSupported)
-                        Button { model.askAbout("I'm interested in \(wood.name) cabinets.") } label: {
-                            ActionLabel(title: "Ask about \(wood.name)", systemImage: "bubble.left")
-                        }
-                        .secondaryActionStyle()
+                        AskRow(text: "Hi Green Cabinets, I'm interested in \(wood.name) cabinets. ",
+                               note: "I'm interested in \(wood.name) cabinets.")
                     }
                 }
                 .padding(.horizontal, Space.gutter)
@@ -242,10 +240,8 @@ struct FinishDetailView: View {
                 }
                 .primaryActionStyle()
                 .disabled(!Tools.arSupported)
-                Button { model.askAbout("I'm interested in the \(finish.name) finish.") } label: {
-                    ActionLabel(title: "Ask about this finish", systemImage: "bubble.left")
-                }
-                .secondaryActionStyle()
+                AskRow(text: "Hi Green Cabinets, I'm interested in the \(finish.name) finish. ",
+                       note: "I'm interested in the \(finish.name) finish.", image: finish.texture)
             }
             .padding(.horizontal, Space.gutter)
             .padding(.bottom, Space.section)

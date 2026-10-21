@@ -122,6 +122,7 @@ struct HomeView: View {
                             }
                         }
                         .buttonStyle(PressableStyle())
+                        .workPhotoMenu(p, model: model)
                         .accessibilityLabel(p.title)
                     }
                 }
@@ -245,7 +246,7 @@ struct HomeView: View {
             Button { model.tab = .quote } label: { ActionLabel(title: "Get a quote", systemImage: "paperplane") }
                 .primaryActionStyle()
             ActionRow {
-                Link(destination: URL(string: "sms:\(Content.textNumber)")!) { ActionLabel(title: "Text us", systemImage: "message") }
+                Button { model.textUs() } label: { ActionLabel(title: "Text us", systemImage: "message") }
                     .secondaryActionStyle()
                 Link(destination: URL(string: "mailto:\(Content.email)")!) { ActionLabel(title: "Email us", systemImage: "envelope") }
                     .secondaryActionStyle()

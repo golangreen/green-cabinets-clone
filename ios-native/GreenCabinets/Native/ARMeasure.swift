@@ -269,7 +269,9 @@ final class ARMeasureViewController: UIViewController {
         tick?.cancel()
         let lengths = lines.map { Double($0.meters) }
         let photos = self.photos
-        dismiss(animated: true) { [weak self] in self?.onDone?(lengths, photos) }
+        // Held here, not through self: the screen may be gone when the dismissal ends
+        let done = onDone
+        dismiss(animated: true) { done?(lengths, photos) }
     }
 
     @objc private func close() { finish() }

@@ -15,6 +15,24 @@ extension View {
     }
 }
 
+/// Long-press a photo: text us about it, add it to the quote, or share it.
+extension View {
+    func workPhotoMenu(_ p: WorkPhoto, model: AppModel) -> some View {
+        contextMenu {
+            Button { model.textUs("Hi Green Cabinets, I like this look: \(p.title). ", image: p.id) } label: {
+                Label("Text us about it", systemImage: "message")
+            }
+            Button { model.askAbout("I like this one: \(p.title).") } label: {
+                Label("Add to quote", systemImage: "text.badge.plus")
+            }
+            ShareLink(item: Image(p.id), subject: Text(p.title), message: Text(Content.shareLine),
+                      preview: SharePreview(p.title, image: Image(p.id)))
+        } preview: {
+            Image(p.id).resizable().aspectRatio(contentMode: .fit).frame(width: 340)
+        }
+    }
+}
+
 /// A photo you can pinch, double-tap and pan, with the system's own scroll
 /// physics (rubber-banding at the edges, momentum).
 struct ZoomableImage: UIViewRepresentable {
@@ -96,12 +114,8 @@ struct PhotoDetailView: View {
                 VStack(alignment: .leading, spacing: Space.m) {
                     Text(photo.category.rawValue).eyebrow()
                     Text(photo.title).cardTitle().fixedSize(horizontal: false, vertical: true)
-                    Button {
-                        model.askAbout("I like this one: \(photo.title).")
-                    } label: {
-                        ActionLabel(title: "Ask about this look", systemImage: "bubble.left")
-                    }
-                    .secondaryActionStyle()
+                    AskRow(text: "Hi Green Cabinets, I like this look: \(photo.title). ",
+                           note: "I like this one: \(photo.title).", image: photo.id)
                 }
                 .padding(Space.l)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -111,6 +125,14 @@ struct PhotoDetailView: View {
         .navigationTitle("\(index + 1) of \(photos.count)")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbar {
+            if let photo {
+                ToolbarItem(placement: .topBarTrailing) {
+                    ShareLink(item: Image(photo.id), subject: Text(photo.title), message: Text(Content.shareLine),
+                              preview: SharePreview(photo.title, image: Image(photo.id)))
+                }
+            }
+        }
         .sensoryFeedback(.selection, trigger: current)
     }
 }

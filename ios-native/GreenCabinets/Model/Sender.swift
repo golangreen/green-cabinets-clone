@@ -38,12 +38,14 @@ enum Sender {
             var lines = ["Project: \(r.projectType)"] + r.details
             lines += lengthLines(r)
             if !r.note.isEmpty { lines += ["", r.note] }
+            // The office takes up to 1000 characters
+            let message = "Sent from the Green Cabinets iPhone app\n\n" + lines.joined(separator: "\n")
             var body: [String: Any] = [
                 "name": r.name, "email": r.email,
-                "message": "Sent from the Green Cabinets iPhone app\n\n" + lines.joined(separator: "\n"),
+                "message": String(message.prefix(1000)),
                 "projectType": r.projectType.lowercased(), "spamGuard": guardInfo,
             ]
-            if phone.count >= 10 { body["phone"] = phone }
+            if phone.count >= 10 { body["phone"] = String(phone.prefix(20)) }
             try await post("send-contact-form", body)
             return ref
         }
@@ -54,7 +56,8 @@ enum Sender {
             let clean = a.title.replacingOccurrences(of: "[^A-Za-z0-9 ._-]", with: "", options: .regularExpression)
             return ["name": "\(i + 1) \(clean.prefix(60)) \(ref).jpg", "data": a.jpeg.base64EncodedString()]
         }
-        var summary = ["Project: \(r.projectType)"] + r.details + lengthLines(r) + r.basket.roomLines
+        // At most 20 lines: the lengths share lines so a long list can't push the room off
+        var summary = ["Project: \(r.projectType)"] + r.details + packed(lengthLines(r)) + r.basket.roomLines
         summary = Array(summary.prefix(20)).map { String($0.prefix(600)) }
         var body: [String: Any] = [
             "kind": r.basket.room != nil ? "scan" : "quote",
@@ -73,6 +76,18 @@ enum Sender {
             let name = l.name.trimmingCharacters(in: .whitespaces)
             return "\(name.isEmpty ? "Length \(i + 1)" : name): \(r.unit.forText.length(l.meters))"
         }
+    }
+
+    /// Joins short lines into a few lines of at most 590 characters.
+    private static func packed(_ items: [String]) -> [String] {
+        guard items.count > 3 else { return items }
+        var out: [String] = [], cur = ""
+        for i in items {
+            if !cur.isEmpty && cur.count + i.count + 3 > 590 { out.append(cur); cur = "" }
+            cur += cur.isEmpty ? i : " · " + i
+        }
+        if !cur.isEmpty { out.append(cur) }
+        return out
     }
 
     private static func post(_ fn: String, _ body: [String: Any]) async throws {

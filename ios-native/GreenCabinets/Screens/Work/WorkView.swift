@@ -3,6 +3,7 @@ import SwiftUI
 /// The finished work, as an editorial mosaic: one large photo, then two side
 /// by side. A filter at the top, a tap opens the photo full screen.
 struct WorkView: View {
+    @Environment(AppModel.self) private var model
     @Namespace private var zoom
     @State private var filter: WorkCategory?
     @State private var path = NavigationPath()
@@ -82,6 +83,7 @@ struct WorkView: View {
                 .zoomSource(p.id, in: zoom)
         }
         .buttonStyle(PressableStyle())
+        .workPhotoMenu(p, model: model)
         .accessibilityLabel(p.title)
         .accessibilityHint("Opens the photo")
     }

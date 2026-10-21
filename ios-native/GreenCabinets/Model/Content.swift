@@ -127,6 +127,9 @@ enum Content {
               answer: "Throughout Brooklyn, Manhattan and Queens, plus the wider New York area."),
     ]
 
-    static let textNumber = "+17188045488"
+    /// "Text us" goes here. Only the message sheet uses it; no screen shows it.
+    static let textNumber = "+16465493955"
     static let email = "orders@greencabinetsny.com"
+    /// Goes with a shared photo
+    static let shareLine = "Custom cabinetry by Green Cabinets NY. greencabinetsny.com"
 }

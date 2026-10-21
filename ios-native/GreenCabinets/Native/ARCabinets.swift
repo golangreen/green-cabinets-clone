@@ -382,7 +382,9 @@ final class ARDesignViewController: UIViewController, ARSessionDelegate {
     }
 
     @objc private func close() {
-        dismiss(animated: true) { [weak self] in self?.onDone?(self?.photos ?? []) }
+        // Held here, not through self: the screen may be gone when the dismissal ends
+        let done = onDone, photos = self.photos
+        dismiss(animated: true) { done?(photos) }
     }
 
     @objc private func done() {

@@ -25,6 +25,8 @@ struct QuoteView: View {
     private enum Field { case place, notes, name, email, phone }
     private static let types = ["Kitchen", "Bathroom vanity", "Closet", "Built-ins", "Something else"]
     private static let timings = ["As soon as possible", "In 1 to 3 months", "In 3 to 6 months", "Just planning"]
+    /// The office's message limit, with room for the project lines
+    private static let noteLimit = 800
 
     private var nameError: String? { name.trimmingCharacters(in: .whitespaces).count < 2 ? "Add your name so we know who to reply to." : nil }
     private var emailError: String? {
@@ -68,7 +70,7 @@ struct QuoteView: View {
                     .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4))
             }
 
-            Section("Your project") {
+            Section {
                 Picker("Project", selection: $projectType) { ForEach(Self.types, id: \.self) { Text($0) } }
                 Picker("Timing", selection: $timing) { ForEach(Self.timings, id: \.self) { Text($0) } }
                 TextField("Neighborhood or building", text: $place)
@@ -79,6 +81,15 @@ struct QuoteView: View {
                 TextField("Anything we should know (optional)", text: $notes, axis: .vertical)
                     .lineLimit(3...8)
                     .focused($focus, equals: .notes)
+                    .onChange(of: notes) { _, v in
+                        if v.count > Self.noteLimit { notes = String(v.prefix(Self.noteLimit)) }
+                    }
+            } header: {
+                Text("Your project")
+            } footer: {
+                if notes.count > Self.noteLimit - 100 {
+                    Text("\(Self.noteLimit - notes.count) characters left").monospacedDigit()
+                }
             }
             .listRowBackground(Brand.surface)
 
@@ -120,13 +131,20 @@ struct QuoteView: View {
             }
 
             Section("Rather talk?") {
-                Link(destination: URL(string: "sms:\(Content.textNumber)")!) { Label("Text us", systemImage: "message") }
+                Button { model.textUs() } label: { Label("Text us", systemImage: "message") }
                 Link(destination: URL(string: "mailto:\(Content.email)")!) { Label("Email us", systemImage: "envelope") }
             }
             .listRowBackground(Brand.surface)
         }
         .scrollContentBackground(.hidden)
         .scrollDismissesKeyboard(.interactively)
+        .toolbar {
+            // The phone keypad has no return key
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { focus = nil }.fontWeight(.semibold)
+            }
+        }
         .onChange(of: photoPicks) { _, picks in load(picks) }
     }
 
@@ -292,6 +310,12 @@ private struct Thumb: View {
                 Image(uiImage: img).resizable().scaledToFill()
                     .frame(width: 96, height: 96)
                     .clipShape(RoundedRectangle(cornerRadius: Radius.chip, style: .continuous))
+                    // Long-press to see it large
+                    .contextMenu {
+                        Button(role: .destructive, action: remove) { Label("Remove", systemImage: "trash") }
+                    } preview: {
+                        Image(uiImage: img).resizable().aspectRatio(contentMode: .fit).frame(width: 340)
+                    }
                     .accessibilityLabel(attachment.title)
             }
             Button(action: remove) {

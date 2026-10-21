@@ -47,4 +47,11 @@ extension AppModel {
         quoteNote = text
         tab = .quote
     }
+
+    /// A text to the office, already started; a photo from the app can go with it.
+    func textUs(_ body: String = "Hi Green Cabinets, ", image: String? = nil) {
+        TextUs.open(body, image: image.flatMap { UIImage(named: $0) }) { [weak self] in
+            self?.say("Message sent")
+        }
+    }
 }

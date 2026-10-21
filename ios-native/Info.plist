@@ -34,6 +34,33 @@
 		<string>CormorantGaramond-MediumItalic.ttf</string>
 		<string>CormorantGaramond-SemiBold.ttf</string>
 	</array>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>text</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Text us</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>message</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>measure</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Measure a wall</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>ruler</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>quote</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Get a quote</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>paperplane</string>
+		</dict>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
