@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 /// Sends a request to the Green Cabinets office (orders@greencabinetsny.com)
 /// through the same email functions the website uses. With pictures or a
@@ -40,7 +41,8 @@ enum Sender {
             lines += lengthLines(r)
             if !r.note.isEmpty { lines += ["", r.note] }
             // The office takes up to 1000 characters
-            let message = "Sent from the Green Cabinets iPhone app\n\n" + lines.joined(separator: "\n")
+            let device = await MainActor.run { UIDevice.current.userInterfaceIdiom == .pad ? "iPad" : "iPhone" }
+            let message = "Sent from the Green Cabinets \(device) app\n\n" + lines.joined(separator: "\n")
             var body: [String: Any] = [
                 "name": r.name, "email": r.email,
                 "message": String(message.prefix(1000)),

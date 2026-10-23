@@ -62,7 +62,7 @@ struct ScanResultView: View {
 
                 actions
             }
-            .padding(.horizontal, Space.gutter)
+            .page()
             .padding(.bottom, Space.section)
         }
         .scrollIndicators(.hidden)

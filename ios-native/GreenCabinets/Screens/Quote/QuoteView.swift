@@ -138,6 +138,7 @@ struct QuoteView: View {
             .listRowBackground(Brand.surface)
         }
         .scrollContentBackground(.hidden)
+        .pageMargins()
         .scrollDismissesKeyboard(.interactively)
         .debugScroll()
         .toolbar {

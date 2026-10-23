@@ -105,17 +105,17 @@ await step("price: free", async () => {
   });
 });
 
-await step("screenshots (6.9 inch)", async () => {
+async function pushShots(type, dir) {
   const sets = (await api("GET", `/appStoreVersionLocalizations/${vloc.id}/appScreenshotSets`)).data;
-  let set = sets.find((s) => s.attributes.screenshotDisplayType === "APP_IPHONE_67");
+  let set = sets.find((s) => s.attributes.screenshotDisplayType === type);
   if (!set)
     set = (await api("POST", "/appScreenshotSets", {
-      data: { type: "appScreenshotSets", attributes: { screenshotDisplayType: "APP_IPHONE_67" }, relationships: { appStoreVersionLocalization: { data: { type: "appStoreVersionLocalizations", id: vloc.id } } } },
+      data: { type: "appScreenshotSets", attributes: { screenshotDisplayType: type }, relationships: { appStoreVersionLocalization: { data: { type: "appStoreVersionLocalizations", id: vloc.id } } } },
     })).data;
   for (const o of (await api("GET", `/appScreenshotSets/${set.id}/appScreenshots`)).data) await api("DELETE", `/appScreenshots/${o.id}`);
-  const files = fs.readdirSync(SHOTS).filter((f) => f.endsWith(".jpg")).sort();
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".jpg")).sort();
   for (const f of files) {
-    const buf = fs.readFileSync(SHOTS + f);
+    const buf = fs.readFileSync(dir + f);
     const shot = (await api("POST", "/appScreenshots", {
       data: { type: "appScreenshots", attributes: { fileName: f, fileSize: buf.length }, relationships: { appScreenshotSet: { data: { type: "appScreenshotSets", id: set.id } } } },
     })).data;
@@ -126,4 +126,7 @@ await step("screenshots (6.9 inch)", async () => {
     await api("PATCH", `/appScreenshots/${shot.id}`, { data: { type: "appScreenshots", id: shot.id, attributes: { uploaded: true, sourceFileChecksum: crypto.createHash("md5").update(buf).digest("hex") } } });
   }
   return files.length + " uploaded";
-});
+}
+await step("screenshots (6.9 inch)", () => pushShots("APP_IPHONE_67", SHOTS));
+// iPad: straight from the 13-inch iPad Pro simulator (2064 x 2752)
+await step("screenshots (13 inch iPad)", () => pushShots("APP_IPAD_PRO_3GEN_129", new URL("./screenshots-ipad/", import.meta.url).pathname));

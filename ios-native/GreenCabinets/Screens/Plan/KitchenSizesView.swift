@@ -164,7 +164,7 @@ struct KitchenSizesView: View {
                     .secondaryActionStyle()
                 }
             }
-            .padding(.horizontal, Space.gutter)
+            .page()
             .padding(.bottom, Space.section)
         }
         .scrollIndicators(.hidden)

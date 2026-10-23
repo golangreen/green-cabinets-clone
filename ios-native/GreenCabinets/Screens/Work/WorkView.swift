@@ -33,7 +33,7 @@ struct WorkView: View {
                         .id(filter)
                         .transition(.opacity)
                 }
-                .padding(.horizontal, Space.gutter)
+                .page()
                 .padding(.bottom, Space.section)
                 .animation(.easeOut(duration: 0.2), value: filter)
             }

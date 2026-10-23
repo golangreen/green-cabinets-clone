@@ -122,7 +122,7 @@ struct ColorMatchView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            .padding(.horizontal, Space.gutter)
+            .page()
             .padding(.bottom, Space.section)
         }
         .scrollIndicators(.hidden)

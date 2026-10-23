@@ -22,7 +22,7 @@ struct HomeView: View {
                         faq
                         contact
                     }
-                    .padding(.horizontal, Space.gutter)
+                    .page()
                 }
                 .padding(.bottom, Space.section)
             }
@@ -86,7 +86,7 @@ struct HomeView: View {
                 }
                 .padding(.top, Space.xs)
             }
-            .padding(.horizontal, Space.gutter)
+            .page()
             .padding(.top, -64)
         }
     }

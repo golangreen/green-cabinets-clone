@@ -45,7 +45,7 @@ struct MaterialsView: View {
                     .id(shelf)
                     .transition(.opacity)
                 }
-                .padding(.horizontal, Space.gutter)
+                .page()
                 .padding(.bottom, Space.section)
                 .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: shelf)
             }
@@ -281,19 +281,19 @@ struct SupplierCatalogView: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                     }
-                    .padding(.horizontal, Space.gutter)
+                    .page()
 
                     ForEach(groups, id: \.title) { g in
                         Section {
                             PanelGrid(panels: g.panels, from: "all", zoom: zoom)
-                                .padding(.horizontal, Space.gutter)
+                                .page()
                         } header: {
                             HStack {
                                 Text(g.title).font(.headline).foregroundStyle(Brand.ivory)
                                 Spacer()
                                 Text("\(g.panels.count)").font(.subheadline).foregroundStyle(Brand.stone).monospacedDigit()
                             }
-                            .padding(.horizontal, Space.gutter)
+                            .page()
                             .padding(.vertical, Space.s)
                             .background(Brand.ink.opacity(0.94))
                             .accessibilityAddTraits(.isHeader)
@@ -307,7 +307,7 @@ struct SupplierCatalogView: View {
                                 .font(.subheadline.weight(.semibold))
                                 .frame(minHeight: 44)
                         }
-                        .padding(.horizontal, Space.gutter)
+                        .page()
                     }
                 }
                 .padding(.bottom, Space.section)
@@ -438,7 +438,7 @@ struct WoodLibraryView: View {
                     }
                 }
             }
-            .padding(.horizontal, Space.gutter)
+            .page()
             .padding(.bottom, Space.section)
         }
         .scrollIndicators(.hidden)
@@ -457,7 +457,7 @@ struct HouseColorsView: View {
                 group("Painted", HouseColors.paints)
                 group("Stained wood", HouseColors.stains)
             }
-            .padding(.horizontal, Space.gutter)
+            .page()
             .padding(.bottom, Space.section)
         }
         .scrollIndicators(.hidden)
@@ -563,7 +563,7 @@ struct PanelDetailView: View {
                     }
                 }
             }
-            .padding(.horizontal, Space.gutter)
+            .page()
             .padding(.bottom, Space.section)
         }
         .scrollIndicators(.hidden)
@@ -624,7 +624,7 @@ struct WoodDetailView: View {
                     list("Keep in mind", wood.cons, symbol: "exclamationmark.circle")
                     list("Finishes that suit it", wood.finishes, symbol: "paintbrush")
                 }
-                .padding(.horizontal, Space.gutter)
+                .page()
             }
             .padding(.bottom, Space.section)
         }
@@ -716,7 +716,7 @@ struct FinishDetailView: View {
                     AskRow(text: "Hi Green Cabinets, I'm interested in \(finish.name). ", pick: finish.requestLine)
                 }
             }
-            .padding(.horizontal, Space.gutter)
+            .page()
             .padding(.bottom, Space.section)
         }
         .scrollIndicators(.hidden)

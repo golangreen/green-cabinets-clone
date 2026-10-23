@@ -42,6 +42,31 @@ enum Space {
     static let section: CGFloat = 40
     /// Side margin for page content
     static let gutter: CGFloat = 20
+    /// Widest a page's text column gets (iPad), so lines stay easy to read
+    static let pageMax: CGFloat = 820
+}
+
+extension View {
+    /// Page content: the side margin, and on a wide screen a centered column
+    func page() -> some View {
+        padding(.horizontal, Space.gutter)
+            .frame(maxWidth: Space.pageMax)
+            .frame(maxWidth: .infinity)
+    }
+
+    /// The same centered column for a Form or List, which lays out its own rows
+    func pageMargins() -> some View { PageMargins(inner: self) }
+}
+
+private struct PageMargins<Inner: View>: View {
+    let inner: Inner
+    @State private var width: CGFloat = 0
+    var body: some View {
+        inner
+            // Narrow screens keep the system's own margins
+            .contentMargins(.horizontal, width > Space.pageMax + 2 * Space.gutter ? (width - Space.pageMax) / 2 : nil, for: .scrollContent)
+            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
+    }
 }
 
 enum Radius {

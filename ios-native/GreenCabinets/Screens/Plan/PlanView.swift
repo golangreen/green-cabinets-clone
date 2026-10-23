@@ -62,7 +62,7 @@ struct PlanView: View {
 
                     projectSummary
                 }
-                .padding(.horizontal, Space.gutter)
+                .page()
                 .padding(.bottom, Space.section)
             }
             .scrollIndicators(.hidden)
