@@ -51,8 +51,10 @@ enum Content {
     static let hero = "photo-modern-kitchen-island-bar-stools"
 
     static let photos: [WorkPhoto] = [
+        .init(id: "photo-light-wood-kitchen-marble-peninsula-front", title: "Light wood, white uppers, marble peninsula", category: .kitchens),
         .init(id: "photo-modern-kitchen-island-bar-stools", title: "White oak with a marble waterfall island", category: .kitchens),
         .init(id: "photo-natural-wood-kitchen-marble", title: "Natural oak with a marble backsplash", category: .kitchens),
+        .init(id: "photo-light-wood-u-kitchen-marble-peninsula-stools", title: "A light wood U with a marble peninsula", category: .kitchens),
         .init(id: "photo-green-kitchen-marble-island", title: "Painted green with brass hardware", category: .kitchens),
         .init(id: "photo-loft-kitchen-exposed-brick-natural-wood", title: "Natural wood against exposed brick", category: .kitchens),
         .init(id: "photo-marble-wood-kitchen-island", title: "Marble waterfall island and wood cabinetry", category: .kitchens),
@@ -62,7 +64,15 @@ enum Content {
         .init(id: "photo-natural-wood-open-concept-kitchen", title: "An open plan oak kitchen", category: .kitchens),
         .init(id: "photo-modern-kitchen-island-glass-pendants", title: "Wood island under glass pendants", category: .kitchens),
         .init(id: "photo-natural-wood-kitchen-white-countertops", title: "Tall oak cabinets, white counters", category: .kitchens),
+        .init(id: "photo-wood-peninsula-white-tall-cabinets-kitchen", title: "Wood peninsula, white tall cabinets", category: .kitchens),
+        .init(id: "photo-open-kitchen-dining-wood-peninsula-stools", title: "Open kitchen beside the dining room", category: .kitchens),
+        .init(id: "photo-wood-kitchen-peninsula-dining-room", title: "Wood peninsula with bar seating", category: .kitchens),
+        .init(id: "photo-open-kitchen-dining-wood-panel-fridge", title: "White and wood, with a paneled fridge", category: .kitchens),
+        .init(id: "photo-dining-room-white-wood-kitchen-pendants", title: "The kitchen from the dining table", category: .kitchens),
         .init(id: "photo-modern-white-kitchen-pendants", title: "White kitchen with globe pendants", category: .kitchens),
+        .init(id: "photo-powder-room-wood-vanity-green-marble", title: "Powder room in wood and green marble", category: .baths),
+        .init(id: "photo-bathroom-wood-double-vanity-glass-shower", title: "Wood double vanity, glass shower", category: .baths),
+        .init(id: "photo-bathroom-floating-wood-vanity-marble-tub", title: "Floating wood vanity, marble tub", category: .baths),
         .init(id: "photo-modern-bathroom-marble-vanity", title: "Floating vanity in a marble bath", category: .baths),
         .init(id: "photo-luxury-marble-bathroom-shower", title: "Wood vanity beside a marble shower", category: .baths),
         .init(id: "photo-marble-bathroom-outdoor-access", title: "Marble bath with a wood vanity", category: .baths),
