@@ -34,8 +34,12 @@ if (process.argv.includes("--listing")) await import("./push-listing.mjs");
 
 const open = (await api("GET", subs + "READY_FOR_REVIEW")).data;
 const s = open[0] ?? (await api("POST", "/reviewSubmissions", { data: { type: "reviewSubmissions", attributes: { platform: "IOS" }, relationships: { app: { data: { type: "apps", id: app.id } } } } })).data;
-const item = await call("POST", "/reviewSubmissionItems", { data: { type: "reviewSubmissionItems", relationships: { reviewSubmission: { data: { type: "reviewSubmissions", id: s.id } }, appStoreVersion: { data: { type: "appStoreVersions", id: v.id } } } } });
-if (!item.ok) console.log("item:", item.msg);
+// New screenshots are processed for a few minutes; the version can't be added until they are
+for (let i = 0; i < 40; i++) {
+  const item = await call("POST", "/reviewSubmissionItems", { data: { type: "reviewSubmissionItems", relationships: { reviewSubmission: { data: { type: "reviewSubmissions", id: s.id } }, appStoreVersion: { data: { type: "appStoreVersions", id: v.id } } } } });
+  if (item.ok || !JSON.stringify(item.j?.errors ?? "").includes("ASSET_IN_POST_PROCESSING")) { if (!item.ok) console.log("item:", item.msg); break; }
+  await sleep(20000);
+}
 await api("PATCH", `/reviewSubmissions/${s.id}`, { data: { type: "reviewSubmissions", id: s.id, attributes: { submitted: true } } });
 const now = (await api("GET", `/apps/${app.id}/appStoreVersions?filter[platform]=IOS`)).data[0];
 console.log("submitted:", now.attributes.appStoreState);
