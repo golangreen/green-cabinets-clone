@@ -1,0 +1,528 @@
+[
+ {
+  "slug": "maple",
+  "name": "Maple",
+  "tagline": "Smooth, pale, and the painter's favorite.",
+  "short": "Hard maple offers a creamy, almost uniform grain that takes paint and light stains beautifully. It is the workhorse of modern shaker and slab cabinetry across Brooklyn and Manhattan.",
+  "janka": 1450,
+  "cost": "$$",
+  "color": "Creamy white to pale reddish-brown",
+  "grain": "Fine, closed, mostly straight with occasional curl",
+  "stability": 4,
+  "stain": "Tricky",
+  "pros": [
+   "Excellent paint finish: no grain bleed-through",
+   "Hard wearing surface (Janka 1,450)",
+   "Affordable and widely available",
+   "Sustainable North American species"
+  ],
+  "cons": [
+   "Can blotch under oil stains without prep",
+   "Yellows slightly with UV over time when clear-coated",
+   "Less dramatic grain than oak or walnut"
+  ],
+  "finishes": [
+   "Brilliant White paint",
+   "Sage green paint",
+   "Light natural lacquer",
+   "Dye-stained gray"
+  ],
+  "doors": [
+   "Shaker",
+   "Slim Shaker",
+   "Slab",
+   "Beaded inset"
+  ],
+  "swatch": "#efe1c6",
+  "image": "wood-maple"
+ },
+ {
+  "slug": "walnut",
+  "name": "American Walnut",
+  "tagline": "Rich chocolate tones with quiet luxury.",
+  "short": "Black walnut is the prestige hardwood of American cabinetmaking: deep brown heartwood, gentle figure, and a soft, hand-finished feel that elevates any kitchen, library, or vanity.",
+  "janka": 1010,
+  "cost": "$$$$",
+  "color": "Deep chocolate brown with purple undertones",
+  "grain": "Medium, mostly straight, occasional waves and burl",
+  "stability": 5,
+  "stain": "Excellent",
+  "pros": [
+   "Naturally rich color: no stain required",
+   "One of the most dimensionally stable hardwoods",
+   "Easy to machine and hand-finish",
+   "Reads as luxury without dramatic figure",
+   "FSC-certified and ethically sourced"
+  ],
+  "cons": [
+   "Premium price tier (2-3× maple, 30-50% over white oak)",
+   "Sapwood-heartwood color contrast must be sorted carefully",
+   "Softer than maple or oak: more prone to denting",
+   "Lightens with UV exposure over decades"
+  ],
+  "finishes": [
+   "Hardwax oil (natural)",
+   "Matte conversion varnish",
+   "Rubio Monocoat Pure",
+   "Soft satin lacquer",
+   "Osmo Polyx"
+  ],
+  "doors": [
+   "Slab",
+   "Shaker",
+   "Reeded",
+   "Frameless European",
+   "Inset shaker"
+  ],
+  "swatch": "#5b3a29",
+  "image": "wood-walnut"
+ },
+ {
+  "slug": "white-oak",
+  "name": "White Oak",
+  "tagline": "The defining wood of modern American kitchens.",
+  "short": "White oak combines visible cathedral grain, exceptional hardness, and a cool tan tone that takes everything from rift-cut natural finishes to Belgian-inspired smoked stains.",
+  "janka": 1360,
+  "cost": "$$$",
+  "color": "Light to medium tan with olive undertones",
+  "grain": "Open-pored, prominent cathedral or straight rift",
+  "stability": 4,
+  "stain": "Excellent",
+  "pros": [
+   "Exceptional hardness and dimensional stability",
+   "Takes reactive, fumed, and pigment stains beautifully",
+   "Highly weather-resistant (closed tyloses)",
+   "On-trend for modern, transitional, and traditional kitchens",
+   "Most flexible aesthetic range of any hardwood"
+  ],
+  "cons": [
+   "Open grain shows under paint without filling",
+   "Rift-and-quartered cuts cost 30-100% more than plain-sawn",
+   "Tannins can react with metal fasteners and some finishes",
+   "Lead times longer than red oak or maple"
+  ],
+  "finishes": [
+   "Hardwax oil natural",
+   "Fumed/smoked",
+   "Cerused white",
+   "Reactive iron-acetate",
+   "Soft pigment stain",
+   "Rubio Monocoat Pure"
+  ],
+  "doors": [
+   "Slab (rift-cut)",
+   "Shaker",
+   "Reeded",
+   "Beaded inset",
+   "Mission/Craftsman"
+  ],
+  "swatch": "#c9a877",
+  "image": "wood-white-oak"
+ },
+ {
+  "slug": "red-oak",
+  "name": "Red Oak",
+  "tagline": "Familiar, affordable, and unmistakably American.",
+  "short": "Red oak's pinkish heartwood and pronounced cathedral grain defined American kitchens for half a century. Modern stains and rift cuts have brought it roaring back as a budget-friendly white oak alternative.",
+  "janka": 1290,
+  "cost": "$$",
+  "color": "Pinkish to reddish-brown",
+  "grain": "Open-pored, very prominent cathedral",
+  "stability": 3,
+  "stain": "Excellent",
+  "pros": [
+   "Most affordable premium domestic hardwood ($7-$10/bf)",
+   "Takes any stain color predictably",
+   "Strong, hard, and easy to repair",
+   "Abundant supply, stable lead times",
+   "Rift-cut version reads as modern Scandinavian"
+  ],
+  "cons": [
+   "Open grain is not watertight: avoid for wet zones",
+   "Pinkish undertone can clash with cool palettes",
+   "Less dimensionally stable than white oak",
+   "Wrong stain choice can read as dated builder-grade"
+  ],
+  "finishes": [
+   "Honey stain + matte topcoat",
+   "Limed white",
+   "Espresso pigment",
+   "Cerused gray",
+   "Clear hardwax oil (rift-cut)"
+  ],
+  "doors": [
+   "Shaker",
+   "Raised panel",
+   "Slab (rift-cut)",
+   "Beaded inset"
+  ],
+  "swatch": "#b07555",
+  "image": "wood-red-oak"
+ },
+ {
+  "slug": "birch",
+  "name": "Birch",
+  "tagline": "Affordable, paint-ready, and surprisingly strong.",
+  "short": "Yellow birch offers maple-like density at a more accessible price. Its subtle grain finishes smooth under paint and takes a range of warm stains, making it the value pick for shaker and slab cabinetry.",
+  "janka": 1260,
+  "cost": "$$",
+  "color": "Creamy white sap, light yellow-brown heart",
+  "grain": "Fine, closed, mostly straight with subtle curl",
+  "stability": 3,
+  "stain": "Tricky",
+  "pros": [
+   "Maple-like density at a lower price",
+   "Excellent paint finish",
+   "Strong and screw-friendly",
+   "Best plywood substrate for cabinet construction"
+  ],
+  "cons": [
+   "Blotches under oil-based stains without prep",
+   "Yellows under UV exposure",
+   "Less dramatic grain than oak"
+  ],
+  "finishes": [
+   "White or sage paint",
+   "Gel stain medium walnut",
+   "Light natural lacquer"
+  ],
+  "doors": [
+   "Shaker",
+   "Slim Shaker",
+   "Slab"
+  ],
+  "swatch": "#e8d3a8",
+  "image": "wood-birch"
+ },
+ {
+  "slug": "cherry",
+  "name": "Cherry",
+  "tagline": "Patinas to a deep amber with age.",
+  "short": "American black cherry begins as a soft pinkish blonde and matures over months into a glowing reddish-amber. It is the heritage hardwood of Shaker and Federal furniture, prized for its silky finish.",
+  "janka": 950,
+  "cost": "$$$",
+  "color": "Pale pink-blonde aging to deep reddish amber",
+  "grain": "Fine, closed, straight with occasional curl or pin knots",
+  "stability": 4,
+  "stain": "Tricky",
+  "pros": [
+   "Develops a unique amber patina over time",
+   "Silky-smooth finish with minimal sanding",
+   "Excellent dimensional stability",
+   "Heritage American species"
+  ],
+  "cons": [
+   "Color shift can surprise clients (sample with patina)",
+   "Blotches under stains without conditioner",
+   "Softer than oak or maple: gentler use"
+  ],
+  "finishes": [
+   "Hand-rubbed oil/wax",
+   "Clear satin lacquer",
+   "Light natural stain (no pigment)"
+  ],
+  "doors": [
+   "Raised panel",
+   "Beaded inset",
+   "Shaker",
+   "Slab"
+  ],
+  "swatch": "#9a4f30",
+  "image": "wood-cherry"
+ },
+ {
+  "slug": "hickory",
+  "name": "Hickory",
+  "tagline": "The hardest commercial American hardwood.",
+  "short": "Hickory delivers the most dramatic color contrast and the highest Janka rating of any common cabinet wood. It is the right call for high-traffic kitchens, mountain houses, and rustic-modern aesthetics.",
+  "janka": 1820,
+  "cost": "$$$",
+  "color": "Cream sap with warm reddish-brown heart",
+  "grain": "Bold, mostly straight, occasional wild figure",
+  "stability": 3,
+  "stain": "Good",
+  "pros": [
+   "Hardest common cabinet hardwood (Janka 1,820)",
+   "Unique sap/heart contrast adds character",
+   "Extremely tough and shock-resistant",
+   "Comparable cost to white oak"
+  ],
+  "cons": [
+   "Hard on tooling: premium pricing on labor",
+   "Strong color contrast not everyone wants",
+   "Less dimensionally stable than oak or walnut",
+   "Wrong choice for minimalist or modern aesthetics"
+  ],
+  "finishes": [
+   "Clear hardwax oil",
+   "Light natural stain",
+   "Distressed/wire-brushed",
+   "Satin conversion varnish",
+   "Amber shellac"
+  ],
+  "doors": [
+   "Shaker",
+   "Raised panel",
+   "Plank-style",
+   "Beaded inset"
+  ],
+  "swatch": "#8a5a3b",
+  "image": "wood-hickory"
+ },
+ {
+  "slug": "ash",
+  "name": "White Ash",
+  "tagline": "Oak-like grain, cleaner color, lower price.",
+  "short": "White ash has the bold open grain of oak with a paler, more neutral background: perfect for clients who want oak texture without oak's pink or olive undertones. It also accepts cerused and limed finishes beautifully.",
+  "janka": 1320,
+  "cost": "$$",
+  "color": "Pale neutral tan with light heartwood",
+  "grain": "Open-pored, prominent cathedral, similar to oak",
+  "stability": 4,
+  "stain": "Excellent",
+  "pros": [
+   "Oak look with neutral color",
+   "Strong strength-to-weight ratio",
+   "Takes cerused and limed finishes cleanly",
+   "Lower price than white oak"
+  ],
+  "cons": [
+   "Supply impacted by emerald ash borer",
+   "Open grain telegraphs under paint",
+   "Less recognizable to clients than oak"
+  ],
+  "finishes": [
+   "Cerused white",
+   "Limed gray",
+   "Hardwax oil natural",
+   "Light pigment stain"
+  ],
+  "doors": [
+   "Slab",
+   "Shaker",
+   "Reeded"
+  ],
+  "swatch": "#d2b48c",
+  "image": "wood-ash"
+ },
+ {
+  "slug": "mahogany",
+  "name": "Mahogany",
+  "tagline": "The original luxury hardwood, ribbon-figured and timeless.",
+  "short": "True mahogany develops a deep reddish-brown patina, takes a piano-grade finish, and is dimensionally rock-solid. We specify African (Khaya) for sustainable sourcing while preserving the classic look.",
+  "janka": 1070,
+  "cost": "$$$$",
+  "color": "Pinkish-tan deepening to rich reddish-brown",
+  "grain": "Medium, often ribbon-striped, interlocked figure",
+  "stability": 5,
+  "stain": "Excellent",
+  "pros": [
+   "Extremely dimensionally stable",
+   "Takes high-gloss and hand-rubbed finishes beautifully",
+   "Develops a rich patina over decades",
+   "Historical authenticity for prewar restorations"
+  ],
+  "cons": [
+   "Premium price tier",
+   "Sourcing requires care for sustainability",
+   "Softer than maple/oak: less ideal for high-traffic bases"
+  ],
+  "finishes": [
+   "French polish (shellac)",
+   "Hand-rubbed oil",
+   "Conversion varnish satin"
+  ],
+  "doors": [
+   "Raised panel",
+   "Fielded inset",
+   "Library frame-and-panel"
+  ],
+  "swatch": "#7d3a1f",
+  "image": "wood-mahogany"
+ },
+ {
+  "slug": "alder",
+  "name": "Knotty Alder",
+  "tagline": "Warm rustic character at a friendly price.",
+  "short": "Knotty alder brings honest character knots, warm honey tones, and a soft hand-feel to rustic, mountain-modern, and Spanish revival kitchens. It is also the standard substrate for mid-priced stained cabinetry.",
+  "janka": 590,
+  "cost": "$",
+  "color": "Light honey to reddish-brown",
+  "grain": "Fine, mostly straight, with character knots when knotty grade",
+  "stability": 3,
+  "stain": "Very Good",
+  "pros": [
+   "Affordable solid wood option",
+   "Accepts distressing and rub-through finishes",
+   "Easy to machine and hand-finish",
+   "Warm, friendly aesthetic"
+  ],
+  "cons": [
+   "Soft (Janka 590): dents easily",
+   "Knots can fall out if poorly sorted",
+   "Less suited to modern/minimalist looks"
+  ],
+  "finishes": [
+   "Hand-rubbed honey stain + glaze",
+   "Distressed cherry-tone stain",
+   "Antique espresso"
+  ],
+  "doors": [
+   "Raised panel",
+   "Arched raised",
+   "Beaded inset",
+   "Plank-style"
+  ],
+  "swatch": "#c08a5a",
+  "image": "wood-alder"
+ },
+ {
+  "slug": "beech",
+  "name": "European Beech",
+  "tagline": "Dense, pale, and the staple of European frameless cabinetry.",
+  "short": "Steamed European beech offers maple-like density with a pinkish-cream tone and a uniform grain that has defined Bauhaus and Scandinavian cabinetry for nearly a century.",
+  "janka": 1300,
+  "cost": "$$",
+  "color": "Pinkish-cream (steamed) to pale tan",
+  "grain": "Fine, closed, very uniform",
+  "stability": 3,
+  "stain": "Very Good",
+  "pros": [
+   "Excellent paint and clear finish surface",
+   "Steam-bends easily for curved components",
+   "Affordable European hardwood",
+   "Uniform, calm grain"
+  ],
+  "cons": [
+   "Less dimensionally stable than maple",
+   "Pinkish cast not loved by every palette",
+   "Lower availability in U.S. domestic supply"
+  ],
+  "finishes": [
+   "Clear hardwax oil",
+   "Soft white paint",
+   "Light pigment stain"
+  ],
+  "doors": [
+   "Slab (frameless)",
+   "Shaker",
+   "Reeded"
+  ],
+  "swatch": "#e6c9a8",
+  "image": "wood-beech"
+ },
+ {
+  "slug": "rift-cut-white-oak",
+  "name": "Rift-Cut White Oak",
+  "tagline": "The defining cut of modern luxury kitchens.",
+  "short": "Rift-cut white oak shows tight, ruler-straight vertical grain with no cathedral arches. It's the most consistent door-to-door look in cabinetry and the signature of post-2018 high-end design.",
+  "janka": 1360,
+  "cost": "$$$$",
+  "color": "Light to medium tan with olive undertones",
+  "grain": "Tight, vertical, ruler-straight",
+  "stability": 5,
+  "stain": "Excellent",
+  "pros": [
+   "Most consistent door-to-door grain match available",
+   "Reads as calm and modern: no cathedral noise",
+   "More dimensionally stable than plain-sawn (cuts perpendicular to rings)",
+   "Same hardness and water resistance as plain white oak"
+  ],
+  "cons": [
+   "30-40% more expensive per board foot than plain-sawn",
+   "Lower yield = longer lead times for custom widths",
+   "Wastes the cut's beauty if you plan to paint it",
+   "Less character than plain-sawn for traditional kitchens"
+  ],
+  "finishes": [
+   "Hardwax oil natural",
+   "Fumed/smoked",
+   "Cerused white",
+   "Rubio Monocoat Pure"
+  ],
+  "doors": [
+   "Slab",
+   "Shaker",
+   "Reeded",
+   "Frameless European"
+  ],
+  "swatch": "#c9a877",
+  "image": "wood-rift-cut-white-oak"
+ },
+ {
+  "slug": "quartersawn-oak",
+  "name": "Quartersawn Oak",
+  "tagline": "Iridescent ray fleck and the soul of Mission and Greene & Greene.",
+  "short": "Quartersawn oak is sliced perpendicular to the growth rings, exposing the medullary rays as shimmering silver-gold ribbons. It is the defining wood of Arts & Crafts, Mission, and Stickley furniture.",
+  "janka": 1360,
+  "cost": "$$$$",
+  "color": "Tan to medium brown with shimmering ray fleck",
+  "grain": "Straight grain face with prominent medullary ray fleck",
+  "stability": 5,
+  "stain": "Excellent",
+  "pros": [
+   "Most dimensionally stable cut available: minimal seasonal movement",
+   "Iridescent ray fleck is impossible to replicate any other way",
+   "Defining wood of American Arts & Crafts and Mission style",
+   "Holds tight joinery in NYC's humidity swings"
+  ],
+  "cons": [
+   "Most expensive cut of oak: roughly 2× plain-sawn cost",
+   "Lowest yield per log = longest lead times (10-14 weeks)",
+   "Strong visual character can overwhelm minimalist designs",
+   "Ray fleck makes inconsistent panel matching harder to manage"
+  ],
+  "finishes": [
+   "Fumed (ammonia)",
+   "Hardwax oil natural",
+   "Amber shellac",
+   "Reactive iron-acetate"
+  ],
+  "doors": [
+   "Mission/Craftsman flat panel",
+   "Inset shaker",
+   "Slab (for modern fleck-forward)",
+   "Raised panel"
+  ],
+  "swatch": "#a37a4f",
+  "image": "wood-quartersawn-oak"
+ },
+ {
+  "slug": "rustic-hickory",
+  "name": "Rustic Hickory",
+  "tagline": "The hardest domestic hardwood: with knots, color swings, and farmhouse soul.",
+  "short": "Rustic hickory is character-grade hickory selected for visible knots, mineral streaks, and dramatic heartwood-sapwood contrast. It is the signature wood of mountain modern, farmhouse, and lodge-style kitchens.",
+  "janka": 1820,
+  "cost": "$$",
+  "color": "Dramatic creamy white sap to reddish-brown heart with knots",
+  "grain": "Bold, open, often wavy, with mineral streaks and tight knots",
+  "stability": 3,
+  "stain": "Good",
+  "pros": [
+   "Hardest domestic cabinet wood: Janka 1,820 lbf",
+   "Distinctive farmhouse and mountain-modern character",
+   "More affordable than clean-grade hickory (10-15% less)",
+   "Hides dents, scratches, and dings exceptionally well"
+  ],
+  "cons": [
+   "Strong visual character not for minimalist kitchens",
+   "Hard on tooling: slightly higher labor cost",
+   "Less dimensionally stable than oak or maple in humidity swings",
+   "Requires intentional color sorting to balance panels"
+  ],
+  "finishes": [
+   "Clear hardwax oil",
+   "Satin conversion varnish",
+   "Amber shellac",
+   "Light natural stain"
+  ],
+  "doors": [
+   "Shaker",
+   "Raised panel",
+   "Beaded inset",
+   "Plank-style slab"
+  ],
+  "swatch": "#9c6b3f",
+  "image": "wood-rustic-hickory"
+ }
+]
