@@ -97,7 +97,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: Space.l) {
             SectionHeader(eyebrow: "Tools", title: "Try it in your own room.",
                           subtitle: "Everything you make here goes with your quote request.")
-            LazyVGrid(columns: [GridItem(.flexible(), spacing: Space.m), GridItem(.flexible())], spacing: Space.m) {
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: Space.m, alignment: .top), GridItem(.flexible(), alignment: .top)], spacing: Space.m) {
                 ToolTile(symbol: "cube.transparent", title: "Cabinets in AR", detail: "Place real-size cabinets in your kitchen") { model.openCabinets() }
                 ToolTile(symbol: "ruler", title: "Measure", detail: "Walls, gaps and windows with the camera") { model.openMeasure() }
                 ToolTile(symbol: "square.split.bottomrightquarter", title: "Design my kitchen", detail: "Your kitchen's shape and sizes, new cabinets and the price") {
@@ -121,7 +121,7 @@ struct HomeView: View {
                     .frame(minHeight: 44)
             }
             ScrollView(.horizontal) {
-                LazyHStack(spacing: Space.m) {
+                LazyHStack(alignment: .top, spacing: Space.m) {
                     ForEach(Content.photos.prefix(8)) { p in
                         NavigationLink(value: p) {
                             VStack(alignment: .leading, spacing: Space.s) {
@@ -131,7 +131,7 @@ struct HomeView: View {
                                 Text(p.title)
                                     .font(.footnote)
                                     .foregroundStyle(Brand.stone)
-                                    .lineLimit(2)
+                                    .lineLimit(2, reservesSpace: true)
                                     .frame(width: 250, alignment: .leading)
                             }
                         }
@@ -161,7 +161,7 @@ struct HomeView: View {
             SectionHeader(eyebrow: "Materials", title: "Real panels, real samples.",
                           subtitle: "Mostly Tafisa, Shinnoki and Egger. Pick the ones you like and we bring them to your home.")
             ScrollView(.horizontal) {
-                LazyHStack(spacing: Space.m) {
+                LazyHStack(alignment: .top, spacing: Space.m) {
                     ForEach(strip) { p in
                         NavigationLink(value: PanelRoute(panel: p, from: "home")) {
                             VStack(alignment: .leading, spacing: Space.xs) {
@@ -170,7 +170,7 @@ struct HomeView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: Radius.chip, style: .continuous))
                                     .overlay(RoundedRectangle(cornerRadius: Radius.chip, style: .continuous).strokeBorder(Brand.line))
                                     .zoomSource("home-\(p.id)", in: zoom)
-                                Text(p.name).font(.footnote.weight(.semibold)).foregroundStyle(Brand.ivory).lineLimit(2)
+                                Text(p.name).font(.footnote.weight(.semibold)).foregroundStyle(Brand.ivory).lineLimit(2, reservesSpace: true)
                                 Text(p.brand).font(.caption).foregroundStyle(Brand.stone)
                             }
                             .frame(width: 110, alignment: .leading)

@@ -132,7 +132,7 @@ struct DesignBoardView: View {
         if !b.picks.isEmpty {
             VStack(alignment: .leading, spacing: Space.m) {
                 Text("Finishes and looks").eyebrow()
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: Space.m)], spacing: Space.l) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: Space.m, alignment: .top)], spacing: Space.l) {
                     ForEach(b.picks, id: \.self) { line in
                         let p = BoardPick(line)
                         VStack(alignment: .leading, spacing: Space.xs) {

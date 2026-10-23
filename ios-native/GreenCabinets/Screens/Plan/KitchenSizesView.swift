@@ -99,7 +99,7 @@ struct KitchenSizesView: View {
                 Text("Pick the shape closest to yours, then set how long each wall is. A tape measure is plenty: we check every size at the visit.")
                     .secondaryText().fixedSize(horizontal: false, vertical: true)
 
-                LazyVGrid(columns: [GridItem(.flexible(), spacing: Space.m), GridItem(.flexible())], spacing: Space.m) {
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: Space.m, alignment: .top), GridItem(.flexible(), alignment: .top)], spacing: Space.m) {
                     ForEach(KitchenShape.allCases) { s in
                         Button {
                             withAnimation(Motion.ui(reduceMotion)) {

@@ -104,6 +104,17 @@ import luxuryWalkInClosetIntegratedLighting from "@/assets/gallery/luxury-walk-i
 import darkWalkInClosetCenterIsland from "@/assets/gallery/dark-walk-in-closet-center-island.jpg";
 import whiteWalkInClosetModern from "@/assets/gallery/white-walk-in-closet-modern.jpg";
 
+import lightWoodKitchenMarblePeninsulaFront from "@/assets/gallery/light-wood-kitchen-marble-peninsula-front.jpg";
+import lightWoodUKitchenMarblePeninsulaStools from "@/assets/gallery/light-wood-u-kitchen-marble-peninsula-stools.jpg";
+import woodPeninsulaWhiteTallCabinetsKitchen from "@/assets/gallery/wood-peninsula-white-tall-cabinets-kitchen.jpg";
+import openKitchenDiningWoodPeninsulaStools from "@/assets/gallery/open-kitchen-dining-wood-peninsula-stools.jpg";
+import woodKitchenPeninsulaDiningRoom from "@/assets/gallery/wood-kitchen-peninsula-dining-room.jpg";
+import openKitchenDiningWoodPanelFridge from "@/assets/gallery/open-kitchen-dining-wood-panel-fridge.jpg";
+import diningRoomWhiteWoodKitchenPendants from "@/assets/gallery/dining-room-white-wood-kitchen-pendants.jpg";
+import powderRoomWoodVanityGreenMarble from "@/assets/gallery/powder-room-wood-vanity-green-marble.jpg";
+import bathroomWoodDoubleVanityGlassShower from "@/assets/gallery/bathroom-wood-double-vanity-glass-shower.jpg";
+import bathroomFloatingWoodVanityMarbleTub from "@/assets/gallery/bathroom-floating-wood-vanity-marble-tub.jpg";
+
 export type GalleryCategory = "kitchens" | "vanities" | "closets" | "design-to-reality" | "all";
 
 export interface ProductInfo {
@@ -121,6 +132,13 @@ export interface GalleryImage {
 
 export const galleryImages: GalleryImage[] = [
   // KITCHENS
+  { src: lightWoodKitchenMarblePeninsulaFront, alt: "Light wood kitchen with white upper cabinets, marble peninsula and backsplash, and panel-ready fridge", category: "kitchens" },
+  { src: lightWoodUKitchenMarblePeninsulaStools, alt: "Light wood U-shaped kitchen with marble peninsula, white tall cabinets, and velvet bar stools", category: "kitchens" },
+  { src: woodPeninsulaWhiteTallCabinetsKitchen, alt: "Light wood peninsula with marble top in front of white floor-to-ceiling cabinets", category: "kitchens" },
+  { src: openKitchenDiningWoodPeninsulaStools, alt: "Open kitchen and dining room with light wood peninsula, marble counter, and white tall cabinets", category: "kitchens" },
+  { src: woodKitchenPeninsulaDiningRoom, alt: "Light wood kitchen peninsula with bar seating beside the dining room", category: "kitchens" },
+  { src: openKitchenDiningWoodPanelFridge, alt: "Dining room facing a white and light wood kitchen with a paneled fridge", category: "kitchens" },
+  { src: diningRoomWhiteWoodKitchenPendants, alt: "Dining room with a white and light wood kitchen and pendant lights behind", category: "kitchens" },
   { src: naturalWoodOpenConceptKitchen, alt: "Natural wood open concept kitchen with dining area", category: "kitchens" },
   { src: modernKitchenWoodCabinetsCloseup, alt: "Modern kitchen wood cabinets close-up with gray marble countertops", category: "kitchens" },
   { src: luxuryKitchenMarbleDining, alt: "Luxury kitchen with marble island and wood dining table integration", category: "kitchens" },
@@ -190,6 +208,9 @@ export const galleryImages: GalleryImage[] = [
   { src: kitchenIslandCabinetInstall, alt: "Kitchen island cabinet installation process", category: "kitchens" },
 
   // VANITIES
+  { src: powderRoomWoodVanityGreenMarble, alt: "Powder room with floating wood vanity, stone top, glass vessel sink, and green marble", category: "vanities" },
+  { src: bathroomWoodDoubleVanityGlassShower, alt: "Bathroom with light wood double vanity, marble top, wall faucets, and glass shower", category: "vanities" },
+  { src: bathroomFloatingWoodVanityMarbleTub, alt: "Bathroom with floating light wood vanity, marble tub wall, and medicine cabinet", category: "vanities" },
   { src: bathroomMarble, alt: "Elegant marble bathroom with modern fixtures", category: "vanities" },
   { src: modernBathroomMarbleVanity, alt: "Modern bathroom with floating marble vanity and walk-in shower", category: "vanities" },
   { src: modernPowderRoomMarble, alt: "Modern powder room with marble countertop and storage", category: "vanities" },

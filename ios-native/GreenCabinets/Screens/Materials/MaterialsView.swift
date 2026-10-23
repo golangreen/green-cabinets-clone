@@ -179,7 +179,7 @@ struct PanelGrid: View {
     let zoom: Namespace.ID
 
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: Space.m)], spacing: Space.l) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: Space.m, alignment: .top)], spacing: Space.l) {
             ForEach(panels) { p in PanelTile(panel: p, from: from, zoom: zoom) }
         }
     }
@@ -204,7 +204,7 @@ struct PanelTile: View {
                     }
                     .zoomSource("\(from)-\(panel.id)", in: zoom)
                 // The name is how people tell decors apart: it wraps rather than cuts off
-                Text(panel.name).font(.subheadline.weight(.semibold)).foregroundStyle(Brand.ivory).lineLimit(2)
+                Text(panel.name).font(.subheadline.weight(.semibold)).foregroundStyle(Brand.ivory).lineLimit(2, reservesSpace: true)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, Space.xs)
@@ -420,7 +420,7 @@ struct WoodLibraryView: View {
             VStack(alignment: .leading, spacing: Space.l) {
                 Text("Every hardwood we build in, with its hardness, cost and how it takes a stain.")
                     .secondaryText().fixedSize(horizontal: false, vertical: true)
-                LazyVGrid(columns: [GridItem(.flexible(), spacing: Space.m), GridItem(.flexible())], spacing: Space.l) {
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: Space.m, alignment: .top), GridItem(.flexible(), alignment: .top)], spacing: Space.l) {
                     ForEach(WoodSpecies.all) { w in
                         NavigationLink(value: w) {
                             VStack(alignment: .leading, spacing: Space.s) {
@@ -468,7 +468,7 @@ struct HouseColorsView: View {
     private func group(_ title: String, _ list: [Finish]) -> some View {
         VStack(alignment: .leading, spacing: Space.m) {
             Text(title).eyebrow()
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: Space.m)], spacing: Space.l) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: Space.m, alignment: .top)], spacing: Space.l) {
                 ForEach(list) { f in FinishTile(finish: f) }
             }
         }
