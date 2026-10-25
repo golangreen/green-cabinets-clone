@@ -21,7 +21,7 @@ const About = () => {
               regardless of scale or complexity.
             </p>
             <p>
-              Every kitchen is designed in Bushwick and measured for the room it goes in. We take
+              Every kitchen is designed in Bushwick and measured for the room it goes in. We take 
               <span className="text-ivory font-semibold"> pride in our craftsmanship</span>, 
               ensuring that every cabinet we create meets the highest standards of design, functionality, and durability. 
               Our track record speaks for itself—we've earned exceptional satisfaction ratings across all our client segments.
