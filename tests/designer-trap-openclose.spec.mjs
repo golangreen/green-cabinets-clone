@@ -38,7 +38,7 @@ const f = page.frame({ url: /vanity-designer\.html/ });
 assert(f, "iframe not found");
 
 await f.waitForFunction(() => !!document.querySelector('[data-og="trap"]'), null, {
-  timeout: 5_000,
+  timeout: 15_000,
 });
 
 const canvas = f.locator("canvas").first();

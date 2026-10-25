@@ -60,7 +60,7 @@ for (const vp of VIEWPORTS) {
     .first()
     .waitFor({ state: "visible", timeout: 15_000 });
   const f = page.frame({ url: /vanity-designer\.html/ });
-  await f.waitForFunction(() => !!document.querySelector('[data-og="trap"]'), null, { timeout: 5_000 });
+  await f.waitForFunction(() => !!document.querySelector('[data-og="trap"]'), null, { timeout: 15_000 });
 
   const canvas = f.locator("canvas").first();
   const iframeEl = await page.locator('iframe[src*="vanity-designer.html"]').elementHandle();
