@@ -52,8 +52,8 @@ async function shot(name) {
   await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
   const lb = await canvas.boundingBox();
   const vp = page.viewportSize();
-  const x = Math.max(0, ib.x + lb.x);
-  const y = Math.max(0, ib.y + lb.y);
+  const x = Math.max(0, lb.x);
+  const y = Math.max(0, lb.y);
   const clip = {
     x, y,
     width: Math.min(lb.width, vp.width - x),
