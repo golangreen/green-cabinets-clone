@@ -52,7 +52,7 @@ const Contact = () => {
         <div className="text-center mb-16">
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-ivory mb-6">Get in Touch</h2>
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-            Appointment-only. We bring door and finish samples to your home in Brooklyn, Manhattan, and Queens.
+            Appointment-only. We bring door and finish samples to your home — no walk-in showroom.
           </p>
         </div>
 
