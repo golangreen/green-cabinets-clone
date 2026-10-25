@@ -49,13 +49,18 @@ for (const vp of VIEWPORTS) {
   page.on("console", (m) => m.type() === "error" && keep(m.text()) && errs.push(m.text()));
 
   await page.goto("http://localhost:8080/designer", { waitUntil: "domcontentloaded" });
+  // Phones get a "Launch vanity designer" button that opens the iframe full screen.
+  const launch = page.getByRole("button", { name: "Launch vanity designer" });
+  const ifr = page.locator('iframe[src*="vanity-designer.html"]');
+  await launch.or(ifr).first().waitFor({ state: "visible", timeout: 15_000 });
+  if (await launch.isVisible()) await launch.click();
   await page
     .frameLocator('iframe[src*="vanity-designer.html"]')
     .locator("body")
     .first()
     .waitFor({ state: "visible", timeout: 15_000 });
   const f = page.frame({ url: /vanity-designer\.html/ });
-  await f.waitForFunction(() => !!document.querySelector('[data-og="trap"]'), null, { timeout: 5_000 });
+  await f.waitForFunction(() => !!document.querySelector('[data-og="trap"]'), null, { timeout: 15_000 });
 
   const canvas = f.locator("canvas").first();
   const iframeEl = await page.locator('iframe[src*="vanity-designer.html"]').elementHandle();
@@ -75,8 +80,8 @@ for (const vp of VIEWPORTS) {
     const ib = await iframeEl.boundingBox();
     const lb = await canvas.boundingBox();
     const pvp = page.viewportSize();
-    const x = Math.max(0, ib.x + lb.x);
-    const y = Math.max(0, ib.y + lb.y);
+    const x = Math.max(0, lb.x);
+    const y = Math.max(0, lb.y);
     const clip = {
       x, y,
       width: Math.min(lb.width, pvp.width - x),
