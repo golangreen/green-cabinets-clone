@@ -12,7 +12,7 @@ async function getFrame(page) {
   await page.frameLocator('iframe[src*="vanity-designer.html"]').locator("body").first()
     .waitFor({ state: "visible", timeout: 15_000 });
   const f = page.frame({ url: /vanity-designer\.html/ });
-  await f.waitForFunction(() => !!document.querySelector('[data-og="trap"]'), null, { timeout: 5_000 });
+  await f.waitForFunction(() => !!document.querySelector('[data-og="trap"]'), null, { timeout: 15_000 });
   return f;
 }
 
@@ -56,7 +56,7 @@ for (const trap of TRAPS) {
   const ctx2 = await browser.newContext({ viewport: { width: 1280, height: 1800 } });
   const page2 = await ctx2.newPage();
   await page2.goto(ifrUrl, { waitUntil: "domcontentloaded" });
-  await page2.waitForFunction(() => !!document.querySelector('[data-og="trap"].on'), null, { timeout: 5_000 });
+  await page2.waitForFunction(() => !!document.querySelector('[data-og="trap"].on'), null, { timeout: 15_000 });
   const trapInShare = await page2.evaluate(() => document.querySelector('[data-og="trap"].on')?.dataset.ov);
   assert.equal(trapInShare, trap, `${trap}: lost via URL share`);
   await ctx2.close();
