@@ -34,9 +34,11 @@ import { cornerCabinetsLazySusanNycKitchensPost } from "@/data/blogPosts/cornerC
 import { faceFrameVsFramelessCabinetsNycPost } from "@/data/blogPosts/faceFrameVsFramelessCabinetsNycPost";
 import { countertopTemplatingCabinetInstallNycPost } from "@/data/blogPosts/countertopTemplatingCabinetInstallNycPost";
 import { kidsRoomBuiltInsBunkBedsNycPost } from "@/data/blogPosts/kidsRoomBuiltInsBunkBedsNycPost";
+import { cabinetPullsKnobsHardwareSizingNycPost } from "@/data/blogPosts/cabinetPullsKnobsHardwareSizingNycPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 const ALL_STATIC_POSTS: BlogArticle[] = [
+  cabinetPullsKnobsHardwareSizingNycPost,
   kidsRoomBuiltInsBunkBedsNycPost,
   countertopTemplatingCabinetInstallNycPost,
   faceFrameVsFramelessCabinetsNycPost,
@@ -106,6 +108,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  cabinetPullsKnobsHardwareSizingNycPost.slug,
   kidsRoomBuiltInsBunkBedsNycPost.slug,
   countertopTemplatingCabinetInstallNycPost.slug,
   faceFrameVsFramelessCabinetsNycPost.slug,
