@@ -39,9 +39,11 @@ import { softCloseBlumVsHettichNycPost } from "@/data/blogPosts/softCloseBlumVsH
 import { crownMoldingLightRailScribePrewarNycPost } from "@/data/blogPosts/crownMoldingLightRailScribePrewarNycPost";
 import { customKitchenCabinetsBedStuyBrooklynPost } from "@/data/blogPosts/customKitchenCabinetsBedStuyBrooklynPost";
 import { customBathroomVanityManhattanCoOpPost } from "@/data/blogPosts/customBathroomVanityManhattanCoOpPost";
+import { undercabinetLedLightingNycKitchensPost } from "@/data/blogPosts/undercabinetLedLightingNycKitchensPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 const ALL_STATIC_POSTS: BlogArticle[] = [
+  undercabinetLedLightingNycKitchensPost,
   customBathroomVanityManhattanCoOpPost,
   customKitchenCabinetsBedStuyBrooklynPost,
   crownMoldingLightRailScribePrewarNycPost,
@@ -116,6 +118,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  undercabinetLedLightingNycKitchensPost.slug,
   customBathroomVanityManhattanCoOpPost.slug,
   customKitchenCabinetsBedStuyBrooklynPost.slug,
   crownMoldingLightRailScribePrewarNycPost.slug,
@@ -167,6 +170,7 @@ export function getStaticBlogPost(slug?: string): BlogArticle | null {
   // be in the index and sitemap yet show "Article not found".
   const listed = STATIC_BY_SLUG.get(slug);
   if (listed) return listed;
+  if (slug === undercabinetLedLightingNycKitchensPost.slug) return undercabinetLedLightingNycKitchensPost;
   if (slug === customBathroomVanityManhattanCoOpPost.slug) return customBathroomVanityManhattanCoOpPost;
   if (slug === customKitchenCabinetsBedStuyBrooklynPost.slug) return customKitchenCabinetsBedStuyBrooklynPost;
   if (slug === crownMoldingLightRailScribePrewarNycPost.slug) return crownMoldingLightRailScribePrewarNycPost;
