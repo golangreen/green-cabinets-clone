@@ -78,7 +78,7 @@ export const glassFrontCabinetDoorsNycKitchensPost: BlogArticle = {
   title: META.title,
   content_html: BODY.join("\n"),
   excerpt: META.excerpt,
-  meta_title: "Glass-Front Cabinet Doors for NYC Kitchens | Green Cabinets NY",
+  meta_title: "Glass-Front Cabinet Doors for NYC Kitchens",
   meta_description: META.meta_description,
   tags: META.tags,
   image_url: null,
