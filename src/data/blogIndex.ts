@@ -43,9 +43,11 @@ import { undercabinetLedLightingNycKitchensPost } from "@/data/blogPosts/underca
 import { glassFrontCabinetDoorsNycKitchensPost } from "@/data/blogPosts/glassFrontCabinetDoorsNycKitchensPost";
 import { applianceGaragePocketDoorCabinetsNycPost } from "@/data/blogPosts/applianceGaragePocketDoorCabinetsNycPost";
 import { customKitchenCabinetsRidgewoodBushwickPost } from "@/data/blogPosts/customKitchenCabinetsRidgewoodBushwickPost";
+import { openShelvingVsUpperCabinetsNycPost } from "@/data/blogPosts/openShelvingVsUpperCabinetsNycPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 const ALL_STATIC_POSTS: BlogArticle[] = [
+  openShelvingVsUpperCabinetsNycPost,
   customKitchenCabinetsRidgewoodBushwickPost,
   applianceGaragePocketDoorCabinetsNycPost,
   glassFrontCabinetDoorsNycKitchensPost,
@@ -124,6 +126,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  openShelvingVsUpperCabinetsNycPost.slug,
   customKitchenCabinetsRidgewoodBushwickPost.slug,
   applianceGaragePocketDoorCabinetsNycPost.slug,
   glassFrontCabinetDoorsNycKitchensPost.slug,
@@ -179,6 +182,7 @@ export function getStaticBlogPost(slug?: string): BlogArticle | null {
   // be in the index and sitemap yet show "Article not found".
   const listed = STATIC_BY_SLUG.get(slug);
   if (listed) return listed;
+  if (slug === openShelvingVsUpperCabinetsNycPost.slug) return openShelvingVsUpperCabinetsNycPost;
   if (slug === customKitchenCabinetsRidgewoodBushwickPost.slug) return customKitchenCabinetsRidgewoodBushwickPost;
   if (slug === applianceGaragePocketDoorCabinetsNycPost.slug) return applianceGaragePocketDoorCabinetsNycPost;
   if (slug === glassFrontCabinetDoorsNycKitchensPost.slug) return glassFrontCabinetDoorsNycKitchensPost;
