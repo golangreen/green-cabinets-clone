@@ -21,7 +21,7 @@ const About = () => {
               regardless of scale or complexity.
             </p>
             <p>
-              What sets us apart is our unwavering commitment to excellence. We take immense 
+              Every kitchen is designed in Bushwick and measured for the room it goes in. We take 
               <span className="text-ivory font-semibold"> pride in our craftsmanship</span>, 
               ensuring that every cabinet we create meets the highest standards of design, functionality, and durability. 
               Our track record speaks for itself—we've earned exceptional satisfaction ratings across all our client segments.

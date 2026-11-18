@@ -34,9 +34,31 @@ import { cornerCabinetsLazySusanNycKitchensPost } from "@/data/blogPosts/cornerC
 import { faceFrameVsFramelessCabinetsNycPost } from "@/data/blogPosts/faceFrameVsFramelessCabinetsNycPost";
 import { countertopTemplatingCabinetInstallNycPost } from "@/data/blogPosts/countertopTemplatingCabinetInstallNycPost";
 import { kidsRoomBuiltInsBunkBedsNycPost } from "@/data/blogPosts/kidsRoomBuiltInsBunkBedsNycPost";
+import { cabinetPullsKnobsHardwareSizingNycPost } from "@/data/blogPosts/cabinetPullsKnobsHardwareSizingNycPost";
+import { softCloseBlumVsHettichNycPost } from "@/data/blogPosts/softCloseBlumVsHettichNycPost";
+import { crownMoldingLightRailScribePrewarNycPost } from "@/data/blogPosts/crownMoldingLightRailScribePrewarNycPost";
+import { customKitchenCabinetsBedStuyBrooklynPost } from "@/data/blogPosts/customKitchenCabinetsBedStuyBrooklynPost";
+import { customBathroomVanityManhattanCoOpPost } from "@/data/blogPosts/customBathroomVanityManhattanCoOpPost";
+import { undercabinetLedLightingNycKitchensPost } from "@/data/blogPosts/undercabinetLedLightingNycKitchensPost";
+import { glassFrontCabinetDoorsNycKitchensPost } from "@/data/blogPosts/glassFrontCabinetDoorsNycKitchensPost";
+import { applianceGaragePocketDoorCabinetsNycPost } from "@/data/blogPosts/applianceGaragePocketDoorCabinetsNycPost";
+import { customKitchenCabinetsRidgewoodBushwickPost } from "@/data/blogPosts/customKitchenCabinetsRidgewoodBushwickPost";
+import { openShelvingVsUpperCabinetsNycPost } from "@/data/blogPosts/openShelvingVsUpperCabinetsNycPost";
+import { customBathroomVanityQueensApartmentsPost } from "@/data/blogPosts/customBathroomVanityQueensApartmentsPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 const ALL_STATIC_POSTS: BlogArticle[] = [
+  customBathroomVanityQueensApartmentsPost,
+  openShelvingVsUpperCabinetsNycPost,
+  customKitchenCabinetsRidgewoodBushwickPost,
+  applianceGaragePocketDoorCabinetsNycPost,
+  glassFrontCabinetDoorsNycKitchensPost,
+  undercabinetLedLightingNycKitchensPost,
+  customBathroomVanityManhattanCoOpPost,
+  customKitchenCabinetsBedStuyBrooklynPost,
+  crownMoldingLightRailScribePrewarNycPost,
+  softCloseBlumVsHettichNycPost,
+  cabinetPullsKnobsHardwareSizingNycPost,
   kidsRoomBuiltInsBunkBedsNycPost,
   countertopTemplatingCabinetInstallNycPost,
   faceFrameVsFramelessCabinetsNycPost,
@@ -106,6 +128,17 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  customBathroomVanityQueensApartmentsPost.slug,
+  openShelvingVsUpperCabinetsNycPost.slug,
+  customKitchenCabinetsRidgewoodBushwickPost.slug,
+  applianceGaragePocketDoorCabinetsNycPost.slug,
+  glassFrontCabinetDoorsNycKitchensPost.slug,
+  undercabinetLedLightingNycKitchensPost.slug,
+  customBathroomVanityManhattanCoOpPost.slug,
+  customKitchenCabinetsBedStuyBrooklynPost.slug,
+  crownMoldingLightRailScribePrewarNycPost.slug,
+  softCloseBlumVsHettichNycPost.slug,
+  cabinetPullsKnobsHardwareSizingNycPost.slug,
   kidsRoomBuiltInsBunkBedsNycPost.slug,
   countertopTemplatingCabinetInstallNycPost.slug,
   faceFrameVsFramelessCabinetsNycPost.slug,
@@ -152,6 +185,16 @@ export function getStaticBlogPost(slug?: string): BlogArticle | null {
   // be in the index and sitemap yet show "Article not found".
   const listed = STATIC_BY_SLUG.get(slug);
   if (listed) return listed;
+  if (slug === customBathroomVanityQueensApartmentsPost.slug) return customBathroomVanityQueensApartmentsPost;
+  if (slug === openShelvingVsUpperCabinetsNycPost.slug) return openShelvingVsUpperCabinetsNycPost;
+  if (slug === customKitchenCabinetsRidgewoodBushwickPost.slug) return customKitchenCabinetsRidgewoodBushwickPost;
+  if (slug === applianceGaragePocketDoorCabinetsNycPost.slug) return applianceGaragePocketDoorCabinetsNycPost;
+  if (slug === glassFrontCabinetDoorsNycKitchensPost.slug) return glassFrontCabinetDoorsNycKitchensPost;
+  if (slug === undercabinetLedLightingNycKitchensPost.slug) return undercabinetLedLightingNycKitchensPost;
+  if (slug === customBathroomVanityManhattanCoOpPost.slug) return customBathroomVanityManhattanCoOpPost;
+  if (slug === customKitchenCabinetsBedStuyBrooklynPost.slug) return customKitchenCabinetsBedStuyBrooklynPost;
+  if (slug === crownMoldingLightRailScribePrewarNycPost.slug) return crownMoldingLightRailScribePrewarNycPost;
+  if (slug === softCloseBlumVsHettichNycPost.slug) return softCloseBlumVsHettichNycPost;
   if (slug === cornerCabinetsLazySusanNycKitchensPost.slug) return cornerCabinetsLazySusanNycKitchensPost;
   if (slug === radiatorCoversBuiltInsPrewarNycPost.slug) return radiatorCoversBuiltInsPrewarNycPost;
   if (slug === customKitchenTimelineNycPost.slug) return customKitchenTimelineNycPost;

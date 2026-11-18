@@ -20,13 +20,13 @@ const features: Feature[] = [
     isVideo: true,
     title: "Custom Solutions",
     description: "Every space is unique. Our designers work with you to create cabinets that maximize functionality and beauty.",
-    stats: "500+ Custom Designs",
+    stats: "Built to spec",
   },
   {
     media: kitchenImage1,
     title: "Sustainable Choice",
     description: "We source responsibly and build to last. Quality materials that stand the test of time.",
-    stats: "100% Eco-Friendly",
+    stats: "Vetted millwork suppliers",
   },
   {
     media: kitchenImage2,

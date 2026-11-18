@@ -56,7 +56,8 @@ await frame.waitForSelector("canvas", { state: "visible", timeout: 15000 });
 
 // Enable hardware so the hwfinish chips render
 const pickChip = async (group, id) => {
-  const c = await frame.$(`[data-og="${group}"][data-ov="${id}"]`);
+  const sel = `[data-og="${group}"][data-ov="${id}"]`;
+  const c = await frame.waitForSelector(sel, { timeout: 10000 }).catch(() => null);
   assert.ok(c, `chip [data-og="${group}"][data-ov="${id}"] missing`);
   await c.click();
   await page.waitForTimeout(280);
