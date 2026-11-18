@@ -2,6 +2,7 @@
 // icon, feature graphic and screenshots, then the bundle to a track.
 //   node store/play.mjs listing                  text and pictures only
 //   node store/play.mjs upload <track> [--draft]  bundle to internal / production (also pushes the listing)
+//   node store/play.mjs release <track> <code>   put an uploaded versionCode on a track
 //   node store/play.mjs check                    what each track holds
 // Signs in with the Play service account that already publishes Punchlee
 // (~/Downloads/punchlee-keys/play-service-account.json), which Golan gave
@@ -76,6 +77,16 @@ if (cmd === "upload") {
     }));
     console.log(`ok   ${t} track: ${name}`);
   }
+}
+
+if (cmd === "release") {
+  const gradle = readFileSync(DIR + "../app/build.gradle.kts", "utf8");
+  const name = `${/versionName = "([^"]+)"/.exec(gradle)[1]} (${flag})`;
+  await j(await fetch(`${E}/tracks/${track}`, {
+    method: "PUT", headers: { ...H, "Content-Type": "application/json" },
+    body: JSON.stringify({ track, releases: [{ name, versionCodes: [flag], status: "completed", releaseNotes: [{ language: L.language, text: L.releaseNotes }] }] }),
+  }));
+  console.log(`ok   ${track} track: ${name}`);
 }
 
 const c = await j(await fetch(E + ":commit", { method: "POST", headers: H }));
