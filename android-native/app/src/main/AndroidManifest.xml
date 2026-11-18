@@ -7,6 +7,8 @@
     <!-- The AR tools need ARCore and a camera, but the app works without them -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.ar" android:required="false" />
+    <!-- ML Kit's invisible scanner delegate is portrait-only; keep tablets and Chromebooks eligible -->
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
     <uses-feature android:glEsVersion="0x00030000" android:required="true" />
 
     <application
