@@ -75,7 +75,7 @@ export const customBathroomVanityQueensApartmentsPost: BlogArticle = {
   title: META.title,
   content_html: BODY.join("\n"),
   excerpt: META.excerpt,
-  meta_title: "Custom Bathroom Vanity in Queens Apartments | Green Cabinets NY",
+  meta_title: "Custom Bathroom Vanity for Queens Apartments",
   meta_description: META.meta_description,
   tags: META.tags,
   image_url: null,
