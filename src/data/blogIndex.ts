@@ -47,9 +47,11 @@ import { openShelvingVsUpperCabinetsNycPost } from "@/data/blogPosts/openShelvin
 import { customBathroomVanityQueensApartmentsPost } from "@/data/blogPosts/customBathroomVanityQueensApartmentsPost";
 import { galleyKitchenCustomCabinetsNycPost } from "@/data/blogPosts/galleyKitchenCustomCabinetsNycPost";
 import { slabVsShakerCabinetDoorsNycCondosPost } from "@/data/blogPosts/slabVsShakerCabinetDoorsNycCondosPost";
+import { shoeEntryStorageBrooklynTownhousesPost } from "@/data/blogPosts/shoeEntryStorageBrooklynTownhousesPost";
 
 /** Prepend newest SEO posts here without rewriting the large staticBlogPosts bundle. */
 const ALL_STATIC_POSTS: BlogArticle[] = [
+  shoeEntryStorageBrooklynTownhousesPost,
   slabVsShakerCabinetDoorsNycCondosPost,
   galleyKitchenCustomCabinetsNycPost,
   customBathroomVanityQueensApartmentsPost,
@@ -132,6 +134,7 @@ export const STATIC_BLOG_SLUGS = new Set(STATIC_BLOG_POSTS.map((p) => p.slug));
 
 /** Slugs pinned to the top of /blog, in order, regardless of published date. */
 export const PINNED_BLOG_SLUGS: string[] = [
+  shoeEntryStorageBrooklynTownhousesPost.slug,
   slabVsShakerCabinetDoorsNycCondosPost.slug,
   galleyKitchenCustomCabinetsNycPost.slug,
   customBathroomVanityQueensApartmentsPost.slug,
@@ -191,6 +194,7 @@ export function getStaticBlogPost(slug?: string): BlogArticle | null {
   // be in the index and sitemap yet show "Article not found".
   const listed = STATIC_BY_SLUG.get(slug);
   if (listed) return listed;
+  if (slug === shoeEntryStorageBrooklynTownhousesPost.slug) return shoeEntryStorageBrooklynTownhousesPost;
   if (slug === slabVsShakerCabinetDoorsNycCondosPost.slug) return slabVsShakerCabinetDoorsNycCondosPost;
   if (slug === galleyKitchenCustomCabinetsNycPost.slug) return galleyKitchenCustomCabinetsNycPost;
   if (slug === customBathroomVanityQueensApartmentsPost.slug) return customBathroomVanityQueensApartmentsPost;
